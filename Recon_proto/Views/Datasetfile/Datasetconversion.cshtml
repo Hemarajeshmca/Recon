@@ -1,0 +1,333 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.action-button {
+			width: 120px;
+			background: #673AB7;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 0px 10px 5px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		.action-button-previous {
+			width: 100px;
+			background: #616161;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 5px 10px 0px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		.tooltip-container {
+			position: relative;
+			display: inline-block;
+		}
+
+		.info-icon {
+			cursor: pointer;
+		}
+
+		.tooltip1 {
+			display: none;
+			position: absolute;
+			background-color: lightslategray;
+			color: #fff;
+			padding: 10px;
+			border-radius: 15px;
+			white-space: nowrap;
+			z-index: 1;
+			top: 100%;
+			margin-left: -95px;
+			transform: translateX(-50%);
+		}
+
+		.tooltip-container:hover .tooltip1 {
+			display: block;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 84%;">
+				<div class="row">
+					<div class="nav-align-top mb-3 mt-3">
+						<ul class="nav nav-pills mb-2" role="tablist">
+							<li class="nav-item">
+								<button type="button" id="Datasetlist"
+										class="nav-link active"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-Datasetlist"
+										aria-controls="navs-pills-Datasetlist"
+										aria-selected="true">
+									Dataset list
+								</button>
+							</li>
+							<li class="nav-item">
+								<button type="button" id="DatasetProgress"
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-DatasetProgress"
+										aria-controls="navs-pills-DatasetProgress"
+										aria-selected="true">
+									Dataset Progress
+								</button>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade show active" id="navs-pills-Datasetlist" role="tabpanel" >
+								<div class="panel panel-default">
+									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+										<table class="table table-bordered table-sm">
+											<thead style="background: #c1c1c1;">
+												<tr class="text-nowrap">
+													<th width="50px">Select</th>
+													<th width="50px">Sl. No</th>
+													<th>Dataset Name</th>
+													<th>Last Sync Datetime</th>
+													<th>Last Sync Status</th>
+													<th width="10px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="height:25px;background-color:lightyellow;color: black;">
+													<td align="center"><input type="checkbox" checked /></td>
+													<td>1</td>
+													<td>HDFC Bank - 123456</td>
+													<td>12-09-2023 11:47:53 AM</td>
+													<td>Inprogress</td>
+													<td>
+														<div class="tooltip-container">
+															<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
+															@*<span class="info-icon">ℹ️</span>*@
+															@*<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank - 123456</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>14-09-2023 11:47:53 AM</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong></p>
+																<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>scheduler</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Inprogress</p>
+																<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>InProcess records 1000</p>
+															</div>*@
+														</div>
+													</td>
+												</tr>
+												<tr style="height:25px;background-color:lightgreen;color: black;">
+													<td align="center"><input type="checkbox"></td>
+													<td>2</td>
+													<td>HDFC Ledger - 00234123</td>
+													<td>11-09-2023 02:24:45 PM	</td>
+													<td>Completed</td>
+													<td>
+														<div class="tooltip-container">
+															<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
+															@*<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 12:00:00 PM</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 02:24:45 PM</p>
+																<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>Excel</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> Completed</p>
+																<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>Completed records 1000</p>
+															</div>*@
+														</div>
+													</td>
+												</tr>
+												<tr style="height:25px;background-color:red;color: white;">
+													<td align="center"><input type="checkbox"></td>
+													<td>3</td>
+													<td>HDFC Bank Presentation 123456</td>
+													<td>12-09-2023 10:40:00 AM</td>
+													<td>Failed</td>
+													<td>
+														<div class="tooltip-container">
+															<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
+															@*<span class="info-icon">ℹ️</span>*@
+															@*<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank Presentation 123456</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>12-09-2023 09:40:00 AM</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong>12-09-2023 10:40:00 AM</p>
+																<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>Pipeline</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Failed</p>
+																<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>Failed Network Error</p>
+															</div>*@
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="row">
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4">
+											<input type="button" name="next" class="next action-button" value="Next" onclick="validateNextdataset();" />											
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="navs-pills-DatasetProgress" role="tabpanel" >
+								<div class="panel panel-default">
+									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+											<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+												<div class="col-sm-4">
+													<label for="" class="form-label">Pipeline</label>
+													<select id="Pipeline" class="form-select form-control" onclick="Pipeline()">
+														<option value="excel">Excel - HDFC Bank</option>
+														<option value="scheduled">Scheduled - Oracle GL</option>
+													</select>
+												</div>
+												<div class="col-sm-4">
+													<form id="theuploadformempff">
+														<div class="form-group">
+															<label for="Filename" class="form-label">Choose Excel</label>
+															<input type="file" class="form-control input-lg browse btn btn-primary input-lg" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+															<label class="col-md-6 control-label" id="FileName"></label>
+														</div>
+													</form>
+												</div>
+												<div class="col-sm-2" style="margin-top:29px">
+													<label class="form-label"></label>
+													<input type="button" style="background: #38b55a;border-color: #38b55a;width:40%" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
+													
+												</div>
+											</div>
+										</div>
+									</div>
+									<input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevdp();" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+
+						<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
+						<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 12:00:00 PM</p>
+						<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 02:24:45 PM</p>
+						<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>Excel</p>
+						<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> Completed</p>
+						<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>Completed records 1000</p>
+					
+						</div>
+					</div>
+					<div class="row">
+					<div class="col-sm-4"> </div>
+					
+					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
+						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button></center>
+					</div>
+					<div class="col-sm-4"> </div>
+				</div>
+				</div>
+			</div>
+		</div>
+	
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Dataset Import");
+	});
+	function validateNextdataset(){
+		$("#Datasetlist").removeClass('nav-link active');
+		$("#Datasetlist").toggleClass('nav-link');
+		$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade active in');
+		$("#navs-pills-Datasetlist").toggleClass('tab-pane fade');
+		$("#DatasetProgress").removeClass('nav-link');
+		$("#DatasetProgress").toggleClass('nav-link active');
+		$("#navs-pills-Datasetlist").hide();
+		$("#navs-pills-DatasetProgress").show();
+	}
+	function validatePrevdp(){
+		$("#DatasetProgress").removeClass('nav-link active');
+		$("#DatasetProgress").toggleClass('nav-link');
+		$("#navs-pills-Datasetlist").toggleClass('tab-pane fade active in');
+		$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade');
+		$("#Datasetlist").removeClass('nav-link');
+		$("#Datasetlist").toggleClass('nav-link active');
+		$("#navs-pills-DatasetProgress").hide();
+		$("#navs-pills-Datasetlist").show();
+	}
+
+	function rr1() {
+		$("#infomodal").hide();
+	}
+</script>

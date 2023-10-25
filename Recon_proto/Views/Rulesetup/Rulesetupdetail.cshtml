@@ -1,0 +1,1106 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.editable-dropdown {
+			position: relative;
+		}
+
+		#dropdown-list {
+			list-style: none;
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			border: 1px solid #ccc;
+			background-color: #fff;
+			z-index: 1;
+		}
+
+			#dropdown-list li {
+				padding: 5px;
+				cursor: pointer;
+			}
+
+		#editable-input {
+			width: 100%;
+		}
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.action-button {
+			width: 120px;
+			background: #673AB7;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 0px 10px 5px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		.action-button-previous {
+			width: 100px;
+			background: #616161;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 5px 10px 0px;
+			float: right;
+			border-radius: 20px;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 84%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Rule Code</label>
+									<input class="form-control" type="text" id="txtrulecode" value="">
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../Rulesetup/Rulesetup"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="box box-orange" style="height:auto">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-4">
+								<label for="" class="form-label">Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" id="ruleName" type="text">
+								<input class="form-control" type="hidden" id="rulegid">
+							</div>
+							<div class="col-sm-4">
+								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="cmbreconname" class="form-select form-control" onchange="reconchange()">
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<div>
+									<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+									<span data-for='valid' class='k-invalid-msg'></span>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<label for="organization" class="form-label">
+									<span>Period To</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="untillactive" onclick="checkactive()" id="untillactive" />&nbsp;&nbsp;
+									<span style="font-size:14px;">Until Active</span>
+								</label>
+								<div>
+									<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-2">
+								<label for="" class="form-label">Rule Applied On&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="RuleAppliedOn" class="form-select form-control" style=" width: 80%;" onchange="RuleApplied()">
+								</select>
+							</div>
+							<div class="col-sm-2" style="margin-left: -53px;margin-right: 56px;">
+								<label id="sourceparentdataset" class="form-label"></label>
+								<select id="sourcedataset" class="form-select form-control" style=" width: 126%;">
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<label id=comsupdataset class="form-label"></label>
+								<select id="comdataset" class="form-select form-control" style=" width: 126%;">
+								</select>
+							</div>
+							<div class="col-sm-2" style="margin-left: 36px;margin-right: -38px;">
+								<label id="souparaccmode" class="form-label"></label>
+								<select id="Accmode" class="form-select form-control" style=" width: 80%;">
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<label for="" class="form-label">Reversal Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="radio" id="Reversal1" name="Reversal" value="Y">&nbsp;&nbsp;Yes&nbsp;
+									<input type="radio" id="Reversal2" style="margin-left: 10px;" name="Reversal" value="N">&nbsp;&nbsp;No&nbsp;
+									<input type="radio" id="Reversal3" style="margin-left: 10px;" name="Reversal" value="O">&nbsp;&nbsp;N/A&nbsp;
+								</div>
+							</div>
+							<div class="col-sm-2" style="margin-left: -3px;">
+								<label for="" class="form-label">Group Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="radio" id="groupflag1" name="Groupflag" value="Y" onclick="flag()">&nbsp;&nbsp;Yes&nbsp;
+									<input type="radio" id="groupflag2" style="margin-left: 10px;" name="Groupflag" onclick="flag()" value="N">&nbsp;&nbsp;No&nbsp;
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="nav-align-top mb-3 mt-3">
+								<ul class="nav nav-pills mb-2" role="tablist">
+									<li class="nav-item">
+										<button type="button" id="ruleCondition"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-FiedConfig"
+												aria-controls="navs-pills-FiedConfig"
+												aria-selected="true">
+											Rule Condition
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="grouping"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-grouping"
+												aria-controls="navs-pills-top-grouping"
+												aria-selected="false">
+											Grouping
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="identifier"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-identifier"
+												aria-controls="navs-pills-top-identifier"
+												aria-selected="true">
+											Identifier
+										</button>
+									</li>
+
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-25px;">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+													<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<div class="col-xs-12">
+														<div id="grid_rulecondition">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="modal" id="rulecon" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-lg" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+														</div>
+														<div class="modal-body" style="margin-top: -26px;">
+															<div class="row">
+																<div class="col-sm-4">
+																</div>
+																<div class="col-sm-4">
+																	<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New</h4>
+																</div>
+																<div class="col-sm-4">
+																	<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+																</div>
+															</div>
+															<hr style="margin-top:-1px; width:100%;">
+															<div class="container">
+																<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+																	<div class="col-sm-6">
+																		<label for="" class="form-label">Source Dataset</label>
+																		<input class="form-control" id="sourcedataset1" type="text" disabled>
+																	</div>
+																	<div class="col-sm-6">
+																		<label for="" class="form-label">Comparison Dataset</label>
+																		<input class="form-control" id="comparisondataset1" type="text" disabled>
+																	</div>
+																</div>
+																<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+																	<div class="col-sm-6">
+																		<label for="" class="form-label">Source Field</label>
+																		<select id="cmbsourcefield" class="form-select form-control" onchange="sourcefield()">
+																		</select>
+																	</div>
+																	<div class="col-sm-6">
+																		<label for="" class="form-label">Comparison Field</label>
+																		<select id="cmbcomparisionfield" class="form-select form-control" onchange="comparefield()">
+																		</select>
+																	</div>
+																</div>
+																<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px">
+																	<div class="col-sm-6">
+																		<label for="" class="form-label">Extraction Criteria </label>
+																		<select id="cmbextractcriteria" class="form-select form-control">
+																		</select>
+																	</div>
+																	<div class="col-sm-6">
+																		<label for="" class="form-label">Comparision Criteria  </label>
+																		<select id="cmbcomparecriteria" class="form-select form-control">
+																		</select>
+																	</div>
+																</div>
+																<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px">
+																	<div class="col-sm-4">
+																	</div>
+																	<div class="col-sm-4">
+																	</div>
+																	<div class="col-sm-4">
+																		<label for="" class="form-label"></label>
+																		<center>
+																			<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+																			<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button>
+																		</center>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-25px;">
+										<div class="panel panel-default">
+											<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+												<div class="col-sm-4">
+													<label for="" class="form-label">Group Method</label>
+													<div style="margin-left:2px;margin-top:5px">
+														<input type="radio" id="Status" name="Groupmethod" value="C">&nbsp;&nbsp;Contra&nbsp;
+														<input type="radio" id="Status" style="margin-left: 10px;" name="Groupmethod" value="B">&nbsp;&nbsp;Mirror&nbsp;
+														<input type="radio" id="Status" name="Groupmethod" value="C">&nbsp;&nbsp;Contra & Mirror&nbsp;
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<label for="" class="form-label">Group Many-To-Many</label>
+													<div style="margin-left:2px;margin-top:5px">
+														<input type="radio" id="Status" name="Grouptomany" value="Y">&nbsp;&nbsp;Yes&nbsp;
+														<input type="radio" id="Status" style="margin-left: 10px;" name="Grouptomany" value="N">&nbsp;&nbsp;No&nbsp;
+													</div>
+												</div>
+											</div>
+											<div class="panel-body" style="padding: 10px 0px;">
+												<i data-bs-toggle="modal" data-bs-target="#newtargetgrouping" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+												@*<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor: pointer" onclick="rr5()"></i>*@
+												<table class="table table-bordered table-sm">
+													<thead style="background: #c1c1c1;">
+														<tr class="text-nowrap">
+															<th style="width: 50px;">Action</th>
+															<th>Sl No</th>
+															<th>Comparison Group Field</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr style="height:25px;">
+															<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr5()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+															<td></td>
+															<td></td>
+															<td></td>
+														</tr>
+														<tr style="height:25px;">
+															<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr5()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+															<td></td>
+															<td></td>
+															<td></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<div class="modal" id="newtargetgrouping" tabindex="-1" aria-hidden="true">
+												<div class="modal-dialog modal-lg" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+														</div>
+														<div class="modal-body" style="margin-top: -26px;">
+															<div class="row">
+																<div class="col-sm-4">
+																</div>
+																<div class="col-sm-4">
+																	<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New</h4>
+																</div>
+																<div class="col-sm-4">
+																	<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+																</div>
+															</div>
+															<hr style="margin-top:-1px; width:100%;">
+															<div class="container">
+																<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+																	<div class="col-sm-8">
+																		<label for="" class="form-label">Comparison Group Field</label>
+																		<select id="mode" class="form-select form-control">
+																			<option value="1" selected>AC No</option>
+																			<option value="2">Amount</option>
+																			<option value="3">Application Name</option>
+																		</select>
+																	</div>
+																	<div class="col-sm-4" style="margin-top: 4%;">
+																		<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+																		<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr6()">Cancel</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-identifier" role="tabpanel" style="margin-top:-10px;">
+										<div class="panel panel-default">
+
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:10px">
+													<div class="table-responsive text-nowrap" style="margin-top: -20px;">
+														<i data-bs-toggle="modal" data-bs-target="#newidentifier" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+														@*<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor: pointer" onclick="rr2()"></i>*@
+														<table class="table table-bordered table-sm">
+															<thead style="background: #c1c1c1;">
+																<tr class="text-nowrap">
+																	<th style="width: 50px;">Action</th>
+																	<th>Filter Applied On</th>
+																	<th>Filter Field</th>
+																	<th>Filter Criteria</th>
+																	<th>Identifier Criteria</th>
+																	<th>Identifier Value</th>
+																	<th>Status</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr style="height:25px;">
+																	<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr2()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+																	<td>Source-HDFC Bank - 123456</td>
+																	<td>Narration	</td>
+																	<td>EXACT	</td>
+																	<td>BEGINS WITH	</td>
+																	<td>CASH DEP	</td>
+																	<td>Active</td>
+																</tr>
+															</tbody>
+															<tbody>
+																<tr style="height:25px;">
+																	<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr2()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+																	<td>Comparision-HDFC Ledger - 00234123</td>
+																	<td>Cheque No	</td>
+																	<td>EXACT	</td>
+																	<td>CONTAINS	</td>
+																	<td>ERP	</td>
+																	<td>Active</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="modal" id="newidentifier" tabindex="-1" aria-hidden="true">
+											<div class="modal-dialog modal-lg" role="document">
+												<div class="modal-content">
+													<div class="modal-header">
+													</div>
+													<div class="modal-body" style="margin-top: -26px;">
+														<div class="row">
+															<div class="col-sm-4">
+															</div>
+															<div class="col-sm-4">
+																<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New</h4>
+															</div>
+															<div class="col-sm-4">
+																<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+															</div>
+														</div>
+														<hr style="margin-top:-1px; width:100%;">
+														<div class="container">
+															<div class="row" style="padding-bottom:5px;margin-top:5px">
+																<div class="col-sm-8">
+																	<label for="" class="form-label">
+																		Filter Apply On
+																	</label>
+																	<select id="mode" class="form-select form-control">
+																		<option value="1" selected>Source-HDFC Bank - 123456</option>
+																		<option value="2">Comparision-HDFC Ledger - 00234123</option>
+																	</select>
+																</div>
+
+																<div class="col-sm-4">
+																	<label for="" class="form-label">
+																		Filter Name
+																	</label>
+																	<select id="mode" class="form-select form-control">
+																		<option value="1" selected>Narration</option>
+																		<option value="2">Cheque No</option>
+																	</select>
+																</div>
+															</div>
+															<div class="row" style="padding-bottom:5px;margin-top:5px;">
+																<div class="col-sm-4">
+																	<label for="" class="form-label">Extraction Criteria</label>
+																	<select id="mode" class="form-select form-control">
+																		<option value="1" selected>EXACT</option>
+																		<option value="1">SUBSTR($FIELD$,m,n)</option>
+																		<option value="1">LEFT($FIELD$,n)</option>
+																		<option value="1">RIGHT($FIELD$,n)</option>
+																		<option value="1">SPLIT($FIELD$,'/',n)</option>
+																	</select>
+																</div>
+																@*<div class="col-sm-4">
+																<label for="" class="form-label">
+																Extraction Filter
+																</label>
+																<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+																</div>*@
+																<div class="col-sm-4">
+																	<label for="" class="form-label">Identifier Criteria</label>
+																	<select id="mode" class="form-select form-control">
+																		<option value="1" selected>EXACT</option>
+																		<option value="1">SUBSTR($FIELD$,m,n)</option>
+																		<option value="1">LEFT($FIELD$,n)</option>
+																		<option value="1">RIGHT($FIELD$,n)</option>
+																		<option value="1">SPLIT($FIELD$,'/',n)</option>
+																		<option value="1">BEGINS WITH</option>
+																		<option value="1">ENDS WITH</option>
+																		<option value="1">CONTAINS</option>
+																		<option value="1">NOT CONTAINS</option>
+																	</select>
+																</div>
+																<div class="col-sm-4">
+																	<label for="" class="form-label">Identifier Value</label>
+																	<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+																</div>
+															</div>
+															<div class="row" style="padding-bottom:5px;margin-top:5px;">
+																<div class="col-sm-4">
+																</div>
+																<div class="col-sm-4">
+																</div>
+																<div class="col-sm-4" style="margin-top:3%;">
+																	<button type="submit" class="btn btn-sm btn-success me-2" style="background: green ;border-color: Green;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+																	<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr3()">Cancel</button>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+							<div class="col-sm-4"></div>
+							<div class="col-sm-4" style="text-align:center">
+									<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheader()">Save</button>&nbsp;&nbsp;&nbsp;
+									<a href="../Recon/ReconList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+							</div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Rule Setup");
+		kendodate_format();
+		grid_rulecondition([]);
+		getGridComboList();
+	});
+	
+	function RuleApplied() {
+		if ($("#RuleAppliedOn").val() == 'T') {
+			$("#sourceparentdataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
+			$("#comsupdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
+			$("#souparaccmode").text("Source Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
+		} else if ($("#RuleAppliedOn").val() == 'S') {
+			$("#sourceparentdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
+			$("#comsupdataset").text("Parent Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
+			$("#souparaccmode").text("Parent Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
+		}
+	}
+	function flag() {
+		var flag = $('input[name="Groupflag"]:checked').val()
+		if (flag == "Y") {
+			$("#grouping").show();
+		} else {
+			$("#grouping").hide();
+		}
+	}
+
+	function rr1() {
+		$("#newdebit").hide();
+	}
+	function rrbase() {
+		$("#collapseOne").show();
+	}
+	function rrbase1() {
+		$("#collapseOne").hide();
+	}
+	function reconchange() {
+		//dataset combo
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '/Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset").empty();
+				$("#sourcedataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					$("#sourcedataset").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
+				});
+				$("#comdataset").empty();
+				$("#comdataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					$("#comdataset").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
+				});
+			}
+		});
+	}
+	function load() {
+		if (getlocalStorage('btn_clk_val') == "Create") {
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#txtstatus").val("Active");
+		}
+		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#txtrulecode").val(data.rule_code);
+				$("#ruleName").val(data.rule_name);
+				$("#cmbreconname").val(data.recon_code);
+				jQuery('#cmbreconname').trigger("change");
+				$("#txtstatus").val(data.active_status_desc);
+				$("#rulegid").val(data.rule_gid);
+				$.ajax({
+					type: "POST",
+					url: '/Rulesetup/rulefetch',
+					dataType: 'json',
+					data: JSON.stringify({ in_rule_code: data.rule_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
+							var res = JSON.parse(response);
+							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
+							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
+							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
+							$("#Accmode").val(res.RuleHeader[0].source_acc_mode);
+							if (res.RuleHeader[0].reversal_flag == "Y") {
+								$("#Reversal1").prop("checked", true);
+							} else if (res.RuleHeader[0].reversal_flag == "N") {
+								$("#Reversal2").prop("checked", true);
+							} else if (res.RuleHeader[0].reversal_flag == "O") {
+								$("#Reversal3").prop("checked", true);
+							}
+							if (res.RuleHeader[0].group_flag == "Y") {
+								$("#groupflag1").prop("checked", true);
+							} else {
+								$("#groupflag2").prop("checked", true);
+							}
+						}
+						else {
+
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
+		}
+	}
+	function checkactive() {
+		debugger;
+		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
+			$("#period_to").val('');
+			//$("#period_to").removeAttr('disabled', true);
+			$("#period_to").prop("disabled", true);
+			$('#period_to').unbind('click');
+		}
+		else {
+
+			$("#period_to").removeAttr('disabled', false);
+		}
+	}
+	function getGridComboList() {
+		// Dataset type
+		var in_master_code = "QCD_RS_RULE_APPLLIED";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '/Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#RuleAppliedOn").empty();
+				$.each(response, function (index, item) {
+					$("#RuleAppliedOn").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+				RuleApplied();
+			}
+		});
+
+		// Dataset type
+		var in_master_code = "QCD_RS_ACC_MODE";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '/Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#Accmode").empty();
+				$("#Accmode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#Accmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbreconname").append($('<option>', {
+						value: item.recon_code,
+						text: item.recon_name
+					}));
+				});
+				load();
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	function saveheader() {
+		debugger;
+		try {
+			var in_rule_code = $("#txtrulecode").val();
+			var ruleName = $("#ruleName").val();
+			var cmbreconname = $("#cmbreconname").val();
+			var period_from = $("#period_from").val();
+			var ts = period_from.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var in_until_active_flag = "";
+			if ($('#untillactive').is(":checked")) {
+				in_until_active_flag = "Y"
+				var pr1 = "";
+			} else {
+				in_until_active_flag = "N"
+				var period_to = $("#period_to").val();
+				var ts1 = period_to.split("/");
+				var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			}
+			var in_source_dataset_code = "";
+			var in_comparison_dataset_code = "";
+			var in_source_acc_mode = "";
+			var in_parent_dataset_code = "";
+			var in_support_dataset_code = "";
+			var in_parent_acc_mode = "";
+			var in_applyrule_on = $("#RuleAppliedOn").val();
+			if (in_applyrule_on == 'T') {
+				in_source_dataset_code = $("#sourcedataset").val();
+				in_comparison_dataset_code = $("#comdataset").val();
+				in_source_acc_mode = $("#Accmode").val();
+			} else {
+				in_parent_dataset_code = $("#sourcedataset").val();
+				in_support_dataset_code = $("#comdataset").val();
+				in_parent_acc_mode = $("#Accmode").val();
+			}
+			var action = "";
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var rulegid = $("#rulegid").val();
+			if (rulegid == "") {
+				rulegid = 0;
+			}
+			var status = 0;
+			if ($("#txtstatus").val() == "Active") {
+				status = "Y"
+			} else {
+				status = "N"
+			}
+			var Reversal = $("input[name='Reversal']:checked").val();
+			var Groupflag = $("input[name='Groupflag']:checked").val();
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/Ruleheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
+					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on,
+					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode,
+					in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode,
+					in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function grid_rulecondition(data) {
+		$("#grid_rulecondition").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							recondataset_gid: { type: "string" },
+							recon_code: { type: "string" },
+							dataset_code: { type: "string" },
+							dataset_name: { type: "string" },
+							dataset_type_desc: { type: "string" },
+							parent_dataset_code: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							In_mode_flag: { type: "string", defaultValue: "I" }
+						}
+					}
+				}
+			},
+			height: 172,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getdetailSelectedRows()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJsdataset()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "recondataset_gid",
+				title: "datasetdetail_id",
+				hidden: true,
+			},
+			{
+				field: "recon_code",
+				title: "Source Field",
+				width: 100,
+			},
+			{
+				field: "dataset_code",
+				title: "Extraction criteria",
+				width: 100,
+			},
+			{
+				field: "dataset_name",
+				title: "Comparison Field",
+				width: 100,
+			},
+			{
+				field: "dataset_type",
+				title: "Comparison criteria",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+			},
+			{
+				field: "In_mode_flag",
+				title: "Mode",
+				hidden: true
+			}],
+			editable: false,
+
+		});
+	}
+	function getrulecondition(mode) {
+		if ($(mode).attr('value') == "create") {
+			$("#sourcedataset1").val($("#sourcedataset").find(":selected").text());
+			$("#comparisondataset1").val($("#comdataset").find(":selected").text());
+			$("#rulecon").modal('show');
+			var datasetcode = $("#sourcedataset").val();
+			$.ajax({
+				type: "POST",
+				url: '/DataSet/Datasetdetailreadlist',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ datasetCode: datasetcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						$("#cmbsourcefield").empty();
+						$("#cmbsourcefield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(response, function (index, item) {
+							$("#cmbsourcefield").append($('<option>', {
+								value: item.dataset_table_field,
+								text: item.field_name,
+								code: item.field_type
+							}).data('code', item.field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+			var datasetcode = $("#comdataset").val();
+			$.ajax({
+				type: "POST",
+				url: '/DataSet/Datasetdetailreadlist',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ datasetCode: datasetcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						$("#cmbcomparisionfield").empty();
+						$("#cmbcomparisionfield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(response, function (index, item) {
+							$("#cmbcomparisionfield").append($('<option>', {
+								value: item.dataset_table_field,
+								text: item.field_name,
+								type: item.field_type
+							}).data('code', item.field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+	}
+	function sourcefield() {
+		var data1 = $("#cmbsourcefield").find(":selected");
+		var codeValue = data1.data('code');
+		var sourcedata = 'SOURCE';
+		$.ajax({
+			type: "POST",
+			url: '/Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#cmbextractcriteria").empty();
+					$("#cmbextractcriteria").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#cmbextractcriteria").append($('<option>', {
+							value: item.condition_criteria,
+							text: item.condition_desc
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function comparefield(){
+		var data1 = $("#cmbcomparisionfield").find(":selected");
+		var codeValue = data1.data('code');
+		var sourcedata = 'COMPARISON';
+		$.ajax({
+			type: "POST",
+			url: '/Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#cmbcomparecriteria").empty();
+					$("#cmbcomparecriteria").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#cmbcomparecriteria").append($('<option>', {
+							value: item.condition_criteria,
+							text: item.condition_desc
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+</script>

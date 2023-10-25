@@ -1,0 +1,140 @@
+﻿@{
+	ViewData["Title"] = "Filetemplate";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+	.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;">
+				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
+					<div class="col-md-3">
+						<label class="form-label">Process Type</label>
+						<select id="type" class="form-select form-control">
+							<option value="all" selected>ALL</option>
+							<option value="">Auto Matching</option>
+							<option value="">Auto Matching Preview</option>
+							<option value="">File Import</option>
+							<option value="">Manual Matching</option>
+							<option value="">Posting Supporting File</option>
+							<option value="">Report Generation</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label for="" class="form-label">Initiated From Date</label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label"> Initiated To Date </label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+							Search
+						</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<table class="table table-bordered table-sm">
+						<thead style="background: #c1c1c1;">
+							<tr class="text-nowrap">
+								<th>Job Id</th>
+								<th>Process Name</th>
+								<th>Process Type</th>
+								<th>Initiated Date & Time</th>
+								<th>Initiated By</th>
+								<th>Status</th>
+								<th>Remark</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="height:25px;">
+								<td>407</td>
+								<td>Nachapr23_1.xlsx Import</td>
+								<td>File Import</td>
+								<td>15-06-2023 05:52:41</td>
+								<td> sundar </td>
+								<td> Inprocess </td>
+								<td> Transferring file from bcp table to staging table... </td>
+							</tr>
+							<tr style="height:25px;">
+								<td>406</td>
+								<td>NACHAPR23_1.xlsx Import	</td>
+								<td>File Import</td>
+								<td>15-06-2023 05:42:01	</td>
+								<td> sundar </td>
+								<td> Initiated </td>
+								<td>NACHAPR23_1.xlsx File Importing...</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$("#navhead").text("Job in progress");
+		kendodate_format();
+	});
+
+</script>

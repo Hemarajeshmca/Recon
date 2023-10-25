@@ -1,0 +1,376 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<link href="~/assets/map-style/esri/claro.css" rel="stylesheet" />
+<link href="~/assets/map-style/esri/esri.css" rel="stylesheet" />
+<script src="~/assets/js/map-script/site.js"></script>
+<link href="~/assets/map-style/main1.css" rel="stylesheet" />
+<script src="~/assets/map-script/init.js"></script>
+<link href="~/assets/wizard.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+		.k-grid.k-widget {
+			height: 360px;
+		}
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+		.k-grid-header {
+			font-weight: bold;
+		}
+		.k-state-active {
+			display: none;
+		}
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+		.tooltip-container {
+			position: relative;
+			display: inline-block;
+		}
+		.info-icon {
+			cursor: pointer;
+		}
+		.tooltip1 {
+			display: none;
+			position: absolute;
+			background-color: lightslategray;
+			color: #fff;
+			padding: 10px;
+			border-radius: 15px;
+			white-space: nowrap;
+			z-index: 1;
+			top: 100%;			
+			margin-left: -95px;
+			transform: translateX(-50%);
+		}
+		.tooltip-container:hover .tooltip1 {
+			display: block;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-33px;">
+				<div class="card">
+					<div id="msform">
+						<!-- progressbar -->
+						<ul id="progressbar">
+							<li class="active" id="account">Recon List</li>
+							<li id="personal">Dataset list</li>
+							<li id="payment">Dataset Progress</li>
+						</ul>
+						<div class="progress">
+							<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
+						<br>
+						<!-- fieldsets -->
+						<fieldset>
+							<div class="form-card">
+								<div class="row" style="padding-left:10px">
+									<div class="col-7">
+										<label for="" class="form-label" style="font-size: 22px;">Recon List&nbsp;</label>
+									</div>
+									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+										<table class="table table-bordered table-sm">
+											<thead style="background: #c1c1c1;">
+												<tr class="text-nowrap">
+													<th width="50px">Select</th>
+													<th width="50px">Sl. No</th>
+													<th>Recon Name</th>
+													<th width="10px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="height:25px;">
+													<td align="center"><input type="checkbox" checked></td>
+													<td>1</td>
+													<td>HDFC CC BRS</td>
+													<td>
+														<div class="tooltip-container">
+															<span class="info-icon">ℹ️</span>
+															<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong> HDFC CC BRS</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> Completed</p>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr style="height:25px;">
+													<td align="center"><input type="checkbox"></td>
+													<td>2</td>
+													<td>SBI CC BRS</td>
+													<td>
+														<div class="tooltip-container">
+															<span class="info-icon">ℹ️</span>
+															<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong> SBI CC BRS</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> Completed</p>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<input type="button" name="next" class="next action-button" value="Next" onclick="validateNextRemarks('1,2',this);" />
+						</fieldset>
+						<fieldset>
+							<div class="form-card">
+								<div class="row" style="padding-left:10px">
+									<div class="col-7">
+										<label for="" class="form-label" style="font-size: 22px;">DataSet List&nbsp;</label>
+									</div>
+									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+										<label for="" class="form-label" style="font-size:15px;font-weight:600">Recon Name : HDFC CC BRS&nbsp;&nbsp;</label>
+										<table class="table table-bordered table-sm">
+											<thead style="background: #c1c1c1;">
+												<tr class="text-nowrap">
+													<th width="50px">Select</th>
+													<th width="50px">Sl. No</th>
+													<th>Dataset Name</th>
+													<th>Last Sync Datetime</th>
+													<th>Process</th>
+													<th width="10px"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr style="height:25px;background-color:lightyellow">
+													<td align="center"><input type="checkbox" checked /></td>
+													<td>1</td>
+													<td>HDFC Bank - 123456</td>
+													<td>12-09-2023 11:47:53 AM</td>
+													<td>Inprogress</td>
+													<td>
+														<div class="tooltip-container">
+															<span class="info-icon">ℹ️</span>
+															<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank - 123456</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Inprogress</p>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr style="height:25px;background-color:lightgreen">
+													<td align="center"><input type="checkbox"></td>
+													<td>2</td>
+													<td>HDFC Ledger - 00234123</td>
+													<td>11-09-2023 02:24:45 PM	</td>
+													<td>Completed</td>
+													<td>
+														<div class="tooltip-container">
+															<span class="info-icon">ℹ️</span>
+															<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> Completed</p>
+															</div>
+														</div>
+													</td>
+												</tr>
+												<tr style="height:25px;background-color:red">
+													<td align="center"><input type="checkbox"></td>
+													<td>3</td>
+													<td>HDFC Bank Presentation 123456</td>
+													<td>12-09-2023 10:40:00 AM	</td>
+													<td>Failed</td>
+													<td>
+														<div class="tooltip-container">
+															<span class="info-icon">ℹ️</span>
+															<div class="tooltip1">
+																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank Presentation 123456</p>
+																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Failed</p>
+															</div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<input type="button" name="next" class="next action-button" value="Next" onclick="validateNextRemarks('3', this);" />
+							<input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevRemarks('2',this);" />
+
+						</fieldset>
+						<fieldset>
+							<div class="form-card">
+								<div class="row" style="padding-left:10px">
+									<div class="col-7">
+										<label for="" class="form-label" style="font-size: 22px;">Dataset Progress&nbsp;</label>
+									</div>
+								</div>
+								<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+									<label for="" class="form-label" style="font-size:15px;font-weight:600">Recon Name : HDFC CC BRS&nbsp;==>&nbsp;Dataset name : HDFC Bank - 123456</label>
+									<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+
+										<div class="col-sm-4">
+											<label for="" class="form-label">Pipeline</label>
+											<select id="Pipeline" class="form-select form-control" onclick="Pipeline()">
+												<option value="excel">Excel</option>
+												<option value="scheduled">Scheduled</option>
+											</select>
+										</div>
+										<div class="col-sm-4">
+											<form id="theuploadformempff">
+												<div class="form-group">
+													<label for="Filename" class="form-label">Choose Excel</label>
+													<input type="file" class="form-control input-lg browse btn btn-primary input-lg" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+													<label class="col-md-6 control-label" id="FileName"></label>
+												</div>
+											</form>
+										</div>
+										<div class="col-sm-2" style="margin-top:29px">
+											<label class="form-label"></label>
+											<input type="button" style="background: #38b55a;border-color: #38b55a;width:40%" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
+											<div class="tooltip-container">
+												<span class="info-icon">ℹ️</span>
+												<div class="tooltip1">
+													<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank Presentation 123456</p>
+													<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+													<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong> 2023-09-19</p>
+													<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Inprogress</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevRemarks('6,7',this);" />
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Dataset Conversion ");
+	});
+	function validateNextRemarks(btn, row) {
+		try {
+			var btnarr = [];
+			var status = false;
+			btnarr = btn.split(',');
+			status = true;
+			if (status == true) {
+				current_fs = $(row).parent();
+				next_fs = $(row).parent().next();
+
+				//Add Class Active
+				$("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+
+				//show the next fieldset
+				next_fs.show();
+				//hide the current fieldset with style
+				current_fs.animate({
+					opacity: 0
+				}, {
+					step: function (now) {
+						// for making fielset appear animation
+						opacity = 1 - now;
+
+						current_fs.css({
+							'display': 'none',
+							'position': 'relative'
+						});
+						next_fs.css({
+							'opacity': opacity
+						});
+					},
+					duration: 500
+				});
+				setProgressBar(++current);
+
+			}
+
+		}
+		catch (e) {
+			console.log("validateNextRemarks(btn,row) :" + e.message);
+		}
+	}
+	function validatePrevRemarks(btn, row) {
+		var btnarr = [];
+		var status = false;
+		btnarr = btn.split(',');
+		for (var i = 0; i < btnarr.length; i++) {
+			if ($('.btn_' + btnarr[i]).hasClass('d-none') == false) {
+				status = true;
+			}
+			if (status == true) {
+				current_fs = $(row).parent();
+				previous_fs = $(row).parent().prev();
+
+				//Remove class active
+				$("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+				//show the previous fieldset
+				previous_fs.show();
+
+				//hide the current fieldset with style
+				current_fs.animate({
+					opacity: 0
+				}, {
+					step: function (now) {
+						// for making fielset appear animation
+						opacity = 1 - now;
+
+						current_fs.css({
+							'display': 'none',
+							'position': 'relative'
+						});
+						previous_fs.css({
+							'opacity': opacity
+						});
+					},
+					duration: 500
+				});
+				setProgressBar(--current);
+			}
+		}
+	}
+	function Pipeline() {
+		if ($("#Pipeline").val() == "excel") {
+			$("#File_Import").removeAttr("disabled");
+		} else {
+			$("#File_Import").attr("disabled", "disabled");
+		}
+	}
+</script>

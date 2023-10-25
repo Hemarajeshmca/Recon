@@ -1,0 +1,96 @@
+﻿@{
+	ViewData["Title"] = "Filetemplate";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;">
+				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
+					<div class="col-md-3">
+						<label class="form-label">
+							Job Type
+						</label>
+						<input class="form-control" value="Auto Matching" disabled />
+					</div>
+					<div class="col-md-3">
+						<label for="" class="form-label">Initiated From Date</label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label"> Initiated To Date </label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+							Search
+						</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<table class="table table-bordered table-sm">
+						<thead style="background: #c1c1c1;">
+							<tr class="text-nowrap">
+								<th style="width: 50px;">Action</th>
+								<th>Job Id</th>
+								<th>Job Name</th>
+								<th>Initiated Date & Time</th>
+								<th>Initiated By</th>
+								<th>Status</th>
+								<th>Remarks</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="height:25px;">
+								<td align="center"> </td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								
+							</tr>
+							<tr style="height:25px;">
+								<td align="center"> </td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Undo KO off by Job");
+		kendodate_format();
+	});
+</script>

@@ -1,0 +1,134 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;">
+				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
+					
+					<div class="col-md-3">
+						<label for="" class="form-label">Date From</label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label">Date To </label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label">Recon Name</label>
+						<select id="type" class="form-select form-control">
+							<option value="all" selected>CUB CC BRS - 113120000100488</option>
+							<option value="">SBI CC BRS - 40904776466</option>
+							<option value="">Indusind CA BRS - 201003823096</option>
+							<option value="">HDFC CC BRS - 50200064486821</option>
+						</select>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+							Show Rules
+						</button> &nbsp;&nbsp;&nbsp;
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
+							Preview
+						</button> &nbsp;&nbsp;&nbsp;
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
+							KnockOff
+						</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<table class="table table-bordered table-sm">
+						<thead style="background: #c1c1c1;">
+							<tr class="text-nowrap">
+								<th style="width: 50px;">Select</th>
+								<th>Rule</th>
+								<th>Source Dataset</th>
+								<th>Comparison Dataset</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="height:25px;">
+								<td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
+								<td>Hdfc CC- UPI Collection From Customer	</td>
+								<td>HDFC Bank - 123456</td>
+								<td>HDFC Ledger - 00234123</td>
+							</tr>
+							<tr style="height:25px;">
+								<td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
+								<td>Hdfc CC- IMPS Collection From Customer	</td>
+								<td>HDFC Ledger - 00234123231</td>
+								<td>HDFC Bank - 123456132</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$("#navhead").text("Rule Preview");
+		kendodate_format();
+	});
+
+</script>

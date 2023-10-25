@@ -1,0 +1,293 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row">
+					<div class="col-xs-12">
+						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+						</a>
+						<div id="grid_dataset"> </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Dataset");
+		setlocalStorage("ls_pageList", "");
+		grid_dataset_details([]);
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/Datasetlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					grid_dataset_details(response);
+				}
+				else {
+					grid_dataset_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+		
+	});
+
+	function grid_dataset_details(data) {
+		try {
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 10,
+					schema: {
+						model: {
+							fields: {
+								dataset_code: { type: "string" },
+								dataset_name: { type: "string" },
+								category: { type: "string" },
+								status: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 458,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				change: selectRow,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",							
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",						
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",							
+						},
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					], title: "Action&nbsp;", width: "40px",
+				},
+				{
+					field: "dataset_id",
+					title: "Row id",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "datasetCode",
+					title: "Dataset Code",
+					width: 100,
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 100,
+				},
+				{
+					field: "dataset_category",
+					title: "Category",
+					width: 100,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 100,
+				},
+				{
+					field: "In_mode_flag",
+					title: "Mode",
+					hidden: true
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+	function getSerializedRows() {
+		btn_onClick('Create');
+		document.location = "../DataSet/DataSetForm";
+	}
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") !="") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						btn_onClick("Edit");
+						document.location = '../DataSet/DataSetForm';
+					}
+					else if (mode == "view") {
+						btn_onClick('View');
+						document.location = "../DataSet/DataSetForm";
+					}
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+	function selectRow() {
+		try {
+			var grid = $("#grid_dataset").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem);
+		}
+		catch (err) {
+
+		}
+	}
+	function myDeleteJs() {			
+			var grid = $("#grid_dataset").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var dataset_id = model.dataset_id;
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+					var dataset_name = "";
+					var dataset_category = "";
+					var dataset_code = "";
+					var action = "DELETE";
+					var action_by = "vijay"
+					var dataset_id = model.dataset_id;
+					var status = "";
+					$.ajax({
+						type: "POST",
+						url: '/DataSet/Datasetheader',
+						dataType: 'json',
+						data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							$.alert({
+								icon: 'fa fa-success',
+								title: 'Recon',
+								theme: 'dark',
+								content: response.out_msg,
+								type: 'green',
+								animationSpeed: 700,
+							});
+							setTimeout(function () {
+								window.location.reload(1);
+							}, 2500);
+						}
+					})
+					},
+					cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+</script>

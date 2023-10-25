@@ -1,0 +1,602 @@
+@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 82%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="lbldatasetcode" class="form-label">Dataset Code</label>
+									<input class="form-control" type="text" id="txtdatasetcode">
+								</div>
+								<div class="col-sm-4">
+									<label for="lblmode" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblstatus" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../DataSet/DataSetList"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10px;">
+						<div class="col-sm-4">
+							<label class="form-label" for="">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" id="datasetname">
+							<input class="form-control" type="hidden" id="datasetgid">
+						</div>
+						<div class="col-sm-4">
+							<label class="form-label" for="">Category&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="cmbcategory" class="form-select form-control">								
+							</select>
+						</div>
+						<div class="col-sm-2">
+							<label class="form-label" for="">Clone Dataset&nbsp;</label>
+							<select id="Cmbclone" class="form-select form-control">								
+							</select>
+						</div>
+						<div class="col-sm-2" style="margin-top:30px">
+							<button type="button" class="btn btn-sm me-2 save_btn" onclick="saveheader()">Clone</button>&nbsp;&nbsp;&nbsp;
+						</div>
+
+					</div>
+
+
+					<div class="row" style="margin-top:20px;">
+						<div class="col-xs-12">
+							<i data-bs-toggle="modal" data-bs-target="#newdebit" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+							<div id="grid_datasetfield">
+							</div>
+						</div>
+					</div>
+
+					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4" style="margin-top:2%;">
+							<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheader()">Save</button>&nbsp;&nbsp;&nbsp;
+							<a href="../DataSet/DataSetList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+
+					<div class="modal fade" id="newdebit" tabindex="-1" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								</div>
+								<div class="modal-body" style="margin-top: -26px;">
+									<div class="row">
+										<div class="col-sm-4">
+										</div>
+										<div class="col-sm-4">
+											<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Mapping</h4>
+										</div>
+										<div class="col-sm-4">
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										</div>
+									</div>
+									<hr style="margin-top:-1px; width:100%;">
+									<div class="container">
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Dataset Field</label>
+												<input class="form-control" id="datasetfield" type="text" style="width:92%;">
+												<input class="form-control" type="hidden" id="datasetdetail_id">
+												<input class="form-control" type="hidden" id="txtmodeflag" value="Create">
+											</div>
+
+											<div class="col-sm-4">
+												<label for="" class="form-label">Field Type&nbsp;</label>
+												<select id="cmbFieldType" class="form-select form-control">													
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Field Length&nbsp;</label>
+												<input class="form-control" id="fieldlength" type="text" style=" width:92%;">
+											</div>
+										</div>
+										<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Mandatory&nbsp;</label>
+												<div style="margin-left:2px;margin-top:5px">
+													<input type="radio" id="mandatory1" name="mandatory" value="Y">&nbsp;&nbsp;Yes&nbsp;
+													<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" value="N">&nbsp;&nbsp;No&nbsp;
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-4" style="margin-top:30px;float: right;">
+										<center>
+											<button type="submit" class="btn btn-sm save_btn me-2"  onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
+											<button type="submit" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
+										</center>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		getGridComboList();
+		$("#navhead").text("Dataset");
+		grid_datasetfield([]);			
+	});
+	function load() {
+		if (getlocalStorage('btn_clk_val') == "Create") {
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#txtstatus").val("Active");
+		}
+		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#datasetname").val(data.dataset_name);
+				$("#cmbcategory").val(cat);
+				$("#txtdatasetcode").val(data.datasetCode);
+				$("#txtstatus").val(data.active_status_desc);
+				$("#datasetgid").val(data.dataset_id);
+				detailsfetch(data.datasetCode)
+			}
+		}
+	}
+
+	function detailsfetch(datasetCode) {
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/Datasetdetailreadlist',
+			dataType: 'json',
+			data: JSON.stringify({ datasetCode: datasetCode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					grid_datasetfield(response);
+				}
+				else {
+					grid_datasetfield([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function saveheader() {
+		debugger;
+		try {
+			var dataset_name = $("#datasetname").val();
+			var dataset_category = $("#cmbcategory").val();
+			var dataset_code = $("#txtdatasetcode").val();
+			var clone_dataset = $("#Cmbclone").val();
+			var action = "";
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var dataset_id = 0;
+			if (dataset_id > 0) {
+				dataset_id = $("datasetgid").val();
+			}
+			var status = 0;
+			if ($("#txtstatus").val() == "Active") {
+				status = "Y"
+			} else {
+				status = "N"
+			}
+			$.ajax({
+				type: "POST",
+				url: '/DataSet/Datasetheader',
+				dataType: 'json',
+				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset,  in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						detailsfetch($("#txtdatasetcode").val());
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function rr() {
+		$("#newdebit").show();
+	}
+	function rr1() {
+		window.location.href = "../DataSet/DataSetForm";
+	}
+	function rr7() {
+		debugger;
+		window.location.href = "../DataSet/DataSetList";
+	}
+	function grid_datasetfield(data) {
+		debugger;
+		$("#grid_datasetfield").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							slno: { type: "string" },
+							field_name: { type: "string" },
+							field_type: { type: "string" },
+							field_length: { type: "string" },
+							field_mandatory: { type: "string" },
+							In_mode_flag: { type: "string", defaultValue: "I" }
+						}
+					}
+				}
+			},
+			height: 270,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
+				//setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getdetailSelectedRows()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "datasetdetail_id",
+				title: "datasetdetail_id",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "slno",
+				title: "Sl no",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "field_name",
+				title: "Dataset Field",
+				width: 100,
+			},
+			{
+				field: "field_type",
+				title: "Field Type",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "fieldtype_desc",
+				title: "Field Type",
+				width: 100,
+			},
+			{
+				field: "field_length",
+				title: "Field Length",
+				width: 100,
+			},
+			{
+				field: "field_mandatory",
+				title: "Mandatory",
+				width: 100,
+			},
+
+			{
+				field: "In_mode_flag",
+				title: "Mode",
+				hidden: true
+			}],
+			editable: false,
+
+		});
+	}
+	function savedetail() {
+		try {
+			var datasetfield = $("#datasetfield").val();
+			var FieldType = $("#cmbFieldType").val();
+			var fieldlength = $("#fieldlength").val();
+			var dataset_code = $("#txtdatasetcode").val();
+			var action = "";
+			if ($("#txtmodeflag").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmodeflag").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var datasetdetail_id = 0;
+			if (datasetdetail_id > 0) {
+				datasetdetail_id = $("datasetdetail_id").val();
+			}
+			var status = 0;
+			if ($("txtstatus").val() == "Active") {
+				status = "Y"
+			} else {
+				status = "N"
+			}
+			var mandatory = $("input[name='mandatory']:checked").val();
+			$.ajax({
+				type: "POST",
+				url: '/DataSet/Datasetdetail',
+				dataType: 'json',
+				data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						load();
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function getdetailSelectedRows() {
+		var grid = $("#grid_datasetfield").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		$("#datasetfield").val(selectedItem.field_name);
+		$("#datasetdetail_id").val(selectedItem.datasetdetail_id);
+		$("#txtmodeflag").val("edit");
+		$("#cmbFieldType").val(selectedItem.field_type);
+		$("#fieldlength").val(selectedItem.field_length);
+		if (selectedItem.field_mandatory == "Yes") {
+			$("#mandatory1").prop("checked", true);
+		} else {
+			$("#mandatory2").prop("checked", true);
+		}
+		$("#newdebit").modal('show');
+	}
+	function getGridComboList() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/Datasetlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#Cmbclone").empty();
+				$("#Cmbclone").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#Cmbclone").append($('<option>', {
+						value: item.datasetCode,
+						text: item.dataset_name
+					}));
+				});					
+			}
+		});
+		var in_master_code = "QCD_DS_CATEGORY";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '/Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbcategory").empty();
+				$("#cmbcategory").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbcategory").append($('<option>', {
+						value: item.masterCode,
+						text: item.masterName
+					}));
+				});
+				load();
+			}
+		});
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/getfieldtype',
+			dataType: 'json',
+			data: JSON.stringify({ }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbFieldType").empty();
+				$("#cmbFieldType").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbFieldType").append($('<option>', {
+						value: item.fieldtype_code,
+						text: item.fieldtype_desc
+					}));
+				});
+			}
+		});	
+	}
+	function myDeleteJs() {
+		debugger;
+		var grid = $("#grid_datasetfield").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var EmployeeID = (model.datasetdetail_id);
+
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var datasetfield = "";
+					var FieldType = "";
+					var fieldlength = "";
+					var dataset_code = "";
+					var action = "DELETE";
+					var action_by = "vijay"
+					var datasetdetail_id = EmployeeID;					
+					var status = "";
+					var mandatory = "";
+					$.ajax({
+						type: "POST",
+						url: '/DataSet/Datasetdetail',
+						dataType: 'json',
+						data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {							
+								$.alert({
+									icon: 'fa fa-success',
+									title: 'Recon',
+									theme: 'dark',
+									content: 'Record deleted.!',
+									type: 'green',
+									animationSpeed: 700,
+								});							
+							setTimeout(function () {
+								window.location.reload(1);
+							}, 2500);
+						},
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+</script>
+
+
