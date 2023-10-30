@@ -143,8 +143,8 @@
 											<div class="col-sm-4">
 												<label for="" class="form-label">Dataset Field</label>
 												<input class="form-control" id="datasetfield" type="text" style="width:92%;">
-												<input class="form-control" type="hidden" id="datasetdetail_id">
-												<input class="form-control" type="hidden" id="txtmodeflag" value="Create">
+												<input class="form-control" type="number" id="datasetdetail_id" hidden>
+												<input class="form-control" type="text" id="txtmodeflag" value="Create" hidden>
 											</div>
 
 											<div class="col-sm-4">
@@ -169,8 +169,8 @@
 									</div>
 									<div class="col-sm-4" style="margin-top:30px;float: right;">
 										<center>
-											<button type="submit" class="btn btn-sm save_btn me-2"  onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
-											<button type="submit" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
+											<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
+											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
 										</center>
 									</div>
 								</div>
@@ -248,7 +248,7 @@
 			var action_by = "vijay"
 			var dataset_id = 0;
 			if (dataset_id > 0) {
-				dataset_id = $("datasetgid").val();
+				dataset_id = $("#datasetgid").val();
 			}
 			var status = 0;
 			if ($("#txtstatus").val() == "Active") {
@@ -263,17 +263,22 @@
 				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset,  in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
 					debugger;
-					if (response != null) {
+					if (data.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
 							type: 'green',
 						});
 						detailsfetch($("#txtdatasetcode").val());
-					}
-					else {
-
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
 					}
 				},
 				error: function (er) {
@@ -396,21 +401,21 @@
 		});
 	}
 	function savedetail() {
+		debugger;
 		try {
 			var datasetfield = $("#datasetfield").val();
 			var FieldType = $("#cmbFieldType").val();
 			var fieldlength = $("#fieldlength").val();
 			var dataset_code = $("#txtdatasetcode").val();
+			var datasetdetail_id = $("#datasetdetail_id").val();
 			var action = "";
-			if ($("#txtmodeflag").val() == "Create") {
-				action = "INSERT"
-			} else if ($("#txtmodeflag").val() == "Edit") {
-				action = "UPDATE"
-			}
 			var action_by = "vijay"
-			var datasetdetail_id = 0;
 			if (datasetdetail_id > 0) {
-				datasetdetail_id = $("datasetdetail_id").val();
+				datasetdetail_id = $("#datasetdetail_id").val();
+				action = "UPDATE"
+			} else {
+				datasetdetail_id = 0;
+				action = "INSERT"
 			}
 			var status = 0;
 			if ($("txtstatus").val() == "Active") {
@@ -455,6 +460,7 @@
 		}
 	}
 	function getdetailSelectedRows() {
+		debugger;
 		var grid = $("#grid_datasetfield").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		$("#datasetfield").val(selectedItem.field_name);
@@ -517,11 +523,14 @@
 				load();
 			}
 		});
+		
+		var in_master_code = "QCD_RC_FIELD_TYPE";
+		var in_user_code = "sundar";
 		$.ajax({
 			type: "POST",
-			url: '/DataSet/getfieldtype',
+			url: '/Common/Qcdmaster',
 			dataType: 'json',
-			data: JSON.stringify({ }),
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				$("#cmbFieldType").empty();
@@ -531,8 +540,8 @@
 				}));
 				$.each(response, function (index, item) {
 					$("#cmbFieldType").append($('<option>', {
-						value: item.fieldtype_code,
-						text: item.fieldtype_desc
+						value: item.masterCode,
+						text: item.masterName
 					}));
 				});
 			}
@@ -542,7 +551,6 @@
 		debugger;
 		var grid = $("#grid_datasetfield").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var EmployeeID = (model.datasetdetail_id);
 
 		$.confirm({
 			icon: 'fa fa-warning',
@@ -554,14 +562,13 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var datasetfield = "";
-					var FieldType = "";
-					var fieldlength = "";
-					var dataset_code = "";
+					var datasetfield = model.field_name;
+					var FieldType = model.field_type;
+					var fieldlength = model.field_length;
+					var dataset_code = model.datasetCode;
 					var action = "DELETE";
 					var action_by = "vijay"
-					var datasetdetail_id = EmployeeID;					
-					var status = "";
+					var datasetdetail_id = model.datasetdetail_id;
 					var mandatory = "";
 					$.ajax({
 						type: "POST",
@@ -569,18 +576,27 @@
 						dataType: 'json',
 						data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
 						contentType: 'application/json; charset=utf-8',
-						success: function (response) {							
+						success: function (response) {	
+								debugger;
+								var data = response;
+							if (data.out_result == "1") {
 								$.alert({
 									icon: 'fa fa-success',
 									title: 'Recon',
 									theme: 'dark',
-									content: 'Record deleted.!',
+									content: data.out_msg,
 									type: 'green',
 									animationSpeed: 700,
-								});							
-							setTimeout(function () {
-								window.location.reload(1);
-							}, 2500);
+								});
+								load();
+								//window.location.reload(1);
+							} else {
+								$.alert({
+									title: 'Recon',
+									content: data.out_msg,
+									type: 'red',
+								});
+							}
 						},
 					});
 				},

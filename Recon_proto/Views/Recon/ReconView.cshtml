@@ -44,6 +44,17 @@
 			z-index: 10003;
 			left: 300px !important;
 		}
+
+		.datepicker table tr td.active:active,
+		.datepicker table tr td.active.highlighted:active,
+		.datepicker table tr td.active.active,
+		.datepicker table tr td.active.highlighted.active {
+			background-color: green;
+		}
+
+			.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+				background-color: red;
+			}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -91,7 +102,7 @@
 								<div class="col-sm-2">
 									<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 									<div>
-										<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" onclick="Dateformat()" style="width:100%" />
+										<input class="cusDate" #datepicker data-role='datepicker' id="period_from" name="period_from" onclick="Dateformat()" style="width:100%" />
 										<span data-for='valid' class='k-invalid-msg'></span>
 									</div>
 								</div>
@@ -244,7 +255,7 @@
 									<div class="col-sm-4" style="margin-top:30px;float: right;">
 										<center>
 											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveDataset()">Save</button>&nbsp;&nbsp;&nbsp;
-											<button type="submit" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
+											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
 										</center>
 									</div>
 								</div>
@@ -300,7 +311,7 @@
 											<div class="col-sm-4" style="margin-top:13px;float: right;margin-bottom:10px">
 												<center>
 													<button type="button" class="btn btn-sm save_btn me-2" onclick="saveDatasetmapping()">Add</button>&nbsp;&nbsp;&nbsp;
-													<button type="submit" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr3()">Cancel</button>
+													<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr3()">Cancel</button>
 												</center>
 											</div>
 										</div>
@@ -328,6 +339,7 @@
 		grid_recondatasetmapping([]);
 	});
 	function DatasetTypefield() {
+		debugger;
 		if ($("#DatasetType").val() == "QCD_SUPPORT") {
 			$("#cmbParentDataset").attr('disabled', false);
 			var reconcode = $("#reconcode").val()
@@ -338,13 +350,16 @@
 				data: JSON.stringify({ in_recon_code: reconcode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response != null) {
+					debugger;
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (result != null) {
 						$("#cmbParentDataset").empty();
 						$("#cmbParentDataset").append($('<option>', {
 							value: "",
 							text: "  Select  "
 						}));
-						$.each(response, function (index, item) {
+						$.each(result, function (index, item) {
 							$("#cmbParentDataset").append($('<option>', {
 								value: item.dataset_code,
 								text: item.dataset_name
@@ -694,27 +709,36 @@
 		});
 	}
 	function saveDataset() {
+		debugger;
 		try {
 			var reconcode = $("#reconcode").val();
 			var datasetname = $("#cmbdatasetname").val();
 			var DatasetType = $("#DatasetType").val();
 			var parentdataset = $("#cmbParentDataset").val();
+			var recondataset_gid = $("#recondataset_gid").val();
+			var status = 0;
 			if (parentdataset == null) {
 				parentdataset = "";
 			}
 			var action = "";
-			if ($("#txtmodedataset").val() == "Create") {
+			if (recondataset_gid > 0) {
+				action = "UPDATE";
+				recondataset_gid = $("#recondataset_gid").val();
+			} else {
+				recondataset_gid = 0;
 				action = "INSERT"
-			} else if ($("#txtmodedataset").val() == "Edit") {
-				action = "UPDATE"
 			}
+			//if ($("#txtmodedataset").val() == "Create") {
+			//	action = "INSERT"
+			//} else if ($("#txtmodedataset").val() == "Edit") {
+			//	action = "UPDATE"
+			//}
 			var action_by = "vijay";
 			var in_user_code = "vijay";
-			var recondataset_gid = 0;
-			if (recondataset_gid > 0) {
-				recondataset_gid = $("recondataset_gid").val();
-			}
-			var status = 0;
+			//var recondataset_gid = 0;
+			//if (recondataset_gid > 0) {
+			//	recondataset_gid = $("recondataset_gid").val();
+			//}
 			if ($("#txtstatus").val() == "Active") {
 				status = "Y"
 			} else {
@@ -735,6 +759,9 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						$("#txtmodedataset").val("");
+						$("#DatasetType").val("");
+						$("#cmbParentDataset").val("");
 					}
 					else {
 
@@ -1086,12 +1113,18 @@
 		});
 	}
 	function getdatasetrecon() {
+		debugger;
 		var grid = $("#grid_datasetrecon").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		$("#cmbdatasetname").val(selectedItem.dataset_code);		
 		$("#DatasetType").val(selectedItem.dataset_type);
 		$("#Accountform").modal('show');
+		$("#recondataset_gid").val(selectedItem.recondataset_gid)
 	}
+	function rr1() {
+		window.location.href = "../Recon/ReconView";
+	}
+
 </script>
 
 
