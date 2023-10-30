@@ -68,8 +68,15 @@
 </html>
 <script>
 	$(document).ready(function () {
+		gridlist();
 		$("#navhead").text("Dataset");
+		
 		setlocalStorage("ls_pageList", "");
+		
+		
+	});
+
+	function gridlist() {
 		grid_dataset_details([]);
 		var data = {};
 		data.in_user_gid = 0;
@@ -95,8 +102,7 @@
 			}
 
 		});
-		
-	});
+	}
 
 	function grid_dataset_details(data) {
 		try {
@@ -235,8 +241,19 @@
 
 		}
 	}
-	function myDeleteJs() {			
-			var grid = $("#grid_dataset").data("kendoGrid");
+	function myDeleteJs() {
+		debugger;
+		//var grid = $("#grid").data("kendoGrid");
+		//var selectedItem = grid.dataItem(grid.select());
+		//console.log("selectedItem", selectedItem);
+		//$("#master_gid").val(selectedItem.master_gid);
+		//$("#mode").val("Delete");
+		//$("#MasterSysCode").val(selectedItem.master_syscode);
+		//$("#MasterShortCode").val(selectedItem.master_short_code);
+		//$("#MasterCode").val(selectedItem.master_code);
+		//$("#MasterName").val(selectedItem.master_name);
+		//$("#MasterMultipleName").val(selectedItem.master_multiple_name);
+		var grid = $("#grid_dataset").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var dataset_id = model.dataset_id;
 			$.confirm({
@@ -251,7 +268,7 @@
 					confirm: function () {
 					var dataset_name = "";
 					var dataset_category = "";
-					var dataset_code = "";
+					var dataset_code = model.datasetCode;
 					var action = "DELETE";
 					var action_by = "vijay"
 					var dataset_id = model.dataset_id;
@@ -263,17 +280,26 @@
 						data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
-							$.alert({
-								icon: 'fa fa-success',
-								title: 'Recon',
-								theme: 'dark',
-								content: response.out_msg,
-								type: 'green',
-								animationSpeed: 700,
-							});
-							setTimeout(function () {
-								window.location.reload(1);
-							}, 2500);
+							var result = JSON.parse(response);
+							var data = result[0];
+							debugger;
+							if(data.out_result == "1") {
+								$.alert({
+									icon: 'fa fa-success',
+									title: 'Recon',
+									theme: 'dark',
+									content: data.out_msg,
+									type: 'green',
+									animationSpeed: 700,
+								});
+								gridlist();
+							} else {
+								$.alert({
+									title: 'Recon',
+									content: data.out_msg,
+									type: 'red',
+								});
+							}							
 						}
 					})
 					},

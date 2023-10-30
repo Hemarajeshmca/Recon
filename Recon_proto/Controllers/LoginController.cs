@@ -1,0 +1,222 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
+using System.Text;
+using System.Data;
+using System.Net;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Recon_proto.Models;
+using static Recon_proto.Controllers.LoginController;
+
+namespace Recon_proto.Controllers
+{
+    public class LoginController : Controller
+    {
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<LoginController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        string ipAddress = "";
+
+        public LoginController(
+     IConfiguration configuration,
+     ILogger<LoginController> logger,
+     IHttpContextAccessor httpContextAccessor)
+        {
+            _configuration = configuration;
+            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        [HttpPost]
+        public string Login_validation([FromBody] Login_model1 model)
+        {
+            Login_model loginmodel = new Login_model();
+            List<user_model> objcat_lst = new List<user_model>();
+            DataTable result = new DataTable();
+            string post_data = "";
+            using (var client = new HttpClient())
+            {
+                string hostName = Dns.GetHostName();
+                ipAddress = Dns.GetHostAddresses(hostName)[0].ToString();
+                var pass = Encrypt(model.Password);
+                loginmodel.user_id = model.UserName;
+                loginmodel.password = pass;
+                loginmodel.ip = ipAddress;
+                loginmodel.msg = "";
+                loginmodel.ip_address = "";
+                loginmodel.datasource = "";
+                loginmodel.user_code = "";
+                loginmodel.user_name = "";
+                loginmodel.oldpassword = "";
+                client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(loginmodel), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("Loginvalidation", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataTable>(d2);
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    user_model objcat = new user_model();
+                    objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
+                    objcat.user_name = result.Rows[i]["user_name"].ToString();
+                    objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
+                    objcat.usergroup_gid = Convert.ToInt32(result.Rows[i]["usergroup_code"]);
+                    objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
+                    objcat.msg = result.Rows[i]["out_msg"].ToString();
+                    objcat.oldpassworrd = Decrypt(pass);
+                    objcat.user_status = result.Rows[i]["user_status"].ToString();
+                    objcat_lst.Add(objcat);
+                    ViewBag.user_gid = objcat.user_gid;
+                    ViewBag.user_name = objcat.user_name;
+                    HttpContext.Session.SetString("usercode", model.UserName);
+                    HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
+                    HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
+                    HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
+                    HttpContext.Session.SetString("user_code", result.Rows[i]["user_gid"].ToString());
+                    HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
+                    HttpContext.Session.SetString("userrole", "ADMIN");
+                }
+                return JsonConvert.SerializeObject(objcat_lst);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult changepassword_Save([FromBody] changePassword model)
+        {
+            string post_data = "";
+            List<user_model> objcat_lst = new List<user_model>();
+            try
+            {
+                var dataFromSession = HttpContext.Session.GetString("user_code");
+                var oldpassword = Encrypt(model.oldpass);
+                var pass = Encrypt(model.newpass);
+                changepass_save changepassModal = new changepass_save();
+                changepassModal.old_password = oldpassword;
+                changepassModal.new_password = pass;
+                changepassModal.user_id = dataFromSession;
+                changepassModal.out_msg = "";
+                using (var client = new HttpClient())
+                {
+                    string[] result = { };
+                    try
+                    {
+                        //string post_data1 = _commonController.GetApiResult(JsonConvert.SerializeObject(changepassModal), "changepass_save");
+                        client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        HttpContent content = new StringContent(JsonConvert.SerializeObject(changepassModal), UTF8Encoding.UTF8, "application/json");
+                        var response = client.PostAsync("Loginvalidation", content).Result;
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        post_data = reader.ReadToEnd();
+                        DataTable d2 = JsonConvert.DeserializeObject<DataTable>(post_data);
+                        //  result = JsonConvert.DeserializeObject<DataTable>(d2);
+
+                        //result = JsonConvert.DeserializeObject<DataTable>(d2);
+                        //result = (string[])JsonConvert.DeserializeObject(post_data1, result.GetType());
+                        return Json(d2);
+                    }
+                    catch (Exception ex)
+                    {
+                        string control = this.ControllerContext.RouteData.Values["controller"].ToString();
+                        return Json(ex.Message);
+                    }
+                   
+                }
+            }
+            catch (Exception ex)
+            {
+                string control = this.ControllerContext.RouteData.Values["controller"].ToString();
+                //LogHelper.WriteLog(ex.ToString(), control);
+            }
+            return View();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        public class changePassword
+        {
+            public string? user_gid { get; set; }
+            public string? oldpass { get; set; }
+            public string? newpass { get; set; }
+        }
+
+        public class Login_model1
+        {
+            public string? UserName { get; set; }
+            public string? Password { get; set; }
+        }
+
+        private string Encrypt(string clearText)
+        {
+            try
+            {
+                string EncryptionKey = "MAKV2SPBNI99212";
+                byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
+                using (Aes encryptor = Aes.Create())
+                {
+                    Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                    encryptor.Key = pdb.GetBytes(32);
+                    encryptor.IV = pdb.GetBytes(16);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
+                        {
+                            cs.Write(clearBytes, 0, clearBytes.Length);
+                            cs.Close();
+                        }
+                        clearText = Convert.ToBase64String(ms.ToArray());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+            return clearText;
+        }
+
+
+        private string Decrypt(string cipherText)
+        {
+            try
+            {
+                string EncryptionKey = "MAKV2SPBNI99212";
+                byte[] cipherBytes = Convert.FromBase64String(cipherText);
+                using (Aes encryptor = Aes.Create())
+                {
+                    Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(EncryptionKey, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                    encryptor.Key = pdb.GetBytes(32);
+                    encryptor.IV = pdb.GetBytes(16);
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        using (CryptoStream cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+                        {
+                            cs.Write(cipherBytes, 0, cipherBytes.Length);
+                            cs.Close();
+                        }
+                        cipherText = Encoding.Unicode.GetString(ms.ToArray());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+            return cipherText;
+        }
+
+    }
+}
