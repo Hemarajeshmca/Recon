@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
-using static Recon_proto.Controllers.CommonController;
 
 namespace Recon_proto.Controllers
 {
