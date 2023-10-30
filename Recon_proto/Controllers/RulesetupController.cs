@@ -188,7 +188,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
-		#region fetch dataset
+		#region fetch condition
 		public class getCondition
 		{
 			public String? in_condition_type { get; set; }
@@ -210,6 +210,123 @@ namespace Recon_proto.Controllers
 				StreamReader reader = new StreamReader(data);
 				post_data = reader.ReadToEnd();
 				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+		#endregion
+
+		#region  rule condition
+		public class RuleCondition
+        {
+            public int? in_rulecondition_gid { get; set; }
+            public string? in_rule_code { get; set; }
+            public string? in_source_field { get; set; }
+            public string? in_comparison_field { get; set; }
+            public string? in_extraction_criteria { get; set; }
+            public string? in_comparison_criteria { get; set; }
+            public string? in_active_status { get; set; }
+            public string? in_action { get; set; }
+            public string? in_user_code { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+
+		[HttpPost]
+		public JsonResult ruleconditionsave([FromBody] RuleCondition context)
+		{
+			RuleCondition objList = new RuleCondition();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("rulecondition", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					objList.in_rulecondition_gid = Convert.ToInt32(result.Rows[i]["in_rulecondition_gid"]);
+					objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					objList.out_result = result.Rows[i]["out_result"].ToString();
+				}
+				return Json(objList);
+			}
+		}
+		#endregion
+
+		#region grouping
+		public class Rulegrouping
+		{
+			public int? in_rulegrpfield_gid { get; set; }
+			public int? in_rule_gid { get; set; }
+			public string? in_group_method_flag { get; set; }
+			public string? in_manytomany_match_flag { get; set; }
+			public string? in_grp_field { get; set; }
+			public string? in_rule_code { get; set; }
+			public string? in_active_status { get; set; }
+			public string? in_action { get; set; }
+			public string? in_user_code { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+		[HttpPost]
+		public JsonResult rulegroupsave([FromBody] Rulegrouping context)
+		{
+			Rulegrouping objList = new Rulegrouping();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("rulegrouping", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					objList.in_rulegrpfield_gid = Convert.ToInt32(result.Rows[i]["in_rulegrpfield_gid"]);
+					objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					objList.out_result = result.Rows[i]["out_result"].ToString();
+				}
+				return Json(objList);
+			}
+		}
+		#endregion
+
+		#region getFieldAgainstReconList
+		public class getFieldAgainstReconList
+		{
+			public String? in_recon_code { get; set; }
+		}
+		[HttpPost]
+		public JsonResult FieldAgainstRecon([FromBody] getFieldAgainstReconList context)
+		{			
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getFieldAgainstRecon", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);				
 				return Json(d2);
 			}
 		}
