@@ -351,15 +351,15 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
-					var result = JSON.parse(response);
-					var data = result[0];
-					if (result != null) {
+					if (response != null) {
+						var result = JSON.parse(response);
 						$("#cmbParentDataset").empty();
 						$("#cmbParentDataset").append($('<option>', {
 							value: "",
 							text: "  Select  "
 						}));
-						$.each(result, function (index, item) {
+						console.log(`result.ReconDataSet`, result.ReconDataSet);
+						$.each(result.ReconDataSet, function (index, item) {
 							$("#cmbParentDataset").append($('<option>', {
 								value: item.dataset_code,
 								text: item.dataset_name
@@ -367,6 +367,7 @@
 						});
 					}
 					else {
+						console.log(`Failed`)
 					}
 				},
 				error: function (er) {
@@ -439,6 +440,7 @@
 					data: JSON.stringify({ in_recon_code: data.recon_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
+						debugger;
 						if (response !=" ") {
 							var res = JSON.parse(response);
 							grid_datasetrecon(res.ReconDataSet);
@@ -728,17 +730,8 @@
 				recondataset_gid = 0;
 				action = "INSERT"
 			}
-			//if ($("#txtmodedataset").val() == "Create") {
-			//	action = "INSERT"
-			//} else if ($("#txtmodedataset").val() == "Edit") {
-			//	action = "UPDATE"
-			//}
 			var action_by = "vijay";
 			var in_user_code = "vijay";
-			//var recondataset_gid = 0;
-			//if (recondataset_gid > 0) {
-			//	recondataset_gid = $("recondataset_gid").val();
-			//}
 			if ($("#txtstatus").val() == "Active") {
 				status = "Y"
 			} else {
@@ -1052,6 +1045,7 @@
 		$("#cmbdatasetfieldname").val(selectedItem.dataset_table_field);
 	}
 	function myDeleteJsdataset(){
+		debugger;
 		var grid = $("#grid_datasetrecon").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var recondataset_gid = model.recondataset_gid;
@@ -1065,10 +1059,10 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var reconcode = "";
-					var datasetname = "";
-					var DatasetType = "";
-					var parentdataset = "";				
+					var reconcode = model.recon_code;
+					var datasetcode = model.dataset_code;
+					var DatasetType = model.dataset_type;
+					var parentdataset = model.parent_dataset_code;
 					var action = "DELETE";
 					var action_by = "vijay"
 					var in_user_code = "vijay";
@@ -1078,7 +1072,7 @@
 						type: "POST",
 						url: '/Recon/Recondatasetsave',
 						dataType: 'json',
-						data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
+						data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetcode, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
 							debugger;
@@ -1088,6 +1082,7 @@
 									content: response.out_msg,
 									type: 'green',
 								});
+								load();
 							}
 							else {
 
