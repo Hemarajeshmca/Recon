@@ -30,6 +30,7 @@
 		#editable-input {
 			width: 100%;
 		}
+
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
@@ -231,7 +232,6 @@
 											Identifier
 										</button>
 									</li>
-
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-25px;">
@@ -267,6 +267,8 @@
 																	<div class="col-sm-6">
 																		<label for="" class="form-label">Source Dataset</label>
 																		<input class="form-control" id="sourcedataset1" type="text" disabled>
+																		<input class="form-control" id="rulecondtion_gid" type="hidden" disabled>
+																		<input class="form-control" id="txtmoderulecon" value="Create" type="hidden" disabled>
 																	</div>
 																	<div class="col-sm-6">
 																		<label for="" class="form-label">Comparison Dataset</label>
@@ -305,7 +307,7 @@
 																	<div class="col-sm-4">
 																		<label for="" class="form-label"></label>
 																		<center>
-																			<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+																			<button type="button" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%" onclick="saverulecondition()">Save</button>&nbsp;&nbsp;&nbsp;
 																			<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button>
 																		</center>
 																	</div>
@@ -323,46 +325,25 @@
 												<div class="col-sm-4">
 													<label for="" class="form-label">Group Method</label>
 													<div style="margin-left:2px;margin-top:5px">
-														<input type="radio" id="Status" name="Groupmethod" value="C">&nbsp;&nbsp;Contra&nbsp;
-														<input type="radio" id="Status" style="margin-left: 10px;" name="Groupmethod" value="B">&nbsp;&nbsp;Mirror&nbsp;
-														<input type="radio" id="Status" name="Groupmethod" value="C">&nbsp;&nbsp;Contra & Mirror&nbsp;
+														<input type="radio" id="GM1" name="Groupmethod" value="C">&nbsp;&nbsp;Contra&nbsp;
+														<input type="radio" id="GM2" style="margin-left: 10px;" name="Groupmethod" value="B">&nbsp;&nbsp;Mirror&nbsp;
+														<input type="radio" id="GM3" name="Groupmethod" value="A">&nbsp;&nbsp;Contra & Mirror&nbsp;
 													</div>
 												</div>
 												<div class="col-sm-4">
 													<label for="" class="form-label">Group Many-To-Many</label>
 													<div style="margin-left:2px;margin-top:5px">
-														<input type="radio" id="Status" name="Grouptomany" value="Y">&nbsp;&nbsp;Yes&nbsp;
-														<input type="radio" id="Status" style="margin-left: 10px;" name="Grouptomany" value="N">&nbsp;&nbsp;No&nbsp;
+														<input type="radio" id="GMM1" name="Grouptomany" value="Y">&nbsp;&nbsp;Yes&nbsp;
+														<input type="radio" id="GMM2" style="margin-left: 10px;" name="Grouptomany" value="N">&nbsp;&nbsp;No&nbsp;
 													</div>
 												</div>
 											</div>
-											<div class="panel-body" style="padding: 10px 0px;">
-												<i data-bs-toggle="modal" data-bs-target="#newtargetgrouping" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-												@*<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor: pointer" onclick="rr5()"></i>*@
-												<table class="table table-bordered table-sm">
-													<thead style="background: #c1c1c1;">
-														<tr class="text-nowrap">
-															<th style="width: 50px;">Action</th>
-															<th>Sl No</th>
-															<th>Comparison Group Field</th>
-															<th>Status</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr style="height:25px;">
-															<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr5()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
-															<td></td>
-															<td></td>
-															<td></td>
-														</tr>
-														<tr style="height:25px;">
-															<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr5()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
-															<td></td>
-															<td></td>
-															<td></td>
-														</tr>
-													</tbody>
-												</table>
+											<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<i data-bs-toggle="modal" onclick='getgrouping(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+												<div class="col-xs-12">
+													<div id="grid_grouping">
+													</div>
+												</div>
 											</div>
 											<div class="modal" id="newtargetgrouping" tabindex="-1" aria-hidden="true">
 												<div class="modal-dialog modal-lg" role="document">
@@ -385,14 +366,12 @@
 																<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
 																	<div class="col-sm-8">
 																		<label for="" class="form-label">Comparison Group Field</label>
-																		<select id="mode" class="form-select form-control">
-																			<option value="1" selected>AC No</option>
-																			<option value="2">Amount</option>
-																			<option value="3">Application Name</option>
+																		<select id="cmbcomgrpfield" class="form-select form-control">
 																		</select>
+																		<input type="hidden" id="rulegrpfield_gid" />
 																	</div>
 																	<div class="col-sm-4" style="margin-top: 4%;">
-																		<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+																		<button type="button" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%" onclick="savegrouping()" >Save</button>&nbsp;&nbsp;&nbsp;
 																		<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr6()">Cancel</button>
 																	</div>
 																</div>
@@ -405,47 +384,12 @@
 									</div>
 									<div class="tab-pane fade" id="navs-pills-top-identifier" role="tabpanel" style="margin-top:-10px;">
 										<div class="panel panel-default">
-
 											<div class="panel-body">
-												<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:10px">
-													<div class="table-responsive text-nowrap" style="margin-top: -20px;">
-														<i data-bs-toggle="modal" data-bs-target="#newidentifier" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-														@*<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor: pointer" onclick="rr2()"></i>*@
-														<table class="table table-bordered table-sm">
-															<thead style="background: #c1c1c1;">
-																<tr class="text-nowrap">
-																	<th style="width: 50px;">Action</th>
-																	<th>Filter Applied On</th>
-																	<th>Filter Field</th>
-																	<th>Filter Criteria</th>
-																	<th>Identifier Criteria</th>
-																	<th>Identifier Value</th>
-																	<th>Status</th>
-																</tr>
-															</thead>
-															<tbody>
-																<tr style="height:25px;">
-																	<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr2()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
-																	<td>Source-HDFC Bank - 123456</td>
-																	<td>Narration	</td>
-																	<td>EXACT	</td>
-																	<td>BEGINS WITH	</td>
-																	<td>CASH DEP	</td>
-																	<td>Active</td>
-																</tr>
-															</tbody>
-															<tbody>
-																<tr style="height:25px;">
-																	<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" onclick="rr2()" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
-																	<td>Comparision-HDFC Ledger - 00234123</td>
-																	<td>Cheque No	</td>
-																	<td>EXACT	</td>
-																	<td>CONTAINS	</td>
-																	<td>ERP	</td>
-																	<td>Active</td>
-																</tr>
-															</tbody>
-														</table>
+											    <div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+													<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<div class="col-xs-12">
+														<div id="grid_identifier">
+														</div>
 													</div>
 												</div>
 											</div>
@@ -470,59 +414,32 @@
 														<div class="container">
 															<div class="row" style="padding-bottom:5px;margin-top:5px">
 																<div class="col-sm-8">
-																	<label for="" class="form-label">
-																		Filter Apply On
-																	</label>
-																	<select id="mode" class="form-select form-control">
-																		<option value="1" selected>Source-HDFC Bank - 123456</option>
-																		<option value="2">Comparision-HDFC Ledger - 00234123</option>
+																	<label for="" class="form-label">Filter Apply On</label>
+																	<select id="filterapplyon" class="form-select form-control">
 																	</select>
 																</div>
-
 																<div class="col-sm-4">
-																	<label for="" class="form-label">
-																		Filter Name
-																	</label>
-																	<select id="mode" class="form-select form-control">
-																		<option value="1" selected>Narration</option>
-																		<option value="2">Cheque No</option>
+																	<label for="" class="form-label">Filter Name</label>
+																	<select id="filtername" class="form-select form-control">
 																	</select>
 																</div>
 															</div>
 															<div class="row" style="padding-bottom:5px;margin-top:5px;">
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Extraction Criteria</label>
-																	<select id="mode" class="form-select form-control">
-																		<option value="1" selected>EXACT</option>
-																		<option value="1">SUBSTR($FIELD$,m,n)</option>
-																		<option value="1">LEFT($FIELD$,n)</option>
-																		<option value="1">RIGHT($FIELD$,n)</option>
-																		<option value="1">SPLIT($FIELD$,'/',n)</option>
+																	<select id="extractcriteria" class="form-select form-control">
+																		
 																	</select>
 																</div>
-																@*<div class="col-sm-4">
-																<label for="" class="form-label">
-																Extraction Filter
-																</label>
-																<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
-																</div>*@
+															
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Identifier Criteria</label>
-																	<select id="mode" class="form-select form-control">
-																		<option value="1" selected>EXACT</option>
-																		<option value="1">SUBSTR($FIELD$,m,n)</option>
-																		<option value="1">LEFT($FIELD$,n)</option>
-																		<option value="1">RIGHT($FIELD$,n)</option>
-																		<option value="1">SPLIT($FIELD$,'/',n)</option>
-																		<option value="1">BEGINS WITH</option>
-																		<option value="1">ENDS WITH</option>
-																		<option value="1">CONTAINS</option>
-																		<option value="1">NOT CONTAINS</option>
+																	<select id="identifiercriteria" class="form-select form-control">																		
 																	</select>
 																</div>
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Identifier Value</label>
-																	<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+																	<input class="form-control" id="identifiervalue" type="text" value="" >
 																</div>
 															</div>
 															<div class="row" style="padding-bottom:5px;margin-top:5px;">
@@ -547,8 +464,8 @@
 						<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 							<div class="col-sm-4"></div>
 							<div class="col-sm-4" style="text-align:center">
-									<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheader()">Save</button>&nbsp;&nbsp;&nbsp;
-									<a href="../Recon/ReconList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+								<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheader()">Save</button>&nbsp;&nbsp;&nbsp;
+								<a href="../Recon/ReconList" class="btn btn-sm cancel_btn me-2">Cancel</a>
 							</div>
 							<div class="col-sm-4"></div>
 						</div>
@@ -565,8 +482,10 @@
 		kendodate_format();
 		grid_rulecondition([]);
 		getGridComboList();
+		grid_grouping([]);
+		grid_identifier([]);
 	});
-	
+
 	function RuleApplied() {
 		if ($("#RuleAppliedOn").val() == 'T') {
 			$("#sourceparentdataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
@@ -674,6 +593,24 @@
 							} else {
 								$("#groupflag2").prop("checked", true);
 							}
+							if (res.RuleCondition.length > 0){
+								grid_rulecondition(res.RuleCondition);
+							}
+							if (res.RuleGrouping.length > 0) {
+								grid_grouping(res.RuleGrouping)
+								if (res.RuleGrouping[0].group_method_flag == "C") {
+									$("#GM1").prop("checked", true);
+								} else if (res.RuleGrouping[0].group_method_flag == "B") {
+									$("#GM2").prop("checked", true);
+								} else if (res.RuleGrouping[0].group_method_flag == "A") {
+									$("#GM3").prop("checked", true);
+								}
+								if (res.RuleGrouping[0].manytomany_match_flag == "Y") {
+									$("#GMM1").prop("checked", true);
+								} else if (res.RuleGrouping[0].manytomany_match_flag == "N") {
+									$("#GMM2").prop("checked", true);
+								}
+							}				
 						}
 						else {
 
@@ -779,7 +716,6 @@
 		});
 	}
 	function saveheader() {
-		debugger;
 		try {
 			var in_rule_code = $("#txtrulecode").val();
 			var ruleName = $("#ruleName").val();
@@ -861,7 +797,6 @@
 					alert(er)
 					console.log(er)
 				}
-
 			});
 		}
 		catch (e) {
@@ -876,15 +811,14 @@
 				schema: {
 					model: {
 						fields: {
-							recondataset_gid: { type: "string" },
-							recon_code: { type: "string" },
-							dataset_code: { type: "string" },
-							dataset_name: { type: "string" },
-							dataset_type_desc: { type: "string" },
-							parent_dataset_code: { type: "string" },
+							rulecondition_gid: { type: "string" },
+							rule_code: { type: "string" },
+							source_field: { type: "string" },
+							comparison_field: { type: "string" },
+							extraction_criteria: { type: "string" },
+							comparison_criteria: { type: "string" },
 							active_status: { type: "string" },
-							active_status_desc: { type: "string" },
-							In_mode_flag: { type: "string", defaultValue: "I" }
+							active_status_desc: { type: "string" }
 						}
 					}
 				}
@@ -911,37 +845,50 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getdetailSelectedRows()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getrulecondition(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsdataset()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsrulecondition()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
-				field: "recondataset_gid",
-				title: "datasetdetail_id",
+				field: "rulecondition_gid",
+				title: "rulecondition_gid",
 				hidden: true,
 			},
 			{
-				field: "recon_code",
+				field: "source_field",
+				title: "Source Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "source_field_desc",
 				title: "Source Field",
 				width: 100,
 			},
+				
 			{
-				field: "dataset_code",
+				field: "extraction_criteria",
 				title: "Extraction criteria",
 				width: 100,
 			},
 			{
-				field: "dataset_name",
+				field: "comparison_field_desc",
 				title: "Comparison Field",
 				width: 100,
 			},
 			{
-				field: "dataset_type",
+				field: "comparison_field",
+				title: "Comparison Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "comparison_criteria",
 				title: "Comparison criteria",
 				width: 100,
 			},
@@ -954,11 +901,6 @@
 				field: "active_status_desc",
 				title: "Status",
 				width: 80,
-			},
-			{
-				field: "In_mode_flag",
-				title: "Mode",
-				hidden: true
 			}],
 			editable: false,
 
@@ -969,58 +911,38 @@
 			$("#sourcedataset1").val($("#sourcedataset").find(":selected").text());
 			$("#comparisondataset1").val($("#comdataset").find(":selected").text());
 			$("#rulecon").modal('show');
-			var datasetcode = $("#sourcedataset").val();
+			var reconcode = $("#cmbreconname").val();
 			$.ajax({
 				type: "POST",
-				url: '/DataSet/Datasetdetailreadlist',
+				url: '/Rulesetup/FieldAgainstRecon',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ datasetCode: datasetcode }),
+				data: JSON.stringify({ in_recon_code: reconcode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response != null) {
+						var res = JSON.parse(response);
 						$("#cmbsourcefield").empty();
 						$("#cmbsourcefield").append($('<option>', {
 							value: "",
 							text: "  Select  "
 						}));
-						$.each(response, function (index, item) {
+						$.each(res, function (index, item) {
 							$("#cmbsourcefield").append($('<option>', {
-								value: item.dataset_table_field,
-								text: item.field_name,
-								code: item.field_type
-							}).data('code', item.field_type));
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
 						});
-					}
-					else {
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-			});
-			var datasetcode = $("#comdataset").val();
-			$.ajax({
-				type: "POST",
-				url: '/DataSet/Datasetdetailreadlist',
-				dataType: 'json',
-				async: false,
-				data: JSON.stringify({ datasetCode: datasetcode }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response != null) {
 						$("#cmbcomparisionfield").empty();
 						$("#cmbcomparisionfield").append($('<option>', {
 							value: "",
 							text: "  Select  "
 						}));
-						$.each(response, function (index, item) {
+						$.each(res, function (index, item) {
 							$("#cmbcomparisionfield").append($('<option>', {
-								value: item.dataset_table_field,
-								text: item.field_name,
-								type: item.field_type
-							}).data('code', item.field_type));
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
 						});
 					}
 					else {
@@ -1031,6 +953,64 @@
 					console.log(er)
 				}
 			});
+		
+		} else if ($(mode).attr('value') == "edit") {
+
+			$("#sourcedataset1").val($("#sourcedataset").find(":selected").text());
+			$("#comparisondataset1").val($("#comdataset").find(":selected").text());
+			$("#rulecon").modal('show');
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/FieldAgainstRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var res = JSON.parse(response);
+						$("#cmbsourcefield").empty();
+						$("#cmbsourcefield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbsourcefield").append($('<option>', {
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
+						});
+						$("#cmbcomparisionfield").empty();
+						$("#cmbcomparisionfield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbcomparisionfield").append($('<option>', {
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+			var grid = $("#grid_rulecondition").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#cmbsourcefield").val(selectedItem.source_field);
+			$("#cmbcomparisionfield").val(selectedItem.comparison_field);
+			jQuery('#cmbsourcefield').trigger("change");
+			jQuery('#cmbcomparisionfield').trigger("change");
+			$("#txtmoderulecon").val("Edit");
+			$("#cmbextractcriteria").val(selectedItem.extraction_criteria);
+			$("#cmbcomparecriteria").val(selectedItem.comparison_criteria);
+			$("#rulecondtion_gid").val(selectedItem.rulecondition_gid);
 		}
 	}
 	function sourcefield() {
@@ -1054,7 +1034,7 @@
 					}));
 					$.each(res, function (index, item) {
 						$("#cmbextractcriteria").append($('<option>', {
-							value: item.condition_criteria,
+							value: item.condition_desc,
 							text: item.condition_desc
 						}));
 					});
@@ -1068,7 +1048,7 @@
 			}
 		});
 	}
-	function comparefield(){
+	function comparefield() {
 		var data1 = $("#cmbcomparisionfield").find(":selected");
 		var codeValue = data1.data('code');
 		var sourcedata = 'COMPARISON';
@@ -1089,7 +1069,7 @@
 					}));
 					$.each(res, function (index, item) {
 						$("#cmbcomparecriteria").append($('<option>', {
-							value: item.condition_criteria,
+							value: item.condition_desc,
 							text: item.condition_desc
 						}));
 					});
@@ -1102,5 +1082,369 @@
 				console.log(er)
 			}
 		});
+	}
+	function saverulecondition() {
+		try {
+			var in_rule_code = $("#txtrulecode").val();
+			var in_source_field = $("#cmbsourcefield").val();
+			var in_comparison_field = $("#cmbcomparisionfield").val();
+			var in_extraction_criteria = $("#cmbextractcriteria").val();
+			var in_comparison_criteria = $("#cmbcomparecriteria").val();
+			var action = "";
+			if ($("#txtmoderulecon").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmoderulecon").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var rulecondtion_gid = $("#rulecondtion_gid").val();
+			if (rulecondtion_gid == "") {
+				rulecondtion_gid = 0;
+			}
+			var status = 0;
+			if ($("#txtstatus").val() == "Active") {
+				status = "Y"
+			} else {
+				status = "N"
+			}
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/ruleconditionsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_rulecondition_gid: rulecondtion_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field,
+					in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function grid_grouping(data) {
+		$("#grid_grouping").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							rulegrpfield_gid: { type: "string" },
+							grp_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 172,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_grouping').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getgrouping(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJsgrouping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "rulegrpfield_gid",
+				title: "rulegrpfield_gid",
+				hidden: true,
+			},
+			{
+				field: "grp_field",
+				title: "Comparison Group Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "field_name",
+				title: "Comparison Group Field",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+			}],
+			editable: false,
+
+		});
+	}
+	function getgrouping(mode) {
+		if ($(mode).attr('value') == "create") {
+			$("#newtargetgrouping").modal('show');
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/FieldAgainstRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var res = JSON.parse(response);
+						$("#cmbcomgrpfield").empty();
+						$("#cmbcomgrpfield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbcomgrpfield").append($('<option>', {
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if ($(mode).attr('value') == "edit") {
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/FieldAgainstRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var res = JSON.parse(response);
+						$("#cmbcomgrpfield").empty();
+						$("#cmbcomgrpfield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbcomgrpfield").append($('<option>', {
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+			var grid = $("#grid_grouping").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#newtargetgrouping").modal('show');
+			$("#cmbcomgrpfield").val(selectedItem.grp_field)
+		}
+	}
+	function savegrouping() {
+		try {
+			var in_rule_code = $("#txtrulecode").val();
+			var rulegid = parseInt($("#rulegid").val());
+			var cmbcomgrpfield = $("#cmbcomgrpfield").val();
+			var in_group_method_flag = $("input[name='Groupmethod']:checked").val();
+			var in_manytomany_match_flag = $("input[name='Grouptomany']:checked").val();
+			var action = "";
+			if ($("#txtmoderulecon").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmoderulecon").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var rulegrpfield_gid = $("#rulegrpfield_gid").val();
+			if (rulegrpfield_gid == "") {
+				rulegrpfield_gid = 0;
+			}
+			var status = 0;
+			if ($("#txtstatus").val() == "Active") {
+				status = "Y"
+			} else {
+				status = "N"
+			}
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/rulegroupsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, in_rule_gid: rulegid,
+					in_group_method_flag: in_group_method_flag,in_manytomany_match_flag: in_manytomany_match_flag,
+					in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by,in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function grid_identifier(data) {
+		$("#grid_identifier").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							ruleselefilter_gid: { type: "string" },
+							filter_applied_on: { type: "string" },
+							filter_field: { type: "string" },
+							filter_criteria: { type: "string" },
+							ident_criteria: { type: "string" },
+							ident_value: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 172,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_identifier').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getidentifier(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJsidentifier()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "ruleselefilter_gid",
+				title: "ruleselefilter_gid",
+				hidden: true,
+			},
+			{
+				field: "filter_applied_on",
+				title: "Filter Applied On",
+				width: 100,
+			},
+			{
+				field: "filter_field",
+				title: "Filter Field",
+				width: 100,
+			},
+			{
+				field: "filter_criteria",
+				title: "Filter Criteria",
+				width: 100,
+			},
+			{
+				field: "ident_criteria",
+				title: "Identifier Criteria",
+				width: 100,
+			},
+			{
+				field: "ident_value",
+				title: "Identifier Value",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+			}],
+			editable: false,
+
+		});
+	}
+	function getidentifier(mode) {
+		if ($(mode).attr('value') == "create") {
+			$("#newidentifier").modal('show');
+		}
 	}
 </script>
