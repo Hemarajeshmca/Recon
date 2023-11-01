@@ -1,4 +1,4 @@
-﻿@{
+﻿@*@{
 	ViewData["Title"] = "Filetemplate";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
@@ -147,4 +147,269 @@
 		kendodate_format();
 	});
 
+</script>*@
+
+
+@{
+	ViewData["Title"] = "Filetemplate";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-bottom: 1%;">
+					<div class="col-md-3">
+						<label class="form-label">Process Type</label>
+						<select id="jobtype" class="form-select form-control"> </select>
+					</div>
+					<div class="col-md-3">
+						<label for="" class="form-label">Initiated From Date</label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label"> Initiated To Date </label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="searchJob()">
+							Search
+						</button>
+					</div>
+				</div>
+				<div id="grid_jobinprogress" sty> </div>
+
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$("#navhead").text("Job Completed");
+		kendodate_format();
+		getjobtypelist();
+
+	});
+
+	function getjobtypelist() {
+		$.ajax({
+			type: "POST",
+			url: '/Utility/jobtypelist',
+			dataType: 'json',
+			data: JSON.stringify({}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#jobtype").empty();
+				$.each(response, function (index, item) {
+					$("#jobtype").append($('<option>', {
+						value: item.jobtype_code,
+						text: item.jobtype_desc
+					}));
+				});
+			}
+		});
+	}
+
+
+	function searchJob() {
+		try {
+			var job_type = $("#jobtype").val();
+			var period_from = $("#initiated_from").val();
+			var ts = period_from.split("/");
+			var start_date = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var period_end = $("#initialed_to").val();
+			var te = period_end.split("/");
+			var end_date = te[2] + "-" + te[1] + "-" + te[0];
+			$.ajax({
+				type: "POST",
+				url: '/Utility/Joblistfetch',
+				dataType: 'json',
+				data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'C' }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						fetchGrid(response);
+					}
+					else {
+						fetchGrid();
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+
+	}
+
+	function fetchGrid(data) {
+		try {
+			$("#grid_jobinprogress").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 10,
+					schema: {
+						model: {
+							fields: {
+								end_date: { type: "string" },
+								job_gid: { type: "string" },
+								job_name: { type: "string" },
+								job_remark: { type: "string" },
+								jobstatus_desc: { type: "string" },
+								jobtype_code: { type: "string" },
+								jobtype_desc: { type: "string" },
+								start_date: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 415,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				columns: [
+					{
+						command: [
+							{
+								name: "download",
+								id: "btn_download",
+								template: "<a href='' value='download' data-bs-toggle='modal'><img src = '../Assets/images/download.png' style='height: 20px;width: 20px;'></a>&nbsp;&nbsp;&nbsp;",
+							},
+							
+						], title: "Action&nbsp;", width: "40px",
+						hidden: true,
+					},				
+					{
+					field: "job_gid",
+					title: "Job ID",
+					width: 100,
+				},
+
+				{
+					field: "job_name",
+					title: "Job Name",
+					width: 100,
+				},
+				{
+					field: "jobtype_code",
+					title: "Job Type Code",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "jobtype_desc",
+					title: "Job Type",
+					width: 100,
+				},
+				{
+					field: "start_date",
+					title: "Start Date",
+					width: 100,
+				},
+				{
+					field: "end_date",
+					title: "End Date",
+					width: 100,
+				},
+					{
+						field: "job_remark",
+						title: "Job Remark",
+						width: 100,
+					},
+					{
+						field: "jobstatus_desc",
+						title: "Job Status",
+						width: 100,
+					},
+				{
+					field: "jobtype_code",
+					title: "Job Type Code",
+					hidden: true
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
 </script>
