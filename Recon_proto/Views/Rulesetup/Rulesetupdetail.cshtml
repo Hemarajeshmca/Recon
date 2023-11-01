@@ -369,9 +369,10 @@
 																		<select id="cmbcomgrpfield" class="form-select form-control">
 																		</select>
 																		<input type="hidden" id="rulegrpfield_gid" />
+																		<input class="form-control" id="txtmodegroup" value="Create" type="hidden" disabled>
 																	</div>
 																	<div class="col-sm-4" style="margin-top: 4%;">
-																		<button type="button" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%" onclick="savegrouping()" >Save</button>&nbsp;&nbsp;&nbsp;
+																		<button type="button" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%" onclick="savegrouping()">Save</button>&nbsp;&nbsp;&nbsp;
 																		<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr6()">Cancel</button>
 																	</div>
 																</div>
@@ -385,7 +386,7 @@
 									<div class="tab-pane fade" id="navs-pills-top-identifier" role="tabpanel" style="margin-top:-10px;">
 										<div class="panel panel-default">
 											<div class="panel-body">
-											    <div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
 													<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													<div class="col-xs-12">
 														<div id="grid_identifier">
@@ -417,10 +418,12 @@
 																	<label for="" class="form-label">Filter Apply On</label>
 																	<select id="filterapplyon" class="form-select form-control">
 																	</select>
+																	<input class="form-control" id="ruleselefilter_gid" type="hidden" disabled>
+																	<input class="form-control" id="txtmodeidentifier" value="Create" type="hidden" disabled>
 																</div>
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Filter Name</label>
-																	<select id="filtername" class="form-select form-control">
+																	<select id="cmbfiltername" class="form-select form-control" onchange="filtername()">
 																	</select>
 																</div>
 															</div>
@@ -428,18 +431,17 @@
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Extraction Criteria</label>
 																	<select id="extractcriteria" class="form-select form-control">
-																		
 																	</select>
 																</div>
-															
+
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Identifier Criteria</label>
-																	<select id="identifiercriteria" class="form-select form-control">																		
+																	<select id="identifiercriteria" class="form-select form-control">
 																	</select>
 																</div>
 																<div class="col-sm-4">
 																	<label for="" class="form-label">Identifier Value</label>
-																	<input class="form-control" id="identifiervalue" type="text" value="" >
+																	<input class="form-control" id="identifiervalue" type="text" value="">
 																</div>
 															</div>
 															<div class="row" style="padding-bottom:5px;margin-top:5px;">
@@ -448,7 +450,7 @@
 																<div class="col-sm-4">
 																</div>
 																<div class="col-sm-4" style="margin-top:3%;">
-																	<button type="submit" class="btn btn-sm btn-success me-2" style="background: green ;border-color: Green;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+																	<button type="submit" class="btn btn-sm btn-success me-2" style="background: green ;border-color: Green;width:40%" onclick="saveIdentifier()">Save</button>&nbsp;&nbsp;&nbsp;
 																	<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr3()">Cancel</button>
 																</div>
 															</div>
@@ -505,7 +507,6 @@
 			$("#grouping").hide();
 		}
 	}
-
 	function rr1() {
 		$("#newdebit").hide();
 	}
@@ -545,6 +546,17 @@
 				}));
 				$.each(res, function (index, item) {
 					$("#comdataset").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
+				});
+				$("#filterapplyon").empty();
+				$("#filterapplyon").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					$("#filterapplyon").append($('<option>', {
 						value: item.dataset_code,
 						text: item.dataset_name
 					}));
@@ -593,7 +605,7 @@
 							} else {
 								$("#groupflag2").prop("checked", true);
 							}
-							if (res.RuleCondition.length > 0){
+							if (res.RuleCondition.length > 0) {
 								grid_rulecondition(res.RuleCondition);
 							}
 							if (res.RuleGrouping.length > 0) {
@@ -610,7 +622,10 @@
 								} else if (res.RuleGrouping[0].manytomany_match_flag == "N") {
 									$("#GMM2").prop("checked", true);
 								}
-							}				
+							}
+							if (res.RuleIdentifier.length > 0) {
+								grid_identifier(res.RuleIdentifier);
+							}
 						}
 						else {
 
@@ -870,7 +885,7 @@
 				title: "Source Field",
 				width: 100,
 			},
-				
+
 			{
 				field: "extraction_criteria",
 				title: "Extraction criteria",
@@ -953,7 +968,7 @@
 					console.log(er)
 				}
 			});
-		
+
 		} else if ($(mode).attr('value') == "edit") {
 
 			$("#sourcedataset1").val($("#sourcedataset").find(":selected").text());
@@ -1199,7 +1214,7 @@
 				hidden: true,
 			},
 			{
-				field: "field_name",
+				field: "recon_field_name",
 				title: "Comparison Group Field",
 				width: 100,
 			},
@@ -1274,6 +1289,7 @@
 								text: item.recon_field_name
 							}).data('code', item.recon_field_type));
 						});
+						$("#txtmodegroup").val("Edit");
 					}
 					else {
 					}
@@ -1297,9 +1313,9 @@
 			var in_group_method_flag = $("input[name='Groupmethod']:checked").val();
 			var in_manytomany_match_flag = $("input[name='Grouptomany']:checked").val();
 			var action = "";
-			if ($("#txtmoderulecon").val() == "Create") {
+			if ($("#txtmodegroup").val() == "Create") {
 				action = "INSERT"
-			} else if ($("#txtmoderulecon").val() == "Edit") {
+			} else if ($("#txtmodegroup").val() == "Edit") {
 				action = "UPDATE"
 			}
 			var action_by = "vijay"
@@ -1319,8 +1335,8 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, in_rule_gid: rulegid,
-					in_group_method_flag: in_group_method_flag,in_manytomany_match_flag: in_manytomany_match_flag,
-					in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by,in_active_status: status
+					in_group_method_flag: in_group_method_flag, in_manytomany_match_flag: in_manytomany_match_flag,
+					in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -1404,9 +1420,15 @@
 				hidden: true,
 			},
 			{
+				field: "dataset_name",
+				title: "Filter Applied On",
+				width: 100,
+			},
+			{
 				field: "filter_applied_on",
 				title: "Filter Applied On",
 				width: 100,
+				hidden: true,
 			},
 			{
 				field: "filter_field",
@@ -1445,6 +1467,208 @@
 	function getidentifier(mode) {
 		if ($(mode).attr('value') == "create") {
 			$("#newidentifier").modal('show');
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/FieldAgainstRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var res = JSON.parse(response);
+						$("#cmbfiltername").empty();
+						$("#cmbfiltername").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbfiltername").append($('<option>', {
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if ($(mode).attr('value') == "edit") {
+			$("#newidentifier").modal('show');
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/FieldAgainstRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var res = JSON.parse(response);
+						$("#cmbfiltername").empty();
+						$("#cmbfiltername").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbfiltername").append($('<option>', {
+								value: item.recon_field_desc,
+								text: item.recon_field_name
+							}).data('code', item.recon_field_type));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+			var grid = $("#grid_identifier").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#cmbfiltername").val(selectedItem.filter_field);
+			jQuery('#cmbfiltername').trigger("change");
+			$("#filterapplyon").val(selectedItem.filter_applied_on);			
+			$("#txtmodeidentifier").val("Edit");
+			$("#extractcriteria").val(selectedItem.filter_criteria);
+			$("#identifiercriteria").val(selectedItem.ident_criteria);
+			$("#identifiervalue").val(selectedItem.ident_value);
+			$("#ruleselefilter_gid").val(selectedItem.ruleselefilter_gid);
+		}
+	}
+	function filtername() {
+		var data1 = $("#cmbfiltername").find(":selected");
+		var codeValue = data1.data('code');
+		var sourcedata = 'SOURCE';
+		$.ajax({
+			type: "POST",
+			url: '/Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#extractcriteria").empty();
+					$("#extractcriteria").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#extractcriteria").append($('<option>', {
+							value: item.condition_desc,
+							text: item.condition_desc
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		var data1 = $("#cmbfiltername").find(":selected");
+		var codeValue = data1.data('code');
+		var sourcedata = 'COMPARISON';
+		$.ajax({
+			type: "POST",
+			url: '/Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#identifiercriteria").empty();
+					$("#identifiercriteria").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#identifiercriteria").append($('<option>', {
+							value: item.condition_desc,
+							text: item.condition_desc
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function saveIdentifier() {
+		try {
+			var in_rule_code = $("#txtrulecode").val();
+			var filterapplyon = $("#filterapplyon").val();
+			var cmbfiltername = $("#cmbfiltername").val();
+			var extractcriteria = $("#extractcriteria").val();
+			var identifiercriteria = $("#identifiercriteria").val();
+			var identifiervalue = $("#identifiervalue").val();
+
+			var action = "";
+			if ($("#txtmodeidentifier").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmoderulecon").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var ruleselefilter_gid = $("#ruleselefilter_gid").val();
+			if (ruleselefilter_gid == "") {
+				ruleselefilter_gid = 0;
+			}
+			var status = 0;
+			if ($("#txtstatus").val() == "Active") {
+				status = "Y"
+			} else {
+				status = "N"
+			}
+			$.ajax({
+				type: "POST",
+				url: '/Rulesetup/ruleIdentifiersave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue,
+					in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
 		}
 	}
 </script>
