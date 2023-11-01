@@ -331,5 +331,51 @@ namespace Recon_proto.Controllers
 			}
 		}
 		#endregion
+
+		#region RuleIdentifier
+		public class RuleIdentifier
+		{
+			public int? in_ruleselefilter_gid { get; set; }
+			public string? in_rule_code { get; set; }
+			public string? in_filter_applied_on { get; set; }
+			public string? in_filter_field { get; set; }
+			public string? in_filter_criteria { get; set; }
+			public string? in_ident_criteria { get; set; }
+			public string? in_ident_value { get; set; }
+			public string? in_active_status { get; set; }
+			public string? in_action { get; set; }
+			public string? in_user_code { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+		[HttpPost]
+		public JsonResult ruleIdentifiersave([FromBody] RuleIdentifier context)
+		{
+			RuleIdentifier objList = new RuleIdentifier();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("ruleidentifier", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					objList.in_ruleselefilter_gid = Convert.ToInt32(result.Rows[i]["in_ruleselefilter_gid"]);
+					objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					objList.out_result = result.Rows[i]["out_result"].ToString();
+				}
+				return Json(objList);
+			}
+		}
+		#endregion
 	}
 }

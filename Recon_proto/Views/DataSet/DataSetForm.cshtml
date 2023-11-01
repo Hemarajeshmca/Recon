@@ -83,20 +83,20 @@
 						<div class="col-sm-4">
 							<label class="form-label" for="">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="datasetname">
-							<input class="form-control" type="hidden" id="datasetgid">
+							<input class="form-control" type="hidden" id="datasetgid" value=0;>
 						</div>
 						<div class="col-sm-4">
 							<label class="form-label" for="">Category&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="cmbcategory" class="form-select form-control">								
+							<select id="cmbcategory" class="form-select form-control">
 							</select>
 						</div>
 						<div class="col-sm-2">
 							<label class="form-label" for="">Clone Dataset&nbsp;</label>
-							<select id="Cmbclone" class="form-select form-control">								
+							<select id="Cmbclone" class="form-select form-control">
 							</select>
 						</div>
 						<div class="col-sm-2" style="margin-top:30px">
-							<button type="button" class="btn btn-sm me-2 save_btn" onclick="saveheader()">Clone</button>&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
 						</div>
 
 					</div>
@@ -104,7 +104,7 @@
 
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
-							<i data-bs-toggle="modal" data-bs-target="#newdebit" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+							<i data-bs-toggle="modal" data-bs-target="#newdebit" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 							<div id="grid_datasetfield">
 							</div>
 						</div>
@@ -113,8 +113,8 @@
 					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
 						<div class="col-sm-4">
 						</div>
-						<div class="col-sm-4" style="margin-top:2%;">
-							<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheader()">Save</button>&nbsp;&nbsp;&nbsp;
+						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
+							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheader()">Submit</button>&nbsp;&nbsp;&nbsp;
 							<a href="../DataSet/DataSetList" class="btn btn-sm cancel_btn me-2">Cancel</a>
 						</div>
 						<div class="col-sm-4">
@@ -139,39 +139,40 @@
 									</div>
 									<hr style="margin-top:-1px; width:100%;">
 									<div class="container">
-										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+										<div class="row" style="padding-bottom:2px;margin-top:5px;">
 											<div class="col-sm-4">
 												<label for="" class="form-label">Dataset Field</label>
-												<input class="form-control" id="datasetfield" type="text" style="width:92%;">
+												<input class="form-control" id="datasetfield" type="text" style="width:100%;">
 												<input class="form-control" type="number" id="datasetdetail_id" hidden>
 												<input class="form-control" type="text" id="txtmodeflag" value="Create" hidden>
 											</div>
 
 											<div class="col-sm-4">
 												<label for="" class="form-label">Field Type&nbsp;</label>
-												<select id="cmbFieldType" class="form-select form-control">													
+												<select id="cmbFieldType" class="form-select form-control">
 												</select>
 											</div>
 											<div class="col-sm-4">
 												<label for="" class="form-label">Field Length&nbsp;</label>
-												<input class="form-control" id="fieldlength" type="text" style=" width:92%;">
+												<input class="form-control" id="fieldlength" type="text" style=" width:100%;">
 											</div>
 										</div>
-										<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px">
+										<div class="row" style="padding-bottom:3px;padding-top:8px;">
 											<div class="col-sm-4">
 												<label for="" class="form-label">Mandatory&nbsp;</label>
 												<div style="margin-left:2px;margin-top:5px">
 													<input type="radio" id="mandatory1" name="mandatory" value="Y">&nbsp;&nbsp;Yes&nbsp;
-													<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" value="N">&nbsp;&nbsp;No&nbsp;
+													<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" checked value="N">&nbsp;&nbsp;No&nbsp;
 												</div>
 											</div>
+											<div class="col-sm-4"></div>
+											<div class="col-sm-4" style="margin-top:20px;float: right;">
+												<center>
+													<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
+													<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
+												</center>
+											</div>
 										</div>
-									</div>
-									<div class="col-sm-4" style="margin-top:30px;float: right;">
-										<center>
-											<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
-											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
-										</center>
 									</div>
 								</div>
 							</div>
@@ -187,14 +188,14 @@
 	$(document).ready(function () {
 		getGridComboList();
 		$("#navhead").text("Dataset");
-		grid_datasetfield([]);			
+		grid_datasetfield([]);
 	});
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Active");
 		}
-		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
 				var data = getlocalStorage("ls_pageList");
 				var cat = data.dataset_category;
@@ -205,6 +206,24 @@
 				$("#txtstatus").val(data.active_status_desc);
 				$("#datasetgid").val(data.dataset_id);
 				detailsfetch(data.datasetCode)
+				$("#Cmbclone").prop('disabled', true)
+				$("#btnclone").prop('disabled', true)
+			}
+		} else if (getlocalStorage('btn_clk_val') == "View") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#datasetname").val(data.dataset_name);
+				$("#cmbcategory").val(cat);
+				$("#txtdatasetcode").val(data.datasetCode);
+				$("#txtstatus").val(data.active_status_desc);
+				$("#datasetgid").val(data.dataset_id);
+				detailsfetch(data.datasetCode)
+				$("#Cmbclone").prop('disabled', true)
+				$("#btnclone").prop('disabled', true)
+				$("#savesubmit").prop('disabled', true)
+				$("#adddataset").hide();
 			}
 		}
 	}
@@ -246,9 +265,11 @@
 				action = "UPDATE"
 			}
 			var action_by = "vijay"
-			var dataset_id = 0;
+			var dataset_id = $("#datasetgid").val();
 			if (dataset_id > 0) {
 				dataset_id = $("#datasetgid").val();
+			}else{
+				dataset_id=0;
 			}
 			var status = 0;
 			if ($("#txtstatus").val() == "Active") {
@@ -260,7 +281,7 @@
 				type: "POST",
 				url: '/DataSet/Datasetheader',
 				dataType: 'json',
-				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset,  in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -269,7 +290,7 @@
 					if (data.out_result == "1") {
 						$.alert({
 							title: 'Recon',
-							content: response.out_msg,
+							content: data.out_msg,
 							type: 'green',
 						});
 						detailsfetch($("#txtdatasetcode").val());
@@ -294,6 +315,7 @@
 	}
 	function rr() {
 		$("#newdebit").show();
+		$("#mandatory2").prop("checked", true);
 	}
 	function rr1() {
 		window.location.href = "../DataSet/DataSetForm";
@@ -438,6 +460,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						$("#newdebit").modal('hide');
 						load();
 					}
 					else {
@@ -497,7 +520,7 @@
 						value: item.datasetCode,
 						text: item.dataset_name
 					}));
-				});					
+				});
 			}
 		});
 		var in_master_code = "QCD_DS_CATEGORY";
@@ -523,7 +546,7 @@
 				load();
 			}
 		});
-		
+
 		var in_master_code = "QCD_RC_FIELD_TYPE";
 		var in_user_code = "sundar";
 		$.ajax({
@@ -545,7 +568,7 @@
 					}));
 				});
 			}
-		});	
+		});
 	}
 	function myDeleteJs() {
 		debugger;
@@ -576,9 +599,9 @@
 						dataType: 'json',
 						data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
 						contentType: 'application/json; charset=utf-8',
-						success: function (response) {	
-								debugger;
-								var data = response;
+						success: function (response) {
+							debugger;
+							var data = response;
 							if (data.out_result == "1") {
 								$.alert({
 									icon: 'fa fa-success',
@@ -611,6 +634,30 @@
 					});
 				},
 			}
+		});
+	}
+	function saveclone() {
+		$.confirm({
+			icon: 'fa fa-info',
+			title: 'Recon',
+			theme: 'dark',
+			content: 'Are you sure do you want to Clone this DataSet!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					saveheader();
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'clone Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			},
 		});
 	}
 </script>
