@@ -54,19 +54,11 @@
 <body class="hold-transition skin-blue sidebar-mini fixed">
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-1%;">
-				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-bottom: 1%;">
 					<div class="col-md-3">
 						<label class="form-label">Process Type</label>
-						<select id="type" class="form-select form-control">
-							<option value="all" selected>ALL</option>
-							<option value="">Auto Matching</option>
-							<option value="">Auto Matching Preview</option>
-							<option value="">File Import</option>
-							<option value="">Manual Matching</option>
-							<option value="">Posting Supporting File</option>
-							<option value="">Report Generation</option>
-						</select>
+						<select id="jobtype" class="form-select form-control"> </select>
 					</div>
 					<div class="col-md-3">
 						<label for="" class="form-label">Initiated From Date</label>
@@ -83,47 +75,14 @@
 						</div>
 					</div>
 					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+						<button type="button" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="searchJob()">
 							Search
 						</button>
 					</div>
 				</div>
+					<div id="grid_jobinprogress" sty> </div>
+				
 
-				<div class="row">
-					<table class="table table-bordered table-sm">
-						<thead style="background: #c1c1c1;">
-							<tr class="text-nowrap">
-								<th>Job Id</th>
-								<th>Process Name</th>
-								<th>Process Type</th>
-								<th>Initiated Date & Time</th>
-								<th>Initiated By</th>
-								<th>Status</th>
-								<th>Remark</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr style="height:25px;">
-								<td>407</td>
-								<td>Nachapr23_1.xlsx Import</td>
-								<td>File Import</td>
-								<td>15-06-2023 05:52:41</td>
-								<td> sundar </td>
-								<td> Inprocess </td>
-								<td> Transferring file from bcp table to staging table... </td>
-							</tr>
-							<tr style="height:25px;">
-								<td>406</td>
-								<td>NACHAPR23_1.xlsx Import	</td>
-								<td>File Import</td>
-								<td>15-06-2023 05:42:01	</td>
-								<td> sundar </td>
-								<td> Initiated </td>
-								<td>NACHAPR23_1.xlsx File Importing...</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
 			</div>
 		</div>
 	</div>
@@ -135,6 +94,157 @@
 	$(document).ready(function () {
 		$("#navhead").text("Job in progress");
 		kendodate_format();
+		getjobtypelist();
 	});
 
+	function getjobtypelist() {
+		$.ajax({
+			type: "POST",
+			url: '/Utility/jobtypelist',
+			dataType: 'json',
+			data: JSON.stringify({}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#jobtype").empty();
+				$.each(response, function (index, item) {
+					$("#jobtype").append($('<option>', {
+						value: item.jobtype_code,
+						text: item.jobtype_desc
+					}));
+				});
+			}
+		});
+	}
+
+
+	function searchJob() {
+		try {
+			var job_type = $("#jobtype").val();
+			var period_from = $("#initiated_from").val();
+			var ts = period_from.split("/");
+			var start_date = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var period_end = $("#initialed_to").val();
+			var te = period_end.split("/");
+			var end_date = te[2] + "-" + te[1] + "-" + te[0];
+			$.ajax({
+				type: "POST",
+				url: '/Utility/Joblistfetch',
+				dataType: 'json',
+				data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'P' }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						fetchGrid(response);
+					}
+					else {
+						fetchGrid();
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+			
+		}
+
+	function fetchGrid(data) {
+		try {
+			$("#grid_jobinprogress").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 10,
+					schema: {
+						model: {
+							fields: {
+								end_date: { type: "string" },
+								job_gid: { type: "string" },
+								job_name: { type: "string" },
+								job_remark: { type: "string" },
+								jobstatus_desc: { type: "string" },
+								jobtype_code: { type: "string" },
+								jobtype_desc: { type: "string" },
+								start_date: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 415,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				columns: [{
+					field: "job_gid",
+					title: "Job ID",
+					width: 100,
+
+				},
+
+				{
+					field: "job_name",
+					title: "Job Name",
+					width: 100,
+				},
+				{
+					field: "jobtype_code",
+					title: "Job Type Code",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "job_remark",
+					title: "Job Remark",
+					width: 100,
+				},
+				{
+					field: "jobstatus_desc",
+					title: "Job Status",
+					width: 100,
+				},
+				{
+						field: "jobtype_desc",
+						title: "Job Type",
+						width: 100,
+					},
+					{
+						field: "start_date",
+						title: "Start Date",
+						width: 100,
+					},
+					{
+						field: "end_date",
+						title: "End Date",
+						width: 100,
+					},
+					{
+					field: "jobtype_code",
+					title: "Job Type Code",
+					hidden: true
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
 </script>
