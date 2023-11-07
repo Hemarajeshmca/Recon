@@ -11,8 +11,7 @@
         public string active_status { get; set; }
         public string active_status_desc { get; set; }
         public string master_multiple_name { get; set; }
-
-
+        public string? parent_master_syscode_desc { get; set; }
 
     }
 }
