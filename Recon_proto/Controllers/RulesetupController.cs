@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
@@ -377,5 +378,59 @@ namespace Recon_proto.Controllers
             }
         }
         #endregion
+
+
+        public class Ruleagainstrecon
+        {
+            public string? in_recon_code { get; set; }
+            public string? in_rule_apply_on { get; set; }
+        }
+
+        public class RuleAgainstReconList
+        {
+            public Int32? rule_gid { get; set; }
+            public String? rule_code { get; set; }
+            public String? rule_name { get; set; }
+            public String? source_dataset_code { get; set; }
+            public string? comparison_dataset_code { get; set; }
+            public string? source_dataset_desc { get; set; }
+            public string? comparison_dataset_desc { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult RuleAgainstRecon([FromBody] Ruleagainstrecon context)
+        {
+            List<RuleAgainstReconList> objcat_lst = new List<RuleAgainstReconList>();
+
+            DataTable result = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("getruleagainstRecon", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataTable>(d2);
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    RuleAgainstReconList objList = new RuleAgainstReconList();
+                    objList.rule_gid = Convert.ToInt32(result.Rows[i]["rule_gid"]);
+                    objList.rule_code = result.Rows[i]["rule_code"].ToString();
+                    objList.rule_name = result.Rows[i]["rule_name"].ToString();
+                    objList.source_dataset_code = result.Rows[i]["source_dataset_code"].ToString();
+                    objList.source_dataset_desc = result.Rows[i]["source_dataset_desc"].ToString();
+                    objList.comparison_dataset_code = result.Rows[i]["comparison_dataset_code"].ToString();
+                    objList.comparison_dataset_desc = result.Rows[i]["comparison_dataset_desc"].ToString();
+                    objcat_lst.Add(objList);
+                }
+                return Json(objcat_lst);
+            }
+        }
     }
 }

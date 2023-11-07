@@ -75,6 +75,7 @@
                         </button>*@
                     </div>
                 </div>
+                <div id="grid_preview"></div>
 
                 <div class="row" style="margin-bottom: 2%;">
                     <div class="col-md-3">
@@ -92,13 +93,12 @@
                         </div>
                     </div>
                     <div class="col-md-3" style="margin-top: 2%;">
-                        <button type="button" onclick="showPreview()" class="btn btn-sm me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
+                        <button type="button" onclick="showPreview()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
                             Preview
                         </button> &nbsp;&nbsp;&nbsp;
                     </div>
                 </div>
 
-                <div id="grid_preview"></div>
             </div>
         </div>
     </div>
@@ -113,6 +113,7 @@
         kendodate_format();
         getreconlist();
         getpreview();
+        grid_rule([])
     });
 
     function getreconlist() {
@@ -177,6 +178,7 @@
     }
 
     function showRule() {
+        debugger;
         try {
             var in_recon_code = $("#reconname").val();
             var rulepreview = $("#prviewon").val();
@@ -190,14 +192,13 @@
                 }),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-
                     debugger;
-                    if (response != null) {
-                        var res = JSON.parse(response);
-                        grid_rule(res);
+                    if (response.length >0 ) {
+                        //var res = JSON.parse(response);
+                        grid_rule(response);
                     }
                     else {
-
+                        grid_rule([]);
                     }
                 },
                 error: function (er) {
@@ -230,7 +231,7 @@
                     }
                 }
             },
-            height: 172,
+            height: 303,
             groupable: false,
             dataBound: function (e) {
                 resultData = e.sender._data;

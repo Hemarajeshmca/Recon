@@ -49,6 +49,7 @@ namespace Recon_proto.Controllers
                     objcat.active_status = result.Rows[i]["active_status"].ToString();
                     objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
                     objcat.master_multiple_name = result.Rows[i]["master_multiple_name"].ToString();
+                    objcat.parent_master_syscode_desc = result.Rows[i]["parent_master_syscode_desc"].ToString();
                     objcat_lst.Add(objcat);
                 }
                 return Json(objcat_lst);
