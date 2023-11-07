@@ -105,7 +105,7 @@
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card-body" style="margin-top:-1%;height:95%;">
-                <div class="row">
+                <div class="row" style="margin-bottom: 1%;">
                     <div class="col-sm-4">
                         <label for="" class="form-label">QCD Master Code</label>
                         <select id="qcdcode" class="form-select form-control" onchange="getQcdlist($('#qcdcode').val())">
@@ -114,7 +114,7 @@
                         <input class="form-control" id="parentdesc" type="text" value="" hidden>
 
                     </div>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4" hidden>
                         <form id="theuploadformempff">
                             <div class="form-group">
                                 <label for="Filename" class="form-label">File Name</label>
@@ -123,7 +123,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-sm-2" style="margin-top:29px">
+                    <div class="col-sm-2" style="margin-top:29px" hidden>
                         <label class="form-label"></label>
                         <input type="button" name="Import" class="btn btn-sm save_btn me-2" value="Start" />
 
@@ -160,31 +160,17 @@
                     <div class="container">
                         <div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
                             <div class="col-sm-4">
-                                <label for="" class="form-label">Parent Code</label>
+                                <label for="" class="form-label">QCD Master Code</label>
                                 <input class="form-control" id="parentCode" type="text" value="" disabled>
                                     <input class="form-control" id="master_gid" type="text" value="" hidden>
                                     <input class="form-control" id="mode" type="text" value="" hidden>
                             </div>
 
-                            <div class="col-sm-4">
-                                <label for="" class="form-label"> Master Syscode </label>
-                                <input class="form-control" id="MasterSysCode" type="text" value="">
-
-                            </div>
+                            
                             <div class="col-sm-4">
                                 <label for="" class="form-label"> Master Code </label>
                                 <input class="form-control" id="MasterCode" type="text" value="">
                             </div>
-                        </div>
-
-                        <div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
-                            <div class="col-sm-4">
-                                <label for="" class="form-label">
-                                    Master ShortCode
-                                </label>
-                                <input class="form-control" id="MasterShortCode" type="text" value="">
-                            </div>
-
                             <div class="col-sm-4">
                                 <label for="" class="form-label">
                                     Master Name
@@ -192,7 +178,23 @@
                                 <input class="form-control" id="MasterName" type="text" value="">
 
                             </div>
-                            <div class="col-sm-4">
+                        </div>
+
+                        <div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+                            <div class="col-sm-4" hidden>
+                                <label for="" class="form-label">
+                                    Master ShortCode
+                                </label>
+                                <input class="form-control" id="MasterShortCode" type="text" value="">
+                            </div>
+                            <div class="col-sm-4" hidden>
+                                <label for="" class="form-label"> Master Syscode </label>
+                                <input class="form-control" id="MasterSysCode" type="text" value="">
+
+                            </div>
+
+                            
+                            <div class="col-sm-4" hidden>
                                 <label for="" class="form-label">
                                     Master Multiple Name
                                 </label>
@@ -201,7 +203,7 @@
                         </div>
 
 
-                        <div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px">
+                        <div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px" hidden>
                             <div class="col-sm-4">
                                 <label for="" class="form-label">Status&nbsp;</label>
                                 <div style="margin-left:2px;margin-top:5px">
@@ -232,12 +234,10 @@
         var mode = "";
         $("#navhead").text("QCD Master");
         $("#kendoVersion").text(kendo.version);
-        debugger;
         var data = {};
         data.in_user_code = 'sundar';
         data.in_master_code = 'QCD_MAST';
         var Context = data;
-        debugger;
         $.ajax({
             type: "POST",
             url: '/QCDmaster/QcdMasterGridRead',
@@ -245,7 +245,6 @@
             data: JSON.stringify({ in_user_code: Context.in_user_code, in_master_code: Context.in_master_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
                 if (response != null) {
                     $("#qcdcode").empty();
                     $.each(response, function (index, item) {
@@ -254,7 +253,6 @@
                             text: item.master_name
                         }));                       
                     });
-                    debugger;
                     getQcdlist($("#qcdcode").val());
                     var cur_value = $('#qcdcode').children('option:selected').text();
                     $("#parentCode").val(cur_value);
@@ -273,7 +271,6 @@
 
 
     function getQcdlist(master_code) {
-        debugger;
         grid_dataset_details([]);
         var data = {};
         data.in_user_code = 'sundar';
@@ -287,7 +284,6 @@
             data: JSON.stringify({ in_user_code: data.in_user_code, in_master_code: data.in_master_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
-                debugger;
                 if (data != null) {
                     grid_dataset_details(data);
                 } else {
@@ -298,10 +294,121 @@
     }
 
     function grid_dataset_details(data) {
+        //try {
+        //    $("#grid").kendoGrid({
+        //        dataSource: {
+        //            data: data,
+        //            pageSize: 10,
+        //            schema: {
+        //                model: {
+        //                    fields: {
+        //                        Action: { type: "string" },
+        //                        master_gid: { type: "int" },
+        //                        parent_master_syscode: { type: "string" },
+        //                        master_syscode: { type: "string" },
+        //                        master_code: { type: "string" },
+        //                        master_name: { type: "string" },
+        //                        master_multiple_name: { type: "string" },
+        //                        active_status: { type: "string" },
+        //                        active_status_desc: { type: "string" },
+        //                        master_short_code: { type: "string" },
+        //                    }
+        //                }
+        //            }
+        //        },
+        //        height: 400,
+        //        groupable: false,
+        //        dataBound: function (e) {
+        //            resultData = e.sender._data;
+        //            var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+        //            setColor(rows, resultData);
+        //        },
+        //        pageable: {
+        //            refresh: false,
+        //            pageSizes: true,
+        //            buttonCount: 5
+        //        },
+        //        sortable: true,
+        //        selectable: true,
+        //        filterable: true,
+        //        navigatable: true,
+        //        selectable: true,
+        //        columns: [{
+        //            command: [
+        //                {
+        //                    name: "edit",
+        //                    id: "Edit",
+        //                    template: "<a href='' onclick='openQCDModel()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a> &nbsp;&nbsp;  ",
+        //                },
+        //                {
+        //                    name: "Delete",
+        //                    id: "Delete",
+        //                    template: "<a href='' onclick='myDeleteQCD()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+        //                },
+        //            ],
+        //            title: "Action ",
+        //            width: "40px",
+        //        },
+        //        {
+        //            field: "master_gid",
+        //            title: "Master Gid",
+        //            width: 100,
+        //            hidden: true
+        //        },
+        //        {
+        //            field: "parent_master_syscode",
+        //            title: "Parent Code",
+        //            width: 100,
+        //        },
+        //        {
+        //            field: "master_syscode",
+        //            title: "MasterSync Code",
+        //            width: 100,
+        //            hidden: true
+        //        },
+        //        {
+        //            field: "master_code",
+        //            title: "Master Code",
+        //            width: 100,
+        //        },
+        //        {
+        //            field: "master_name",
+        //            title: "Master Name",
+        //            width: 100,
+        //        },
+        //        {
+        //            field: "master_multiple_name",
+        //            title: "Master Multiple Name",
+        //            width: 100,
+        //            hidden: true
+        //        },
+        //        {
+        //            field: "master_short_code",
+        //            title: "Master Short Code",
+        //            width: 100,
+        //            hidden: true
+        //        },
+        //        {
+        //            field: "active_status",
+        //            title: "Active stauts",
+        //            width: 100,
+        //            hidden: true
+        //        },
+        //        {
+        //            field: "active_status_desc",
+        //            title: "Status",
+        //            width: 100,
+        //        }],
+        //    });
+        //}
+        //catch (err) {
+        //    console.log(err)
+        //}
         try {
             $("#grid").kendoGrid({
                 dataSource: {
                     data: data,
+                    pageSize: 10,
                     schema: {
                         model: {
                             fields: {
@@ -319,81 +426,95 @@
                         }
                     }
                 },
-                height: 400,
+                height: 415,
                 groupable: false,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
                 sortable: true,
                 selectable: true,
                 filterable: true,
-                selectable: "single",
-
+                navigatable: true,
                 columns: [{
                     command: [
-                        {
-                            name: "edit",
-                            id: "Edit",
-                            template: "<a href='' onclick='openQCDModel()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a> &nbsp;&nbsp;  ",
+                                {
+                                    name: "edit",
+                                    id: "Edit",
+                                    template: "<a href='' onclick='openQCDModel()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a> &nbsp;&nbsp;  ",
+                                },
+                                {
+                                    name: "Delete",
+                                    id: "Delete",
+                                    template: "<a href='' onclick='myDeleteQCD()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+                                },
+                            ],
+                            title: "Action ",
+                            width: "40px",
                         },
                         {
-                            name: "Delete",
-                            id: "Delete",
-                            template: "<a href='' onclick='myDeleteQCD()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+                            field: "master_gid",
+                            title: "Master Gid",
+                            width: 100,
+                            hidden: true
                         },
-                    ],
-                    title: "Action ",
-                    width: "40px",
-                },
-                {
-                    field: "master_gid",
-                    title: "Master Gid",
-                    width: 100,
-                    hidden: true
-                },
-                {
-                    field: "parent_master_syscode",
-                    title: "Parent Code",
-                    width: 100,
-                },
-                {
-                    field: "master_syscode",
-                    title: "MasterSync Code",
-                    width: 100,
-                },
-                {
-                    field: "master_code",
-                    title: "Master Code",
-                    width: 100,
-                },
-                {
-                    field: "master_name",
-                    title: "Master Name",
-                    width: 100,
-                },
-                {
-                    field: "master_multiple_name",
-                    title: "Master Multiple Name",
-                    width: 100,
-                },
-                {
-                    field: "master_short_code",
-                    title: "Master Short Code",
-                    width: 100,
-                    hidden: true
-                },
-                {
-                    field: "active_status",
-                    title: "Active stauts",
-                    width: 100,
-                    hidden: true
-                },
-                {
-                    field: "active_status_desc",
-                    title: "Status",
-                    width: 100,
-                }],
+                        {
+                            field: "parent_master_syscode",
+                            title: "Parent Code",
+                            width: 100,
+                        },
+                        {
+                            field: "master_syscode",
+                            title: "MasterSync Code",
+                            width: 100,
+                            hidden: true
+                        },
+                        {
+                            field: "master_code",
+                            title: "Master Code",
+                            width: 100,
+                        },
+                        {
+                            field: "master_name",
+                            title: "Master Name",
+                            width: 100,
+                        },
+                        {
+                            field: "master_multiple_name",
+                            title: "Master Multiple Name",
+                            width: 100,
+                            hidden: true
+                        },
+                        {
+                            field: "master_short_code",
+                            title: "Master Short Code",
+                            width: 100,
+                            hidden: true
+                        },
+                        {
+                            field: "active_status",
+                            title: "Active stauts",
+                            width: 100,
+                            hidden: true
+                        },
+                        {
+                            field: "active_status_desc",
+                            title: "Status",
+                            width: 100,
+                        }],
+                editable: false,
+
             });
         }
         catch (err) {
             console.log(err)
+
         }
     }
 
@@ -414,17 +535,16 @@
     }
 
     function saveQcd() {
-        debugger;
         var master_code = '';
         var objdata = {};
         objdata.masterGid = $("#master_gid").val();
         objdata.action = $("#mode").val();
-        objdata.active_status = $("input[name='qcd_status']:checked").val();
+        objdata.active_status = $("input[name='qcd_status']:checked").val() ? $("input[name='qcd_status']:checked").val() : 'Y';
         objdata.masterCode = $("#MasterCode").val();
-        objdata.mastermutiplename = $("#MasterMultipleName").val();
+        objdata.mastermutiplename = $("#MasterMultipleName").val() ? $("#MasterMultipleName").val() : '';
         objdata.masterName = $("#MasterName").val();
         objdata.masterShortCode = $("#MasterShortCode").val();
-        objdata.masterSyscode = $("#MasterSysCode").val();
+        objdata.masterSyscode = $("#MasterSysCode").val() ? $("#MasterSysCode").val() : '';
         objdata.parentMasterSyscode = $("#qcdcode").val();
         var objdata = objdata;
         $.ajax({
@@ -466,7 +586,6 @@
     }
 
     function openQCDModel() {
-        debugger;
         $("#newQcd").modal('show');
         var grid = $("#grid").data("kendoGrid");
         var selectedItem = grid.dataItem(grid.select());

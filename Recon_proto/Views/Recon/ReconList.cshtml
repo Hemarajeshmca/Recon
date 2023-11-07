@@ -10,6 +10,7 @@
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
+
 		.error_show {
 			color: red;
 			margin-left: 10px;
@@ -53,13 +54,13 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-1%;height: 82%;">
-				<div class="row">								
-						<div class="col-xs-12">
-							<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
-								<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
-							</a>
-							<div id="grid_reconlist"> </div>
-						</div>	
+				<div class="row">
+					<div class="col-xs-12">
+						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+						</a>
+						<div id="grid_reconlist"> </div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -114,7 +115,7 @@
 								recontype_code: { type: "string" },
 								recontype_desc: { type: "string" },
 								period_from: { type: "string" },
-								period_to: { type: "string" },								
+								period_to: { type: "string" },
 								status: { type: "string" }
 							}
 						}
@@ -154,8 +155,8 @@
 							id: "Delete",
 							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
-					], 
-					title: "Action&nbsp;", 
+					],
+					title: "Action&nbsp;",
 					width: "60px",
 				},
 				{
@@ -269,7 +270,7 @@
 	function myDeleteJs() {
 		var grid = $("#grid_reconlist").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var dataset_id = model.dataset_id;
+		var recon_gid = model.recon_gid;
 		$.confirm({
 			icon: 'fa fa-warning',
 			title: 'Recon',
@@ -280,18 +281,21 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var dataset_name = "";
-					var dataset_category = "";
-					var dataset_code = "";
+					var reconcode = "";
+					var cmbrecontype = "";
+					var ReconName = "";
+					var pr = "1901-01-01";
+					var in_until_active_flag = "";
+					var pr1 = "1901-01-01";
 					var action = "DELETE";
 					var action_by = "vijay"
-					var dataset_id = model.dataset_id;
 					var status = "";
+					var in_recon_automatch_partial = "";
 					$.ajax({
 						type: "POST",
-						url: '/DataSet/Datasetheader',
+						url: '/Recon/Reconheadersave',
 						dataType: 'json',
-						data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+						data: JSON.stringify({ in_recon_gid: recon_gid, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
 							$.alert({

@@ -96,7 +96,7 @@
 								</div>
 								<div class="col-sm-2">
 									<label for="" class="form-label">Recon Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-									<select id="cmbrecontype" class="form-select form-control">
+									<select id="cmbrecontype" class="form-select form-control" onchange="recontypeconfig()">
 									</select>
 								</div>
 								<div class="col-sm-2">
@@ -183,11 +183,49 @@
 										<div class="tab-pane fade" id="navs-pills-top-AddtionalConfiguration" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<div class="col-sm-2">
-														<label for="" class="form-label">Partial Match&nbsp;</label>
-														<div style="margin-left:2px;margin-top:5px">
-															<input type="radio" id="partialmatch1" name="partialmatch" value="Y">&nbsp;Yes &nbsp;
-															<input type="radio" id="partialmatch2" name="partialmatch" value="N" checked style="margin-left: 10px;">&nbsp;No&nbsp;
+													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Partial Match&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="partialmatch1" name="partialmatch" value="Y">&nbsp;Yes &nbsp;
+																<input type="radio" id="partialmatch2" name="partialmatch" value="N" checked style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Threshold +&nbsp;</label>
+															<input class="form-control" id="ReconName" name="ReconName" type="text">
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Threshold -&nbsp;</label>
+															<input class="form-control" id="ReconName" name="ReconName" type="text">
+														</div>
+													</div>
+													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Date Flag&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="recondateflag1" name="recondateflag" value="Y">&nbsp;Yes &nbsp;
+																<input type="radio" id="recondateflag2" name="recondateflag" value="N" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Date Field&nbsp;</label>
+															<select id="cmbrecondatefield" class="form-select form-control">
+															</select>
+														</div>
+													</div>
+													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Value Flag&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="reconvalueflag1" name="reconvalueflag" value="Y">&nbsp;Yes &nbsp;
+																<input type="radio" id="reconvalueflag2" name="reconvalueflag" value="N" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Value Field&nbsp;</label>
+															<select id="cmbreconvaluefield" class="form-select form-control">
+															</select>
 														</div>
 													</div>
 												</div>
@@ -290,6 +328,7 @@
 												<input class="form-control" id="displayorder" name="" type="text" value="">
 												<input type="hidden" id="reconfield_gid" value="0" />
 												<input type="hidden" id="txtmodedatasetmapping" value="Create" />
+												<input type="hidden" id="reconfieldmapping_gid" value="0" />
 											</div>
 
 										</div>
@@ -337,20 +376,20 @@
 		getGridComboList();
 		grid_datasetrecon([]);
 		grid_recondatasetmapping([]);
+		recontypeconfig();
 	});
 	function DatasetTypefield() {
-		debugger;
-		if ($("#DatasetType").val() == "QCD_SUPPORT") {
+		if ($("#DatasetType").val() == "S") {
 			$("#cmbParentDataset").attr('disabled', false);
 			var reconcode = $("#reconcode").val()
 			$.ajax({
 				type: "POST",
 				url: '/Recon/Reconheaderfetch',
 				dataType: 'json',
+				async: false,
 				data: JSON.stringify({ in_recon_code: reconcode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					if (response != null) {
 						var result = JSON.parse(response);
 						$("#cmbParentDataset").empty();
@@ -381,7 +420,7 @@
 		}
 	}
 	function checkactive() {
-		debugger;
+
 		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
 			$("#period_to").val('');
 			//$("#period_to").removeAttr('disabled', true);
@@ -404,12 +443,13 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
+					var result = JSON.parse(response);
 					$("#cmbdatasetfieldname").empty();
 					$("#cmbdatasetfieldname").append($('<option>', {
 						value: "",
 						text: "  Select  "
 					}));
-					$.each(response, function (index, item) {
+					$.each(result.DataSet, function (index, item) {
 						$("#cmbdatasetfieldname").append($('<option>', {
 							value: item.dataset_table_field,
 							text: item.field_name
@@ -430,6 +470,7 @@
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Active");
+			gridmap([]);
 		}
 		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -453,16 +494,16 @@
 					data: JSON.stringify({ in_recon_code: data.recon_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
-						debugger;
+
 						if (response != " ") {
 							var res = JSON.parse(response);
 							grid_datasetrecon(res.ReconDataSet);
-							if (res.ReconDataSetmapping.length >0){
+							if (res.ReconDataSetmapping.length > 0) {
 								griddatamapping(res.ReconDataSetmapping);
-							}else{
+							} else {
 								gridmap([]);
 							}
-							
+
 							$("#cmbdatasetmap").empty();
 							$("#cmbdatasetmap").append($('<option>', {
 								value: "",
@@ -554,7 +595,7 @@
 				}));
 				$.each(response, function (index, item) {
 					$("#DatasetType").append($('<option>', {
-						value: item.masterCode,
+						value: item.master_syscode,
 						text: item.masterName
 					}));
 				});
@@ -562,7 +603,6 @@
 		});
 	}
 	function saveheader() {
-		debugger;
 		try {
 			var reconcode = $("#reconcode").val();
 			var cmbrecontype = $("#cmbrecontype").val();
@@ -609,7 +649,7 @@
 				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
+
 					if (response != null) {
 						$.alert({
 							title: 'Recon',
@@ -718,7 +758,13 @@
 				field: "parent_dataset_code",
 				title: "Parent Dataset",
 				width: 100,
+				hidden: true,
 			},
+			{
+				field: "parent_dataset_name",
+				title: "Parent Dataset",
+				width: 100,
+			}, 
 			{
 				field: "active_status",
 				title: "Status",
@@ -739,7 +785,7 @@
 		});
 	}
 	function saveDataset() {
-		debugger;
+
 		try {
 			var reconcode = $("#reconcode").val();
 			var datasetname = $("#cmbdatasetname").val();
@@ -773,7 +819,7 @@
 				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
+
 					if (response != null) {
 						$.alert({
 							title: 'Recon',
@@ -899,16 +945,25 @@
 			var cmbdatasetmap = $("#cmbdatasetmap").val();
 			var cmbdatasetfieldname = $("#cmbdatasetfieldname").val();
 			var action = "";
-			if ($("#txtmodedatasetmapping").val() == "Create") {
+			if ($("#txtmodedatasetmapping").val() == "Create" && cmbdatasetmap != "") {
 				action = "INSERT"
 			} else if ($("#txtmodedatasetmapping").val() == "Edit") {
 				action = "UPDATE"
 			}
+
 			var action_by = "vijay";
 			var in_user_code = "vijay";
-			var reconfield_gid = 0;
+			var reconfield_gid = $("#reconfield_gid").val();
 			if (reconfield_gid > 0) {
-				reconfield_gid = $("reconfield_gid").val();
+				reconfield_gid = $("#reconfield_gid").val();
+			} else {
+				reconfield_gid = 0;
+			}
+			var reconfieldmapping_gid = $("#reconfieldmapping_gid").val();
+			if (reconfieldmapping_gid > 0) {
+				reconfieldmapping_gid = $("#reconfieldmapping_gid").val();
+			} else {
+				reconfieldmapping_gid = 0;
 			}
 			var status = 0;
 			if ($("#txtstatus").val() == "Active") {
@@ -921,18 +976,21 @@
 				type: "POST",
 				url: '/Recon/Recondatasetmappingsave',
 				dataType: 'json',
-				data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+				data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					if (response != null) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
 							type: 'green',
 						});
-						var reconfield =$("#Reconfieldname").val();						
-						var reconcod= $("#reconcode").val();
+						$("#reconfield_gid").val(response.in_reconfield_gid);
+						$("#cmbdatasetmap").val("");
+						$("#cmbdatasetfieldname").val("");
+						$("#reconfieldmapping_gid").val(0)
+						var reconfield = $("#Reconfieldname").val();
+						var reconcod = $("#reconcode").val();
 						$.ajax({
 							type: "POST",
 							url: '/Recon/Recondatasetmappingfetch',
@@ -984,7 +1042,7 @@
 
 		var entryIndex = "entries[" + i + "]";
 		for (var key in data[0]) {
-			debugger;
+
 			var propType = typeof data[0][key];
 
 			if (key == "display_order" || key == "display_order") {
@@ -1063,16 +1121,18 @@
 		grid.hideColumn(4);
 	}
 	function getdetailSelectedRows() {
+
 		var grid = $("#grid1").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
-		$("#Reconfieldname").val(selectedItem.entries[3]);
-		$("#displayorder").val(selectedItem.entries[4]);
-		$("#txtmodeflag").val("edit");
+		$("#Reconfieldname").val(selectedItem.entries[4]);
+		$("#displayorder").val(selectedItem.entries[5]);
+		$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
+		$("#txtmodedatasetmapping").val("Edit");
 		$.ajax({
 			type: "POST",
 			url: '/Recon/Recondatasetmappingfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_recon_code: selectedItem.entries[1], in_recon_field_name: selectedItem.entries[3], in_dataset_code: selectedItem.entries[0] }),
+			data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1096,9 +1156,10 @@
 		jQuery('#cmbdatasetmap').trigger("change");
 		$("#Datasetmappingform").modal('show');
 		$("#cmbdatasetfieldname").val(selectedItem.dataset_table_field);
+		$("#reconfieldmapping_gid").val(selectedItem.reconfieldmapping_gid);
 	}
 	function myDeleteJsdataset() {
-		debugger;
+
 		var grid = $("#grid_datasetrecon").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var recondataset_gid = model.recondataset_gid;
@@ -1128,7 +1189,7 @@
 						data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetcode, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
-							debugger;
+
 							if (response != null) {
 								$.alert({
 									title: 'Recon',
@@ -1161,74 +1222,97 @@
 		});
 	}
 	function getdatasetrecon() {
-		debugger;
 		var grid = $("#grid_datasetrecon").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
-		$("#cmbdatasetname").val(selectedItem.dataset_code);
-		$("#DatasetType").val(selectedItem.dataset_type);
+		$("#cmbdatasetname").val(selectedItem.dataset_code);		
 		$("#Accountform").modal('show');
-		$("#recondataset_gid").val(selectedItem.recondataset_gid)
+		$("#recondataset_gid").val(selectedItem.recondataset_gid);
+		// Dataset type
+		var in_master_code = "QCD_DS_TYPE";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '/Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#DatasetType").empty();
+				$("#DatasetType").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#DatasetType").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+				$("#DatasetType").val(selectedItem.dataset_type);
+				DatasetTypefield();
+				$("#cmbParentDataset").val(selectedItem.parent_dataset_code);
+			}
+		});
 	}
 	function rr1() {
 		window.location.href = "../Recon/ReconView";
 	}
-	function gridmap(data){
-	$("#maingrid").kendoGrid({
-		dataSource: {
-			data: data,
-			pageSize: 10,
-			schema: {
-				model: {
-					fields: {
-						recondataset_gid: { type: "string" },
-						recon_code: { type: "string" },
-						dataset_code: { type: "string" },
-						dataset_name: { type: "string" },
-						dataset_type_desc: { type: "string" },
-						parent_dataset_code: { type: "string" },						
+	function gridmap(data) {
+		$("#maingrid").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							recondataset_gid: { type: "string" },
+							recon_code: { type: "string" },
+							dataset_code: { type: "string" },
+							dataset_name: { type: "string" },
+							dataset_type_desc: { type: "string" },
+							parent_dataset_code: { type: "string" },
+						}
 					}
 				}
-			}
-		},
-		height: 250,
-		groupable: false,
-		
-		sortable: true,
-		selectable: true,
-		filterable: true,
-		navigatable: true,
-		pageable: true,
-		pageable: {
-			refresh: false,
-			pageSizes: true,
-			buttonCount: 5
-		},
-		columns: [	
-		{
-			field: "dataset_name",
-			title: "Recon name",
-			width: 100,
-		},		
-		{
-			field: "dataset_type_desc",
-			title: "Display Order",
-			width: 100,
-		},
-		{
-			field: "parent_dataset_code",
-			title: "Dataset Name",
-			width: 100,
-		},
-		],
-		editable: false,
+			},
+			height: 250,
+			groupable: false,
 
-	});
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "dataset_name",
+					title: "Recon name",
+					width: 100,
+				},
+				{
+					field: "dataset_type_desc",
+					title: "Display Order",
+					width: 100,
+				},
+				{
+					field: "parent_dataset_code",
+					title: "Dataset Name",
+					width: 100,
+				},
+			],
+			editable: false,
+
+		});
 	}
 	function myDeletedatamapping() {
-		debugger;
-		var grid = $("#maingrid").data("kendoGrid");
+		var grid = $("#grid1").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var recondataset_gid = model.recondataset_gid;
 		$.confirm({
 			icon: 'fa fa-warning',
 			title: 'Recon',
@@ -1247,16 +1331,16 @@
 					var action = "DELETE";
 					var action_by = "vijay"
 					var in_user_code = "vijay";
-					var reconfield_gid = model.reconfield_gid;
+					var reconfield_gid = parseInt(model.entries[0]);
+					var in_reconfieldmapping_gid = 0;
 					var status = "";
 					$.ajax({
 						type: "POST",
 						url: '/Recon/Recondatasetmappingsave',
 						dataType: 'json',
-						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
-							debugger;
 							if (response != null) {
 								$.alert({
 									title: 'Recon',
@@ -1287,6 +1371,108 @@
 				},
 			}
 		});
+	}
+	function myDeleteJsdatasetmapping() {
+		$("#Datasetmappingform").modal('show');
+		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var reconcode = model.recon_code;
+					var Reconfieldname = model.recon_field_name;
+					var displayorder = model.display_order;
+					var cmbdatasetmap = "";
+					var cmbdatasetfieldname = "";
+					var action = "DELETE";
+					var action_by = "vijay"
+					var in_user_code = "vijay";
+					var reconfield_gid = 0;
+					var in_reconfieldmapping_gid = model.reconfieldmapping_gid;
+					var status = "";
+					$.ajax({
+						type: "POST",
+						url: '/Recon/Recondatasetmappingsave',
+						dataType: 'json',
+						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							if (response != null) {
+								$.alert({
+									title: 'Recon',
+									content: response.out_msg,
+									type: 'green',
+								});
+								var reconfield = $("#Reconfieldname").val();
+								var reconcod = $("#reconcode").val();
+								$.ajax({
+									type: "POST",
+									url: '/Recon/Recondatasetmappingfetch',
+									dataType: 'json',
+									data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '' }),
+									contentType: 'application/json; charset=utf-8',
+									success: function (response) {
+										if (response != null) {
+											grid_recondatasetmapping(response)
+										}
+										else {
+											grid_recondatasetmapping([]);
+										}
+									},
+									error: function (er) {
+										alert(er)
+										console.log(er)
+									}
+
+								});
+							}
+							else {
+
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+	function rr3() {
+		$("#Datasetmappingform").modal('hide');
+		load();
+	}
+	function recontypeconfig() {
+		var recontype = $("#cmbrecontype").val();
+		if (recontype == "v" || recontype == "N") {
+			$('#reconvalueflag1').prop('checked', true);
+			$('#recondateflag2').prop('checked', true);
+			$("#cmbrecondatefield").prop('disabled', true)
+			$("#cmbreconvaluefield").prop('disabled', false)
+		} else {
+			$('#recondateflag1').prop('checked', true);
+			$('#reconvalueflag2').prop('checked', true);
+			$("#cmbreconvaluefield").prop('disabled', true)
+			$("#cmbrecondatefield").prop('disabled', false)
+		}
 	}
 </script>
 
