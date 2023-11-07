@@ -356,6 +356,56 @@ namespace Recon_proto.Controllers
 			public String? active_status { get; set; }
 			public String? active_status_desc { get; set; }
 		}
-			#endregion
+		#endregion
+		[HttpPost]
+		public JsonResult Reconlistknockoff()
+		{
+			DataTable result1 = new DataTable();
+			List<getReconknockoff> objcat_lst = new List<getReconknockoff>();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getreconknockofflist", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result1 = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result1.Rows.Count; i++)
+				{
+					getReconknockoff objcat = new getReconknockoff();
+					objcat.recon_gid = Convert.ToInt16(result1.Rows[i]["recon_gid"]);
+					objcat.recon_code = result1.Rows[i]["recon_code"].ToString();
+					objcat.recon_name = result1.Rows[i]["recon_name"].ToString();
+					objcat.recontype_code = result1.Rows[i]["recontype_code"].ToString();
+					objcat.recontype_desc = result1.Rows[i]["recontype_desc"].ToString();
+					objcat.start_date = result1.Rows[i]["start_date"].ToString();
+					objcat.job_remark = result1.Rows[i]["job_remark"].ToString();
+					objcat.job_status = result1.Rows[i]["job_status"].ToString();
+					objcat.jobstatus_desc = result1.Rows[i]["jobstatus_desc"].ToString();
+					objcat_lst.Add(objcat);
+				}
+				return Json(objcat_lst);
+			}
 		}
+
+	public class getReconknockoff
+		{
+			public Int32? recon_gid { get; set; }
+			public String? recon_code { get; set; }
+			public String? recon_name { get; set; }
+			public String? recontype_code { get; set; }
+			public String? recontype_desc { get; set; }
+			public String? start_date { get; set; }
+			public String? job_remark { get; set; }
+			public String? job_status { get; set; }
+			public String? jobstatus_desc { get; set; }
+		}
+
+
+	}
 }

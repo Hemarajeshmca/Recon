@@ -1,211 +1,446 @@
-﻿@{	
-	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+﻿@{
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
 <html>
 <head>
-	<title></title>
-	<style>
-		.nav-item.me-2.me-xl-50 {
-			margin-right: 28rem !important;
-		}
-		.error_show {
-			color: red;
-			margin-left: 10px;
-		}
+    <title></title>
+    <style>
+        .nav-item.me-2.me-xl-50 {
+            margin-right: 28rem !important;
+        }
 
-		.k-grid.k-widget {
-			height: 360px;
-		}
+        .error_show {
+            color: red;
+            margin-left: 10px;
+        }
 
-		.k-grid-header th.k-header > .k-link {
-			width: 100px;
-		}
+        .k-grid.k-widget {
+            height: 360px;
+        }
 
-		.k-grid-header {
-			font-weight: bold;
-		}
+        .k-grid-header th.k-header > .k-link {
+            width: 100px;
+        }
 
-		.k-state-active {
-			display: none;
-		}
+        .k-grid-header {
+            font-weight: bold;
+        }
 
-		.k-content {
-			font-weight: normal;
-			font-size: 13px;
-		}
+        .k-state-active {
+            display: none;
+        }
 
-		.k-widget.k-window {
-			padding-top: 35px;
-			min-width: 90px;
-			min-height: 50px;
-			width: 700px !important;
-			height: 300px !important;
-			top: 180.766px !important;
-			/*left: 120px !important;*/
-			z-index: 10003;
-			left: 300px !important;
-		}
+        .k-content {
+            font-weight: normal;
+            font-size: 13px;
+        }
 
-		.tooltip-container {
-			position: relative;
-			display: inline-block;
-		}
+        .k-widget.k-window {
+            padding-top: 35px;
+            min-width: 90px;
+            min-height: 50px;
+            width: 700px !important;
+            height: 300px !important;
+            top: 180.766px !important;
+            /*left: 120px !important;*/
+            z-index: 10003;
+            left: 300px !important;
+        }
 
-		.info-icon {
-			cursor: pointer;
-		}
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
 
-		.tooltip1 {
-			display: none;
-			position: absolute;
-			background-color: lightslategray;
-			color: #fff;
-			padding: 10px;
-			border-radius: 15px;
-			white-space: nowrap;
-			z-index: 1;
-			top: 100%;
-			margin-left: -142px;
-			transform: translateX(-50%);
-		}
+        .info-icon {
+            cursor: pointer;
+        }
 
-		.tooltip-container:hover .tooltip1 {
-			display: block;
-		}
-	</style>
+        .tooltip1 {
+            display: none;
+            position: absolute;
+            background-color: lightslategray;
+            color: #fff;
+            padding: 10px;
+            border-radius: 15px;
+            white-space: nowrap;
+            z-index: 1;
+            top: 100%;
+            margin-left: -142px;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-container:hover .tooltip1 {
+            display: block;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-	<div class="content-wrapper">
-		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-1%;height: 84%;">
-				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
-					@*<div class="col-md-3">
-						<label class="form-label">Recon Type</label>
-						<select id="mode" class="form-select form-control">
-							<option value="I">Proof</option>
-							<option value="I" selected>Brs</option>
-							<option value="I">Contra</option>
-							<option value="I">Mirror</option>
-							<option value="I">Value Based</option>
-							<option value="I">Non Value Based</option>
-						</select>
-					</div>*@
-					<div class="col-md-3">
-						<label for="" class="form-label">Date From</label>
-						<div>
-							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
-							<span data-for='valid' class='k-invalid-msg'></span>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<label class="form-label">Date To </label>
-						<div>
-							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
-							<span data-for='valid' class='k-invalid-msg'></span>
-						</div>
-					</div>
-					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
-							Show Recon
-						</button> &nbsp;&nbsp;&nbsp;
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
-							Run Selected
-						</button>
-					</div>
-				</div>
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top:-1%;height: 84%;">
+                <div class="row" style="margin-top:10px;margin-bottom: 2%;">
+                    <div class="col-md-3">
+                        <label for="" class="form-label">Date From</label>
+                        <div>
+                            <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Date To </label>
+                        <div>
+                            <input class="cusDate" data-role='datepicker2' id="initiated_to" name="initiated_to" onclick="Dateformat()" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Match On</label>
+                        <select id="matchon" class="form-select form-control"> </select>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 2%;">
+                        @*<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+                        Show Recon
+                        </button> &nbsp;&nbsp;&nbsp;*@
+                        <button type="button" onclick="runselected()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
+                            Run Selected
+                        </button>
+                    </div>
+                </div>
+                <div id="grid_preview"></div>
+                @*<div class="row">
+                <table class="table table-bordered table-sm">
+                <thead style="background: #c1c1c1;">
+                <tr class="text-nowrap">
+                <th style ="width: 50px;">Select</th>
+                <th>Recon Name</th>
+                <th>Recon Type</th>
+                <th>Last KO Execution Date</th>
+                <th>Last KO Execution Status</th>
+                <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="height:25px;">
+                <td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
+                <td>Hdfc CC- UPI Collection From Customer</td>
+                <td>Brs</td>
+                <td>19-09-2023</td>
+                <td>Inprocess</td>
+                <td>
+                <div class="tooltip-container">
+                <i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
+                </div>
+                </td>
+                </tr>
+                <tr style="height:25px;">
+                <td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
+                <td>Hdfc CC- IMPS Collection From Customer</td>
+                <td>Brs</td>
+                <td>19-09-2023</td>
+                <td>Inprocess</td>
+                <td>
+                <div class="tooltip-container">
+                <i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
+                </div>
+                </td>
+                </tr>
+                </tbody>
+                </table>
+                </div>*@
+            </div>
+        </div>
+    </div>
 
-				<div class="row">
-					<table class="table table-bordered table-sm">
-						<thead style="background: #c1c1c1;">
-							<tr class="text-nowrap">
-								<th style ="width: 50px;">Select</th>
-								<th>Recon Name</th>	
-								<th>Recon Type</th>
-								<th>Last KO Execution Date</th>
-								<th>Last KO Execution Status</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr style="height:25px;">
-								<td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
-								<td>Hdfc CC- UPI Collection From Customer</td>
-								<td>Brs</td>
-								<td>19-09-2023</td>
-								<td>Inprocess</td>
-								<td>
-									<div class="tooltip-container">
-										<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>										
-									</div>
-								</td>
-							</tr>
-							<tr style="height:25px;">
-								<td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
-								<td>Hdfc CC- IMPS Collection From Customer</td>
-								<td>Brs</td>
-								<td>19-09-2023</td>
-								<td>Inprocess</td>
-								<td>
-									<div class="tooltip-container">
-										<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>										
-									</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" style="width: 510px;left: 155px;">
-				<div class="modal-header">
-				</div>
-				<div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
-					<div class="row">
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
-						</div>
-						<div class="col-sm-4">
-							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
-						</div>
-					</div>
-					<hr style="margin-top:-1px; width:100%;">
-					<div class="container">
-						<p><strong>Recon Name&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
-						<p><strong>Ko Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 12:00:00 PM</p>
-						<p><strong>Ko Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong></p>
-						<p><strong>Ko Initiated By&nbsp;&nbsp;:&nbsp;</strong>Vijay</p>
-						<p><strong>KO Execution Status&nbsp;&nbsp;:&nbsp;</strong> Inprocess</p>
-						<p><strong>Ko Remark&nbsp;&nbsp;:&nbsp;</strong>Completed records 1000</p>
-						<p><strong>Ko Exception Status&nbsp;&nbsp;:&nbsp;</strong>20 Records Exceptions</p>
-					</div>
-				</div>
-				<div class="row" style="margin-top: -27px;margin-bottom: -12px;">
-					<div class="col-sm-4"> </div>
-					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
-						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button></center>
-					</div>
-					<div class="col-sm-4"> </div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 510px;left: 155px;">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
+                    <div class="row">
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+                        </div>
+                    </div>
+                    <hr style="margin-top:-1px; width:100%;">
+                    <div class="container">
+                        <p><strong>Recon Name&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
+                        <p><strong>Ko Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 12:00:00 PM</p>
+                        <p><strong>Ko Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong></p>
+                        <p><strong>Ko Initiated By&nbsp;&nbsp;:&nbsp;</strong>Vijay</p>
+                        <p><strong>KO Execution Status&nbsp;&nbsp;:&nbsp;</strong> Inprocess</p>
+                        <p><strong>Ko Remark&nbsp;&nbsp;:&nbsp;</strong>Completed records 1000</p>
+                        <p><strong>Ko Exception Status&nbsp;&nbsp;:&nbsp;</strong>20 Records Exceptions</p>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
+                    <div class="col-sm-4"> </div>
+                    <div class="col-sm-4" style="margin-bottom:30px;float: right;">
+                        <center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button></center>
+                    </div>
+                    <div class="col-sm-4"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 
 <script type="text/javascript">
-	$(document).ready(function () {
-		$("#navhead").text("Automatic Posting & Knockoff");
-		kendodate_format();
-	});
-	function rr1() {
-		$("#infomodal").hide();
-	}
+    $(document).ready(function () {
+        $("#navhead").text("Automatic Posting & Knockoff");
+        kendodate_format();
+        getpreview();
+        getreconlist();
+    });
+    function rr1() {
+        $("#infomodal").hide();
+    }
+
+    function getpreview() {
+        var in_master_code = "QCD_RC_PREVIEW_ON";
+        var in_user_code = "sundar";
+        $.ajax({
+            type: "POST",
+            url: '/Common/Qcdmaster',
+            dataType: 'json',
+            data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#matchon").empty();
+                $("#matchon").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(response, function (index, item) {
+                    $("#matchon").append($('<option>', {
+                        value: item.masterCode,
+                        text: item.masterName
+                    }));
+                });
+            }
+        });
+    }
+
+    function getreconlist() {
+        debugger;
+        var data = {};
+        data.in_user_gid = 0;
+        data.in_active_status = '';
+        var Context = data;
+        $.ajax({
+            type: "POST",
+            url: '/Recon/Reconlistknockoff',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response.length > 0) {
+                    grid_rule(response);
+                }
+                else {
+
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+    }
+
+    function grid_rule(data) {
+        $("#grid_preview").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 15,
+                schema: {
+                    model: {
+                        fields: {
+                            recon_gid: { type: "string" },
+                            recon_code: { type: "string" },
+                            recon_name: { type: "string" },
+                            recontype_code: { type: "string" },
+                            recontype_desc: { type: "string" },
+                            start_date: { type: "string" },
+                            job_remark: { type: "string" },
+                            job_status: { type: "string" },
+                            jobstatus_desc: { type: "string" }
+                        }
+                    }
+                }
+            },
+            height: 407,
+            groupable: false,
+            dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_preview').data('kendoGrid').tbody.children();
+                setColor(rows, resultData);
+            },
+            sortable: true,
+            selectable: true,
+            filterable: true,
+            navigatable: true,
+            pageable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [
+                {
+                    field: "recon_gid",
+                    title: "recon_gid",
+                    hidden: true,
+                },
+                {
+                    field: "job_status",
+                    title: "job_status",
+                    hidden: true,
+                },
+                {
+                    field: "name",
+                    title: "Action",
+                    template: function (dataItem) {
+                        if (dataItem.job_status == "P") {
+                            return "<input id='preview_checkbox' type='radio' disabled />";
+
+                        } else {
+                            return "<input  id='preview_checkbox' type='radio' />";
+                        }
+                    },
+                    width:80
+                },
+                {
+                    field: "recon_code",
+                    title: "recon_code",
+                    hidden: true,
+                },
+                {
+                    field: "recon_name",
+                    title: "Recon Name",
+                    width: 100,
+                },
+                {
+                    field: "recontype_code",
+                    title: "recontype_code",
+                    width: 10,
+                    hidden: true
+                },
+                {
+                    field: "recontype_desc",
+                    title: "Recon Type",
+                    width: 100,
+                },
+                {
+                    field: "start_date",
+                    title: "Last KO Execution Date",
+                    width: 100,
+                },
+                {
+                    field: "jobstatus_desc",
+                    title: "Last KO Execution Status",
+                    width: 100,
+                }],
+            editable: false,
+        });
+    }
+
+
+    function runselected() {
+        debugger;
+        var rulepreview = $("#matchon").val();
+        var period_from = $("#initiated_from").val();
+        var ts = period_from.split("/");
+        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+        var period_to = $("#initiated_to").val();
+        var ts1 = period_to.split("/");
+        var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+        var grid = $("#grid_preview").data("kendoGrid");
+        var checkedrows = $("#preview_checkbox:checked", grid.tbody).closest("tr");
+        var objpplmapupdlist = [];
+        var dropdownid = "";
+        for (var i = 0; i < checkedrows.length; i++) {
+            dropdownid = grid.dataItem(checkedrows[i]);
+        }
+        var in_recon_code = dropdownid.recon_code;
+        if (in_recon_code && rulepreview && period_from && period_to){
+        $.ajax({
+            type: "POST",
+            url: '/KnockOff/previewRulebase',
+            dataType: 'json',
+            data: JSON.stringify({
+                in_recon_code: in_recon_code + '$',
+                in_ko_post_flag: rulepreview,
+                in_period_from: pr,
+                in_period_to: pr1,
+                in_automatch_flag: 'Y',
+                in_ip_addr: '',
+                in_user_code: 'Hema'
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var res = JSON.parse(response);
+                if (res[0].out_result == '1') {
+                    $.alert({
+                        title: 'Recon',
+                        content: res[0].out_msg,
+                        type: 'green',
+                    });
+                }
+                else if (res[0].out_result == '0') {
+                    $.alert({
+                        title: 'Recon',
+                        content: res[0].out_msg,
+                        type: 'red',
+                    });
+                } else {
+                    $.alert({
+                        title: 'Recon',
+                        content: 'Something went wrong ..!',
+                        type: 'red',
+                    });
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+        } else if (!in_recon_code) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Recon Code',
+                type: 'red',
+            });
+        } else if (!rulepreview) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Rule Preview',
+                type: 'red',
+            });
+        } else if (!period_from) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Preiod From',
+                type: 'red',
+            });
+        } else if (!period_to) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Preiod From',
+                type: 'red',
+            });
+        }
+    }
+
 </script>

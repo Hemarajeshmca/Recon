@@ -150,7 +150,7 @@
                         <div class="col-sm-4">
                         </div>
                         <div class="col-sm-4">
-                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New</h4>
+                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">QCD Master</h4>
                         </div>
                         <div class="col-sm-4">
                             <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
@@ -294,119 +294,10 @@
     }
 
     function grid_dataset_details(data) {
-        //try {
-        //    $("#grid").kendoGrid({
-        //        dataSource: {
-        //            data: data,
-        //            pageSize: 10,
-        //            schema: {
-        //                model: {
-        //                    fields: {
-        //                        Action: { type: "string" },
-        //                        master_gid: { type: "int" },
-        //                        parent_master_syscode: { type: "string" },
-        //                        master_syscode: { type: "string" },
-        //                        master_code: { type: "string" },
-        //                        master_name: { type: "string" },
-        //                        master_multiple_name: { type: "string" },
-        //                        active_status: { type: "string" },
-        //                        active_status_desc: { type: "string" },
-        //                        master_short_code: { type: "string" },
-        //                    }
-        //                }
-        //            }
-        //        },
-        //        height: 400,
-        //        groupable: false,
-        //        dataBound: function (e) {
-        //            resultData = e.sender._data;
-        //            var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
-        //            setColor(rows, resultData);
-        //        },
-        //        pageable: {
-        //            refresh: false,
-        //            pageSizes: true,
-        //            buttonCount: 5
-        //        },
-        //        sortable: true,
-        //        selectable: true,
-        //        filterable: true,
-        //        navigatable: true,
-        //        selectable: true,
-        //        columns: [{
-        //            command: [
-        //                {
-        //                    name: "edit",
-        //                    id: "Edit",
-        //                    template: "<a href='' onclick='openQCDModel()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a> &nbsp;&nbsp;  ",
-        //                },
-        //                {
-        //                    name: "Delete",
-        //                    id: "Delete",
-        //                    template: "<a href='' onclick='myDeleteQCD()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
-        //                },
-        //            ],
-        //            title: "Action ",
-        //            width: "40px",
-        //        },
-        //        {
-        //            field: "master_gid",
-        //            title: "Master Gid",
-        //            width: 100,
-        //            hidden: true
-        //        },
-        //        {
-        //            field: "parent_master_syscode",
-        //            title: "Parent Code",
-        //            width: 100,
-        //        },
-        //        {
-        //            field: "master_syscode",
-        //            title: "MasterSync Code",
-        //            width: 100,
-        //            hidden: true
-        //        },
-        //        {
-        //            field: "master_code",
-        //            title: "Master Code",
-        //            width: 100,
-        //        },
-        //        {
-        //            field: "master_name",
-        //            title: "Master Name",
-        //            width: 100,
-        //        },
-        //        {
-        //            field: "master_multiple_name",
-        //            title: "Master Multiple Name",
-        //            width: 100,
-        //            hidden: true
-        //        },
-        //        {
-        //            field: "master_short_code",
-        //            title: "Master Short Code",
-        //            width: 100,
-        //            hidden: true
-        //        },
-        //        {
-        //            field: "active_status",
-        //            title: "Active stauts",
-        //            width: 100,
-        //            hidden: true
-        //        },
-        //        {
-        //            field: "active_status_desc",
-        //            title: "Status",
-        //            width: 100,
-        //        }],
-        //    });
-        //}
-        //catch (err) {
-        //    console.log(err)
-        //}
         try {
             $("#grid").kendoGrid({
                 dataSource: {
+                    type: "odata",
                     data: data,
                     pageSize: 10,
                     schema: {
@@ -509,7 +400,7 @@
                             width: 100,
                         }],
                 editable: false,
-
+                resizable: false
             });
         }
         catch (err) {
@@ -525,6 +416,7 @@
 
     function openModel() {
         $("#newQcd").show();
+
     }
 
     function openNewModel() {
@@ -541,10 +433,10 @@
         objdata.action = $("#mode").val();
         objdata.active_status = $("input[name='qcd_status']:checked").val() ? $("input[name='qcd_status']:checked").val() : 'Y';
         objdata.masterCode = $("#MasterCode").val();
-        objdata.mastermutiplename = $("#MasterMultipleName").val() ? $("#MasterMultipleName").val() : '';
+        objdata.mastermutiplename = $("#MasterName").val() ? $("#MasterName").val() : '';
         objdata.masterName = $("#MasterName").val();
         objdata.masterShortCode = $("#MasterShortCode").val();
-        objdata.masterSyscode = $("#MasterSysCode").val() ? $("#MasterSysCode").val() : '';
+        objdata.masterSyscode = $("#MasterCode").val() ? $("#MasterCode").val() : '';
         objdata.parentMasterSyscode = $("#qcdcode").val();
         var objdata = objdata;
         $.ajax({
