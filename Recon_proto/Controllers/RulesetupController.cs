@@ -331,5 +331,31 @@ namespace Recon_proto.Controllers
 			}
 		}
 		#endregion
+
+		public class getRuleAgainstReconList
+		{
+			public String? in_recon_code { get; set; }
+			public String? in_rule_apply_on { get; set; }
+		}
+		[HttpPost]
+		public JsonResult RuleAgainstRecon([FromBody] getRuleAgainstReconList context)
+		{
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getruleagainstRecon", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+
 	}
 }
