@@ -160,21 +160,21 @@ namespace Recon_proto.Controllers
 				StreamReader reader = new StreamReader(data);
 				post_data = reader.ReadToEnd();
 				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					Datasetdetailfetchlist objcat = new Datasetdetailfetchlist();
-					objcat.datasetdetail_id = Convert.ToInt32(result.Rows[i]["datasetfield_gid"]);
-					objcat.datasetCode = result.Rows[i]["dataset_code"].ToString();
-					objcat.field_name = result.Rows[i]["field_name"].ToString();
-					objcat.field_type = result.Rows[i]["field_type"].ToString();
-					objcat.fieldtype_desc = result.Rows[i]["fieldtype_desc"].ToString();
-					objcat.field_length = result.Rows[i]["field_length"].ToString();
-					objcat.field_mandatory = result.Rows[i]["field_mandatory"].ToString();
-					objcat.dataset_table_field = result.Rows[i]["dataset_table_field"].ToString();
-					objcat_lst.Add(objcat);
-				}
-				return Json(objcat_lst);
+				//result = JsonConvert.DeserializeObject<DataTable>(d2);
+				//for (int i = 0; i < result.Rows.Count; i++)
+				//{
+				//	Datasetdetailfetchlist objcat = new Datasetdetailfetchlist();
+				//	objcat.datasetdetail_id = Convert.ToInt32(result.Rows[i]["datasetfield_gid"]);
+				//	objcat.datasetCode = result.Rows[i]["dataset_code"].ToString();
+				//	objcat.field_name = result.Rows[i]["field_name"].ToString();
+				//	objcat.field_type = result.Rows[i]["field_type"].ToString();
+				//	objcat.fieldtype_desc = result.Rows[i]["fieldtype_desc"].ToString();
+				//	objcat.field_length = result.Rows[i]["field_length"].ToString();
+				//	objcat.field_mandatory = result.Rows[i]["field_mandatory"].ToString();
+				//	objcat.dataset_table_field = result.Rows[i]["dataset_table_field"].ToString();
+				//	objcat_lst.Add(objcat);
+				//}
+				return Json(d2);
 			}
 		}
 		#region detailfetch

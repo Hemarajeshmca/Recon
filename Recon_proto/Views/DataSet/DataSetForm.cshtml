@@ -98,9 +98,7 @@
 						<div class="col-sm-2" style="margin-top:30px">
 							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
 						</div>
-
 					</div>
-
 
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
@@ -108,13 +106,13 @@
 							<div id="grid_datasetfield">
 							</div>
 						</div>
-					</div>
 
+					</div>
 					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
 						<div class="col-sm-4">
 						</div>
 						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
-							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheader()">Submit</button>&nbsp;&nbsp;&nbsp;
+							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
 							<a href="../DataSet/DataSetList" class="btn btn-sm cancel_btn me-2">Cancel</a>
 						</div>
 						<div class="col-sm-4">
@@ -193,7 +191,7 @@
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
-			$("#txtstatus").val("Active");
+			$("#txtstatus").val("Draft");
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -227,7 +225,6 @@
 			}
 		}
 	}
-
 	function detailsfetch(datasetCode) {
 		$.ajax({
 			type: "POST",
@@ -235,9 +232,20 @@
 			dataType: 'json',
 			data: JSON.stringify({ datasetCode: datasetCode }),
 			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
+			success: function (response) {				
 				if (response != null) {
-					grid_datasetfield(response);
+					var result = JSON.parse(response);
+					$("#datasetname").val(result.Header[0].dataset_name);
+					$("#cmbcategory").val(result.Header[0].dataset_category);
+					$("#txtdatasetcode").val(result.Header[0].dataset_code);
+					$("#txtstatus").val(result.Header[0].active_status_desc);
+					$("#datasetgid").val(result.Header[0].dataset_gid);
+					grid_datasetfield(result.DataSet);
+					if (response.length > 0) {
+						$("#Cmbclone").val();
+						$("#Cmbclone").prop('disabled', true)
+						$("#btnclone").prop('disabled', true)
+					}
 				}
 				else {
 					grid_datasetfield([]);
@@ -250,7 +258,6 @@
 
 		});
 	}
-
 	function saveheader() {
 		debugger;
 		try {
@@ -275,7 +282,7 @@
 			if ($("#txtstatus").val() == "Active") {
 				status = "Y"
 			} else {
-				status = "N"
+				status = "D"
 			}
 			$.ajax({
 				type: "POST",
@@ -294,6 +301,7 @@
 							type: 'green',
 						});
 						detailsfetch($("#txtdatasetcode").val());
+						$("#datasetgid").val(data.in_dataset_gid);
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -313,17 +321,9 @@
 			console.log(e)
 		}
 	}
-	function rr() {
-		$("#newdebit").show();
-		$("#mandatory2").prop("checked", true);
-	}
 	function rr1() {
 		window.location.href = "../DataSet/DataSetForm";
-	}
-	function rr7() {
-		debugger;
-		window.location.href = "../DataSet/DataSetList";
-	}
+	}	
 	function grid_datasetfield(data) {
 		debugger;
 		$("#grid_datasetfield").kendoGrid({
@@ -660,6 +660,55 @@
 			},
 		});
 	}
+	function saveheadersubmit(){
+		var dataset_name = $("#datasetname").val();
+		var dataset_category = $("#cmbcategory").val();
+		var dataset_code = $("#txtdatasetcode").val();
+		var clone_dataset = $("#Cmbclone").val();
+		var action = "";		
+		var action_by = "vijay"
+		var dataset_id = $("#datasetgid").val();
+		if (dataset_id > 0) {
+			dataset_id = $("#datasetgid").val();
+			action = "UPDATE"
+		} else {
+			dataset_id = 0;
+			action = "INSERT"
+		}
+		var status = "Y";
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/Datasetheader',
+			dataType: 'json',
+			data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				var data = result[0];
+				debugger;
+				if (data.out_result == "1") {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'green',
+					});
+					detailsfetch($("#txtdatasetcode").val());
+					$("#datasetgid").val(data.in_dataset_gid);
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'red',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});			
+		}
 </script>
 
 
