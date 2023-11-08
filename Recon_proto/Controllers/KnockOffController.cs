@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -91,5 +92,36 @@ namespace Recon_proto.Controllers
 			}
 		}
 
-	}
+
+        public ActionResult DownloadFile(string Subfolder, string Excelfiles)
+        {
+            string Result = "";
+            byte[] filebyte;
+           // string filepath1 = @"D:\MonthEndReport\" + Subfolder + "\\" + Excelfiles + "";
+            string filepath1 = @"D:\recon\Training.xlsx";
+            string subDirectory = filepath1;
+
+            try
+            {
+                filebyte = GetFile(subDirectory);
+                return File(filebyte, System.Net.Mime.MediaTypeNames.Application.Octet, "Recons.xlsx");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View();
+        }
+
+        byte[] GetFile(string s)
+        {
+            System.IO.FileStream fs = System.IO.File.OpenRead(s);
+            byte[] data = new byte[fs.Length];
+            int br = fs.Read(data, 0, data.Length);
+            if (br != fs.Length)
+                throw new System.IO.IOException(s);
+            return data;
+        }
+
+    }
 }
