@@ -350,7 +350,8 @@
 							{
 								name: "download",
 								id: "btn_download",
-								template: "<a href='' value='download' data-bs-toggle='modal'><img src = '../Assets/images/download.png' style='height: 20px;width: 20px;'></a>&nbsp;&nbsp;&nbsp;",
+								template: "<a href='' onclick='downloadJob(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px;width: 20px;' src = '../Assets/images/download.png'></a>&nbsp;&nbsp;&nbsp;",
+
 							},
 							
 						], title: "Action&nbsp;", width: "40px",
@@ -410,5 +411,25 @@
 			console.log(err)
 
 		}
+	}
+
+	function downloadJob(val) {
+		debugger;
+
+		window.location.href = '@Url.Action("DownloadFile", "KnockOff")?Subfolder=' + 'foldername' + '&Excelfiles=' + 'excelfile' + '';
+
+		//$.ajax({
+		//	type: "POST",
+		//	url: '/KnockOff/DownloadFile',
+		//	dataType: 'json',
+		//	data: JSON.stringify({
+		//		Subfolder: '',
+		//		Excelfiles: ''
+		//	}),
+		//	contentType: 'application/json; charset=utf-8',
+		//	success: function (response) {
+		//		debugger;
+		//	}
+		//});
 	}
 </script>
