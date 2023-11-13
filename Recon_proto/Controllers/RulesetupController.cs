@@ -24,7 +24,8 @@ namespace Recon_proto.Controllers
         public class Rulesetuplist
         {
             public String? in_user_code { get; set; }
-        }
+			public string? in_recon_code { get; set; }
+		}
         public class Rulesetuplistmodel
         {
             public string? rule_code { get; set; }
