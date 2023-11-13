@@ -290,7 +290,7 @@
 																<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px">
 																	<div class="col-sm-6">
 																		<label for="" class="form-label">Extraction Criteria </label>
-																		<input type="text" id="editableDropdownInput" placeholder="Type here" oninput="filterDropdown()">
+																		@*<input type="text" id="editableDropdownInput" placeholder="Type here" oninput="filterDropdown()">*@
 																		<select id="cmbextractcriteria" class="form-select form-control">
 																		</select>
 																	</div>
@@ -507,6 +507,7 @@
 			}
 		}
 	}
+	
 	function RuleApplied() {
 		if ($("#RuleAppliedOn").val() == 'T') {
 			$("#sourceparentdataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
@@ -668,7 +669,10 @@
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Active");
 			$("#groupflag2").prop("checked", true);
+			flag();
 			$("#Reversal3").prop("checked", true);
+			$("#GM1").prop("checked", true);
+			$("#GMM2").prop("checked", true);
 		}
 		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {

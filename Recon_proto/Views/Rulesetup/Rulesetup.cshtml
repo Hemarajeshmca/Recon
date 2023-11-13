@@ -49,7 +49,12 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-1%;min-height:82%;">
-				<div class="row" style="margin-top:10px">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
 					<div class="col-xs-12">
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'><i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i></a>
 						<div id="grid_rulesetup">
@@ -68,7 +73,36 @@
 		$("#navhead").text("Rule Setup");
 		kendodate_format();
 		grid_rulesetup_details([]);
-		gridlist();
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbreconname").append($('<option>', {
+						value: item.recon_code,
+						text: item.recon_name
+					}));
+				});				
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
 	});
 
 	function rr1() {
@@ -94,7 +128,7 @@
 						}
 					}
 				},
-				height: 450,
+				height: 420,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -219,7 +253,8 @@
 
 		}
 	}
-	function gridlist() {
+	function reconchangelist() {
+		var cmbreconname = $("#cmbreconname").val();
 		var data = {};
 		data.in_user_code = '';
 		var Context = data;
@@ -227,7 +262,7 @@
 			type: "POST",
 			url: '/Rulesetup/Rulesetuplistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_code: Context.in_user_code }),
+			data: JSON.stringify({ in_user_code: Context.in_user_code, in_recon_code: cmbreconname }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
