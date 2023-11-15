@@ -64,6 +64,8 @@ namespace Recon_proto.Controllers
 			public string masterShortCode { get; set; }
 			public string masterSyscode { get; set; }
 			public string ParentMasterSyscode { get; set; }
+			public string and { get; set; }
+			public string or { get; set; }
 		}
 		#endregion
 	}
