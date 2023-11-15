@@ -16,6 +16,7 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
+		#region list
 		[HttpPost]
 		public JsonResult Reconlistfetch([FromBody] Reconlistmodel context)
 		{			
@@ -52,7 +53,7 @@ namespace Recon_proto.Controllers
 				return Json(objcat_lst);
 			}
 		}
-		#region list
+	
 		public class Reconlistmodel
 		{
 			public string? recon_code { get; set; }
@@ -69,6 +70,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		#region recon type
 		[HttpPost]
 		public JsonResult getrecontype()
 		{
@@ -98,7 +100,7 @@ namespace Recon_proto.Controllers
 				return Json(objcat_lst);
 			}
 		}
-		#region recon type
+		
 		public class recontype
 		{
 			public string? recontype_desc { get; set; }
@@ -107,6 +109,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		#region header
 		[HttpPost]
 		public JsonResult Reconheadersave([FromBody] Reconheader context)
 		{
@@ -134,7 +137,7 @@ namespace Recon_proto.Controllers
 				return Json(objList);
 			}
 		}
-		#region header
+		
 		public class Reconheader
 		{
 			public Int32? in_recon_gid { get; set; }
@@ -146,6 +149,12 @@ namespace Recon_proto.Controllers
 			public String in_period_to { get; set; }
 			public String? in_until_active_flag { get; set; }
 			public String? in_active_status { get; set; }
+			public String? in_recon_date_flag { get; set; }
+			public String? in_recon_date_field { get; set; }
+			public String? in_recon_value_flag { get; set; }
+			public String? in_recon_value_field { get; set; }
+			public Double in_threshold_plus_value { get; set; }
+			public Double in_threshold_minus_value { get; set; }
 			public String in_action { get; set; }
 			public String? in_action_by { get; set; }
 			public String? out_msg { get; set; }
@@ -153,6 +162,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		#region dataset recon
 		[HttpPost]
 		public JsonResult Recondatasetsave([FromBody] Recondataset context)
 		{
@@ -180,7 +190,7 @@ namespace Recon_proto.Controllers
 				return Json(objList);
 			}
 		}
-		#region dataset recon
+		
 		public class Recondataset
 		{
 			public Int16? in_recondataset_gid { get; set; }

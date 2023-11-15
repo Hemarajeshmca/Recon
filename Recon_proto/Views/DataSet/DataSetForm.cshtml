@@ -102,7 +102,7 @@
 
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
-							<i data-bs-toggle="modal" data-bs-target="#newdebit" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+							<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 							<div id="grid_datasetfield">
 							</div>
 						</div>
@@ -136,40 +136,47 @@
 										</div>
 									</div>
 									<hr style="margin-top:-1px; width:100%;">
-									<div class="container">
-										<div class="row" style="padding-bottom:2px;margin-top:5px;">
-											<div class="col-sm-4">
-												<label for="" class="form-label">Dataset Field</label>
-												<input class="form-control" id="datasetfield" type="text" style="width:100%;">
-												<input class="form-control" type="number" id="datasetdetail_id" hidden>
-												<input class="form-control" type="text" id="txtmodeflag" value="Create" hidden>
-											</div>
+									<div class="row" style="padding-bottom:2px;margin-top:5px;">
+										<div class="col-sm-4">
+											<label for="" class="form-label">Dataset Field</label>
+											<input class="form-control" id="datasetfield" type="text" style="width:100%;">
+											<input class="form-control" type="number" id="datasetdetail_id" hidden>
+											<input class="form-control" type="text" id="txtmodeflag" value="Create" hidden>
+										</div>
 
-											<div class="col-sm-4">
-												<label for="" class="form-label">Field Type&nbsp;</label>
-												<select id="cmbFieldType" class="form-select form-control">
-												</select>
+										<div class="col-sm-4">
+											<label for="" class="form-label">Field Type&nbsp;</label>
+											<select id="cmbFieldType" class="form-select form-control" onchange="fieldtype()">
+											</select>
+										</div>
+										<div class="col-sm-4" id="fielddataset">
+											<label for="" class="form-label">Field Length&nbsp;</label>
+											<input class="form-control" id="fieldlength" type="text" style=" width:100%;">
+										</div>
+										<div class="col-sm-4" style="display:none" id="numeric">
+											<label for="" class="form-label">Precision&nbsp;</label>
+											<input class="form-control" id="fieldPrecision" type="text" style=" width:50%;" value="5">
+											<div style="margin-left: 107px;margin-right: -51px;margin-top: -63px;">
+												<label for="" class="form-label">scale&nbsp;</label>
+												<input class="form-control" id="fieldscale" type="text" style=" width:50%;" value="2">
 											</div>
-											<div class="col-sm-4">
-												<label for="" class="form-label">Field Length&nbsp;</label>
-												<input class="form-control" id="fieldlength" type="text" style=" width:100%;">
+											<label for="" class="form-label">(Ex : 00000.00)</label>
+										</div>
+									</div>
+									<div class="row" style="padding-bottom:3px;padding-top:8px;">
+										<div class="col-sm-4">
+											<label for="" class="form-label">Mandatory&nbsp;</label>
+											<div style="margin-left:2px;margin-top:5px">
+												<input type="radio" id="mandatory1" name="mandatory" value="Y">&nbsp;&nbsp;Yes&nbsp;
+												<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" checked value="N">&nbsp;&nbsp;No&nbsp;
 											</div>
 										</div>
-										<div class="row" style="padding-bottom:3px;padding-top:8px;">
-											<div class="col-sm-4">
-												<label for="" class="form-label">Mandatory&nbsp;</label>
-												<div style="margin-left:2px;margin-top:5px">
-													<input type="radio" id="mandatory1" name="mandatory" value="Y">&nbsp;&nbsp;Yes&nbsp;
-													<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" checked value="N">&nbsp;&nbsp;No&nbsp;
-												</div>
-											</div>
-											<div class="col-sm-4"></div>
-											<div class="col-sm-4" style="margin-top:20px;float: right;">
-												<center>
-													<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
-													<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr1()">Cancel</button>
-												</center>
-											</div>
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4" style="margin-top:20px;float: right;">
+											<center>
+												<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
+												<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+											</center>
 										</div>
 									</div>
 								</div>
@@ -188,6 +195,16 @@
 		$("#navhead").text("Dataset");
 		grid_datasetfield([]);
 	});
+	function fieldtype() {
+		var FieldType = $("#cmbFieldType").val();
+		if (FieldType == "NUMERIC") {
+			$("#fielddataset").hide();
+			$("#numeric").show();
+		} else {
+			$("#fielddataset").show();
+			$("#numeric").hide();
+		}
+	}
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -232,7 +249,7 @@
 			dataType: 'json',
 			data: JSON.stringify({ datasetCode: datasetCode }),
 			contentType: 'application/json; charset=utf-8',
-			success: function (response) {				
+			success: function (response) {
 				if (response != null) {
 					var result = JSON.parse(response);
 					$("#datasetname").val(result.Header[0].dataset_name);
@@ -266,18 +283,22 @@
 			var dataset_code = $("#txtdatasetcode").val();
 			var clone_dataset = $("#Cmbclone").val();
 			var action = "";
+			var dataset_id = $("#datasetgid").val();
+
+			if (dataset_id > 0) {
+				dataset_id = $("#datasetgid").val();
+				return;
+			} else {
+				dataset_id = 0;
+			}
+
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
 			var action_by = "vijay"
-			var dataset_id = $("#datasetgid").val();
-			if (dataset_id > 0) {
-				dataset_id = $("#datasetgid").val();
-			}else{
-				dataset_id=0;
-			}
+
 			var status = 0;
 			if ($("#txtstatus").val() == "Active") {
 				status = "Y"
@@ -295,11 +316,11 @@
 					var data = result[0];
 					debugger;
 					if (data.out_result == "1") {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'green',
-						});
+						//$.alert({
+						//	title: 'Recon',
+						//	content: data.out_msg,
+						//	type: 'green',
+						//});
 						detailsfetch($("#txtdatasetcode").val());
 						$("#datasetgid").val(data.in_dataset_gid);
 					} else {
@@ -321,9 +342,6 @@
 			console.log(e)
 		}
 	}
-	function rr1() {
-		window.location.href = "../DataSet/DataSetForm";
-	}	
 	function grid_datasetfield(data) {
 		debugger;
 		$("#grid_datasetfield").kendoGrid({
@@ -408,6 +426,18 @@
 				width: 100,
 			},
 			{
+				field: "precision_length",
+				title: "precision_length",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "scale_length",
+				title: "scale_length",
+				width: 100,
+				hidden: true,
+			},
+			{
 				field: "field_mandatory",
 				title: "Mandatory",
 				width: 100,
@@ -430,6 +460,8 @@
 			var fieldlength = $("#fieldlength").val();
 			var dataset_code = $("#txtdatasetcode").val();
 			var datasetdetail_id = $("#datasetdetail_id").val();
+			var precision_length = $("#fieldPrecision").val();
+			var scale_length = $("#fieldscale").val();
 			var action = "";
 			var action_by = "vijay"
 			if (datasetdetail_id > 0) {
@@ -439,18 +471,13 @@
 				datasetdetail_id = 0;
 				action = "INSERT"
 			}
-			var status = 0;
-			if ($("txtstatus").val() == "Active") {
-				status = "Y"
-			} else {
-				status = "N"
-			}
+			var status = "Y";			
 			var mandatory = $("input[name='mandatory']:checked").val();
 			$.ajax({
 				type: "POST",
 				url: '/DataSet/Datasetdetail',
 				dataType: 'json',
-				data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
+				data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
@@ -496,6 +523,9 @@
 		} else {
 			$("#mandatory2").prop("checked", true);
 		}
+		fieldtype();
+		$("#fieldPrecision").val(selectedItem.precision_length);
+		$("#fieldscale").val(selectedItem.scale_length);
 		$("#newdebit").modal('show');
 	}
 	function getGridComboList() {
@@ -641,7 +671,7 @@
 			icon: 'fa fa-info',
 			title: 'Recon',
 			theme: 'dark',
-			content: 'Are you sure do you want to Clone this DataSet!',
+			content: 'Are you sure to Clone ?',
 			type: 'orange',
 			buttons: {
 				confirm: function () {
@@ -660,12 +690,12 @@
 			},
 		});
 	}
-	function saveheadersubmit(){
+	function saveheadersubmit() {
 		var dataset_name = $("#datasetname").val();
 		var dataset_category = $("#cmbcategory").val();
 		var dataset_code = $("#txtdatasetcode").val();
 		var clone_dataset = $("#Cmbclone").val();
-		var action = "";		
+		var action = "";
 		var action_by = "vijay"
 		var dataset_id = $("#datasetgid").val();
 		if (dataset_id > 0) {
@@ -694,6 +724,7 @@
 					});
 					detailsfetch($("#txtdatasetcode").val());
 					$("#datasetgid").val(data.in_dataset_gid);
+					window.location.href = "../DataSet/DataSetList";
 				} else {
 					$.alert({
 						title: 'Recon',
@@ -707,8 +738,8 @@
 				console.log(er)
 			}
 
-		});			
-		}
+		});
+	}
 </script>
 
 
