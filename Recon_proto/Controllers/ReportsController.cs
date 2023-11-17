@@ -170,26 +170,7 @@ namespace Recon_proto.Controllers
 				StreamReader reader = new StreamReader(data);
 				post_data = reader.ReadToEnd();
 				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				//for (int i = 0; i < result.Rows.Count; i++)
-				//{
-				//	mainQCDMaster objcat = new mainQCDMaster();
-				//	objcat.master_gid = Convert.ToInt32(result.Rows[i]["master_gid"]);
-				//	objcat.masterCode = result.Rows[i]["master_code"].ToString();
-				//	objcat.masterName = result.Rows[i]["master_name"].ToString();
-				//	objcat.masterShortCode = result.Rows[i]["master_short_code"].ToString();
-				//	objcat.masterSyscode = result.Rows[i]["master_syscode"].ToString();
-				//	objcat.ParentMasterSyscode = result.Rows[i]["parent_master_syscode"].ToString();
-				//	objcat.mastermutiplename = result.Rows[i]["master_multiple_name"].ToString();
-				//	objcat.active_status = result.Rows[i]["active_status"].ToString();
-				//	objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
-				//	objcat_lst.Add(objcat);
-
-				//	ViewBag.constraints = objcat_lst;
-
-
-				//}
-				return Json(result);
+				return Json(d2);
 			}
 		}
 	
@@ -204,6 +185,60 @@ namespace Recon_proto.Controllers
 			public string? in_user_code { get; set; }
 		}
 
+		[HttpPost]
+		public JsonResult reconwithinacc([FromBody] reconwithinaccmodel context)
+		{
+			DataTable result = new DataTable();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("reconwithinacc", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+
+		public class reconwithinaccmodel
+		{
+			public String? in_recon_code { get; set; }
+			public String? in_tran_date { get; set; }
+
+		}
+
+
+		[HttpPost]
+		public JsonResult reconbetweenacc([FromBody] reconbetweenaccmodel context)
+		{
+			DataTable result = new DataTable();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("reconbetweenacc", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+
+		public class reconbetweenaccmodel
+		{
+			public String? in_recon_code { get; set; }
+			public String? in_tran_date { get; set; }
+
+		}
 
 	}
 }

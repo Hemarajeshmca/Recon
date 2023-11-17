@@ -23,7 +23,7 @@
 							Date From
 						</label>
 						<div>
-							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" data-role='datepicker' id="from_date" name="from_date" onclick="Dateformat()" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
@@ -32,22 +32,19 @@
 							Date To
 						</label>
 						<div>
-							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" data-role='datepicker' id="to_date" name="to_date" onclick="Dateformat()" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<label for="organization" class="form-label">Recon Name</label><br>
-						<select id="mode" class="form-select form-control">
-							<option value="A">CUB CC BRS - 113120000100488 </option>
-							<option value="I"> SBI CC BRS - 40904776466</option>
-							<option value="I"> Indusind CA BRS - 201003823096</option>
-							<option value="I"> HDFC CC BRS - 50200064486821</option>
+						<select id="reconname" class="form-select form-control">
+							
 						</select>
 
 					</div>
 					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+						<button type="button" onclick="run()" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
 							Run
 						</button> &nbsp;&nbsp;
 						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
@@ -102,7 +99,68 @@
 </html>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Recon - Within A/cs");
+		$("#navhead").text("Recon - KnockoffMIS");
 		kendodate_format();
+		getreconlist();
 	});
+
+	function getreconlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: '', in_active_status: '' }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				$("#reconname").empty();
+				$("#reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#reconname").append($('<option>', {
+						value: item.recon_code,
+						text: item.recon_name
+					}));
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function run() {
+		debugger;
+		var in_recon_code = $("#reconname").val();
+		var in_tran_date = $("#from_date").val();
+		var ts = in_tran_date.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		var in_todate = $("#to_date").val();
+		var ts1 = in_todate.split("/");
+		var pr1 = ts[2] + "-" + ts1[1] + "-" + ts1[0];
+		$.ajax({
+			type: "POST",
+			//url: '/Reports/reconbetweenacc',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code, in_from_date: pr, in_to_date: pr1 }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				alert(response)
+			},
+			error: function (er) {
+				debugger;
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
 </script>
