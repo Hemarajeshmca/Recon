@@ -614,6 +614,50 @@
 				}
 			}
 		}
+		function setDefaultValues(e) {
+
+			if (e.type != "click" || e.type == undefined) {
+
+				if (e.action == "" || e.action == undefined) {
+					for (var i = 0; i < e.sender._data.length; i++) {
+						if (e.sender._data[i].mode_flag == "") {
+							e.sender._data[i].mode_flag = "I";
+							if (e.sender._data[i].mode_flag == "I") {
+								var rows = e.sender.tbody.children();
+								var row = $(rows[i]);
+								row.css('backgroundColor', 'lightgreen')
+							}
+
+							var rows = e.sender.tbody.children();
+
+							for (var j = 1; j < rows.length; j++) {
+								var row = $(rows[j]);
+								var dataItem = e.sender.dataItem(row);
+
+								if (dataItem.mode_flag == "I") {
+									row.css('backgroundColor', 'lightgreen')
+								}
+								else if (dataItem.mode_flag == "D") {
+									row.css('backgroundColor', '#ff3333')
+								}
+							}
+
+						}
+						else if (e.sender._data[i].mode_flag != "") {
+							if (e.sender._data[i].mode_flag == "S")
+								if (e.sender._cellId == "comp_change_Grid_active_cell" || e.sender._cellId == "grid_detail_form_active_cell")
+
+									e.sender._data[i].mode_flag = "S";
+
+								else
+									e.sender._data[i].mode_flag = "U";
+
+						}						
+					}
+				}
+			}
+		}
+
 		function testt() {
 
 			alert($('#orglvl1valO').val());
