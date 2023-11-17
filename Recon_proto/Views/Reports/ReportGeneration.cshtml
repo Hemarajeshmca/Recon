@@ -76,13 +76,13 @@
 												<th style="text-align:center;width: 2%;">(</th>
 
 												<th class="box-title" style="width: 5%;">Attributes</th>
-												<th style="width: 5%;">Constraints</th>
+												<th style="width: 8%;">Constraints</th>
 												<th style="width:5%">Value</th>
 
 												<th style="text-align:center;width: 2%;">)</th>
 												<th style="width: 3%;">Joins</th>
 
-												<th style="width:5%">Action</th>
+												<th style="width:3%">Action</th>
 											</tr>
 										</thead>
 
@@ -407,16 +407,16 @@
 				'</td>' +
 
 				' <td>' +
-			'<input type="text"  class="form-control" id="txtorderid' + counter + '" disabled class="text-box single-line" name="ClientSampleID[' + counter + ']" value="" required="required" style="width:150px;" />' +
+			'<input type="text"  class="form-control" id="txtorderid' + counter + '" disabled class="text-box single-line" name="ClientSampleID[' + counter + ']" value="" required="required" />' +
 			' <input type="text" id="txtorderidone' + counter + '" hidden name="ClientSampleID[' + counter + ']" value="" ;" />' +
 				
 				'</td>' +
 
 				' <td>' +
-			'<select id="contselect' + counter + '"  class="text-box single-line"  name="drpCondition[' + counter + ']" value="" required="required" style="width:150px;height: 25px;" /></select>' +
+			'<select id="contselect' + counter + '"  class="form-control form-select"  name="drpCondition[' + counter + ']" value="" required="required" /></select>' +
 				'</td>' +
 				' <td>' +
-			'<input type="text"  class="form-control" id="txtvalue' + counter + '" class="text-box single-line" name="Valueof[' + counter + ']" value="" required="required" style="width:150px;" />' +
+			'<input type="text"  class="form-control" id="txtvalue' + counter + '" class="text-box single-line" name="Valueof[' + counter + ']" value="" required="required" />' +
 									
 				'</td>' +
 				' <td>' +
@@ -424,7 +424,7 @@
 
 				'</td>' +
 				' <td>' +
-			'<select id="contbtn' + counter + '"  class="text-box single-line" name="jointst[' + counter + ']" value="" required="required" style="width:150px;height: 25px;" /></select>' +
+			'<select id="contbtn' + counter + '"  class="text-box single-line form-control form-select" name="jointst[' + counter + ']" value="" required="required" /></select>' +
 
 				//'<input type="checkbox"  id="chkvalue' + counter + '" style="margin-left:8px;width:22px; name="checkvalueof[' + counter + ']"  value="Y">' +
 				'</td>' +
@@ -454,8 +454,10 @@
 			$('#contselect' + indexval).append('<option value="' + "Does not contains" + '">' + "Does not contains" + '</option>');
 			$('#contbtn' + indexval).append('<option value="' + "AND" + '">' + "AND" + '</option>');
 			$('#contbtn' + indexval).append('<option value="' + "OR" + '">' + "OR" + '</option>');
+			$('#contbtn' + indexval).append('<option value="' + "" + '">' + "" + '</option>');
+
 			$('#txtorderid' + indexval).val($("#report_param").find(":selected").text());
-			$('#txtorderidone' + indexval).val($("#report_param").find(":selected").text());
+			$('#txtorderidone' + indexval).val($("#report_param").val());
 			counter++;
 
 			//var res = $('#counttxt').val(counter);
@@ -479,205 +481,243 @@
 		var data = {};
 		 data.in_recon_code = $("#reconname").val();
 		 data.in_report_code = $("#report_name").val();
-		 data.in_report_param = $("#report_param").val();
-		 data.reportcondition ='';
+		 data.in_report_param = $("#report_param").find(":selected").text();
+		 data.reportcondition ='AND';
 		 data.in_ip_addr = 'localhost';
 		 data.in_outputfile_flag = true;
 		 data.in_user_code = 'Hema';
 		for (var i=1; i<=clicks;i++)
 		{
 			var openpara = $("#chkval" + i).is(":checked");
-			var attributes = $("#txtorderid"+ i).val();
+			var attributes = $("#txtorderidone" + i).val();
 			var constraints = $("#contselect"+i).val();
 			var value = $("#txtvalue" + i).val();
 			var closepara = $("#chkvalue" + i).is(":checked");
 			var joins = $("#contbtn" + i).val();
+			var joinsvalidation = $("#contbtn" + clicks).val();
+
+			if (!value) {
+				$.alert({
+					title: 'Recon',
+					content: 'Please select value field',
+					type: 'red',
+				});
+
+				return false;
+			}
+			if (i != clicks) {
+				if (joins == '') {
+					$.alert({
+						title: 'Recon',
+						content: 'Please select joins',
+						type: 'red',
+					});
+
+					return false;
+				}
+			}
+
+
+			if(joinsvalidation!='')
+			{
+				$.alert({
+					title: 'Recon',
+					content: 'Please select last row joins as blank',
+					type: 'red',
+				});
+
+				return false;
+			}
+
+		
+
+			
 
 			if (constraints.toLowerCase() == "is equal to") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " = '" + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " = '" + value.toString() + "' " + ")" + joins;
 
 			}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + " = '" + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + " = '" + value.toString() + "' " + joins;
 
 			}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + " = '" + value.toString() + "' " + ")";
+					data.reportcondition += " " + attributes + " = '" + value.toString() + "' " + ")" + joins;
 			}
 			else {
-					data.reportcondition += " " + attributes + " = '" + value.toString() + "' ";
+					data.reportcondition += " " + attributes + " = '" + value.toString() + "' " + joins;
 			}
 		}
 			else if (constraints.toLowerCase() == "is not equal to") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " != '" + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " != '" + value.toString() + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + " != '" + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + " != '" + value.toString() + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					reportcondition += " " + attributes + " != '" + value.toString() + "' " + ")";
+					reportcondition += " " + attributes + " != '" + value.toString() + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + " != '" + value.toString() + "' ";
+					data.reportcondition += " " + attributes + " != '" + value.toString() + "' " + joins;
 				}
 			}
 			else if (constraints.toLowerCase() == "begins with") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " like '" + value.toString() + '%' + "' " + ")";
+					data.reportcondition += " ( " + attributes + " like '" + value.toString() + '%' + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + " like '" + value.toString() + '%' + "' ";
+					data.reportcondition += " (" + attributes + " like '" + value.toString() + '%' + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + " like '" + value.toString() + '%' + "' " + ")";
+					data.reportcondition += " " + attributes + " like '" + value.toString() + '%' + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + " like'" + value.toString() + '%' + "' ";
+					data.reportcondition += " " + attributes + " like'" + value.toString() + '%' + "' " + joins;
 				}
 			}
 			else if (constraints.toLowerCase() == "end with") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " like '" + '%' + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " like '" + '%' + value.toString() + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + " like '" + '%' + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + " like '" + '%' + value.toString() + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + "' " + ")";
+					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + "' ";
+					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + "' " + joins;
 				}
 			}
 
 			else if (constraints.toLowerCase() == "contains") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " like '" + '%' + value.toString() + '%' + "' " + ")";
+					data.reportcondition += " ( " + attributes + " like '" + '%' + value.toString() + '%' + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + " like '" + '%' + value.toString() + '%' + "' ";
+					data.reportcondition += " (" + attributes + " like '" + '%' + value.toString() + '%' + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + '%' + "' " + ")";
+					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + '%' + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + '%' + "' ";
+					data.reportcondition += " " + attributes + " like '" + '%' + value.toString() + '%' + "' " + joins;
 				}
 			}
 
 			else if (constraints.toLowerCase() == "does not contains") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " not like '" + '%' + value.toString() + '%' + "' " + ")";
+					data.reportcondition += " ( " + attributes + " not like '" + '%' + value.toString() + '%' + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + "not like '" + '%' + value.toString() + '%' + "' ";
+					data.reportcondition += " (" + attributes + "not like '" + '%' + value.toString() + '%' + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + "not like '" + '%' + value.toString() + '%' + "' " + ")";
+					data.reportcondition += " " + attributes + "not like '" + '%' + value.toString() + '%' + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + "not like '" + '%' + value.toString() + '%' + "' ";
+					data.reportcondition += " " + attributes + "not like '" + '%' + value.toString() + '%' + "' " + joins;
 				}
 			}
 			else if (constraints.toLowerCase() == "is greater than") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " > '" + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " > '" + value.toString() + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + "> '" + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + "> '" + value.toString() + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + "> '" + value.toString() + "' " + ")";
+					data.reportcondition += " " + attributes + "> '" + value.toString() + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + "> '" + value.toString() + "' ";
+					data.reportcondition += " " + attributes + "> '" + value.toString() + "' " + joins;
 				}
 			}
 			else if (constraints.toLowerCase() == "is less than") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " < '" + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " < '" + value.toString() + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + "< '" + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + "< '" + value.toString() + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + "< '" + value.toString() + "' " + ")";
+					data.reportcondition += " " + attributes + "< '" + value.toString() + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + "< '" + value.toString() + "' ";
+					data.reportcondition += " " + attributes + "< '" + value.toString() + "' " + joins;
 				}
 			}
 			else if (constraints.toLowerCase() == "is greater than or equal to") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " >= '" + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " >= '" + value.toString() + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + ">= '" + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + ">= '" + value.toString() + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + ">= '" + value.toString() + "' " + ")";
+					data.reportcondition += " " + attributes + ">= '" + value.toString() + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + ">= '" + value.toString() + "' ";
+					data.reportcondition += " " + attributes + ">= '" + value.toString() + "' " + joins;
 				}
 			}
 			else if (constraints.toLowerCase() == "is less than or equal to") {
 				if (openpara == true && closepara == true) {
 
-					data.reportcondition += " ( " + attributes + " <= '" + value.toString() + "' " + ")";
+					data.reportcondition += " ( " + attributes + " <= '" + value.toString() + "' " + ")" + joins;
 
 				}
 				else if (openpara == true) {
 
-					data.reportcondition += " (" + attributes + "<= '" + value.toString() + "' ";
+					data.reportcondition += " (" + attributes + "<= '" + value.toString() + "' " + joins;
 
 				}
 				else if (closepara == true) {
-					data.reportcondition += " " + attributes + "<= '" + value.toString() + "' " + ")";
+					data.reportcondition += " " + attributes + "<= '" + value.toString() + "' " + ")" + joins;
 				}
 				else {
-					data.reportcondition += " " + attributes + "<= '" + value.toString() + "' ";
+					data.reportcondition += " " + attributes + "<= '" + value.toString() + "' " + joins;
 				}
 			}
 		}
 
-		if (data.in_recon_code && data.in_report_code && data.in_report_param && data.reportcondition && data.in_ip_addr) {
+		if (data.in_recon_code && data.in_report_code && data.in_report_param && data.reportcondition != 'AND' && data.in_ip_addr) {
 			$.ajax({
 				type: "POST",
 				url: '/Reports/generateReport',
@@ -686,8 +726,23 @@
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
+					var res = JSON.parse(response);
+					var data = res[0];
 					debugger;
-					alert(response)
+					if (data.out_result != '0') {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
 				},
 				error: function (er) {
 					debugger;
@@ -713,7 +768,7 @@
 				content: 'Please choose Report value',
 				type: 'red',
 			});
-		} else if (!data.reportcondition) {
+		} else if (!data.reportcondition == 'AND') {
 			$.alert({
 				title: 'Recon',
 				content: 'Please add any one conditions',
@@ -725,6 +780,7 @@
 				content: 'IP address is missing',
 				type: 'red',
 			});
+		}
 	}
 
 	//function griddata() {

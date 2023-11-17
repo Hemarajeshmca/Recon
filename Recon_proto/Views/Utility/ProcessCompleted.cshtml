@@ -350,7 +350,7 @@
 							{
 								name: "download",
 								id: "btn_download",
-								template: "<a href='' onclick='downloadJob(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px;width: 20px;' src = '../Assets/images/download.png'></a>&nbsp;&nbsp;&nbsp;",
+								template: "<a href='' onclick='downloadJob(this)' value='job_id' data-bs-toggle='modal'><img style='height: 20px;width: 20px;' src = '../Assets/images/download.png'></a>&nbsp;&nbsp;&nbsp;",
 
 							},
 							
@@ -415,8 +415,15 @@
 
 	function downloadJob(val) {
 		debugger;
+		
+		var data = $(val).attr('value');
+		var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+		var grid = $("#grid_jobinprogress").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var job_gid = model.job_gid;
+		window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '';
 
-		window.location.href = '@Url.Action("DownloadFile", "KnockOff")?Subfolder=' + 'foldername' + '&Excelfiles=' + 'excelfile' + '';
+		//window.location.href = '@Url.Action("DownloadFile", "KnockOff")?Subfolder=' + 'foldername' + '&Excelfiles=' + 'excelfile' + '';
 
 		//$.ajax({
 		//	type: "POST",

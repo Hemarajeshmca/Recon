@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text;
 using static Recon_proto.Controllers.DataSetController;
 using static Recon_proto.Controllers.ReconController;
@@ -10,6 +12,7 @@ namespace Recon_proto.Controllers
 {
 	public class UtilityController : Controller
 	{
+		Fileservice _fileservice = new Fileservice();
 		public IActionResult InProgress()
 		{
 			return View();
@@ -109,5 +112,79 @@ namespace Recon_proto.Controllers
 			public String? in_jobtype_code { get; set; }
 			public String? in_jobstatus { get; set; }
 		}
+
+
+		public IActionResult Downloads(string jobid)
+		{
+			fileModel FileDownloadgrid = new fileModel();
+			//string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
+			string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
+			FileDownloadgrid.jobGid= jobid;
+			FileDownloadgrid.jobName= "";
+			FileDownloadgrid.filePath = filepath.Replace("'","");
+
+			using (var client = new HttpClient())
+			{
+				string[] result = { };
+
+				client.BaseAddress = new Uri("http://146.56.55.230:9091/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				//var json = JsonConvert.SerializeObject(FileDownloadgrid);
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
+				content.Headers.Add("user_code", "12345");
+
+				var response = client.PostAsync("files", content).Result;
+
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				string base64data = string.Empty;
+
+				var bytes = new byte[data.Length];
+				data.Read(bytes, 0, bytes.Length);
+				//byte[] bytes = Convert.FromBase64String(reader.ReadLine().Replace('"', ' '));
+				var responses = new FileContentResult(bytes, "application/octet-stream");
+				//responses.FileDownloadName = Job_name;
+
+				var fileName = jobid.ToString() + ".zip";
+
+
+				var contentDisposition = new ContentDisposition
+				{
+					FileName = jobid,
+					Inline = true,
+				};
+
+				Response.Clear();
+				//Response.AddHeader("content-disposition", "inline; filename=" + Job_gid.ToString() + ConfigurationManager.AppSettings["downloadFiletype"].ToString());
+				Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+				Response.Headers.Add("Content-Type", "application/octet-stream");
+				return File(bytes, "application/octet-stream", fileName);
+
+
+				//try
+				//{
+				//	var (fileType, archiveData, archiveName) = _fileservice.DownloadFiles(filepath, jobid);
+
+				//	return File(archiveData, fileType, archiveName);
+				//}
+				//catch (Exception ex)
+				//{
+				//	return BadRequest(ex.Message);
+				//}
+			}
+
+		}
+
+		public class fileModel
+		{
+			public String? jobGid { get; set; }
+
+			public string? jobName { get; set; }
+
+			public String? filePath { get; set; }
+		}
+	
 	}
 }
+
