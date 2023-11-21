@@ -13,7 +13,13 @@ namespace Recon_proto.Controllers
 	public class UtilityController : Controller
 	{
 		Fileservice _fileservice = new Fileservice();
-		public IActionResult InProgress()
+        private IConfiguration _configuration;
+        public UtilityController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        string urlstring = "";
+        public IActionResult InProgress()
 		{
 			return View();
 		}
@@ -25,13 +31,16 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult jobtypelist()
 		{
-			DataTable result = new DataTable();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
 			List<jobtype> objcat_lst = new List<jobtype>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Utility/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
 				var response = client.GetAsync("jobtype").Result;
@@ -61,14 +70,17 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Joblistfetch([FromBody] Jobstatusmodel context)
 		{
-			Jobstatusmodel objList = new Jobstatusmodel();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Jobstatusmodel objList = new Jobstatusmodel();
 			DataTable result = new DataTable();
 			List<Joblistmodel> objcat_lst = new List<Joblistmodel>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Utility/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("jobStatus", content).Result;
@@ -116,7 +128,8 @@ namespace Recon_proto.Controllers
 
 		public IActionResult Downloads(string jobid)
 		{
-			fileModel FileDownloadgrid = new fileModel();
+            urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
+            fileModel FileDownloadgrid = new fileModel();
 			//string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
 			string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
 			FileDownloadgrid.jobGid= jobid;
@@ -126,9 +139,9 @@ namespace Recon_proto.Controllers
 			using (var client = new HttpClient())
 			{
 				string[] result = { };
-
-				client.BaseAddress = new Uri("http://146.56.55.230:9091/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                client.BaseAddress = new Uri(urlstring);
+                //client.BaseAddress = new Uri("http://146.56.55.230:9091/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				//var json = JsonConvert.SerializeObject(FileDownloadgrid);
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");

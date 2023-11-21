@@ -8,19 +8,28 @@ namespace Recon_proto.Controllers
 {
 	public class CommonController : Controller
 	{
-		public IActionResult Index()
+        private IConfiguration _configuration;
+        public CommonController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        string urlstring = "";
+        public IActionResult Index()
 		{
 			return View();
 		}
 		[HttpPost]
 		public JsonResult Qcdmaster([FromBody] Qcdgridread context)
-		{		
-			DataTable result = new DataTable();
+		{
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
 			List<mainQCDMaster> objcat_lst = new List<mainQCDMaster>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+                string Urlcon = "Qcdmaster/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");

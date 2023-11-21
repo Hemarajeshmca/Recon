@@ -59,13 +59,13 @@
 
                     <div class="col-md-3">
                         <label class="form-label">Recon Name</label>
-                        <select id="reconname" class="form-select form-control"> </select>
+                        <select id="reconname" onchange="showRule()" class="form-select form-control"> </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" hidden>
                         <label class="form-label">Preview On</label>
                         <select id="prviewon" class="form-select form-control"> </select>
                     </div>
-                    <div class="col-md-3" style="margin-top: 2%;">
+                    <div class="col-md-3" style="margin-top: 2%;" hidden>
                         <button type="button" class="btn btn-sm save_btn me-2" onclick="showRule()" style="width:40%;margin-top: 7px">
                             Show Rules
                         </button> &nbsp;&nbsp;&nbsp;
@@ -75,8 +75,60 @@
                         </button>*@
                     </div>
                 </div>
-                <div id="grid_preview"></div>
 
+                <div class="row">
+                    <div class="nav-align-top mb-3 mt-3">
+                        <ul class="nav nav-pills mb-2" role="tablist">
+                            <li class="nav-item">
+                                <button type="button"
+                                        class="nav-link active"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#navs-pills-top-Dataset"
+                                        aria-controls="navs-pills-top-Dataset"
+                                        aria-selected="true">
+                                    Rule
+                                </button>
+                            </li>
+
+                            <li class="nav-item">
+                                <button type="button"
+                                        class="nav-link"
+                                        role="tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#navs-pills-top-Dataset"
+                                        aria-controls="navs-pills-top-Dataset"
+                                        aria-selected="true">
+                                    Dataset
+                                </button>
+                            </li>
+                           
+                        </ul>
+                        <div class="tab-content">
+                            @*Rule*@
+                            <div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="col-xs-12">
+                                            <div id="grid_preview">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*Dataset*@
+                            <div class="tab-pane fade" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <div class="col-xs-12">
+                                            <div id="dataset_grid"> </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row" style="margin-bottom: 2%;">
                     <div class="col-md-3">
                         <label for="" class="form-label">Date From</label>
@@ -181,14 +233,13 @@
         debugger;
         try {
             var in_recon_code = $("#reconname").val();
-            var rulepreview = $("#prviewon").val();
+            //var rulepreview = $("#prviewon").val();
             $.ajax({
                 type: "POST",
                 url: '/Rulesetup/RuleAgainstRecon',
                 dataType: 'json',
                 data: JSON.stringify({
                     in_recon_code: in_recon_code,
-                    in_rule_apply_on: rulepreview
                 }),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {

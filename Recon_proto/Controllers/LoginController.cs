@@ -12,11 +12,12 @@ namespace Recon_proto.Controllers
 {
     public class LoginController : Controller
     {
+
         private readonly IConfiguration _configuration;
         private readonly ILogger<LoginController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         string ipAddress = "";
-
+        string urlstring = "";
         public LoginController(
      IConfiguration configuration,
      ILogger<LoginController> logger,
@@ -26,10 +27,12 @@ namespace Recon_proto.Controllers
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
         }
+       
 
         [HttpPost]
         public string Login_validation([FromBody] Login_model1 model)
         {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             Login_model loginmodel = new Login_model();
             List<user_model> objcat_lst = new List<user_model>();
             DataTable result = new DataTable();
@@ -48,7 +51,9 @@ namespace Recon_proto.Controllers
                 loginmodel.user_code = "";
                 loginmodel.user_name = "";
                 loginmodel.oldpassword = "";
-                client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
+                string Urlcon = "UserManagement/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(loginmodel), UTF8Encoding.UTF8, "application/json");
@@ -87,6 +92,7 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public IActionResult changepassword_Save([FromBody] changePassword model)
         {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             string post_data = "";
             List<user_model> objcat_lst = new List<user_model>();
             try
@@ -104,8 +110,9 @@ namespace Recon_proto.Controllers
                     string[] result = { };
                     try
                     {
-                        //string post_data1 = _commonController.GetApiResult(JsonConvert.SerializeObject(changepassModal), "changepass_save");
-                        client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
+                        string Urlcon = "UserManagement/";
+                        client.BaseAddress = new Uri(urlstring + Urlcon);
+                        //client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
                         client.DefaultRequestHeaders.Accept.Clear();
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         HttpContent content = new StringContent(JsonConvert.SerializeObject(changepassModal), UTF8Encoding.UTF8, "application/json");
