@@ -119,6 +119,14 @@
 			float: right;
 			border-radius: 20px;
 		}
+
+		div.k-header.k-grid-toolbar {
+			background-image: none;
+		}
+
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: white !important;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -160,12 +168,12 @@
 							</div>
 							<div class="col-sm-3">
 								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="cmbreconname" class="form-select form-control" onchange="reconchange()">
+								<select id="cmbreconname" class="form-select form-control" onchange="reconchange()" disabled>
 								</select>
 							</div>
 							<div class="col-md-1">
 								<label for="" class="form-label">Rule order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<input class="form-control" id="ruleorder" type="text">
+								<input class="form-control" id="ruleorder" type="number" value="0">
 							</div>
 							<div class="col-md-1" style="padding-left:0">
 								<label for="" class="form-label">Recon Value&nbsp;</label>
@@ -221,7 +229,6 @@
 								</select>
 							</div>
 						</div>
-
 						<div class="row">
 							<div class="nav-align-top mb-3 mt-3">
 								<ul class="nav nav-pills mb-2" role="tablist">
@@ -481,6 +488,7 @@
 								<div class="col-sm-4"></div>
 							</div>
 						</div>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -584,7 +592,6 @@
 			});
 		}
 	}
-
 	function rr1() {
 		$("#newdebit").hide();
 	}
@@ -690,7 +697,6 @@
 		});
 	}
 	function load() {
-
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Active");
@@ -725,19 +731,10 @@
 							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
 							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
-							$("#Accmode").val(res.RuleHeader[0].source_acc_mode);
-							if (res.RuleHeader[0].reversal_flag == "Y") {
-								$("#Reversal1").prop("checked", true);
-							} else if (res.RuleHeader[0].reversal_flag == "N") {
-								$("#Reversal2").prop("checked", true);
-							} else if (res.RuleHeader[0].reversal_flag == "O") {
-								$("#Reversal3").prop("checked", true);
-							}
-							if (res.RuleHeader[0].group_flag == "Y") {
-								$("#groupflag1").prop("checked", true);
-							} else {
-								$("#groupflag2").prop("checked", true);
-							}
+							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
+							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
+							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 							if (res.RuleCondition.length > 0) {
 								grid_rulecondition(res.RuleCondition);
 							}
@@ -965,18 +962,20 @@
 			var in_source_dataset_code = "";
 			var in_comparison_dataset_code = "";
 			var in_source_acc_mode = "";
-			var in_parent_dataset_code = "";
-			var in_support_dataset_code = "";
+			var in_parent_dataset_code = "";		
 			var in_parent_acc_mode = "";
+			var in_comparison_acc_mode = "";
 			var in_applyrule_on = $("#RuleAppliedOn").val();
 			if (in_applyrule_on == 'T') {
 				in_source_dataset_code = $("#sourcedataset").val();
 				in_comparison_dataset_code = $("#comdataset").val();
-				in_source_acc_mode = $("#Accmode").val();
+				in_source_acc_mode = $("#souaccmode").val();
+				in_comparison_acc_mode = $("#comaccmode").val();
 			} else {
-				in_parent_dataset_code = $("#sourcedataset").val();
-				in_support_dataset_code = $("#comdataset").val();
-				in_parent_acc_mode = $("#Accmode").val();
+				in_source_dataset_code = $("#sourcedataset").val();			
+				in_source_acc_mode = $("#souaccmode").val();
+				in_parent_dataset_code = $("#comdataset").val();
+				in_parent_acc_mode = $("#comaccmode").val();
 			}
 			var action = "";
 			if ($("#txtmode").val() == "Create") {
@@ -989,24 +988,19 @@
 			if (rulegid == "") {
 				rulegid = 0;
 			}
-			var status = 0;
-			if ($("#txtstatus").val() == "Active") {
-				status = "Y"
-			} else {
-				status = "N"
-			}
-			var Reversal = $("input[name='Reversal']:checked").val();
-			var Groupflag = $("input[name='Groupflag']:checked").val();
+			var in_rule_order =parseFloat($("#ruleorder").val()).toFixed(2);
+			var status = "D";
+			var Groupflag = $("#cmbgroupflag").val();
 			$.ajax({
 				type: "POST",
 				url: '/Rulesetup/Ruleheader',
 				dataType: 'json',
 				data: JSON.stringify({
 					in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
-					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on,
-					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode,
-					in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode,
-					in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status
+					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
+					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode:in_comparison_acc_mode,
+					in_parent_dataset_code: in_parent_dataset_code,in_parent_acc_mode: in_parent_acc_mode,
+					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -1080,7 +1074,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href='' value='edit' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saverulecondition()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "edit",
@@ -1156,7 +1150,7 @@
 			},
 			{
 				field: "close_param",
-				title: "(",
+				title: ")",
 				width: 20,
 				template: "<input id='preview_checkbox' type='checkbox' />",
 				filterable: false,
@@ -1410,7 +1404,7 @@
 	function ExtractDropdown() {
 		var dropdownHtml = "";
 		dropdownHtml = '<select class="dropdown form-select1" id="cmbextractcriteria">';
-		dropdownHtml += '<option value="">  Select  </option>';		
+		dropdownHtml += '<option value="">  Select  </option>';
 		dropdownHtml += '</select>';
 		return dropdownHtml;
 	}
@@ -1432,9 +1426,11 @@
 	}
 	function saverulecondition() {
 		try {
+			var grid = $("#grid_rulecondition").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
 			var in_rule_code = $("#txtrulecode").val();
-			var in_source_field = $("#cmbsourcefield").val();
-			var in_comparison_field = $("#cmbcomparisionfield").val();
+			var in_source_field = $("#cmbsourcefield1").val();
+			var in_comparison_field = $("#cmbcomparisionfield1").val();
 			var in_extraction_criteria = $("#cmbextractcriteria").val();
 			var in_comparison_criteria = $("#cmbcomparecriteria").val();
 			var action = "";
@@ -2216,7 +2212,7 @@
 			success: function (response) {
 				var res = JSON.parse(response);
 				$.each(res, function (index, item) {
-					if (item.dataset_type == "S" && $("#sourcedataset").val()) {
+					if (item.dataset_type == "S" && item.dataset_code == $("#sourcedataset").val()) {
 						$("#comdataset").val(item.parent_dataset_code);
 					}
 				});
