@@ -102,7 +102,8 @@
 
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
-							<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+							@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+							<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 							<div id="grid_datasetfield">
 							</div>
 						</div>
@@ -276,7 +277,6 @@
 		});
 	}
 	function saveheader() {
-		debugger;
 		try {
 			var dataset_name = $("#datasetname").val();
 			var dataset_category = $("#cmbcategory").val();
@@ -297,14 +297,9 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "vijay"
+			var action_by = "vijay";
+			var status = "D"
 
-			var status = 0;
-			if ($("#txtstatus").val() == "Active") {
-				status = "Y"
-			} else {
-				status = "D"
-			}
 			$.ajax({
 				type: "POST",
 				url: '/DataSet/Datasetheader',
@@ -383,7 +378,7 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getdetailSelectedRows()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
@@ -471,7 +466,7 @@
 				datasetdetail_id = 0;
 				action = "INSERT"
 			}
-			var status = "Y";			
+			var status = "Y";
 			var mandatory = $("input[name='mandatory']:checked").val();
 			$.ajax({
 				type: "POST",
@@ -509,24 +504,84 @@
 			console.log(e)
 		}
 	}
-	function getdetailSelectedRows() {
-		debugger;
-		var grid = $("#grid_datasetfield").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());
-		$("#datasetfield").val(selectedItem.field_name);
-		$("#datasetdetail_id").val(selectedItem.datasetdetail_id);
-		$("#txtmodeflag").val("edit");
-		$("#cmbFieldType").val(selectedItem.field_type);
-		$("#fieldlength").val(selectedItem.field_length);
-		if (selectedItem.field_mandatory == "Yes") {
-			$("#mandatory1").prop("checked", true);
-		} else {
-			$("#mandatory2").prop("checked", true);
+	function getdetailSelectedRows(mode) {
+		if ($(mode).attr('value') == "edit") {
+			var grid = $("#grid_datasetfield").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#datasetfield").val(selectedItem.field_name);
+			$("#datasetdetail_id").val(selectedItem.datasetdetail_id);
+			$("#txtmodeflag").val("edit");
+			$("#cmbFieldType").val(selectedItem.field_type);
+			$("#fieldlength").val(selectedItem.field_length);
+			if (selectedItem.field_mandatory == "Yes") {
+				$("#mandatory1").prop("checked", true);
+			} else {
+				$("#mandatory2").prop("checked", true);
+			}
+			fieldtype();
+			$("#fieldPrecision").val(selectedItem.precision_length);
+			$("#fieldscale").val(selectedItem.scale_length);
+			$("#newdebit").modal('show');
+		} else if ($(mode).attr('value') == "create") {
+			var dataset_id = $("#datasetgid").val();
+			if (dataset_id > 0) {
+				dataset_id = $("#datasetgid").val();
+				$("#newdebit").modal('show');
+				return;
+			} else {
+				dataset_id = 0;
+			}
+			var dataset_name = $("#datasetname").val();
+			var dataset_category = $("#cmbcategory").val();
+			var dataset_code = $("#txtdatasetcode").val();
+			var clone_dataset = $("#Cmbclone").val();
+			var action = "";
+			var dataset_id = $("#datasetgid").val();
+
+			if (dataset_id > 0) {
+				dataset_id = $("#datasetgid").val();
+				return;
+			} else {
+				dataset_id = 0;
+			}
+
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay"
+			var status = "D"
+
+			$.ajax({
+				type: "POST",
+				url: '/DataSet/Datasetheader',
+				dataType: 'json',
+				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					debugger;
+					if (data.out_result == "1") {
+						detailsfetch($("#txtdatasetcode").val());
+						$("#datasetgid").val(data.in_dataset_gid);
+						$("#newdebit").modal('show');
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
 		}
-		fieldtype();
-		$("#fieldPrecision").val(selectedItem.precision_length);
-		$("#fieldscale").val(selectedItem.scale_length);
-		$("#newdebit").modal('show');
 	}
 	function getGridComboList() {
 		var data = {};
@@ -546,10 +601,12 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
-					$("#Cmbclone").append($('<option>', {
-						value: item.datasetCode,
-						text: item.dataset_name
-					}));
+					if (item.active_status == "Y") {
+						$("#Cmbclone").append($('<option>', {
+							value: item.datasetCode,
+							text: item.dataset_name
+						}));
+					}
 				});
 			}
 		});
@@ -691,54 +748,65 @@
 		});
 	}
 	function saveheadersubmit() {
-		var dataset_name = $("#datasetname").val();
-		var dataset_category = $("#cmbcategory").val();
-		var dataset_code = $("#txtdatasetcode").val();
-		var clone_dataset = $("#Cmbclone").val();
-		var action = "";
-		var action_by = "vijay"
-		var dataset_id = $("#datasetgid").val();
-		if (dataset_id > 0) {
-			dataset_id = $("#datasetgid").val();
-			action = "UPDATE"
-		} else {
-			dataset_id = 0;
-			action = "INSERT"
-		}
-		var status = "Y";
-		$.ajax({
-			type: "POST",
-			url: '/DataSet/Datasetheader',
-			dataType: 'json',
-			data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var result = JSON.parse(response);
-				var data = result[0];
-				debugger;
-				if (data.out_result == "1") {
-					$.alert({
-						title: 'Recon',
-						content: data.out_msg,
-						type: 'green',
-					});
-					detailsfetch($("#txtdatasetcode").val());
-					$("#datasetgid").val(data.in_dataset_gid);
-					window.location.href = "../DataSet/DataSetList";
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: data.out_msg,
-						type: 'red',
-					});
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
+		var grid = $("#grid_datasetfield").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var recordsOnCurrentView = dataSource.view().length;
+		if (recordsOnCurrentView >= 1) {
+			var dataset_name = $("#datasetname").val();
+			var dataset_category = $("#cmbcategory").val();
+			var dataset_code = $("#txtdatasetcode").val();
+			var clone_dataset = $("#Cmbclone").val();
+			var action = "";
+			var action_by = "vijay"
+			var dataset_id = $("#datasetgid").val();
+			if (dataset_id > 0) {
+				dataset_id = $("#datasetgid").val();
+				action = "UPDATE"
+			} else {
+				dataset_id = 0;
+				action = "INSERT"
 			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '/DataSet/Datasetheader',
+				dataType: 'json',
+				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					debugger;
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						detailsfetch($("#txtdatasetcode").val());
+						$("#datasetgid").val(data.in_dataset_gid);
+						window.location.href = "../DataSet/DataSetList";
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
 
-		});
+			});
+		}else{
+			$.alert({
+				title: 'Recon',
+				content: "List Empty",
+				type: 'red',
+			});
+		}
 	}
 </script>
 
