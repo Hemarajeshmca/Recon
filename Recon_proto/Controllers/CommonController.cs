@@ -20,7 +20,7 @@ namespace Recon_proto.Controllers
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Qcdmaster/");
+				client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");

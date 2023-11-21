@@ -10,6 +10,15 @@
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 28rem !important;
 		}
+		a {
+			color: #fff !important;
+		}
+
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: #fff !important;
+		}
+
+
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -30,57 +39,22 @@
 					<div class="col-md-3">
 						<label for="organization" class="form-label">Recon Name</label><br>
 						<select id="reconname" class="form-select form-control"> </select>
-
-
 					</div>
 					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="button" onclick="run()" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:25%;margin-top: 7px">
+						<button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%">
 							Run
 						</button>
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;margin-top: 7px">
+						<button type="submit" class="btn btn-sm save_btn me-2" style="">
 							Month Brs
 						</button>
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;margin-top: 7px">
+						<button type="submit" class="btn btn-sm save_btn me-2" style="">
 							Daily Brs
 						</button>
 
 					</div>
-				
-				
-
 				</div>
 
-				<div class="row">
-					<div></div>
-@*					<table class="table table-bordered table-sm">
-						<thead style="background: #c1c1c1;">
-							<tr class="text-nowrap">
-								<th>Particular</th>
-								<th>Amount</th>
-								<th>Account Mode</th>
-								<th>Balance Amount</th>
-
-							</tr>
-						</thead>
-						<tbody>
-							<tr style="height:25px;">
-								<td align="center"> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-
-							</tr>
-							<tr style="height:25px;">
-								<td align="center"> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-
-							</tr>
-						</tbody>
-					</table>
-*@				</div>
-
+					<div id="grid_dataset"></div>
 			</div>
 		</div>
 	</div>
@@ -95,15 +69,15 @@
 	});
 
 	function getreconlist() {
+		debugger;
 		var data = {};
-		data.in_user_gid = 0;
-		data.in_active_status = '';
+		data.in_recontype_code = 'B';
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '/Recon/Reconlistfetch',
+			url: '/Recon/getReconAgainstTypeCode',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: '', in_active_status: '' }),
+			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				debugger;
@@ -141,7 +115,12 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				debugger;
-				alert(response)
+				var res = JSON.parse(response)
+				if (res.length > 0) {
+					loadGrid(res);
+				} else {
+					loadGrid([]);
+				}
 			},
 			error: function (er) {
 				debugger;
@@ -149,6 +128,78 @@
 				console.log(er)
 			}
 		});
+	}
+
+	function loadGrid(data) {
+		try {
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 20,
+					schema: {
+						model: {
+							fields: {
+								brs_gid: { type: "string" },
+								particulars: { type: "string" },
+								tran_value: { type: "string" },
+								tran_acc_mode: { type: "string" },
+								bal_value: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 458,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: false,
+				navigatable: true,
+				columns: [
+				{
+					field: "brs_gid",
+					title: "brs_gid",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "particulars",
+					title: "Particular",
+					width: 100,
+				},
+				{
+					field: "tran_value",
+					title: "Amount",
+					width: 100,
+				},
+				{
+					field: "tran_acc_mode",
+					title: "Account Mode",
+					width: 100,
+				},
+				{
+					field: "bal_value",
+					title: "Balance Amount",
+					width: 100,
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
 	}
 
 </script>
