@@ -207,7 +207,7 @@
 				<div class="menu-inner-shadow"></div>
 				<ul class="menu-inner py-1">
 					
-					<li class="menu-item">
+			@*		<li class="menu-item">
 						<a href="#" class="menu-link menu-toggle">
 							<i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Maintenance"></i>
 							<div data-i18n="Maintenance">Maintenance</div>
@@ -252,7 +252,7 @@
 					
 						</ul>
 					</li>
-					
+					*@
 					
 					<li class="menu-item">
 						<a href="#" class="menu-link menu-toggle">
@@ -350,33 +350,33 @@
 						</ul>
 					</li>
 					<li class="menu-item">
-						<a href="../Reports/WithinAccounts" class="menu-link menu-toggle">
+						<a href="~/Reports/WithinAccounts" class="menu-link menu-toggle">
 							<i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
 							<div data-i18n="Report">Report</div>
 						</a>
 						<ul class="menu-sub">
 							<li class="menu-item">
-								<a href="../Reports/WithinAccounts" class="menu-link">
+								<a href="~/Reports/WithinAccounts" class="menu-link">
 									<div data-i18n="Recon">Recon - Within A/cs</div>
 								</a>
 							</li>
 							<li class="menu-item">
-								<a href="../Reports/BetweenAccounts" class="menu-link">
+								<a href="~/Reports/BetweenAccounts" class="menu-link">
 									<div data-i18n="Recon">Recon - Between A/cs</div>
 								</a>
 							</li>
 							<li class="menu-item">
-								<a href="../Reports/ReportGeneration" class="menu-link">
+								<a href="~/Reports/ReportGeneration" class="menu-link">
 									<div data-i18n="Recon">Report Generation</div>
 								</a>
 							</li>
 							<li class="menu-item">
-								<a href="../Reports/KnockoffMIS" class="menu-link">
+								<a href="~/Reports/KnockoffMIS" class="menu-link">
 									<div data-i18n="Recon">Report KnockOff MIS</div>
 								</a>
 							</li>
 							<li class="menu-item">
-								<a href="../Reports/PaginationReport" class="menu-link">
+								<a href="~/Reports/PaginationReport" class="menu-link">
 									<div data-i18n="Recon">Pagination Report</div>
 								</a>
 							</li>
@@ -401,12 +401,126 @@
 							<i class="bx bx-menu bx-sm"></i>
 						</a>
 					</div>
-					<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-						<ul class="navbar-nav flex-row align-items-center ms-auto">
+					<div class="navbar-nav-right" id="navbar-collapse">
+						<div class="row">
+							<div class="col-md-6" style="display:flex;">
+								<ul class="navbar-nav flex-row align-items-center ms-auto">
+									<li >
+										<h5 class="card-header" id="navhead"></h5>
+									</li>
+									</ul>
+							</div>
+							<div class="col-md-6" style="display:flex;">
+								<ul class="navbar-nav flex-row align-items-center ms-auto">
+									<li class="nav-item navbar-dropdown dropdown-user dropdown">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<div class="avatar-online card-header">
+												Maintenance
+											</div>
+										</a>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li>
+												<a class="dropdown-item" href="~/DataSet/DataSetList">
+													<span class="align-middle">Dataset Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Recon/ReconList">
+													<span class="align-middle">Recon Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Connnector/connectors">
+													<span class="align-middle">Connector Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Pipeline/Pipeline">
+													<span class="align-middle">Pipeline Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Rulesetup/Rulesetup">
+													<span class="align-middle">Rule Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Knockoff/PreviewRuleBase">
+													<span class="align-middle">Rule Preview</span>
+												</a>
+												<a class="dropdown-item" href="~/QCDmaster/QcdMaster">
+													<span class="align-middle">QCD Master</span>
+												</a>
+											</li>
+										</ul>
+									</li>
+									<li class="home-menu">
+										<a href="@Url.Action("Dashboard", "Dashboard")">
+											<img src="~/Content/css/dist/images/home.png" class="home-image" alt="Home Image">
+										</a>
+									</li>
+									<li class="nav-item navbar-dropdown dropdown-user dropdown">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<div class="avatar avatar-online">
+												<i class='bx bxs-group' data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile"></i>
+											</div>
+										</a>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li style="margin-bottom:-22px;">
+												<a class="dropdown-item" href="#">
+													<div class="d-flex">
+														<div class="flex-shrink-0 me-3">
+															<center>
+																<div class="avatar avatar-online">
+																	<img src="~/Assets/images/profile.jpg" class="w-px-40 h-auto rounded-circle" />
+																</div>
+															</center>
+														</div>
+													</div>
+												</a>
+											</li>
+											<li>
+												<div class="dropdown-divider"></div>
+											</li>
+											<li>
+
+												<a class="dropdown-item" href="#">
+													<i class="bx bx-user me-2"></i>
+													<span class="align-middle">Super Admin</span>
+												</a>
+											</li>
+											<li>
+												<div class="dropdown-divider"></div>
+											</li>
+											<li>
+												<a class="dropdown-item" href="../Login/ChangePassword" onclick="showchangepasswordscreen();">
+													<i class="bx bxs-lock-alt me-2"></i>
+													<span class="align-middle">Change Password</span>
+												</a>
+												<a class="dropdown-item" href="#" onclick="return Signout();">
+													<i class="bx bx-power-off me-2"></i>
+													<span class="align-middle">Log Out</span>
+												</a>
+											</li>
+										</ul>
+									</li>
+
+									</ul>
+							</div>
+						</div>
+@*						<ul class="navbar-nav flex-row align-items-center ms-auto">
 							<li class="nav-item me-2 me-xl-50" style="margin-right: 33rem !important">
 								<h5 class="card-header" id="navhead"></h5>
 							</li>
 							<li class="nav-item dropdown-language dropdown me-2 me-xl-0">
+							</li>
+
+							<li class="nav-item navbar-dropdown dropdown-user dropdown">
+								<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+									<div class="avatar avatar-online">
+										Maintance
+									</div>
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end">
+									<li>
+										<a class="dropdown-item" href="../DataSet/DataSetList">
+											<span class="align-middle">Dataset Setup</span>
+										</a>
+										<a class="dropdown-item" href="../Recon/ReconList">
+											<span class="align-middle">Recon Setup</span>
+										</a>
+									</li>
+								</ul>
 							</li>
 							<li class="home-menu">
 								<a href="@Url.Action("Dashboard", "Dashboard")">
@@ -437,22 +551,7 @@
 										<div class="dropdown-divider"></div>
 									</li>
 									<li>
-										<a class="dropdown-item" href="#">
-											<i class="bx bxs-smile me-2"></i>
-											<span class="align-middle" id="empname"></span>
-										</a>
-										<a class="dropdown-item" href="#">
-											<i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-											<span class="align-middle" id="empcode"></span>
-										</a>
-										<a class="dropdown-item" href="#">
-											<i class="bx bx-envelope me-2"></i>
-											<span class="align-middle" id="empemail"></span>
-										</a>
-										<a class="dropdown-item" href="#">
-											<i class="fa fa-phone-square me-2"></i>
-											<span class="align-middle" id="empmobile"></span>
-										</a>
+										
 										<a class="dropdown-item" href="#">
 											<i class="bx bx-user me-2"></i>
 											<span class="align-middle">Super Admin</span>
@@ -474,20 +573,16 @@
 								</ul>
 							</li>
 
-							<!--/ User -->
+							
 						</ul>
-					</div>
+*@					</div>
 
-				</nav>
-				@*<div class="container-xxl" style="padding-right: 20px;margin-bottom: 20px; padding-left: 20px;border-radius:20px;margin-top:-9px;">
-				</div>*@
-
-
+				</nav>		
 				<div class="content-wrapper">
 					@RenderBody()
-
 				</div>
 			</div>
+		
 		</div>
 
 		<div class="layout-overlay layout-menu-toggle"></div>

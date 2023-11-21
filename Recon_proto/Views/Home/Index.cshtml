@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
+
 <!Doctype html>
 <html>
 <head>
@@ -457,3 +458,131 @@
 
 
 </script>
+
+
+@*<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Input Dropdown</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Add some additional styling if needed */
+        .single-input-dropdown {
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+
+        <div class="form-group">
+            <label for="singleInputDropdown">Select or type to search:</label>
+            <div class="input-group single-input-dropdown">
+                <input type="text"
+                       class="form-control"
+                       id="singleInputDropdown"
+                       placeholder="Type to search..."
+                       data-toggle="dropdown"
+                       aria-haspopup="true"
+                       aria-expanded="false"
+                onkeyup="myFunction()">
+                <div class="dropdown-menu" aria-labelledby="singleInputDropdown">
+                   
+                </div>
+            </div>
+        </div>
+
+        <p id="selectedItem">Selected Item: </p>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+        getGridComboList();
+   
+        });
+
+        function getGridComboList() {
+            debugger;
+            var DBresponse = "";
+            const inputElement = $('#singleInputDropdown');
+            const dropdownMenu = inputElement.next('.dropdown-menu');
+            var in_master_code = "QCD_RC_RCON_TYPE";
+            var in_user_code = "sundar";
+            $.ajax({
+                type: "POST",
+                url: '/Common/Qcdmaster',
+                dataType: 'json',
+                data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    debugger;
+                    DBresponse = JSON.stringify(response)
+                    try {
+
+                        // Iterate over the array to populate the initial dropdown
+                        response.forEach(option => {
+                            debugger;
+                            const optionItem = $('<button class="dropdown-item" type="button"></button>').text(option.masterName);
+                            optionItem.on('click', function () {
+                                debugger;
+                                inputElement.val(option.masterName);
+                                $('#selectedItem').text('Selected Item: ' + option.masterName);
+                                dropdownMenu.html('');
+                            });
+                            dropdownMenu.append(optionItem);
+                        });
+                    } catch (error) {
+                        console.error('Error parsing JSON on page load:', error);
+                    }
+                 }
+ 
+            });
+
+            inputElement.on('keyup', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                dropdownMenu.html('');
+
+                try {
+                    const dataArray = JSON.parse(DBresponse);
+
+                    // Iterate over the array to dynamically populate the dropdown
+                    dataArray.forEach(option => {
+                        if (option.masterName.toLowerCase().includes(searchTerm)) {
+                            const optionItem = $('<button class="dropdown-item" type="button"></button>').text(option.masterName);
+                            optionItem.on('click', function () {
+                                inputElement.val(option.masterName);
+                                $('#selectedItem').text('Selected Item: ' + option.masterName);
+                                dropdownMenu.html('');
+                            });
+                            dropdownMenu.append(optionItem);
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error parsing JSON dynamically:', error);
+                }
+            });
+                let firstClick = true;
+                inputElement.on('click', function () {
+                    if (firstClick) {
+                        inputElement.trigger('keyup');
+                        firstClick = false;
+                    }
+                });
+        }
+
+
+
+    </script>
+
+</body>
+</html>*@

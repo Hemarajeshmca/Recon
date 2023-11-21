@@ -25,7 +25,8 @@ namespace Recon_proto.Controllers
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+
+				client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
@@ -403,7 +404,7 @@ namespace Recon_proto.Controllers
 			}
 		}
 
-	public class getReconknockoff
+		public class getReconknockoff
 		{
 			public Int32? recon_gid { get; set; }
 			public String? recon_code { get; set; }
@@ -416,6 +417,48 @@ namespace Recon_proto.Controllers
 			public String? jobstatus_desc { get; set; }
 		}
 
+
+		[HttpPost]
+		public JsonResult getReconAgainstTypeCode([FromBody] recontypemodel context)
+		{
+			DataTable result = new DataTable();
+			List<Reconlistmodel> objcat_lst = new List<Reconlistmodel>();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getReconAgainstTypecode", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					Reconlistmodel objcat = new Reconlistmodel();
+					objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
+					objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+					objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+					objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
+					objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
+					objcat.period_from = result.Rows[i]["period_from"].ToString();
+					objcat.period_to = result.Rows[i]["period_to"].ToString();
+					objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
+					objcat.active_status = result.Rows[i]["active_status"].ToString();
+					objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+					objcat_lst.Add(objcat);
+				}
+				return Json(objcat_lst);
+			}
+		}
+
+		public class recontypemodel
+		{
+			public String? in_recontype_code { get; set;}
+		}
 
 	}
 }
