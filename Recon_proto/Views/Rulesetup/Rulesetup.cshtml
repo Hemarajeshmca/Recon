@@ -91,11 +91,13 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
-					$("#cmbreconname").append($('<option>', {
-						value: item.recon_code,
-						text: item.recon_name
-					}));
-				});				
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
 			},
 			error: function (er) {
 				alert(er)
@@ -217,10 +219,18 @@
 		}
 	}
 	function getSerializedRows() {
-		btn_onClick('Create');
-		//var selectedItem=
-		//setlocalStorage("ls_pageList", selectedItem);
+		btn_onClick('Create');		
+		var selectedItem=$("#cmbreconname").val();
+		if (selectedItem != "") {
+		setlocalStorage("ls_pageList", selectedItem);
 		document.location = "../Rulesetup/Rulesetupdetail";
+		}else{
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ",
+				type: 'red',
+			});
+		}
 	}
 	function getSerializedSelectedRows(mode) {
 		try {
@@ -305,14 +315,14 @@
 					var in_source_acc_mode = "";
 					var in_parent_dataset_code = "";
 					var in_support_dataset_code = "";
-					var in_parent_acc_mode = "";					
+					var in_parent_acc_mode = "";
 					var action = "DELETE";
 					var action_by = "vijay"
 					var rulegid = model.rule_gid;
 					var status = "";
 					var Reversal = "";
 					var Groupflag = "";
-					var in_until_active_flag="";
+					var in_until_active_flag = "";
 					var in_applyrule_on = "";
 					$.ajax({
 						type: "POST",

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
@@ -9,7 +10,13 @@ namespace Recon_proto.Controllers
 {
 	public class DataSetController : Controller
 	{
-		public IActionResult DataSetList()
+        private IConfiguration _configuration;
+        public DataSetController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        string urlstring = "";
+        public IActionResult DataSetList()
 		{
 			return View();
 		}
@@ -21,13 +28,15 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Datasetlistfetch([FromBody] Datasetlistmodel context)
 		{
-			Datasetlistmodel objList = new Datasetlistmodel();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Datasetlistmodel objList = new Datasetlistmodel();
 			DataTable result = new DataTable();
 			List<Datasetlistmodel> objcat_lst = new List<Datasetlistmodel>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+                string Urlcon = "Dataset/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);             
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
