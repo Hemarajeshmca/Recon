@@ -13,6 +13,12 @@ namespace Recon_proto.Controllers
 {
     public class QCDmasterController : Controller
     {
+        private IConfiguration _configuration;
+        public QCDmasterController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        string urlstring = "";
         public IActionResult QcdMaster()
         {
             return View();
@@ -21,13 +27,16 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult QcdMasterGridRead([FromBody] QcdlistModal context)
         {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             QcdlistModal objList = new QcdlistModal();
             DataTable result = new DataTable();
             List<QcdMasterModel> objcat_lst = new List<QcdMasterModel>();
             string post_data = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/qcdmaster/");
+                string Urlcon = "qcdmaster/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/qcdmaster/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
@@ -60,12 +69,15 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult QcdCrud([FromBody] QcdCrudModal context)
         {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             QcdCrudModal objList = new QcdCrudModal();
             DataTable result = new DataTable();
             string post_data = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/qcdmaster/");
+                string Urlcon = "qcdmaster/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/qcdmaster/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");

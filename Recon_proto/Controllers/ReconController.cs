@@ -8,7 +8,13 @@ namespace Recon_proto.Controllers
 {
 	public class ReconController : Controller
 	{
-		public IActionResult ReconView()
+        private IConfiguration _configuration;
+        public ReconController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        string urlstring = "";
+        public IActionResult ReconView()
 		{
 			return View();
 		}
@@ -19,15 +25,17 @@ namespace Recon_proto.Controllers
 		#region list
 		[HttpPost]
 		public JsonResult Reconlistfetch([FromBody] Reconlistmodel context)
-		{			
-			DataTable result = new DataTable();
+		{
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
 			List<Reconlistmodel> objcat_lst = new List<Reconlistmodel>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-
-				client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("reconlist", content).Result;
@@ -75,12 +83,15 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult getrecontype()
 		{
-			DataTable result = new DataTable();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
 			List<recontype> objcat_lst = new List<recontype>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
@@ -114,13 +125,16 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Reconheadersave([FromBody] Reconheader context)
 		{
-			Reconheader objList = new Reconheader();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Reconheader objList = new Reconheader();
 			DataTable result = new DataTable();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Dataset/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("Recon", content).Result;
@@ -167,12 +181,15 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Recondatasetsave([FromBody] Recondataset context)
 		{
-			Recondataset objList = new Recondataset();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Recondataset objList = new Recondataset();
 			DataTable result = new DataTable();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
 				client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
@@ -210,15 +227,18 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Reconheaderfetch([FromBody] fetchRecon context)
 		{
-			DataSet result = new DataSet();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
 			DataTable result1 = new DataTable();
 			List<fetchRecondataset> objcat_lst = new List<fetchRecondataset>();
 			string post_data = "";
 			string d2 = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("fetchrecondetails", content).Result;
@@ -273,14 +293,16 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Recondatasetmappingsave([FromBody] datamapping context)
 		{
-			
-			datamapping objList = new datamapping();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            datamapping objList = new datamapping();
 			DataTable result = new DataTable();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("recondatamapping", content).Result;
@@ -319,14 +341,17 @@ namespace Recon_proto.Controllers
 
 		[HttpPost]
 		public JsonResult Recondatasetmappingfetch([FromBody] getReconDataMappingList context)
-		{		
-			DataTable result1 = new DataTable();
+		{
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result1 = new DataTable();
 			List<getReconDataMapping> objcat_lst = new List<getReconDataMapping>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("getReconDataMappingList", content).Result;
@@ -371,13 +396,16 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Reconlistknockoff()
 		{
-			DataTable result1 = new DataTable();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result1 = new DataTable();
 			List<getReconknockoff> objcat_lst = new List<getReconknockoff>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("getreconknockofflist", content).Result;
@@ -421,13 +449,16 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult getReconAgainstTypeCode([FromBody] recontypemodel context)
 		{
-			DataTable result = new DataTable();
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
 			List<Reconlistmodel> objcat_lst = new List<Reconlistmodel>();
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-				client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
+                string Urlcon = "Recon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 				var response = client.PostAsync("getReconAgainstTypecode", content).Result;
