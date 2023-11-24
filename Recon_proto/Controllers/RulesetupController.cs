@@ -4,14 +4,18 @@ using System;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
-using static Recon_proto.Controllers.DataSetController;
-using static Recon_proto.Controllers.ReconController;
 
 namespace Recon_proto.Controllers
 {
     public class RulesetupController : Controller
     {
-        public IActionResult Rulesetup()
+		private IConfiguration _configuration;
+		public RulesetupController(IConfiguration configuration)
+		{
+			_configuration = configuration;
+		}
+        string urlstring = "";		
+		public IActionResult Rulesetup()
         {
             return View();
         }
@@ -40,13 +44,15 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult Rulesetuplistfetch([FromBody] Rulesetuplist context)
         {
-            DataTable result = new DataTable();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
             List<Rulesetuplistmodel> objcat_lst = new List<Rulesetuplistmodel>();
             string post_data = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+			    client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("rulelist", content).Result;
@@ -100,13 +106,15 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult Ruleheader([FromBody] Rulesetupheader context)
         {
-            Rulesetupheader objList = new Rulesetupheader();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Rulesetupheader objList = new Rulesetupheader();
             DataTable result = new DataTable();
             string post_data = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("ruleheader", content).Result;
@@ -134,15 +142,15 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult rulefetch([FromBody] fetchRule context)
         {
-            DataSet result = new DataSet();
-            DataTable result1 = new DataTable();
-            List<fetchRecondataset> objcat_lst = new List<fetchRecondataset>();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();          
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("fetchrule", content).Result;
@@ -169,15 +177,16 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult rulerecondatasetfetch([FromBody] getdataagainsRecon context)
         {
-            DataSet result = new DataSet();
-            DataTable result1 = new DataTable();
-            List<fetchRecondataset> objcat_lst = new List<fetchRecondataset>();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+            DataTable result1 = new DataTable();           
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("getdataagainsRecon", content).Result;
@@ -195,16 +204,19 @@ namespace Recon_proto.Controllers
         {
             public String? in_condition_type { get; set; }
             public String? in_field_type { get; set; }
-        }
+			public String? in_recon_code { get; set; }
+		}
         [HttpPost]
         public JsonResult rulefilterfetch([FromBody] getCondition context)
         {
-            string post_data = "";
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("getCondition", content).Result;
@@ -226,7 +238,10 @@ namespace Recon_proto.Controllers
             public string? in_comparison_field { get; set; }
             public string? in_extraction_criteria { get; set; }
             public string? in_comparison_criteria { get; set; }
-            public string? in_active_status { get; set; }
+			public string? in_open_flag { get; set; }
+			public string? in_close_flag { get; set; }
+			public string? in_join_condition { get; set; }
+			public string? in_active_status { get; set; }
             public string? in_action { get; set; }
             public string? in_user_code { get; set; }
             public string? out_msg { get; set; }
@@ -236,14 +251,16 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult ruleconditionsave([FromBody] RuleCondition context)
         {
-            RuleCondition objList = new RuleCondition();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			RuleCondition objList = new RuleCondition();
             DataTable result = new DataTable();
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("rulecondition", content).Result;
@@ -281,14 +298,16 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult rulegroupsave([FromBody] Rulegrouping context)
         {
-            Rulegrouping objList = new Rulegrouping();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Rulegrouping objList = new Rulegrouping();
             DataTable result = new DataTable();
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("rulegrouping", content).Result;
@@ -316,12 +335,14 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult FieldAgainstRecon([FromBody] getFieldAgainstReconList context)
         {
-            string post_data = "";
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Recon/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("getFieldAgainstRecon", content).Result;
@@ -344,7 +365,10 @@ namespace Recon_proto.Controllers
             public string? in_filter_criteria { get; set; }
             public string? in_ident_criteria { get; set; }
             public string? in_ident_value { get; set; }
-            public string? in_active_status { get; set; }
+			public string? in_open_flag { get; set; }
+			public string? in_close_flag { get; set; }
+			public string? in_join_condition { get; set; }
+			public string? in_active_status { get; set; }
             public string? in_action { get; set; }
             public string? in_user_code { get; set; }
             public string? out_msg { get; set; }
@@ -353,14 +377,16 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult ruleIdentifiersave([FromBody] RuleIdentifier context)
         {
-            RuleIdentifier objList = new RuleIdentifier();
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			RuleIdentifier objList = new RuleIdentifier();
             DataTable result = new DataTable();
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("ruleidentifier", content).Result;
@@ -378,10 +404,55 @@ namespace Recon_proto.Controllers
                 return Json(objList);
             }
         }
-        #endregion
+		#endregion
 
+		#region rule field order
+		public class Rulefieldorder
+		{
+			public int? in_rulerecorder_gid { get; set; }
+			public string? in_rule_code { get; set; }
+			public string? in_recorder_applied_on { get; set; }
+			public int? in_recorder_seqno { get; set; }
+			public string? in_recorder_field { get; set; }
+			public string? in_active_status { get; set; }
+			public string? in_action { get; set; }
+			public string? in_user_code { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+		[HttpPost]
+		public JsonResult Rulefieldordersave([FromBody] Rulefieldorder context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Rulefieldorder objList = new Rulefieldorder();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("rulefieldorder", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					objList.in_rulerecorder_gid = Convert.ToInt32(result.Rows[i]["in_rulerecorder_gid"]);
+					objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					objList.out_result = result.Rows[i]["out_result"].ToString();
+				}
+				return Json(objList);
+			}
+		}
+		#endregion
 
-        public class Ruleagainstrecon
+		public class Ruleagainstrecon
         {
             public string? in_recon_code { get; set; }
             public string? in_rule_apply_on { get; set; }
@@ -401,15 +472,16 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult RuleAgainstRecon([FromBody] Ruleagainstrecon context)
         {
-            List<RuleAgainstReconList> objcat_lst = new List<RuleAgainstReconList>();
-
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			List<RuleAgainstReconList> objcat_lst = new List<RuleAgainstReconList>();
             DataTable result = new DataTable();
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44348/api/Rulesetup/");
-                client.DefaultRequestHeaders.Accept.Clear();
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                 var response = client.PostAsync("getruleagainstRecon", content).Result;
