@@ -154,14 +154,16 @@
 	
 	<link href="~/Content/kendo1/2015.1.318/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
 	<link href="~/Content/kendo1/2015.1.318/kendo.dataviz.min.css" rel="stylesheet" type="text/css" />
-	<link href="~/Content/kendo1/2015.1.318/kendo.default.min.css" rel="stylesheet" type="text/css" />
 	<link href="~/Content/kendo1/2015.1.318/kendo.dataviz.default.min.css" rel="stylesheet" type="text/css" />
-
+	<link href="~/css/kendo.default.min.css" rel="stylesheet" />
+	<link href="~/css/kendo.common.min.css" rel="stylesheet" />
 	<link href="~/Content/css/jquery-ui-datepicker.css" rel="stylesheet" type="text/css" />
 	<script src="~/Scripts/kendo1/2015.1.318/jquery.min.js"></script>
 	<script src="~/Scripts/kendo1/2015.1.318/jszip.min.js"></script>
 	<script src="~/Scripts/kendo1/2015.1.318/kendo.all.min.js"></script>
-	<script src="~/Scripts/kendo1/2015.1.318/kendo.aspnetmvc.min.js"></script>
+	<script src="~/Scripts/kendo1/2015.1.318/kendo.aspnetmvc.min.js"></script>@*
+	<link href="~/Content/kendo1/2015.1.318/kendo.default.min.css" rel="stylesheet" type="text/css" />*@
+	
 	<script src="~/Scripts/kendo.modernizr.custom.js"></script>
 	<script src="~/Scripts/jquery-ui-datepicker.js" type="text/javascript"></script>
 	<script src="~/Content/css/dist/js/adminlte.min.js"></script>	
@@ -176,6 +178,7 @@
 	<link rel="stylesheet" href="~/Assets/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
 	<link rel="stylesheet" href="~/Assets/assets/vendor/libs/typeahead-js/typeahead.css" />
 	<link rel="stylesheet" href="~/Assets/assets/vendor/libs/apex-charts/apex-charts.css" />
+	<link href="~/css/site.css" rel="stylesheet" type="text/css" />
 	<script src="~/Assets/assets/vendor/js/helpers.js"></script>
 	<script src="~/Assets/assets/js/config.js"></script>
 	<script src="~/Assets/assets/js/jquery.multiselect.js"></script>
@@ -184,7 +187,7 @@
 	<link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
 	<link href="~/Content/kendo1/2015.1.318/kendo.common.min.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
-	<link href="~/css/site.css" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -707,7 +710,35 @@
 						}
 					}
 				}
-			}
+			} 
+		}
+		//mandatory for grid combo
+		function combo_editor_man(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+			$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+				autoBind: false,
+				filter: "contains",
+				dataSource: datasource,
+				change: function (e) {
+					var cmb_value = this.value();
+					if (cmb_value && this.selectedIndex == -1) {
+						this.value("");
+					}
+					//else{FF
+					var cmb_var = $("#" + grid_id).data("kendoGrid");
+					var selectedItem = cmb_var.dataItem(cmb_var.select());
+					var combobox_data = $("#" + cmbid).data("kendoComboBox");
+					if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+						selectedItem[datafield] = "";
+						selectedItem[code_datafield] = "";
+					}
+					else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			});
+
+			$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 		}
 		function setDefaultValues(e) {
 
