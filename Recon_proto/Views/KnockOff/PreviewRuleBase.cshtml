@@ -6,55 +6,55 @@
 <html>
 <head>
     <title></title>
-    <style>
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 33rem !important;
-        }
+    @*<style>
+    .nav-item.me-2.me-xl-50 {
+    margin-right: 33rem !important;
+    }
 
-        .error_show {
-            color: red;
-            margin-left: 10px;
-        }
+    .error_show {
+    color: red;
+    margin-left: 10px;
+    }
 
-        .k-grid.k-widget {
-            height: 360px;
-        }
+    .k-grid.k-widget {
+    height: 360px;
+    }
 
-        .k-grid-header th.k-header > .k-link {
-            width: 100px;
-        }
+    .k-grid-header th.k-header > .k-link {
+    width: 100px;
+    }
 
-        .k-grid-header {
-            font-weight: bold;
-        }
+    .k-grid-header {
+    font-weight: bold;
+    }
 
-        .k-state-active {
-            display: none;
-        }
+    .k-state-active {
+    display: none;
+    }
 
-        .k-content {
-            font-weight: normal;
-            font-size: 13px;
-        }
+    .k-content {
+    font-weight: normal;
+    font-size: 13px;
+    }
 
-        .k-widget.k-window {
-            padding-top: 35px;
-            min-width: 90px;
-            min-height: 50px;
-            width: 700px !important;
-            height: 300px !important;
-            top: 180.766px !important;
-            /*left: 120px !important;*/
-            z-index: 10003;
-            left: 300px !important;
-        }
-    </style>
+    .k-widget.k-window {
+    padding-top: 35px;
+    min-width: 90px;
+    min-height: 50px;
+    width: 700px !important;
+    height: 300px !important;
+    top: 180.766px !important;
+    /*left: 120px !important;*/
+    z-index: 10003;
+    left: 300px !important;
+    }
+    </style>*@
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;">
-                <div class="row" style="margin-top:10px;margin-bottom: 2%;">
+            <div class="card-body" style="margin-top:-1%;height: 84%;">
+                <div class="row" style="margin-top:10px;">
 
 
                     <div class="col-md-3">
@@ -84,8 +84,8 @@
                                         class="nav-link active"
                                         role="tab"
                                         data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-top-Dataset"
-                                        aria-controls="navs-pills-top-Dataset"
+                                        data-bs-target="#navs-pills-top-Rule"
+                                        aria-controls="navs-pills-top-Rule"
                                         aria-selected="true">
                                     Rule
                                 </button>
@@ -102,11 +102,11 @@
                                     Dataset
                                 </button>
                             </li>
-                           
+
                         </ul>
-                        <div class="tab-content">
+                        <div class="tab-content" style="margin-top:2%;box-shadow:none !important;padding: 20px 0px;">
                             @*Rule*@
-                            <div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
+                            <div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
                                 <div class="panel panel-default">
                                     <div class="panel-body">
                                         <div class="col-xs-12">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" style="margin-bottom: 2%;">
+                <div class="row">
                     <div class="col-md-3">
                         <label for="" class="form-label">Date From</label>
                         <div>
@@ -164,8 +164,9 @@
         $("#navhead").text("Rule Preview");
         kendodate_format();
         getreconlist();
-        getpreview();
-        grid_rule([])
+        //getpreview();
+        grid_rule([]);
+        grid_dataset([]);
     });
 
     function getreconlist() {
@@ -236,7 +237,7 @@
             //var rulepreview = $("#prviewon").val();
             $.ajax({
                 type: "POST",
-                url: '/Rulesetup/RuleAgainstRecon',
+                url: '/KnockOff/RuleAgainstRecon',
                 dataType: 'json',
                 data: JSON.stringify({
                     in_recon_code: in_recon_code,
@@ -244,12 +245,13 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     debugger;
-                    if (response.length >0 ) {
-                        //var res = JSON.parse(response);
-                        grid_rule(response);
-                    }
-                    else {
+                    if (response != null) {
+                        var result = JSON.parse(response);
+                        grid_rule(result.ReconRule);
+                        grid_dataset(result.ReconDataSet)
+                    } else {
                         grid_rule([]);
+                        grid_dataset([]);
                     }
                 },
                 error: function (er) {
@@ -263,6 +265,66 @@
         }
     }
 
+    function grid_dataset(data) {
+        $("#dataset_grid").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 5,
+                schema: {
+                    model: {
+                        fields: {
+                            dataset_name: { type: "string" },
+                            dataset_type_desc: { type: "string" },
+                            parent_dataset_name: { type: "string" },
+                            active_status_desc: { type: "string" },
+
+                        }
+                    }
+                }
+            },
+            height: 303,
+            groupable: false,
+            dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#dataset_grid').data('kendoGrid').tbody.children();
+                setColor(rows, resultData);
+            },
+            sortable: true,
+            selectable: true,
+            filterable: true,
+            navigatable: true,
+            pageable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [
+                {
+                    field: "dataset_name",
+                    title: "Dataset Name",
+                    width: 100,
+                },
+                {
+                    field: "dataset_type_desc",
+                    title: "Dataset Type",
+                    width: 100,
+                },
+
+                {
+                    field: "parent_dataset_name",
+                    title: "Parent Dataset",
+                    width: 100,
+                },
+                {
+                    field: "active_status_desc",
+                    title: "Status",
+                    width: 80,
+                }],
+            editable: false,
+        });
+    }
+
     function grid_rule(data) {
         $("#grid_preview").kendoGrid({
             dataSource: {
@@ -274,6 +336,7 @@
                             rule_gid: { type: "string" },
                             rule_code: { type: "string" },
                             rule_name: { type: "string" },
+                            rule_order: { type: "string" },
                             source_dataset_code: { type: "string" },
                             comparison_dataset_code: { type: "string" },
                             source_dataset_desc: { type: "string" },
@@ -300,57 +363,64 @@
                 buttonCount: 5
             },
             columns: [
-            {
-                field: "rule_gid",
-                title: "rule_gid",
-                hidden: true,
-            },
-            {
-                field: "rule_code",
-                title: "Rule Code",
-                width: 100,
-                hidden: true,
-            },
+                {
+                    field: "rule_gid",
+                    title: "rule_gid",
+                    hidden: true,
+                },
+                {
+                    field: "rule_code",
+                    title: "Rule Code",
+                    width: 100,
+                    hidden: true,
+                },
                 {
                     field: "name",
                     title: "Action",
                     template: "<input id='preview_checkbox' type='checkbox' />",
+                    width: 80,
+                    hidden: true,
+                },
+                {
+                    field: "rule_name",
+                    title: "Rule Name",
+                    width: 100,
+                },
+                {
+                    field: "rule_order",
+                    title: "Rule Order",
                     width: 80
                 },
-            {
-                field: "rule_name",
-                title: "Rule Name",
-                width: 100,
-            },
-            {
-                field: "source_dataset_desc",
-                title: "Source Dataset",
-                width: 150,
-            },
-            {
-                field: "source_dataset_desc",
-                title: "Comparision Dataset",
-                width: 150,
-            },
-            {
-                field: "source_dataset_code",
-                title: "Source Dataset",
-                width: 100,
-                hidden: true
-            },
-            {
-                field: "comparison_dataset_code",
-                title: "Comparision Dataset",
-                width: 100,
-                hidden: true
+                {
+                    field: "source_dataset_desc",
+                    title: "Source Dataset",
+                    width: 150,
+                },
+                {
+                    field: "source_dataset_desc",
+                    title: "Comparision Dataset",
+                    width: 150,
+                },
+                {
+                    field: "source_dataset_code",
+                    title: "Source Dataset",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "comparison_dataset_code",
+                    title: "Comparision Dataset",
+                    width: 100,
+                    hidden: true
 
-            }],
+                }],
             editable: false,
         });
     }
 
-  
+
     function showPreview() {
+
         var in_recon_code = $("#reconname").val();
         var rulepreview = $("#prviewon").val();
         var period_from = $("#initiated_from").val();
@@ -360,72 +430,76 @@
         var ts1 = period_to.split("/");
         var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
         var grid = $("#grid_preview").data("kendoGrid");
-        var checkedrows = $("#preview_checkbox:checked", grid.tbody).closest("tr");
-        console.log(`checkedrows`, checkedrows.length);
-        var dropdownid = "";
-        for (var i = 0; i < checkedrows.length; i++) {
-            var item = grid.dataItem(checkedrows[i]);
-            dropdownid = dropdownid + item.rule_code + "#";
+        var dataItems = grid.dataSource.data();
+        var firstColumnValues = "";
+        for (var i = 0; i < dataItems.length; i++) {
+            var firstColumnValue = dataItems[i].rule_code + "#"; 
+            firstColumnValues = firstColumnValues + firstColumnValue;
         }
-        if (in_recon_code && rulepreview && period_from && period_to && dropdownid) {
-        $.ajax({
-            type: "POST",
-            url: '/KnockOff/previewRulebase',
-            dataType: 'json',
-            data: JSON.stringify({
-                in_recon_code: in_recon_code+'$'+dropdownid,
-                in_ko_post_flag: rulepreview,
-                in_period_from: pr,
-                in_period_to: pr1,
-                in_automatch_flag: 'N',
-                in_ip_addr: '',
-                in_user_code: 'Hema'
-            }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                debugger;
-                var res = JSON.parse(response);
-                debugger;
-                console.log('res', res[0].out_result)
-                if (res[0].out_result == '1') {
-                    $.alert({
-                        title: 'Recon',
-                        content: res[0].out_msg,
-                        type: 'green',
-                    });        
-                    
-                }
-                else if (res[0].out_result == '0') {
+        if (firstColumnValues != "") {
+            firstColumnValues = firstColumnValues.slice(0, -1);
+        }
+        //console.log(`firstColumnValue`, firstColumnValue);
+
+        //var checkedrows = $("#preview_checkbox:checked", grid.tbody).closest("tr");
+        //console.log(`checkedrows`, checkedrows.length);
+        //var dropdownid = "";
+        //for (var i = 0; i < checkedrows.length; i++) {
+        //    var item = grid.dataItem(checkedrows[i]);
+        //    dropdownid = dropdownid + item.rule_code + "#";
+        //}
+        if (in_recon_code && period_from && period_to && firstColumnValues) {
+            $.ajax({
+                type: "POST",
+                url: '/KnockOff/previewRulebase',
+                dataType: 'json',
+                data: JSON.stringify({
+                    in_recon_code: in_recon_code + '$' + firstColumnValues,
+                    in_period_from: pr,
+                    in_period_to: pr1,
+                    in_automatch_flag: 'N',
+                    in_ip_addr: '',
+                    in_user_code: 'Hema'
+                }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
                     debugger;
-                    $.alert({
-                        title: 'Recon',
-                        content: res[0].out_msg,
-                        type: 'red',
-                    });
-                } else {
+                    var res = JSON.parse(response);
                     debugger;
-                    $.alert({
-                        title: 'Recon',
-                        content: 'Something went wrong ..!',
-                        type: 'red',
-                    });
+                    console.log('res', res[0].out_result)
+                    if (res[0].out_result == '1') {
+                        $.alert({
+                            title: 'Recon',
+                            content: res[0].out_msg,
+                            type: 'green',
+                        });
+
+                    }
+                    else if (res[0].out_result == '0') {
+                        debugger;
+                        $.alert({
+                            title: 'Recon',
+                            content: res[0].out_msg,
+                            type: 'red',
+                        });
+                    } else {
+                        debugger;
+                        $.alert({
+                            title: 'Recon',
+                            content: 'Something went wrong ..!',
+                            type: 'red',
+                        });
+                    }
+                },
+                error: function (er) {
+                    alert(er)
+                    console.log(er)
                 }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
-        });
+            });
         } else if (!in_recon_code) {
             $.alert({
                 title: 'Recon',
                 content: 'Please select Recon Code',
-                type: 'red',
-            });
-        } else if (!rulepreview) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Rule Preview',
                 type: 'red',
             });
         } else if (!period_from) {
@@ -440,7 +514,7 @@
                 content: 'Please select Preiod To',
                 type: 'red',
             });
-        } else if (!dropdownid) {
+        } else if (!firstColumnValues) {
             $.alert({
                 title: 'Recon',
                 content: 'Please select Rules',

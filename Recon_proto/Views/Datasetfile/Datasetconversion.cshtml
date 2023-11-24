@@ -6,6 +6,12 @@
 <head>
 	<title></title>
 	<style>
+		.selectedDataset{
+			font-size: 13px;
+			font-weight: 600;
+			color: brown;
+		}
+
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
@@ -134,11 +140,12 @@
 								</button>
 							</li>
 						</ul>
-						<div class="tab-content">
+						<div class="tab-content" style="box-shadow:none; padding:20px 0px;">
 							<div class="tab-pane fade show active" id="navs-pills-Datasetlist" role="tabpanel" >
 								<div class="panel panel-default">
 									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
-										<table class="table table-bordered table-sm">
+									<div id="grid_dataset"> </div>
+									@*<table class="table table-bordered table-sm">
 											<thead style="background: #c1c1c1;">
 												<tr class="text-nowrap">
 													<th width="50px">Select</th>
@@ -159,15 +166,7 @@
 													<td>
 														<div class="tooltip-container">
 															<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
-															@*<span class="info-icon">ℹ️</span>*@
-															@*<div class="tooltip1">
-																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank - 123456</p>
-																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>14-09-2023 11:47:53 AM</p>
-																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong></p>
-																<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>scheduler</p>
-																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Inprogress</p>
-																<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>InProcess records 1000</p>
-															</div>*@
+														
 														</div>
 													</td>
 												</tr>
@@ -180,14 +179,7 @@
 													<td>
 														<div class="tooltip-container">
 															<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
-															@*<div class="tooltip1">
-																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
-																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 12:00:00 PM</p>
-																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 02:24:45 PM</p>
-																<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>Excel</p>
-																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> Completed</p>
-																<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>Completed records 1000</p>
-															</div>*@
+														
 														</div>
 													</td>
 												</tr>
@@ -200,20 +192,12 @@
 													<td>
 														<div class="tooltip-container">
 															<i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
-															@*<span class="info-icon">ℹ️</span>*@
-															@*<div class="tooltip1">
-																<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong>HDFC Bank Presentation 123456</p>
-																<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>12-09-2023 09:40:00 AM</p>
-																<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong>12-09-2023 10:40:00 AM</p>
-																<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong>Pipeline</p>
-																<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong>Failed</p>
-																<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong>Failed Network Error</p>
-															</div>*@
+															
 														</div>
 													</td>
 												</tr>
 											</tbody>
-										</table>
+										</table>*@
 									</div>
 									<div class="row">
 										<div class="col-sm-4"></div>
@@ -227,26 +211,24 @@
 							<div class="tab-pane fade" id="navs-pills-DatasetProgress" role="tabpanel" >
 								<div class="panel panel-default">
 									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+										<div class="selectedDataset" id="selected_dataset_name"></div>
 											<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 												<div class="col-sm-4">
 													<label for="" class="form-label">Pipeline</label>
-													<select id="Pipeline" class="form-select form-control" onclick="Pipeline()">
-														<option value="excel">Excel - HDFC Bank</option>
-														<option value="scheduled">Scheduled - Oracle GL</option>
-													</select>
+													<select id="Pipeline" class="form-select form-control"> </select>
 												</div>
 												<div class="col-sm-4">
 													<form id="theuploadformempff">
 														<div class="form-group">
 															<label for="Filename" class="form-label">Choose Excel</label>
 															<input type="file" class="form-control input-lg browse btn btn-primary input-lg" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
-															<label class="col-md-6 control-label" id="FileName"></label>
+															<label class="col-md-6 control-label" id="FileName" hidden></label>
 														</div>
 													</form>
 												</div>
 												<div class="col-sm-2" style="margin-top:29px">
 													<label class="form-label"></label>
-													<input type="button" style="background: #38b55a;border-color: #38b55a;width:40%" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
+													<input type="button" onclick="start()" style="background: #38b55a;border-color: #38b55a;width:40%" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
 													
 												</div>
 											</div>
@@ -303,19 +285,216 @@
 </body>
 </html>
 <script>
+	var selected_dataset = '';
 	$(document).ready(function () {
 		$("#navhead").text("Dataset Import");
+		gridlist();
 	});
-	function validateNextdataset(){
-		$("#Datasetlist").removeClass('nav-link active');
-		$("#Datasetlist").toggleClass('nav-link');
-		$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade active in');
-		$("#navs-pills-Datasetlist").toggleClass('tab-pane fade');
-		$("#DatasetProgress").removeClass('nav-link');
-		$("#DatasetProgress").toggleClass('nav-link active');
-		$("#navs-pills-Datasetlist").hide();
-		$("#navs-pills-DatasetProgress").show();
+
+	function gridlist() {
+		grid_dataset_details([]);
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/Datasetlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					grid_dataset_details(response);
+				}
+				else {
+					grid_dataset_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
 	}
+
+
+	var status_Priority = [];
+	function grid_dataset_details(data) {
+		try {
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 10,
+					schema: {
+						model: {
+							fields: {
+								dataset_id: { type: "string" },
+								datasetCode: { type: "string" },
+								dataset_name: { type: "string" },
+								dataset_category: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" },
+								sl_no: {type: "string"},
+								lastsync_datetime: {type: "string"}
+							}
+						}
+					}
+				},
+				height: 423,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				change: selectRow,
+				columns: [
+				{
+					field: "name",
+					title: "Action",
+						template: "<input id='dataset_selected' onclick='rowselected(this)' name='dataset_code' type='radio'/>",
+					width: 80,
+				},
+				{
+					field: "sl_no",
+					title: "Sl No",
+					width:50,
+				},
+				{
+					field: "dataset_id",
+					title: "Row id",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "datasetCode",
+					title: "Dataset Code",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 100,
+				},
+				{
+					field: "dataset_category",
+					title: "Category",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 100,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+
+					},
+				},
+				{
+					field: "lastsync_datetime",
+					title: "Last sync Datetime",
+					width: 100
+				},
+				{
+					field: "In_mode_flag",
+					title: "Mode",
+					hidden: true
+				},{
+						field: "info",
+						title: "",
+						template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+						width:50
+				}],
+				editable: false,
+			});
+			
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+	function selectRow() {
+		//debugger;
+		//try {
+		//	var grid = $("#grid_dataset").data("kendoGrid");
+		//	var selectedItem = grid.dataItem(grid.select());
+		//	setlocalStorage("ls_pageList", selectedItem);
+		//}
+		//catch (err) {
+
+		//}
+	}
+
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
+	}
+
+	function validateNextdataset(){
+		var grid = $("#grid_dataset").data("kendoGrid");
+		var checkedrows = $("#dataset_selected:checked", grid.tbody).closest("tr");
+		var objpplmapupdlist = [];
+		var dropdownid = "";
+		for (var i = 0; i < checkedrows.length; i++) {
+			selected_dataset = grid.dataItem(checkedrows[i]);
+		}
+		if (selected_dataset) {
+			$("#Datasetlist").removeClass('nav-link active');
+			$("#Datasetlist").toggleClass('nav-link');
+			$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade active in');
+			$("#navs-pills-Datasetlist").toggleClass('tab-pane fade');
+			$("#DatasetProgress").removeClass('nav-link');
+			$("#DatasetProgress").toggleClass('nav-link active');
+			$("#navs-pills-Datasetlist").hide();
+			$("#navs-pills-DatasetProgress").show();
+			$('#selected_dataset_name').text('Selected Dataset :' + selected_dataset.dataset_name);
+			getpipelinelist(selected_dataset.datasetCode);
+		} else {
+			alert("Dataset code not selected");
+		}
+
+	}
+
+	function rowselected(val){
+		debugger;
+		console.log(`val`, $("#dataset_selected").val());
+	}
+
 	function validatePrevdp(){
 		$("#DatasetProgress").removeClass('nav-link active');
 		$("#DatasetProgress").toggleClass('nav-link');
@@ -330,4 +509,106 @@
 	function rr1() {
 		$("#infomodal").hide();
 	}
+
+	function getpipelinelist(dataset_code) {
+		debugger;
+		$.ajax({
+			type: "POST",
+			url: '/DataSet/getPipelinelist',
+			dataType: 'json',
+			data: JSON.stringify({ in_target_dataset_code: dataset_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response) {
+					$("#Pipeline").empty();
+					$("#Pipeline").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#Pipeline").append($('<option>', {
+							value: item.pipeline_code,
+							text: item.pipeline_name
+						}));
+					});
+				} else {
+
+				}
+				
+			}
+		});
+	}
+
+	// code to hit API directly
+	function start1() {
+		debugger;
+		var baseurl = '@ViewBag.baseurl';
+		var fileName = '';
+		var pipeline_code = $("#Pipeline").val();
+		var filepath = $("#File_Import").val();
+		var fileInput = document.getElementById('File_Import');
+		var formData = new FormData();
+		formData.append('pipeline_code', pipeline_code);
+
+		if (fileInput.files.length > 0) {
+			formData.append('file', fileInput.files[0]);
+		}
+		formData.append('initiated_by', 'Hema');
+		$.ajax({
+			url: baseurl+'Pipeline/NewScheduler_new',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+			}
+		});
+	}
+
+	function start() {
+		debugger;
+		var fileName = '';
+		var pipeline_code = $("#Pipeline").val();
+		var filepath = $("#File_Import").val();
+		var fileInput = document.getElementById('File_Import');
+		var formData = new FormData();
+		formData.append('pipeline_code', pipeline_code);
+
+		if (fileInput.files.length > 0) {
+			formData.append('file', fileInput.files[0]);
+		}
+		formData.append('initiated_by', 'Hema');
+		$.ajax({
+			url: '/Datasetfile/datasetfile',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+				if(!response) {
+					$.alert({
+						title: 'Recon',
+						content: "Something went wrong",
+						type: 'red',
+					});
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: response,
+						type: 'green',
+					});
+				}
+			}
+		});
+	}
+
+	function openInfoModel() {
+		debugger;
+		var grid = $("#grid_dataset").data("kendoGrid");
+		grid.table.on("click", "tr", function () {
+			$("#infomodal").modal("show");
+		});
+	}
+
 </script>

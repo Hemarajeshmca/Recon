@@ -110,46 +110,6 @@
                     </div>
                 </div>
                 <div id="grid_preview"></div>
-                @*<div class="row">
-                <table class="table table-bordered table-sm">
-                <thead style="background: #c1c1c1;">
-                <tr class="text-nowrap">
-                <th style ="width: 50px;">Select</th>
-                <th>Recon Name</th>
-                <th>Recon Type</th>
-                <th>Last KO Execution Date</th>
-                <th>Last KO Execution Status</th>
-                <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr style="height:25px;">
-                <td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
-                <td>Hdfc CC- UPI Collection From Customer</td>
-                <td>Brs</td>
-                <td>19-09-2023</td>
-                <td>Inprocess</td>
-                <td>
-                <div class="tooltip-container">
-                <i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
-                </div>
-                </td>
-                </tr>
-                <tr style="height:25px;">
-                <td><input type="checkbox" id="select" style="margin-left: 10px;" name="" value="P"></td>
-                <td>Hdfc CC- IMPS Collection From Customer</td>
-                <td>Brs</td>
-                <td>19-09-2023</td>
-                <td>Inprocess</td>
-                <td>
-                <div class="tooltip-container">
-                <i data-bs-toggle="modal" data-bs-target="#infomodal" class="fa fa-info cursor-pointer" aria-hidden="true" style="color:green"></i>
-                </div>
-                </td>
-                </tr>
-                </tbody>
-                </table>
-                </div>*@
             </div>
         </div>
     </div>
@@ -312,10 +272,10 @@
                     title: "Action",
                     template: function (dataItem) {
                         if (dataItem.job_status == "P") {
-                            return "<input id='preview_checkbox' type='radio' disabled />";
+                            return "<input id='preview_checkbox' name='job_status' type='radio' disabled />";
 
                         } else {
-                            return "<input  id='preview_checkbox' type='radio' />";
+                            return "<input  id='preview_checkbox' name='job_status' type='radio' />";
                         }
                     },
                     width:80

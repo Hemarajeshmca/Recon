@@ -491,5 +491,7 @@ namespace Recon_proto.Controllers
 			public String? in_recontype_code { get; set;}
 		}
 
+
+
 	}
 }

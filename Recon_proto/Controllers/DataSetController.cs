@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Data;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -55,6 +56,8 @@ namespace Recon_proto.Controllers
 					objcat.active_status = result.Rows[i]["active_status"].ToString();
 					objcat.dataset_category = result.Rows[i]["dataset_category"].ToString();
 					objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+					objcat.sl_no = result.Rows[i]["sl_no"].ToString();
+					objcat.lastsync_datetime = result.Rows[i]["lastsync_datetime"].ToString();
 					objcat_lst.Add(objcat);
 				}
 				return Json(objcat_lst);
@@ -72,11 +75,14 @@ namespace Recon_proto.Controllers
 			public int in_user_gid { get; set; }
 			public string? in_user_code { get; set; }
 			public string? in_active_status { get; set; }
+			public string? sl_no { get; set; }
+			public string? lastsync_datetime { get; set; }
 		}
 		#endregion
 		[HttpPost]
 		public JsonResult Datasetheader([FromBody] DatasetHeadermodel context)
 		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DatasetHeadermodel objList = new DatasetHeadermodel();
 			DataTable result = new DataTable();
 			string post_data = "";
@@ -115,6 +121,7 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Datasetdetail([FromBody] Datasetdetailrmodel context)
 		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			Datasetdetailrmodel objList = new Datasetdetailrmodel();
 			DataTable result = new DataTable();
 			string post_data = "";
@@ -162,6 +169,7 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult Datasetdetailreadlist([FromBody] Datasetdetailfetch context)
 		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			List<Datasetdetailfetchlist> objcat_lst = new List<Datasetdetailfetchlist>();
 			DataTable result = new DataTable();
 			string post_data = "";
@@ -216,6 +224,7 @@ namespace Recon_proto.Controllers
 		[HttpPost]
 		public JsonResult getfieldtype()
 		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DataTable result = new DataTable();
 			List<fieldtype> objcat_lst = new List<fieldtype>();
 			string post_data = "";
@@ -250,6 +259,60 @@ namespace Recon_proto.Controllers
 			public string fieldtype_desc { get; set; }
 			public string fieldtype_code { get; set; }
 			public int fieldtype_gid { get; set; }
+		}
+		#endregion
+
+
+
+		#region Pipeline
+		[HttpPost]
+		public JsonResult getPipelinelist([FromBody] pipelinelist context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			List<pipelinemodal> objcat_lst = new List<pipelinemodal>();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Process/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				//client.BaseAddress = new Uri("https://localhost:44348/api/DataSet/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getPipelinelist", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					pipelinemodal objcat = new pipelinemodal();
+					objcat.pipeline_gid = Convert.ToInt32(result.Rows[i]["pipeline_gid"]);
+					objcat.pipeline_code = result.Rows[i]["pipeline_code"].ToString();
+					objcat.pipeline_desc = result.Rows[i]["pipeline_desc"].ToString();
+					objcat.pipeline_name = result.Rows[i]["pipeline_name"].ToString();
+					objcat.pipeline_status = result.Rows[i]["pipeline_status"].ToString();
+
+					objcat_lst.Add(objcat);
+				}
+				return Json(objcat_lst);
+			}
+		}
+
+		public class pipelinelist
+		{
+			public string? in_target_dataset_code { get; set; }
+		}
+
+		public class pipelinemodal
+		{
+			public int pipeline_gid { get; set; }
+			public string pipeline_code { get; set; }
+			public string pipeline_desc { get; set; }
+			public string pipeline_name { get; set; }
+			public string pipeline_status { get; set; }
 		}
 		#endregion
 	}
