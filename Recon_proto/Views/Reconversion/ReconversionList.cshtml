@@ -1,0 +1,239 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row">
+					<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+						<div class="col-sm-4">
+							<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="cmbreconname" class="form-select form-control">
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label">Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" id="ruleName" type="text">
+							<input class="form-control" type="hidden" id="rulegid">
+						</div>
+						
+					</div>
+					<div class="col-xs-12">
+						<div id="grid_reconverion"> </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		var dataSource = [{ rule_gid: 1, source_dataset_name: "", comparsion_dataset_name: "", match_off: "", hold_relase: "", rule_name: "test" }];
+		grid_reconverion(dataSource);
+		$("#navhead").text("Recon Version");
+		gridlist();
+	});
+	function gridlist() {
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbreconname").append($('<option>', {
+						value: item.recon_code,
+						text: item.recon_name
+					}));
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function grid_reconverion(data) {	
+		$("#grid_reconverion").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							rule_gid: { type: "string" },
+							rule_name: { type: "string" },
+							source_dataset_name: { type: "string" },
+							comparsion_dataset_name: { type: "string" },
+							match_of: { type: "string" },
+							hold_relase: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 400,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_reconverion').data('kendoGrid').tbody.children();
+				//setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "rule_gid",
+					title: "rule_gid",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_name",
+					title: "Rule Name",
+					width: 100,
+				},
+				{
+					field: "source_dataset_name",
+					title: "Source Dataset Name",
+					width: 100,
+				},
+				{
+					field: "comparsion_dataset_name",
+					title: "Comparsion Dataset Name",
+					width: 100,
+				},
+				{
+					field: "match_off",
+					title: "System or manual",
+					width: 100,
+					template: '<button class="toggle-button k-button" data-toggle="Toggle" onclick="toggleButtonClick(this)">Toggle</button>',
+				},
+				{
+					field: "hold_relase",
+					title: "hold",
+					width: 100,
+				},
+				],
+			editable: false,
+
+		});
+	}
+	function toggleButtonClick(button) {
+		var grid = $("#grid").data("kendoGrid");
+		var row = $(button).closest("tr");
+		var dataItem = grid.dataItem(row);
+
+		// Toggle the value in the data source
+		var currentValue = dataItem.get("Toggle");
+		dataItem.set("Toggle", !currentValue);
+
+		// Perform additional actions as needed
+	}
+	function process() {
+		var grid = $("#grid_reconverion").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var scheduler_gid = model.scheduler_gid;
+		var action = "";
+		var action_by = "vijay"
+		var status = "Y";
+		$.ajax({
+			type: "POST",
+			url: '/DatasettoReconprocess/DatasettoReconListmodel',
+			dataType: 'json',
+			data: JSON.stringify({ in_scheduler_gid: scheduler_gid, in_user_gid: user_gid }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				var data = result[0];
+				if (data.out_result == "1") {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'green',
+					});
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'red',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+</script>
+

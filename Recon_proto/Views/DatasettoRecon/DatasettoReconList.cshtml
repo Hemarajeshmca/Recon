@@ -1,0 +1,216 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+	
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="grid_datasettorecon"> </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		grid_datasettorecon([]);
+		$("#navhead").text("Dataset To Recon");
+		gridlist();
+	});
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '/DatasettoRecon/DatasettoReconListfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					grid_datasettorecon(res);
+				}
+				else {
+					grid_datasettorecon([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function grid_datasettorecon(data) {
+		$("#grid_datasettorecon").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							scheduler_gid: { type: "string" },
+							scheduler_name: { type: "string" },
+							dataset_name: { type: "string" },
+							last_sync_date: { type: "string" },
+							pipeline_code: { type: "string" },
+							pipeline_desc: { type: "string" },
+							In_mode_flag: { type: "string", defaultValue: "I" }
+						}
+					}
+				}
+			},
+			height: 400,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_datasettorecon').data('kendoGrid').tbody.children();
+				//setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "scheduler_gid",
+					title: "scheduler_gid",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "scheduler_name",
+					title: "Scheduler Name",
+					width: 100,
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 100,
+				},
+				{
+					field: "last_sync_date",
+					title: "Last Sync Date",
+					width: 100,
+				},
+				{
+					field: "pipeline_code",
+					title: "Pipeline Code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "pipeline_desc",
+					title: "Pipeline",
+					width: 100,
+				},
+				{
+					command: [
+						{
+							name: "Process",
+							id: "Edit",
+							click: function (e) {
+								process()
+							},
+						},
+					], title: "Action&nbsp;", width: "40px",
+				}],
+			editable: false,
+
+		});
+	}
+	function process() {
+		var grid = $("#grid_datasettorecon").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var scheduler_gid = model.scheduler_gid;
+		var action = "";
+		var action_by = "vijay"
+		var status = "Y";
+		$.ajax({
+			type: "POST",
+			url: '/DatasettoReconprocess/DatasettoReconListmodel',
+			dataType: 'json',
+			data: JSON.stringify({ in_scheduler_gid: scheduler_gid, in_user_gid: user_gid }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				var data = result[0];
+				if (data.out_result == "1") {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'green',
+					});
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'red',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+</script>
+
