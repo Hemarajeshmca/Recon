@@ -388,7 +388,7 @@
 			var reconcode = $("#reconcode").val()
 			$.ajax({
 				type: "POST",
-				url: '/Recon/Reconheaderfetch',
+				url: '../Recon/Reconheaderfetch',
 				dataType: 'json',
 				async: false,
 				data: JSON.stringify({ in_recon_code: reconcode }),
@@ -439,7 +439,7 @@
 		var datasetcode = $("#cmbdatasetmap").val();
 		$.ajax({
 			type: "POST",
-			url: '/DataSet/Datasetdetailreadlist',
+			url: '../DataSet/Datasetdetailreadlist',
 			dataType: 'json',
 			async: false,
 			data: JSON.stringify({ datasetCode: datasetcode }),
@@ -494,7 +494,7 @@
 				}
 				$.ajax({
 					type: "POST",
-					url: '/Recon/Reconheaderfetch',
+					url: '../Recon/Reconheaderfetch',
 					dataType: 'json',
 					data: JSON.stringify({ in_recon_code: data.recon_code }),
 					contentType: 'application/json; charset=utf-8',
@@ -564,7 +564,7 @@
 	function detailfetch(reconcode) {
 		$.ajax({
 			type: "POST",
-			url: '/Recon/Reconheaderfetch',
+			url: '../Recon/Reconheaderfetch',
 			dataType: 'json',
 			data: JSON.stringify({ in_recon_code: reconcode }),
 			contentType: 'application/json; charset=utf-8',
@@ -615,7 +615,7 @@
 		var in_user_code = "sundar";
 		$.ajax({
 			type: "POST",
-			url: '/Common/Qcdmaster',
+			url: '../Common/Qcdmaster',
 			dataType: 'json',
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
@@ -641,7 +641,7 @@
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '/DataSet/Datasetlistfetch',
+			url: '../DataSet/Datasetlistfetch',
 			dataType: 'json',
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
@@ -664,7 +664,7 @@
 		var in_user_code = "sundar";
 		$.ajax({
 			type: "POST",
-			url: '/Common/Qcdmaster',
+			url: '../Common/Qcdmaster',
 			dataType: 'json',
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
@@ -728,7 +728,7 @@
 			var in_threshold_minus_value = parseFloat($("#thersholdminus").val()).toFixed(2);
 			$.ajax({
 				type: "POST",
-				url: '/Recon/Reconheadersave',
+				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
 					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value
@@ -895,7 +895,7 @@
 
 			$.ajax({
 				type: "POST",
-				url: '/Recon/Recondatasetsave',
+				url: '../Recon/Recondatasetsave',
 				dataType: 'json',
 				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
@@ -1051,7 +1051,7 @@
 
 			$.ajax({
 				type: "POST",
-				url: '/Recon/Recondatasetmappingsave',
+				url: '../Recon/Recondatasetmappingsave',
 				dataType: 'json',
 				data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
@@ -1070,7 +1070,7 @@
 						var reconcod = $("#reconcode").val();
 						$.ajax({
 							type: "POST",
-							url: '/Recon/Recondatasetmappingfetch',
+							url: '../Recon/Recondatasetmappingfetch',
 							dataType: 'json',
 							data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '' }),
 							contentType: 'application/json; charset=utf-8',
@@ -1207,7 +1207,7 @@
 		$("#txtmodedatasetmapping").val("Edit");
 		$.ajax({
 			type: "POST",
-			url: '/Recon/Recondatasetmappingfetch',
+			url: '../Recon/Recondatasetmappingfetch',
 			dataType: 'json',
 			data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
 			contentType: 'application/json; charset=utf-8',
@@ -1261,7 +1261,7 @@
 					var status = "";
 					$.ajax({
 						type: "POST",
-						url: '/Recon/Recondatasetsave',
+						url: '../Recon/Recondatasetsave',
 						dataType: 'json',
 						data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetcode, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
@@ -1309,7 +1309,7 @@
 		var in_user_code = "sundar";
 		$.ajax({
 			type: "POST",
-			url: '/Common/Qcdmaster',
+			url: '../Common/Qcdmaster',
 			dataType: 'json',
 			async: false,
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
@@ -1410,7 +1410,7 @@
 					var status = "";
 					$.ajax({
 						type: "POST",
-						url: '/Recon/Recondatasetmappingsave',
+						url: '../Recon/Recondatasetmappingsave',
 						dataType: 'json',
 						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
@@ -1473,7 +1473,7 @@
 					var status = "";
 					$.ajax({
 						type: "POST",
-						url: '/Recon/Recondatasetmappingsave',
+						url: '../Recon/Recondatasetmappingsave',
 						dataType: 'json',
 						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
@@ -1488,7 +1488,7 @@
 								var reconcod = $("#reconcode").val();
 								$.ajax({
 									type: "POST",
-									url: '/Recon/Recondatasetmappingfetch',
+									url: '../Recon/Recondatasetmappingfetch',
 									dataType: 'json',
 									data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '' }),
 									contentType: 'application/json; charset=utf-8',
@@ -1602,7 +1602,7 @@
 			var in_threshold_minus_value = $("#thersholdminus").val();
 			$.ajax({
 				type: "POST",
-				url: '/Recon/Reconheadersave',
+				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value }),
 				contentType: 'application/json; charset=utf-8',
