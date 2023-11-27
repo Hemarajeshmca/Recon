@@ -283,10 +283,7 @@ namespace Recon_proto.Controllers
         #region grouping
         public class Rulegrouping
         {
-            public int? in_rulegrpfield_gid { get; set; }
-            public int? in_rule_gid { get; set; }
-            public string? in_group_method_flag { get; set; }
-            public string? in_manytomany_match_flag { get; set; }
+            public int? in_rulegrpfield_gid { get; set; }          
             public string? in_grp_field { get; set; }
             public string? in_rule_code { get; set; }
             public string? in_active_status { get; set; }
