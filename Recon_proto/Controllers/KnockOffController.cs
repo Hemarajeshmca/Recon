@@ -50,7 +50,6 @@ namespace Recon_proto.Controllers
         public class getpreviewRulebase
         {
             public String? in_recon_code { get; set; }
-           // public String? in_ko_post_flag { get; set; }
             public String? in_period_from { get; set; }
             public String? in_period_to { get; set; }
             public String? in_automatch_flag { get; set; }
