@@ -67,9 +67,9 @@
             height: 360px;
         }
 
-        .k-grid-header th.k-header > .k-link {
+  /*      .k-grid-header th.k-header > .k-link {
             width: 100px;
-        }
+        }*/
 
         .k-grid-header {
             font-weight: bold;
@@ -107,7 +107,7 @@
             <div class="card-body" style="margin-top:-1%;height:95%;">
                 <div class="row" style="margin-bottom: 1%;">
                     <div class="col-sm-4">
-                        <label for="" class="form-label">QCD Master</label>
+                        <label for="" class="form-label">Master</label>
                         <select id="qcdcode" class="form-select form-control" onchange="getQcdlist($('#qcdcode').val())">
                             <option value="">Select</option>
                         </select>
@@ -133,7 +133,7 @@
                 <div class="col-md-12">
                     <i data-bs-toggle="modal" onclick="openNewModel()" data-bs-target="#newQcd" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
                     </div>
-                <div class="col-md-12">
+                <div class="col-md-12" id="maingrid">
                     <div id="grid"></div>
                 </div>
             </div>
@@ -160,7 +160,7 @@
                     <div class="container">
                         <div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
                             <div class="col-sm-4">
-                                <label for="" class="form-label">QCD Master</label>
+                                <label for="" class="form-label">Master</label>
                                 <input class="form-control" id="parentCode" type="text" value="" disabled>
                                     <input class="form-control" id="master_gid" type="text" value="" hidden>
                                     <input class="form-control" id="mode" type="text" value="" hidden>
@@ -168,12 +168,11 @@
 
                             
                             <div class="col-sm-4">
-                                <label for="" class="form-label"> Master Code </label>
+                                <label for="" id="mastercode_label" class="form-label"> </label>
                                 <input class="form-control" id="MasterCode" type="text" value="">
                             </div>
                             <div class="col-sm-4">
-                                <label for="" class="form-label">
-                                    Master Name
+                                <label id="masterName_label" for="" class="form-label">
                                 </label>
                                 <input class="form-control" id="MasterName" type="text" value="">
 
@@ -229,7 +228,7 @@
 </html>
 <script type="text/javascript">
 
-
+    var selected_masterName ='';
     $(document).ready(function () {
         var mode = "";
         $("#navhead").text("QCD Master");
@@ -256,6 +255,7 @@
                     getQcdlist($("#qcdcode").val());
                     var cur_value = $('#qcdcode').children('option:selected').text();
                     $("#parentCode").val(cur_value);
+                   
 
                 }
                 else {
@@ -271,10 +271,17 @@
 
 
     function getQcdlist(master_code) {
-        grid_dataset_details([]);
+        debugger;  
+       
+        //grid_dataset_details([]);
+        $("#grid").remove();
+        $('#maingrid').append('<div id="grid" style="margin-top: 15px;margin-left: 13px;"></div>');
         var data = {};
         data.in_user_code = 'sundar';
         data.in_master_code = master_code;
+        selected_masterName = $('#qcdcode').children('option:selected').text();
+        document.getElementById('mastercode_label').innerHTML = selected_masterName + " " + "code";
+        document.getElementById('masterName_label').innerHTML = selected_masterName + " " + "Name";
         var cur_value = $('#qcdcode').children('option:selected').text();
         $("#parentCode").val(cur_value);
         $.ajax({
@@ -285,7 +292,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
                 if (data != null) {
-                    grid_dataset_details(data);
+                    grid_dataset_details(data, selected_masterName);
                 } else {
                     grid_dataset_details([]);
                 }
@@ -293,8 +300,9 @@
         });
     }
 
-    function grid_dataset_details(data) {
+    function grid_dataset_details(data, QcdName) {
         try {
+            var name = $('#qcdcode').children('option:selected').text()
             $("#grid").kendoGrid({
                 dataSource: {
                     type: "odata",
@@ -353,52 +361,52 @@
                         {
                             field: "master_gid",
                             title: "Master Gid",
-                            width: 100,
+                            width: 10,
                             hidden: true
                         },
                         {
                             field: "parent_master_syscode",
                             title: "parent_master_syscode",
-                            width: 100,
+                            width: 10,
                             hidden:true
                         },
                         {
                             field: "parent_master_syscode_desc",
-                            title: "Parent Code",
+                            title: "Master",
                             width: 100,
                         },
                         {
                             field: "master_syscode",
                             title: "MasterSync Code",
-                            width: 100,
+                            width: 10,
                             hidden: true
                         },
                         {
                             field: "master_code",
-                            title: "Master Code",
+                            title: $('#qcdcode').children('option:selected').text() + " " + "Code",
                             width: 100,
                         },
                         {
                             field: "master_name",
-                            title: "Master Name",
+                            title: name + " " + "Name",
                             width: 100,
                         },
                         {
                             field: "master_multiple_name",
                             title: "Master Multiple Name",
-                            width: 100,
+                            width: 10,
                             hidden: true
                         },
                         {
                             field: "master_short_code",
                             title: "Master Short Code",
-                            width: 100,
+                            width: 10,
                             hidden: true
                         },
                         {
                             field: "active_status",
                             title: "Active stauts",
-                            width: 100,
+                            width: 10,
                             hidden: true
                         },
                         {

@@ -1,20 +1,28 @@
 @{
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
-@*
-<iframe src="http://140.238.247.210/ConnectorWeb/Connectors/" title="description" style="height: 556px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top:-1%;height: 84%;">
+                <iframe src="http://140.238.247.210/ConnectorWeb/Connectors/" title="description" style="height: 556px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
 
-	div.footer {
-	display: none;
-	}
-</iframe>*@
+	                div.footer {
+	                display: none;
+	                }
+                </iframe>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
 
-<div class="row" style="margin-top:10px">
+@*<div class="row" style="margin-top:10px">
     <div class="col-xs-12">
 
 <div id="external-content"></div>
 </div>
-</div>
+</div>*@
 
 @*<script>$("#testLoad").load("http://140.238.247.210/ConnectorWeb/Connectors/");</script>
 <div id="testLoad"></div>*@
@@ -33,6 +41,7 @@
 <script>
 	$(document).ready(function () {
 		$("#navhead").text("Connectors");
+    });
 
         //$("#fetchData").click(function () {
         //    // Make an AJAX GET request to the other application's API endpoint
@@ -46,22 +55,22 @@
         //        });
         //});
 
-        fetch('http://localhost:5544')
-            .then(response => {
-                debugger;
-                if (response.ok) {
-                    return response.text();
-                }
-                throw new Error('Network response was not ok');
-            })
-            .then(htmlContent => {
-                // Display the retrieved content in the designated div
-                document.getElementById('external-content').innerHTML = htmlContent;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });   
-    });
+    //    fetch('http://localhost:5544')
+    //        .then(response => {
+    //            debugger;
+    //            if (response.ok) {
+    //                return response.text();
+    //            }
+    //            throw new Error('Network response was not ok');
+    //        })
+    //        .then(htmlContent => {
+    //            // Display the retrieved content in the designated div
+    //            document.getElementById('external-content').innerHTML = htmlContent;
+    //        })
+    //        .catch(error => {
+    //            console.error('Error:', error);
+    //        });   
+    //});
 
     
     //document.addEventListener("DOMContentLoaded", function () {
