@@ -6,6 +6,8 @@ using System.Data.SqlTypes;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
+using System.Data;
+using System.Reflection.PortableExecutable;
 
 namespace Recon_proto.Controllers
 {
@@ -36,13 +38,13 @@ namespace Recon_proto.Controllers
 			objcontent.initiated_by = initiated_by;
 			urlstring = _configuration.GetSection("Appsettings")["connectorUrl"].ToString();
 			string post_data = "";
-			var filepath = "/Pipeline/NewScheduler";
+			var filepath = "Pipeline/NewScheduler";
 			using (var client = new HttpClient())
 			using (var content1 = new MultipartFormDataContent())
 			using (var fileStream = file.OpenReadStream())
 			{
 				string[] result = { };
-				client.BaseAddress = new Uri(urlstring + filepath);
+				client.BaseAddress = new Uri(urlstring);
 				client.DefaultRequestHeaders.Accept.Clear();
 				content1.Add(new StreamContent(fileStream), "file", file.FileName);
 				content1.Add(new StringContent(pipeline_code), "pipeline_code");
@@ -56,7 +58,7 @@ namespace Recon_proto.Controllers
 			}
 
 		}
-		public class datasetfileModel
+        public class datasetfileModel
 		{
 			public string? pipeline_code { get; set; }
 			public IFormFile file { get; set; }
