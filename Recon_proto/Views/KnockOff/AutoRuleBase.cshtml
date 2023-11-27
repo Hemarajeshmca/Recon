@@ -11,6 +11,10 @@
             margin-right: 28rem !important;
         }
 
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: #fff !important;
+        }
+
         .error_show {
             color: red;
             margin-left: 10px;
@@ -20,9 +24,9 @@
             height: 360px;
         }
 
-        .k-grid-header th.k-header > .k-link {
+ /*       .k-grid-header th.k-header > .k-link {
             width: 100px;
-        }
+        }*/
 
         .k-grid-header {
             font-weight: bold;
@@ -96,14 +100,11 @@
                             <span data-for='valid' class='k-invalid-msg'></span>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                  @*  <div class="col-md-3">
                         <label class="form-label">Match On</label>
                         <select id="matchon" class="form-select form-control"> </select>
-                    </div>
+                    </div>*@
                     <div class="col-md-3" style="margin-top: 2%;">
-                        @*<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
-                        Show Recon
-                        </button> &nbsp;&nbsp;&nbsp;*@
                         <button type="button" onclick="runselected()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
                             Run Selected
                         </button>
@@ -132,13 +133,13 @@
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
                     <div class="container">
-                        <p><strong>Recon Name&nbsp;&nbsp;:&nbsp;</strong>HDFC Ledger - 00234123</p>
-                        <p><strong>Ko Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong>11-09-2023 12:00:00 PM</p>
-                        <p><strong>Ko Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong></p>
-                        <p><strong>Ko Initiated By&nbsp;&nbsp;:&nbsp;</strong>Vijay</p>
-                        <p><strong>KO Execution Status&nbsp;&nbsp;:&nbsp;</strong> Inprocess</p>
-                        <p><strong>Ko Remark&nbsp;&nbsp;:&nbsp;</strong>Completed records 1000</p>
-                        <p><strong>Ko Exception Status&nbsp;&nbsp;:&nbsp;</strong>20 Records Exceptions</p>
+                        <p><strong>Recon Name&nbsp;&nbsp;:&nbsp;</strong><span id="recon_name"></span></p>
+                        <p><strong>Ko Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="initated_date"></span></p>
+                        <p><strong>Ko Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="completed_date"></span></p>
+                        <p><strong>Ko Initiated By&nbsp;&nbsp;:&nbsp;</strong><span id="initatedby"></span></p>
+                        <p><strong>KO Execution Status&nbsp;&nbsp;:&nbsp;</strong> <span id="status"></span></p>
+                        <p><strong>Ko Remark&nbsp;&nbsp;:&nbsp;</strong><span id="remarks"></span></p>
+                        <p><strong>Ko Exception Status&nbsp;&nbsp;:&nbsp;</strong><span id="execution_status"></span></p>
                     </div>
                 </div>
                 <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
@@ -158,10 +159,11 @@
     $(document).ready(function () {
         $("#navhead").text("Automatic Posting & Knockoff");
         kendodate_format();
-        getpreview();
+        //getpreview();
         getreconlist();
     });
     function rr1() {
+        debugger;
         $("#infomodal").hide();
     }
 
@@ -170,7 +172,7 @@
         var in_user_code = "sundar";
         $.ajax({
             type: "POST",
-            url: '/Common/Qcdmaster',
+            url: '../Common/Qcdmaster',
             dataType: 'json',
             data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
             contentType: 'application/json; charset=utf-8',
@@ -198,7 +200,7 @@
         var Context = data;
         $.ajax({
             type: "POST",
-            url: '/Recon/Reconlistknockoff',
+            url: '../Recon/Reconlistknockoff',
             dataType: 'json',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
@@ -272,13 +274,14 @@
                     title: "Action",
                     template: function (dataItem) {
                         if (dataItem.job_status == "P") {
-                            return "<input id='preview_checkbox' name='job_status' type='radio' disabled />";
+                            return "<input id='preview_checkbox' onclick='rowselected(this)' name='job_status' type='radio' disabled />";
 
                         } else {
-                            return "<input  id='preview_checkbox' name='job_status' type='radio' />";
+                            return "<input  id='preview_checkbox' onclick='rowselected(this)' name='job_status' type='radio' />";
                         }
                     },
-                    width:80
+                    width:30,
+                    filterable: false
                 },
                 {
                     field: "recon_code",
@@ -288,7 +291,7 @@
                 {
                     field: "recon_name",
                     title: "Recon Name",
-                    width: 100,
+                    width: 200,
                 },
                 {
                     field: "recontype_code",
@@ -310,6 +313,13 @@
                     field: "jobstatus_desc",
                     title: "Last KO Execution Status",
                     width: 100,
+                },{
+                    field: "Info",
+                    title: "",
+                    template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+                    width: 50,
+                    filterable: false
+
                 }],
             editable: false,
         });
@@ -333,14 +343,13 @@
             dropdownid = grid.dataItem(checkedrows[i]);
         }
         var in_recon_code = dropdownid.recon_code;
-        if (in_recon_code && rulepreview && period_from && period_to){
+        if (in_recon_code && period_from && period_to){
         $.ajax({
             type: "POST",
-            url: '/KnockOff/previewRulebase',
+            url: '../KnockOff/previewRulebase',
             dataType: 'json',
             data: JSON.stringify({
                 in_recon_code: in_recon_code + '$',
-                in_ko_post_flag: rulepreview,
                 in_period_from: pr,
                 in_period_to: pr1,
                 in_automatch_flag: 'Y',
@@ -356,6 +365,7 @@
                         content: res[0].out_msg,
                         type: 'green',
                     });
+                        getreconlist();
                 }
                 else if (res[0].out_result == '0') {
                     $.alert({
@@ -382,12 +392,6 @@
                 content: 'Please select Recon Code',
                 type: 'red',
             });
-        } else if (!rulepreview) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Rule Preview',
-                type: 'red',
-            });
         } else if (!period_from) {
             $.alert({
                 title: 'Recon',
@@ -402,5 +406,29 @@
             });
         }
     }
+
+    function openInfoModel() {
+        debugger;
+        var grid = $("#grid_preview").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        document.getElementById('recon_name').innerHTML = selectedItem.recon_name;
+        document.getElementById('initated_date').innerHTML = selectedItem.start_date;
+        document.getElementById('completed_date').innerHTML = selectedItem.start_date;
+        document.getElementById('initatedby').innerHTML = selectedItem.in_user_code;
+        document.getElementById('status').innerHTML = selectedItem.jobstatus_desc;
+        document.getElementById('remarks').innerHTML = selectedItem.job_remark;
+        document.getElementById('execution_status').innerHTML = selectedItem.jobstatus_desc;
+        $("#infomodal").modal("show");
+        //grid.table.on("click", "tr", function () {
+        //    $("#infomodal").modal("show");
+        //});
+    }
+
+    function rowselected(val) {
+        debugger;
+        console.log(`val`, $("#dataset_selected").val());
+        $("#infomodal").modal("hide");
+    }
+
 
 </script>
