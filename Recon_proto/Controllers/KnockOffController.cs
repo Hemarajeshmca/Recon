@@ -59,6 +59,11 @@ namespace Recon_proto.Controllers
             return View();
         }
 
+        public IActionResult MIS()
+        {
+            return View();
+        }
+
         public class getpreviewRulebase
         {
             public String? in_recon_code { get; set; }
@@ -265,5 +270,38 @@ namespace Recon_proto.Controllers
             public string in_ip_addr { get; set; }  
         }
 
-    }
+
+        [HttpPost]
+		public JsonResult runkosum([FromBody] runkosummodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "knockoff/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("runkosumm", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+
+        public class runkosummodel
+        {
+            public String in_recon_code { get; set; }
+            public String in_period_from { get; set; }
+            public String in_period_to { get; set; }
+            public String in_ip_addr { get; set;}
+            public String in_user_code { get; set; }
+        }
+
+		}
 }

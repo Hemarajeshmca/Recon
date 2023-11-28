@@ -84,14 +84,20 @@
 <body class="hold-transition skin-blue sidebar-mini fixed">
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;height: 84%;">
-                <div style="margin-bottom: 3%;">
+            <div class="card-body" style="margin-top:-1%;height: 84%;overflow-x:scroll;">
+                <div style="margin-bottom: 2%;">
                 <div id="grid_maualmatch1"></div>
                 </div>
-                <div>
+                <div style="margin-bottom: 2%;">
                     <div id="grid_maualmatch2"></div>
                 </div>
-                <div style="margin-top: 1%;">
+                <div style="margin-bottom: 2%;">
+                    <div id="grid_maualmatch3"></div>
+                </div >
+                 <div style="margin-bottom: 2%;">
+                    <div id="grid_maualmatch4"></div>
+                </div>
+                <div>
                     <button type="button" class="btn btn-sm me-2 save_btn" onclick="proceedtoRun()">Proceed</button>&nbsp;&nbsp;&nbsp;
                 </div>
             </div>
@@ -102,7 +108,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#navhead").text("Manual Matching and Posting Details");
+        $("#navhead").text("Manual Matching and Posting");
         kendodate_format();
         getdetails()
     });
@@ -122,8 +128,10 @@
                 debugger;
                 if (response != null) {
                     var data = JSON.parse(response)
-                    grid_manual_details1(data.Table);
-                    grid_manual_details2(data.Table1);
+                    grid_manual_details1(data.DataSet1);
+                    grid_manual_details2(data.DataSet2);
+                    grid_manual_details3(data.DataSet3);
+                    grid_manual_details4(data.Table3);
                 }
                 else {
                     grid_dataset_details([]);
@@ -137,60 +145,225 @@
         });
     }
 
-    function grid_manual_details1(data){
-        debugger;
-        try {
-            $("#grid_maualmatch1").kendoGrid({
-                dataSource: {
-                    data: data,
-                    pageSize: 15,
-                },
-                height: 200,
-                groupable: false,
-                pageable: {
-                    refresh: false,
-                    pageSizes: true,
-                    buttonCount: 5
-                },
-                sortable: true,
-                selectable: true,
-                filterable: true,
-                navigatable: true, 
+    function grid_manual_details1(data) {
+        var columns = [];
+        var rows = [];
+        for (var key in data[0]) {
+            var field = key.replace(/\s+/g, '_');
+            var propType = typeof data[0][key];
+            columns.push({
+                field: field,
+                title: key,
+                type: propType,
+                attributes: { style: "text-align: left;" },
+                filterable: false,
             });
+        }
+        $.each(data, function (i, e) {
+            var entryObject = {};
+            for (var key in e) {
+                var field = key.replace(/\s+/g, '_');
+                entryObject[field] = e[key];
+            }
+            rows.push(entryObject);
+        });
 
-        }
-        catch (err) {
-            console.log(err)
-        }
+        var configuration = {
+            dataSource: {
+                data: rows,
+                pageSize: 10
+            },
+            height: 60,
+            navigatable: false,
+            groupable: false,
+            editable: false,
+            sortable: false,
+            scrollable: false,
+            pageable: false,
+            attributes: { style: "text-align: center;" },
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        contains: "Contains"
+                    }
+                }
+            },
+            resizable: true,
+            persistSelection: true,
+            selectable: true,
+            columns: columns
+        };
+
+        $("#example1").remove();
+        $('#grid_maualmatch1').append('<div id="example1" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
+        var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
     }
 
     function grid_manual_details2(data){
-        try {
-            $("#grid_maualmatch2").kendoGrid({
-                dataSource: {
-                    data: data,
-                    pageSize: 15,
-                   
-                },
-                height: 230,
-                groupable: false,
-                pageable: {
-                    refresh: false,
-                    pageSizes: true,
-                    buttonCount: 5
-                },
-                sortable: true,
-                selectable: true,
-                filterable: true,
-                navigatable: true,
-               
-
+        debugger;
+        var columns = [];
+        var rows = [];
+        for (var key in data[0]) {
+            var field = key.replace(/\s+/g, '_');
+            var propType = typeof data[0][key];
+            columns.push({
+                field: field,
+                title: key,
+                type: propType,
+                attributes: { style: "text-align: left;" },
+                filterable: false,
             });
+        }
+        $.each(data, function (i, e) {
+            var entryObject = {};
+            for (var key in e) {
+                var field = key.replace(/\s+/g, '_');
+                entryObject[field] = e[key];
+            }
+            rows.push(entryObject);
+        });
 
+        var configuration = {
+            dataSource: {
+                data: rows,
+                pageSize: 10
+            },
+            height: 60,
+            navigatable: false,
+            groupable: false,
+            editable: false,
+            sortable: false,
+            scrollable: false,
+            pageable: false,
+            attributes: { style: "text-align: center;" },
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        contains: "Contains"
+                    }
+                }
+            },
+            resizable: false,
+            persistSelection: false,
+            selectable: false,
+            columns: columns
+        };
+        debugger
+        $("#example2").remove();
+        $('#grid_maualmatch2').append('<div id="example2" style="position:relative;" class="k-content"><table id="grid2" style="position:relative;overflow:scroll;width:100%"></table></div>');
+        var timeEditGrid = $("#grid2").kendoGrid(configuration).data("kendoGrid");
+    }
+
+    function grid_manual_details3(data) {
+        var columns = [];
+        var rows = [];
+        for (var key in data[0]) {
+            var field = key.replace(/\s+/g, '_');
+            var propType = typeof data[0][key];
+            columns.push({
+                field: field,
+                title: key,
+                type: propType,
+                attributes: { style: "text-align: left;" },
+                filterable: true,
+            });
         }
-        catch (err) {
-            console.log(err)
+        $.each(data, function (i, e) {
+            var entryObject = {};
+            for (var key in e) {
+                var field = key.replace(/\s+/g, '_');
+                entryObject[field] = e[key];
+            }
+            rows.push(entryObject);
+        });
+
+        var configuration = {
+            dataSource: {
+                data: rows,
+                pageSize: 10
+            },
+            height: 150,
+            navigatable: true,
+            groupable: false,
+            editable: false,
+            sortable: true,
+            scrollable: true,
+            attributes: { style: "text-align: center;" },
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        contains: "Contains"
+                    }
+                }
+            },
+            pageable: {
+                pageSize: 5,
+                buttonCount: 4
+            },
+            resizable: true,
+            persistSelection: true,
+            selectable: true,
+            columns: columns
+        };
+        $("#example3").remove();
+        $('#grid_maualmatch3').append('<div id="example3" style="position:relative;" class="k-content"><table id="grid3" style="position:relative;overflow:scroll;width:100%"></table></div>');
+        var timeEditGrid = $("#grid3").kendoGrid(configuration).data("kendoGrid");
+    }
+
+    function grid_manual_details4(data) {
+        var columns = [];
+        var rows = [];
+        for (var key in data[0]) {
+            var field = key.replace(/\s+/g, '_');
+            var propType = typeof data[0][key];
+            columns.push({
+                field: field,
+                title: key,
+                type: propType,
+                attributes: { style: "text-align: left;" },
+                filterable: false,
+            });
         }
+        $.each(data, function (i, e) {
+            var entryObject = {};
+            for (var key in e) {
+                var field = key.replace(/\s+/g, '_');
+                entryObject[field] = e[key];
+            }
+            rows.push(entryObject);
+        });
+
+        var configuration = {
+            dataSource: {
+                data: rows,
+                pageSize: 10
+            },
+            height: 60,
+            navigatable: false,
+            groupable: false,
+            editable: false,
+            sortable: false,
+            scrollable: false,
+            attributes: { style: "text-align: center;" },
+            filterable: {
+                extra: false,
+                operators: {
+                    string: {
+                        contains: "Contains"
+                    }
+                }
+            },
+            resizable: false,
+            persistSelection: false,
+            selectable: false,
+            columns: columns
+        };
+        $("#example4").remove();
+        $('#grid_maualmatch4').append('<div id="example4" style="position:relative;" class="k-content"><table id="grid4" style="position:relative;overflow:scroll;width:100%"></table></div>');
+        var timeEditGrid = $("#grid4").kendoGrid(configuration).data("kendoGrid");
     }
 
     function proceedtoRun(){
@@ -206,9 +379,9 @@
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                if (response != null) {
+                var res = JSON.parse(response)
+                if (res.length > 0) {
                     debugger;
-                    var res = JSON.parse(response)
                     $.alert({
                         title: 'Recon',
                         content: res[0].out_msg,
