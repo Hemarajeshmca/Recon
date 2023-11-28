@@ -47,6 +47,18 @@ namespace Recon_proto.Controllers
 			return View();
 		}
 
+        public IActionResult ManualMatching()
+        {
+            return View();
+        }
+
+        //ManualMatchDetails
+
+        public IActionResult ManualMatchDetails()
+        {
+            return View();
+        }
+
         public class getpreviewRulebase
         {
             public String? in_recon_code { get; set; }
@@ -167,6 +179,90 @@ namespace Recon_proto.Controllers
                 }
                 return Json(d2);
             }
+        }
+
+
+        [HttpPost]
+
+        public JsonResult ManualMatchList()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "DatasettoRecon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("DatasettoManualRead", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                return Json(d2);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult ManualMatchDetails([FromBody] manualmatchinfo context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "DatasettoRecon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("ManuaMatchInfo", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                return Json(d2);
+            }
+        }
+
+        public class manualmatchinfo
+        {
+            public int in_scheduler_gid { get; set; }
+        }
+
+        [HttpPost]
+
+
+        public JsonResult runmanualfile([FromBody] manualfile context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "DatasettoRecon/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("runManualfile", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                return Json(d2);
+            }
+        }
+
+        public class manualfile
+        {
+            public int in_scheduler_gid { get; set; }
+            public string in_ip_addr { get; set; }  
         }
 
     }
