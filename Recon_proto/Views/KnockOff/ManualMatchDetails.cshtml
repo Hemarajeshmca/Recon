@@ -1,0 +1,233 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+    <title></title>
+    <style>
+        .nav-item.me-2.me-xl-50 {
+            margin-right: 28rem !important;
+        }
+
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: #fff !important;
+        }
+
+        .error_show {
+            color: red;
+            margin-left: 10px;
+        }
+
+        .k-grid.k-widget {
+            height: 360px;
+        }
+
+        /*       .k-grid-header th.k-header > .k-link {
+                            width: 100px;
+                        }*/
+
+        .k-grid-header {
+            font-weight: bold;
+        }
+
+        .k-state-active {
+            display: none;
+        }
+
+        .k-content {
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .k-widget.k-window {
+            padding-top: 35px;
+            min-width: 90px;
+            min-height: 50px;
+            width: 700px !important;
+            height: 300px !important;
+            top: 180.766px !important;
+            /*left: 120px !important;*/
+            z-index: 10003;
+            left: 300px !important;
+        }
+
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .info-icon {
+            cursor: pointer;
+        }
+
+        .tooltip1 {
+            display: none;
+            position: absolute;
+            background-color: lightslategray;
+            color: #fff;
+            padding: 10px;
+            border-radius: 15px;
+            white-space: nowrap;
+            z-index: 1;
+            top: 100%;
+            margin-left: -142px;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-container:hover .tooltip1 {
+            display: block;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top:-1%;height: 84%;">
+                <div style="margin-bottom: 3%;">
+                <div id="grid_maualmatch1"></div>
+                </div>
+                <div>
+                    <div id="grid_maualmatch2"></div>
+                </div>
+                <div style="margin-top: 1%;">
+                    <button type="button" class="btn btn-sm me-2 save_btn" onclick="proceedtoRun()">Proceed</button>&nbsp;&nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#navhead").text("Manual Matching and Posting Details");
+        kendodate_format();
+        getdetails()
+    });
+
+    function getdetails() {
+        var getdata = getlocalStorage("manualMatch_schedulerid");
+        console.log("data", data);
+        var data = {};
+        data.in_scheduler_gid = getdata.scheduler_gid;
+        $.ajax({
+            type: "POST",
+            url: '../KnockOff/ManualMatchDetails',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response != null) {
+                    var data = JSON.parse(response)
+                    grid_manual_details1(data.Table);
+                    grid_manual_details2(data.Table1);
+                }
+                else {
+                    grid_dataset_details([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+
+    function grid_manual_details1(data){
+        debugger;
+        try {
+            $("#grid_maualmatch1").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 15,
+                },
+                height: 200,
+                groupable: false,
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                sortable: true,
+                selectable: true,
+                filterable: true,
+                navigatable: true, 
+            });
+
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
+    function grid_manual_details2(data){
+        try {
+            $("#grid_maualmatch2").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 15,
+                   
+                },
+                height: 230,
+                groupable: false,
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                sortable: true,
+                selectable: true,
+                filterable: true,
+                navigatable: true,
+               
+
+            });
+
+        }
+        catch (err) {
+            console.log(err)
+        }
+    }
+
+    function proceedtoRun(){
+        var getdata = getlocalStorage("manualMatch_schedulerid");
+        console.log("data", data);
+        var data = {};
+        data.in_scheduler_gid = getdata.scheduler_gid;
+        data.in_ip_addr = ""
+        $.ajax({
+            type: "POST",
+            url: '../KnockOff/runmanualfile',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response != null) {
+                    debugger;
+                    var res = JSON.parse(response)
+                    $.alert({
+                        title: 'Recon',
+                        content: res[0].out_msg,
+                        type: 'green',
+                    });
+                }
+                else {
+                    $.alert({
+                        title: 'Recon',
+                        content: "Something went wrong",
+                        type: 'red',
+                    });
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+</script>
