@@ -6,57 +6,17 @@
 <html>
 <head>
     <title></title>
-    @*<style>
-    .nav-item.me-2.me-xl-50 {
-    margin-right: 33rem !important;
-    }
-
-    .error_show {
-    color: red;
-    margin-left: 10px;
-    }
-
-    .k-grid.k-widget {
-    height: 360px;
-    }
-
-    .k-grid-header th.k-header > .k-link {
-    width: 100px;
-    }
-
-    .k-grid-header {
-    font-weight: bold;
-    }
-
-    .k-state-active {
-    display: none;
-    }
-
-    .k-content {
-    font-weight: normal;
-    font-size: 13px;
-    }
-
-    .k-widget.k-window {
-    padding-top: 35px;
-    min-width: 90px;
-    min-height: 50px;
-    width: 700px !important;
-    height: 300px !important;
-    top: 180.766px !important;
-    /*left: 120px !important;*/
-    z-index: 10003;
-    left: 300px !important;
-    }
-    </style>*@
+    <style>
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: #fff !important; 
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="card-body" style="margin-top:-1%;height: 84%;">
                 <div class="row" style="margin-top:10px;">
-
-
                     <div class="col-md-3">
                         <label class="form-label">Recon Name</label>
                         <select id="reconname" onchange="showRule()" class="form-select form-control"> </select>
@@ -77,7 +37,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="nav-align-top mb-3 mt-3">
+                    <div class="nav-align-top mt-3">
                         <ul class="nav nav-pills mb-2" role="tablist">
                             <li class="nav-item">
                                 <button type="button"
@@ -154,6 +114,77 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 510px;left: 155px;">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
+                    <div class="row">
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+                        </div>
+                    </div>
+                    <hr style="margin-top:-1px; width:100%;">
+                    <div class="container">
+                        <p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
+                        <p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
+                        <p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
+                        <p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
+                    <div class="col-sm-4"> </div>
+                    <div class="col-sm-4" style="margin-bottom:30px;float: right;">
+                        <center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button></center>
+                    </div>
+                    <div class="col-sm-4"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="infoDatamodal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" style="width: 510px;left: 155px;">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
+                    <div class="row">
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+                        </div>
+                    </div>
+                    <hr style="margin-top:-1px; width:100%;">
+                    <div class="container">
+                        <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
+                        <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
+                        <p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
+                        <p><strong>Status&nbsp;&nbsp;:&nbsp;</strong><span id="status"></span></p>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
+                    <div class="col-sm-4"> </div>
+                    <div class="col-sm-4" style="margin-bottom:30px;float: right;">
+                        <center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button></center>
+                    </div>
+                    <div class="col-sm-4"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
 
@@ -320,6 +351,13 @@
                     field: "active_status_desc",
                     title: "Status",
                     width: 80,
+                }, {
+                    field: "Info",
+                    title: "Info",
+                    template: "<a href='' style='cursor:pointer;' onclick='openDataModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+                    width: 50,
+                    filterable: false
+
                 }],
             editable: false,
         });
@@ -412,6 +450,13 @@
                     title: "Comparision Dataset",
                     width: 100,
                     hidden: true
+
+                }, {
+                    field: "Info",
+                    title: "Info",
+                    template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+                    width: 50,
+                    filterable: false
 
                 }],
             editable: false,
@@ -521,5 +566,35 @@
                 type: 'red',
             });
         }
+    }
+
+    function rr1() {
+        $("#infomodal").hide();
+        $("infoDatamodal").hide();
+    }
+
+    function openInfoModel() {
+        debugger;
+        var grid = $("#grid_preview").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        document.getElementById('rule_name').innerHTML = selectedItem.rule_name;
+        document.getElementById('rule_order').innerHTML = selectedItem.rule_order;
+        document.getElementById('source_dataset').innerHTML = selectedItem.source_dataset_desc;
+        document.getElementById('comparision_dataset').innerHTML = selectedItem.source_dataset_desc;
+        $("#infomodal").modal("show");
+    }
+
+    function openDataModel(){
+        debugger;
+        var grid = $("#dataset_grid").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        document.getElementById('dataset_name').innerHTML = selectedItem.dataset_name;
+        document.getElementById('dataset_type').innerHTML = selectedItem.dataset_type_desc;
+        document.getElementById('parent_dataset').innerHTML = selectedItem.parent_dataset_name;
+        document.getElementById('status').innerHTML = selectedItem.active_status_desc;
+        $("#infoDatamodal").modal("show");
+        //grid.table.on("click", "tr", function () {
+        //    $("#infomodal").modal("show");
+        //});
     }
 </script>
