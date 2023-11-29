@@ -122,7 +122,7 @@
 					<div class="nav-align-top mb-3 mt-3">
 						<ul class="nav nav-pills mb-2" role="tablist">
 							<li class="nav-item">
-								<button type="button" id="Datasetlist"
+								<button type="button" id="Datasetlist" disabled
 										class="nav-link active"
 										role="tab"
 										data-bs-toggle="tab"
@@ -133,7 +133,7 @@
 								</button>
 							</li>
 							<li class="nav-item">
-								<button type="button" id="DatasetProgress"
+								<button type="button" id="DatasetProgress" disabled
 										class="nav-link"
 										role="tab"
 										data-bs-toggle="tab"
@@ -250,7 +250,7 @@
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '~/DataSet/Datasetlistfetch',
+			url: '/DataSet/Datasetlistfetch',
 			dataType: 'json',
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
@@ -437,6 +437,9 @@
 		$("#Datasetlist").toggleClass('nav-link active');
 		$("#navs-pills-DatasetProgress").hide();
 		$("#navs-pills-Datasetlist").show();
+		$("#FileName").val("");
+		$("#File_Import").val("");
+		$("#Pipeline").val("");
 	}
 
 	function rr1() {
@@ -447,7 +450,7 @@
 		debugger;
 		$.ajax({
 			type: "POST",
-			url: '~/DataSet/getPipelinelist',
+			url: '/DataSet/getPipelinelist',
 			dataType: 'json',
 			data: JSON.stringify({ in_target_dataset_code: dataset_code }),
 			contentType: 'application/json; charset=utf-8',
@@ -513,7 +516,7 @@
 		}
 		formData.append('initiated_by', 'Hema');
 		$.ajax({
-			url: '~/Datasetfile/datasetfile',
+			url: '/Datasetfile/datasetfile',
 			type: 'POST',
 			data: formData,
 			processData: false,
