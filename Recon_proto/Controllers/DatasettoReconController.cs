@@ -69,9 +69,12 @@ namespace Recon_proto.Controllers
 		}
 
 		public class DatasettoReconprocessmodel
-		{
-			public int in_user_gid { get; set; }
+		{		
 			public int in_scheduler_gid { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+			public string in_ip_addr { get; set; }
+			
 		}
 #endregion
 	}

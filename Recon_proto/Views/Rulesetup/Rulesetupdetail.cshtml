@@ -971,9 +971,9 @@
 							open_parem: { type: "string" },
 							rulecondition_gid: { type: "string", defaultValue: "0" },
 							rule_code: { type: "string" },
-							source_field: { type: "string" },
-							source_field_desc: { type: "string" },
-							comparison_field: { type: "string" },
+							source_field_code: { type: "string", defaultValue: "" },
+							source_field_desc: { type: "string", defaultValue: "" },
+							comparison_field: { type: "string", defaultValue: "" },
 							comparison_field_desc: { type: "string" },
 							extraction_criteria: { type: "string" },
 							comparison_criteria: { type: "string" },
@@ -989,10 +989,10 @@
 			groupable: false,
 			dataBinding: setDefaultValues,
 			edit: OnEdit,
-			dataBound: function (e) {
+			dataBound: function (e) {				
 				resultData = e.sender._data;
 				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);
+				setColor(rows, resultData);				
 			},
 			sortable: true,
 			selectable: true,
@@ -1011,11 +1011,11 @@
 						name: "save",
 						id: "Save",
 						template: "<a href=''onclick='saverulecondition()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
-					},
+					}, 
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''class='k-grid-edit' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
@@ -1050,7 +1050,7 @@
 				field: "source_field_desc",
 				title: "Source Field",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_rulecondition")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_desc", "grid_rulecondition")
 				},
 				width: 120,
 			},
@@ -1063,7 +1063,7 @@
 				field: "extraction_criteria",
 				title: "Extraction criteria",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria_code", "grid_rulecondition")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "", "grid_rulecondition")
 				},
 				width: 120,
 			},
@@ -1077,7 +1077,7 @@
 				field: "comparison_field_desc",
 				title: "Comparison Field",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_rulecondition")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field_desc", "grid_rulecondition")
 				},
 				width: 120,
 			},
@@ -1090,7 +1090,7 @@
 				field: "comparison_criteria",
 				title: "Comparison criteria",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria_code", "grid_rulecondition")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_rulecondition")
 				},
 				width: 120,
 			},
@@ -1124,7 +1124,10 @@
 				},
 				width: 120,
 			}],
-			editable: true,
+			editable: function (e) {
+				// Use the "editable" field value from the data to determine editability
+				return e.model.editable;
+			}
 		});
 		source_field_desc_list = cmbsourcefield();
 		comparison_field_desc_list = cmbsourcefield();
@@ -1152,12 +1155,17 @@
 	}
 	function OnEdit(e) {
 		try {
-			setDefaultValues(e);			
-			e.container.find("input[name='source_field_desc']").change(function () {
+			setDefaultValues(e);
+			var columnIndex = this.cellIndex(e.container);
+			var fieldName = this.thead.find("th").eq(columnIndex).data("field");
+			if (!isEditable(fieldName, e.model)) {
+				this.closeCell(); // prevent editing
+			}
+			e.container.find("input[name='source_field_desc']").focusout(function () {
 				var arr = [];
 				var codeValue = $(this).val();
 				var sourcedata = 'SOURCE';
-				var in_recon_code = $("#cmbreconname").val();
+				var in_recon_code = $("#cmbreconname").val();				
 				$.ajax({
 					type: "POST",
 					url: '../Rulesetup/rulefilterfetch',
@@ -1183,7 +1191,8 @@
 					}
 				});
 			});
-			e.container.find("input[name='comparison_field_desc']").change(function () {
+			
+			e.container.find("input[name='comparison_field_desc']").focusout(function () {
 				var arr = [];
 				var codeValue = $(this).val();
 				var sourcedata = 'COMPARISON';

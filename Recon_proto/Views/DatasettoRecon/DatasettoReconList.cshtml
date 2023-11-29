@@ -99,13 +99,18 @@
 				schema: {
 					model: {
 						fields: {
-							scheduler_gid: { type: "string" },
-							scheduler_name: { type: "string" },
+							scheduler_gid: { type: "string" },						
+							scheduled_date: { type: "string" },
+							scheduler_start_date: { type: "string" },
+							scheduler_end_date: { type: "string" },
+							scheduler_initiated_by: { type: "string" },
+							pipeline_code: { type: "string" },
+							pipeline_name: { type: "string" },
+							file_name: { type: "string" },
+							dataset_code: { type: "string" },
 							dataset_name: { type: "string" },
 							last_sync_date: { type: "string" },
-							pipeline_code: { type: "string" },
-							pipeline_desc: { type: "string" },
-							In_mode_flag: { type: "string", defaultValue: "I" }
+							last_sync_status: { type: "string" },							
 						}
 					}
 				}
@@ -129,38 +134,6 @@
 			},
 			columns: [
 				{
-					field: "scheduler_gid",
-					title: "scheduler_gid",
-					width: 100,
-					hidden: true,
-				},
-				{
-					field: "scheduler_name",
-					title: "Scheduler Name",
-					width: 100,
-				},
-				{
-					field: "dataset_name",
-					title: "Dataset Name",
-					width: 100,
-				},
-				{
-					field: "last_sync_date",
-					title: "Last Sync Date",
-					width: 100,
-				},
-				{
-					field: "pipeline_code",
-					title: "Pipeline Code",
-					width: 100,
-					hidden: true,
-				},
-				{
-					field: "pipeline_desc",
-					title: "Pipeline",
-					width: 100,
-				},
-				{
 					command: [
 						{
 							name: "Process",
@@ -169,7 +142,69 @@
 								process()
 							},
 						},
-					], title: "Action&nbsp;", width: "40px",
+					], title: "Action&nbsp;", width: "80px",
+				},
+				{
+					field: "scheduler_gid",
+					title: "scheduler_gid",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "scheduled_date",
+					title: "Scheduler Date",
+					width: 150,
+				},
+				{
+					field: "scheduler_start_date",
+					title: "Scheduler Start Date",
+					width: 180,
+				},
+				{
+					field: "scheduler_end_date",
+					title: "Scheduler End Date",
+					width: 180,
+				},
+				{
+					field: "scheduler_initiated_by",
+					title: "Scheduler initiated By",
+					width: 180,
+				},				
+				{
+					field: "pipeline_code",
+					title: "Pipeline Code",
+					width: 180,
+				},
+				{
+					field: "pipeline_name",
+					title: "Pipeline Name",
+					width: 180,
+				},
+				{
+					field: "file_name",
+					title: "File Name",
+					width: 120,
+				},
+				{
+					field: "dataset_code",
+					title: "Dataset Code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 180,
+				}, 
+				{
+					field: "last_sync_date",
+					title: "Last Sync Date",
+					width: 180,
+				}, 
+				{
+					field: "last_sync_date",
+					title: "Last Sync Date",
+					width: 180,
 				}],
 			editable: false,
 
@@ -178,15 +213,12 @@
 	function process() {
 		var grid = $("#grid_datasettorecon").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var scheduler_gid = model.scheduler_gid;
-		var action = "";
-		var action_by = "vijay"
-		var status = "Y";
+		var scheduler_gid = model.scheduler_gid;		
 		$.ajax({
 			type: "POST",
 			url: '../DatasettoReconprocess/DatasettoReconListmodel',
 			dataType: 'json',
-			data: JSON.stringify({ in_scheduler_gid: scheduler_gid, in_user_gid: user_gid }),
+			data: JSON.stringify({ in_scheduler_gid: scheduler_gid }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
