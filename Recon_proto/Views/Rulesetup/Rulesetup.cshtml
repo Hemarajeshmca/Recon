@@ -74,6 +74,9 @@
 		kendodate_format();
 		grid_rulesetup_details([]);
 		//recon name
+		gridlist();
+	});
+	function gridlist() {
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -105,7 +108,7 @@
 			}
 
 		});
-	});
+	}
 
 	function rr1() {
 		$("#newdebit").hide();
@@ -219,12 +222,12 @@
 		}
 	}
 	function getSerializedRows() {
-		btn_onClick('Create');		
-		var selectedItem=$("#cmbreconname").val();
+		btn_onClick('Create');
+		var selectedItem = $("#cmbreconname").val();
 		if (selectedItem != "") {
-		setlocalStorage("ls_pageList", selectedItem);
-		document.location = "../Rulesetup/Rulesetupdetail";
-		}else{
+			setlocalStorage("ls_pageList", selectedItem);
+			document.location = "../Rulesetup/Rulesetupdetail";
+		} else {
 			$.alert({
 				title: 'Recon',
 				content: "Please Select Recon ",
@@ -305,57 +308,84 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var in_rule_code = "";
-					var ruleName = "";
-					var cmbreconname = "";
-					var pr1 = "1901-01-01";
-					var pr = "1901-01-01";
-					var in_source_dataset_code = "";
-					var in_comparison_dataset_code = "";
-					var in_source_acc_mode = "";
-					var in_parent_dataset_code = "";
-					var in_support_dataset_code = "";
-					var in_parent_acc_mode = "";
-					var action = "DELETE";
-					var action_by = "vijay"
-					var rulegid = model.rule_gid;
-					var status = "";
-					var Reversal = "";
-					var Groupflag = "";
-					var in_until_active_flag = "";
-					var in_applyrule_on = "";
-					$.ajax({
-						type: "POST",
-						url: '../Rulesetup/Ruleheader',
-						dataType: 'json',
-						data: JSON.stringify({
-							in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
-							in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on,
-							in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode,
-							in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode,
-							in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status
-						}),
-						contentType: 'application/json; charset=utf-8',
-						success: function (response) {
-							if (response.out_result == "1") {
-								$.alert({
-									icon: 'fa fa-success',
-									title: 'Recon',
-									theme: 'dark',
-									content: response.out_msg,
-									type: 'green',
-									animationSpeed: 700,
-								});
-								gridlist();
-							} else {
-								$.alert({
-									title: 'Recon',
-									content: response.out_msg,
-									type: 'red',
-								});
-							}
-						}
-					})
+					$.confirm({
+						title: 'Delete Reason',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									var in_rule_code = "";
+									var ruleName = "";
+									var cmbreconname = "";
+									var pr1 = "1901-01-01";
+									var pr = "1901-01-01";
+									var in_source_dataset_code = "";
+									var in_comparison_dataset_code = "";
+									var in_source_acc_mode = "";
+									var in_parent_dataset_code = "";
+									var in_support_dataset_code = "";
+									var in_parent_acc_mode = "";
+									var action = "DELETE";
+									var action_by = "vijay"
+									var rulegid = model.rule_gid;
+									var status = "";
+									var Reversal = "";
+									var Groupflag = "";
+									var in_until_active_flag = "";
+									var in_applyrule_on = "";
+									$.ajax({
+										type: "POST",
+										url: '../Rulesetup/Ruleheader',
+										dataType: 'json',
+										data: JSON.stringify({
+											in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
+											in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on,
+											in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode,
+											in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode,
+											in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: name
+										}),
+										contentType: 'application/json; charset=utf-8',
+										success: function (response) {
+											if (response.out_result == "1") {
+												$.alert({
+													icon: 'fa fa-success',
+													title: 'Recon',
+													theme: 'dark',
+													content: response.out_msg,
+													type: 'green',
+													animationSpeed: 700,
+												});
+												gridlist();
+											} else {
+												$.alert({
+													title: 'Recon',
+													content: data.out_msg,
+													type: 'red',
+												});
+											}
+										}
+									})
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
 				},
 				cancel: function () {
 					$.alert({
