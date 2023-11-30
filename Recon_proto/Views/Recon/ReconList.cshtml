@@ -281,36 +281,69 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var reconcode = "";
-					var cmbrecontype = "";
-					var ReconName = "";
-					var pr = "1901-01-01";
-					var in_until_active_flag = "";
-					var pr1 = "1901-01-01";
-					var action = "DELETE";
-					var action_by = "vijay"
-					var status = "";
-					var in_recon_automatch_partial = "";
-					$.ajax({
-						type: "POST",
-						url: '../Recon/Reconheadersave',
-						dataType: 'json',
-						data: JSON.stringify({ in_recon_gid: recon_gid, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag }),
-						contentType: 'application/json; charset=utf-8',
-						success: function (response) {
-							$.alert({
-								icon: 'fa fa-success',
-								title: 'Recon',
-								theme: 'dark',
-								content: response.out_msg,
-								type: 'green',
-								animationSpeed: 700,
-							});
-							setTimeout(function () {
-								window.location.reload(1);
-							}, 2500);
-						}
-					})
+					$.confirm({
+						title: 'Delete Reason',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									var reconcode = "";
+									var cmbrecontype = "";
+									var ReconName = "";
+									var pr = "1901-01-01";
+									var in_until_active_flag = "";
+									var pr1 = "1901-01-01";
+									var action = "DELETE";
+									var action_by = "vijay"
+									var status = "";
+									
+									var in_recon_automatch_partial = "";									
+									var in_recon_date_flag = "";
+									var in_recon_date_field = "";									
+									var in_recon_value_flag = "";
+									var in_recon_value_field=  "";									
+									var in_threshold_plus_value = 0;
+									var in_threshold_minus_value = 0;
+									$.ajax({
+										type: "POST",
+										url: '../Recon/Reconheadersave',
+										dataType: 'json',
+										data: JSON.stringify({
+											in_recon_gid: recon_gid, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: name
+										}),
+										contentType: 'application/json; charset=utf-8',
+										success: function (response) {
+											$.alert({
+												icon: 'fa fa-success',
+												title: 'Recon',
+												theme: 'dark',
+												content: response.out_msg,
+												type: 'green',
+												animationSpeed: 700,
+											});
+										}
+									})
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
 				},
 				cancel: function () {
 					$.alert({

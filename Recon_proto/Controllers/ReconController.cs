@@ -131,7 +131,7 @@ namespace Recon_proto.Controllers
 			string post_data = "";
 			using (var client = new HttpClient())
 			{
-                string Urlcon = "Dataset/";
+                string Urlcon = "Recon/";
                 client.BaseAddress = new Uri(urlstring + Urlcon);
                 //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -170,6 +170,7 @@ namespace Recon_proto.Controllers
 			public String? in_recon_value_field { get; set; }
 			public Double in_threshold_plus_value { get; set; }
 			public Double in_threshold_minus_value { get; set; }
+			public String in_active_reason { get; set; }
 			public String in_action { get; set; }
 			public String? in_action_by { get; set; }
 			public String? out_msg { get; set; }
@@ -273,7 +274,7 @@ namespace Recon_proto.Controllers
 		#region reconfetch
 		public class fetchRecon
 		{
-			public string? in_recon_code { get; set; }
+			public Int16? in_recon_code { get; set; }
 
 		}
 		public class fetchRecondataset
