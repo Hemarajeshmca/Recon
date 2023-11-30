@@ -250,7 +250,7 @@
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '/DataSet/Datasetlistfetch',
+			url: '../DataSet/Datasetlistfetch',
 			dataType: 'json',
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
@@ -303,7 +303,7 @@
 						}
 					}
 				},
-				height: 350,
+				height: 365,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -325,12 +325,18 @@
 					title: "Action",
 					template: "<input id='dataset_selected' onclick='rowselected(this)' name='dataset_code' type='radio'/>",
 					width: 40,
-					filterable: false
+					filterable: false,
+						attributes: {
+							style: "text-align: center;"
+						}
 				},
 				{
 					field: "sl_no",
 					title: "Sl No",
 					width:50,
+						attributes: {
+							style: "text-align: right;"
+						}
 				},
 				{
 					field: "dataset_id",
@@ -381,7 +387,10 @@
 						title: "",
 						template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
 						width:50,
-						filterable: false
+						filterable: false,
+						attributes: {
+							style: "text-align: center;"
+						}
 
 				}],
 				editable: false,
@@ -450,7 +459,7 @@
 		debugger;
 		$.ajax({
 			type: "POST",
-			url: '/DataSet/getPipelinelist',
+			url: '../DataSet/getPipelinelist',
 			dataType: 'json',
 			data: JSON.stringify({ in_target_dataset_code: dataset_code }),
 			contentType: 'application/json; charset=utf-8',
@@ -516,7 +525,7 @@
 		}
 		formData.append('initiated_by', 'Hema');
 		$.ajax({
-			url: '/Datasetfile/datasetfile',
+			url: '../Datasetfile/datasetfile',
 			type: 'POST',
 			data: formData,
 			processData: false,
@@ -534,6 +543,9 @@
 						content: response,
 						type: 'green',
 					});
+					$("#FileName").val("");
+					$("#File_Import").val("");
+					$("#Pipeline").val("");
 				}
 			}
 		});

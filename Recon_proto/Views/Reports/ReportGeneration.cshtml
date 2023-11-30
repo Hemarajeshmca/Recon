@@ -124,7 +124,7 @@
 		data.in_action = '';
 		$.ajax({
 			type: "POST",
-			url: "/Reports/getreportparam",
+			url: "../Reports/getreportparam",
 			dataType: "json",
 			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action }),
 			contentType: 'application/json; charset=utf-8',
@@ -727,19 +727,27 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
-					var data = res[0];
-					debugger;
-					if (data.out_result != '0') {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'green',
-						});
-						
+					
+					if(res.length > 0) {
+						var data = res[0];
+						if (data.out_result != '0') {
+							$.alert({
+								title: 'Recon',
+								content: data.out_msg,
+								type: 'green',
+							});
+
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: data.out_msg,
+								type: 'red',
+							});
+					}
 					} else {
 						$.alert({
 							title: 'Recon',
-							content: data.out_msg,
+							content: "Something Went Wrong ..!",
 							type: 'red',
 						});
 					}
