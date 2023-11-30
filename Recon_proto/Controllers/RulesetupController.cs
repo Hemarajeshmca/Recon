@@ -99,6 +99,7 @@ namespace Recon_proto.Controllers
 			public string? in_group_flag { get; set; }
 			public string? in_active_status { get; set; }
 			public string? in_action { get; set; }
+			public string? in_inactive_reason { get; set; }
 			public string? in_user_code { get; set; }
 			public string? out_msg { get; set; }
 			public string? out_result { get; set; }
