@@ -71,7 +71,7 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Recon code</label>
-									<input class="form-control" type="text" id="reconcode" value="">
+									<input class="form-control" type="text" id="reconcode" value="" disabled>
 								</div>
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Mode</label>
@@ -163,7 +163,7 @@
 										<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" data-bs-target="#Accountform" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													<div class="col-xs-12">
 														<div id="grid_datasetrecon">
 														</div>
@@ -175,7 +175,7 @@
 										<div class="tab-pane fade" id="navs-pills-top-Datasetmapping" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" data-bs-target="#Datasetmappingform" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create'  class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													<div class="col-xs-12">
 														<div id="maingrid">
 														</div>
@@ -385,13 +385,14 @@
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
 			$("#cmbParentDataset").attr('disabled', false);
-			var reconcode = $("#reconcode").val()
+			var reconcode = $("#reconcode").val();
+			var recongid = $("#recon_id").val();
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheaderfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: recongid }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response != null) {
@@ -488,7 +489,7 @@
 				$("#period_from").val(data.period_from);
 				$("#period_to").val(data.period_to);
 				$("#txtstatus").val(data.active_status_desc);
-				$("#recon_id").val(data.recon_gid);
+				$("#recon_id").val(data.recon_gid);				
 				if (data.until_active_flag == "Y") {
 					$('#untillactive').attr('checked', true);
 				}
@@ -496,12 +497,30 @@
 					type: "POST",
 					url: '../Recon/Reconheaderfetch',
 					dataType: 'json',
-					data: JSON.stringify({ in_recon_code: data.recon_code }),
+					data: JSON.stringify({ in_recon_code: data.recon_gid }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 
 						if (response != " ") {
 							var res = JSON.parse(response);
+							if (res.ReconHeader[0].recon_value_flag == "Y") {
+								$("#reconvalueflag1").prop("checked", true);
+							} else {
+								$("#reconvalueflag2").prop("checked", true);
+							}
+							if (res.ReconHeader[0].recon_date_flag == "Y") {
+								$("#recondateflag1").prop("checked", true);
+							} else {
+								$("#recondateflag2").prop("checked", true);
+							}
+							if (res.ReconHeader[0].recon_automatch_partial == "Y") {
+								$("#partialmatch1").prop("checked", true);
+							} else {
+								$("#partialmatch2").prop("checked", true);
+							}
+							
+							$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
+							$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
 							grid_datasetrecon(res.ReconDataSet);
 							if (res.ReconDataSetmapping.length > 0) {
 								griddatamapping(res.ReconDataSetmapping);
@@ -546,6 +565,8 @@
 									}));
 								}
 							});
+							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
+							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
 						}
 						else {
 							grid_datasetrecon([]);
@@ -578,6 +599,23 @@
 					$("#period_to").val(res.ReconHeader[0].period_to);
 					$("#txtstatus").val(res.ReconHeader[0].active_status_desc);
 					$("#recon_id").val(res.ReconHeader[0].recon_gid);
+					if (res.ReconHeader[0].recon_value_flag == "Y") {
+						$("#reconvalueflag1").prop("checked", true);
+					} else {
+						$("#reconvalueflag2").prop("checked", true);
+					}
+					if (res.ReconHeader[0].recon_date_flag == "Y") {
+						$("#recondateflag1").prop("checked", true);
+					} else {
+						$("#recondateflag2").prop("checked", true);
+					}
+					if (res.ReconHeader[0].recon_automatch_partial == "Y") {
+						$("#partialmatch1").prop("checked", true);
+					} else {
+						$("#partialmatch2").prop("checked", true);
+					}					
+					$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
+					$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
 					grid_datasetrecon(res.ReconDataSet);
 					if (res.ReconDataSetmapping.length > 0) {
 						griddatamapping(res.ReconDataSetmapping);
@@ -596,6 +634,34 @@
 							text: item.dataset_name
 						}));
 					});
+					$("#cmbrecondatefield").empty();
+					$("#cmbrecondatefield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.Reconfield, function (index, item) {
+						if (item.recon_field_type == "DATE") {
+							$("#cmbrecondatefield").append($('<option>', {
+								value: item.recon_field_name,
+								text: item.recon_field_desc
+							}));
+						}
+					});
+					$("#cmbreconvaluefield").empty();
+					$("#cmbreconvaluefield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.Reconfield, function (index, item) {
+						if (item.recon_field_type == "number") {
+							$("#cmbreconvaluefield").append($('<option>', {
+								value: item.recon_field_name,
+								text: item.recon_field_desc
+							}));
+						}
+					});
+					$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
+					$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
 				}
 				else {
 					grid_datasetrecon([]);
@@ -696,7 +762,6 @@
 				in_until_active_flag = "Y"
 				var pr1 = "1901-01-01";
 			} else {
-				s
 				in_until_active_flag = "N"
 				var period_to = $("#period_to").val();
 				var ts1 = period_to.split("/");
@@ -713,7 +778,9 @@
 			var recon_id = $("#recon_id").val();
 			if (recon_id > 0) {
 				recon_id = $("#recon_id").val();
+				$("#Accountform").modal('show');
 				return;
+
 			} else {
 				recon_id = 0;
 			}
@@ -722,8 +789,15 @@
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
 			var in_recon_date_field = $("#cmbrecondatefield").val();
+			if (in_recon_date_field == null){
+				in_recon_date_field='';
+			}
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
 			var in_recon_value_field = $("#cmbreconvaluefield").val();
+			if (in_recon_value_field == null) {
+				in_recon_value_field = '';
+			}
+			var in_active_reason="";
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdminus").val()).toFixed(2);
 			$.ajax({
@@ -731,7 +805,7 @@
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -742,6 +816,8 @@
 						//	type: 'green',
 						//});
 						$("#recon_id").val(response.in_recon_gid)
+						detailfetch(response.in_recon_gid);
+						$("#Accountform").modal('show');
 					}
 					else {
 
@@ -913,7 +989,7 @@
 						$("#cmbdatasetname").val("");
 						$("#recondataset_gid").val(response.in_recondataset_gid)
 						$("#Accountform").modal('hide');
-						detailfetch(reconcode);
+						detailfetch($("#recon_id").val());
 					}
 					else {
 
@@ -1110,7 +1186,7 @@
 		columns.push({
 			field: entryIndex - 1,
 			title: 'Action',
-			template: "<a href='' onclick='getdetailSelectedRows()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;<a href='' onclick='myDeletedatamapping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
+			template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;<a href='' onclick='myDeletedatamapping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
 			filterable: false,
 			sortable: true,
 			editable: true,
@@ -1197,8 +1273,8 @@
 		grid.hideColumn(3);
 		grid.hideColumn(4);
 	}
-	function getdetailSelectedRows() {
-
+	function getdetailSelectedRows(mode) {
+		if ($(mode).attr('value') == "edit") {
 		var grid = $("#grid1").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		$("#Reconfieldname").val(selectedItem.entries[4]);
@@ -1225,6 +1301,13 @@
 			}
 		});
 		$("#Datasetmappingform").modal('show');
+		} else if ($(mode).attr('value') == "create") {
+			grid_recondatasetmapping([]);
+			$("#Reconfieldname").val("");
+			$("#displayorder").val("");
+			$("#reconfield_gid").val(0);
+			$("#Datasetmappingform").modal('show');
+		}
 	}
 	function getdatasetmapping() {
 		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
@@ -1536,7 +1619,9 @@
 	}
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
+		
 		if (recontype == "v" || recontype == "N") {
+			$('#partialmatch2').prop('checked', true);
 			$('#reconvalueflag1').prop('checked', true);
 			$('#recondateflag2').prop('checked', true);
 			$("#cmbrecondatefield").prop('disabled', true);
@@ -1546,6 +1631,7 @@
 			$("#recondateflag2").prop('disabled', false);
 			$("#reconvalueflag1").prop('disabled', false);
 		} else {
+			$('#partialmatch2').prop('checked', true);
 			$('#recondateflag1').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
 			$("#cmbreconvaluefield").prop('disabled', true);
@@ -1600,11 +1686,12 @@
 			var in_recon_value_field = $("#cmbreconvaluefield").val();
 			var in_threshold_plus_value = $("#thersholdplus").val();
 			var in_threshold_minus_value = $("#thersholdminus").val();
+			var in_active_reason ="";
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value }),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 
@@ -1615,7 +1702,7 @@
 							type: 'green',
 						});
 						$("#recon_id").val(response.in_recon_gid)
-						detailfetch(reconcode);
+						detailfetch(response.in_recon_gid);
 						window.location.href = "../Recon/ReconList";
 					}
 					else {
