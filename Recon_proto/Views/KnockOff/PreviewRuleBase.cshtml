@@ -208,7 +208,7 @@
         var Context = data;
         $.ajax({
             type: "POST",
-            url: '/Recon/Reconlistfetch',
+            url: '../Recon/Reconlistfetch',
             dataType: 'json',
             data: JSON.stringify({ in_user_gid: '', in_active_status: '' }),
             contentType: 'application/json; charset=utf-8',
@@ -240,7 +240,7 @@
         var in_user_code = "sundar";
         $.ajax({
             type: "POST",
-            url: '/Common/Qcdmaster',
+            url: '../Common/Qcdmaster',
             dataType: 'json',
             data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
             contentType: 'application/json; charset=utf-8',
@@ -268,7 +268,7 @@
             //var rulepreview = $("#prviewon").val();
             $.ajax({
                 type: "POST",
-                url: '/KnockOff/RuleAgainstRecon',
+                url: '../KnockOff/RuleAgainstRecon',
                 dataType: 'json',
                 data: JSON.stringify({
                     in_recon_code: in_recon_code,
@@ -356,7 +356,10 @@
                     title: "Info",
                     template: "<a href='' style='cursor:pointer;' onclick='openDataModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
                     width: 50,
-                    filterable: false
+                    filterable: false,
+                    attributes: {
+                        style: "text-align: center;"
+                    }
 
                 }],
             editable: false,
@@ -427,7 +430,10 @@
                 {
                     field: "rule_order",
                     title: "Rule Order",
-                    width: 80
+                    width: 80,
+                    attributes: {
+                        style: "text-align: right;"
+                    }
                 },
                 {
                     field: "source_dataset_desc",
@@ -456,7 +462,10 @@
                     title: "Info",
                     template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
                     width: 50,
-                    filterable: false
+                    filterable: false,
+                    attributes: {
+                        style: "text-align: center;"
+                    }
 
                 }],
             editable: false,
@@ -496,7 +505,7 @@
         if (in_recon_code && period_from && period_to && firstColumnValues) {
             $.ajax({
                 type: "POST",
-                url: '/KnockOff/previewRulebase',
+                url: '../KnockOff/previewRulebase',
                 dataType: 'json',
                 data: JSON.stringify({
                     in_recon_code: in_recon_code + '$' + firstColumnValues,

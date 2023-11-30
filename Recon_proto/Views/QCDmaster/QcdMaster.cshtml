@@ -281,12 +281,12 @@
         data.in_master_code = master_code;
         selected_masterName = $('#qcdcode').children('option:selected').text();
         document.getElementById('mastercode_label').innerHTML = selected_masterName + " " + "code";
-        document.getElementById('masterName_label').innerHTML = selected_masterName + " " + "Name";
+        document.getElementById('masterName_label').innerHTML = selected_masterName + " " + "Description";
         var cur_value = $('#qcdcode').children('option:selected').text();
         $("#parentCode").val(cur_value);
         $.ajax({
             type: "POST",
-            url: "/QCDmaster/QcdMasterGridRead",
+            url: "../QCDmaster/QcdMasterGridRead",
             dataType: "json",
             data: JSON.stringify({ in_user_code: data.in_user_code, in_master_code: data.in_master_code }),
             contentType: 'application/json; charset=utf-8',
@@ -357,6 +357,9 @@
                             ],
                             title: "Action",
                             width: "40px",
+                            attributes: {
+                                style: "text-align: center;"
+                            }
                         },
                         {
                             field: "master_gid",
@@ -388,7 +391,7 @@
                         },
                         {
                             field: "master_name",
-                            title: name + " " + "Name",
+                            title: name + " " + "Description",
                             width: 100,
                         },
                         {
