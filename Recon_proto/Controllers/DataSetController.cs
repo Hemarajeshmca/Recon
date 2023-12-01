@@ -206,7 +206,7 @@ namespace Recon_proto.Controllers
 		#region detailfetch
 		public class Datasetdetailfetch
 		{
-			public string? datasetCode { get; set; }			
+			public Int16 datasetCode { get; set; }			
 		}
 		public class Datasetdetailfetchlist
 		{

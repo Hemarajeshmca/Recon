@@ -48,7 +48,7 @@ namespace Recon_proto.Controllers
 
 		#region process
 		[HttpPost]
-		public JsonResult DatasettoReconprocess([FromBody] DatasettoReconListmodel context)
+		public JsonResult DatasettoReconprocess([FromBody] DatasettoReconprocessmodel context)
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			string post_data = "";
