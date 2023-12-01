@@ -146,7 +146,6 @@
 				</div>
 			
 				<div id="grid"></div>
-			
 			</div>
 		</div>
 	</div>
@@ -160,6 +159,7 @@
 		$("#navhead").text("KnockOff MIS");
 		kendodate_format();
 		getreconlist();
+		loadGrid();
 	});
 
 	function getreconlist() {
@@ -230,62 +230,216 @@
 		});
 	}
 
+	//function defaultgrid(){
+	//		try {
+	//		$("#grid").kendoGrid({
+	//				dataSource: {
+	//					data: [],
+	//					pageSize: 10,
+	//					schema: {
+	//						model: {
+	//							fields: {
+	//								row_label: { type: "string" },
+	//								dr_count: { type: "string" },
+	//								dr_value: { type: "string" },
+	//								cr_value: { type: "string" },
+	//								total_count: { type: "string" },
+	//								total_value: { type: "string" },
+	//								back_color: { type: "string" },
+	//								fore_color: { type: "string" },
+	//							}
+	//						}
+	//					}
+	//				},
+	//				height: 330,
+	//				groupable: false,
+	//				dataBound: function (e) {
+	//					resultData = e.sender._data;
+	//					var rows = $('#grid').data('kendoGrid').tbody.children();
+	//					setColor(rows, resultData);
+	//				},
+	//				pageable: {
+	//					refresh: false,
+	//					pageSizes: true,
+	//					buttonCount: 5
+	//				},
+	//				sortable: true,
+	//				selectable: true,
+	//				filterable: false,
+	//				navigatable: true,
+	//				columns: [{
+	//					field: "row_label",
+	//					title: "Row Label",
+	//				},
+	//				{
+	//					field: "dr_count",
+	//					title: "Dr Count",
+	//				},
+	//				{
+	//					field: "dr_value",
+	//					title: "Dr Value",
+	//				},
+	//				{
+	//					field: "cr_count",
+	//					title: "Cr Count",
+	//				},
+	//				{
+	//					field: "cr_value",
+	//					title: "Cr Value",
+	//				},
+	//				{
+	//					field: "total_count",
+	//					title: "Total Count",
+	//				},
+	//				{
+	//					field: "total_value",
+	//					title: "Total Value",
+	//				},
+	//				{
+	//					field: "backcolor",
+	//					title: "Backcolor",
+	//					width: 100,
+	//				},
+	//				{
+	//					field: "forecolor",
+	//					title: "Forecolor",
+	//				},
+	//				],
+	//				editable: false,
+
+	//			});
+	//		}
+	//		catch (err) {
+	//			console.log(err)
+
+	//		}
+		
+	//}
+
 	function loadGrid(data) {
+		debugger;
 		var columns = [];
 		var rows = [];
-		for (var key in data[0]) {
-			var field = key.replace(/\s+/g, '_');
-			var propType = typeof data[0][key];
-			columns.push({
-				field: field,
-				title: key,
-				type: propType,
-				attributes: { style: "text-align: left;" },
-				filterable: false,
-			});
-		}
-		$.each(data, function (i, e) {
-			var entryObject = {};
-			for (var key in e) {
+		if(data) {
+			for (var key in data[0]) {
 				var field = key.replace(/\s+/g, '_');
-				entryObject[field] = e[key];
+				var propType = typeof data[0][key];
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: left;" },
+					filterable: false,
+				});
 			}
-			rows.push(entryObject);
-		});
-
-		var configuration = {
-			dataSource: {
-				data: rows,
-				pageSize: 10
-			},
-			height: 250,
-			navigatable: false,
-			groupable: false,
-			editable: false,
-			sortable: false,
-			scrollable: true,
-			attributes: { style: "text-align: center;" },
-			filterable: {
-				extra: true,
-				operators: {
-					string: {
-						contains: "Contains"
-					}
+			$.each(data, function (i, e) {
+				var entryObject = {};
+				for (var key in e) {
+					var field = key.replace(/\s+/g, '_');
+					entryObject[field] = e[key];
 				}
-			},
-			pageable: {
-				pageSize: 10,
-				buttonCount: 4
-			},
-			resizable: true,
-			persistSelection: true,
-			selectable: true,
-			columns: columns
-		};
+				rows.push(entryObject);
+			});
 
-		$("#example").remove();
-		$('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
-		var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+			var configuration = {
+				dataSource: {
+					data: rows,
+					pageSize: 10
+				},
+				height: 250,
+				navigatable: false,
+				groupable: false,
+				editable: false,
+				sortable: false,
+				scrollable: true,
+				attributes: { style: "text-align: center;" },
+				filterable: {
+					extra: true,
+					operators: {
+						string: {
+							contains: "Contains"
+						}
+					}
+				},
+				pageable: {
+					pageSize: 10,
+					buttonCount: 4
+				},
+				resizable: true,
+				persistSelection: true,
+				selectable: true,
+				columns: columns
+			};
+
+			$("#example").remove();
+			$('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
+			var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+		} else {
+			var emptydata = [{
+				"Row Labels": "",
+				"Dr Count": "",
+				"Dr Value": "",
+				"Cr Count": "",
+				"Cr Value": "",
+				"Total Count": "",
+				"Total Value": "",
+				"backcolor": "",
+				"forecolor": ""
+			}];
+			for (var key in emptydata[0]) {
+				var emptyfield = key.replace(/\s+/g, '_');
+				columns.push({
+					field: emptyfield,
+					title: key,
+					attributes: { style: "text-align: left;" },
+					filterable: false,
+				});
+			}
+			$.each(emptydata, function (i, e) {
+				var entryObject = {};
+				for (var key in e) {
+					var field = key.replace(/\s+/g, '_');
+					entryObject[field] = e[key];
+				}
+				rows.push(entryObject);
+			});
+
+			var configuration = {
+				dataSource: {
+					data: rows,
+					pageSize: 10
+				},
+				height: 250,
+				navigatable: false,
+				groupable: false,
+				editable: false,
+				sortable: false,
+				scrollable: true,
+				attributes: { style: "text-align: center;" },
+				filterable: {
+					extra: true,
+					operators: {
+						string: {
+							contains: "Contains"
+						}
+					}
+				},
+				pageable: {
+					pageSize: 10,
+					buttonCount: 4
+				},
+				resizable: true,
+				persistSelection: true,
+				selectable: true,
+				columns: columns
+			};
+
+			$("#example").remove();
+			$('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
+			var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+		}
+
+
 
 	}
 </script>
