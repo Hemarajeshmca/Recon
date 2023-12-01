@@ -179,7 +179,7 @@
 												</div>
 												<div class="col-sm-2" style="margin-top:29px">
 													<label class="form-label"></label>
-													<input type="button" onclick="start()" style="background: #38b55a;border-color: #38b55a;width:40%" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
+												<input type="button" onclick="start()" style="background: #175650;border-color: #175650;width:40%; color:#fff;" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
 													
 												</div>
 											</div>
@@ -225,7 +225,7 @@
 					<div class="col-sm-4"> </div>
 					
 					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
-						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button></center>
+						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
 					</div>
 					<div class="col-sm-4"> </div>
 				</div>
@@ -255,8 +255,11 @@
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				if (response != null) {
-					grid_dataset_details(response);
+				if (response.length > 0) {
+					debugger;
+					const activeData = response.filter(item => item.active_status === "Y");
+
+					grid_dataset_details(activeData);
 				}
 				else {
 					grid_dataset_details([]);
@@ -561,9 +564,15 @@
 		document.getElementById('initatedby').innerHTML = selectedItem.in_user_code;
 		document.getElementById('status').innerHTML = selectedItem.active_status_desc;
 		document.getElementById('remarks').innerHTML = selectedItem.active_status_desc;
-		grid.table.on("click", "tr", function () {
-			$("#infomodal").modal("show");
-		});
+		$("#infomodal").modal("show");
+		//grid.table.on("click", "tr", function () {
+		//	$("#infomodal").modal("show");
+		//});
+	}
+
+
+	function rowselected(val) {
+		$("#infomodal").modal("hide");
 	}
 
 </script>
