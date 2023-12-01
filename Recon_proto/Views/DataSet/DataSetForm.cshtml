@@ -345,6 +345,7 @@
 				schema: {
 					model: {
 						fields: {
+							datasetfield_gid: { type: "string" },
 							slno: { type: "string" },
 							field_name: { type: "string" },
 							field_type: { type: "string" },
@@ -387,8 +388,8 @@
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
-				field: "datasetdetail_id",
-				title: "datasetdetail_id",
+				field: "datasetfield_gid",
+				title: "datasetfield_gid",
 				width: 100,
 				hidden: true,
 			},
@@ -482,7 +483,7 @@
 							type: 'green',
 						});
 						$("#newdebit").modal('hide');
-						load();
+						detailsfetch($("#datasetgid").val())
 					}
 					else {
 						$.alert({
@@ -508,7 +509,7 @@
 			var grid = $("#grid_datasetfield").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			$("#datasetfield").val(selectedItem.field_name);
-			$("#datasetdetail_id").val(selectedItem.datasetdetail_id);
+			$("#datasetdetail_id").val(selectedItem.datasetfield_gid);
 			$("#txtmodeflag").val("edit");
 			$("#cmbFieldType").val(selectedItem.field_type);
 			$("#fieldlength").val(selectedItem.field_length);
@@ -526,6 +527,13 @@
 			if (dataset_id > 0) {
 				dataset_id = $("#datasetgid").val();
 				$("#newdebit").modal('show');
+				$("#datasetfield").val("");
+				$("#datasetdetail_id").val(0);
+				$("#cmbFieldType").val("");
+				$("#fieldlength").val("");
+				$("#mandatory2").prop("checked", true);
+				$("#fieldPrecision").val(5);
+				$("#fieldscale").val(2);
 				return;
 			} else {
 				dataset_id = 0;
@@ -539,16 +547,13 @@
 
 			if (dataset_id > 0) {
 				dataset_id = $("#datasetgid").val();
+				
 				return;
 			} else {
 				dataset_id = 0;
 			}
-
-			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
-			} else if ($("#txtmode").val() == "Edit") {
-				action = "UPDATE"
-			}
+			
 			var action_by = "vijay"
 			var status = "D"
 
@@ -566,6 +571,13 @@
 						detailsfetch(data.in_dataset_gid);
 						$("#datasetgid").val(data.in_dataset_gid);
 						$("#newdebit").modal('show');
+						$("#datasetfield").val("");
+						$("#datasetdetail_id").val(0);						
+						$("#cmbFieldType").val("");
+						$("#fieldlength").val("");						
+						$("#mandatory2").prop("checked", true);
+						$("#fieldPrecision").val(5);
+						$("#fieldscale").val(2);
 					} else {
 						$.alert({
 							title: 'Recon',

@@ -213,12 +213,13 @@
 	function process() {
 		var grid = $("#grid_datasettorecon").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var scheduler_gid = model.scheduler_gid;		
+		var scheduler_gid = model.scheduler_gid;	
+		var in_ip_addr="";
 		$.ajax({
 			type: "POST",
-			url: '../DatasettoReconprocess/DatasettoReconListmodel',
+			url: '../DatasettoRecon/DatasettoReconprocess',
 			dataType: 'json',
-			data: JSON.stringify({ in_scheduler_gid: scheduler_gid }),
+			data: JSON.stringify({ in_scheduler_gid: scheduler_gid, in_ip_addr: in_ip_addr }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);

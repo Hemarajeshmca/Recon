@@ -253,21 +253,7 @@ namespace Recon_proto.Controllers
 				{
 					d2 = "";
 				}
-				//result1 = result.Tables[1];
-				//for (int i = 0; i < result1.Rows.Count; i++)
-				//{
-				//	fetchRecondataset objcat = new fetchRecondataset();
-				//	objcat.recondataset_gid = Convert.ToInt16(result1.Rows[i]["recondataset_gid"]);
-				//	objcat.recon_code = result1.Rows[i]["recon_code"].ToString();
-				//	objcat.dataset_code = result1.Rows[i]["dataset_code"].ToString();
-				//	objcat.dataset_name = result1.Rows[i]["dataset_name"].ToString();
-				//	objcat.dataset_type = result1.Rows[i]["dataset_type"].ToString();
-				//	objcat.dataset_type_desc = result1.Rows[i]["dataset_type_desc"].ToString();
-				//	objcat.parent_dataset_code = result1.Rows[i]["parent_dataset_code"].ToString();
-				//	objcat.active_status = result1.Rows[i]["active_status"].ToString();
-				//	objcat.active_status_desc = result1.Rows[i]["active_status_desc"].ToString();
-				//	objcat_lst.Add(objcat);
-				//}
+				
 				return Json(d2);
 			}
 		}
@@ -491,8 +477,35 @@ namespace Recon_proto.Controllers
 		{
 			public String? in_recontype_code { get; set;}
 		}
+		#region detailfield
 
-
-
+		[HttpPost]
+		public JsonResult Datasetfieldlist([FromBody] Datasetdetailfetch context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Recon/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				//client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("Datasetfield", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+		
+		public class Datasetdetailfetch
+		{
+			public string? datasetCode { get; set; }
+		}
+		#endregion
 	}
 }

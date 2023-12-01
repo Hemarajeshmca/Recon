@@ -179,6 +179,8 @@
 													<div class="col-xs-12">
 														<div id="maingrid">
 														</div>
+														<div id="maingrid1">
+														</div>
 													</div>
 												</div>
 											</div>
@@ -440,7 +442,7 @@
 		var datasetcode = $("#cmbdatasetmap").val();
 		$.ajax({
 			type: "POST",
-			url: '../DataSet/Datasetdetailreadlist',
+			url: '../Recon/Datasetfieldlist',
 			dataType: 'json',
 			async: false,
 			data: JSON.stringify({ datasetCode: datasetcode }),
@@ -619,6 +621,7 @@
 					grid_datasetrecon(res.ReconDataSet);
 					if (res.ReconDataSetmapping.length > 0) {
 						griddatamapping(res.ReconDataSetmapping);
+						$("#maingrid1").hide()
 					} else {
 						gridmap([]);
 					}
@@ -1416,7 +1419,7 @@
 		});
 	}
 	function gridmap(data) {
-		$("#maingrid").kendoGrid({
+		$("#maingrid1").kendoGrid({
 			dataSource: {
 				data: data,
 				pageSize: 10,
@@ -1434,7 +1437,7 @@
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
-				var rows = $('#maingrid').data('kendoGrid').tbody.children();
+				var rows = $('#maingrid1').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
 			sortable: true,
@@ -1615,7 +1618,7 @@
 	}
 	function rr3() {
 		$("#Datasetmappingform").modal('hide');
-		load();
+		detailfetch($("#recon_id").val());
 	}
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();

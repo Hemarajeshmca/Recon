@@ -79,7 +79,7 @@
 						</div>
 						<div class="col-sm-4">
 							<label for="" class="form-label">Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" id="reconversion" type="text">
+							<input class="form-control" id="reconversion" type="number">
 							<input class="form-control" type="hidden" id="rulegid">
 						</div>
 						<div class="col-md-3" style="margin-top: 2%;">
@@ -265,56 +265,20 @@
 	function sel_checkbox(data) {	
 		var isChecked = data.system_match_flag_desc;
 		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
+		if (isChecked == "YES") {
+			con = 'checked=checked';
 		}
-		return '<input id="chk_sel_' + data.rule_gid + '" class="customClass" #if (system_match_flag_desc) { # checked="checked" # } # type="checkbox"/> ';
+		return '<input id="chk_sel_' + data.rule_gid + '" class="customClass" ' + con + '"  type="checkbox"/> ';
 	}
 	function sel_checkbox1(data) {
 		var isChecked = data.hold_flag_desc;
 		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
+		if (isChecked == "YES") {
+			con = 'checked=checked';
 		}
-		return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" #if (system_match_flag_desc) { # checked="checked" # } # type="checkbox"/> ';
+		return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" ' + con + '" type="checkbox"/> ';
 	}
-	function process() {
-		var grid = $("#grid_reconverion").data("kendoGrid");
-		var model = grid.dataItem($(event.target).closest("tr"));
-		var scheduler_gid = model.scheduler_gid;
-		var action = "";
-		var action_by = "vijay"
-		var status = "Y";
-		$.ajax({
-			type: "POST",
-			url: '../DatasettoReconprocess/DatasettoReconListmodel',
-			dataType: 'json',
-			data: JSON.stringify({ in_scheduler_gid: scheduler_gid, in_user_gid: user_gid }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var result = JSON.parse(response);
-				var data = result[0];
-				if (data.out_result == "1") {
-					$.alert({
-						title: 'Recon',
-						content: data.out_msg,
-						type: 'green',
-					});
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: data.out_msg,
-						type: 'red',
-					});
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-
-		});
-	}
+	
 	function createSwitch(element) {
 		element.kendoMobileSwitch({
 			onLabel: "Enable",
@@ -347,23 +311,17 @@
 		// sync data with remote service
 		//grid.dataSource.sync();
 	}
-	function customEditor(container, options) {
-		$('<input type="checkbox" name="' + options.field + '" id="' + options.field + '"/>')
-			.appendTo(container)
-			.kendoMobileSwitch({
-				onLabel: "YES",
-				offLabel: "NO"
-			});
-	}
-	function customEditor1(container, options) {
-		$('<input type="checkbox" name="' + options.field + '"/>')
-			.appendTo(container)
-			.kendoMobileSwitch({
-				onLabel: "YES",
-				offLabel: "NO"
-			});
-	}
+	
 	function reconsubmit() {
+		var in_recon_version = $("#reconversion").val();
+		if (in_recon_version =='') {	
+			$.alert({
+				title: 'Recon',
+				content: 'please enter version !',
+				type: 'green',
+			});
+			return;
+		}
 		var concatstring ="";
 		var in_recon_code = $("#cmbreconname").val();
 		var in_recon_version = $("#reconversion").val();
