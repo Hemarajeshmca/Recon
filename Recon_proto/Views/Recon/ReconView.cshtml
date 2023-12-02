@@ -163,7 +163,8 @@
 										<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													@*<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="grid_datasetrecon">
 														</div>
@@ -175,7 +176,7 @@
 										<div class="tab-pane fade" id="navs-pills-top-Datasetmapping" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create'  class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													<div class="col-xs-12">
 														<div id="maingrid">
 														</div>
@@ -271,14 +272,14 @@
 									<div class="container">
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 											<div class="col-sm-4">
-												<label for="" class="form-label">Dataset Name</label>
+												<label for="" class="form-label">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="cmbdatasetname" class="form-select form-control">
 												</select>
 												<input type="hidden" id="recondataset_gid" value="0" />
 												<input type="hidden" id="txtmodedataset" value="Create" />
 											</div>
 											<div class="col-sm-4">
-												<label for="" class="form-label">Dataset Type</label>
+												<label for="" class="form-label">Dataset Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="DatasetType" class="form-select form-control" onchange="DatasetTypefield()">
 												</select>
 											</div>
@@ -326,12 +327,12 @@
 									<div class="container">
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
 											<div class="col-sm-4">
-												<label for="" class="form-label">Recon Field Name</label>
+												<label for="" class="form-label">Recon Field Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<input class="form-control" id="Reconfieldname" name="ReconName" type="text" value="">
 											</div>
 											<div class="col-sm-4">
-												<label for="" class="form-label">Display Order</label>
-												<input class="form-control" id="displayorder" name="" type="text" value="">
+												<label for="" class="form-label">Display Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<input class="form-control" id="displayorder" name="" type="number" value=0>
 												<input type="hidden" id="reconfield_gid" value="0" />
 												<input type="hidden" id="txtmodedatasetmapping" value="Create" />
 												<input type="hidden" id="reconfieldmapping_gid" value="0" />
@@ -340,12 +341,12 @@
 										</div>
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
 											<div class="col-sm-8">
-												<label for="" class="form-label">Dataset Name</label>
+												<label for="" class="form-label">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="cmbdatasetmap" class="form-select form-control" onchange="Datasetname()">
 												</select>
 											</div>
 											<div class="col-sm-4">
-												<label for="" class="form-label">Dataset Field Name</label>
+												<label for="" class="form-label">Dataset Field Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="cmbdatasetfieldname" class="form-select form-control">
 												</select>
 											</div>
@@ -491,7 +492,7 @@
 				$("#period_from").val(data.period_from);
 				$("#period_to").val(data.period_to);
 				$("#txtstatus").val(data.active_status_desc);
-				$("#recon_id").val(data.recon_gid);				
+				$("#recon_id").val(data.recon_gid);
 				if (data.until_active_flag == "Y") {
 					$('#untillactive').attr('checked', true);
 				}
@@ -520,7 +521,7 @@
 							} else {
 								$("#partialmatch2").prop("checked", true);
 							}
-							
+
 							$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 							$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
 							grid_datasetrecon(res.ReconDataSet);
@@ -615,7 +616,7 @@
 						$("#partialmatch1").prop("checked", true);
 					} else {
 						$("#partialmatch2").prop("checked", true);
-					}					
+					}
 					$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 					$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
 					grid_datasetrecon(res.ReconDataSet);
@@ -792,15 +793,15 @@
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
 			var in_recon_date_field = $("#cmbrecondatefield").val();
-			if (in_recon_date_field == null){
-				in_recon_date_field='';
+			if (in_recon_date_field == null) {
+				in_recon_date_field = '';
 			}
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
 			var in_recon_value_field = $("#cmbreconvaluefield").val();
 			if (in_recon_value_field == null) {
 				in_recon_value_field = '';
 			}
-			var in_active_reason="";
+			var in_active_reason = "";
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdminus").val()).toFixed(2);
 			$.ajax({
@@ -880,7 +881,7 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getdatasetrecon()' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
@@ -949,6 +950,48 @@
 
 		});
 	}
+	function getdatasetrecon(mode) {
+		if ($(mode).attr('value') == "edit") {
+			var grid = $("#grid_datasetrecon").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#cmbdatasetname").val(selectedItem.dataset_code);
+			$("#Accountform").modal('show');
+			$("#recondataset_gid").val(selectedItem.recondataset_gid);
+			// Dataset type
+			var in_master_code = "QCD_DS_TYPE";
+			var in_user_code = "sundar";
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#DatasetType").empty();
+					$("#DatasetType").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#DatasetType").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					});
+					$("#DatasetType").val(selectedItem.dataset_type);
+					DatasetTypefield();
+					$("#cmbParentDataset").val(selectedItem.parent_dataset_code);
+				}
+			});
+		} else if ($(mode).attr('value') == "create") {
+			$("#cmbdatasetname").val("");
+			$("#DatasetType").val("");
+			$("#cmbParentDataset").val("");
+			$("#recondataset_gid").val(0);
+			saveheader();
+		}
+	}
 	function saveDataset() {
 		try {
 			var reconcode = $("#reconcode").val();
@@ -979,8 +1022,7 @@
 				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-
-					if (response != null) {
+					if (response.out_result == "1") {				
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -995,7 +1037,11 @@
 						detailfetch($("#recon_id").val());
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -1155,7 +1201,8 @@
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
 								if (response != null) {
-									grid_recondatasetmapping(response)
+									grid_recondatasetmapping(response);
+									$("#Reconfieldname").prop('disabled', true);
 								}
 								else {
 									grid_recondatasetmapping([]);
@@ -1278,36 +1325,37 @@
 	}
 	function getdetailSelectedRows(mode) {
 		if ($(mode).attr('value') == "edit") {
-		var grid = $("#grid1").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());
-		$("#Reconfieldname").val(selectedItem.entries[4]);
-		$("#displayorder").val(selectedItem.entries[5]);
-		$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
-		$("#txtmodedatasetmapping").val("Edit");
-		$.ajax({
-			type: "POST",
-			url: '../Recon/Recondatasetmappingfetch',
-			dataType: 'json',
-			data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				if (response != null) {
-					grid_recondatasetmapping(response)
+			var grid = $("#grid1").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#Reconfieldname").val(selectedItem.entries[4]);
+			$("#displayorder").val(selectedItem.entries[5]);
+			$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
+			$("#txtmodedatasetmapping").val("Edit");
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Recondatasetmappingfetch',
+				dataType: 'json',
+				data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						grid_recondatasetmapping(response)
+					}
+					else {
+						grid_recondatasetmapping([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
 				}
-				else {
-					grid_recondatasetmapping([]);
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-		});
-		$("#Datasetmappingform").modal('show');
+			});
+			$("#Datasetmappingform").modal('show');
 		} else if ($(mode).attr('value') == "create") {
+			$("#Reconfieldname").prop('disabled', false);
 			grid_recondatasetmapping([]);
 			$("#Reconfieldname").val("");
-			$("#displayorder").val("");
+			$("#displayorder").val(0);
 			$("#reconfield_gid").val(0);
 			$("#Datasetmappingform").modal('show');
 		}
@@ -1384,40 +1432,7 @@
 			}
 		});
 	}
-	function getdatasetrecon() {
-		var grid = $("#grid_datasetrecon").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());
-		$("#cmbdatasetname").val(selectedItem.dataset_code);
-		$("#Accountform").modal('show');
-		$("#recondataset_gid").val(selectedItem.recondataset_gid);
-		// Dataset type
-		var in_master_code = "QCD_DS_TYPE";
-		var in_user_code = "sundar";
-		$.ajax({
-			type: "POST",
-			url: '../Common/Qcdmaster',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				$("#DatasetType").empty();
-				$("#DatasetType").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(response, function (index, item) {
-					$("#DatasetType").append($('<option>', {
-						value: item.masterSyscode,
-						text: item.masterName
-					}));
-				});
-				$("#DatasetType").val(selectedItem.dataset_type);
-				DatasetTypefield();
-				$("#cmbParentDataset").val(selectedItem.parent_dataset_code);
-			}
-		});
-	}
+
 	function gridmap(data) {
 		$("#maingrid1").kendoGrid({
 			dataSource: {
@@ -1622,7 +1637,7 @@
 	}
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
-		
+
 		if (recontype == "v" || recontype == "N") {
 			$('#partialmatch2').prop('checked', true);
 			$('#reconvalueflag1').prop('checked', true);
@@ -1659,7 +1674,6 @@
 				in_until_active_flag = "Y"
 				var pr1 = "1901-01-01";
 			} else {
-				s
 				in_until_active_flag = "N"
 				var period_to = $("#period_to").val();
 				var ts1 = period_to.split("/");
@@ -1689,7 +1703,7 @@
 			var in_recon_value_field = $("#cmbreconvaluefield").val();
 			var in_threshold_plus_value = $("#thersholdplus").val();
 			var in_threshold_minus_value = $("#thersholdminus").val();
-			var in_active_reason ="";
+			var in_active_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',

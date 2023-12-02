@@ -29,24 +29,13 @@ namespace Recon_proto.Controllers
         {
             public String? in_user_code { get; set; }
 			public string? in_recon_code { get; set; }
-		}
-        public class Rulesetuplistmodel
-        {
-            public string? rule_code { get; set; }
-            public string? rule_name { get; set; }
-            public int rule_gid { get; set; }
-            public string? recon_code { get; set; }
-            public string? recon_name { get; set; }
-            public string? active_status { get; set; }
-            public string? active_status_desc { get; set; }
-        }
+		}        
 
         [HttpPost]
         public JsonResult Rulesetuplistfetch([FromBody] Rulesetuplist context)
         {
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-			DataTable result = new DataTable();
-            List<Rulesetuplistmodel> objcat_lst = new List<Rulesetuplistmodel>();
+			DataTable result = new DataTable();           
             string post_data = "";
             using (var client = new HttpClient())
             {
@@ -59,21 +48,8 @@ namespace Recon_proto.Controllers
                 Stream data = response.Content.ReadAsStreamAsync().Result;
                 StreamReader reader = new StreamReader(data);
                 post_data = reader.ReadToEnd();
-                string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                result = JsonConvert.DeserializeObject<DataTable>(d2);
-                for (int i = 0; i < result.Rows.Count; i++)
-                {
-                    Rulesetuplistmodel objcat = new Rulesetuplistmodel();
-                    objcat.rule_gid = Convert.ToInt32(result.Rows[i]["rule_gid"]);
-                    objcat.rule_code = result.Rows[i]["rule_code"].ToString();
-                    objcat.rule_name = result.Rows[i]["rule_name"].ToString();
-                    objcat.recon_code = result.Rows[i]["recon_code"].ToString();
-                    objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-                    objcat.active_status = result.Rows[i]["active_status"].ToString();
-                    objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
-                    objcat_lst.Add(objcat);
-                }
-                return Json(objcat_lst);
+                string d2 = JsonConvert.DeserializeObject<string>(post_data);               
+                return Json(d2);
             }
         }
         #endregion
