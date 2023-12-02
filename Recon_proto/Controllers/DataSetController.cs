@@ -57,7 +57,8 @@ namespace Recon_proto.Controllers
 					objcat.dataset_category = result.Rows[i]["dataset_category"].ToString();
 					objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
 					objcat.sl_no = result.Rows[i]["sl_no"].ToString();
-					objcat.lastsync_datetime = result.Rows[i]["lastsync_datetime"].ToString();
+					objcat.last_sync_date = result.Rows[i]["last_sync_date"].ToString(); 
+					objcat.last_sync_status = result.Rows[i]["last_sync_status"].ToString();
 					objcat_lst.Add(objcat);
 				}
 				return Json(objcat_lst);
@@ -76,7 +77,8 @@ namespace Recon_proto.Controllers
 			public string? in_user_code { get; set; }
 			public string? in_active_status { get; set; }
 			public string? sl_no { get; set; }
-			public string? lastsync_datetime { get; set; }
+			public string? last_sync_date { get; set; }
+			public string? last_sync_status { get; set; }
 		}
 		#endregion
 		[HttpPost]

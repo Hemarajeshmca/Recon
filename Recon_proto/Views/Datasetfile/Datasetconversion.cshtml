@@ -172,7 +172,7 @@
 													<form id="theuploadformempff">
 														<div class="form-group">
 															<label for="Filename" class="form-label">Choose Excel</label>
-															<input type="file" class="form-control input-lg browse btn btn-primary input-lg" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+														<input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
 															<label class="col-md-6 control-label" id="FileName" hidden></label>
 														</div>
 													</form>
@@ -301,7 +301,8 @@
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
 								sl_no: {type: "string"},
-								lastsync_datetime: {type: "string"}
+								last_sync_date: { type: "string" },
+								last_sync_status: { type: "string" }
 							}
 						}
 					}
@@ -336,7 +337,7 @@
 				{
 					field: "sl_no",
 					title: "Sl No",
-					width:50,
+					width:60,
 						attributes: {
 							style: "text-align: right;"
 						}
@@ -357,28 +358,32 @@
 				{
 					field: "dataset_name",
 					title: "Dataset Name",
-					width: 300,
+					width: 150,
 				},
 				{
 					field: "dataset_category",
 					title: "Category",
 					width: 100,
-					hidden: true
 				},
 				{
 					field: "active_status",
 					title: "Status",
-					width: 100,
+					width: 80,
 					hidden: true
 				},
 				{
 					field: "active_status_desc",
 					title: "Status",
-					width: 100,
+					width: 80,
 				},
 				{
-					field: "lastsync_datetime",
-					title: "Last sync Datetime",
+					field: "last_sync_date",
+					title: "Last sync Date",
+					width: 100
+				},
+				{
+					field: "last_sync_status",
+					title: "Last sync Status",
 					width: 100
 				},
 				{
@@ -493,6 +498,7 @@
 		debugger;
 		var baseurl = '@ViewBag.baseurl';
 		var fileName = '';
+		var fileType = '';
 		var pipeline_code = $("#Pipeline").val();
 		var filepath = $("#File_Import").val();
 		var fileInput = document.getElementById('File_Import');
@@ -501,6 +507,7 @@
 
 		if (fileInput.files.length > 0) {
 			formData.append('file', fileInput.files[0]);
+			fileType = fileInput.files[0].type;
 		}
 		formData.append('initiated_by', 'Hema');
 		$.ajax({
@@ -517,41 +524,82 @@
 	function start() {
 		debugger;
 		var fileName = '';
+		var fileType = '';
+		var fileInput = '';
 		var pipeline_code = $("#Pipeline").val();
 		var filepath = $("#File_Import").val();
-		var fileInput = document.getElementById('File_Import');
+		fileInput = document.getElementById('File_Import');
 		var formData = new FormData();
 		formData.append('pipeline_code', pipeline_code);
 
 		if (fileInput.files.length > 0) {
 			formData.append('file', fileInput.files[0]);
+			fileType = fileInput.files[0].name;
 		}
 		formData.append('initiated_by', 'Hema');
-		$.ajax({
-			url: '../Datasetfile/datasetfile',
-			type: 'POST',
-			data: formData,
-			processData: false,
-			contentType: false,
-			success: function (response) {
-				if(!response) {
-					$.alert({
-						title: 'Recon',
-						content: "Something went wrong",
-						type: 'red',
-					});
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: response,
-						type: 'green',
-					});
-					$("#FileName").val("");
-					$("#File_Import").val("");
-					$("#Pipeline").val("");
-				}
-			}
-		});
+		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
+			$.alert({
+				title: 'Recon',
+				content: "Job Initiated Kindly check the Job Status in Utility",
+				type: 'green',
+			});
+			$.ajax({
+				url: '../Datasetfile/datasetfile',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				//success: function (response) {
+				//	if (!response) {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: "Something went wrong",
+				//			type: 'red',
+				//		});
+				//	} else {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: response,
+				//			type: 'green',
+				//		});
+				//		$("#FileName").val("");
+				//		$("#File_Import").val("");
+				//		$("#Pipeline").val("");
+				//	}
+				//}
+			});
+		} 
+		else if (!pipeline_code) {
+						$.alert({
+							title: 'Recon',
+							content: "Pipeline code is missing",
+							type: 'red',
+						});
+
+		} 
+		else if (!filepath) {
+			$.alert({
+				title: 'Recon',
+				content: "File path is missing",
+				type: 'red',
+			});
+
+		} else if (!fileInput) {
+			$.alert({
+				title: 'Recon',
+				content: "File is missing",
+				type: 'red',
+			});
+		} else if (!fileType.endsWith('.xlsx')) {
+			$.alert({
+				title: 'Recon',
+				content: "Incorrect File type",
+				type: 'red',
+			});
+			$("#File_Import").val("");
+			$("#FileName").val("");
+		}
+		
 	}
 
 	function openInfoModel() {
@@ -565,9 +613,6 @@
 		document.getElementById('status').innerHTML = selectedItem.active_status_desc;
 		document.getElementById('remarks').innerHTML = selectedItem.active_status_desc;
 		$("#infomodal").modal("show");
-		//grid.table.on("click", "tr", function () {
-		//	$("#infomodal").modal("show");
-		//});
 	}
 
 

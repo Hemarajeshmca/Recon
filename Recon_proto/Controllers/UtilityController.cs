@@ -100,7 +100,9 @@ namespace Recon_proto.Controllers
 					objcat.job_remark = result.Rows[i]["job_remark"].ToString();
 					objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
 					objcat.jobtype_desc = result.Rows[i]["jobtype_desc"].ToString();
-					objcat_lst.Add(objcat);
+                    objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+                    objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+                    objcat_lst.Add(objcat);
 				}
 				return Json(objcat_lst);
 			}
@@ -115,7 +117,9 @@ namespace Recon_proto.Controllers
 			public String? job_remark { get; set; }
 			public String? jobstatus_desc { get; set; }
 			public String? jobtype_desc { get; set; }
-		}
+            public String? recon_code { get; set; }
+            public String? recon_name { get; set; }
+        }
 
 		public class Jobstatusmodel
 		{

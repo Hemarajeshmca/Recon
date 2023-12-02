@@ -133,10 +133,15 @@
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
                     <div class="container">
+                        <p><strong>Rule Code&nbsp;&nbsp;:&nbsp;</strong><span id="rule_code"></span></p>
                         <p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
+                        <p><strong>Rule Applied On&nbsp;&nbsp;:&nbsp;</strong><span id="rule_apply_on_desc"></span></p>
                         <p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
+                        <p><strong>Group Flag&nbsp;&nbsp;:&nbsp;</strong><span id="group_flag"></span></p>
                         <p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
                         <p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
+                        <p><strong>Rule Status&nbsp;&nbsp;:&nbsp;</strong><span id="active_status_desc"></span></p>
+
                     </div>
                 </div>
                 <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
@@ -168,9 +173,12 @@
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
                     <div class="container">
+                        <p><strong>Dataset Code&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span></p>
                         <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
                         <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
                         <p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
+                        <p><strong>Last Sync Date&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_date"></span></p>
+                        <p><strong>Last Sync Status&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_status"></span></p>
                         <p><strong>Status&nbsp;&nbsp;:&nbsp;</strong><span id="status"></span></p>
                     </div>
                 </div>
@@ -195,7 +203,6 @@
         $("#navhead").text("Rule Preview");
         kendodate_format();
         getreconlist();
-        //getpreview();
         grid_rule([]);
         grid_dataset([]);
     });
@@ -229,34 +236,6 @@
             error: function (er) {
                 alert(er)
                 console.log(er)
-            }
-        });
-    }
-
-
-    function getpreview() {
-        debugger;
-        var in_master_code = "QCD_RC_PREVIEW_ON";
-        var in_user_code = "sundar";
-        $.ajax({
-            type: "POST",
-            url: '../Common/Qcdmaster',
-            dataType: 'json',
-            data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                debugger;
-                $("#prviewon").empty();
-                $("#prviewon").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(response, function (index, item) {
-                    $("#prviewon").append($('<option>', {
-                        value: item.masterCode,
-                        text: item.masterName
-                    }));
-                });
             }
         });
     }
@@ -304,11 +283,13 @@
                 schema: {
                     model: {
                         fields: {
+                            dataset_code:{type: "string"},
                             dataset_name: { type: "string" },
                             dataset_type_desc: { type: "string" },
                             parent_dataset_name: { type: "string" },
+                            last_sync_date: {type: "string"},
+                            last_sync_status: {type: "string"},
                             active_status_desc: { type: "string" },
-
                         }
                     }
                 }
@@ -332,6 +313,11 @@
             },
             columns: [
                 {
+                    field: "dataset_code",
+                    title: "Dataset Code",
+                    width: 80,
+                },
+                {
                     field: "dataset_name",
                     title: "Dataset Name",
                     width: 100,
@@ -339,18 +325,28 @@
                 {
                     field: "dataset_type_desc",
                     title: "Dataset Type",
+                    width: 80,
+                },
+                {
+                    field: "last_sync_date",
+                    title: "Last Sync Date",
                     width: 100,
                 },
-
+                {
+                    field: "last_sync_status",
+                    title: "Last Sync Status",
+                    width: 80,
+                },
                 {
                     field: "parent_dataset_name",
                     title: "Parent Dataset",
                     width: 100,
+                    hidden:true
                 },
                 {
                     field: "active_status_desc",
                     title: "Status",
-                    width: 80,
+                    width: 50,
                 }, {
                     field: "Info",
                     title: "Info",
@@ -381,7 +377,12 @@
                             source_dataset_code: { type: "string" },
                             comparison_dataset_code: { type: "string" },
                             source_dataset_desc: { type: "string" },
-                            comparison_dataset_desc: { type: "string" }
+                            comparison_dataset_desc: { type: "string" },
+                            rule_apply_on_desc : {type: "string"},
+                            rule_order: {type: "string"},
+                            group_flag:{type: "string"},
+                            group_flag_desc: { type: "string" },
+                            active_status_desc:{type:"string"}
                         }
                     }
                 }
@@ -410,12 +411,6 @@
                     hidden: true,
                 },
                 {
-                    field: "rule_code",
-                    title: "Rule Code",
-                    width: 100,
-                    hidden: true,
-                },
-                {
                     field: "name",
                     title: "Action",
                     template: "<input id='preview_checkbox' type='checkbox' />",
@@ -423,27 +418,48 @@
                     hidden: true,
                 },
                 {
+                    field: "rule_code",
+                    title: "Rule Code",
+                    width: 80,
+                },
+
+                {
                     field: "rule_name",
                     title: "Rule Name",
                     width: 100,
                 },
                 {
+                    field: "rule_apply_on_desc",
+                    title: "Rule Applied On",
+                    width: 80,
+                },
+                {
                     field: "rule_order",
                     title: "Rule Order",
-                    width: 80,
-                    attributes: {
-                        style: "text-align: right;"
-                    }
+                    width: 50,
+                    attributes: {  style: "text-align: center;" }
+                },
+                {
+                    field: "group_flag_desc",
+                    title: "Group Flag",
+                    width: 50,
+                },
+                {
+                    field: "active_status_desc",
+                    title: "Status",
+                    width: 50,
                 },
                 {
                     field: "source_dataset_desc",
                     title: "Source Dataset",
                     width: 150,
+                    hidden: true
                 },
                 {
                     field: "source_dataset_desc",
                     title: "Comparision Dataset",
                     width: 150,
+                    hidden: true
                 },
                 {
                     field: "source_dataset_code",
@@ -474,7 +490,6 @@
 
 
     function showPreview() {
-
         var in_recon_code = $("#reconname").val();
         var rulepreview = $("#prviewon").val();
         var period_from = $("#initiated_from").val();
@@ -493,16 +508,12 @@
         if (firstColumnValues != "") {
             firstColumnValues = firstColumnValues.slice(0, -1);
         }
-        //console.log(`firstColumnValue`, firstColumnValue);
-
-        //var checkedrows = $("#preview_checkbox:checked", grid.tbody).closest("tr");
-        //console.log(`checkedrows`, checkedrows.length);
-        //var dropdownid = "";
-        //for (var i = 0; i < checkedrows.length; i++) {
-        //    var item = grid.dataItem(checkedrows[i]);
-        //    dropdownid = dropdownid + item.rule_code + "#";
-        //}
         if (in_recon_code && period_from && period_to && firstColumnValues) {
+            $.alert({
+                title: 'Recon',
+                content: "Job Initated, Please check the Job Status in Utility",
+                type: 'green',
+            });
             $.ajax({
                 type: "POST",
                 url: '../KnockOff/previewRulebase',
@@ -516,39 +527,6 @@
                     in_user_code: 'Hema'
                 }),
                 contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    debugger;
-                    var res = JSON.parse(response);
-                    debugger;
-                    console.log('res', res[0].out_result)
-                    if (res[0].out_result == '1') {
-                        $.alert({
-                            title: 'Recon',
-                            content: res[0].out_msg,
-                            type: 'green',
-                        });
-
-                    }
-                    else if (res[0].out_result == '0') {
-                        debugger;
-                        $.alert({
-                            title: 'Recon',
-                            content: res[0].out_msg,
-                            type: 'red',
-                        });
-                    } else {
-                        debugger;
-                        $.alert({
-                            title: 'Recon',
-                            content: 'Something went wrong ..!',
-                            type: 'red',
-                        });
-                    }
-                },
-                error: function (er) {
-                    alert(er)
-                    console.log(er)
-                }
             });
         } else if (!in_recon_code) {
             $.alert({
@@ -586,10 +564,14 @@
         debugger;
         var grid = $("#grid_preview").data("kendoGrid");
         var selectedItem = grid.dataItem(grid.select());
+        document.getElementById('rule_code').innerHTML = selectedItem.rule_code;
         document.getElementById('rule_name').innerHTML = selectedItem.rule_name;
+        document.getElementById('rule_apply_on_desc').innerHTML = selectedItem.rule_apply_on_desc;
+        document.getElementById('group_flag').innerHTML = selectedItem.group_flag_desc;
         document.getElementById('rule_order').innerHTML = selectedItem.rule_order;
         document.getElementById('source_dataset').innerHTML = selectedItem.source_dataset_desc;
         document.getElementById('comparision_dataset').innerHTML = selectedItem.source_dataset_desc;
+        document.getElementById('active_status_desc').innerHTML = selectedItem.active_status_desc;
         $("#infomodal").modal("show");
     }
 
@@ -597,9 +579,12 @@
         debugger;
         var grid = $("#dataset_grid").data("kendoGrid");
         var selectedItem = grid.dataItem(grid.select());
+        document.getElementById('dataset_code').innerHTML = selectedItem.dataset_code;
         document.getElementById('dataset_name').innerHTML = selectedItem.dataset_name;
         document.getElementById('dataset_type').innerHTML = selectedItem.dataset_type_desc;
         document.getElementById('parent_dataset').innerHTML = selectedItem.parent_dataset_name;
+        document.getElementById('last_sync_date').innerHTML = selectedItem.last_sync_date;
+        document.getElementById('last_sync_status').innerHTML = selectedItem.last_sync_status;
         document.getElementById('status').innerHTML = selectedItem.active_status_desc;
         $("#infoDatamodal").modal("show");
         //grid.table.on("click", "tr", function () {
