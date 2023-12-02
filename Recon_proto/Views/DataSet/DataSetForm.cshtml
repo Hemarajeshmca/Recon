@@ -139,23 +139,23 @@
 									<hr style="margin-top:-1px; width:100%;">
 									<div class="row" style="padding-bottom:2px;margin-top:5px;">
 										<div class="col-sm-4">
-											<label for="" class="form-label">Dataset Field</label>
+											<label for="" class="form-label">Dataset Field&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<input class="form-control" id="datasetfield" type="text" style="width:100%;">
 											<input class="form-control" type="number" id="datasetdetail_id" hidden>
 											<input class="form-control" type="text" id="txtmodeflag" value="Create" hidden>
 										</div>
 
 										<div class="col-sm-4">
-											<label for="" class="form-label">Field Type&nbsp;</label>
+											<label for="" class="form-label">Field Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<select id="cmbFieldType" class="form-select form-control" onchange="fieldtype()">
 											</select>
 										</div>
 										<div class="col-sm-4" id="fielddataset">
-											<label for="" class="form-label">Field Length&nbsp;</label>
+											<label for="" class="form-label">Field Length&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<input class="form-control" id="fieldlength" type="text" style=" width:100%;">
 										</div>
 										<div class="col-sm-4" style="display:none" id="numeric">
-											<label for="" class="form-label">Precision&nbsp;</label>
+											<label for="" class="form-label">Precision&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<input class="form-control" id="fieldPrecision" type="text" style=" width:50%;" value="5">
 											<div style="margin-left: 107px;margin-right: -51px;margin-top: -63px;">
 												<label for="" class="form-label">scale&nbsp;</label>
@@ -166,7 +166,7 @@
 									</div>
 									<div class="row" style="padding-bottom:3px;padding-top:8px;">
 										<div class="col-sm-4">
-											<label for="" class="form-label">Mandatory&nbsp;</label>
+											<label for="" class="form-label">Mandatory&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<div style="margin-left:2px;margin-top:5px">
 												<input type="radio" id="mandatory1" name="mandatory" value="Y">&nbsp;&nbsp;Yes&nbsp;
 												<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" checked value="N">&nbsp;&nbsp;No&nbsp;
@@ -476,7 +476,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -534,6 +534,7 @@
 				$("#mandatory2").prop("checked", true);
 				$("#fieldPrecision").val(5);
 				$("#fieldscale").val(2);
+				fieldtype();
 				return;
 			} else {
 				dataset_id = 0;

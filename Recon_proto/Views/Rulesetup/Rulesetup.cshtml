@@ -179,7 +179,7 @@
 				{
 					field: "rule_code",
 					title: "Rule Code",
-					width: 100,
+					width: 80,
 				},
 				{
 					field: "rule_name",
@@ -187,14 +187,44 @@
 					width: 100,
 				},
 				{
+					field: "rule_apply_on",
+					title: "rule_apply_on",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_apply_on_desc",
+					title: "Rule Applied On",
+					width: 100,
+				},
+				{
+					field: "group_flag",
+					title: "group_flag",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_order",
+					title: "Rule Order",
+					width: 80,
+					attributes: { style: "text-align: right;" },
+				},
+				{
+					field: "group_flag_desc",
+					title: "Group Flag",
+						width: 100,
+				},
+				{
 					field: "recon_code",
 					title: "Recon Code",
 					width: 100,
+					hidden: true,
 				},
 				{
 					field: "recon_name",
 					title: "Recon Name",
 					width: 100,
+					hidden: true,
 				},
 				{
 					field: "active_status",
@@ -205,7 +235,7 @@
 				{
 					field: "active_status_desc",
 					title: "Status",
-					width: 100,
+					width: 80,
 				},
 				{
 					field: "In_mode_flag",
@@ -280,8 +310,9 @@
 			data: JSON.stringify({ in_user_code: Context.in_user_code, in_recon_code: cmbreconname }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				if (response != null) {
-					grid_rulesetup_details(response);
+				var res = JSON.parse(response);
+				if (res != null) {
+					grid_rulesetup_details(res);
 				}
 				else {
 					grid_rulesetup_details([]);

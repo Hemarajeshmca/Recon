@@ -227,6 +227,27 @@
 			overflow-y: auto;
 			overflow-x: hidden;
 		}
+
+		.info-label {
+			display: inline-block;
+			cursor: pointer;
+			color: blue;
+			text-decoration: underline;
+		}
+
+		.info-content {
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			border: 1px solid #ccc;
+			padding: 10px;
+			z-index: 1;
+		}
+
+		.info-label:hover .info-content,
+		.info-label.active .info-content {
+			display: block;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -267,7 +288,7 @@
 								<input class="form-control" type="hidden" id="rulegid">
 							</div>
 							<div class="col-sm-3">
-								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="toggleInfo(this)">i</span></label>
 								<select id="cmbreconname" class="form-select form-control" disabled>
 								</select>
 							</div>
@@ -327,6 +348,9 @@
 								<label id="lblcomaccmode" class="form-label">Comparison Account Mode</label>
 								<select id="comaccmode" class="form-select form-control" style=" width: 100%;">
 								</select>
+							</div>
+							<div class="info-content">
+								This is the information you want to display.
 							</div>
 						</div>
 						<div class="row">
@@ -528,6 +552,9 @@
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
 		}
+	}
+	function toggleInfo(label) {
+		label.classList.toggle('active');
 	}
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
@@ -946,6 +973,8 @@
 			var rulegid = $("#rulegid").val();
 			if (rulegid == "") {
 				rulegid = 0;
+			}else{
+				return
 			}
 			var in_rule_order = parseFloat($("#ruleorder").val()).toFixed(2);
 			var status = "D";
