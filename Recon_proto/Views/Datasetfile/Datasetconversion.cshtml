@@ -538,35 +538,35 @@
 		}
 		formData.append('initiated_by', 'Hema');
 		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
-			$.alert({
-				title: 'Recon',
-				content: "Job Initiated Kindly check the Job Status in Utility",
-				type: 'green',
-			});
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Job Initiated Kindly check the Job Status in Utility",
+			//	type: 'green',
+			//});
 			$.ajax({
 				url: '../Datasetfile/datasetfile',
 				type: 'POST',
 				data: formData,
 				processData: false,
 				contentType: false,
-				//success: function (response) {
-				//	if (!response) {
-				//		$.alert({
-				//			title: 'Recon',
-				//			content: "Something went wrong",
-				//			type: 'red',
-				//		});
-				//	} else {
-				//		$.alert({
-				//			title: 'Recon',
-				//			content: response,
-				//			type: 'green',
-				//		});
-				//		$("#FileName").val("");
-				//		$("#File_Import").val("");
-				//		$("#Pipeline").val("");
-				//	}
-				//}
+				success: function (response) {
+					if (!response) {
+						$.alert({
+							title: 'Recon',
+							content: "Something went wrong",
+							type: 'red',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response,
+							type: 'green',
+						});
+						$("#FileName").val("");
+						$("#File_Import").val("");
+						$("#Pipeline").val("");
+					}
+				}
 			});
 		} 
 		else if (!pipeline_code) {
