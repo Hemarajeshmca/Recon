@@ -154,9 +154,7 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult rulerecondatasetfetch([FromBody] getdataagainsRecon context)
         {
-			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-			DataSet result = new DataSet();
-            DataTable result1 = new DataTable();           
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();      
             string post_data = "";
             string d2 = "";
             using (var client = new HttpClient())
@@ -174,10 +172,34 @@ namespace Recon_proto.Controllers
                 return Json(d2);
             }
         }
-        #endregion
+		#endregion
 
-        #region fetch condition
-        public class getCondition
+		#region fetch recon		
+		[HttpPost]
+		public JsonResult rulereconfetch([FromBody] getdataagainsRecon context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getRecon", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+		#endregion
+
+		#region fetch condition
+		public class getCondition
         {
             public String? in_condition_type { get; set; }
             public String? in_field_type { get; set; }
