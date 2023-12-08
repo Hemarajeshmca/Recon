@@ -8,6 +8,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Data;
 using System.Reflection.PortableExecutable;
+using System.Net;
 
 namespace Recon_proto.Controllers
 {
@@ -30,7 +31,7 @@ namespace Recon_proto.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult datasetfile(string pipeline_code, IFormFile file, string initiated_by)
+		public string datasetfile(string pipeline_code, IFormFile file, string initiated_by)
 		{
 			datasetfileModel objcontent = new datasetfileModel();
 			objcontent.pipeline_code = pipeline_code;
@@ -54,11 +55,54 @@ namespace Recon_proto.Controllers
 				Stream data = response.Content.ReadAsStreamAsync().Result;
 				StreamReader reader = new StreamReader(data);
 				post_data = reader.ReadToEnd();
-				return Json(post_data);
+				var res = "";
+				if(post_data != "")
+				{
+					res = setProcessdataset(post_data);
+				}
+				return res;
+				//return Json(post_data);
 			}
 
 		}
-        public class datasetfileModel
+
+		public string setProcessdataset(string gid)
+		{
+
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			setProcessdatasetModel objcontent = new setProcessdatasetModel();
+			objcontent.in_scheduler_gid = Convert.ToInt32(gid);
+			//string hostName = Dns.GetHostName();
+			//IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+			//objcontent.in_ip_addr = addresses[0];
+			DataTable result = new DataTable();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "DatasettoRecon/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(objcontent), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("runProcessdataset", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				return d2;
+			}
+		}
+
+		public class setProcessdatasetModel
+		{
+			public int in_scheduler_gid { get; set; }
+			public string in_ip_addr { get; set; } = "localhost";
+
+		}
+
+
+		public class datasetfileModel
 		{
 			public string? pipeline_code { get; set; }
 			public IFormFile file { get; set; }
