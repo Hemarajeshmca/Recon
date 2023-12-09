@@ -165,13 +165,13 @@
 										<div class="selectedDataset" id="selected_dataset_name"></div>
 											<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 												<div class="col-sm-4">
-													<label for="" class="form-label">Pipeline</label>
+												<label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 													<select id="Pipeline" class="form-select form-control"> </select>
 												</div>
 												<div class="col-sm-4">
 													<form id="theuploadformempff">
 														<div class="form-group">
-															<label for="Filename" class="form-label">Choose Excel</label>
+														<label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 														<input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
 															<label class="col-md-6 control-label" id="FileName" hidden></label>
 														</div>
@@ -538,35 +538,35 @@
 		}
 		formData.append('initiated_by', 'Hema');
 		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
-			//$.alert({
-			//	title: 'Recon',
-			//	content: "Job Initiated Kindly check the Job Status in Utility",
-			//	type: 'green',
-			//});
+			$.alert({
+				title: 'Recon',
+				content: "Job Initiated Kindly check the Job Status in Utility",
+				type: 'green',
+			});
 			$.ajax({
 				url: '../Datasetfile/datasetfile',
 				type: 'POST',
 				data: formData,
 				processData: false,
 				contentType: false,
-				success: function (response) {
-					if (!response) {
-						$.alert({
-							title: 'Recon',
-							content: "Something went wrong",
-							type: 'red',
-						});
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: response,
-							type: 'green',
-						});
-						$("#FileName").val("");
-						$("#File_Import").val("");
-						$("#Pipeline").val("");
-					}
-				}
+				//success: function (response) {
+				//	if (!response) {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: "Something went wrong",
+				//			type: 'red',
+				//		});
+				//	} else {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: response,
+				//			type: 'green',
+				//		});
+				//		$("#FileName").val("");
+				//		$("#File_Import").val("");
+				//		$("#Pipeline").val("");
+				//	}
+				//}
 			});
 		} 
 		else if (!pipeline_code) {

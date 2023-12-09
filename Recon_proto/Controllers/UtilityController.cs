@@ -68,6 +68,47 @@ namespace Recon_proto.Controllers
 
 
 		[HttpPost]
+		public JsonResult getjobinprogresslist([FromBody] Jobstatusmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Jobstatusmodel objList = new Jobstatusmodel();
+			DataTable result = new DataTable();
+			List<Joblistmodel> objcat_lst = new List<Joblistmodel>();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Utility/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				//client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("jobinpogress", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					Joblistmodel objcat = new Joblistmodel();
+					objcat.job_gid = Convert.ToInt32(result.Rows[i]["job_gid"]);
+					objcat.jobtype_code = result.Rows[i]["jobtype_code"].ToString();
+					objcat.job_name = result.Rows[i]["job_name"].ToString();
+					objcat.start_date = result.Rows[i]["start_date"].ToString();
+					objcat.end_date = result.Rows[i]["end_date"].ToString();
+					objcat.job_remark = result.Rows[i]["job_remark"].ToString();
+					objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
+					objcat.jobtype_desc = result.Rows[i]["jobtype_desc"].ToString();
+					objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+					objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+					objcat_lst.Add(objcat);
+				}
+				return Json(objcat_lst);
+			}
+		}
+
+		[HttpPost]
 		public JsonResult Joblistfetch([FromBody] Jobstatusmodel context)
 		{
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -83,7 +124,7 @@ namespace Recon_proto.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("jobStatus", content).Result;
+				var response = client.PostAsync("jobcompleted", content).Result;
 				Stream data = response.Content.ReadAsStreamAsync().Result;
 				StreamReader reader = new StreamReader(data);
 				post_data = reader.ReadToEnd();
