@@ -571,6 +571,7 @@
                         <p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
                         <p><strong>Rule Applied On&nbsp;&nbsp;:&nbsp;</strong><span id="rule_apply_on_desc"></span></p>
                         <p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
+                        <p><strong>Rule Version&nbsp;&nbsp;:&nbsp;</strong><span id="rule_version"></span></p>
                         <p><strong>Group Flag&nbsp;&nbsp;:&nbsp;</strong><span id="group_flag"></span></p>
                         <p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
                         <p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
@@ -807,12 +808,12 @@
                             rule_code: { type: "string" },
                             rule_name: { type: "string" },
                             rule_order: { type: "string" },
+                            recon_rule_version: {type: "string"},
                             source_dataset_code: { type: "string" },
                             comparison_dataset_code: { type: "string" },
                             source_dataset_desc: { type: "string" },
                             comparison_dataset_desc: { type: "string" },
                             rule_apply_on_desc: { type: "string" },
-                            rule_order: { type: "string" },
                             group_flag: { type: "string" },
                             group_flag_desc: { type: "string" },
                             active_status_desc: { type: "string" }
@@ -873,6 +874,11 @@
                     attributes: { style: "text-align: center;" }
                 },
                 {
+                    field: "recon_rule_version",
+                    title: "Rule Version",
+                    width: 50,
+                },
+                {
                     field: "group_flag_desc",
                     title: "Group Flag",
                     width: 50,
@@ -910,7 +916,7 @@
                     field: "Info",
                     title: "Info",
                     template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
-                    width: 50,
+                    width: 30,
                     filterable: false,
                     attributes: {
                         style: "text-align: center;"
@@ -941,18 +947,18 @@
         if (firstColumnValues != "") {
             firstColumnValues = firstColumnValues.slice(0, -1);
         }
-        if (in_recon_code && period_from && period_to && firstColumnValues) {
-            $.alert({
-                title: 'Recon',
-                content: "Job Initated, Please check the Job Status in Utility",
-                type: 'green',
-            });
+        if (in_recon_code && period_from && period_to) {
+            //$.alert({
+            //    title: 'Recon',
+            //    content: "Job Initated, Please check the Job Status in Utility",
+            //    type: 'green',
+            //});
             $.ajax({
                 type: "POST",
                 url: '../KnockOff/previewRulebase',
                 dataType: 'json',
                 data: JSON.stringify({
-                    in_recon_code: in_recon_code + '$' + firstColumnValues,
+                    in_recon_code: in_recon_code,
                     in_period_from: pr,
                     in_period_to: pr1,
                     in_automatch_flag: 'Y',
@@ -960,6 +966,23 @@
                     in_user_code: 'Hema'
                 }),
                 contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    if (!response) {
+                        $.alert({
+                            title: 'Recon',
+                            content: "Something went wrong",
+                            type: 'red',
+                        });
+                    } else {
+                        var res = JSON.parse(response);
+                        $.alert({
+                            title: 'Recon',
+                            content: res[0].out_msg,
+                            type: 'green',
+                        });
+                    }
+                }
+
             });
         } else if (!in_recon_code) {
             $.alert({
@@ -979,13 +1002,7 @@
                 content: 'Please select Preiod To',
                 type: 'red',
             });
-        } else if (!firstColumnValues) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Rules',
-                type: 'red',
-            });
-        }
+        } 
     }
 
     function rr1() {
@@ -1001,7 +1018,8 @@
         document.getElementById('rule_name').innerHTML = selectedItem.rule_name;
         document.getElementById('rule_apply_on_desc').innerHTML = selectedItem.rule_apply_on_desc;
         document.getElementById('group_flag').innerHTML = selectedItem.group_flag_desc;
-        document.getElementById('rule_order').innerHTML = selectedItem.rule_order;
+        document.getElementById('rule_order').innerHTML = selectedItem.rule_order; 
+        document.getElementById('rule_version').innerHTML = selectedItem.recon_rule_version;
         document.getElementById('source_dataset').innerHTML = selectedItem.source_dataset_desc;
         document.getElementById('comparision_dataset').innerHTML = selectedItem.source_dataset_desc;
         document.getElementById('active_status_desc').innerHTML = selectedItem.active_status_desc;
