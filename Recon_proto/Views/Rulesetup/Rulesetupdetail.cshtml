@@ -161,18 +161,9 @@
 			font-size: 12px;
 		}
 
-			.k-grid-header th.k-header, .k-filter-row th {
+			.k-grid-header th.k-header.k-filter-row th {
 				text-align: center;
 			}
-
-		/*.k-grid th.k-header, .k-grid-header .k-grid th.k-header, .k-grid-header {
-																		background-color: #c5deed;
-																		color: black;
-																	}
-
-																		.k-grid-header .k-header .k-link, .k-grid-header .k-header, .k-grid-header .k-link, .k-grid-header .k-link:link, .k-pager-info, .k-scheduler-header, .k-scheduler-agendaview .k-scheduler-datecolumn {
-																			color: white;
-																		}*/
 
 		.k-grid td {
 			padding: 0.3em 0.3em;
@@ -287,7 +278,7 @@
 								<input class="form-control" type="hidden" id="recontype">
 							</div>
 							<div class="col-sm-3">
-								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoModel(this)" data-bs-toggle="modal">i</span></label>
+								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoModel(this)" data-bs-toggle="modal"><img src='../images/info.png' style="width: 39%;"></span></label>
 								<select id="cmbreconname" class="form-select form-control" disabled>
 								</select>
 							</div>
@@ -348,7 +339,6 @@
 								<select id="comaccmode" class="form-select form-control" style=" width: 100%;">
 								</select>
 							</div>
-
 						</div>
 						<div class="row">
 							<div class="nav-align-top mb-3 mt-3">
@@ -2006,7 +1996,7 @@
 
 			var in_rule_code = $("#txtrulecode").val();
 			var filterapplyon = model.filter_applied_on;
-			var cmbfiltername = model.filter_field;
+			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
@@ -2074,7 +2064,7 @@
 
 			var in_rule_code = $("#txtrulecode").val();
 			var filterapplyon = model.filter_applied_on;
-			var cmbfiltername = model.filter_field;
+			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
@@ -3040,7 +3030,7 @@
 			console.log(e)
 		}
 	}
-	function openInfoModel() {		
+	function openInfoModel() {
 		$("#infomodal").modal("show");
 	}
 	function sourcefieldchange() {
