@@ -1638,7 +1638,8 @@
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
 
-		if (recontype == "v" || recontype == "N") {
+		if (recontype == "V") {
+			$("#partialmatch1").prop('disabled', true);
 			$('#partialmatch2').prop('checked', true);
 			$('#reconvalueflag1').prop('checked', true);
 			$('#recondateflag2').prop('checked', true);
@@ -1648,13 +1649,29 @@
 			$("#reconvalueflag2").prop('disabled', true);
 			$("#recondateflag2").prop('disabled', false);
 			$("#reconvalueflag1").prop('disabled', false);
+			$("#thersholdplus").prop('disabled', true);
+			$("#thersholdminus").prop('disabled', true);
+
+		}else if (recontype == "N") {
+			$("#partialmatch1").prop('disabled', true);
+			$('#partialmatch2').prop('checked', true);
+			$('#reconvalueflag2').prop('checked', true);
+			$('#recondateflag2').prop('checked', true);
+			$("#cmbrecondatefield").prop('disabled', true);
+			$("#cmbreconvaluefield").prop('disabled', true);
+			$("#recondateflag1").prop('disabled', true);
+			$("#reconvalueflag2").prop('disabled', true);
+			$("#recondateflag2").prop('disabled', true);
+			$("#reconvalueflag1").prop('disabled', true);
+			$("#thersholdplus").prop('disabled', true);
+			$("#thersholdminus").prop('disabled', true);
+
 		} else {
 			$('#partialmatch2').prop('checked', true);
 			$('#recondateflag1').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
 			$("#cmbreconvaluefield").prop('disabled', true);
 			$("#cmbrecondatefield").prop('disabled', false);
-
 			$('#recondateflag2').prop('disabled', true);
 			$('#reconvalueflag1').prop('disabled', true);
 			$('#recondateflag1').prop('disabled', false);
