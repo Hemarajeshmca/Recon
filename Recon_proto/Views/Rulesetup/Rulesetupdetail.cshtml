@@ -141,6 +141,11 @@
 			padding: 2px 5px 1px 6px;
 		}
 
+		.tab-content {
+			padding: 0.9rem;
+			border-radius: 0.375rem;
+		}
+
 		.k-grid .k-grouping-header {
 			height: 20px;
 			font-size: 12px;
@@ -161,13 +166,13 @@
 			}
 
 		/*.k-grid th.k-header, .k-grid-header .k-grid th.k-header, .k-grid-header {
-														background-color: #c5deed;
-														color: black;
-													}
+																		background-color: #c5deed;
+																		color: black;
+																	}
 
-														.k-grid-header .k-header .k-link, .k-grid-header .k-header, .k-grid-header .k-link, .k-grid-header .k-link:link, .k-pager-info, .k-scheduler-header, .k-scheduler-agendaview .k-scheduler-datecolumn {
-															color: white;
-														}*/
+																		.k-grid-header .k-header .k-link, .k-grid-header .k-header, .k-grid-header .k-link, .k-grid-header .k-link:link, .k-pager-info, .k-scheduler-header, .k-scheduler-agendaview .k-scheduler-datecolumn {
+																			color: white;
+																		}*/
 
 		.k-grid td {
 			padding: 0.3em 0.3em;
@@ -279,20 +284,21 @@
 								<label for="" class="form-label">Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<input class="form-control" id="ruleName" type="text">
 								<input class="form-control" type="hidden" id="rulegid">
+								<input class="form-control" type="hidden" id="recontype">
 							</div>
 							<div class="col-sm-3">
 								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoModel(this)" data-bs-toggle="modal">i</span></label>
 								<select id="cmbreconname" class="form-select form-control" disabled>
 								</select>
 							</div>
-							<div class="col-md-1">
+							<div class="col-md-2">
 								<label for="" class="form-label">Rule order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<input class="form-control" id="ruleorder" type="number" value="0">
 							</div>
-							<div class="col-md-1" style="padding-left:0">
-								<label for="" class="form-label">Recon Value&nbsp;</label>
-								<input class="form-control" id="reconvalue" type="text" disabled>
-							</div>
+							@*<div class="col-md-1" style="padding-left:0">
+							<label for="" class="form-label">Recon Value&nbsp;</label>
+							<input class="form-control" id="reconvalue" type="text" disabled>
+							</div>*@
 							<div class="col-md-2">
 								<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<div>
@@ -323,12 +329,12 @@
 								</select>
 							</div>
 							<div class="col-sm-3" style="margin-left: 54px;margin-right: 28px;">
-								<label id="sourceparentdataset" class="form-label">Source Dataset</label>
+								<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<select id="sourcedataset" class="form-select form-control" style=" width: 100%;" onchange="sourcefieldchange()">
 								</select>
 							</div>
 							<div class="col-sm-2" style="margin-left:-27px;">
-								<label id="" class="form-label">Source Account Mode</label>
+								<label id="" class="form-label">Source Account Mode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<select id="souaccmode" class="form-select form-control" style=" width: 100%;">
 								</select>
 							</div>
@@ -415,10 +421,10 @@
 									</li>
 								</ul>
 								<div class="tab-content">
-									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-25px;">
+									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-13px;">
 										<div class="panel panel-default">
 											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="grid_rulecondition">
@@ -428,10 +434,10 @@
 											</div>
 										</div>
 									</div>
-									<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-10px;">
+									<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-13px;">
 										<div class="panel panel-default">
 											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="grid_sourceidentifier">
@@ -441,10 +447,10 @@
 											</div>
 										</div>
 									</div>
-									<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-10px;">
+									<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-13px;">
 										<div class="panel panel-default">
 											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="grid_comparisionidentifier">
@@ -454,9 +460,9 @@
 											</div>
 										</div>
 									</div>
-									<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-25px;">
+									<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-13px;">
 										<div class="panel panel-default">
-											<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+											<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 												<div class="col-xs-12">
 													<div id="grid_grouping">
 													</div>
@@ -465,10 +471,10 @@
 										</div>
 
 									</div>
-									<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-10px;">
+									<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
 										<div class="panel panel-default">
 											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="grid_sourceorder">
@@ -478,10 +484,10 @@
 											</div>
 										</div>
 									</div>
-									<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-10px;">
+									<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-13px;">
 										<div class="panel panel-default">
 											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:30px;padding-top:10px;">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="grid_comparisonorder">
@@ -581,6 +587,31 @@
 		$("#navhead").text("Rule Setup");
 		kendodate_format();
 		getGridComboList();
+		cmbsourcefield();
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulereconfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				document.getElementById('recon_name').innerHTML = res[0].recon_name;
+				document.getElementById('recon_type').innerHTML = res[0].recontype_desc;
+				document.getElementById('rperiod_from').innerHTML = res[0].period_from;
+				document.getElementById('rperiod_to').innerHTML = res[0].period_to;
+				document.getElementById('thersholdplus').innerHTML = res[0].threshold_plus_value;
+				document.getElementById('thersholdminus').innerHTML = res[0].threshold_minus_value;
+				document.getElementById('recondateflag').innerHTML = res[0].recon_date_flag;
+				document.getElementById('cmbrecondatefield').innerHTML = res[0].recon_date_field;
+				document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
+				document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
+				document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+				$("#recontype").val(res[0].recontype_code);
+			}
+		});
 	});
 
 	function RuleApplied() {
@@ -833,7 +864,7 @@
 				RuleApplied();
 			}
 		});
-		// account mode
+		// Source account mode
 		var in_master_code = "QCD_RS_ACC_MODE";
 		var in_user_code = "sundar";
 		$.ajax({
@@ -1051,14 +1082,13 @@
 				success: function (response) {
 					debugger;
 					if (response != null) {
-						$.alert({
-							title: 'Recon',
-							content: response.out_msg,
-							type: 'green',
-						});
+						//$.alert({
+						//	title: 'Recon',
+						//	content: response.out_msg,
+						//	type: 'green',
+						//});
 						$("#rulegid").val(response.in_rule_gid);
 						getfetch(response.in_rule_gid);
-
 					}
 					else {
 
@@ -1105,7 +1135,7 @@
 					}
 				}
 			},
-			height: 200,
+			height: 185,
 			groupable: false,
 			//dataBinding: setDefaultValues,
 			edit: OnEdit,
@@ -1505,6 +1535,7 @@
 						fields: {
 							ruleselefilter_gid: { type: "string", defaultValue: "0" },
 							filter_applied_on: { type: "string", defaultValue: "S" },
+							filter_field_code: { type: "string" },
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
@@ -1516,7 +1547,7 @@
 					}
 				}
 			},
-			height: 200,
+			height: 185,
 			groupable: false,
 			dataBinding: setDefaultValues,
 			edit: OnEdit,
@@ -1577,11 +1608,17 @@
 				hidden: true,
 			},
 			{
+				field: "filter_field_code",
+				title: "Filter Applied On",
+				width: 100,
+				hidden: true,
+			},
+			{
 				field: "filter_field",
 				title: "Filter Field",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field", "grid_sourceidentifier")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourceidentifier")
 				},
 			},
 			{
@@ -1720,7 +1757,7 @@
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 					}
 					selectedItem.ident_criteria_input = undefined;
-				}				
+				}
 			}
 		});
 	}
@@ -1737,6 +1774,7 @@
 							ruleselefilter_gid: { type: "string", defaultValue: "0" },
 							filter_applied_on: { type: "string", defaultValue: "C" },
 							filter_field: { type: "string" },
+							filter_field_code: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
 							ident_value: { type: "string" },
@@ -1747,7 +1785,7 @@
 					}
 				}
 			},
-			height: 200,
+			height: 185,
 			groupable: false,
 			dataBinding: setDefaultValues,
 			edit: OnEdit,
@@ -1808,11 +1846,17 @@
 				hidden: true,
 			},
 			{
+				field: "filter_field_code",
+				title: "filter_field_code",
+				width: 100,
+				hidden: true,
+			},
+			{
 				field: "filter_field",
 				title: "Filter Field",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field", "grid_comparisionidentifier")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionidentifier")
 				},
 			},
 			{
@@ -2236,6 +2280,7 @@
 		}
 	}
 	//-----------------------------------------------------     identifier     ----------------------------------------------------------------
+	//-----------------------------------------------------     grouping    ----------------------------------------------------------------
 	function grid_grouping(data) {
 		$("#grid_grouping").kendoGrid({
 			dataSource: {
@@ -2252,7 +2297,7 @@
 					}
 				}
 			},
-			height: 172,
+			height: 185,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -2301,10 +2346,15 @@
 				hidden: true,
 			},
 			{
+				field: "recon_field_code",
+				title: "recon_field_code",
+				hidden: true,
+			},
+			{
 				field: "recon_field_name",
 				title: "Comparison Group Field",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recon_field_name", "grid_grouping")
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recon_field_code", "grid_grouping")
 				},
 				width: 120,
 			},
@@ -2329,7 +2379,7 @@
 			var grid = $("#grid_grouping").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var in_rule_code = $("#txtrulecode").val();
-			var cmbcomgrpfield = model.recon_field_name;
+			var cmbcomgrpfield = model.recon_field_code;
 			var action = "";
 			var action_by = "vijay"
 			var rulegrpfield_gid = model.rulegrpfield_gid;
@@ -2443,26 +2493,9 @@
 			});
 		}
 	}
-	function sourcefieldchange() {
-		var reconcode = $("#cmbreconname").val();
-		$.ajax({
-			type: "POST",
-			url: '../Rulesetup/rulerecondatasetfetch',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var res = JSON.parse(response);
-				$.each(res, function (index, item) {
-					if (item.dataset_type == "S" && item.dataset_code == $("#sourcedataset").val()) {
-						$("#comdataset").val(item.parent_dataset_code);
-					}
-				});
-			}
-		});
-	}
+	//-----------------------------------------------------     grouping    ----------------------------------------------------------------
 
+	//-----------------------------------------------------     Source order    ----------------------------------------------------------------
 	function grid_sourceorder(data) {
 		var recorder_field_list = "";
 		$("#grid_sourceorder").kendoGrid({
@@ -2472,7 +2505,7 @@
 				schema: {
 					model: {
 						fields: {
-							rulerecorder_gid: { type: "string" },
+							rulerecorder_gid: { type: "string", defaultValue: "0" },
 							rule_code: { type: "string" },
 							recorder_applied_on: { type: "string" },
 							recorder_seqno: { type: "number" },
@@ -2484,7 +2517,7 @@
 				}
 			},
 			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
-			height: 172,
+			height: 185,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -2571,7 +2604,6 @@
 		});
 		recorder_field_list = cmbsourcefield();
 	}
-
 	function saverulesourceorder() {
 		try {
 			var grid = $("#grid_sourceorder").data("kendoGrid");
@@ -2579,14 +2611,16 @@
 			var in_rule_code = $("#txtrulecode").val();
 			var in_recorder_applied_on = "S";
 			var in_recorder_seqno = model.recorder_seqno;
-			var in_recorder_field = model.recorder_field;
-			var action = "INSERT";
+			var in_recorder_field = model.recorder_field_code;
+			var action = "";
 			var action_by = "vijay";
-			var rulegrpfield_gid = $("#rulegrpfield_gid").val();
-			if (model.rulerecorder_gid == "") {
+			var rulerecorder_gid = model.rulerecorder_gid;
+			if (rulerecorder_gid == "0") {
 				in_rulerecorder_gid = 0;
+				action = "INSERT"
 			} else {
 				in_rulerecorder_gid = model.rulerecorder_gid
+				action = "UPDATE"
 			}
 			var status = "Y"
 			$.ajax({
@@ -2632,7 +2666,7 @@
 				schema: {
 					model: {
 						fields: {
-							rulerecorder_gid: { type: "string" },
+							rulerecorder_gid: { type: "string", defaultValue: "0" },
 							rule_code: { type: "string" },
 							recorder_applied_on: { type: "string" },
 							recorder_seqno: { type: "number" },
@@ -2644,7 +2678,7 @@
 				}
 			},
 			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
-			height: 172,
+			height: 185,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -2731,7 +2765,6 @@
 		});
 		recorder_field_list = cmbsourcefield();
 	}
-
 	function saverulecomparisonorder() {
 		try {
 			var grid = $("#grid_comparisonorder").data("kendoGrid");
@@ -2739,14 +2772,16 @@
 			var in_rule_code = $("#txtrulecode").val();
 			var in_recorder_applied_on = "C";
 			var in_recorder_seqno = model.recorder_seqno;
-			var in_recorder_field = model.recorder_field;
+			var in_recorder_field = model.recorder_field_code;
 			var action = "INSERT";
 			var action_by = "vijay";
-			var rulegrpfield_gid = $("#rulegrpfield_gid").val();
-			if (model.rulerecorder_gid == "") {
+			var rulerecorder_gid = model.rulerecorder_gid;
+			if (rulerecorder_gid == "0") {
 				in_rulerecorder_gid = 0;
+				action = "INSERT"
 			} else {
 				in_rulerecorder_gid = model.rulerecorder_gid
+				action = "UPDATE"
 			}
 			var status = "Y"
 			$.ajax({
@@ -2921,6 +2956,7 @@
 			});
 		}
 	}
+	//-----------------------------------------------------     Source order    ----------------------------------------------------------------
 	function saveheadersubmit() {
 		try {
 			var in_rule_code = $("#txtrulecode").val();
@@ -3004,30 +3040,26 @@
 			console.log(e)
 		}
 	}
-	function openInfoModel() {
+	function openInfoModel() {		
+		$("#infomodal").modal("show");
+	}
+	function sourcefieldchange() {
 		var reconcode = $("#cmbreconname").val();
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/rulereconfetch',
+			url: '../Rulesetup/rulerecondatasetfetch',
 			dataType: 'json',
 			async: false,
 			data: JSON.stringify({ in_recon_code: reconcode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
-				document.getElementById('recon_name').innerHTML = res[0].recon_name;
-				document.getElementById('recon_type').innerHTML = res[0].recontype_desc;
-				document.getElementById('rperiod_from').innerHTML = res[0].period_from;
-				document.getElementById('rperiod_to').innerHTML = res[0].period_to;
-				document.getElementById('thersholdplus').innerHTML = res[0].threshold_plus_value;
-				document.getElementById('thersholdminus').innerHTML = res[0].threshold_minus_value;
-				document.getElementById('recondateflag').innerHTML = res[0].recon_date_flag;
-				document.getElementById('cmbrecondatefield').innerHTML = res[0].recon_date_field;
-				document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
-				document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
-				document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+				$.each(res, function (index, item) {
+					if (item.dataset_type == "S" && item.dataset_code == $("#sourcedataset").val()) {
+						$("#comdataset").val(item.parent_dataset_code);
+					}
+				});
 			}
 		});
-		$("#infomodal").modal("show");
 	}
 </script>
