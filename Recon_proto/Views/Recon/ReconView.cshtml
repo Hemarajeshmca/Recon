@@ -1637,7 +1637,6 @@
 	}
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
-
 		if (recontype == "V") {
 			$("#partialmatch1").prop('disabled', true);
 			$('#partialmatch2').prop('checked', true);
@@ -1651,7 +1650,6 @@
 			$("#reconvalueflag1").prop('disabled', false);
 			$("#thersholdplus").prop('disabled', true);
 			$("#thersholdminus").prop('disabled', true);
-
 		}else if (recontype == "N") {
 			$("#partialmatch1").prop('disabled', true);
 			$('#partialmatch2').prop('checked', true);
@@ -1728,20 +1726,26 @@
 				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
+							icon: 'fa fa-success',
 							title: 'Recon',
+							theme: 'dark',
 							content: response.out_msg,
 							type: 'green',
+							animationSpeed: 700,
 						});
 						$("#recon_id").val(response.in_recon_gid)
 						detailfetch(response.in_recon_gid);
 						window.location.href = "../Recon/ReconList";
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
 					}
-					else {
-
-					}
+					
 				},
 				error: function (er) {
 					alert(er)
