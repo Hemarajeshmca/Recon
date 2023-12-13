@@ -114,7 +114,7 @@ namespace Recon_proto.Controllers
         #region fetch
         public class fetchRule
         {
-            public Int16? in_rule_code { get; set; }
+            public Int16? in_rule_gid { get; set; }
         }
         [HttpPost]
         public JsonResult rulefetch([FromBody] fetchRule context)
