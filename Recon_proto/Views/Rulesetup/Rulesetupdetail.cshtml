@@ -603,36 +603,6 @@
 			}
 		});
 	});
-
-	function RuleApplied() {
-		if ($("#RuleAppliedOn").val() == 'T') {
-			$("#lblcomaccmode").text("Comparison Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
-			$("#comsupdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
-		} else if ($("#RuleAppliedOn").val() == 'S') {
-			$("#comsupdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
-			$("#lblcomaccmode").text("Supporting Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>")
-		}
-	}
-	function rr1() {
-		$("#newdebit").hide();
-	}
-	function rrbase() {
-		$("#collapseOne").show();
-	}
-	function rrbase1() {
-		$("#collapseOne").hide();
-	}
-	function Invoice() {
-		try {
-			$("div#sourceidentifier").toggleClass('tab-pane fade show activ');
-			$("div#sourceidentifier").show();
-
-		}
-		catch (err) {
-			javascript_log4j_root(arguments.callee.name, err);
-		}
-	}
-
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -667,7 +637,7 @@
 					url: '../Rulesetup/rulefetch',
 					dataType: 'json',
 					async: false,
-					data: JSON.stringify({ in_rule_code: data.rule_gid }),
+					data: JSON.stringify({ in_rule_gid: data.rule_gid }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 						if (response != null) {
@@ -679,6 +649,11 @@
 							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
 							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
+							$("#period_from").val(res.RuleHeader[0].period_from);
+							$("#period_to").val(res.RuleHeader[0].period_to);
+							if (res.RuleHeader[0].until_active_flag == "Y") {
+								$('#untillactive').attr('checked', true);
+							}
 							if (res.RuleCondition.length > 0) {
 								grid_rulecondition(res.RuleCondition);
 							}
@@ -727,6 +702,55 @@
 			}
 		}
 	}
+	function RuleApplied() {
+		if ($("#RuleAppliedOn").val() == 'T') {
+			$("#lblcomaccmode").text("Comparison Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#comsupdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			// Source account mode
+			var in_master_code = "QCD_RS_ACC_MODE";
+			var in_user_code = "sundar";
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#souaccmode").empty();
+					$("#souaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterShortCode == "S") {
+							$("#souaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+					$("#comaccmode").empty();
+					$("#comaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#comaccmode").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					});
+				}
+			});
+		} else if ($("#RuleAppliedOn").val() == 'S') {
+			$("#comsupdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomaccmode").text("Supporting Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#souaccmode").val("NA");
+			$("#comaccmode").val("NA");
+		
+			}
+		}
 	function checkactive() {
 		debugger;
 		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
@@ -745,7 +769,7 @@
 			type: "POST",
 			url: '../Rulesetup/rulefetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_rule_code: rulecode }),
+			data: JSON.stringify({ in_rule_gid: rulecode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -763,6 +787,11 @@
 					jQuery('#cmbreconname').trigger("change");
 					$("#txtstatus").val(res.RuleHeader[0].active_status_desc);
 					$("#rulegid").val(res.RuleHeader[0].rule_gid);
+					$("#period_from").val(res.RuleHeader[0].period_from);
+					$("#period_to").val(res.RuleHeader[0].period_to);
+					if (res.RuleHeader[0].until_active_flag == "Y") {
+						$('#untillactive').attr('checked', true);
+					}
 					if (res.RuleCondition.length > 0) {
 						grid_rulecondition(res.RuleCondition);
 					} else {
@@ -815,6 +844,7 @@
 			type: "POST",
 			url: '../Common/Qcdmaster',
 			dataType: 'json',
+			async: false,
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
@@ -851,44 +881,9 @@
 						text: item.masterName
 					}));
 				});
-				RuleApplied();
 			}
 		});
-		// Source account mode
-		var in_master_code = "QCD_RS_ACC_MODE";
-		var in_user_code = "sundar";
-		$.ajax({
-			type: "POST",
-			url: '../Common/Qcdmaster',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				$("#souaccmode").empty();
-				$("#souaccmode").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(response, function (index, item) {
-					$("#souaccmode").append($('<option>', {
-						value: item.masterSyscode,
-						text: item.masterName
-					}));
-				});
-				$("#comaccmode").empty();
-				$("#comaccmode").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(response, function (index, item) {
-					$("#comaccmode").append($('<option>', {
-						value: item.masterSyscode,
-						text: item.masterName
-					}));
-				});
-			}
-		});
+
 		//recon name
 		var data = {};
 		data.in_user_gid = 0;
