@@ -36,7 +36,10 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
-
+		public IActionResult ReconHistory()
+		{
+			return View();
+		}
 
 		public JsonResult ReportList()
 		{
@@ -260,6 +263,33 @@ namespace Recon_proto.Controllers
 			public String? in_tran_date { get; set; }
 
 		}
+		#region version history
+		[HttpPost]
+		public JsonResult Reconversionhistoryfetch([FromBody] ReconversionListfetchmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			string post_data = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "ReconVersion/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("ReconVersionhistory", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				string d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
 
+		public class ReconversionListfetchmodel
+		{
+			public string in_recon_code { get; set; }
+			public string in_version_code { get; set; }
+		}
+		#endregion
 	}
 }
