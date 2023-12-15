@@ -538,11 +538,12 @@
 		}
 		formData.append('initiated_by', 'Hema');
 		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
-			//$.alert({
-			//	title: 'Recon',
-			//	content: "Job Initiated Kindly check the Job Status in Utility",
-			//	type: 'green',
-			//});
+			
+			$.alert({
+				title: 'Recon',
+				content: "Job Initiated Kindly check the Job Status in Utility",
+				type: 'green',
+			});		
 			//window.location.href = "../Datasetfile/Datasetconversion";
 			$.ajax({
 				url: '../Datasetfile/datasetfile',
@@ -550,26 +551,26 @@
 				data: formData,
 				processData: false,
 				contentType: false,
-				success: function (response) {
-					debugger;
-					if (!response) {
-						$.alert({
-							title: 'Recon',
-							content: "Something went wrong",
-							type: 'red',
-						});
-					} else {
-						var res = JSON.parse(response)
-						$.alert({
-							title: 'Recon',
-							content: res[0].out_msg,
-							type: 'green',
-						});
-						$("#FileName").val("");
-						$("#File_Import").val("");
-						$("#Pipeline").val("");
-					}
-				}
+				//success: function (response) {
+				//	debugger;
+				//	if (!response) {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: "Something went wrong",
+				//			type: 'red',
+				//		});
+				//	} else {
+				//		var res = JSON.parse(response)
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: res[0].out_msg,
+				//			type: 'green',
+				//		});
+				//		$("#FileName").val("");
+				//		$("#File_Import").val("");
+				//		$("#Pipeline").val("");
+				//	}
+				//}
 			});
 		} 
 		else if (!pipeline_code) {
@@ -601,7 +602,7 @@
 			$("#File_Import").val("");
 			$("#FileName").val("");
 		}
-		
+		hideProgress();
 	}
 
 	function openInfoModel() {

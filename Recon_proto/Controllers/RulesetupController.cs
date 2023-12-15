@@ -473,33 +473,43 @@ namespace Recon_proto.Controllers
             DataTable result = new DataTable();
             string post_data = "";
             string d2 = "";
-            using (var client = new HttpClient())
-            {
-				string Urlcon = "Rulesetup/";
-				client.BaseAddress = new Uri(urlstring + Urlcon);
-				client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                var response = client.PostAsync("getruleagainstRecon", content).Result;
-                Stream data = response.Content.ReadAsStreamAsync().Result;
-                StreamReader reader = new StreamReader(data);
-                post_data = reader.ReadToEnd();
-                d2 = JsonConvert.DeserializeObject<string>(post_data);
-                result = JsonConvert.DeserializeObject<DataTable>(d2);
-                for (int i = 0; i < result.Rows.Count; i++)
-                {
-                    RuleAgainstReconList objList = new RuleAgainstReconList();
-                    objList.rule_gid = Convert.ToInt32(result.Rows[i]["rule_gid"]);
-                    objList.rule_code = result.Rows[i]["rule_code"].ToString();
-                    objList.rule_name = result.Rows[i]["rule_name"].ToString();
-                    objList.source_dataset_code = result.Rows[i]["source_dataset_code"].ToString();
-                    objList.source_dataset_desc = result.Rows[i]["source_dataset_desc"].ToString();
-                    objList.comparison_dataset_code = result.Rows[i]["comparison_dataset_code"].ToString();
-                    objList.comparison_dataset_desc = result.Rows[i]["comparison_dataset_desc"].ToString();
-                    objcat_lst.Add(objList);
-                }
-                return Json(objcat_lst);
-            }
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Rulesetup/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getruleagainstRecon", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					for (int i = 0; i < result.Rows.Count; i++)
+					{
+						RuleAgainstReconList objList = new RuleAgainstReconList();
+						objList.rule_gid = Convert.ToInt32(result.Rows[i]["rule_gid"]);
+						objList.rule_code = result.Rows[i]["rule_code"].ToString();
+						objList.rule_name = result.Rows[i]["rule_name"].ToString();
+						objList.source_dataset_code = result.Rows[i]["source_dataset_code"].ToString();
+						objList.source_dataset_desc = result.Rows[i]["source_dataset_desc"].ToString();
+						objList.comparison_dataset_code = result.Rows[i]["comparison_dataset_code"].ToString();
+						objList.comparison_dataset_desc = result.Rows[i]["comparison_dataset_desc"].ToString();
+						objcat_lst.Add(objList);
+					}
+					return Json(objcat_lst);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "RuleAgainstRecon");
+				return Json(ex.Message);
+			}
+		
         }
     }
 }
