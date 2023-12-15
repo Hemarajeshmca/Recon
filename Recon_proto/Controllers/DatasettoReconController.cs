@@ -24,21 +24,30 @@ namespace Recon_proto.Controllers
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();		
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-				string Urlcon = "DatasettoRecon/";
-				client.BaseAddress = new Uri(urlstring + Urlcon);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("DatasettoReconRead", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				return Json(d2);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "DatasettoRecon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("DatasettoReconRead", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "DatasettoReconListfetch");
+                return Json(ex.Message);
+            }
+        }
 	
 		public class DatasettoReconListmodel
 		{			
@@ -52,21 +61,29 @@ namespace Recon_proto.Controllers
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-				string Urlcon = "DatasettoRecon/";
-				client.BaseAddress = new Uri(urlstring + Urlcon);
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("DatasettoReconprocess", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				return Json(d2);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "DatasettoRecon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("DatasettoReconprocess", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "DatasettoReconprocess");
+                return Json(ex.Message);
+            }
+        }
 
 		public class DatasettoReconprocessmodel
 		{		

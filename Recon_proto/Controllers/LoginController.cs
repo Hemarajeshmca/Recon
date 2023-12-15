@@ -37,55 +37,63 @@ namespace Recon_proto.Controllers
             List<user_model> objcat_lst = new List<user_model>();
             DataTable result = new DataTable();
             string post_data = "";
-            using (var client = new HttpClient())
+            try
             {
-                string hostName = Dns.GetHostName();
-                ipAddress = Dns.GetHostAddresses(hostName)[0].ToString();
-                var pass = Encrypt(model.Password);
-                loginmodel.user_id = model.UserName;
-                loginmodel.password = pass;
-                loginmodel.ip = ipAddress;
-                loginmodel.msg = "";
-                loginmodel.ip_address = "";
-                loginmodel.datasource = "";
-                loginmodel.user_code = "";
-                loginmodel.user_name = "";
-                loginmodel.oldpassword = "";
-                string Urlcon = "UserManagement/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpContent content = new StringContent(JsonConvert.SerializeObject(loginmodel), UTF8Encoding.UTF8, "application/json");
-                var response = client.PostAsync("Loginvalidation", content).Result;
-                Stream data = response.Content.ReadAsStreamAsync().Result;
-                StreamReader reader = new StreamReader(data);
-                post_data = reader.ReadToEnd();
-                string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                result = JsonConvert.DeserializeObject<DataTable>(d2);
-                for (int i = 0; i < result.Rows.Count; i++)
+                using (var client = new HttpClient())
                 {
-                    user_model objcat = new user_model();
-                    objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
-                    objcat.user_name = result.Rows[i]["user_name"].ToString();
-                    objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
-                    objcat.usergroup_gid = Convert.ToInt32(result.Rows[i]["usergroup_code"]);
-                    objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
-                    objcat.msg = result.Rows[i]["out_msg"].ToString();
-                    objcat.oldpassworrd = Decrypt(pass);
-                    objcat.user_status = result.Rows[i]["user_status"].ToString();
-                    objcat_lst.Add(objcat);
-                    ViewBag.user_gid = objcat.user_gid;
-                    ViewBag.user_name = objcat.user_name;
-                    HttpContext.Session.SetString("usercode", model.UserName);
-                    HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
-                    HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
-                    HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
-                    HttpContext.Session.SetString("user_code", result.Rows[i]["user_gid"].ToString());
-                    HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
-                    HttpContext.Session.SetString("userrole", "ADMIN");
+                    string hostName = Dns.GetHostName();
+                    ipAddress = Dns.GetHostAddresses(hostName)[0].ToString();
+                    var pass = Encrypt(model.Password);
+                    loginmodel.user_id = model.UserName;
+                    loginmodel.password = pass;
+                    loginmodel.ip = ipAddress;
+                    loginmodel.msg = "";
+                    loginmodel.ip_address = "";
+                    loginmodel.datasource = "";
+                    loginmodel.user_code = "";
+                    loginmodel.user_name = "";
+                    loginmodel.oldpassword = "";
+                    string Urlcon = "UserManagement/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(loginmodel), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Loginvalidation", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        user_model objcat = new user_model();
+                        objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
+                        objcat.user_name = result.Rows[i]["user_name"].ToString();
+                        objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
+                        objcat.usergroup_gid = Convert.ToInt32(result.Rows[i]["usergroup_code"]);
+                        objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
+                        objcat.msg = result.Rows[i]["out_msg"].ToString();
+                        objcat.oldpassworrd = Decrypt(pass);
+                        objcat.user_status = result.Rows[i]["user_status"].ToString();
+                        objcat_lst.Add(objcat);
+                        ViewBag.user_gid = objcat.user_gid;
+                        ViewBag.user_name = objcat.user_name;
+                        HttpContext.Session.SetString("usercode", model.UserName);
+                        HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
+                        HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
+                        HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
+                        HttpContext.Session.SetString("user_code", result.Rows[i]["user_gid"].ToString());
+                        HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
+                        HttpContext.Session.SetString("userrole", "ADMIN");
+                    }
+                    return JsonConvert.SerializeObject(objcat_lst);
                 }
-                return JsonConvert.SerializeObject(objcat_lst);
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Login_validation");
+                return ex.Message;
             }
         }
 
@@ -130,6 +138,8 @@ namespace Recon_proto.Controllers
                     catch (Exception ex)
                     {
                         string control = this.ControllerContext.RouteData.Values["controller"].ToString();
+                        CommonController objcom = new CommonController(_configuration);
+                        objcom.errorlog(ex.Message, "changepassword_Save");
                         return Json(ex.Message);
                     }
                    

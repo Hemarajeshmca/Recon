@@ -30,38 +30,46 @@ namespace Recon_proto.Controllers
             DataTable result = new DataTable();
 			List<Reconlistmodel> objcat_lst = new List<Reconlistmodel>();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("reconlist", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					Reconlistmodel objcat = new Reconlistmodel();
-					objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
-					objcat.recon_code = result.Rows[i]["recon_code"].ToString();
-					objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-					objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
-					objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
-					objcat.period_from = result.Rows[i]["period_from"].ToString();
-					objcat.period_to = result.Rows[i]["period_to"].ToString();
-					objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
-					objcat.active_status = result.Rows[i]["active_status"].ToString();				
-					objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
-					objcat_lst.Add(objcat);
-				}
-				return Json(objcat_lst);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("reconlist", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        Reconlistmodel objcat = new Reconlistmodel();
+                        objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
+                        objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+                        objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+                        objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
+                        objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
+                        objcat.period_from = result.Rows[i]["period_from"].ToString();
+                        objcat.period_to = result.Rows[i]["period_to"].ToString();
+                        objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
+                        objcat.active_status = result.Rows[i]["active_status"].ToString();
+                        objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+                        objcat_lst.Add(objcat);
+                    }
+                    return Json(objcat_lst);
+                }
+            }  catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Reconlistfetch");
+                return Json(ex.Message);
+            }
+        }
 	
 		public class Reconlistmodel
 		{
@@ -87,31 +95,40 @@ namespace Recon_proto.Controllers
             DataTable result = new DataTable();
 			List<recontype> objcat_lst = new List<recontype>();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
-				var response = client.GetAsync("recontype").Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					recontype objcat = new recontype();
-					objcat.recontype_gid = Convert.ToInt32(result.Rows[i]["recontype_gid"]);
-					objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
-					objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
-					objcat_lst.Add(objcat);
-				}
-				return Json(objcat_lst);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+                    var response = client.GetAsync("recontype").Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        recontype objcat = new recontype();
+                        objcat.recontype_gid = Convert.ToInt32(result.Rows[i]["recontype_gid"]);
+                        objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
+                        objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
+                        objcat_lst.Add(objcat);
+                    }
+                    return Json(objcat_lst);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getrecontype");
+                return Json(ex.Message);
+            }
+        }
 		
 		public class recontype
 		{
@@ -129,29 +146,37 @@ namespace Recon_proto.Controllers
             Reconheader objList = new Reconheader();
 			DataTable result = new DataTable();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("Recon", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					objList.in_recon_gid = Convert.ToInt16(result.Rows[i]["in_recon_gid"]);
-					objList.out_msg = result.Rows[i]["out_msg"].ToString();
-					objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
-				}
-				return Json(objList);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Recon", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        objList.in_recon_gid = Convert.ToInt16(result.Rows[i]["in_recon_gid"]);
+                        objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                        objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
+                    }
+                    return Json(objList);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Reconheadersave");
+                return Json(ex.Message);
+            }
+        }
 		
 		public class Reconheader
 		{
@@ -186,29 +211,37 @@ namespace Recon_proto.Controllers
             Recondataset objList = new Recondataset();
 			DataTable result = new DataTable();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("Recondataset", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					objList.in_recondataset_gid = Convert.ToInt16(result.Rows[i]["in_recondataset_gid"]);
-					objList.out_msg = result.Rows[i]["out_msg"].ToString();
-					objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
-				}
-				return Json(objList);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Recondataset", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        objList.in_recondataset_gid = Convert.ToInt16(result.Rows[i]["in_recondataset_gid"]);
+                        objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                        objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
+                    }
+                    return Json(objList);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Recondatasetsave");
+                return Json(ex.Message);
+            }
+        }
 		
 		public class Recondataset
 		{
@@ -234,29 +267,37 @@ namespace Recon_proto.Controllers
 			List<fetchRecondataset> objcat_lst = new List<fetchRecondataset>();
 			string post_data = "";
 			string d2 = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("fetchrecondetails", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataSet>(d2);
-				var rr = result.Tables.Count;
-				if (rr <= 0)
-				{
-					d2 = "";
-				}
-				
-				return Json(d2);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("fetchrecondetails", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataSet>(d2);
+                    var rr = result.Tables.Count;
+                    if (rr <= 0)
+                    {
+                        d2 = "";
+                    }
+
+                    return Json(d2);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Reconheaderfetch");
+                return Json(ex.Message);
+            }
+        }
 		#region reconfetch
 		public class fetchRecon
 		{
@@ -284,29 +325,37 @@ namespace Recon_proto.Controllers
             datamapping objList = new datamapping();
 			DataTable result = new DataTable();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("recondatamapping", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					objList.in_reconfield_gid = Convert.ToInt16(result.Rows[i]["in_reconfield_gid"]);
-					objList.out_msg = result.Rows[i]["out_msg"].ToString();
-					objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
-				}
-				return Json(objList);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("recondatamapping", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        objList.in_reconfield_gid = Convert.ToInt16(result.Rows[i]["in_reconfield_gid"]);
+                        objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                        objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
+                    }
+                    return Json(objList);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Recondatasetmappingsave");
+                return Json(ex.Message);
+            }
+        }
 		#region dataset mapping
 		public class datamapping
 		{
@@ -333,35 +382,43 @@ namespace Recon_proto.Controllers
             DataTable result1 = new DataTable();
 			List<getReconDataMapping> objcat_lst = new List<getReconDataMapping>();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("getReconDataMappingList", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result1 = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result1.Rows.Count; i++)
-				{
-					getReconDataMapping objcat = new getReconDataMapping();
-					objcat.reconfieldmapping_gid = Convert.ToInt16(result1.Rows[i]["reconfieldmapping_gid"]);
-					objcat.in_dataset_code = result1.Rows[i]["dataset_code"].ToString();
-					objcat.in_datasetname_code = result1.Rows[i]["dataset_name"].ToString();
-					objcat.in_dataset_field_name = result1.Rows[i]["field_name"].ToString();
-					objcat.dataset_table_field = result1.Rows[i]["dataset_table_field"].ToString();
-					objcat.active_status = result1.Rows[i]["active_status"].ToString();
-					objcat.active_status_desc = result1.Rows[i]["active_status_desc"].ToString();					
-					objcat_lst.Add(objcat);
-				}
-				return Json(objcat_lst); 
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getReconDataMappingList", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result1 = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result1.Rows.Count; i++)
+                    {
+                        getReconDataMapping objcat = new getReconDataMapping();
+                        objcat.reconfieldmapping_gid = Convert.ToInt16(result1.Rows[i]["reconfieldmapping_gid"]);
+                        objcat.in_dataset_code = result1.Rows[i]["dataset_code"].ToString();
+                        objcat.in_datasetname_code = result1.Rows[i]["dataset_name"].ToString();
+                        objcat.in_dataset_field_name = result1.Rows[i]["field_name"].ToString();
+                        objcat.dataset_table_field = result1.Rows[i]["dataset_table_field"].ToString();
+                        objcat.active_status = result1.Rows[i]["active_status"].ToString();
+                        objcat.active_status_desc = result1.Rows[i]["active_status_desc"].ToString();
+                        objcat_lst.Add(objcat);
+                    }
+                    return Json(objcat_lst);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Recondatasetmappingfetch");
+                return Json(ex.Message);
+            }
+        }
 		#region reconfetch
 		public class getReconDataMappingList
 		{
@@ -379,45 +436,56 @@ namespace Recon_proto.Controllers
 			public String? active_status { get; set; }
 			public String? active_status_desc { get; set; }
 		}
-		#endregion
-		[HttpPost]
+        #endregion
+
+
+        #region Reconlistknockoff
+        [HttpPost]
 		public JsonResult Reconlistknockoff()
 		{
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result1 = new DataTable();
 			List<getReconknockoff> objcat_lst = new List<getReconknockoff>();
 			string post_data = "";
-			using (var client = new HttpClient())
+			try
 			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("getreconknockofflist", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result1 = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result1.Rows.Count; i++)
-				{
-					getReconknockoff objcat = new getReconknockoff();
-					objcat.recon_gid = Convert.ToInt16(result1.Rows[i]["recon_gid"]);
-					objcat.recon_code = result1.Rows[i]["recon_code"].ToString();
-					objcat.recon_name = result1.Rows[i]["recon_name"].ToString();
-					objcat.recontype_code = result1.Rows[i]["recontype_code"].ToString();
-					objcat.recontype_desc = result1.Rows[i]["recontype_desc"].ToString();
-					objcat.start_date = result1.Rows[i]["start_date"].ToString();
-					objcat.job_remark = result1.Rows[i]["job_remark"].ToString();
-					objcat.job_status = result1.Rows[i]["job_status"].ToString();
-					objcat.jobstatus_desc = result1.Rows[i]["jobstatus_desc"].ToString();
-					objcat_lst.Add(objcat);
-				}
-				return Json(objcat_lst);
-			}
-		}
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getreconknockofflist", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result1 = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result1.Rows.Count; i++)
+                    {
+                        getReconknockoff objcat = new getReconknockoff();
+                        objcat.recon_gid = Convert.ToInt16(result1.Rows[i]["recon_gid"]);
+                        objcat.recon_code = result1.Rows[i]["recon_code"].ToString();
+                        objcat.recon_name = result1.Rows[i]["recon_name"].ToString();
+                        objcat.recontype_code = result1.Rows[i]["recontype_code"].ToString();
+                        objcat.recontype_desc = result1.Rows[i]["recontype_desc"].ToString();
+                        objcat.start_date = result1.Rows[i]["start_date"].ToString();
+                        objcat.job_remark = result1.Rows[i]["job_remark"].ToString();
+                        objcat.job_status = result1.Rows[i]["job_status"].ToString();
+                        objcat.jobstatus_desc = result1.Rows[i]["jobstatus_desc"].ToString();
+                        objcat_lst.Add(objcat);
+                    }
+                    return Json(objcat_lst);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Reconlistknockoff");
+                return Json(ex.Message);
+            }
+        }
 
 		public class getReconknockoff
 		{
@@ -432,75 +500,95 @@ namespace Recon_proto.Controllers
 			public String? jobstatus_desc { get; set; }
 		}
 
+        #endregion
 
-		[HttpPost]
+        #region getReconAgainstTypeCode
+        [HttpPost]
 		public JsonResult getReconAgainstTypeCode([FromBody] recontypemodel context)
 		{
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
 			List<Reconlistmodel> objcat_lst = new List<Reconlistmodel>();
 			string post_data = "";
-			using (var client = new HttpClient())
-			{
-                string Urlcon = "Recon/";
-                client.BaseAddress = new Uri(urlstring + Urlcon);
-                //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
-                client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("getReconAgainstTypecode", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				result = JsonConvert.DeserializeObject<DataTable>(d2);
-				for (int i = 0; i < result.Rows.Count; i++)
-				{
-					Reconlistmodel objcat = new Reconlistmodel();
-					objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
-					objcat.recon_code = result.Rows[i]["recon_code"].ToString();
-					objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-					objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
-					objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
-					objcat.period_from = result.Rows[i]["period_from"].ToString();
-					objcat.period_to = result.Rows[i]["period_to"].ToString();
-					objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
-					objcat.active_status = result.Rows[i]["active_status"].ToString();
-					objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
-					objcat_lst.Add(objcat);
-				}
-				return Json(objcat_lst);
-			}
-		}
+            try {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getReconAgainstTypecode", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        Reconlistmodel objcat = new Reconlistmodel();
+                        objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
+                        objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+                        objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+                        objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
+                        objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
+                        objcat.period_from = result.Rows[i]["period_from"].ToString();
+                        objcat.period_to = result.Rows[i]["period_to"].ToString();
+                        objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
+                        objcat.active_status = result.Rows[i]["active_status"].ToString();
+                        objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+                        objcat_lst.Add(objcat);
+                    }
+                    return Json(objcat_lst);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getReconAgainstTypeCode");
+                return Json(ex.Message);
+            }
+        }
 
 		public class recontypemodel
 		{
 			public String? in_recontype_code { get; set;}
 		}
-		#region detailfield
 
-		[HttpPost]
+        #endregion
+
+        #region detailfield
+
+        [HttpPost]
 		public JsonResult Datasetfieldlist([FromBody] Datasetdetailfetch context)
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DataTable result = new DataTable();
-			string post_data = "";
-			using (var client = new HttpClient())
-			{
-				string Urlcon = "Recon/";
-				client.BaseAddress = new Uri(urlstring + Urlcon);
-				//client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
-				client.DefaultRequestHeaders.Accept.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-				var response = client.PostAsync("Datasetfield", content).Result;
-				Stream data = response.Content.ReadAsStreamAsync().Result;
-				StreamReader reader = new StreamReader(data);
-				post_data = reader.ReadToEnd();
-				string d2 = JsonConvert.DeserializeObject<string>(post_data);
-				return Json(d2);
-			}
-		}
+			string post_data = ""; 
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Recon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Datasetfield", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            } catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Datasetfieldlist");
+                return Json(ex.Message);
+            }
+        }
 		
 		public class Datasetdetailfetch
 		{

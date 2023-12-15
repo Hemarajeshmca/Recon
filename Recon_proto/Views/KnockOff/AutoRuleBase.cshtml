@@ -949,11 +949,11 @@
             firstColumnValues = firstColumnValues.slice(0, -1);
         }
         if (in_recon_code && period_from && period_to) {
-            //$.alert({
-            //    title: 'Recon',
-            //    content: "Job Initated, Please check the Job Status in Utility",
-            //    type: 'green',
-            //});
+            $.alert({
+                title: 'Recon',
+                content: "Job Initated, Please check the Job Status in Utility",
+                type: 'green',
+            });
             $.ajax({
                 type: "POST",
                 url: '../KnockOff/previewRulebase',
@@ -967,23 +967,23 @@
                     in_user_code: 'Hema'
                 }),
                 contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    if (!response) {
-                        $.alert({
-                            title: 'Recon',
-                            content: "Something went wrong",
-                            type: 'red',
-                        });
-                    } else {
-                        var res = JSON.parse(response);
-                        $.alert({
-                            title: 'Recon',
-                            content: res[0].out_msg,
-                            type: 'green',
-                        });
-                    }
-                }
-
+                //success: function (response) {
+                //    if (!response) {
+                //        $.alert({
+                //            title: 'Recon',
+                //            content: "Something went wrong",
+                //            type: 'red',
+                //        });
+                //    } else {
+                //        var res = JSON.parse(response);
+                //        $.alert({
+                //            title: 'Recon',
+                //            content: res[0].out_msg,
+                //            type: 'green',
+                //        });
+                //    }
+                //}
+               
             });
         } else if (!in_recon_code) {
             $.alert({
@@ -1003,7 +1003,8 @@
                 content: 'Please select Preiod To',
                 type: 'red',
             });
-        } 
+        }
+        hideProgress();
     }
 
     function rr1() {
