@@ -1,208 +1,229 @@
 ﻿@{
-	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
 <html>
 <head>
-	<title></title>
-	<style>
-		.nav-item.me-2.me-xl-50 {
-			margin-right: 28rem !important;
-		}
-/*		a {
-			color: #fff !important;
-		}*/
+    <title></title>
+    <style>
+       /* .k-grid td {
+            background-color: unset !important;
+        }*/
 
-		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-			color: #fff !important;
-		}
+        .nav-item.me-2.me-xl-50 {
+            margin-right: 28rem !important;
+        }
 
+        .k-grid td {
+            border: unset !important;
+            font-weight: 800;
+            line-height: 1em;
+            border-left: 1px solid #c5c5c5 !important;
+        }
 
-	</style>
+        /*		a {
+                            color: #fff !important;
+                        }*/
+        /*
+                        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+                            color: #fff !important;
+                        }*/
+
+        .k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+            color: #fff !important;
+        }
+
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-	<div class="content-wrapper">
-		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-1%;height:84%">
-				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top:-1%;height:84%">
+                <div class="row" style="margin-top:10px;margin-bottom: 2%;">
 
-					<div class="col-md-2">
-						<label for="" class="form-label">
-							Tran Date
-						</label>
-						<div>
-							<input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" onclick="Dateformat()" style="width:100%" />
-							<span data-for='valid' class='k-invalid-msg'></span>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<label for="organization" class="form-label">Recon Name</label><br>
-						<select id="reconname" class="form-select form-control"> </select>
-					</div>
-					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%">
-							Run
-						</button>
-						<button type="submit" class="btn btn-sm save_btn me-2" style="">
-							Month Brs
-						</button>
-						<button type="submit" class="btn btn-sm save_btn me-2" style="">
-							Daily Brs
-						</button>
+                    <div class="col-md-2">
+                        <label for="" class="form-label">
+                            Tran Date
+                        </label>
+                        <div>
+                            <input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" onclick="Dateformat()" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="organization" class="form-label">Recon Name</label><br>
+                        <select id="reconname" class="form-select form-control"> </select>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 2%;">
+                        <button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%">
+                            Run
+                        </button>
+                        <button type="submit" class="btn btn-sm save_btn me-2" style="">
+                            Month Brs
+                        </button>
+                        <button type="submit" class="btn btn-sm save_btn me-2" style="">
+                            Daily Brs
+                        </button>
 
-					</div>
-				</div>
+                    </div>
+                </div>
 
-					<div id="grid_dataset"></div>
-			</div>
-		</div>
-	</div>
+                <div id="grid_dataset"></div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 <script type="text/javascript">
-	$(document).ready(function () {
-		$("#navhead").text("Recon-Between A/cs");
-		kendodate_format();
-		getreconlist();
+    $(document).ready(function () {
+        $("#navhead").text("Recon-Between A/cs");
+        kendodate_format();
+        getreconlist();
 
-	});
+    });
 
-	function getreconlist() {
-		debugger;
-		var data = {};
-		data.in_recontype_code = 'B';
-		var Context = data;
-		$.ajax({
-			type: "POST",
-			url: '../Recon/getReconAgainstTypeCode',
-			dataType: 'json',
-			data: JSON.stringify(data),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				debugger;
-				$("#reconname").empty();
-				$("#reconname").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(response, function (index, item) {
-					$("#reconname").append($('<option>', {
-						value: item.recon_code,
-						text: item.recon_name
-					}));
-				});
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-		});
-	}
+    function getreconlist() {
+        debugger;
+        var data = {};
+        data.in_recontype_code = 'B';
+        var Context = data;
+        $.ajax({
+            type: "POST",
+            url: '../Recon/getReconAgainstTypeCode',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                $("#reconname").empty();
+                $("#reconname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(response, function (index, item) {
+                    $("#reconname").append($('<option>', {
+                        value: item.recon_code,
+                        text: item.recon_name
+                    }));
+                });
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+    }
 
-	function run() {
-		debugger;
-		var in_recon_code = $("#reconname").val();
-		var in_tran_date = $("#tran_date").val();
-		var ts = in_tran_date.split("/");
-		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-		$.ajax({
-			type: "POST",
-			url: '../Reports/reconbetweenacc',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				debugger;
-				var res = JSON.parse(response)
-				if (res.length > 0) {
-					loadGrid(res);
-				} else {
-					loadGrid([]);
-				}
-			},
-			error: function (er) {
-				debugger;
-				alert(er)
-				console.log(er)
-			}
-		});
-	}
+    function run() {
+        debugger;
+        var in_recon_code = $("#reconname").val();
+        var in_tran_date = $("#tran_date").val();
+        var ts = in_tran_date.split("/");
+        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+        $.ajax({
+            type: "POST",
+            url: '../Reports/reconbetweenacc',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                var res = JSON.parse(response)
+                if (res.length > 0) {
+                    loadGrid(res);
+                } else {
+                    loadGrid([]);
+                }
+            },
+            error: function (er) {
+                debugger;
+                alert(er)
+                console.log(er)
+            }
+        });
+    }
 
-	function loadGrid(data) {
-		try {
-			$("#grid_dataset").kendoGrid({
-				dataSource: {
-					data: data,
-					pageSize: 20,
-					schema: {
-						model: {
-							fields: {
-								brs_gid: { type: "string" },
-								particulars: { type: "string" },
-								tran_value: { type: "string" },
-								tran_acc_mode: { type: "string" },
-								bal_value: { type: "string" },
-							}
-						}
-					}
-				},
-				height: 395,
-				groupable: false,
-				dataBound: function (e) {
-					resultData = e.sender._data;
-					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
-					setColor(rows, resultData);
-				},
-				pageable: {
-					refresh: false,
-					pageSizes: true,
-					buttonCount: 5
-				},
-				sortable: true,
-				selectable: true,
-				filterable: false,
-				navigatable: true,
-				columns: [
-				{
-					field: "brs_gid",
-					title: "brs_gid",
-					width: 100,
-					hidden: true,
-					attributes: { style: "text-align: right;" },
-				},
+    function loadGrid(data) {
+        try {
+            $("#grid_dataset").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 20,
+                    schema: {
+                        model: {
+                            fields: {
+                                brs_gid: { type: "string" },
+                                particulars: { type: "string" },
+                                tran_value: { type: "string" },
+                                tran_acc_mode: { type: "string" },
+                                bal_value: { type: "string" },
+                            }
+                        }
+                    }
+                },
+                height: 350,
+                groupable: false,
+                dataBound: function (e) {
+                    var grid = this; // "this" refers to the Kendo Grid
+                    var rows = grid.tbody.children();
 
-				{
-					field: "particulars",
-					title: "Particular",
-					width: 100,
-				},
-				{
-					field: "tran_value",
-					title: "Amount",
-					width: 100,
-					attributes: { style: "text-align: right;" },
-				},
-				{
-					field: "tran_acc_mode",
-					title: "Account Mode",
-					width: 100,
-				},
-				{
-					field: "bal_value",
-					title: "Balance Amount",
-					width: 100,
-					attributes: { style: "text-align: right;" },
-				}],
-				editable: false,
+                    rows.each(function () {
+                        var rowDataItem = grid.dataItem(this);
+                        if (rowDataItem.particulars === "Add" || rowDataItem.particulars === "Subtotal" || rowDataItem.particulars === "Less" || rowDataItem.particulars === "Arrived Balance") {
+                            $(this).css("color", "red");
+                        }
+                        if (rowDataItem.tran_acc_mode === "CR" || rowDataItem.tran_acc_mode === "DR") {
+                            $(this).css("color", "blue");
+                        }
+                    });
+                },
+                pageable: false,
+                sortable: true,
+                selectable: true,
+                filterable: false,
+                navigatable: true,
+                columns: [
+                    {
+                        field: "brs_gid",
+                        title: "brs_gid",
+                        width: 100,
+                        hidden: true,
+                        attributes: { style: "text-align: right;" },
+                    },
 
-			});
-		}
-		catch (err) {
-			console.log(err)
+                    {
+                        field: "particulars",
+                        title: "Particular",
+                        width: 200,
+                    },
+                    {
+                        field: "tran_value",
+                        title: "Amount",
+                        width: 100,
+                        attributes: { style: "text-align: right;" },
+                    },
+                    {
+                        field: "tran_acc_mode",
+                        title: "Account Mode",
+                        width: 50,
+                    },
+                    {
+                        field: "bal_value",
+                        title: "Balance Amount",
+                        width: 100,
+                        attributes: { style: "text-align: right;" },
+                    }],
 
-		}
-	}
+                editable: false,
+
+            });
+        }
+        catch (err) {
+            console.log(err)
+
+        }
+    }
 
 </script>
