@@ -870,9 +870,9 @@
 				var rows = $('#grid_datasetrecon').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -1084,9 +1084,9 @@
 				var rows = $('#grid_datasetreconmapping').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -1242,7 +1242,7 @@
 			title: 'Action',
 			template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;<a href='' onclick='myDeletedatamapping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
 			filterable: false,
-			sortable: true,
+			sortable: false,
 			editable: true,
 			width: '100px'
 		});
@@ -1295,17 +1295,18 @@
 			navigatable: true,
 			groupable: false,
 			editable: false,
-			sortable: true,
+			sortable: false,
 			scrollable: true,
+			filterable: false,
 			attributes: { style: "text-align: center;" },
-			filterable: {
-				extra: false,
-				operators: {
-					string: {
-						contains: "Contains"
-					}
-				}
-			},
+			//filterable: {
+			//	extra: false,
+			//	operators: {
+			//		string: {
+			//			contains: "Contains"
+			//		}
+			//	}
+			//},
 			pageable: {
 				pageSize: 10,
 				buttonCount: 4
@@ -1459,9 +1460,9 @@
 				var rows = $('#maingrid1').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -1718,8 +1719,16 @@
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
 			var in_recon_date_field = $("#cmbrecondatefield").val();
-			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+			if (in_recon_date_field == null) {
+				in_recon_date_field = '';
+			}
 			var in_recon_value_field = $("#cmbreconvaluefield").val();
+			if (in_recon_value_field == null) {
+				in_recon_value_field = '';
+			}
+			
+			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+		
 			var in_threshold_plus_value = $("#thersholdplus").val();
 			var in_threshold_minus_value = $("#thersholdminus").val();
 			var in_active_reason = "";

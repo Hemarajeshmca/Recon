@@ -27,7 +27,7 @@
 		.k-grid-header {
 			font-weight: bold;
 		}
-		
+
 		.k-grid-filter.k-state-active {
 			color: #ffffff;
 			background-color: #1274AC;
@@ -74,6 +74,9 @@
 		$("#navhead").text("Recon");
 		setlocalStorage("ls_pageList", "");
 		grid_reconlist_details([]);
+		gridlist();
+	});
+	function gridlist() {
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -98,9 +101,7 @@
 			}
 
 		});
-
-	});
-
+	}
 	function grid_reconlist_details(data) {
 		try {
 			$("#grid_reconlist").kendoGrid({
@@ -310,12 +311,12 @@
 									var action = "DELETE";
 									var action_by = "vijay"
 									var status = "";
-									
-									var in_recon_automatch_partial = "";									
+
+									var in_recon_automatch_partial = "";
 									var in_recon_date_flag = "";
-									var in_recon_date_field = "";									
+									var in_recon_date_field = "";
 									var in_recon_value_flag = "";
-									var in_recon_value_field=  "";									
+									var in_recon_value_field = "";
 									var in_threshold_plus_value = 0;
 									var in_threshold_minus_value = 0;
 									$.ajax({
@@ -335,6 +336,7 @@
 												type: 'green',
 												animationSpeed: 700,
 											});
+											gridlist();
 										}
 									})
 								}

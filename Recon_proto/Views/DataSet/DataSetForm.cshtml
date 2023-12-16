@@ -103,7 +103,7 @@
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
 							@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-							<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+							<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 							<div id="grid_datasetfield">
 							</div>
 						</div>
@@ -240,6 +240,8 @@
 				$("#btnclone").prop('disabled', true)
 				$("#savesubmit").prop('disabled', true)
 				$("#adddataset").hide();
+				$("#datasetfieldadd").hide();
+				$("#grid_datasetfield .k-grid-edit").hide();
 			}
 		}
 	}
@@ -299,7 +301,7 @@
 			}
 			var action_by = "vijay";
 			var status = "D"
-			var inactive_reason= "";
+			var inactive_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../DataSet/Datasetheader',
@@ -308,7 +310,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
-					var data = result[0];					
+					var data = result[0];
 					if (data.out_result == "1") {
 						//$.alert({
 						//	title: 'Recon',
@@ -337,7 +339,7 @@
 		}
 	}
 	function grid_datasetfield(data) {
-		
+
 		$("#grid_datasetfield").kendoGrid({
 			dataSource: {
 				data: data,
@@ -363,9 +365,9 @@
 				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
 				//setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -448,7 +450,7 @@
 		});
 	}
 	function savedetail() {
-		
+
 		try {
 			var datasetfield = $("#datasetfield").val();
 			var FieldType = $("#cmbFieldType").val();
@@ -475,7 +477,7 @@
 				data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					
+
 					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
@@ -505,94 +507,96 @@
 		}
 	}
 	function getdetailSelectedRows(mode) {
-		if ($(mode).attr('value') == "edit") {
-			var grid = $("#grid_datasetfield").data("kendoGrid");
-			var selectedItem = grid.dataItem(grid.select());
-			$("#datasetfield").val(selectedItem.field_name);
-			$("#datasetdetail_id").val(selectedItem.datasetfield_gid);
-			$("#txtmodeflag").val("edit");
-			$("#cmbFieldType").val(selectedItem.field_type);
-			$("#fieldlength").val(selectedItem.field_length);
-			if (selectedItem.field_mandatory == "Yes") {
-				$("#mandatory1").prop("checked", true);
-			} else {
-				$("#mandatory2").prop("checked", true);
-			}
-			fieldtype();
-			$("#fieldPrecision").val(selectedItem.precision_length);
-			$("#fieldscale").val(selectedItem.scale_length);
-			$("#newdebit").modal('show');
-		} else if ($(mode).attr('value') == "create") {
-			var dataset_id = $("#datasetgid").val();
-			if (dataset_id > 0) {
-				dataset_id = $("#datasetgid").val();
-				$("#newdebit").modal('show');
-				$("#datasetfield").val("");
-				$("#datasetdetail_id").val(0);
-				$("#cmbFieldType").val("");
-				$("#fieldlength").val("");
-				$("#mandatory2").prop("checked", true);
-				$("#fieldPrecision").val(5);
-				$("#fieldscale").val(2);
-				fieldtype();
-				return;
-			} else {
-				dataset_id = 0;
-			}
-			var dataset_name = $("#datasetname").val();
-			var dataset_category = $("#cmbcategory").val();
-			var dataset_code = $("#txtdatasetcode").val();
-			var clone_dataset = $("#Cmbclone").val();
-			var action = "";
-			var dataset_id = $("#datasetgid").val();
-
-			if (dataset_id > 0) {
-				dataset_id = $("#datasetgid").val();
-				
-				return;
-			} else {
-				dataset_id = 0;
-			}
-				action = "INSERT"
-			
-			var action_by = "vijay"
-			var status = "D"
-
-			$.ajax({
-				type: "POST",
-				url: '../DataSet/Datasetheader',
-				dataType: 'json',
-				data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var result = JSON.parse(response);
-					var data = result[0];
-					
-					if (data.out_result == "1") {
-						detailsfetch(data.in_dataset_gid);
-						$("#datasetgid").val(data.in_dataset_gid);
-						$("#newdebit").modal('show');
-						$("#datasetfield").val("");
-						$("#datasetdetail_id").val(0);						
-						$("#cmbFieldType").val("");
-						$("#fieldlength").val("");						
-						$("#mandatory2").prop("checked", true);
-						$("#fieldPrecision").val(5);
-						$("#fieldscale").val(2);
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'red',
-						});
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
+		if ($("#txtmode").val() != "View") {
+			if ($(mode).attr('value') == "edit") {
+				var grid = $("#grid_datasetfield").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+				$("#datasetfield").val(selectedItem.field_name);
+				$("#datasetdetail_id").val(selectedItem.datasetfield_gid);
+				$("#txtmodeflag").val("edit");
+				$("#cmbFieldType").val(selectedItem.field_type);
+				$("#fieldlength").val(selectedItem.field_length);
+				if (selectedItem.field_mandatory == "Yes") {
+					$("#mandatory1").prop("checked", true);
+				} else {
+					$("#mandatory2").prop("checked", true);
 				}
+				fieldtype();
+				$("#fieldPrecision").val(selectedItem.precision_length);
+				$("#fieldscale").val(selectedItem.scale_length);
+				$("#newdebit").modal('show');
+			} else if ($(mode).attr('value') == "create") {
+				var dataset_id = $("#datasetgid").val();
+				if (dataset_id > 0) {
+					dataset_id = $("#datasetgid").val();
+					$("#newdebit").modal('show');
+					$("#datasetfield").val("");
+					$("#datasetdetail_id").val(0);
+					$("#cmbFieldType").val("");
+					$("#fieldlength").val("");
+					$("#mandatory2").prop("checked", true);
+					$("#fieldPrecision").val(5);
+					$("#fieldscale").val(2);
+					fieldtype();
+					return;
+				} else {
+					dataset_id = 0;
+				}
+				var dataset_name = $("#datasetname").val();
+				var dataset_category = $("#cmbcategory").val();
+				var dataset_code = $("#txtdatasetcode").val();
+				var clone_dataset = $("#Cmbclone").val();
+				var action = "";
+				var dataset_id = $("#datasetgid").val();
 
-			});
+				if (dataset_id > 0) {
+					dataset_id = $("#datasetgid").val();
+
+					return;
+				} else {
+					dataset_id = 0;
+				}
+				action = "INSERT"
+
+				var action_by = "vijay"
+				var status = "D"
+
+				$.ajax({
+					type: "POST",
+					url: '../DataSet/Datasetheader',
+					dataType: 'json',
+					data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var result = JSON.parse(response);
+						var data = result[0];
+
+						if (data.out_result == "1") {
+							detailsfetch(data.in_dataset_gid);
+							$("#datasetgid").val(data.in_dataset_gid);
+							$("#newdebit").modal('show');
+							$("#datasetfield").val("");
+							$("#datasetdetail_id").val(0);
+							$("#cmbFieldType").val("");
+							$("#fieldlength").val("");
+							$("#mandatory2").prop("checked", true);
+							$("#fieldPrecision").val(5);
+							$("#fieldscale").val(2);
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: data.out_msg,
+								type: 'red',
+							});
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
 		}
 	}
 	function getGridComboList() {
@@ -670,70 +674,71 @@
 		});
 	}
 	function myDeleteJs() {
-		
-		var grid = $("#grid_datasetfield").data("kendoGrid");
-		var model = grid.dataItem($(event.target).closest("tr"));
+		if ($("#txtmode").val() != "View") {
+			var grid = $("#grid_datasetfield").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
 
-		$.confirm({
-			icon: 'fa fa-warning',
-			title: 'Recon',
-			autoClose: 'cancel|10000',
-			theme: 'dark',
-			animationSpeed: 700,
-			content: 'Are you sure do you want to delete this record!',
-			type: 'orange',
-			buttons: {
-				confirm: function () {
-					var datasetfield = model.field_name;
-					var FieldType = model.field_type;
-					var fieldlength = model.field_length;
-					var dataset_code = model.datasetCode;
-					var action = "DELETE";
-					var action_by = "vijay"
-					var datasetdetail_id = model.datasetfield_gid;
-					var mandatory = "";
-					$.ajax({
-						type: "POST",
-						url: '../DataSet/Datasetdetail',
-						dataType: 'json',
-						data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
-						contentType: 'application/json; charset=utf-8',
-						success: function (response) {
-							
-							var data = response;
-							if (data.out_result == "1") {
-								$.alert({
-									icon: 'fa fa-success',
-									title: 'Recon',
-									theme: 'dark',
-									content: data.out_msg,
-									type: 'green',
-									animationSpeed: 700,
-								});
-								load();
-								//window.location.reload(1);
-							} else {
-								$.alert({
-									title: 'Recon',
-									content: data.out_msg,
-									type: 'red',
-								});
-							}
-						},
-					});
-				},
-				cancel: function () {
-					$.alert({
-						icon: 'fa fa-success',
-						title: 'Recon',
-						theme: 'dark',
-						content: 'Delete Canceled.!',
-						type: 'blue',
-						animationSpeed: 700,
-					});
-				},
-			}
-		});
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var datasetfield = model.field_name;
+						var FieldType = model.field_type;
+						var fieldlength = model.field_length;
+						var dataset_code = model.datasetCode;
+						var action = "DELETE";
+						var action_by = "vijay"
+						var datasetdetail_id = model.datasetfield_gid;
+						var mandatory = "";
+						$.ajax({
+							type: "POST",
+							url: '../DataSet/Datasetdetail',
+							dataType: 'json',
+							data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, field_type: FieldType, field_mandatory: mandatory }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+
+								var data = response;
+								if (data.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: data.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									load();
+									//window.location.reload(1);
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: data.out_msg,
+										type: 'red',
+									});
+								}
+							},
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
 	}
 	function saveclone() {
 		$.confirm({
@@ -779,7 +784,7 @@
 				action = "INSERT"
 			}
 			var status = "Y";
-			var inactive_reason="";
+			var inactive_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../DataSet/Datasetheader',
@@ -789,7 +794,7 @@
 				success: function (response) {
 					var result = JSON.parse(response);
 					var data = result[0];
-					
+
 					if (data.out_result == "1") {
 						$.alert({
 							title: 'Recon',
@@ -813,7 +818,7 @@
 				}
 
 			});
-		}else{
+		} else {
 			$.alert({
 				title: 'Recon',
 				content: "List Empty",

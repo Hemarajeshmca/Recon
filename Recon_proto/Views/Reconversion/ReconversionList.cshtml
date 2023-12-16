@@ -17,14 +17,11 @@
 
 		.k-grid.k-widget {
 			height: 360px;
-		}
-		
+		}	
 
 		.k-grid-header {
 			font-weight: bold;
-		}
-
-		
+		}		
 
 		.k-content {
 			font-weight: normal;
@@ -68,8 +65,7 @@
 <body class="hold-transition skin-blue sidebar-mini fixed">
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
-				<div class="row">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">				
 					<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
 						<div class="col-sm-4">
 							<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -89,8 +85,7 @@
 					</div>
 					<div class="col-xs-12">
 						<div id="grid_reconverion"> </div>
-					</div>
-				</div>
+					</div>				
 			</div>
 		</div>
 	</div>
@@ -122,10 +117,12 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
+					if (item.active_status == 'Y') {
 					$("#cmbreconname").append($('<option>', {
 						value: item.recon_code,
 						text: item.recon_name
 					}));
+					}
 				});
 			},
 			error: function (er) {
@@ -163,7 +160,6 @@
 		$("#grid_reconverion").kendoGrid({
 			dataSource: {
 				data: data,
-				pageSize: 10,
 				schema: {
 					model: {
 						fields: {
@@ -180,7 +176,7 @@
 			},
 			height: 400,
 			groupable: false,
-			
+
 			dataBound: function (e) {
 				createSwitch(this.tbody.find(".customClass"));
 				createSwitch1(this.tbody.find(".customClass1"));							
@@ -189,12 +185,7 @@
 			selectable: true,
 			filterable: true,
 			navigatable: true,
-			pageable: true,
-			pageable: {
-				refresh: false,
-				pageSizes: true,
-				buttonCount: 5
-			},
+			pageable: false,			
 			columns: [
 				{
 					field: "rule_gid",
@@ -239,17 +230,13 @@
 					field: "system_match_flag_desc",
 					title: "System Matchoff Flag",
 					width: 100,
-					template: '#=sel_checkbox(data)#'
-					//template: "<input class='customClass' #if (system_match_flag_desc) { # checked='checked' # } # type='checkbox' />",
-					//editor: customEditor
+					template: '#=sel_checkbox(data)#'					
 				},
 				{
 					field: "hold_flag_desc",
 					title: "Hold Flag",
 					width: 100,
-					template: '#=sel_checkbox1(data)#'
-					//template: "<input class='customClass1' #if (hold_flag_desc) { # checked='checked' # } # type='checkbox' />",
-					//editor: customEditor1
+					template: '#=sel_checkbox1(data)#'					
 				},
 				],
 			editable: false,
@@ -278,7 +265,7 @@
 		}
 		return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" ' + con + '" type="checkbox"/> ';
 	}
-	
+
 	function createSwitch(element) {
 		element.kendoMobileSwitch({
 			onLabel: "Enable",
@@ -311,7 +298,7 @@
 		// sync data with remote service
 		//grid.dataSource.sync();
 	}
-	
+
 	function reconsubmit() {
 		var in_recon_version = $("#reconversion").val();
 		if (in_recon_version =='') {	
