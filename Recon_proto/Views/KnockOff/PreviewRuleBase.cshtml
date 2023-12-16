@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
@@ -15,609 +15,612 @@
             background-color: #1274AC;
         }
     </style>
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-    <div class="content-wrapper">
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;height: 84%;">
-                <div class="row" style="margin-top:10px;">
-                    <div class="col-md-3">
-                        <label class="form-label">Recon Name<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                        <select id="reconname" onchange="showRule()" class="form-select form-control"> </select>
-                    </div>
-                    <div class="col-md-3" hidden>
-                        <label class="form-label">Preview On</label>
-                        <select id="prviewon" class="form-select form-control"> </select>
-                    </div>
-                    <div class="col-md-3" style="margin-top: 2%;" hidden>
-                        <button type="button" class="btn btn-sm save_btn me-2" onclick="showRule()" style="width:40%;margin-top: 7px">
-                            Show Rules
-                        </button> &nbsp;&nbsp;&nbsp;
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 84%;">
+				<div class="row" style="margin-top:10px;">
+					<div class="col-md-3">
+						<label class="form-label">Recon Name<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="reconname" onchange="showRule()" class="form-select form-control"> </select>
+					</div>
+					<div class="col-md-3" hidden>
+						<label class="form-label">Preview On</label>
+						<select id="prviewon" class="form-select form-control"> </select>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;" hidden>
+						<button type="button" class="btn btn-sm save_btn me-2" onclick="showRule()" style="width:40%;margin-top: 7px">
+							Show Rules
+						</button> &nbsp;&nbsp;&nbsp;
 
-                        @*<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
-                        KnockOff
-                        </button>*@
-                    </div>
-                </div>
+						@*<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
+						KnockOff
+						</button>*@
+					</div>
+				</div>
 
-                <div class="row">
-                    <div class="nav-align-top mt-3">
-                        <ul class="nav nav-pills mb-2" role="tablist">
-                            <li class="nav-item">
-                                <button type="button"
-                                        class="nav-link active"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-top-Rule"
-                                        aria-controls="navs-pills-top-Rule"
-                                        aria-selected="true">
-                                    Rule
-                                </button>
-                            </li>
+				<div class="row">
+					<div class="nav-align-top mt-3">
+						<ul class="nav nav-pills mb-2" role="tablist">
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link active"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-Rule"
+										aria-controls="navs-pills-top-Rule"
+										aria-selected="true">
+									Rule
+								</button>
+							</li>
 
-                            <li class="nav-item">
-                                <button type="button"
-                                        class="nav-link"
-                                        role="tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#navs-pills-top-Dataset"
-                                        aria-controls="navs-pills-top-Dataset"
-                                        aria-selected="true">
-                                    Dataset
-                                </button>
-                            </li>
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-Dataset"
+										aria-controls="navs-pills-top-Dataset"
+										aria-selected="true">
+									Dataset
+								</button>
+							</li>
 
-                        </ul>
-                        <div class="tab-content" style="margin-top:2%;box-shadow:none !important;padding: 20px 0px;">
-                            @*Rule*@
-                            <div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        <div class="col-xs-12">
-                                            <div id="grid_preview">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @*Dataset*@
-                            <div class="tab-pane fade" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        <div class="col-xs-12">
-                                            <div id="dataset_grid"> </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="" class="form-label">Date From<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                        <div>
-                            <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
-                            <span data-for='valid' class='k-invalid-msg'></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Date To <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                        <div>
-                            <input class="cusDate" data-role='datepicker2' id="initiated_to" name="initiated_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
-                            <span data-for='valid' class='k-invalid-msg'></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3" style="margin-top: 2%;">
-                        <button type="button" onclick="showPreview()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
-                            Preview
-                        </button> &nbsp;&nbsp;&nbsp;
-                    </div>
-                </div>
+						</ul>
+						<div class="tab-content" style="margin-top:2%;box-shadow:none !important;padding: 20px 0px;">
+							@*Rule*@
+							<div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<div id="grid_preview">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							@*Dataset*@
+							<div class="tab-pane fade" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<div id="dataset_grid"> </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<label for="" class="form-label">Date From<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label">Date To <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initiated_to" name="initiated_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" onclick="showPreview()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
+							Preview
+						</button> &nbsp;&nbsp;&nbsp;
+					</div>
+				</div>
 
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 
-    <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 510px;left: 155px;">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
-                    <div class="row">
-                        <div class="col-sm-4">
-                        </div>
-                        <div class="col-sm-4">
-                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
-                        </div>
-                        <div class="col-sm-4">
-                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
-                        </div>
-                    </div>
-                    <hr style="margin-top:-1px; width:100%;">
-                    <div class="container">
-                        <p><strong>Rule Code&nbsp;&nbsp;:&nbsp;</strong><span id="rule_code"></span></p>
-                        <p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
-                        <p><strong>Rule Applied On&nbsp;&nbsp;:&nbsp;</strong><span id="rule_apply_on_desc"></span></p>
-                        <p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
-                        <p><strong>Rule Version&nbsp;&nbsp;:&nbsp;</strong><span id="rule_version"></span></p>
-                        <p><strong>Group Flag&nbsp;&nbsp;:&nbsp;</strong><span id="group_flag"></span></p>
-                        <p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
-                        <p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
-                        <p><strong>Rule Status&nbsp;&nbsp;:&nbsp;</strong><span id="active_status_desc"></span></p>
+	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" style="width: 510px;left: 155px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<p><strong>Rule Code&nbsp;&nbsp;:&nbsp;</strong><span id="rule_code"></span></p>
+						<p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
+						<p><strong>Rule Applied On&nbsp;&nbsp;:&nbsp;</strong><span id="rule_apply_on_desc"></span></p>
+						<p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
+						<p><strong>Rule Version&nbsp;&nbsp;:&nbsp;</strong><span id="rule_version"></span></p>
+						<p><strong>Group Flag&nbsp;&nbsp;:&nbsp;</strong><span id="group_flag"></span></p>
+						<p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
+						<p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
+						<p><strong>Rule Status&nbsp;&nbsp;:&nbsp;</strong><span id="active_status_desc"></span></p>
 
-                    </div>
-                </div>
-                <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
-                    <div class="col-sm-4"> </div>
-                    <div class="col-sm-4" style="margin-bottom:30px;float: right;">
-                        <center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
-                    </div>
-                    <div class="col-sm-4"> </div>
-                </div>
-            </div>
-        </div>
-    </div>
+					</div>
+				</div>
+				<div class="row" style="margin-top: -27px;margin-bottom: -12px;">
+					<div class="col-sm-4"> </div>
+					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
+						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
+					</div>
+					<div class="col-sm-4"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <div class="modal fade" id="infoDatamodal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 510px;left: 155px;">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
-                    <div class="row">
-                        <div class="col-sm-4">
-                        </div>
-                        <div class="col-sm-4">
-                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
-                        </div>
-                        <div class="col-sm-4">
-                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
-                        </div>
-                    </div>
-                    <hr style="margin-top:-1px; width:100%;">
-                    <div class="container">
-                        <p><strong>Dataset Code&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span></p>
-                        <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
-                        <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
-                        <p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
-                        <p><strong>Last Sync Date&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_date"></span></p>
-                        <p><strong>Last Sync Status&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_status"></span></p>
-                        <p><strong>Status&nbsp;&nbsp;:&nbsp;</strong><span id="status"></span></p>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
-                    <div class="col-sm-4"> </div>
-                    <div class="col-sm-4" style="margin-bottom:30px;float: right;">
-                        <center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
-                    </div>
-                    <div class="col-sm-4"> </div>
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="modal fade" id="infoDatamodal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content" style="width: 510px;left: 155px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<p><strong>Dataset Code&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span></p>
+						<p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
+						<p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
+						<p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
+						<p><strong>Last Sync Date&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_date"></span></p>
+						<p><strong>Last Sync Status&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_status"></span></p>
+						<p><strong>Status&nbsp;&nbsp;:&nbsp;</strong><span id="status"></span></p>
+					</div>
+				</div>
+				<div class="row" style="margin-top: -27px;margin-bottom: -12px;">
+					<div class="col-sm-4"> </div>
+					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
+						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
+					</div>
+					<div class="col-sm-4"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 </html>
 
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        var selectedRule = [];
-        $("#navhead").text("Rule Preview");
-        kendodate_format();
-        getreconlist();
-        grid_rule([]);
-        grid_dataset([]);
-    });
+	$(document).ready(function () {
+		var selectedRule = [];
+		$("#navhead").text("Rule Preview");
+		kendodate_format();
+		getreconlist();
+		grid_rule([]);
+		grid_dataset([]);
+	});
 
-    function getreconlist() {
-        debugger;
-        var data = {};
-        data.in_user_gid = 0;
-        data.in_active_status = '';
-        var Context = data;
-        $.ajax({
-            type: "POST",
-            url: '../Recon/Reconlistfetch',
-            dataType: 'json',
-            data: JSON.stringify({ in_user_gid: '', in_active_status: '' }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                debugger;
-                $("#reconname").empty();
-                $("#reconname").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(response, function (index, item) {
-                    $("#reconname").append($('<option>', {
-                        value: item.recon_code,
-                        text: item.recon_name
-                    }));
-                });
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
-        });
-    }
+	function getreconlist() {
+		debugger;
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: '', in_active_status: '' }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				$("#reconname").empty();
+				$("#reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#reconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
 
-    function showRule() {
-        debugger;
-        try {
-            var in_recon_code = $("#reconname").val();
-            //var rulepreview = $("#prviewon").val();
-            $.ajax({
-                type: "POST",
-                url: '../KnockOff/RuleAgainstRecon',
-                dataType: 'json',
-                data: JSON.stringify({
-                    in_recon_code: in_recon_code,
-                }),
-                contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    debugger;
-                    if (response != null) {
-                        var result = JSON.parse(response);
-                        grid_rule(result.ReconRule);
-                        grid_dataset(result.ReconDataSet)
-                    } else {
-                        grid_rule([]);
-                        grid_dataset([]);
-                    }
-                },
-                error: function (er) {
-                    alert(er)
-                    console.log(er)
-                }
-            });
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
+	function showRule() {
+		debugger;
+		try {
+			var in_recon_code = $("#reconname").val();
+			//var rulepreview = $("#prviewon").val();
+			$.ajax({
+				type: "POST",
+				url: '../KnockOff/RuleAgainstRecon',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_recon_code: in_recon_code,
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						var result = JSON.parse(response);
+						grid_rule(result.ReconRule);
+						grid_dataset(result.ReconDataSet)
+					} else {
+						grid_rule([]);
+						grid_dataset([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
 
-    function grid_dataset(data) {
-        $("#dataset_grid").kendoGrid({
-            dataSource: {
-                data: data,
-                pageSize: 5,
-                schema: {
-                    model: {
-                        fields: {
-                            dataset_code:{type: "string"},
-                            dataset_name: { type: "string" },
-                            dataset_type_desc: { type: "string" },
-                            parent_dataset_name: { type: "string" },
-                            last_sync_date: {type: "string"},
-                            last_sync_status: {type: "string"},
-                            active_status_desc: { type: "string" },
-                        }
-                    }
-                }
-            },
-            height: 250,
-            groupable: false,
-            dataBound: function (e) {
-                resultData = e.sender._data;
-                var rows = $('#dataset_grid').data('kendoGrid').tbody.children();
-                setColor(rows, resultData);
-            },
-            sortable: true,
-            selectable: true,
-            filterable: true,
-            navigatable: true,
-            pageable: true,
-            pageable: {
-                refresh: false,
-                pageSizes: true,
-                buttonCount: 5
-            },
-            columns: [
-                {
-                    field: "dataset_code",
-                    title: "Dataset Code",
-                    width: 80,
-                },
-                {
-                    field: "dataset_name",
-                    title: "Dataset Name",
-                    width: 100,
-                },
-                {
-                    field: "dataset_type_desc",
-                    title: "Dataset Type",
-                    width: 80,
-                },
-                {
-                    field: "last_sync_date",
-                    title: "Last Sync Date",
-                    width: 100,
-                },
-                {
-                    field: "last_sync_status",
-                    title: "Last Sync Status",
-                    width: 80,
-                },
-                {
-                    field: "parent_dataset_name",
-                    title: "Parent Dataset",
-                    width: 100,
-                    hidden:true
-                },
-                {
-                    field: "active_status_desc",
-                    title: "Status",
-                    width: 50,
-                }, {
-                    field: "Info",
-                    title: "Info",
-                    template: "<a href='' style='cursor:pointer;' onclick='openDataModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
-                    width: 50,
-                    filterable: false,
-                    attributes: {
-                        style: "text-align: center;"
-                    }
+	function grid_dataset(data) {
+		$("#dataset_grid").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							dataset_code: { type: "string" },
+							dataset_name: { type: "string" },
+							dataset_type_desc: { type: "string" },
+							parent_dataset_name: { type: "string" },
+							last_sync_date: { type: "string" },
+							last_sync_status: { type: "string" },
+							active_status_desc: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 250,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#dataset_grid').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "dataset_code",
+					title: "Dataset Code",
+					width: 80,
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 100,
+				},
+				{
+					field: "dataset_type_desc",
+					title: "Dataset Type",
+					width: 80,
+				},
+				{
+					field: "last_sync_date",
+					title: "Last Sync Date",
+					width: 100,
+				},
+				{
+					field: "last_sync_status",
+					title: "Last Sync Status",
+					width: 80,
+				},
+				{
+					field: "parent_dataset_name",
+					title: "Parent Dataset",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+				}, {
+					field: "Info",
+					title: "Info",
+					template: "<a href='' style='cursor:pointer;' onclick='openDataModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+					width: 50,
+					filterable: false,
+					attributes: {
+						style: "text-align: center;"
+					}
 
-                }],
-            editable: false,
-        });
-    }
+				}],
+			editable: false,
+		});
+	}
 
-    function grid_rule(data) {
-        $("#grid_preview").kendoGrid({
-            dataSource: {
-                data: data,
-                pageSize: 5,
-                schema: {
-                    model: {
-                        fields: {
-                            rule_gid: { type: "string" },
-                            rule_code: { type: "string" },
-                            rule_name: { type: "string" },
-                            rule_order: { type: "string" },
-                            recon_rule_version: {type: "string"},
-                            source_dataset_code: { type: "string" },
-                            comparison_dataset_code: { type: "string" },
-                            source_dataset_desc: { type: "string" },
-                            comparison_dataset_desc: { type: "string" },
-                            rule_apply_on_desc : {type: "string"},
-                            rule_order: {type: "string"},
-                            group_flag:{type: "string"},
-                            group_flag_desc: { type: "string" },
-                            active_status_desc:{type:"string"}
-                        }
-                    }
-                }
-            },
-            height: 250,
-            groupable: false,
-            dataBound: function (e) {
-                resultData = e.sender._data;
-                var rows = $('#grid_preview').data('kendoGrid').tbody.children();
-                setColor(rows, resultData);
-            },
-            sortable: true,
-            selectable: true,
-            filterable: true,
-            navigatable: true,
-            pageable: true,
-            pageable: {
-                refresh: false,
-                pageSizes: true,
-                buttonCount: 5
-            },
-            columns: [
-                {
-                    field: "rule_gid",
-                    title: "rule_gid",
-                    hidden: true,
-                },
-                {
-                    field: "name",
-                    title: "Action",
-                    template: "<input id='preview_checkbox' type='checkbox' />",
-                    width: 80,
-                    hidden: true,
-                },
-                {
-                    field: "rule_code",
-                    title: "Rule Code",
-                    width: 80,
-                },
+	function grid_rule(data) {
+		$("#grid_preview").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							rule_gid: { type: "string" },
+							rule_code: { type: "string" },
+							rule_name: { type: "string" },
+							rule_order: { type: "string" },
+							recon_rule_version: { type: "string" },
+							source_dataset_code: { type: "string" },
+							comparison_dataset_code: { type: "string" },
+							source_dataset_desc: { type: "string" },
+							comparison_dataset_desc: { type: "string" },
+							rule_apply_on_desc: { type: "string" },
+							rule_order: { type: "string" },
+							group_flag: { type: "string" },
+							group_flag_desc: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 250,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_preview').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "rule_gid",
+					title: "rule_gid",
+					hidden: true,
+				},
+				{
+					field: "name",
+					title: "Action",
+					template: "<input id='preview_checkbox' type='checkbox' />",
+					width: 80,
+					hidden: true,
+				},
+				{
+					field: "rule_code",
+					title: "Rule Code",
+					width: 80,
+				},
 
-                {
-                    field: "rule_name",
-                    title: "Rule Name",
-                    width: 100,
-                },
-                {
-                    field: "rule_apply_on_desc",
-                    title: "Rule Applied On",
-                    width: 80,
-                },
-                {
-                    field: "rule_order",
-                    title: "Rule Order",
-                    width: 50,
-                    attributes: {  style: "text-align: center;" }
-                },
-                {
-                    field: "recon_rule_version",
-                    title: "Rule Version",
-                    width: 60,
-                },
-                {
-                    field: "group_flag_desc",
-                    title: "Group Flag",
-                    width: 50,
-                },
-                {
-                    field: "active_status_desc",
-                    title: "Status",
-                    width: 50,
-                },
-                {
-                    field: "source_dataset_desc",
-                    title: "Source Dataset",
-                    width: 150,
-                    hidden: true
-                },
-                {
-                    field: "source_dataset_desc",
-                    title: "Comparision Dataset",
-                    width: 150,
-                    hidden: true
-                },
-                {
-                    field: "source_dataset_code",
-                    title: "Source Dataset",
-                    width: 100,
-                    hidden: true
-                },
-                {
-                    field: "comparison_dataset_code",
-                    title: "Comparision Dataset",
-                    width: 100,
-                    hidden: true
+				{
+					field: "rule_name",
+					title: "Rule Name",
+					width: 100,
+				},
+				{
+					field: "rule_apply_on_desc",
+					title: "Rule Applied On",
+					width: 80,
+				},
+				{
+					field: "rule_order",
+					title: "Rule Order",
+					width: 50,
+					attributes: { style: "text-align: center;" }
+				},
+				{
+					field: "recon_rule_version",
+					title: "Rule Version",
+					width: 60,
+				},
+				{
+					field: "group_flag_desc",
+					title: "Group Flag",
+					width: 50,
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+				},
+				{
+					field: "source_dataset_desc",
+					title: "Source Dataset",
+					width: 150,
+					hidden: true
+				},
+				{
+					field: "source_dataset_desc",
+					title: "Comparision Dataset",
+					width: 150,
+					hidden: true
+				},
+				{
+					field: "source_dataset_code",
+					title: "Source Dataset",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "comparison_dataset_code",
+					title: "Comparision Dataset",
+					width: 100,
+					hidden: true
 
-                }, {
-                    field: "Info",
-                    title: "Info",
-                    template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
-                    width: 30,
-                    filterable: false,
-                    attributes: {
-                        style: "text-align: center;"
-                    }
+				}, {
+					field: "Info",
+					title: "Info",
+					template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+					width: 30,
+					filterable: false,
+					attributes: {
+						style: "text-align: center;"
+					}
 
-                }],
-            editable: false,
-        });
-    }
+				}],
+			editable: false,
+		});
+	}
 
 
-    function showPreview() {
-        var in_recon_code = $("#reconname").val();
-        var rulepreview = $("#prviewon").val();
-        var period_from = $("#initiated_from").val();
-        var ts = period_from.split("/");
-        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        var period_to = $("#initiated_to").val();
-        var ts1 = period_to.split("/");
-        var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-        var grid = $("#grid_preview").data("kendoGrid");
-        var dataItems = grid.dataSource.data();
-        var firstColumnValues = "";
-        for (var i = 0; i < dataItems.length; i++) {
-            var firstColumnValue = dataItems[i].rule_code + "#"; 
-            firstColumnValues = firstColumnValues + firstColumnValue;
-        }
-        if (firstColumnValues != "") {
-            firstColumnValues = firstColumnValues.slice(0, -1);
-        }
-        if (in_recon_code && period_from && period_to) {
-            $.alert({
-                title: 'Recon',
-                content: "Job Initated, Please check the Job Status in Utility",
-                type: 'green',
-            });
-            $.ajax({
-                type: "POST",
-                url: '../KnockOff/previewRulebase',
-                dataType: 'json',
-                data: JSON.stringify({
-                    in_recon_code: in_recon_code,
-                    in_period_from: pr,
-                    in_period_to: pr1,
-                    in_automatch_flag: 'N',
-                    in_ip_addr: '',
-                    in_user_code: 'Hema'
-                }),
-                contentType: 'application/json; charset=utf-8',
-                //success: function (response) {
-                //    if (!response) {
-                //        $.alert({
-                //            title: 'Recon',
-                //            content: "Something went wrong",
-                //            type: 'red',
-                //        });
-                //    } else {
-                //        var res = JSON.parse(response)
-                //        $.alert({
-                //            title: 'Recon',
-                //            content: res[0].out_msg,
-                //            type: 'green',
-                //        });
-                //    }
-                //}
-            });
-        } else if (!in_recon_code) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Recon Code',
-                type: 'red',
-            });
-        } else if (!period_from) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Preiod From',
-                type: 'red',
-            });
-        } else if (!period_to) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Preiod To',
-                type: 'red',
-            });
-        } else if (!firstColumnValues) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Rules',
-                type: 'red',
-            });
-        }
-        hideProgress();
-    }
+	function showPreview() {
+		var in_recon_code = $("#reconname").val();
+		var rulepreview = $("#prviewon").val();
+		var period_from = $("#initiated_from").val();
+		var ts = period_from.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		var period_to = $("#initiated_to").val();
+		var ts1 = period_to.split("/");
+		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+		var grid = $("#grid_preview").data("kendoGrid");
+		var dataItems = grid.dataSource.data();
+		var firstColumnValues = "";
+		for (var i = 0; i < dataItems.length; i++) {
+			var firstColumnValue = dataItems[i].rule_code + "#";
+			firstColumnValues = firstColumnValues + firstColumnValue;
+		}
+		if (firstColumnValues != "") {
+			firstColumnValues = firstColumnValues.slice(0, -1);
+		}
+		if (in_recon_code && period_from && period_to) {
+			$.alert({
+				title: 'Recon',
+				content: "Job Initated, Please check the Job Status in Utility",
+				type: 'green',
+			});
+			$.ajax({
+				type: "POST",
+				url: '../KnockOff/previewRulebase',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_recon_code: in_recon_code,
+					in_period_from: pr,
+					in_period_to: pr1,
+					in_automatch_flag: 'N',
+					in_ip_addr: '',
+					in_user_code: 'Hema'
+				}),
+				contentType: 'application/json; charset=utf-8',
+				//success: function (response) {
+				//    if (!response) {
+				//        $.alert({
+				//            title: 'Recon',
+				//            content: "Something went wrong",
+				//            type: 'red',
+				//        });
+				//    } else {
+				//        var res = JSON.parse(response)
+				//        $.alert({
+				//            title: 'Recon',
+				//            content: res[0].out_msg,
+				//            type: 'green',
+				//        });
+				//    }
+				//}
+			});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Recon Code',
+				type: 'red',
+			});
+		} else if (!period_from) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Preiod From',
+				type: 'red',
+			});
+		} else if (!period_to) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Preiod To',
+				type: 'red',
+			});
+		} else if (!firstColumnValues) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Rules',
+				type: 'red',
+			});
+		}
+		hideProgress();
+	}
 
-    function rr1() {
-        $("#infomodal").hide();
-        $("infoDatamodal").hide();
-    }
+	function rr1() {
+		$("#infomodal").hide();
+		$("infoDatamodal").hide();
+	}
 
-    function openInfoModel() {
-        debugger;
-        var grid = $("#grid_preview").data("kendoGrid");
-        var selectedItem = grid.dataItem(grid.select());
-        document.getElementById('rule_code').innerHTML = selectedItem.rule_code;
-        document.getElementById('rule_name').innerHTML = selectedItem.rule_name;
-        document.getElementById('rule_apply_on_desc').innerHTML = selectedItem.rule_apply_on_desc;
-        document.getElementById('group_flag').innerHTML = selectedItem.group_flag_desc;
-        document.getElementById('rule_order').innerHTML = selectedItem.rule_order;
-        document.getElementById('rule_version').innerHTML = selectedItem.recon_rule_version;
-        document.getElementById('source_dataset').innerHTML = selectedItem.source_dataset_desc;
-        document.getElementById('comparision_dataset').innerHTML = selectedItem.source_dataset_desc;
-        document.getElementById('active_status_desc').innerHTML = selectedItem.active_status_desc;
-        $("#infomodal").modal("show");
-    }
+	function openInfoModel() {
+		debugger;
+		var grid = $("#grid_preview").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		document.getElementById('rule_code').innerHTML = selectedItem.rule_code;
+		document.getElementById('rule_name').innerHTML = selectedItem.rule_name;
+		document.getElementById('rule_apply_on_desc').innerHTML = selectedItem.rule_apply_on_desc;
+		document.getElementById('group_flag').innerHTML = selectedItem.group_flag_desc;
+		document.getElementById('rule_order').innerHTML = selectedItem.rule_order;
+		document.getElementById('rule_version').innerHTML = selectedItem.recon_rule_version;
+		document.getElementById('source_dataset').innerHTML = selectedItem.source_dataset_desc;
+		document.getElementById('comparision_dataset').innerHTML = selectedItem.source_dataset_desc;
+		document.getElementById('active_status_desc').innerHTML = selectedItem.active_status_desc;
+		$("#infomodal").modal("show");
+	}
 
-    function openDataModel(){
-        debugger;
-        var grid = $("#dataset_grid").data("kendoGrid");
-        var selectedItem = grid.dataItem(grid.select());
-        document.getElementById('dataset_code').innerHTML = selectedItem.dataset_code;
-        document.getElementById('dataset_name').innerHTML = selectedItem.dataset_name;
-        document.getElementById('dataset_type').innerHTML = selectedItem.dataset_type_desc;
-        document.getElementById('parent_dataset').innerHTML = selectedItem.parent_dataset_name;
-        document.getElementById('last_sync_date').innerHTML = selectedItem.last_sync_date;
-        document.getElementById('last_sync_status').innerHTML = selectedItem.last_sync_status;
-        document.getElementById('status').innerHTML = selectedItem.active_status_desc;
-        $("#infoDatamodal").modal("show");
-        //grid.table.on("click", "tr", function () {
-        //    $("#infomodal").modal("show");
-        //});
-    }
+	function openDataModel() {
+		debugger;
+		var grid = $("#dataset_grid").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		document.getElementById('dataset_code').innerHTML = selectedItem.dataset_code;
+		document.getElementById('dataset_name').innerHTML = selectedItem.dataset_name;
+		document.getElementById('dataset_type').innerHTML = selectedItem.dataset_type_desc;
+		document.getElementById('parent_dataset').innerHTML = selectedItem.parent_dataset_name;
+		document.getElementById('last_sync_date').innerHTML = selectedItem.last_sync_date;
+		document.getElementById('last_sync_status').innerHTML = selectedItem.last_sync_status;
+		document.getElementById('status').innerHTML = selectedItem.active_status_desc;
+		$("#infoDatamodal").modal("show");
+		//grid.table.on("click", "tr", function () {
+		//    $("#infomodal").modal("show");
+		//});
+	}
 </script>

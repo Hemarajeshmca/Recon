@@ -70,7 +70,7 @@
 							<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<select id="cmbreconname" class="form-select form-control" onchange="reconchange()">
 							</select>
-						</div>						
+						</div>
 						<div class="col-sm-2" id="cmbversion">
 							<label for="" class="form-label">History Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<select id="comreconversion" class="form-select form-control" style=" width: 100%;">
@@ -80,7 +80,7 @@
 							<button type="button" class="btn btn-sm save_btn me-2" style="margin-top: 7px" onclick="reconversionhistory()">
 								View History
 							</button>
-						</div>						
+						</div>
 					</div>
 					<div class="col-xs-12">
 						<div id="grid_reconverion"> </div>
@@ -94,7 +94,7 @@
 <script>
 	$(document).ready(function () {
 		grid_reconverion([]);
-		$("#navhead").text("Recon Version Report");
+		$("#navhead").text("Recon Rule Version History");
 		gridlist();
 	});
 	function reconversionhistory() {
@@ -122,10 +122,12 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
-					$("#cmbreconname").append($('<option>', {
-						value: item.recon_code,
-						text: item.recon_name
-					}));
+					if (item.active_status == 'Y') {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
 				});
 			},
 			error: function (er) {
@@ -241,15 +243,15 @@
 				{
 					field: "system_match_flag_desc",
 					title: "System Matchoff Flag",
-					width: 100,					
+					width: 100,
 				},
 				{
 					field: "hold_flag_desc",
 					title: "Hold Flag",
-					width: 100,				
+					width: 100,
 				},
 			],
-			editable: false,			
+			editable: false,
 		});
 	}
 	function reconversionhistory() {
@@ -264,7 +266,7 @@
 			success: function (response) {
 				if (response != null) {
 					var res = JSON.parse(response);
-					grid_reconverion(res);					
+					grid_reconverion(res);
 				}
 				else {
 					grid_reconverion([]);

@@ -345,7 +345,7 @@
 								<ul class="nav nav-pills mb-2" role="tablist">
 									<li class="nav-item">
 										<button type="button" id="ruleCondition"
-												class="nav-link"
+												class="nav-link active"
 												role="tab"
 												data-bs-toggle="tab"
 												data-bs-target="#navs-pills-FiedConfig"
@@ -384,7 +384,8 @@
 												data-bs-target="#navs-pills-top-grouping"
 												aria-controls="navs-pills-top-grouping"
 												aria-selected="false">
-											Grouping
+											Additional Grouping
+											@*Grouping*@
 										</button>
 									</li>
 									<li class="nav-item">
@@ -1130,7 +1131,7 @@
 			$("#period_to").removeAttr('disabled', false);
 		}
 	}
-	function getfetch(rulecode) {
+	function getfetch(rulecode, screen) {
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefetch',
@@ -1140,55 +1141,63 @@
 			success: function (response) {
 				if (response != null) {
 					var res = JSON.parse(response);
-					$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
-					$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
-					$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
-					$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
-					$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
-					$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
-					$("#ruleorder").val(res.RuleHeader[0].ruleorder);
-					$("#txtrulecode").val(res.RuleHeader[0].rule_code);
-					$("#ruleName").val(res.RuleHeader[0].rule_name);
-					$("#cmbreconname").val(res.RuleHeader[0].recon_code);
-					jQuery('#cmbreconname').trigger("change");
-					$("#txtstatus").val(res.RuleHeader[0].active_status_desc);
-					$("#rulegid").val(res.RuleHeader[0].rule_gid);
-					$("#period_from").val(res.RuleHeader[0].period_from);
-					$("#period_to").val(res.RuleHeader[0].period_to);
-					if (res.RuleHeader[0].until_active_flag == "Y") {
-						$('#untillactive').attr('checked', true);
-					}
-					if (res.RuleCondition.length > 0) {
-						grid_rulecondition(res.RuleCondition);
-					} else {
-						grid_rulecondition([]);
-					}
-					if (res.RuleGrouping.length > 0) {
-						grid_grouping(res.RuleGrouping);
+					if (screen == "Header") {
+						$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
+						$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
+						$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
+						$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+						$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
+						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
+						$("#ruleorder").val(res.RuleHeader[0].ruleorder);
+						$("#txtrulecode").val(res.RuleHeader[0].rule_code);
+						$("#ruleName").val(res.RuleHeader[0].rule_name);
+						$("#cmbreconname").val(res.RuleHeader[0].recon_code);
+						jQuery('#cmbreconname').trigger("change");
+						$("#txtstatus").val(res.RuleHeader[0].active_status_desc);
+						$("#rulegid").val(res.RuleHeader[0].rule_gid);
+						$("#period_from").val(res.RuleHeader[0].period_from);
+						$("#period_to").val(res.RuleHeader[0].period_to);
+						if (res.RuleHeader[0].until_active_flag == "Y") {
+							$('#untillactive').attr('checked', true);
+						}
+					} else if (screen == "rulecond") {
+						if (res.RuleCondition.length > 0) {
+							grid_rulecondition(res.RuleCondition);
+						} else {
+							grid_rulecondition([]);
+						}
+					} else if (screen == "group") {
+						if (res.RuleGrouping.length > 0) {
+							grid_grouping(res.RuleGrouping);
 
-					} else {
-						grid_grouping([]);
-					}
-					if (res.sourceidentifier.length > 0) {
-						grid_sourceidentifier(res.sourceidentifier);
-					} else {
-						grid_sourceidentifier([]);
-					}
-					if (res.comparisionidentifier.length > 0) {
-						grid_comparisionidentifier(res.comparisionidentifier);
-					}
-					else {
-						grid_comparisionidentifier([]);
-					}
-					if (res.RulefieldorderSource.length > 0) {
-						grid_sourceorder(res.RulefieldorderSource);
-					} else {
-						grid_sourceorder([]);
-					}
-					if (res.Rulefieldordercomparison.length > 0) {
-						grid_comparisonorder(res.Rulefieldordercomparison);
-					} else {
-						grid_comparisonorder([]);
+						} else {
+							grid_grouping([]);
+						}
+					} else if (screen == "idents") {
+						if (res.sourceidentifier.length > 0) {
+							grid_sourceidentifier(res.sourceidentifier);
+						} else {
+							grid_sourceidentifier([]);
+						}
+					} else if (screen == "identc") {
+						if (res.comparisionidentifier.length > 0) {
+							grid_comparisionidentifier(res.comparisionidentifier);
+						}
+						else {
+							grid_comparisionidentifier([]);
+						}
+					} else if (screen == "orders") {
+						if (res.RulefieldorderSource.length > 0) {
+							grid_sourceorder(res.RulefieldorderSource);
+						} else {
+							grid_sourceorder([]);
+						}
+					} else if (screen == "orderc") {
+						if (res.Rulefieldordercomparison.length > 0) {
+							grid_comparisonorder(res.Rulefieldordercomparison);
+						} else {
+							grid_comparisonorder([]);
+						}
 					}
 				}
 				else {
@@ -1400,7 +1409,7 @@
 						//	type: 'green',
 						//});
 						$("#rulegid").val(response.in_rule_gid);
-						getfetch(response.in_rule_gid);
+						getfetch(response.in_rule_gid, "Header");
 					}
 					else {
 
@@ -1456,9 +1465,9 @@
 				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: "row",
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -1746,6 +1755,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#rulegid").val(), "rulecond");
 					}
 					else {
 
@@ -1807,7 +1817,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									getfetch($("#rulegid").val());
+									getfetch($("#rulegid").val(), "rulecond");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -1868,9 +1878,9 @@
 				var rows = $('#grid_sourceidentifier').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -2106,9 +2116,9 @@
 				var rows = $('#grid_comparisionidentifier').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -2363,6 +2373,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#rulegid").val(), "idents");
 					}
 					else {
 
@@ -2431,6 +2442,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#rulegid").val(), "identc");
 					}
 					else {
 
@@ -2494,7 +2506,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									getfetch($("#rulegid").val());
+									getfetch($("#rulegid").val(), "idents");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -2566,7 +2578,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									getfetch($("#rulegid").val());
+									getfetch($("#rulegid").val(), "identc");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -2616,9 +2628,9 @@
 				var rows = $('#grid_grouping').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -2780,7 +2792,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									getfetch($("#rulegid").val());
+									getfetch($("#rulegid").val(), "group");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -2836,9 +2848,9 @@
 				var rows = $('#grid_sourceorder').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -2953,6 +2965,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#rulegid").val(), "orders");
 					}
 					else {
 
@@ -2997,9 +3010,9 @@
 				var rows = $('#grid_comparisonorder').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 			},
-			sortable: true,
+			sortable: false,
 			selectable: true,
-			filterable: true,
+			filterable: false,
 			navigatable: true,
 			pageable: true,
 			pageable: {
@@ -3114,6 +3127,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#rulegid").val(), "orderc");
 					}
 					else {
 
@@ -3174,7 +3188,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									getfetch($("#rulegid").val());
+									getfetch($("#rulegid").val(), "orders");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -3243,7 +3257,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									getfetch($("#rulegid").val());
+									getfetch($("#rulegid").val(), "orderc");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -3305,12 +3319,17 @@
 				in_comparison_dataset_code = $("#comdataset").val();
 				in_comparison_acc_mode = $("#comaccmode").val();
 			}
-			var action = "UPDATE"
+
+			var action = "";
 			var action_by = "vijay"
 			var rulegid = $("#rulegid").val();
 			if (rulegid == "") {
 				rulegid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
 			}
+
 			var in_rule_order = parseFloat($("#ruleorder").val()).toFixed(2);
 			var status = "Y";
 			var Groupflag = $("#cmbgroupflag").val();
@@ -3336,7 +3355,7 @@
 							type: 'green',
 						});
 						$("#rulegid").val(response.in_rule_gid);
-						getfetch(response.in_rule_gid);
+						getfetch(response.in_rule_gid, "Header");
 					}
 					else {
 
@@ -3373,12 +3392,12 @@
 				success: function (response) {
 					var res = JSON.parse(response);
 					$.each(res, function (index, item) {
-						if (item.dataset_type == "S" && item.parent_dataset_code == $("#sourcedataset").val()) {						
+						if (item.dataset_type == "S" && item.parent_dataset_code == $("#sourcedataset").val()) {
 							$("#comdataset").append($('<option>', {
 								value: item.dataset_code,
 								text: item.dataset_name
-							})); 
-						} 
+							}));
+						}
 					});
 				}
 			});
