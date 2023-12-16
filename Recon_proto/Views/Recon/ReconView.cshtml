@@ -561,7 +561,7 @@
 								text: "  Select  "
 							}));
 							$.each(res.Reconfield, function (index, item) {
-								if (item.recon_field_type == "number") {
+								if (item.recon_field_type == "NUMERIC") {
 									$("#cmbreconvaluefield").append($('<option>', {
 										value: item.recon_field_name,
 										text: item.recon_field_desc
@@ -570,6 +570,7 @@
 							});
 							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+							recontypeconfig();
 						}
 						else {
 							grid_datasetrecon([]);
@@ -666,6 +667,7 @@
 					});
 					$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 					$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+					recontypeconfig();
 				}
 				else {
 					grid_datasetrecon([]);
@@ -722,10 +724,12 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
-					$("#cmbdatasetname").append($('<option>', {
-						value: item.datasetCode,
-						text: item.dataset_name
-					}));
+					if (item.active_status == "Y") {
+						$("#cmbdatasetname").append($('<option>', {
+							value: item.datasetCode,
+							text: item.dataset_name
+						}));
+					}
 				});
 			}
 		});
@@ -1022,7 +1026,7 @@
 				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response.out_result == "1") {				
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -1650,7 +1654,7 @@
 			$("#reconvalueflag1").prop('disabled', false);
 			$("#thersholdplus").prop('disabled', true);
 			$("#thersholdminus").prop('disabled', true);
-		}else if (recontype == "N") {
+		} else if (recontype == "N") {
 			$("#partialmatch1").prop('disabled', true);
 			$('#partialmatch2').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
@@ -1745,7 +1749,7 @@
 							type: 'red',
 						});
 					}
-					
+
 				},
 				error: function (er) {
 					alert(er)

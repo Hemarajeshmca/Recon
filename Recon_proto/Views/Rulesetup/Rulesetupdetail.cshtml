@@ -326,7 +326,7 @@
 							</div>
 							<div class="col-sm-2" style="margin-left:-27px;">
 								<label id="" class="form-label">Source Account Mode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="souaccmode" class="form-select form-control" style=" width: 100%;">
+								<select id="souaccmode" class="form-select form-control" style=" width: 100%;" onchange="Sourcemodechange()">
 								</select>
 							</div>
 							<div class="col-sm-2">
@@ -578,30 +578,7 @@
 		kendodate_format();
 		getGridComboList();
 		cmbsourcefield();
-		var reconcode = $("#cmbreconname").val();
-		$.ajax({
-			type: "POST",
-			url: '../Rulesetup/rulereconfetch',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var res = JSON.parse(response);
-				document.getElementById('recon_name').innerHTML = res[0].recon_name;
-				document.getElementById('recon_type').innerHTML = res[0].recontype_desc;
-				document.getElementById('rperiod_from').innerHTML = res[0].period_from;
-				document.getElementById('rperiod_to').innerHTML = res[0].period_to;
-				document.getElementById('thersholdplus').innerHTML = res[0].threshold_plus_value;
-				document.getElementById('thersholdminus').innerHTML = res[0].threshold_minus_value;
-				document.getElementById('recondateflag').innerHTML = res[0].recon_date_flag;
-				document.getElementById('cmbrecondatefield').innerHTML = res[0].recon_date_field;
-				document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
-				document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
-				document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
-				$("#recontype").val(res[0].recontype_code);
-			}
-		});
+
 	});
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
@@ -613,6 +590,70 @@
 			$("#GMM2").prop("checked", true);
 			var data = getlocalStorage("ls_pageList");
 			$("#cmbreconname").val(data);
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/rulereconfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					document.getElementById('recon_name').innerHTML = res[0].recon_name;
+					document.getElementById('recon_type').innerHTML = res[0].recontype_desc;
+					document.getElementById('rperiod_from').innerHTML = res[0].period_from;
+					document.getElementById('rperiod_to').innerHTML = res[0].period_to;
+					document.getElementById('thersholdplus').innerHTML = res[0].threshold_plus_value;
+					document.getElementById('thersholdminus').innerHTML = res[0].threshold_minus_value;
+					document.getElementById('recondateflag').innerHTML = res[0].recon_date_flag;
+					document.getElementById('cmbrecondatefield').innerHTML = res[0].recon_date_field;
+					document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
+					document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
+					document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+					$("#recontype").val(res[0].recontype_code);
+					recontypecondition();
+				}
+			});
+			//dataset combo
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/rulerecondatasetfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					$("#sourcedataset").empty();
+					$("#sourcedataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						if (item.dataset_type != "S") {
+							$("#sourcedataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					});
+					$("#comdataset").empty();
+					$("#comdataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						if (item.dataset_type != "S") {
+							$("#comdataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					});
+				}
+			});
 			$("#txtstatus").val("Draft");
 			grid_rulecondition([]);
 			grid_grouping([]);
@@ -630,6 +671,70 @@
 				$("#ruleName").val(data.rule_name);
 				$("#cmbreconname").val(data.recon_code);
 				jQuery('#cmbreconname').trigger("change");
+				var reconcode = $("#cmbreconname").val();
+				$.ajax({
+					type: "POST",
+					url: '../Rulesetup/rulereconfetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_recon_code: reconcode }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var res = JSON.parse(response);
+						document.getElementById('recon_name').innerHTML = res[0].recon_name;
+						document.getElementById('recon_type').innerHTML = res[0].recontype_desc;
+						document.getElementById('rperiod_from').innerHTML = res[0].period_from;
+						document.getElementById('rperiod_to').innerHTML = res[0].period_to;
+						document.getElementById('thersholdplus').innerHTML = res[0].threshold_plus_value;
+						document.getElementById('thersholdminus').innerHTML = res[0].threshold_minus_value;
+						document.getElementById('recondateflag').innerHTML = res[0].recon_date_flag;
+						document.getElementById('cmbrecondatefield').innerHTML = res[0].recon_date_field;
+						document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
+						document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
+						document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+						$("#recontype").val(res[0].recontype_code);
+						recontypecondition();
+					}
+				});
+				//dataset combo
+				var reconcode = $("#cmbreconname").val();
+				$.ajax({
+					type: "POST",
+					url: '../Rulesetup/rulerecondatasetfetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_recon_code: reconcode }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var res = JSON.parse(response);
+						$("#sourcedataset").empty();
+						$("#sourcedataset").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							if (item.dataset_type != "S") {
+								$("#sourcedataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							}
+						});
+						$("#comdataset").empty();
+						$("#comdataset").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							if (item.dataset_type != "S") {
+								$("#comdataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							}
+						});
+					}
+				});
 				$("#txtstatus").val(data.active_status_desc);
 				$("#rulegid").val(data.rule_gid);
 				$.ajax({
@@ -644,6 +749,7 @@
 							var res = JSON.parse(response);
 							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
 							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
+							RuleApplied();
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
 							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
 							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
@@ -706,6 +812,46 @@
 		if ($("#RuleAppliedOn").val() == 'T') {
 			$("#lblcomaccmode").text("Comparison Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 			$("#comsupdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+
+		} else if ($("#RuleAppliedOn").val() == 'S') {
+			$("#comsupdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomaccmode").text("Supporting Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			//dataset combo
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/rulerecondatasetfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					var sodata = $("#sourcedataset").val();
+					$("#comdataset").empty();
+					$("#comdataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						if (item.dataset_type == "S") {
+							$("#comdataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					});
+				}
+			});
+		}
+	}
+	function groupflagchange() {
+		$("#souaccmode").val("");
+		$("#comaccmode").val("");
+	}
+	function recontypecondition() {
+		var recontype = $("#recontype").val();
+		if (recontype == "W" || recontype == 'B' || recontype == 'I') {
 			// Source account mode
 			var in_master_code = "QCD_RS_ACC_MODE";
 			var in_user_code = "sundar";
@@ -736,21 +882,241 @@
 						text: "  Select  "
 					}));
 					$.each(response, function (index, item) {
-						$("#comaccmode").append($('<option>', {
-							value: item.masterSyscode,
-							text: item.masterName
-						}));
+						if (item.masterSyscode != "NA") {
+							$("#comaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
 					});
 				}
 			});
-		} else if ($("#RuleAppliedOn").val() == 'S') {
-			$("#comsupdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
-			$("#lblcomaccmode").text("Supporting Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
-			$("#souaccmode").val("NA");
-			$("#comaccmode").val("NA");
-		
-			}
+		} else {
+			var in_master_code = "QCD_RS_ACC_MODE";
+			var in_user_code = "sundar";
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#souaccmode").empty();
+					$("#souaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterSyscode == "NA") {
+							$("#souaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+					$("#comaccmode").empty();
+					$("#comaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterSyscode == "NA") {
+							$("#comaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+				}
+			});
 		}
+	}
+	function Sourcemodechange() {
+		var groupflag = $("#cmbgroupflag").val();
+		var sourceAccmode = $("#souaccmode").val();
+		var ruleappliedon = $("#RuleAppliedOn").val();
+		var in_master_code = "QCD_RS_ACC_MODE";
+		var in_user_code = "sundar";
+		var response = [];
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				response = data;
+			}
+		});
+		//-----Transaction-----
+		if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("C")
+		} else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+				if (item.code != "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("D")
+		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+
+			$.each(arr, function (index, item) {
+				if (item.code != "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		//----tranction----
+		//----Support----
+
+		if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("D")
+		} else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+				if (item.code != "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("C")
+		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+
+			$.each(arr, function (index, item) {
+				if (item.code != "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+	}
 	function checkactive() {
 		debugger;
 		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
@@ -855,7 +1221,7 @@
 						text: item.masterName
 					}));
 				});
-				RuleApplied();
+
 			}
 		});
 
@@ -915,45 +1281,7 @@
 			}
 		});
 		load();
-		//dataset combo
-		var reconcode = $("#cmbreconname").val();
-		$.ajax({
-			type: "POST",
-			url: '../Rulesetup/rulerecondatasetfetch',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var res = JSON.parse(response);
-				$("#sourcedataset").empty();
-				$("#sourcedataset").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(res, function (index, item) {
-					if (item.dataset_type != "S") {
-						$("#sourcedataset").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
-						}));
-					}
-				});
-				$("#comdataset").empty();
-				$("#comdataset").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(res, function (index, item) {
-					if (item.dataset_type != "S") {
-						$("#comdataset").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
-						}));
-					}
-				});
-			}
-		});
+
 		//sorce dataset
 		var reconcode = $("#cmbreconname").val();
 		$.ajax({
@@ -997,7 +1325,6 @@
 				console.log(er)
 			}
 		});
-		load();
 	}
 	function saveheader() {
 		try {
@@ -2975,8 +3302,8 @@
 			} else {
 				in_source_dataset_code = $("#sourcedataset").val();
 				in_source_acc_mode = $("#souaccmode").val();
-				in_parent_dataset_code = $("#comdataset").val();
-				in_parent_acc_mode = $("#comaccmode").val();
+				in_comparison_dataset_code = $("#comdataset").val();
+				in_comparison_acc_mode = $("#comaccmode").val();
 			}
 			var action = "UPDATE"
 			var action_by = "vijay"
@@ -3029,22 +3356,32 @@
 		$("#infomodal").modal("show");
 	}
 	function sourcefieldchange() {
-		var reconcode = $("#cmbreconname").val();
-		$.ajax({
-			type: "POST",
-			url: '../Rulesetup/rulerecondatasetfetch',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var res = JSON.parse(response);
-				$.each(res, function (index, item) {
-					if (item.dataset_type == "S" && item.dataset_code == $("#sourcedataset").val()) {
-						$("#comdataset").val(item.parent_dataset_code);
-					}
-				});
-			}
-		});
+		if ($("#RuleAppliedOn").val() == 'S') {
+			$("#comdataset").empty();
+			$("#comdataset").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/rulerecondatasetfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					$.each(res, function (index, item) {
+						if (item.dataset_type == "S" && item.parent_dataset_code == $("#sourcedataset").val()) {						
+							$("#comdataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							})); 
+						} 
+					});
+				}
+			});
+		}
 	}
 </script>
