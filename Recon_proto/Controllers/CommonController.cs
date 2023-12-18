@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Text;
+using static Recon_proto.Controllers.KnockOffController;
 
 namespace Recon_proto.Controllers
 {
@@ -139,6 +140,47 @@ namespace Recon_proto.Controllers
 			public string and { get; set; }
 			public string or { get; set; }
 		}
-		#endregion
-	}
+        #endregion
+
+        #region Dashboard Information
+        public class dashboardinfo
+        {
+            public string in_recon_code { get; set; }
+            public string in_period_from {get; set; }
+            public string in_period_to { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult GetDashboarddtl([FromBody] dashboardinfo context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "UserManagement/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("dashboard", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "dashboard");
+                return Json(ex.Message);
+            }
+        }
+        #endregion
+    }
 }
