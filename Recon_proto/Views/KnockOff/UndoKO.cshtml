@@ -15,76 +15,29 @@
 <body class="hold-transition skin-blue sidebar-mini fixed">
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-1%;">
-				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
-					<div class="col-md-3">
-						<label for="organization" class="form-label">Recon Name</label><br>
-						<select id="mode" class="form-select form-control">
-							<option value="A">CUB CC BRS - 113120000100488 </option>
-							<option value="I"> SBI CC BRS - 40904776466</option>
-							<option value="I"> Indusind CA BRS - 201003823096</option>
-							<option value="I"> HDFC CC BRS - 50200064486821</option>
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+					<div class="col-sm-4">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control">
 						</select>
-
 					</div>
-					<div class="col-md-3">
-						<label for="organization" class="form-label">KO Id</label><br>
-						<input class="form-control" name="koid" value="" />
+					<div class="col-sm-4">
+						<label for="" class="form-label">KO Id&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" id="Ko_id" type="text">
 					</div>
-					<div class="col-md-2" style="margin-top: 2%;">
-						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
-							Run
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="reconsubmit()">
+							Submit
+						</button> &nbsp; &nbsp; &nbsp;
+						<button type="button" id="proceed_btn" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="Proceed()">
+							Proceed
 						</button>
-
-					</div>
-					<div class="col-md-2">
-						
-
-					</div>
-					<div class="col-md-2" >
-						
 					</div>
 				</div>
-
 				<div class="row">
-					<table class="table table-bordered table-sm">
-						<thead style="background: #c1c1c1;">
-							<tr class="text-nowrap">
-								<th style="width: 50px;">Action</th>
-								<th>KO Id</th>
-								<th>KO date</th>
-								<th>Recon Name</th>
-								<th>Rule Name</th>
-								<th>KnockOff Type</th>
-								<th>KnockOff By</th>
-								<th>KnockOff Amount</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr style="height:25px;">
-								<td align="center"> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr style="height:25px;">
-								<td align="center"> </td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-						</tbody>
-					</table>
+					<div id="undo_grid"></div>
 				</div>
-				
 			</div>
 		</div>
 	</div>
@@ -93,6 +46,308 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#navhead").text("Undo Posting & Knockoff");
-		kendodate_format();
+		$('#proceed_btn').prop('disabled', true);
+		//document.getElementById("proceed_btn").disabled = true;
+		gridlist();
 	});
+
+	function gridlist() {
+		debugger;
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function reconsubmit() {
+		debugger;
+		var in_recon_code = $("#cmbreconname").val();
+		var Ko_id = $("#Ko_id").val();
+		$.ajax({
+			type: "POST",
+			url: '../knockoff/undorunreport',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_code: in_recon_code, in_report_code: "RPT_KO", in_report_param: "", in_report_condition: "and a.ko_gid =" + Ko_id, in_ip_addr: "", in_outputfile_flag: false, in_user_code:"" }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response != null) {
+					var res = JSON.parse(response);
+					grid_reconverion(res);
+					//if(res.length > 0){
+					//	grid_reconverion(res);
+					//} 
+					
+				}
+				else {
+					grid_reconverion([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function grid_reconverion(data) {
+		debugger;
+		var columns = [];
+		var rows = [];
+		if (data.length > 0) {
+			$('#proceed_btn').prop('disabled', false);
+			//document.getElementById("proceed_btn").disabled = false;
+			for (var key in data[0]) {
+				var field = key.replace(/\s+/g, '_');
+				var propType = typeof data[0][key];
+				var bool = false;
+				var txtalign = "";
+				var widthval = "";
+				if (field == "forecolor" || field == "backcolor") {
+					bool = true;
+				} if (field == "Row_Labels") {
+					txtalign = "left";
+					widthval = 250;
+				} else {
+					txtalign = "right"
+					widthval: 100;
+				}
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align:" + txtalign },
+					filterable: false,
+					hidden: bool,
+					width: widthval
+				});
+			}
+			$.each(data, function (i, e) {
+				var entryObject = {};
+				for (var key in e) {
+					var field = key.replace(/\s+/g, '_');
+					entryObject[field] = e[key];
+				}
+				rows.push(entryObject);
+			});
+
+			var configuration = {
+				dataSource: {
+					data: rows,
+				},
+				height: 400,
+				navigatable: false,
+				groupable: false,
+				editable: false,
+				sortable: false,
+				scrollable: true,
+				attributes: { style: "text-align: center;" },
+				filterable: {
+					extra: true,
+					operators: {
+						string: {
+							contains: "Contains"
+						}
+					}
+				},
+				pageable: false,
+				resizable: true,
+				persistSelection: true,
+				selectable: true,
+				columns: columns,
+				dataBound: function (e) {
+					var grid = this; // "this" refers to the Kendo Grid
+
+					grid.tbody.find("tr").each(function (index) {
+						var rowData = grid.dataItem(this); // Get the data item for the current row
+						$(this).css("background-color", rowData.backcolor);
+						$(this).css("color", rowData.forecolor);
+						//}
+					});
+				}
+			};
+
+			$("#example").remove();
+		$('#undo_grid').append('<div id="example" style="position:relative;" class="k-content"><table id="undo_grid" style="position:relative;overflow:scroll;width:100%"></table></div>');
+		var timeEditGrid = $("#undo_grid").kendoGrid(configuration).data("kendoGrid");
+		} else {
+			var emptydata = [{
+				"Ko Id": "",
+				"Ko Date": "",
+				"Ko By": "",
+				"Narration": "",
+				"Line Value": "",
+				"Record Type": "",
+				"Tran Date": "",
+				"Loan No": "",
+				"Cheque No": "",
+				"Dataset Code": "",
+				"Dataset Name": "",
+				"Status": "",
+				"Value Date": "",
+				"Ko Amount": "",
+				"Dr Cr": "",
+				"Tran Value": "",
+				"Ko Reason": "",
+				"Ko Remark": "",
+				"Remark1": "",
+				"Remark2": "",
+				"Rule Name": "",
+				"Reversal Flag": "",
+				"Manual Matchoff Flag": "",
+				"Ko Delete Date": "",
+				"Ko Deleted By": "",
+				"Exception Amount": "",
+				"Recon Name": "",
+				"Tran Id": "",
+				"Base Amount": "",
+				"Base Acc Mode": "",
+				"Base Exception Value": "",
+				"Supporting Record Id": "",
+				"Job Id": "",
+				"Ko Detail Id": "",
+				"Supporting File Type": "",
+			}];
+			for (var key in emptydata[0]) {
+				var emptyfield = key.replace(/\s+/g, '_');
+				columns.push({
+					field: emptyfield,
+					title: key,
+					attributes: { style: "text-align: left;" },
+					filterable: false,
+					width:100
+				});
+			}
+			$.each(emptydata, function (i, e) {
+				var entryObject = {};
+				for (var key in e) {
+					var field = key.replace(/\s+/g, '_');
+					entryObject[field] = e[key];
+				}
+				rows.push(entryObject);
+			});
+
+			var configuration = {
+				dataSource: {
+					data: rows,
+				},
+				height: 349,
+				navigatable: false,
+				groupable: false,
+				editable: false,
+				sortable: false,
+				scrollable: true,
+				attributes: { style: "text-align: center;" },
+				filterable: {
+					extra: true,
+					operators: {
+						string: {
+							contains: "Contains"
+						}
+					}
+				},
+				pageable: false,
+				resizable: true,
+				persistSelection: true,
+				selectable: true,
+				columns: columns
+			};
+
+			$("#example").remove();
+			$('#undo_grid').append('<div id="example" style="position:relative;" class="k-content"><table id="undo_grid" style="position:relative;overflow:scroll;width:100%"></table></div>');
+			var timeEditGrid = $("#undo_grid").kendoGrid(configuration).data("kendoGrid");
+		}
+		}
+
+	function Proceed() {
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to Undo this KO!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					KOusingGid();
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+
+	function KOusingGid() {
+		var data = {};
+		data.in_ko_gid = $("#Ko_id").val();
+		data.in_undo_ko_reason = $("test");
+		data.in_user_code ="";
+		$.ajax({
+			type: "POST",
+			url: '../knockoff/undoKO',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if(response) {
+					$.alert({
+						title: 'Recon',
+						content: response.out_msg,
+						type: 'green',
+					});
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: "Something Went Wrong",
+						type: 'green',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+	}
 </script>
