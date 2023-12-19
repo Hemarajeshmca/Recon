@@ -7,9 +7,9 @@
 <head>
     <title></title>
     <style>
-        /*        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+                .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
                             color: #fff !important;
-                        }  */
+                        }  
         .k-grid-filter.k-state-active {
             color: #ffffff;
             background-color: #1274AC;
@@ -29,6 +29,10 @@
                     <div class="col-md-3" hidden>
                         <label class="form-label">Preview On</label>
                         <select id="prviewon" class="form-select form-control"> </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <label for=""  class="form-label">Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                        <input class="form-control" disabled id="reconversion" type="text">
                     </div>
                     <div class="col-md-3" style="margin-top: 2%;" hidden>
                         <button type="button" class="btn btn-sm save_btn me-2" onclick="showRule()" style="width:40%;margin-top: 7px">
@@ -276,6 +280,7 @@
                         var result = JSON.parse(response);
                         grid_rule(result.ReconRule);
                         grid_dataset(result.ReconDataSet);
+                        $("#reconversion").val(result.ReconRule[0].recon_rule_version)
                     } else {
                         grid_rule([]);
                         grid_dataset([]);
@@ -461,6 +466,7 @@
                     field: "recon_rule_version",
                     title: "Rule Version",
                     width: 60,
+                    hidden: true,
                 },
                 {
                     field: "group_flag_desc",

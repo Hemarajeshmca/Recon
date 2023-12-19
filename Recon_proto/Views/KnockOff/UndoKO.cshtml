@@ -125,21 +125,15 @@
 		if (data.length > 0) {
 			$('#proceed_btn').prop('disabled', false);
 			//document.getElementById("proceed_btn").disabled = false;
+			var index = 0;
+			
 			for (var key in data[0]) {
-				var field = key.replace(/\s+/g, '_');
+				var field;
+				index = index + 1;
+				field = "field"+index.toString();
 				var propType = typeof data[0][key];
 				var bool = false;
-				var txtalign = "";
-				var widthval = "";
-				if (field == "forecolor" || field == "backcolor") {
-					bool = true;
-				} if (field == "Row_Labels") {
-					txtalign = "left";
-					widthval = 250;
-				} else {
-					txtalign = "right"
-					widthval: 100;
-				}
+				var txtalign = "left";				
 				columns.push({
 					field: field,
 					title: key,
@@ -147,13 +141,15 @@
 					attributes: { style: "text-align:" + txtalign },
 					filterable: false,
 					hidden: bool,
-					width: widthval
+					width: 150
 				});
 			}
 			$.each(data, function (i, e) {
 				var entryObject = {};
+				index = 0;
 				for (var key in e) {
-					var field = key.replace(/\s+/g, '_');
+					index = index + 1;
+					field = "field" + index.toString();
 					entryObject[field] = e[key];
 				}
 				rows.push(entryObject);
@@ -214,7 +210,7 @@
 				"Status": "",
 				"Value Date": "",
 				"Ko Amount": "",
-				"Dr Cr": "",
+				"Dr/Cr": "",
 				"Tran Value": "",
 				"Ko Reason": "",
 				"Ko Remark": "",
@@ -236,10 +232,14 @@
 				"Ko Detail Id": "",
 				"Supporting File Type": "",
 			}];
+			var index = 0;
 			for (var key in emptydata[0]) {
-				var emptyfield = key.replace(/\s+/g, '_');
+				//var emptyfield = key.replace(/\s+/g, '_');
+				var field;
+				index = index + 1;
+				field = "field" + index.toString();
 				columns.push({
-					field: emptyfield,
+					field: field,
 					title: key,
 					attributes: { style: "text-align: left;" },
 					filterable: false,
@@ -248,8 +248,12 @@
 			}
 			$.each(emptydata, function (i, e) {
 				var entryObject = {};
+				var index = 0;
 				for (var key in e) {
-					var field = key.replace(/\s+/g, '_');
+					var field;
+					index = index + 1;
+					field = "field" + index.toString();
+					//var field = key.replace(/\s+/g, '_');
 					entryObject[field] = e[key];
 				}
 				rows.push(entryObject);
@@ -318,7 +322,7 @@
 	function KOusingGid() {
 		var data = {};
 		data.in_ko_gid = $("#Ko_id").val();
-		data.in_undo_ko_reason = $("test");
+		data.in_undo_ko_reason = "Testing";
 		data.in_user_code ="";
 		$.ajax({
 			type: "POST",
@@ -330,9 +334,10 @@
 			success: function (response) {
 				debugger;
 				if(response) {
+					var res = JSON.parse(response);
 					$.alert({
 						title: 'Recon',
-						content: response.out_msg,
+						content: res[0].out_msg,
 						type: 'green',
 					});
 				} else {

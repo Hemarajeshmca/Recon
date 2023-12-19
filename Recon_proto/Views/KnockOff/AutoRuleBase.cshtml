@@ -455,6 +455,10 @@
                         <label class="form-label">Recon Name<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                         <select id="reconname" onchange="showRule()" class="form-select form-control"> </select>
                     </div>
+                    <div class="col-sm-3">
+                        <label for="" class="form-label">Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                        <input class="form-control" disabled id="reconversion" type="text">
+                    </div>
                     <div class="col-md-3" hidden>
                         <label class="form-label">Preview On</label>
                         <select id="prviewon" class="form-select form-control"> </select>
@@ -592,7 +596,7 @@
 
     <div class="modal fade" id="infoDatamodal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 510px;left: 155px;">
+            <div class="modal-content" style="width: 826px; left: 0px;">
                 <div class="modal-header">
                 </div>
                 <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
@@ -608,13 +612,22 @@
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
                     <div class="container">
-                        <p><strong>Dataset Code&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span></p>
-                        <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
-                        <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
-                        <p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
-                        <p><strong>Last Sync Date&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_date"></span></p>
-                        <p><strong>Last Sync Status&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_status"></span></p>
-                        <p><strong>Status&nbsp;&nbsp;:&nbsp;</strong><span id="status"></span></p>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Dataset Code&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span></p>
+                                <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
+                                <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
+                                <p><strong>Last Sync Date&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_date"></span></p>
+                                <p><strong>Last Sync Status&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_status"></span></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="dataset_grid_model"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
@@ -662,10 +675,12 @@
                     text: "  Select  "
                 }));
                 $.each(response, function (index, item) {
+                    if (item.active_status == 'Y') {
                     $("#reconname").append($('<option>', {
                         value: item.recon_code,
                         text: item.recon_name
                     }));
+                    }
                 });
             },
             error: function (er) {
@@ -692,7 +707,8 @@
                     if (response != null) {
                         var result = JSON.parse(response);
                         grid_rule(result.ReconRule);
-                        grid_dataset(result.ReconDataSet)
+                        grid_dataset(result.ReconDataSet);
+                        $("#reconversion").val(result.ReconRule[0].recon_rule_version)
                     } else {
                         grid_rule([]);
                         grid_dataset([]);
@@ -878,6 +894,7 @@
                     field: "recon_rule_version",
                     title: "Rule Version",
                     width: 50,
+                    hidden: true,
                 },
                 {
                     field: "group_flag_desc",
@@ -1038,7 +1055,120 @@
         document.getElementById('parent_dataset').innerHTML = selectedItem.parent_dataset_name;
         document.getElementById('last_sync_date').innerHTML = selectedItem.last_sync_date;
         document.getElementById('last_sync_status').innerHTML = selectedItem.last_sync_status;
-        document.getElementById('status').innerHTML = selectedItem.active_status_desc;
         $("#infoDatamodal").modal("show");
+        showDatacountGrid(selectedItem.dataset_code);
     }
+
+    function showDatacountGrid(dataset_code) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '../KnockOff/recondatasetinfo',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify({ in_recon_code: $("#reconname").val(), in_dataset_code: dataset_code, in_automatch_flag: 'Y' }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if (response) {
+                    var res = JSON.parse(response)
+                    if (res.Table.length > 0) {
+                        loadGrid(res.Table);
+                    } else {
+                        loadGrid([]);
+                        $.alert({
+                            title: 'Recon',
+                            content: response,
+                            type: 'red',
+                        });
+                    }
+                } else {
+                    $.alert({
+                        title: 'Recon',
+                        content: "Something Went Wrong..!",
+                        type: 'red',
+                    });
+                }
+
+            },
+            error: function (er) {
+                debugger;
+                alert(er)
+                console.log(er)
+            }
+        });
+    }
+
+    function loadGrid(data) {
+        debugger;
+        var columns = [];
+        var rows = [];
+        for (var key in data[0]) {
+            var field = key.replace(/\s+/g, '_');
+            var propType = typeof data[0][key];
+            var bool = false;
+            var txtalign = "right";
+            var widthval = "";
+            if (field == "forecolor" || field == "backcolor") {
+                bool = true;
+            } if (field == "Row_Labels") {
+                txtalign = "left";
+                widthval = 250;
+            } else {
+                txtalign = "right"
+                widthval: 100;
+            }
+            columns.push({
+                field: field,
+                title: key,
+                type: propType,
+                attributes: { style: "text-align:" + txtalign },
+                filterable: false,
+                hidden: bool,
+                width: 150
+            });
+        }
+        $.each(data, function (i, e) {
+            var entryObject = {};
+            for (var key in e) {
+                var field = key.replace(/\s+/g, '_');
+                entryObject[field] = e[key];
+            }
+            rows.push(entryObject);
+        });
+
+        var configuration = {
+            dataSource: {
+                data: rows,
+            },
+            height: 80,
+            navigatable: false,
+            groupable: false,
+            editable: false,
+            sortable: false,
+            scrollable: true,
+            attributes: { style: "text-align: center;" },
+            filterable: false,
+            pageable: false,
+            resizable: true,
+            persistSelection: true,
+            selectable: true,
+            columns: columns,
+            dataBound: function (e) {
+                var grid = this; // "this" refers to the Kendo Grid
+
+                grid.tbody.find("tr").each(function (index) {
+                    var rowData = grid.dataItem(this); // Get the data item for the current row
+                    $(this).css("background-color", rowData.backcolor);
+                    $(this).css("color", rowData.forecolor);
+                    //}
+                });
+            }
+        };
+
+        $("#example").remove();
+        $('#dataset_grid_model').append('<div id="example" style="position:relative;" class="k-content"><table id="dataset_grid_model" style="position:relative;overflow:scroll;width:100%"></table></div>');
+        var timeEditGrid = $("#dataset_grid_model").kendoGrid(configuration).data("kendoGrid");
+    }
+
 </script>
