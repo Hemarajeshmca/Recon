@@ -6,6 +6,18 @@
 <head>
     <title></title>
     <style>
+
+
+        .k-grid td {
+            border: unset !important;
+            font-weight: 800;
+            line-height: 1em;
+            border-left: 1px solid #c5c5c5 !important;
+        }
+
+        .k-grid-header th.k-header, .k-filter-row th {
+            font-weight: 700 !important;
+        }
         .k-grid td {
             background-color: unset !important;
         }
@@ -219,12 +231,26 @@
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 debugger;
-                var res = JSON.parse(response)
-                if (res.Table.length > 0) {
-                    loadGrid(res.Table);
+                if(response) {
+                    var res = JSON.parse(response)
+                    if (res.Table.length > 0) {
+                        loadGrid(res.Table);
+                    } else {
+                        loadGrid([]);
+                        $.alert({
+                            title: 'Recon',
+                            content: response,
+                            type: 'red',
+                        });
+                    }
                 } else {
-                    loadGrid([]);
+                    $.alert({
+                        title: 'Recon',
+                        content: "Something Went Wrong..!",
+                        type: 'red',
+                    });
                 }
+
             },
             error: function (er) {
                 debugger;
@@ -330,16 +356,25 @@
                 var field = key.replace(/\s+/g, '_');
                 var propType = typeof data[0][key];
                 var bool = false;
+                var txtalign = "";
+                var widthval = "";
                 if (field == "forecolor" || field == "backcolor"){
                     bool = true;
+                } if(field== "Row_Labels") {
+                    txtalign = "left";
+                    widthval = 250;
+                } else {
+                    txtalign = "right"
+                    widthval: 100;
                 }
                 columns.push({
                     field: field,
                     title: key,
                     type: propType,
-                    attributes: { style: "text-align: left;" },
+                    attributes: { style: "text-align:"+ txtalign },
                     filterable: false,
                     hidden: bool,
+                    width:widthval
                 });
             }
             $.each(data, function (i, e) {
@@ -354,9 +389,8 @@
             var configuration = {
                 dataSource: {
                     data: rows,
-                    pageSize: 10
                 },
-                height: 349,
+                height: 400,
                 navigatable: false,
                 groupable: false,
                 editable: false,
@@ -375,7 +409,6 @@
                 resizable: true,
                 persistSelection: true,
                 selectable: true,
-
                 columns: columns,
                 dataBound: function (e) {
                     var grid = this; // "this" refers to the Kendo Grid
@@ -423,7 +456,6 @@
             var configuration = {
                 dataSource: {
                     data: rows,
-                    pageSize: 10
                 },
                 height: 349,
                 navigatable: false,

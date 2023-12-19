@@ -11,6 +11,11 @@
             margin-right: 28rem !important;
         }
 
+        .k-grid td {
+            border: unset !important;
+            border-left: 1px solid #c5c5c5 !important;
+        }
+
         .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
             color: #fff !important;
         }
@@ -282,27 +287,16 @@
         var configuration = {
             dataSource: {
                 data: rows,
-                pageSize: 10
             },
-            height: 150,
+            height: 115,
             navigatable: true,
             groupable: false,
             editable: false,
             sortable: true,
             scrollable: true,
             attributes: { style: "text-align: center;" },
-            filterable: {
-                extra: false,
-                operators: {
-                    string: {
-                        contains: "Contains"
-                    }
-                }
-            },
-            pageable: {
-                pageSize: 5,
-                buttonCount: 4
-            },
+            filterable: false,
+            pageable: false,
             resizable: true,
             persistSelection: true,
             selectable: true,
@@ -323,7 +317,7 @@
                 field: field,
                 title: key,
                 type: propType,
-                attributes: { style: "text-align: left;" },
+                attributes: { style: "text-align: right;" },
                 filterable: false,
             });
         }
@@ -372,35 +366,66 @@
         var data = {};
         data.in_scheduler_gid = getdata.scheduler_gid;
         data.in_ip_addr = ""
-        $.ajax({
-            type: "POST",
-            url: '../KnockOff/runmanualfile',
-            dataType: 'json',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var res = JSON.parse(response)
-                if (res.length > 0) {
-                    debugger;
+
+        $.confirm({
+            icon: 'fa fa-warning',
+            title: 'Recon',
+            autoClose: 'cancel|10000',
+            theme: 'dark',
+            animationSpeed: 700,
+            content: 'Are you sure do you want to Proceed!',
+            type: 'orange',
+            buttons: {
+                confirm: function () {
                     $.alert({
                         title: 'Recon',
-                        content: res[0].out_msg,
+                        content: "Manual Matching KO Initated..!",
                         type: 'green',
                     });
-                }
-                else {
-                    $.alert({
-                        title: 'Recon',
-                        content: "Something went wrong",
-                        type: 'red',
-                    });
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
+                    $.ajax({
+                        type: "POST",
+                        url: '../KnockOff/runmanualfile',
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        //success: function (response) {
+                        //    var res = JSON.parse(response)
+                        //    if (res.length > 0) {
+                        //        debugger;
+                        //        $.alert({
+                        //            title: 'Recon',
+                        //            content: res[0].out_msg,
+                        //            type: 'green',
+                        //        });
+                        //    }
+                        //    else {
+                        //        $.alert({
+                        //            title: 'Recon',
+                        //            content: "Something went wrong",
+                        //            type: 'red',
+                        //        });
+                        //    }
+                        //},
+                        //error: function (er) {
+                        //    alert(er)
+                        //    console.log(er)
+                        //}
 
+                    });
+                },
+                cancel: function () {
+                    $.alert({
+                        icon: 'fa fa-success',
+                        title: 'Recon',
+                        theme: 'dark',
+                        content: 'Canceled Sucessfully.!',
+                        type: 'blue',
+                        animationSpeed: 700,
+                    });
+                },
+            }
         });
+
+    
     }
 </script>
