@@ -373,6 +373,133 @@ namespace Recon_proto.Controllers
             public String in_ip_addr { get; set;}
             public String in_user_code { get; set; }
         }
-        #endregion
-    }
+		#endregion
+
+		#region recondatasetinfo
+		[HttpPost]
+		public JsonResult recondatasetinfo([FromBody] recondatasetinfoModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("recondatasetinfo", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "runProcessdataset");
+				return Json(ex.Message);
+			}
+		}
+
+		public class recondatasetinfoModel
+		{
+			public String in_recon_code { get; set; }
+			public String in_dataset_code { get; set; }
+			public String in_automatch_flag { get; set; }
+		}
+		#endregion
+
+		#region undorunreport
+		[HttpPost]
+		public JsonResult undorunreport([FromBody] undorunreportModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("undorunreport", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "undorunreport");
+				return Json(ex.Message);
+			}
+		}
+
+		public class undorunreportModel
+		{
+			public String in_recon_code { get; set; }
+			public String in_report_code { get; set; }
+			public String in_report_param { get; set; }
+			public String in_report_condition { get; set; }
+			public String in_ip_addr { get; set; }
+			public Boolean in_outputfile_flag { get; set; }
+			public String in_user_code { get; set; }
+		}
+		#endregion
+
+		#region undoKO
+		[HttpPost]
+		public JsonResult undoKO([FromBody] undoKOModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("undoKO", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "undoKO");
+				return Json(ex.Message);
+			}
+		}
+
+		public class undoKOModel
+		{
+			public int in_ko_gid { get; set; }
+			public string in_undo_ko_reason { get; set; }
+			public string in_user_code { get; set; }
+		}
+		#endregion
+	}
 }
