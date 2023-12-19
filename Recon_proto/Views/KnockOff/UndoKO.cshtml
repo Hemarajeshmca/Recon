@@ -35,7 +35,7 @@
 						</button>
 					</div>
 				</div>
-				<div class="row">
+				<div class="col-xs-12" style="margin-top: 1%;">
 					<div id="undo_grid"></div>
 				</div>
 			</div>
@@ -159,7 +159,7 @@
 				dataSource: {
 					data: rows,
 				},
-				height: 400,
+				height: 347,
 				navigatable: false,
 				groupable: false,
 				editable: false,
@@ -302,7 +302,34 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					KOusingGid();
+					$.confirm({
+						title: 'Remarks',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									KOusingGid(name);
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
 				},
 				cancel: function () {
 					$.alert({
@@ -315,14 +342,29 @@
 					});
 				},
 			}
+			//buttons: {
+			//	confirm: function () {
+			//		KOusingGid();
+			//	},
+			//	cancel: function () {
+			//		$.alert({
+			//			icon: 'fa fa-success',
+			//			title: 'Recon',
+			//			theme: 'dark',
+			//			content: 'Delete Canceled.!',
+			//			type: 'blue',
+			//			animationSpeed: 700,
+			//		});
+			//	},
+			//}
 		});
 	}
 
 
-	function KOusingGid() {
+	function KOusingGid(reason) {
 		var data = {};
 		data.in_ko_gid = $("#Ko_id").val();
-		data.in_undo_ko_reason = "Testing";
+		data.in_undo_ko_reason = reason;
 		data.in_user_code ="";
 		$.ajax({
 			type: "POST",
@@ -340,6 +382,7 @@
 						content: res[0].out_msg,
 						type: 'green',
 					});
+					grid_reconverion([]);
 				} else {
 					$.alert({
 						title: 'Recon',

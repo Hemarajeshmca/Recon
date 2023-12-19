@@ -9,6 +9,7 @@ using System.Text;
 using System.Data;
 using System.Reflection.PortableExecutable;
 using System.Net;
+using static Recon_proto.Controllers.DatasettoReconController;
 
 namespace Recon_proto.Controllers
 {
@@ -24,6 +25,11 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
+
+		public IActionResult deletedata()
+		{
+            return View();
+        }
 		public IActionResult Datasetconversion()
 		{
 			ViewBag.baseurl = _configuration.GetSection("Appsettings")["connectorUrl"].ToString();
@@ -128,5 +134,87 @@ namespace Recon_proto.Controllers
 
 		#endregion
 
+		#region getschedulerlist
+		public string getschedulerlist([FromBody] getschedulerlistModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Dataset/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getScheduler", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					return d2;
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "getschedulerlist");
+				return ex.Message;
+			}
+
+
+		}
+
+		public class getschedulerlistModel
+		{
+			public string in_processed_date { get; set; }
+			public string? in_scheduler_status { get; set; }
+		}
+
+		#endregion
+
+		#region 
+		public string deletescheduler([FromBody] deleteschedulerModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Dataset/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("delScheduler", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					return d2;
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "delScheduler");
+				return ex.Message;
+			}
+
+
+		}
+
+		public class deleteschedulerModel
+		{
+			public int in_scheduler_gid { get; set; }
+			public string? in_remark { get; set; }
+		}
+		#endregion
 	}
 }
