@@ -1,0 +1,328 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+    <title></title>
+    <style>
+        .nav-item.me-2.me-xl-50 {
+            margin-right: 33rem !important;
+        }
+
+        .error_show {
+            color: red;
+            margin-left: 10px;
+        }
+
+        .k-grid.k-widget {
+            height: 360px;
+        }
+
+        .k-grid-header th.k-header > .k-link {
+            width: 100px;
+        }
+
+        .k-grid-header {
+            font-weight: bold;
+        }
+
+        .k-state-active {
+            display: none;
+        }
+
+        .k-content {
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .k-widget.k-window {
+            padding-top: 35px;
+            min-width: 90px;
+            min-height: 50px;
+            width: 700px !important;
+            height: 300px !important;
+            top: 180.766px !important;
+            /*left: 120px !important;*/
+            z-index: 10003;
+            left: 300px !important;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top: -3%; min-height: 82%;">
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-xs-12">
+                        <i data-bs-toggle="modal" onclick="getdetailSelectedRows(this)" id="userfieldadd" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+                        <div id="grid_user">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="newdebit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                @*  <div class="modal-header">
+                </div> *@
+                <div class="modal-body" style="margin-top: -26px;">
+                    <div class="row" style="background-color:#872e7b;margin-left: -3.2%;width: 106.5%;border-top-left-radius: 5px;border-top-right-radius: 5px;">
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 style="font-size: 15px;text-align: left;color: white;font-weight: 600;margin-top: 5%;margin-left: -105%;">User Creation</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: white;float:right;margin-top: 5%"></i>
+                        </div>
+                    </div>
+                    <hr style="margin-top:-1px; width:100%;">
+                    <div class="row" style="padding-bottom:2px;margin-top:5px;">
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">User Code&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="user_code" type="text" style="width:100%;">
+                            <input class="form-control" type="number" id="user_id" hidden>
+                            <input class="form-control" type="text" id="txtmodeflag" value="Create" hidden>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">User Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="user_name" type="text" style="width:100%;">
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:3px;padding-top:8px;">
+
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">Department&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <select id="department" class="form-select form-control">
+                                <option value="">Select</option>
+                                <option value="">HR</option>
+                                <option value="">Finance</option>
+                                <option value="">Technology</option>
+                                <option value="">Marketing</option>
+                                <option value="">RND</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">Role&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <select id="user_group" class="form-select form-control">
+                                <option value="">Select</option>
+                                <option value="">Admin</option>
+                                <option value="">Maker</option>
+                                <option value="">Checker</option>
+                                <option value="">Guest</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:2px;margin-top:5px;">
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">Address&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="address" type="text" style="width:100%;">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">Contact No&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="contact_no" type="text" style="width:100%;">
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:2px;margin-top:5px;">
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">Email Id&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="email_id" type="text" style="width:100%;">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">City&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="city" type="text" style="width:100%;">
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:2px;margin-top:5px;">
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">State&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="state" type="text" style="width:100%;">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="" class="form-label">Pincode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <input class="form-control" id="pincode" type="text" style="width:100%;">
+
+                        </div>
+                    </div>
+                    <div class="row" style="padding-bottom:3px;padding-top:8px;">
+                        <div class="col-sm-12">
+                            <label for="" class="form-label">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                            <select id="cmb_recon" class="form-select form-control">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr style="margin-top:12px;width: 106%;margin-left: -3%;">
+
+                    <div class="col-sm-6" style="margin-right:-14%; float: right;margin-bottom: -1%;">
+                        <center>
+                            <button type="button" class="btn btn-sm save_btn me-2">Save</button>&nbsp;&nbsp;
+                            <button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+                        </center>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $("#navhead").text("User Creation");
+        griduserlist();
+    });
+
+
+    function griduserlist(data) {
+        try {
+            var data = [
+                {
+                    user_id: "1",
+                    user_code: "sundar",
+                    user_name: "Sundar",
+                    contact_no: "1234567890",
+                    status: "Active",
+                    action: ""
+                },
+                {
+                    user_id: "2",
+                    user_code: "admin",
+                    user_name: "Admin",
+                    contact_no: "9876543210",
+                    status: "Inactive",
+                    action: ""
+                },
+                // Add more objects as needed
+            ];
+
+            $("#grid_user").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 10,
+                    schema: {
+                        model: {
+                            fields: {
+                                user_id: { type: "string" },
+                                user_code: { type: "string" },
+                                user_name: { type: "string" },
+                                contact_no: { type: "string" },
+                                status: { type: "string" },
+                                action: { type: "string" }
+                            }
+                        }
+                    }
+                },
+                height: 458,
+                groupable: false,
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                sortable: true,
+                selectable: true,
+                filterable: true,
+                navigatable: true,
+                // change: selectRow,
+                columns: [
+                    {
+                        field: "user_id",
+                        title: "User Id",
+                        width: 100,
+                        hidden: true,
+                    },
+
+                    {
+                        field: "user_code",
+                        title: "User Code",
+                        width: 100,
+                    },
+                    {
+                        field: "user_name",
+                        title: "User Name",
+                        width: 100,
+                    },
+                    {
+                        field: "contact_no",
+                        title: "Contact No",
+                        width: 100,
+                    },
+                    {
+                        field: "status",
+                        title: "Status",
+                        width: 100
+                    },
+                    {
+                        command: [
+                            {
+                                name: "edit",
+                                id: "btn_Edit",
+                                template: "<a href='' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+                            },
+                            {
+                                name: "view",
+                                id: "View",
+                                template: "<a href='' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+                            },
+                            {
+                                name: "Delete",
+                                id: "Delete",
+                                template: "<a href='' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+                            },
+                        ], title: "Action&nbsp;", width: "40px",
+                    }],
+                editable: false,
+
+            });
+        }
+        catch (err) {
+            console.log(err)
+
+        }
+    }
+
+    function getdetailSelectedRows(mode) {
+        if ($("#txtmode").val() != "View") {
+            if ($(mode).attr('value') == "edit") {
+                // var grid = $("#grid_datasetfield").data("kendoGrid");
+                // var selectedItem = grid.dataItem(grid.select());
+                // $("#datasetfield").val(selectedItem.field_name);
+                // $("#datasetdetail_id").val(selectedItem.datasetfield_gid);
+                // $("#txtmodeflag").val("edit");
+                // $("#cmbFieldType").val(selectedItem.field_type);
+                // $("#fieldlength").val(selectedItem.field_length);
+                // if (selectedItem.field_mandatory == "Yes") {
+                //     $("#mandatory1").prop("checked", true);
+                // }
+                // else {
+                //     $("#mandatory2").prop("checked", true);
+                // }
+                // fieldtype();
+                // $("#fieldPrecision").val(selectedItem.precision_length);
+                // $("#fieldscale").val(selectedItem.scale_length);
+                $("#newdebit").modal('show');
+            }
+            else if ($(mode).attr('value') == "create") {
+                $("#newdebit").modal('show');
+                // $("#datasetfield").val("");
+                // $("#datasetdetail_id").val(0);
+                // $("#cmbFieldType").val("");
+                // $("#fieldlength").val("");
+                // $("#mandatory2").prop("checked", true);
+                // $("#fieldPrecision").val(5);
+                // $("#fieldscale").val(2);
+            }
+        }
+    }
+</script>
