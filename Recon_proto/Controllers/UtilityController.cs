@@ -202,12 +202,45 @@ namespace Recon_proto.Controllers
         #endregion
 
         #region Downloads
+
+        public IActionResult getfilepath()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Common/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("configvalue", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    return Json(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Datasetdetail");
+                return Json(ex.Message);
+            }
+        }
+
         public IActionResult Downloads(string jobid)
 		{
             urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
             fileModel FileDownloadgrid = new fileModel();
 			//string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
-			string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
+			string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon_demo/";
 			FileDownloadgrid.jobGid= jobid;
 			FileDownloadgrid.jobName= "";
 			FileDownloadgrid.filePath = filepath.Replace("'","");

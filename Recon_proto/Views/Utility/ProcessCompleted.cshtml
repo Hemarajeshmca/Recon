@@ -135,7 +135,6 @@
 				data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'C' }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					if (response != null) {
 						fetchGrid(response);
 					}
@@ -179,7 +178,7 @@
 						}
 					}
 				},
-				height: 415,
+				height: 380,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -195,6 +194,7 @@
 				selectable: true,
 				filterable: true,
 				navigatable: true,
+				resizable: true,
 				columns: [
 					{
 						command: [
@@ -269,9 +269,7 @@
 		}
 	}
 
-	function downloadJob(val) {
-		debugger;
-		
+	function downloadJob(val) {	
 		var data = $(val).attr('value');
 		var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
 		var grid = $("#grid_jobinprogress").data("kendoGrid");

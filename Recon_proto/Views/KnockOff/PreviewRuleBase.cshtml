@@ -7,12 +7,16 @@
 <head>
     <title></title>
     <style>
-                .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-                            color: #fff !important;
-                        }  
-        .k-grid-filter.k-state-active {
-            color: #ffffff;
-            background-color: #1274AC;
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: transparent;
+        }
+
+        .k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+            color: white !important;
+        }
+
+        .k-header, .k-grid-header {
+            color: white !important;
         }
     </style>
 
@@ -102,7 +106,7 @@
                     <div class="col-md-3">
                         <label for="" class="form-label">Date From<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                         <div>
-                            <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+                            <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" data-value="1999-01-01" onclick="Dateformat()" style="width:100%" />
                             <span data-for='valid' class='k-invalid-msg'></span>
                         </div>
                     </div>
@@ -184,21 +188,24 @@
                     <hr style="margin-top:-1px; width:100%;">
                     <div class="container">
                         <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Dataset Code&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span></p>
-                                <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_name"></span></p>
-                                <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12">
+                                <p><strong>Dataset Name &nbsp;&nbsp;:&nbsp;</strong><span id="dataset_code"></span> - <span id="dataset_name"></span></p>
+@*                                <p><strong>Dataset Name&nbsp;&nbsp;:&nbsp;</strong><span id="c"></span></p>*@                                <p><strong>Dataset Type&nbsp;&nbsp;:&nbsp;</strong><span id="dataset_type"></span></p>
                                 <p><strong>Parent Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="parent_dataset"></span></p>
                                 <p><strong>Last Sync Date&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_date"></span></p>
                                 <p><strong>Last Sync Status&nbsp;&nbsp;:&nbsp;</strong><span id="last_sync_status"></span></p>
+                                <p><strong>Debit(Before)&nbsp;&nbsp;:&nbsp; Count:</strong> <span id="debit_before_count"></span> &nbsp; <strong>Value:</strong> <span id="debit_before_value"></span> </p>
+                                <p><strong>Debit(After)&nbsp;&nbsp;:&nbsp; Count:</strong> <span id="debit_after_count"></span> &nbsp; <strong>Value:</strong> <span id="debit_after_value"></span> </p>
+                                <p><strong>Credit(Before)&nbsp;&nbsp;:&nbsp; Count:</strong> <span id="credit_before_count"></span> &nbsp; <strong>Value:</strong> <span id="credit_before_value"></span> </p>
+                                <p><strong>Credit(After)&nbsp;&nbsp;:&nbsp; Count:</strong> <span id="credit_after_count"></span> &nbsp; <strong>Value:</strong> <span id="credit_after_value"></span> </p>
+
                             </div>
+                           
                         </div>
 
-                        <div class="row">
+                        @*<div class="row">
                             <div id="dataset_grid_model"></div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
                 <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
@@ -221,6 +228,7 @@
         var selectedRule = [];
         $("#navhead").text("Rule Preview");
         kendodate_format();
+        $("#initiated_from").data("kendoDatePicker").value(new Date("1999-01-01"));
         getreconlist();
         grid_rule([]);
         grid_dataset([]);
@@ -298,6 +306,7 @@
     }
 
     function grid_dataset(data) {
+
         $("#dataset_grid").kendoGrid({
             dataSource: {
                 data: data,
@@ -522,6 +531,7 @@
         var in_recon_code = $("#reconname").val();
         var rulepreview = $("#prviewon").val();
         var period_from = $("#initiated_from").val();
+        //var period_from = "1999/01/01";
         var ts = period_from.split("/");
         var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
         var period_to = $("#initiated_to").val();
@@ -682,74 +692,82 @@
 
     function loadGrid(data) {
         debugger;
-        var columns = [];
-        var rows = [];
-        for (var key in data[0]) {
-            var field = key.replace(/\s+/g, '_');
-            var propType = typeof data[0][key];
-            var bool = false;
-            var txtalign = "right";
-            var widthval = "";
-            if (field == "forecolor" || field == "backcolor") {
-                bool = true;
-            } if (field == "Row_Labels") {
-                txtalign = "left";
-                widthval = 250;
-            } else {
-                txtalign = "right"
-                widthval: 100;
-            }
-            columns.push({
-                field: field,
-                title: key,
-                type: propType,
-                attributes: { style: "text-align:" + txtalign },
-                filterable: false,
-                hidden: bool,
-                width: 150
-            });
-        }
-        $.each(data, function (i, e) {
-            var entryObject = {};
-            for (var key in e) {
-                var field = key.replace(/\s+/g, '_');
-                entryObject[field] = e[key];
-            }
-            rows.push(entryObject);
-        });
+        document.getElementById('debit_before_count').innerHTML = data[0]["Dr Count Before"];
+        document.getElementById('debit_before_value').innerHTML = data[0]["Dr Value Before"];
+        document.getElementById('credit_before_count').innerHTML = data[0]["Cr Count Before"];
+        document.getElementById('credit_before_value').innerHTML = data[0]["Cr Value Before"];
+        document.getElementById('debit_after_count').innerHTML = data[0]["Dr Count After"];
+        document.getElementById('debit_after_value').innerHTML = data[0]["Dr Value After"];
+        document.getElementById('credit_after_count').innerHTML = data[0]["Cr Count After"];
+        document.getElementById('credit_after_value').innerHTML = data[0]["Cr Value After"];
+        //var columns = [];
+        //var rows = [];
+        //for (var key in data[0]) {
+        //    var field = key.replace(/\s+/g, '_');
+        //    var propType = typeof data[0][key];
+        //    var bool = false;
+        //    var txtalign = "right";
+        //    var widthval = "";
+        //    if (field == "forecolor" || field == "backcolor") {
+        //        bool = true;
+        //    } if (field == "Row_Labels") {
+        //        txtalign = "left";
+        //        widthval = 250;
+        //    } else {
+        //        txtalign = "right"
+        //        widthval: 100;
+        //    }
+        //    columns.push({
+        //        field: field,
+        //        title: key,
+        //        type: propType,
+        //        attributes: { style: "text-align:" + txtalign },
+        //        filterable: false,
+        //        hidden: bool,
+        //        width: 150
+        //    });
+        //}
+        //$.each(data, function (i, e) {
+        //    var entryObject = {};
+        //    for (var key in e) {
+        //        var field = key.replace(/\s+/g, '_');
+        //        entryObject[field] = e[key];
+        //    }
+        //    rows.push(entryObject);
+        //});
 
-        var configuration = {
-            dataSource: {
-                data: rows,
-            },
-            height: 80,
-            navigatable: false,
-            groupable: false,
-            editable: false,
-            sortable: false,
-            scrollable: true,
-            attributes: { style: "text-align: center;" },
-            filterable: false,
-            pageable: false,
-            resizable: true,
-            persistSelection: true,
-            selectable: true,
-            columns: columns,
-            dataBound: function (e) {
-                var grid = this; // "this" refers to the Kendo Grid
+        //var configuration = {
+        //    dataSource: {
+        //        data: rows,
+        //    },
+        //    height: 80,
+        //    navigatable: false,
+        //    groupable: false,
+        //    editable: false,
+        //    sortable: false,
+        //    scrollable: true,
+        //    attributes: { style: "text-align: center;" },
+        //    filterable: false,
+        //    pageable: false,
+        //    resizable: true,
+        //    persistSelection: true,
+        //    selectable: true,
+        //    columns: columns,
+        //    dataBound: function (e) {
+        //        var grid = this; // "this" refers to the Kendo Grid
 
-                grid.tbody.find("tr").each(function (index) {
-                    var rowData = grid.dataItem(this); // Get the data item for the current row
-                    $(this).css("background-color", rowData.backcolor);
-                    $(this).css("color", rowData.forecolor);
-                    //}
-                });
-            }
-        };
+        //        grid.tbody.find("tr").each(function (index) {
+        //            var rowData = grid.dataItem(this); // Get the data item for the current row
+        //            $(this).css("background-color", rowData.backcolor);
+        //            $(this).css("color", rowData.forecolor);
+        //            //}
+        //        });
+        //    }
+        //};
 
-        $("#example").remove();
-        $('#dataset_grid_model').append('<div id="example" style="position:relative;" class="k-content"><table id="dataset_grid_model" style="position:relative;overflow:scroll;width:100%"></table></div>');
-        var timeEditGrid = $("#dataset_grid_model").kendoGrid(configuration).data("kendoGrid");
+        //$("#example").remove();
+        //$('#dataset_grid_model').append('<div id="example" style="position:relative;" class="k-content"><table id="dataset_grid_model" style="position:relative;overflow:scroll;width:100%"></table></div>');
+        //var timeEditGrid = $("#dataset_grid_model").kendoGrid(configuration).data("kendoGrid");
     }
 
 </script>
