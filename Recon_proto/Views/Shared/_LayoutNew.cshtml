@@ -1,849 +1,915 @@
-ï»¿
+
 <!DOCTYPE html>
 <html lang="en"
-      class="light-style layout-navbar-fixed layout-menu-fixed layout-menu-collapsed"
-      dir="ltr"
-      data-theme="theme-default"
-      data-assets-path="~/Assets/assets/"
-      data-template="vertical-menu-template" style="overflow:hidden">
+	  class="light-style layout-navbar-fixed layout-menu-fixed layout-menu-collapsed"
+	  dir="ltr"
+	  data-theme="theme-default"
+	  data-assets-path="~/Assets/assets/"
+	  data-template="vertical-menu-template" style="overflow:hidden">
 <head>
-    <style type="text/css">
-        .k-grid td {
-            border-style: solid;
-            border-width: 0 0 0 1px;
-            padding: 0.4em 0.6em;
-            overflow: hidden;
-            line-height: 1.6em;
-            vertical-align: middle;
-            text-overflow: ellipsis;
-        }
+	<style type="text/css">
+		.k-grid td {
+			border-style: solid;
+			border-width: 0 0 0 1px;
+			padding: 0.4em 0.6em;
+			overflow: hidden;
+			line-height: 1.6em;
+			vertical-align: middle;
+			text-overflow: ellipsis;
+		}
 
-        .k-state-selected {
-            color: coral !important;
-        }
+		.k-state-selected {
+			color: coral !important;
+		}
 
-        .footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background-color: #e4e4e4;
-            color: white;
-            text-align: center;
-            z-index: 2;
-            height: 30px;
-        }
+		.footer {
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			background-color: #e4e4e4;
+			color: white;
+			text-align: center;
+			z-index: 2;
+			height: 30px;
+		}
 
-        .k-grid td {
-            white-space: nowrap;
-            background-color: #eceef1;
-            border-color: inherit;
-            /* text-align: center; */
-        }
+		.k-grid td {
+			white-space: nowrap;
+			background-color: #eceef1;
+			border-color: inherit;
+			/* text-align: center; */
+		}
 
-        #overlayy {
-            background-color: transparent;
-            z-index: 999;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-        }
+		#overlayy {
+			background-color: transparent;
+			z-index: 999;
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			display: none;
+		}
 
 
-        li {
-            display: block;
-        }
+		li {
+			display: block;
+		}
 
-        .ms-options {
-            min-height: 100px;
-            max-height: 100px;
-        }
+		.ms-options {
+			min-height: 100px;
+			max-height: 100px;
+		}
 
-        ul {
-            padding-left: 0rem;
-        }
+		ul {
+			padding-left: 0rem;
+		}
 
-        .navbar-nav > .home-menu .home-image {
-            float: left;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            margin-right: 10px;
-            margin-top: -2px 0px;
-            background-color: blue;
-        }
+		.navbar-nav > .home-menu .home-image {
+			float: left;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			margin-right: 10px;
+			margin-top: -2px 0px;
+			background-color: blue;
+		}
 
-        #loader {
-            position: absolute;
-            background: url('http://sampsonresume.com/labs/pIkfp.gif') no-repeat center center;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+		#loader {
+			position: absolute;
+			background: url('http://sampsonresume.com/labs/pIkfp.gif') no-repeat center center;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
 
-        div#spinner {
-            width: 100%;
-            height: 100%;
-            top: 0px;
-            left: 0px;
-            position: fixed;
-            display: block;
-            opacity: 0.6;
-            background: #aaaaaa url('~/content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png');
-            z-index: 1006;
-            text-align: center;
-            display: none;
-        }
+		div#spinner {
+			width: 100%;
+			height: 100%;
+			top: 0px;
+			left: 0px;
+			position: fixed;
+			display: block;
+			opacity: 0.6;
+			background: #aaaaaa url('~/content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png');
+			z-index: 1006;
+			text-align: center;
+			display: none;
+		}
 
-            div#spinner img {
-                position: absolute;
-                /*width: 100px;
-                                                                height: 100px;*/
-                top: 40%;
-                left: 42%;
-                opacity: 4.5;
-                z-index: 1007;
-            }
+			div#spinner img {
+				position: absolute;
+				/*width: 100px;
+														height: 100px;*/
+				top: 40%;
+				left: 42%;
+				opacity: 4.5;
+				z-index: 1007;
+			}
 
-            div#spinner span {
-                font-family: Arial Tahoma;
-                font-size: large;
-                font-weight: bold;
-                opacity: 4.5;
-                margin-top: 100px;
-                color: white;
-            }
+			div#spinner span {
+				font-family: Arial Tahoma;
+				font-size: large;
+				font-weight: bold;
+				opacity: 4.5;
+				margin-top: 100px;
+				color: white;
+			}
 
-        /*grid content should not be wrap*/
+		/*grid content should not be wrap*/
 
-        .k-grid td {
-            white-space: nowrap;
-            border-style: solid;
-            border-width: 1px 0px 0px 1px !important;
-            padding: -3.6em 5.6em;
-            overflow: hidden;
-            line-height: -1.4em;
-            vertical-align: middle;
-            text-overflow: ellipsis;
-            border-color: #80808040;
-        }
-        /*grid header should not be wrap*/
-        .k-grid-header table {
-            width: 100% !important;
-        }
+		.k-grid td {
+			white-space: nowrap;
+			border-style: solid;
+			border-width: 1px 0px 0px 1px !important;
+			padding: -3.6em 5.6em;
+			overflow: hidden;
+			line-height: -1.4em;
+			vertical-align: middle;
+			text-overflow: ellipsis;
+			border-color: #80808040;
+		}
+		/*grid header should not be wrap*/
+		.k-grid-header table {
+			width: 100% !important;
+		}
 
-        .k-grid.k-widget {
-            height: 360px;
-            overflow-y: auto;
-        }
-    </style>
-    <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
-    <meta name="description" content="" />
-    <link href="~/Content/css/bower_components/Ionicons/css/ionicons.min.css" rel="stylesheet" />
-    <link href="~/Content/css/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
-    <link href="~/Content/css/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
-    <link href="~/Content/css/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
-    <link href="~/Content/css/dist/css/dms.css" rel="stylesheet" />
-    @*	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    *@
+		.k-grid.k-widget {
+			height: 360px;
+			overflow-y: auto;
+		}
+	</style>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+		  content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta name="description" content="" />
+	<link href="~/Content/css/bower_components/Ionicons/css/ionicons.min.css" rel="stylesheet" />
+	<link href="~/Content/css/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+	<link href="~/Content/css/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+	<link href="~/Content/css/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
+	<link href="~/Content/css/dist/css/dms.css" rel="stylesheet" />
+	@*	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+	*@
 
-    <link href="~/Content/kendo1/2015.1.318/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/Content/kendo1/2015.1.318/kendo.mobile.all.min.css" rel="stylesheet" type="text/css" />
+	
+	<link href="~/Content/kendo1/2015.1.318/kendo.dataviz.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/Content/kendo1/2015.1.318/kendo.dataviz.default.min.css" rel="stylesheet" type="text/css" />
+	<link href="~/Content/css/jquery-ui-datepicker.css" rel="stylesheet" type="text/css" />
+	<script src="~/Scripts/kendo1/2015.1.318/jquery.min.js"></script>
+	<script src="~/Scripts/kendo1/2015.1.318/jszip.min.js"></script>
+	<script src="~/Scripts/kendo1/2015.1.318/kendo.all.min.js"></script>
+	<script src="~/Scripts/kendo1/2015.1.318/kendo.aspnetmvc.min.js"></script>
+	<link href="~/Content/kendo1/2015.1.318/kendo.default.min.css" rel="stylesheet" type="text/css" />
 
-    <link href="~/Content/kendo1/2015.1.318/kendo.dataviz.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/kendo1/2015.1.318/kendo.dataviz.default.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/Content/css/jquery-ui-datepicker.css" rel="stylesheet" type="text/css" />
-    <script src="~/Scripts/kendo1/2015.1.318/jquery.min.js"></script>
-    <script src="~/Scripts/kendo1/2015.1.318/jszip.min.js"></script>
-    <script src="~/Scripts/kendo1/2015.1.318/kendo.all.min.js"></script>
-    <script src="~/Scripts/kendo1/2015.1.318/kendo.aspnetmvc.min.js"></script>
-    <link href="~/Content/kendo1/2015.1.318/kendo.default.min.css" rel="stylesheet" type="text/css" />
-
-    <script src="~/Scripts/kendo.modernizr.custom.js"></script>
-    <script src="~/Scripts/jquery-ui-datepicker.js" type="text/javascript"></script>
-    <script src="~/Content/css/dist/js/adminlte.min.js"></script>
-    <link rel="icon" type="image/x-icon" href="~/Assets/assets/img/favicon/favicon.ico" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/fonts/boxicons.css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/fonts/fontawesome.css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/fonts/flag-icons.css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/css/rtl/theme-default.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="~/Assets/assets/css/demo.css" />
-    <link rel="stylesheet" href="~/Assets/assets/css/styles.css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/libs/typeahead-js/typeahead.css" />
-    <link rel="stylesheet" href="~/Assets/assets/vendor/libs/apex-charts/apex-charts.css" />
-    <link href="~/css/site.css" rel="stylesheet" type="text/css" />
-    <script src="~/Assets/assets/vendor/js/helpers.js"></script>
-    <script src="~/Assets/assets/js/config.js"></script>
-    <script src="~/Assets/assets/js/jquery.multiselect.js"></script>
-    <link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
-    <script src="~/scripts/jquery-confirm.min.js"></script>
-    <link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
-    <link href="~/Content/kendo1/2015.1.318/kendo.common.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
-    @*<script src="~/scripts/kendo1/2015.1.318/kendo.mobile.min.js"></script>*@
-    <link href="~/css/kendo.common.min.css" rel="stylesheet" />
-    @*<link href="~/css/kendo.default.min.css" rel="stylesheet" />*@
+	<script src="~/Scripts/kendo.modernizr.custom.js"></script>
+	<script src="~/Scripts/jquery-ui-datepicker.js" type="text/javascript"></script>
+	<script src="~/Content/css/dist/js/adminlte.min.js"></script>
+	<link rel="icon" type="image/x-icon" href="~/Assets/assets/img/favicon/favicon.ico" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/fonts/boxicons.css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/fonts/fontawesome.css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/fonts/flag-icons.css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/css/rtl/theme-default.css" class="template-customizer-core-css" />
+	<link rel="stylesheet" href="~/Assets/assets/css/demo.css" />
+	<link rel="stylesheet" href="~/Assets/assets/css/styles.css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/libs/typeahead-js/typeahead.css" />
+	<link rel="stylesheet" href="~/Assets/assets/vendor/libs/apex-charts/apex-charts.css" />
+	<link href="~/css/site.css" rel="stylesheet" type="text/css" />
+	<script src="~/Assets/assets/vendor/js/helpers.js"></script>
+	<script src="~/Assets/assets/js/config.js"></script>
+	<script src="~/Assets/assets/js/jquery.multiselect.js"></script>
+	<link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
+	<script src="~/scripts/jquery-confirm.min.js"></script>
+	<link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
+	<link href="~/Content/kendo1/2015.1.318/kendo.common.min.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
+	@*<script src="~/scripts/kendo1/2015.1.318/kendo.mobile.min.js"></script>*@
+	<link href="~/css/kendo.common.min.css" rel="stylesheet" />
+	@*<link href="~/css/kendo.default.min.css" rel="stylesheet" />*@
 </head>
 
 <body>
 
-    <div id="spinner">
-        <img src="~/Content/images/spinner.gif" /> <br /><span>Please Wait...</span>
-    </div>
-    <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
-            <!-- Menu -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                <div class="app-brand demo">
-                    <a href="index.html" class="app-brand-link">
-                        <img class="logo" src="~/Content/images/backgroundnew.jpg">
-                    </a>
-                    <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
-                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
-                    </a>
-                </div>
-                <div class="menu-inner-shadow"></div>
-                <ul class="menu-inner py-1">
+	<div id="spinner">
+		<img src="~/Content/images/spinner.gif" /> <br /><span>Please Wait...</span>
+	</div>
+	<div class="layout-wrapper layout-content-navbar">
+		<div class="layout-container">
+			<!-- Menu -->
+			<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+				<div class="app-brand demo">
+					<a href="index.html" class="app-brand-link">
+						<img class="logo" src="~/Content/images/backgroundnew.jpg">
+					</a>
+					<a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
+						<i class="bx bx-chevron-left bx-sm align-middle"></i>
+					</a>
+				</div>
+				<div class="menu-inner-shadow"></div>
+				<ul class="menu-inner py-1">
 
-                    @*		<li class="menu-item">
-                    <a href="#" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Maintenance"></i>
-                    <div data-i18n="Maintenance">Maintenance</div>
-                    </a>
-                    <ul class="menu-sub">
-                    <li class="menu-item">
-                    <a href="../DataSet/DataSetList" class="menu-link">
-                    <div data-i18n="DataSet">Dataset Setup</div>
-                    </a>
-                    </li>
+					@*		<li class="menu-item">
+					<a href="#" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Maintenance"></i>
+					<div data-i18n="Maintenance">Maintenance</div>
+					</a>
+					<ul class="menu-sub">
+					<li class="menu-item">
+					<a href="../DataSet/DataSetList" class="menu-link">
+					<div data-i18n="DataSet">Dataset Setup</div>
+					</a>
+					</li>
 
-                    <li class="menu-item">
-                    <a href="../Recon/ReconList" class="menu-link">
-                    <div data-i18n="Recon">Recon Setup</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../Connnector/connectors" class="menu-link">
-                    <div data-i18n="Connector">Connector Setup</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../Pipeline/Pipeline" class="menu-link">
-                    <div data-i18n="Pipeline">Pipeline Setup</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../Rulesetup/Rulesetup" class="menu-link">
-                    <div data-i18n="RuleSetup">Rule Setup</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../Knockoff/PreviewRuleBase" class="menu-link">
-                    <div data-i18n="RulePreview">Rule Preview</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../QCDmaster/QcdMaster" class="menu-link">
-                    <div data-i18n="qcdMaster">QCD Master</div>
-                    </a>
-                    </li>
+					<li class="menu-item">
+					<a href="../Recon/ReconList" class="menu-link">
+					<div data-i18n="Recon">Recon Setup</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../Connnector/connectors" class="menu-link">
+					<div data-i18n="Connector">Connector Setup</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../Pipeline/Pipeline" class="menu-link">
+					<div data-i18n="Pipeline">Pipeline Setup</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../Rulesetup/Rulesetup" class="menu-link">
+					<div data-i18n="RuleSetup">Rule Setup</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../Knockoff/PreviewRuleBase" class="menu-link">
+					<div data-i18n="RulePreview">Rule Preview</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../QCDmaster/QcdMaster" class="menu-link">
+					<div data-i18n="qcdMaster">QCD Master</div>
+					</a>
+					</li>
 
-                    </ul>
-                    </li>
-                    *@
-                    <li class="menu-item">
-                        <a href="#" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bxs-check-shield" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-                            <div data-i18n="Admin">Admin</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="~/Admin/Users" class="menu-link">
-                                    <div data-i18n="JIP">Setup User</div>
-                                </a>
-                            </li>
-                            @* <li class="menu-item">
-                            <a href="~/Utility/ProcessCompleted" class="menu-link">
-                            <div data-i18n="JC">Jobs Completed</div>
-                            </a>
-                            </li> *@
-                        </ul>
-                    </li>
+					</ul>
+					</li>
+					*@
+				@*	<li class="menu-item">
+						<a href="#" class="menu-link menu-toggle">
+							<i class="menu-icon tf-icons bx bxs-check-shield" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
+							<div data-i18n="Admin">Admin</div>
+						</a>
+						<ul class="menu-sub">
+							<li class="menu-item">
+								<a href="~/Admin/Users" class="menu-link">
+									<div data-i18n="JIP">Setup User</div>
+								</a>
+							</li>
 
-                    <li class="menu-item">
-                        <a href="#" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-file" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-                            <div data-i18n="">Process</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="~/Datasetfile/Datasetconversion" class="menu-link">
-                                    <div data-i18n="">Data Import</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/KnockOff/AutoRuleBase" class="menu-link">
-                                    <div data-i18n="">Automatic Posting & Knockoff</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/KnockOff/ManualMatching" class="menu-link">
-                                    <div data-i18n="">Manual Matching and Posting</div>
-                                </a>
-                            </li>
-                            @*<li class="menu-item">
-                            <a href="~/KnockOff/ManualKO" class="menu-link">
-                            <div data-i18n="">Manual Posting & Knockoff</div>
-                            </a>
-                            </li>*@
+						</ul>
+					</li>*@
 
+					<li class="menu-item">
+						<a href="#" class="menu-link menu-toggle">
+							<i class="menu-icon tf-icons bx bx-file" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
+							<div data-i18n="">Process</div>
+						</a>
+						<ul class="menu-sub">
+							<li class="menu-item">
+								<a href="~/Datasetfile/Datasetconversion" class="menu-link">
+									<div data-i18n="">Data Import</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/Datasetfile/deletedata" class="menu-link">
+									<div data-i18n="">Data Delete</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/KnockOff/AutoRuleBase" class="menu-link">
+									<div data-i18n="">Automatic Posting & Knockoff</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/KnockOff/ManualMatching" class="menu-link">
+									<div data-i18n="">Manual Matching and Posting</div>
+								</a>
+							</li>
+							@*<li class="menu-item">
+							<a href="~/KnockOff/ManualKO" class="menu-link">
+							<div data-i18n="">Manual Posting & Knockoff</div>
+							</a>
+							</li>*@
+							<li class="menu-item">
+								<a href="../../KnockOff/UndoKO" class="menu-link">
+									<div data-i18n="">Undo KO</div>
+								</a>
+							</li>
 
-                            <li class="menu-item">
-                                <a href="~/ExceptionTheming/ExceptionTheming" class="menu-link">
-                                    <div data-i18n="">Exception Theming</div>
-                                </a>
-                            </li>
+							<li class="menu-item">
+								<a href="~/ExceptionTheming/ExceptionTheming" class="menu-link">
+									<div data-i18n="">Exception Theming</div>
+								</a>
+							</li>
 
-                        </ul>
-                    </li>
-                    @*<li class="menu-item">
-                    <a href="#" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons bx bx-git-compare" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-                    <div data-i18n="Knockoff">Knockoff</div>
-                    </a>
-                    <ul class="menu-sub">
-                    <li class="menu-item">
-                    <a href="../../KnockOff/AutoRuleBase" class="menu-link">
-                    <div data-i18n="">Rule Based KO - Automatic</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../../KnockOff/PreviewRuleBase" class="menu-link">
-                    <div data-i18n="">Rule Based KO - Preview</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../../KnockOff/ManualKO" class="menu-link">
-                    <div data-i18n="">Manual KO</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../../KnockOff/UndoKO" class="menu-link">
-                    <div data-i18n="">Undo KO</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../../KnockOff/UndoKObyJob" class="menu-link">
-                    <div data-i18n="">Undo KO by Job Id</div>
-                    </a>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../../KnockOff/KoFilebased" class="menu-link">
-                    <div data-i18n="">KO - File Based</div>
-                    </a>
-                    </li>
-                    </ul>
-                    </li>
-                    <li class="menu-item">
-                    <a href="../ExceptionTheming/ExceptionTheming" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-                    <div data-i18n="">Exception Theming</div>
-                    </a>
-                    </li>*@
+						</ul>
+					</li>
+					@*<li class="menu-item">
+					<a href="#" class="menu-link menu-toggle">
+					<i class="menu-icon tf-icons bx bx-git-compare" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
+					<div data-i18n="Knockoff">Knockoff</div>
+					</a>
+					<ul class="menu-sub">
+					<li class="menu-item">
+					<a href="../../KnockOff/AutoRuleBase" class="menu-link">
+					<div data-i18n="">Rule Based KO - Automatic</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../../KnockOff/PreviewRuleBase" class="menu-link">
+					<div data-i18n="">Rule Based KO - Preview</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../../KnockOff/ManualKO" class="menu-link">
+					<div data-i18n="">Manual KO</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../../KnockOff/UndoKO" class="menu-link">
+					<div data-i18n="">Undo KO</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../../KnockOff/UndoKObyJob" class="menu-link">
+					<div data-i18n="">Undo KO by Job Id</div>
+					</a>
+					</li>
+					<li class="menu-item">
+					<a href="../../KnockOff/KoFilebased" class="menu-link">
+					<div data-i18n="">KO - File Based</div>
+					</a>
+					</li>
+					</ul>
+					</li>
+					<li class="menu-item">
+					<a href="../ExceptionTheming/ExceptionTheming" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
+					<div data-i18n="">Exception Theming</div>
+					</a>
+					</li>*@
+					<li class="menu-item">
+						<a href="#" class="menu-link menu-toggle">
+							<i class="menu-icon tf-icons bx bx-analyse" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
+							<div data-i18n="Utility">Utility</div>
+						</a>
+						<ul class="menu-sub">
+							<li class="menu-item">
+								<a href="~/Utility/InProgress" class="menu-link">
+									<div data-i18n="JIP">Jobs In Progress</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/Utility/ProcessCompleted" class="menu-link">
+									<div data-i18n="JC">Jobs Completed</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+					<li class="menu-item">
+						<a href="~/Reports/WithinAccounts" class="menu-link menu-toggle">
+							<i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
+							<div data-i18n="Report">Report</div>
+						</a>
+						<ul class="menu-sub">
+							<li class="menu-item">
+								<a href="~/Reports/WithinAccounts" class="menu-link">
+									<div data-i18n="Recon">Recon - Within A/cs</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/Reports/BetweenAccounts" class="menu-link">
+									<div data-i18n="Recon">Recon - Between A/cs</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/Reports/ReportGeneration" class="menu-link">
+									<div data-i18n="Recon">Report Generation</div>
+								</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/KnockOff/MIS" class="menu-link">
+									<div data-i18n="">Knockoff MIS</div>
+								</a>
+							</li>
+							@*<li class="menu-item">
+							<a href="~/Reports/KnockoffMIS" class="menu-link">
+							<div data-i18n="Recon">Report KnockOff MIS</div>
+							</a>
+							</li>
+							<li class="menu-item">
+								<a href="~/Reports/PaginationReport" class="menu-link">
+									<div data-i18n="Recon">Pagination Report</div>
+								</a>
+							</li>*@
+							<li class="menu-item">
+								<a href="~/Reports/ReconHistory" class="menu-link">
+									<div data-i18n="Recon">Recon Rule Version History</div>
+								</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</aside>
+			<footer class="footer">
+				<img src="../Assets/images/footerlogo.png" style="float: right;margin-right: 23px;margin-top: -6px;">
+				<h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px">Copyright © by Flexicode Technologies (P) Ltd </h6>
+				<img src="../Assets/images/footerlogo.png" style="float: left;margin-top: -39px;margin-left: 109px;">
+			</footer>
+			<!-- / Menu -->
+			<!-- Layout container -->
+			<div class="layout-page">
+				<!-- Navbar -->
+				<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+					 id="layout-navbar">
 
+					<div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+						<a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+							<i class="bx bx-menu bx-sm"></i>
+						</a>
+					</div>
+					<div class="navbar-nav-right" id="navbar-collapse">
+						<div class="row">
+							<div class="col-md-6" style="display:flex;">
+								<ul class="navbar-nav flex-row align-items-center ms-auto">
+									<li>
+										<h5 class="card-header" id="navhead"></h5>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-6" style="display:flex;">
+								<ul class="navbar-nav flex-row align-items-center ms-auto">									
 
-                    <li class="menu-item">
-                        <a href="#" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-analyse" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-                            <div data-i18n="Utility">Utility</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="~/Utility/InProgress" class="menu-link">
-                                    <div data-i18n="JIP">Jobs In Progress</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/Utility/ProcessCompleted" class="menu-link">
-                                    <div data-i18n="JC">Jobs Completed</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-item">
-                        <a href="~/Reports/WithinAccounts" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-                            <div data-i18n="Report">Report</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="~/Reports/WithinAccounts" class="menu-link">
-                                    <div data-i18n="Recon">Recon - Within A/cs</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/Reports/BetweenAccounts" class="menu-link">
-                                    <div data-i18n="Recon">Recon - Between A/cs</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/Reports/ReportGeneration" class="menu-link">
-                                    <div data-i18n="Recon">Report Generation</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/KnockOff/MIS" class="menu-link">
-                                    <div data-i18n="">Knockoff MIS</div>
-                                </a>
-                            </li>
-                            @*<li class="menu-item">
-                            <a href="~/Reports/KnockoffMIS" class="menu-link">
-                            <div data-i18n="Recon">Report KnockOff MIS</div>
-                            </a>
-                            </li>*@
-                            <li class="menu-item">
-                                <a href="~/Reports/PaginationReport" class="menu-link">
-                                    <div data-i18n="Recon">Pagination Report</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="~/Reports/ReconHistory" class="menu-link">
-                                    <div data-i18n="Recon">Recon Rule Version History</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-            <footer class="footer">
-                <img src="../Assets/images/footerlogo.png" style="float: right;margin-right: 23px;margin-top: -6px;">
-                <h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px">Recon. &#169; by Flexicode Technologies (P) Ltd </h6>
-                <img src="../Assets/images/footerlogo.png" style="float: left;margin-top: -39px;margin-left: 109px;">
-            </footer>
-            <!-- / Menu -->
-            <!-- Layout container -->
-            <div class="layout-page">
-                <!-- Navbar -->
-                <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-                     id="layout-navbar">
+									@*<li class="nav-item navbar-dropdown dropdown-user dropdown">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<div class="avatar-online card-header">
+												Maintenance
+											</div>
+										</a>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li>
+												<a class="dropdown-item" href="~/DataSet/DataSetList">
+													<span class="align-middle">Dataset Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Recon/ReconList">
+													<span class="align-middle">Recon Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Connnector/connectors">
+													<span class="align-middle">Connector Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Pipeline/Pipeline">
+													<span class="align-middle">Pipeline Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Rulesetup/Rulesetup">
+													<span class="align-middle">Rule Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Knockoff/PreviewRuleBase">
+													<span class="align-middle">Rule Preview</span>
+												</a>
+												<a class="dropdown-item" href="~/QCDmaster/QcdMaster">
+													<span class="align-middle">QCD Master</span>
+												</a>
+												
+												<a class="dropdown-item" href="~/Reconversion/ReconversionList">
+													<span class="align-middle">Recon Rule Version</span>
+												</a>
+											</li>
+										</ul>
+									</li>*@
+									@*<li class="home-menu">
+										<a href="@Url.Action("Index", "Home")">
+											<img src="~/Content/css/dist/images/home.png" class="home-image" alt="Home Image">
+										</a>
+									</li>*@
+									<li class="nav-item lh-1 me-1">
+										<i style="cursor:pointer;" class="bx bxs-home" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" onclick="window.location.href='../Home/Index'" data-bs-original-title="Home" aria-label="Home"></i>
+									</li>
+									<li class="nav-item dropdown-language dropdown lh-1 me-1">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<i class="bx bxs-cog" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Settings" aria-label="Settings" aria-describedby="tooltip32655"></i>
+										</a>
 
-                    <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-                            <i class="bx bx-menu bx-sm"></i>
-                        </a>
-                    </div>
-                    <div class="navbar-nav-right" id="navbar-collapse">
-                        <div class="row">
-                            <div class="col-md-6" style="display:flex;">
-                                <ul class="navbar-nav flex-row align-items-center ms-auto">
-                                    <li>
-                                        <h5 class="card-header" id="navhead"></h5>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-md-6" style="display:flex;">
-                                <ul class="navbar-nav flex-row align-items-center ms-auto">
-                                    <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                            <div class="avatar-online card-header">
-                                                Maintenance
-                                            </div>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <a class="dropdown-item" href="~/DataSet/DataSetList">
-                                                    <span class="align-middle">Dataset Setup</span>
-                                                </a>
-                                                <a class="dropdown-item" href="~/Recon/ReconList">
-                                                    <span class="align-middle">Recon Setup</span>
-                                                </a>
-                                                <a class="dropdown-item" href="~/Connnector/connectors">
-                                                    <span class="align-middle">Connector Setup</span>
-                                                </a>
-                                                <a class="dropdown-item" href="~/Pipeline/Pipeline">
-                                                    <span class="align-middle">Pipeline Setup</span>
-                                                </a>
-                                                <a class="dropdown-item" href="~/Rulesetup/Rulesetup">
-                                                    <span class="align-middle">Rule Setup</span>
-                                                </a>
-                                                <a class="dropdown-item" href="~/Knockoff/PreviewRuleBase">
-                                                    <span class="align-middle">Rule Preview</span>
-                                                </a>
-                                                <a class="dropdown-item" href="~/QCDmaster/QcdMaster">
-                                                    <span class="align-middle">QCD Master</span>
-                                                </a>
-                                                @*<a class="dropdown-item" href="~/DatasettoRecon/DatasettoReconList">
-                                                <span class="align-middle">Dataset To Recon</span>
-                                                </a>*@
-                                                <a class="dropdown-item" href="~/Reconversion/ReconversionList">
-                                                    <span class="align-middle">Recon Rule Version</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="home-menu">
-                                        <a href="@Url.Action("Index", "Home")">
-                                            <img src="~/Content/css/dist/images/home.png" class="home-image" alt="Home Image">
-                                        </a>
-                                    </li>
-                                    <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                            <div class="avatar avatar-online">
-                                                <i class='bx bxs-group' data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile"></i>
-                                            </div>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li style="margin-bottom:-22px;">
-                                                <a class="dropdown-item" href="#">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3" style="margin-top: 20px;">
-                                                            <center>
-                                                                <div class="avatar avatar-online">
-                                                                    <img src="~/Assets/images/profile.jpg" class="w-px-40 h-auto rounded-circle"
-                                                                         style="width: 50px !important; height: 50px !important;" />
-                                                                </div>
-                                                            </center>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="dropdown-divider"></div>
-                                            </li>
-                                            <li>
+										<ul class="dropdown-menu dropdown-menu-end">
 
-                                                <a class="dropdown-item" href="#">
-                                                    <i class="bx bx-user me-2"></i>
-                                                    <span class="align-middle">Super Admin</span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <div class="dropdown-divider"></div>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item" href="../Login/ChangePassword" onclick="showchangepasswordscreen();">
-                                                    <i class="bx bxs-lock-alt me-2"></i>
-                                                    <span class="align-middle">Change Password</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#" onclick="return Signout();">
-                                                    <i class="bx bx-power-off me-2"></i>
-                                                    <span class="align-middle">Log Out</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
+											<li>
+												<a class="dropdown-item" href="~/DataSet/DataSetList">
+													<span class="align-middle">Dataset Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Recon/ReconList">
+													<span class="align-middle">Recon Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Connnector/connectors">
+													<span class="align-middle">Connector Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Pipeline/Pipeline">
+													<span class="align-middle">Pipeline Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Rulesetup/Rulesetup">
+													<span class="align-middle">Rule Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Knockoff/PreviewRuleBase">
+													<span class="align-middle">Rule Preview</span>
+												</a>
+												<a class="dropdown-item" href="~/QCDmaster/QcdMaster">
+													<span class="align-middle">QCD Master</span>
+												</a>
+												
+												<a class="dropdown-item" href="~/Reconversion/ReconversionList">
+													<span class="align-middle">Recon Rule Version</span>
+												</a>
+											</li>
 
-                                </ul>
-                            </div>
-                        </div>
-                        @*						<ul class="navbar-nav flex-row align-items-center ms-auto">
-                        <li class="nav-item me-2 me-xl-50" style="margin-right: 33rem !important">
-                        <h5 class="card-header" id="navhead"></h5>
-                        </li>
-                        <li class="nav-item dropdown-language dropdown me-2 me-xl-0">
-                        </li>
-
-                        <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                        <div class="avatar avatar-online">
-                        Maintance
-                        </div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                        <li>
-                        <a class="dropdown-item" href="../DataSet/DataSetList">
-                        <span class="align-middle">Dataset Setup</span>
-                        </a>
-                        <a class="dropdown-item" href="../Recon/ReconList">
-                        <span class="align-middle">Recon Setup</span>
-                        </a>
-                        </li>
-                        </ul>
-                        </li>
-                        <li class="home-menu">
-                        <a href="@Url.Action("Dashboard", "Dashboard")">
-                        <img src="~/Content/css/dist/images/home.png" class="home-image" alt="Home Image">
-                        </a>
-                        </li>
-                        <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                        <div class="avatar avatar-online">
-                        <i class='bx bxs-group' data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile"></i>
-                        </div>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                        <li style="margin-bottom:-22px;">
-                        <a class="dropdown-item" href="#">
-                        <div class="d-flex">
-                        <div class="flex-shrink-0 me-3">
-                        <center>
-                        <div class="avatar avatar-online">
-                        <img src="~/Assets/images/profile.jpg" class="w-px-40 h-auto rounded-circle" />
-                        </div>
-                        </center>
-                        </div>
-                        </div>
-                        </a>
-                        </li>
-                        <li>
-                        <div class="dropdown-divider"></div>
-                        </li>
-                        <li>
-
-                        <a class="dropdown-item" href="#">
-                        <i class="bx bx-user me-2"></i>
-                        <span class="align-middle">Super Admin</span>
-                        </a>
-                        </li>
-                        <li>
-                        <div class="dropdown-divider"></div>
-                        </li>
-                        <li>
-                        <a class="dropdown-item" href="../Login/ChangePassword" onclick="showchangepasswordscreen();">
-                        <i class="bx bxs-lock-alt me-2"></i>
-                        <span class="align-middle">Change Password</span>
-                        </a>
-                        <a class="dropdown-item" href="#" onclick="return Signout();">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
-                        </a>
-                        </li>
-                        </ul>
-                        </li>
+										</ul>
 
 
-                        </ul>
-                        *@
-                    </div>
+									</li>
+									<li class="nav-item dropdown-language dropdown lh-1 me-1">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<i class="bx bxs-user-plus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User Admin" aria-label="User Admin" aria-describedby="tooltip229672"></i>
+										</a>
 
-                </nav>
-                <div class="content-wrapper">
-                    @RenderBody()
-                </div>
-            </div>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li>
+												<a class="dropdown-item" href="#" data-language="fr">
+													<i class="bx bx-user fs-4 me-1"></i>
+													<span class="align-middle">User Mgmt</span>
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="#" data-language="fr">
+													<i class="bx bx-user fs-4 me-1"></i>
+													<span class="align-middle">Role Mgmt</span>
+												</a>
+											</li>
 
-        </div>
-
-        <div class="layout-overlay layout-menu-toggle"></div>
-
-        <div class="drag-target"></div>
-    </div>
-    <script src="~/Assets/assets/vendor/libs/popper/popper.js"></script>
-    <script src="~/Assets/assets/vendor/js/bootstrap.js"></script>
-    <script src="~/Assets/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="~/Assets/assets/vendor/libs/hammer/hammer.js"></script>
-    <script src="~/Assets/assets/vendor/js/menu.js"></script>
-    <script src="~/Assets/assets/vendor/libs/apex-charts/apexcharts.js"></script>
-    <script src="~/Assets/assets/js/main.js"></script>
-    <script src="~/Assets/assets/js/dashboards-analytics.js"></script>
-    @*	<script async defer src="https://buttons.github.io/buttons.js"></script>
-    *@
-    <script>
-        function openNav() {
-            $(document).ready(function () {
-                $('#layout-menu').toggleClass('active');
-                $('[data-toggle="tooltip"]').tooltip();
-            });
-        }
-    </script>
-
-    <script>
-        var maxorglvl;
-        $(document).ajaxStart(function () {
-            $('#loader').show();
-            showProgress();
-        });
-
-        $(document).ajaxStop(function () {
-            hideProgress();
-        });
-
-        $(document).ajaxError(function () {
-            hideProgress();
-        })
-
-        var spinnerVisible = false;
-        function getconcatval(mastercode) {
-
-            var master = "";
-            if (mastercode != null) {
-                master = "'" + mastercode + "'";
-            }
-            return master;
-        }
-
-        function showProgress() {
-
-            if (!spinnerVisible) {
-                $("div#spinner").fadeIn("fast");
-                spinnerVisible = true;
-            }
-        }
-        function hideProgress() {
-
-            if (spinnerVisible) {
-                var spinner = $("div#spinner");
-                spinner.stop();
-                spinner.fadeOut("fast");
-                spinnerVisible = false;
-            }
-        }
-        function kendodate_format() {
-            $(".cusDate").kendoDatePicker({
-                value: new Date(),
-                format: "dd/MM/yyyy"
-            });
-            $(".cusDate1").kendoDatePicker({
-                value: new Date(),
-                format: "yyyy-MM-dd"
-            });
-        }
-
-        function get_orgarray(_idval) {
-            function Signout() {
-
-                sessionStorage.removeItem('arr1');
-                sessionStorage.removeItem('arr2');
-                sessionStorage.removeItem('arr3');
-                sessionStorage.removeItem('arr4');
-                $.ajax({
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    data: {},
-                    dataType: "html",
-                    url: '@Url.Action("Signout", "Login")',
-                    success: function (data) {
-                        var url = '@Url.Action("Login", "Login")'
-                        window.location.href = url;
-                    },
-                    error: function (data) {
-                        $.alert({
-                            title: 'DMS',
-                            content: 'Error' + data,
-                            type: 'red',
-                        });
-                    }
-                });
-            }
-
-            function showchangepasswordscreen() {
-
-                var url = '@Url.Action("ChangePassword", "Login")'
-                window.location.href = url;
-            }
+										</ul>
 
 
+									</li>
+									<li class="nav-item navbar-dropdown dropdown-user dropdown">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<div class="avatar avatar-online">
+												<i class='bx bxs-group' data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile"></i>
+											</div>
+										</a>
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li style="margin-bottom:-22px;">
+												<a class="dropdown-item" href="#">
+													<div class="d-flex">
+														<div class="flex-shrink-0 me-3" style="margin-top: 20px;">
+															<center>
+																<div class="avatar avatar-online">
+																	<img src="~/Assets/images/profile.jpg" class="w-px-40 h-auto rounded-circle"
+																		 style="width: 50px !important; height: 50px !important;" />
+																</div>
+															</center>
+														</div>
+													</div>
+												</a>
+											</li>
+											<li>
+												<div class="dropdown-divider"></div>
+											</li>
+											<li>
 
-            function bindmultiselectvalues(arr, _id) {
+												<a class="dropdown-item" href="#">
+													<i class="bx bx-user me-2"></i>
+													<span class="align-middle">Super Admin</span>
+												</a>
+											</li>
+											<li>
+												<div class="dropdown-divider"></div>
+											</li>
+											<li>
+												<a class="dropdown-item" href="../Login/ChangePassword" onclick="showchangepasswordscreen();">
+													<i class="bx bxs-lock-alt me-2"></i>
+													<span class="align-middle">Change Password</span>
+												</a>
+												<a class="dropdown-item" href="#" onclick="return Signout();">
+													<i class="bx bx-power-off me-2"></i>
+													<span class="align-middle">Log Out</span>
+												</a>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+						@*<ul class="navbar-nav flex-row align-items-center ms-auto">
+						<li class="nav-item me-2 me-xl-50" style="margin-right: 33rem !important">
+						<h5 class="card-header" id="navhead"></h5>
+						</li>
+						<li class="nav-item dropdown-language dropdown me-2 me-xl-0">
+						</li>
 
-                if (arr != null) {
-                    $("#" + _id).empty();
-                    for (var t = 0; t < arr.length; t++) {
-                        var opt = new Option(arr[t].name, arr[t].value);
-                        $('#' + _id).append(opt);
-                        if (arr[t].checked) {
-                            $(opt).attr('selected', true);
-                        }
-                    }
-                }
-            }
-        }
-        //mandatory for grid combo
-        function combo_editor_man(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+						<li class="nav-item navbar-dropdown dropdown-user dropdown">
+						<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+						<div class="avatar avatar-online">
+						Maintance
+						</div>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end">
+						<li>
+						<a class="dropdown-item" href="../DataSet/DataSetList">
+						<span class="align-middle">Dataset Setup</span>
+						</a>
+						<a class="dropdown-item" href="../Recon/ReconList">
+						<span class="align-middle">Recon Setup</span>
+						</a>
+						</li>
+						</ul>
+						</li>
+						<li class="home-menu">
+						<a href="@Url.Action("Dashboard", "Dashboard")">
+						<img src="~/Content/css/dist/images/home.png" class="home-image" alt="Home Image">
+						</a>
+						</li>
+						<li class="nav-item navbar-dropdown dropdown-user dropdown">
+						<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+						<div class="avatar avatar-online">
+						<i class='bx bxs-group' data-bs-toggle="tooltip" data-bs-placement="bottom" title="Profile"></i>
+						</div>
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end">
+						<li style="margin-bottom:-22px;">
+						<a class="dropdown-item" href="#">
+						<div class="d-flex">
+						<div class="flex-shrink-0 me-3">
+						<center>
+						<div class="avatar avatar-online">
+						<img src="~/Assets/images/profile.jpg" class="w-px-40 h-auto rounded-circle" />
+						</div>
+						</center>
+						</div>
+						</div>
+						</a>
+						</li>
+						<li>
+						<div class="dropdown-divider"></div>
+						</li>
+						<li>
+
+						<a class="dropdown-item" href="#">
+						<i class="bx bx-user me-2"></i>
+						<span class="align-middle">Super Admin</span>
+						</a>
+						</li>
+						<li>
+						<div class="dropdown-divider"></div>
+						</li>
+						<li>
+						<a class="dropdown-item" href="../Login/ChangePassword" onclick="showchangepasswordscreen();">
+						<i class="bx bxs-lock-alt me-2"></i>
+						<span class="align-middle">Change Password</span>
+						</a>
+						<a class="dropdown-item" href="#" onclick="return Signout();">
+						<i class="bx bx-power-off me-2"></i>
+						<span class="align-middle">Log Out</span>
+						</a>
+						</li>
+						</ul>
+						</li>
 
 
-            $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
-                autoBind: false,
-                filter: "contains",
-                dataSource: datasource,
-                change: function (e) {
-                    var cmb_value = this.value();
-                    if (cmb_value && this.selectedIndex == -1) {
-                        this.value("");
-                    }
-                    //else{FF
-                    var cmb_var = $("#" + grid_id).data("kendoGrid");
-                    var selectedItem = cmb_var.dataItem(cmb_var.select());
-                    var combobox_data = $("#" + cmbid).data("kendoComboBox");
-                    if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
-                        selectedItem[datafield] = "";
-                        selectedItem[code_datafield] = "";
-                    }
-                    else {
-                        selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
-                        selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
-                    }
-                }
-            });
+						</ul>
+						*@
+					</div>
 
-            $("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
-        }
-        function setDefaultValues(e) {
+				</nav>
+				<div class="content-wrapper">
+					@RenderBody()
+				</div>
+			</div>
 
-            if (e.type != "click" || e.type == undefined) {
+		</div>
 
-                if (e.action == "" || e.action == undefined) {
-                    for (var i = 0; i < e.sender._data.length; i++) {
-                        var rows = e.sender.tbody.children();
-                        var row = $(rows[i]);
-                        row.css('backgroundColor', 'lightgreen')
-                    }
-                }
-            }
-        }
+		<div class="layout-overlay layout-menu-toggle"></div>
 
-        function testt() {
+		<div class="drag-target"></div>
+	</div>
+	<script src="~/Assets/assets/vendor/libs/popper/popper.js"></script>
+	<script src="~/Assets/assets/vendor/js/bootstrap.js"></script>
+	<script src="~/Assets/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+	<script src="~/Assets/assets/vendor/libs/hammer/hammer.js"></script>
+	<script src="~/Assets/assets/vendor/js/menu.js"></script>
+	<script src="~/Assets/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+	<script src="~/Assets/assets/js/main.js"></script>
+	<script src="~/Assets/assets/js/dashboards-analytics.js"></script>
+	@*	<script async defer src="https://buttons.github.io/buttons.js"></script>
+	*@
+	<script>
+		function openNav() {
+			$(document).ready(function () {
+				$('#layout-menu').toggleClass('active');
+				$('[data-toggle="tooltip"]').tooltip();
+			});
+		}
+	</script>
 
-            alert($('#orglvl1valO').val());
-        }
-        function btn_onClick(event) {
-            click_btn_val = "";
-            if (event != "") {
-                if (event == "Create") {
-                    click_btn_val = "Create";
-                }
-                else if (event == "Edit") {
-                    click_btn_val = "Edit";
-                }
-                else if (event == "View") {
-                    click_btn_val = "View";
-                }
-                else
-                    click_btn_val = "";
-                setlocalStorage('btn_clk_val', click_btn_val);
-                //document.location = form_list_url;
-            }
-        }
-        function setlocalStorage(key, value) {
-            var data = "";
-            data[key] = value[0];
-            localStorage.setItem(key, JSON.stringify(value));
-        }
+	<script>
+		var maxorglvl;
+		$(document).ajaxStart(function () {
+			$('#loader').show();
+			showProgress();
+		});
 
-        function getlocalStorage(key) {
-            var guid = localStorage.getItem(key);
-            return JSON.parse(guid);
-        }
+		$(document).ajaxStop(function () {
+			hideProgress();
+		});
 
-        function setColor(rows, resultData) {
-            for (var i = 0; i < rows.length; i++) {
-                var row = $(rows[i]);
-                row.css('backgroundColor', 'black');
-            }
-            var child_del = $('.k-grid-Delete').children('span:first');
-            $('.k-grid-Delete').html(child_del);
+		$(document).ajaxError(function () {
+			hideProgress();
+		})
 
-            var child_copy = $('.k-grid-Copy').children('span:first');
-            $('.k-grid-Copy').html(child_copy);
-        }
+		var spinnerVisible = false;
+		function getconcatval(mastercode) {
 
-    </script>
+			var master = "";
+			if (mastercode != null) {
+				master = "'" + mastercode + "'";
+			}
+			return master;
+		}
+
+		function showProgress() {
+
+			if (!spinnerVisible) {
+				$("div#spinner").fadeIn("fast");
+				spinnerVisible = true;
+			}
+		}
+		function hideProgress() {
+
+			if (spinnerVisible) {
+				var spinner = $("div#spinner");
+				spinner.stop();
+				spinner.fadeOut("fast");
+				spinnerVisible = false;
+			}
+		}
+		function kendodate_format() {
+			$(".cusDate").kendoDatePicker({
+				value: new Date(),
+				format: "dd/MM/yyyy"
+			});
+			$(".cusDate1").kendoDatePicker({
+				value: new Date(),
+				format: "yyyy-MM-dd"
+			});
+		}
+
+		function get_orgarray(_idval) {
+			function Signout() {
+
+				sessionStorage.removeItem('arr1');
+				sessionStorage.removeItem('arr2');
+				sessionStorage.removeItem('arr3');
+				sessionStorage.removeItem('arr4');
+				$.ajax({
+					type: "POST",
+					contentType: "application/json; charset=utf-8",
+					data: {},
+					dataType: "html",
+					url: '@Url.Action("Signout", "Login")',
+					success: function (data) {
+						var url = '@Url.Action("Login", "Login")'
+						window.location.href = url;
+					},
+					error: function (data) {
+						$.alert({
+							title: 'DMS',
+							content: 'Error' + data,
+							type: 'red',
+						});
+					}
+				});
+			}
+
+			function showchangepasswordscreen() {
+
+				var url = '@Url.Action("ChangePassword", "Login")'
+				window.location.href = url;
+			}
+
+
+
+			function bindmultiselectvalues(arr, _id) {
+
+				if (arr != null) {
+					$("#" + _id).empty();
+					for (var t = 0; t < arr.length; t++) {
+						var opt = new Option(arr[t].name, arr[t].value);
+						$('#' + _id).append(opt);
+						if (arr[t].checked) {
+							$(opt).attr('selected', true);
+						}
+					}
+				}
+			}
+		}
+		//mandatory for grid combo
+		function combo_editor_man(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+
+
+			$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+				autoBind: false,
+				filter: "contains",
+				dataSource: datasource,
+				change: function (e) {
+					var cmb_value = this.value();
+					if (cmb_value && this.selectedIndex == -1) {
+						this.value("");
+					}
+					//else{FF
+					var cmb_var = $("#" + grid_id).data("kendoGrid");
+					var selectedItem = cmb_var.dataItem(cmb_var.select());
+					var combobox_data = $("#" + cmbid).data("kendoComboBox");
+					if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+						selectedItem[datafield] = "";
+						selectedItem[code_datafield] = "";
+					}
+					else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			});
+
+			$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+		}
+		function setDefaultValues(e) {
+
+			if (e.type != "click" || e.type == undefined) {
+
+				if (e.action == "" || e.action == undefined) {
+					for (var i = 0; i < e.sender._data.length; i++) {
+						var rows = e.sender.tbody.children();
+						var row = $(rows[i]);
+						row.css('backgroundColor', 'lightgreen')
+					}
+				}
+			}
+		}
+
+		function testt() {
+
+			alert($('#orglvl1valO').val());
+		}
+		function btn_onClick(event) {
+			click_btn_val = "";
+			if (event != "") {
+				if (event == "Create") {
+					click_btn_val = "Create";
+				}
+				else if (event == "Edit") {
+					click_btn_val = "Edit";
+				}
+				else if (event == "View") {
+					click_btn_val = "View";
+				}
+				else
+					click_btn_val = "";
+				setlocalStorage('btn_clk_val', click_btn_val);
+				//document.location = form_list_url;
+			}
+		}
+		function setlocalStorage(key, value) {
+			var data = "";
+			data[key] = value[0];
+			localStorage.setItem(key, JSON.stringify(value));
+		}
+
+		function getlocalStorage(key) {
+			var guid = localStorage.getItem(key);
+			return JSON.parse(guid);
+		}
+
+		function setColor(rows, resultData) {
+			for (var i = 0; i < rows.length; i++) {
+				var row = $(rows[i]);				
+					row.css('backgroundColor', 'black');				
+			}
+			var child_del = $('.k-grid-Delete').children('span:first');
+			$('.k-grid-Delete').html(child_del);
+
+			var child_copy = $('.k-grid-Copy').children('span:first');
+			$('.k-grid-Copy').html(child_copy);
+		}
+
+	</script>
 </body>
 </html>

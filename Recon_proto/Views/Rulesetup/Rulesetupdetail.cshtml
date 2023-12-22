@@ -330,12 +330,12 @@
 								</select>
 							</div>
 							<div class="col-sm-2">
-								<label id=comsupdataset class="form-label">Comparison Dataset</label>
+								<label id=comsupdataset class="form-label">Target Dataset</label>
 								<select id="comdataset" class="form-select form-control" style=" width: 100%;">
 								</select>
 							</div>
 							<div class="col-sm-2" style="margin-right: -38px;">
-								<label id="lblcomaccmode" class="form-label">Comparison Account Mode</label>
+								<label id="lblcomaccmode" class="form-label">Target Account Mode</label>
 								<select id="comaccmode" class="form-select form-control" style=" width: 100%;">
 								</select>
 							</div>
@@ -373,7 +373,7 @@
 												data-bs-target="#navs-pills-top-comparisionidentifier"
 												aria-controls="navs-pills-top-comparisionidentifier"
 												aria-selected="true">
-											Comparison Identifier
+											Target Identifier
 										</button>
 									</li>
 									<li class="nav-item">
@@ -407,7 +407,7 @@
 												data-bs-target="#navs-pills-top-comparisonorder"
 												aria-controls="navs-pills-top-comparisonorder"
 												aria-selected="true">
-											Comparison Processing Order
+											Target Processing Order
 										</button>
 									</li>
 								</ul>
@@ -811,8 +811,8 @@
 	}
 	function RuleApplied() {
 		if ($("#RuleAppliedOn").val() == 'T') {
-			$("#lblcomaccmode").text("Comparison Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
-			$("#comsupdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomaccmode").text("Target Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#comsupdataset").text("Target Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 
 		} else if ($("#RuleAppliedOn").val() == 'S') {
 			$("#comsupdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
@@ -1493,7 +1493,7 @@
 						id: "Delete",
 						template: "<a href='' onclick='myDeleteJsrulecondition()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
-				], title: "Action&nbsp;", width: "60px",
+				], title: "Action&nbsp;", width: "40px",
 			},
 			{
 				title: "(", width: 20,
@@ -1530,7 +1530,7 @@
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_rulecondition", "SOURCE")
 				},
 				editable: true,
-				width: 120,
+				width: 170,
 			},
 			{
 				field: "comparison_field",
@@ -1557,7 +1557,7 @@
 				editor: function (container, options) {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_rulecondition", "COMPARISON")
 				},
-				width: 120,
+				width: 170,
 			},
 			{
 				field: "active_status",
@@ -1581,7 +1581,7 @@
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_rulecondition")
 				},
-				width: 120,
+				width: 40,
 			}],
 			editable: true,
 		});
@@ -3063,7 +3063,7 @@
 			},
 			{
 				field: "recorder_field",
-				title: "Source Field",
+				title: "Target Field",
 				width: 100,
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_comparisonorder")

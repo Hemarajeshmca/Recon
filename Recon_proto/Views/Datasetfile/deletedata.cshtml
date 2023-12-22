@@ -1,0 +1,272 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.selectedDataset {
+			font-size: 13px;
+			font-weight: 600;
+			color: brown;
+		}
+
+		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: #fff !important;
+		}*/
+
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 84%;">
+				<div class="row">
+					<div class="row" style="margin-top:10px;">
+						<div class="col-md-3">
+							<label for="" class="form-label">Scheduled Date<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<div>
+								<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+								<span data-for='valid' class='k-invalid-msg'></span>
+							</div>
+						</div>
+						<div class="col-md-3" style="margin-top: 2%;">
+							<button type="button" class="btn btn-sm save_btn me-2" onclick="run()" style="width:40%;margin-top: 7px">
+								Run
+							</button> &nbsp;&nbsp;&nbsp;						
+						</div>
+					</div>
+				
+					<div class="col-xs-12" style="margin-top: 1%;">
+						<div id="scheduled_grid"></div>
+					</div>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Data Deletion");
+		kendodate_format();
+		gridlistload([]);
+	});
+
+	function run() {
+		debugger;
+		var period_from = $("#initiated_from").val();
+		var ts = period_from.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		$.ajax({
+			type: "POST",
+			url: '../Datasetfile/getschedulerlist',
+			dataType: 'json',
+			data: JSON.stringify({ in_processed_date: pr, in_scheduler_status :"C"}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger
+				if (response.length > 0) {
+					debugger;
+					gridlistload(response);
+				}
+				else {
+					gridlistload([])
+				}
+			},
+			error: function (er) {
+				debugger;
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function gridlistload(data) {
+		try {
+			$("#scheduled_grid").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								scheduler_gid: { type: "string" },
+								scheduled_date: { type: "string" },
+								scheduler_initiated_by: { type: "string" },
+								pipeline_name: { type: "string" },
+								file_name: { type: "string" },
+								dataset_code: { type: "string" },
+								dataset_name: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 380,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#scheduled_grid').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				columns: [{
+					command: [
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					], title: "Action&nbsp;", width: "50px",
+					attributes: { style: "text-align: center" },
+				},
+				{
+					field: "scheduler_gid",
+					title: "scheduler_gid",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "scheduled_date",
+					title: "Scheduled Date",
+					width: 80,
+				},
+				{
+					field: "scheduler_initiated_by",
+					title: "Processed By",
+					width: 70,
+				},
+				{
+					field: "pipeline_name",
+					title: "Pipeline Name",
+					width: 100,
+				},
+				{
+					field: "file_name",
+					title: "File Name",
+					width: 100,
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 130,
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+	function myDeleteJs() {
+		debugger;
+		var grid = $("#scheduled_grid").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var scheduler_gid = model.scheduler_gid;
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					$.confirm({
+						title: 'Delete Reason',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									var in_scheduler_gid = scheduler_gid;
+									var in_remark = name;
+									$.ajax({
+										type: "POST",
+										url: '../Datasetfile/deletescheduler',
+										dataType: 'json',
+										data: JSON.stringify({
+											in_scheduler_gid: in_scheduler_gid, in_remark, in_remark
+										}),
+										contentType: 'application/json; charset=utf-8',
+										success: function (response) {
+											debugger;
+											if (response[0].out_result == "1") {
+												$.alert({
+													icon: 'fa fa-success',
+													title: 'Recon',
+													theme: 'dark',
+													content: response[0].out_msg,
+													type: 'green',
+													animationSpeed: 700,
+												});
+												run();
+											} else {
+												$.alert({
+													title: 'Recon',
+													content: response[0].out_msg,
+													type: 'red',
+												});
+											}
+										}
+									})
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+</script>
