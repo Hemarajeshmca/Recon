@@ -258,7 +258,7 @@
 					</ul>
 					</li>
 					*@
-					<li class="menu-item">
+				@*	<li class="menu-item">
 						<a href="#" class="menu-link menu-toggle">
 							<i class="menu-icon tf-icons bx bxs-check-shield" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
 							<div data-i18n="Admin">Admin</div>
@@ -271,7 +271,7 @@
 							</li>
 
 						</ul>
-					</li>
+					</li>*@
 
 					<li class="menu-item">
 						<a href="#" class="menu-link menu-toggle">
@@ -427,7 +427,7 @@
 			</aside>
 			<footer class="footer">
 				<img src="../Assets/images/footerlogo.png" style="float: right;margin-right: 23px;margin-top: -6px;">
-				<h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px">Recon. &#169; by Flexicode Technologies (P) Ltd </h6>
+				<h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px">Copyright © by Flexicode Technologies (P) Ltd </h6>
 				<img src="../Assets/images/footerlogo.png" style="float: left;margin-top: -39px;margin-left: 109px;">
 			</footer>
 			<!-- / Menu -->
@@ -452,8 +452,9 @@
 								</ul>
 							</div>
 							<div class="col-md-6" style="display:flex;">
-								<ul class="navbar-nav flex-row align-items-center ms-auto">
-									<li class="nav-item navbar-dropdown dropdown-user dropdown">
+								<ul class="navbar-nav flex-row align-items-center ms-auto">									
+
+									@*<li class="nav-item navbar-dropdown dropdown-user dropdown">
 										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
 											<div class="avatar-online card-header">
 												Maintenance
@@ -482,19 +483,82 @@
 												<a class="dropdown-item" href="~/QCDmaster/QcdMaster">
 													<span class="align-middle">QCD Master</span>
 												</a>
-												@*<a class="dropdown-item" href="~/DatasettoRecon/DatasettoReconList">
-												<span class="align-middle">Dataset To Recon</span>
-												</a>*@
+												
 												<a class="dropdown-item" href="~/Reconversion/ReconversionList">
 													<span class="align-middle">Recon Rule Version</span>
 												</a>
 											</li>
 										</ul>
-									</li>
-									<li class="home-menu">
+									</li>*@
+									@*<li class="home-menu">
 										<a href="@Url.Action("Index", "Home")">
 											<img src="~/Content/css/dist/images/home.png" class="home-image" alt="Home Image">
 										</a>
+									</li>*@
+									<li class="nav-item lh-1 me-1">
+										<i style="cursor:pointer;" class="bx bxs-home" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" onclick="window.location.href='../Home/Index'" data-bs-original-title="Home" aria-label="Home"></i>
+									</li>
+									<li class="nav-item dropdown-language dropdown lh-1 me-1">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<i class="bx bxs-cog" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Settings" aria-label="Settings" aria-describedby="tooltip32655"></i>
+										</a>
+
+										<ul class="dropdown-menu dropdown-menu-end">
+
+											<li>
+												<a class="dropdown-item" href="~/DataSet/DataSetList">
+													<span class="align-middle">Dataset Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Recon/ReconList">
+													<span class="align-middle">Recon Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Connnector/connectors">
+													<span class="align-middle">Connector Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Pipeline/Pipeline">
+													<span class="align-middle">Pipeline Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Rulesetup/Rulesetup">
+													<span class="align-middle">Rule Setup</span>
+												</a>
+												<a class="dropdown-item" href="~/Knockoff/PreviewRuleBase">
+													<span class="align-middle">Rule Preview</span>
+												</a>
+												<a class="dropdown-item" href="~/QCDmaster/QcdMaster">
+													<span class="align-middle">QCD Master</span>
+												</a>
+												
+												<a class="dropdown-item" href="~/Reconversion/ReconversionList">
+													<span class="align-middle">Recon Rule Version</span>
+												</a>
+											</li>
+
+										</ul>
+
+
+									</li>
+									<li class="nav-item dropdown-language dropdown lh-1 me-1">
+										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+											<i class="bx bxs-user-plus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User Admin" aria-label="User Admin" aria-describedby="tooltip229672"></i>
+										</a>
+
+										<ul class="dropdown-menu dropdown-menu-end">
+											<li>
+												<a class="dropdown-item" href="#" data-language="fr">
+													<i class="bx bx-user fs-4 me-1"></i>
+													<span class="align-middle">User Mgmt</span>
+												</a>
+											</li>
+											<li>
+												<a class="dropdown-item" href="#" data-language="fr">
+													<i class="bx bx-user fs-4 me-1"></i>
+													<span class="align-middle">Role Mgmt</span>
+												</a>
+											</li>
+
+										</ul>
+
+
 									</li>
 									<li class="nav-item navbar-dropdown dropdown-user dropdown">
 										<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -542,11 +606,10 @@
 											</li>
 										</ul>
 									</li>
-
 								</ul>
 							</div>
 						</div>
-						@*						<ul class="navbar-nav flex-row align-items-center ms-auto">
+						@*<ul class="navbar-nav flex-row align-items-center ms-auto">
 						<li class="nav-item me-2 me-xl-50" style="margin-right: 33rem !important">
 						<h5 class="card-header" id="navhead"></h5>
 						</li>
