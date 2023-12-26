@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -203,31 +204,37 @@ namespace Recon_proto.Controllers
 
         #region Downloads
 
-        public IActionResult getfilepath()
+        public JsonResult getfilepath()
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
-            DataTable result = new DataTable();
+			fileconfigmodel FileDownload = new fileconfigmodel();
+
+			var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
+			FileDownload.in_config_name = context;
+			DataTable result = new DataTable();
             string post_data = "";
             try
             {
+
                 using (var client = new HttpClient())
                 {
                     string Urlcon = "Common/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("configvalue", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    return Json(result);
-                }
-            }
-            catch (Exception ex)
+                    return Json(d2);
+
+
+				}
+			}
+			catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
                 objcom.errorlog(ex.Message, "Datasetdetail");
@@ -237,10 +244,14 @@ namespace Recon_proto.Controllers
 
         public IActionResult Downloads(string jobid)
 		{
-            urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
+			var out_result = getfilepath();
+			List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
+			urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
             fileModel FileDownloadgrid = new fileModel();
-			//string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
-			string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon_demo/";
+            string filepath = "";
+			if (myObjects.Count > 0){
+				filepath = myObjects[0].out_config_value;
+			}
 			FileDownloadgrid.jobGid= jobid;
 			FileDownloadgrid.jobName= "";
 			FileDownloadgrid.filePath = filepath.Replace("'","");
@@ -315,9 +326,17 @@ namespace Recon_proto.Controllers
 
 			public String? filePath { get; set; }
 		}
+		public class fileconfigmodel
+		{
+			public string? in_config_name { get; set; }
+			public string? out_config_value { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
 
-        #endregion
+		}
 
-    }
+		#endregion
+
+	}
 }
 
