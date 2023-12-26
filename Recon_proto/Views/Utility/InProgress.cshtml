@@ -8,6 +8,19 @@
 <head>
     <title></title>
     <style>
+
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: transparent;
+        }
+
+        .k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+            color: white !important;
+        }
+
+        .k-header, .k-grid-header {
+            color: white !important;
+        }
+
         .nav-item.me-2.me-xl-50 {
             margin-right: 33rem !important;
         }
@@ -85,15 +98,23 @@
 </html>
 
 <script type="text/javascript">
-
+    var isjobrun = false;
     $(document).ready(function () {
         fetchGrid();
+        getjobtypelist();
         setInterval(function () {
-            getjobtypelist();
-        }, 5000); // 5000 milliseconds = 5 seconds
+            isjobrun = true;
+        }, 5000); 
         $("#navhead").text("Job in progress");
         kendodate_format();
+        if (isjobrun = true) {
+            setInterval(function () {
+                searchJob();
+            }, 5000);// 5000 milliseconds = 5 seconds
+        }
     });
+
+ 
 
     function getjobtypelist() {
         $.ajax({
@@ -175,7 +196,7 @@
                         }
                     }
                 },
-                height: 380,
+                height: 400,
                 groupable: false,
                 dataBound: function (e) {
                     resultData = e.sender._data;
@@ -189,61 +210,40 @@
                 },
                 sortable: true,
                 selectable: true,
-                filterable: true,
+                filterable: false,
                 navigatable: true,
                 resizable: true,
                 columns: [{
                     field: "job_gid",
                     title: "Job ID",
-                    width: 70,
+                    width: 50,
                     attributes: { style: "text-align: center;" },
                 },
 
                 {
                     field: "job_name",
                     title: "Job Name",
-                    width: 100,
-                },
-                {
-                    field: "jobtype_code",
-                    title: "Job Type Code",
-                    hidden: true
+                    width: 125
                 },
                 {
                     field: "jobtype_desc",
                     title: "Job Type",
-                    width: 100,
+                    width:60
                 },
                 {
                     field: "recon_name",
                     title: "Recon Name",
-                    width: 100,
+                    width: 125
                 },
                 {
                     field: "start_date",
                     title: "Start Date",
-                    width: 100,
-                },
-                {
-                    field: "end_date",
-                    title: "End Date",
-                    width: 100,
-                    hidden: true,
+                    width: 100
                 },
                 {
                     field: "job_remark",
                     title: "Job Remark",
-                    width: 100,
-                },
-                {
-                    field: "jobstatus_desc",
-                    title: "Job Status",
-                    width: 80,
-                },
-                {
-                    field: "jobtype_code",
-                    title: "Job Type Code",
-                    hidden: true
+                    width: 250,
                 }],
                 editable: false,
 

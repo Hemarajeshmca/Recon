@@ -731,11 +731,11 @@
         }
 
         if (data.in_recon_code && data.in_report_code && data.in_report_param && data.reportcondition != 'AND' && data.in_ip_addr) {
-            //$.alert({
-            //    title: 'Recon',
-            //    content: "Report Generated, Please check the Job Status in Utility",
-            //    type: 'green',
-            //});
+            $.alert({
+                title: 'Recon',
+                content: "Report Generated, Please check the Job Status in Utility",
+                type: 'green',
+            });
             $.ajax({
                 type: "POST",
                 url: '../Reports/generateReport',
@@ -743,38 +743,38 @@
                 async: false,
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    var res = JSON.parse(response);
+                //success: function (response) {
+                //    var res = JSON.parse(response);
 
-                    if (res.length > 0) {
-                        var data = res[0];
-                        if (data.out_result != '0') {
-                            $.alert({
-                                title: 'Recon',
-                                content: data.out_msg,
-                                type: 'green',
-                            });
+                //    if (res.length > 0) {
+                //        var data = res[0];
+                //        if (data.out_result != '0') {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'green',
+                //            });
 
-                        } else {
-                            $.alert({
-                                title: 'Recon',
-                                content: data.out_msg,
-                                type: 'red',
-                            });
-                        }
-                    } else {
-                        $.alert({
-                            title: 'Recon',
-                            content: "Something Went Wrong ..!",
-                            type: 'red',
-                        });
-                    }
-                },
-                error: function (er) {
-                    debugger;
-                    alert(er)
-                    console.log(er)
-                }
+                //        } else {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'red',
+                //            });
+                //        }
+                //    } else {
+                //        $.alert({
+                //            title: 'Recon',
+                //            content: "Something Went Wrong ..!",
+                //            type: 'red',
+                //        });
+                //    }
+                //},
+                //error: function (er) {
+                //    debugger;
+                //    alert(er)
+                //    console.log(er)
+                //}
             });
         } else if (!data.in_recon_code) {
             $.alert({
