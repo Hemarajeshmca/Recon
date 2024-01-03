@@ -501,5 +501,98 @@ namespace Recon_proto.Controllers
 			public string in_user_code { get; set; }
 		}
 		#endregion
+
+		#region undoKOjob
+		[HttpPost]
+		public JsonResult undoKOjob([FromBody] undoKOjobModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("undoKOjob", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "undoKO");
+				return Json(ex.Message);
+			}
+		}
+
+		public class undoKOjobModel
+		{
+			public string in_recon_code { get; set; }
+			public string in_job_type { get; set; }
+			public string in_job_status { get; set; }
+			public string in_from_date { get; set; }
+			public string in_to_date { get; set; }
+		}
+
+		[HttpPost]
+		public JsonResult undomatchjob([FromBody] undomatchmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			undomatchmodel objList = new undomatchmodel();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					// client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("undomatchjob", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					for (int i = 0; i < result.Rows.Count; i++)
+					{						
+						objList.out_msg = result.Rows[i]["out_msg"].ToString();
+						objList.out_result = result.Rows[i]["out_result"].ToString();
+					}
+					return Json(objList);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "undomatchjob");
+				return Json(ex.Message);
+			}
+
+		}
+		public class undomatchmodel
+		{
+			public string? reconcode { get; set; }
+			public int job_id { get; set; }
+			public string? undo_job_reason { get; set; }
+			public string? in_ip_addr { get; set; }
+			public string? in_user_code { get; set; }			
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+		#endregion
 	}
 }

@@ -1,0 +1,307 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row">
+					<div class="col-xs-12">
+						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+						</a>
+						<div id="grid_role"> </div>
+					</div>
+				</div>
+				<div class="modal" id="Roleform" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+							</div>
+							<div class="modal-body" style="margin-top: -26px;">
+								<div class="row">
+									<div class="col-sm-4">
+									</div>
+									<div class="col-sm-4">
+										<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Add Roles</h4>
+									</div>
+									<div class="col-sm-4">
+										<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+									</div>
+								</div>
+								<hr style="margin-top:-1px; width:100%;">
+								<div class="container">
+									<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+										<div class="col-sm-4">
+											<label for="" class="form-label">Role Code&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input class="form-control" id="role_code" name="RoleCode" type="text" value="">
+											<input type="hidden" id="role_gid" value="0" />
+											<input type="hidden" id="txtmodedataset" value="Create" />
+										</div>
+										<div class="col-sm-4">
+											<label for="" class="form-label">Role Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input class="form-control" id="role_name" name="RoleName" type="text" value="">
+										</div>
+										<div class="col-sm-4">
+											<label for="" class="form-label">Status&nbsp;</label>
+											<select id="cmbstatus" class="form-select form-control" value="" disabled>
+											</select>
+										</div>
+										
+									</div>
+								</div>
+								<div class="col-sm-4" style="margin-top:30px;float: right;">
+									<center>
+										<button type="button" class="btn btn-sm save_btn me-2" onclick="saveRole()">Save</button>&nbsp;&nbsp;&nbsp;
+										<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+									</center>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		grid_role();
+		$("#navhead").text("Roles");
+		setlocalStorage("ls_pageList", "");
+	});
+
+	function grid_role() {
+		grid_role_details([]);
+		
+	}
+	var status_Priority = [];
+	function grid_role_details(data) {
+
+		$("#grid_role").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							role_id: { type: "string" },
+							role_code: { type: "string" },
+							role_name: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 458,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_role').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			sortable: true,
+			selectable: true,
+			filterable: true,
+			navigatable: true,
+			change: selectRow,
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "btn_Edit",
+						template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "view",
+						id: "View",
+						template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "role_id",
+				title: "role_id",
+				width: 100,
+				hidden: true,
+			},
+
+			{
+				field: "role_code",
+				title: "Role Code",
+				width: 100,
+			},
+			{
+				field: "role_name",
+				title: "Role Name",
+				width: 100,
+			},
+			
+			{
+				field: "active_status",
+				title: "Status",
+				width: 100,
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 50,				
+			}],
+			editable: false,
+
+		});
+	}
+
+	function getSerializedRows() {
+		btn_onClick('Create');
+		$("#Roleform").modal('show');
+	}
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						if (items.active_status != "N") {
+							btn_onClick("Edit");
+							//document.location = '../DataSet/DataSetForm';
+						}
+					}
+					else if ($(mode).attr('value') == "view") {
+						btn_onClick('View');
+						//document.location = "../DataSet/DataSetForm";
+					}
+
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+	function selectRow() {
+		try {
+			var grid = $("#grid_dataset").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem);
+		}
+		catch (err) {
+
+		}
+	}
+	function saveRole(){
+		try {
+			var rolecode = $("#role_code").val();
+			var rolename = $("#role_name").val();
+			var status = $("#cmbstatus").val();
+			var rolegid = $("#role_gid").val();
+			var action = "INSERT"
+			var action_by = "vijay";
+			var in_user_code = "vijay";
+			status = "Y"
+
+			$.ajax({
+				type: "POST",
+				url: '../Admin/rolesave',
+				dataType: 'json',
+				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						$("#txtmodedataset").val("");
+						$("#DatasetType").val("");
+						$("#cmbParentDataset").val("");
+						$("#cmbdatasetname").val("");
+						$("#recondataset_gid").val(response.in_recondataset_gid)
+						$("#Accountform").modal('hide');
+						detailfetch($("#recon_id").val());
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+</script>
