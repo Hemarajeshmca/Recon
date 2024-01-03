@@ -169,6 +169,8 @@
 							comparsion_dataset_name: { type: "string" },
 							system_match_flag_desc: { type: "string" },
 							hold_flag_desc: { type: "string" },
+							system_match_flag: { type: "string" },
+							hold_flag: { type: "string" },
 							rule_code: { type: "string" },
 						}
 					}
@@ -176,7 +178,6 @@
 			},
 			height: 400,
 			groupable: false,
-
 			dataBound: function (e) {
 				createSwitch(this.tbody.find(".customClass"));
 				createSwitch1(this.tbody.find(".customClass1"));							
@@ -240,13 +241,13 @@
 				},
 				],
 			editable: false,
-			cancel: function (e) {
-				var grid = this;
-				var rowUid = e.container.data("uid");
-				setTimeout(function () {
-					createSwitch(grid.element.find("tr[data-uid='" + rowUid + "'] .customClass"));
-				});
-			},
+			//cancel: function (e) {
+			//	var grid = this;
+			//	var rowUid = e.container.data("uid");
+			//	setTimeout(function () {
+			//		createSwitch(grid.element.find("tr[data-uid='" + rowUid + "'] .customClass"));
+			//	});
+			//},
 		});
 	}
 	function sel_checkbox(data) {	
@@ -258,12 +259,12 @@
 		return '<input id="chk_sel_' + data.rule_gid + '" class="customClass" ' + con + '"  type="checkbox"/> ';
 	}
 	function sel_checkbox1(data) {
-		var isChecked = data.hold_flag_desc;
-		var con = "";
-		if (isChecked == "YES") {
-			con = 'checked=checked';
+		var isChecked1 = data.hold_flag_desc;
+		var con1 = "";
+		if (isChecked1 == "YES") {
+			con1 = 'checked=checked';
 		}
-		return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" ' + con + '" type="checkbox"/> ';
+		return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" ' + con1 + '" type="checkbox"/> ';
 	}
 
 	function createSwitch(element) {
@@ -285,18 +286,35 @@
 		var grid = $("#grid_reconverion").getKendoGrid();
 		var dataItem = grid.dataItem(row);
 		var checked = e.checked;
-		dataItem.set("system_match_flag_desc", checked);
+		if (checked == true){
+			dataItem.set("system_match_flag_desc", checked);
+			dataItem.set("system_match_flag_desc", 'Y');
+		}else{
+			dataItem.set("system_match_flag_desc", checked);
+			dataItem.set("system_match_flag_desc", 'N');
+		}
+		
 		// sync data with remote service
 		//grid.dataSource.sync();
+		//dataSource.sync();
+		//grid1.refresh();
 	}
 	function onChange1(e) {
-		var row = e.sender.element.closest("tr");
-		var grid = $("#grid_reconverion").getKendoGrid();
-		var dataItem = grid.dataItem(row);
-		var checked = e.checked;
-		dataItem.set("hold_flag_desc", checked);
+		var row1 = e.sender.element.closest("tr");
+		var grid1 = $("#grid_reconverion").getKendoGrid();
+		var dataItem1 = grid1.dataItem(row1);
+		var checked1 = e.checked;
+		if (checked1 == true) {
+			dataItem1.set("hold_flag_desc", checked1);
+			dataItem1.set("hold_flag", 'Y');
+		} else {
+			dataItem1.set("hold_flag_desc", checked1);
+			dataItem1.set("hold_flag", 'N');
+		}		
 		// sync data with remote service
 		//grid.dataSource.sync();
+		//dataSource.sync();
+		//grid1.refresh();
 	}
 
 	function reconsubmit() {

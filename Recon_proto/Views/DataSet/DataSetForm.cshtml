@@ -25,11 +25,7 @@
 
 		.k-grid-header {
 			font-weight: bold;
-		}
-
-		.k-state-active {
-			display: none;
-		}
+		}		
 
 		.k-content {
 			font-weight: normal;
@@ -340,12 +336,10 @@
 		}
 	}
 	function grid_datasetfield(data) {
-		debugger;
-
 		$("#grid_datasetfield").kendoGrid({
 			dataSource: {
 				data: data,
-				pageSize: 10,
+				pageSize: 5,
 				schema: {
 					model: {
 						fields: {
@@ -353,20 +347,33 @@
 							slno: { type: "string" },
 							field_name: { type: "string" },
 							field_type: { type: "string" },
+							fieldtype_desc: { type: "string" },
 							field_length: { type: "string" },
+							precision_length: { type: "string" },
+							scale_length: { type: "string" },
 							field_mandatory: { type: "string" },
 							In_mode_flag: { type: "string", defaultValue: "I" }
 						}
 					}
-				}
+				},
+					change: function (e) {
+					setTimeout(function () {
+						var gd = $("#grid_datasetfield").data("kendoGrid");
+						$('.k-i-close').css('display', 'none');
+						$('button.k-button-icon').css('display', 'none');
+						$('#grid_datasetfield .k-input').prop('disabled', false);
+						$('#grid_datasetfield .k-input').prop('readonly', true);
+					}, 1);
+				},
 			},
+			change: selectRow,
 			height: 270,
 			groupable: false,
-			dataBound: function (e) {
-				resultData = e.sender._data;
-				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
-				//setColor(rows, resultData);
-			},
+			//dataBound: function (e) {
+			//	resultData = e.sender._data;
+			//	var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
+			//	setColor(rows, resultData);
+			//},
 			sortable: false,
 			selectable: true,
 			filterable: false,
@@ -506,6 +513,15 @@
 		}
 		catch (e) {
 			console.log(e)
+		}
+	}
+	function selectRow() {
+		try {
+			var grid = $("#grid_datasetfield").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());			
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
 		}
 	}
 	function getdetailSelectedRows(mode) {
