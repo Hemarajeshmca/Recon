@@ -505,8 +505,10 @@
                     ko_percentage = (ko_count / tran_count) * 100.00;
                     excp_percentage = (excp_count / tran_count) * 100.00;
 
+                    if(tran_count > 0){
                     ko_txt = " (" + ko_percentage.toFixed(2) + " %)";
                     excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
+                    } 
 
                     $("#recon_count").text(data.DataSet1[0]["recon_count"]);
                     $("#acc_count").text(data.DataSet1[0]["dataset_count"]);
@@ -517,6 +519,7 @@
                     $("#excp_percentage").text(excp_txt);
                     $("#match_percentage").text(ko_txt);
                     $("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
+
                     var sys_ko_count = data.DataSet2[0]["system_ko_count"];
                     var man_ko_count = data.DataSet2[0]["manual_ko_count"];
                     drawVisualization(sys_ko_count, man_ko_count);
