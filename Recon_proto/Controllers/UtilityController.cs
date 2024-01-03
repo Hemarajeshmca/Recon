@@ -96,7 +96,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("jobinpogress", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -147,7 +152,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("jobcompleted", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -215,13 +225,17 @@ namespace Recon_proto.Controllers
             string post_data = "";
             try
             {
-
                 using (var client = new HttpClient())
                 {
                     string Urlcon = "Common/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("configvalue", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -262,28 +276,23 @@ namespace Recon_proto.Controllers
                 {
                     string[] result = { };
                     client.BaseAddress = new Uri(urlstring);
-                    //client.BaseAddress = new Uri("http://146.56.55.230:9091/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //var json = JsonConvert.SerializeObject(FileDownloadgrid);
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
                     content.Headers.Add("user_code", "12345");
-
                     var response = client.PostAsync("files", content).Result;
-
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     string base64data = string.Empty;
-
                     var bytes = new byte[data.Length];
                     data.Read(bytes, 0, bytes.Length);
-                    //byte[] bytes = Convert.FromBase64String(reader.ReadLine().Replace('"', ' '));
                     var responses = new FileContentResult(bytes, "application/octet-stream");
-                    //responses.FileDownloadName = Job_name;
-
                     var fileName = jobid.ToString() + ".zip";
-
-
                     var contentDisposition = new ContentDisposition
                     {
                         FileName = jobid,
@@ -295,18 +304,6 @@ namespace Recon_proto.Controllers
                     Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
                     Response.Headers.Add("Content-Type", "application/octet-stream");
                     return File(bytes, "application/octet-stream", fileName);
-
-
-                    //try
-                    //{
-                    //	var (fileType, archiveData, archiveName) = _fileservice.DownloadFiles(filepath, jobid);
-
-                    //	return File(archiveData, fileType, archiveName);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //	return BadRequest(ex.Message);
-                    //}
                 }
             }
             catch (Exception ex)
@@ -315,7 +312,6 @@ namespace Recon_proto.Controllers
                 objcom.errorlog(ex.Message, "files");
                 return Json(ex.Message);
             }
-
         }
 
 		public class fileModel

@@ -5,8 +5,11 @@ using System.Data;
 using System.Net;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Net.NetworkInformation;
 using Recon_proto.Models;
 using static Recon_proto.Controllers.LoginController;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace Recon_proto.Controllers
 {
@@ -16,9 +19,9 @@ namespace Recon_proto.Controllers
         private readonly IConfiguration _configuration;
         private readonly ILogger<LoginController> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        string ipAddress = "";
         string urlstring = "";
-        public LoginController(
+        string ipAddress = "";
+		public LoginController(
      IConfiguration configuration,
      ILogger<LoginController> logger,
      IHttpContextAccessor httpContextAccessor)
@@ -41,21 +44,19 @@ namespace Recon_proto.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    string hostName = Dns.GetHostName();
-                    ipAddress = Dns.GetHostAddresses(hostName)[0].ToString();
-                    var pass = Encrypt(model.Password);
+                    ipAddress = GetLocalIPAddress();
+					var pass = Encrypt(model.Password);
                     loginmodel.user_id = model.UserName;
                     loginmodel.password = pass;
                     loginmodel.ip = ipAddress;
                     loginmodel.msg = "";
-                    loginmodel.ip_address = "";
-                    loginmodel.datasource = "";
+                    loginmodel.ip_address = ipAddress;
+					loginmodel.datasource = "";
                     loginmodel.user_code = "";
                     loginmodel.user_name = "";
                     loginmodel.oldpassword = "";
                     string Urlcon = "UserManagement/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
-                    //client.BaseAddress = new Uri("https://localhost:44348/api/UserManagement/");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(loginmodel), UTF8Encoding.UTF8, "application/json");
@@ -79,13 +80,16 @@ namespace Recon_proto.Controllers
                         objcat_lst.Add(objcat);
                         ViewBag.user_gid = objcat.user_gid;
                         ViewBag.user_name = objcat.user_name;
-                        HttpContext.Session.SetString("usercode", model.UserName);
+                        HttpContext.Session.SetString("user_code", result.Rows[i]["user_gid"].ToString());
                         HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
                         HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
                         HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
-                        HttpContext.Session.SetString("user_code", result.Rows[i]["user_gid"].ToString());
-                        HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
+                        HttpContext.Session.SetString("user_gid", result.Rows[i]["user_gid"].ToString());
+						HttpContext.Session.SetString("role_code", "Admin");
+						HttpContext.Session.SetString("lang_code", "en_US");
+						HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
                         HttpContext.Session.SetString("userrole", "ADMIN");
+                        HttpContext.Session.SetString("ipAddress", ipAddress);
                     }
                     return JsonConvert.SerializeObject(objcat_lst);
                 }
@@ -97,7 +101,15 @@ namespace Recon_proto.Controllers
             }
         }
 
-        [HttpPost]
+		private static string GetLocalIPAddress()
+		{
+			string hostName = Dns.GetHostName();
+			IPAddress[] addresses = Dns.GetHostAddresses(hostName);
+			IPAddress ipv4Address = addresses.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+			return ipv4Address?.ToString() ?? "No IPv4 address found";
+		}
+
+		[HttpPost]
         public IActionResult changepassword_Save([FromBody] changePassword model)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -175,6 +187,7 @@ namespace Recon_proto.Controllers
             public string? UserName { get; set; }
             public string? Password { get; set; }
         }
+
 
         private string Encrypt(string clearText)
         {
