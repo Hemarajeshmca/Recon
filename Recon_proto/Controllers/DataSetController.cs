@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Recon_proto.Models;
 using System.Data;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
+using static Recon_proto.Controllers.LoginController;
 
 namespace Recon_proto.Controllers
 {
@@ -43,7 +47,12 @@ namespace Recon_proto.Controllers
                     string Urlcon = "Dataset/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("DatasetRead", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -63,6 +72,8 @@ namespace Recon_proto.Controllers
                         objcat.sl_no = result.Rows[i]["sl_no"].ToString();
                         objcat.last_sync_date = result.Rows[i]["last_sync_date"].ToString();
                         objcat.last_sync_status = result.Rows[i]["last_sync_status"].ToString();
+                        objcat.completed_date = result.Rows[i]["completed_date"].ToString();
+                        objcat.job_remark = result.Rows[i]["job_remark"].ToString();
                         objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
@@ -89,7 +100,10 @@ namespace Recon_proto.Controllers
 			public string? sl_no { get; set; }
 			public string? last_sync_date { get; set; }
 			public string? last_sync_status { get; set; }
-		}
+            public string? completed_date { get; set; }
+            public string? job_remark { get; set; }
+
+        }
         #endregion
 
         #region Datasetheader
@@ -108,7 +122,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("DatasetHeader", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -157,7 +176,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     // client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("DatasetDetail", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -215,7 +239,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("DatasetReaddetail", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -256,7 +285,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/DataSet/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("getfieldtype", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -309,7 +343,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/DataSet/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("getPipelinelist", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -353,5 +392,7 @@ namespace Recon_proto.Controllers
 			public string pipeline_status { get; set; }
 		}
         #endregion
+
+
     }
 }

@@ -23,6 +23,7 @@
     <link href="~/Content/css/dist/css/dms.css" rel="stylesheet" />
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="~/Scripts/kendo1/2015.1.318/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <style>
         .modal {
@@ -33,12 +34,12 @@
             background-color:#fff;
         }
     </style>
+@*    <link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
     <script src="~/Content/css/bower_components/jquery/dist/jquery.min.js"></script>
     <script src="~/Content/css/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/Scripts/jquery-confirm.min.js"></script>
-    <link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-confirm.min.js"></script>*@
 </head>
-<body style="        background: url('../../Content/images/login_page.jpg') no-repeat center center fixed;
+<body style="background: url('Content/images/login_page.jpg') no-repeat center center fixed;
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -91,6 +92,14 @@
         debugger;
         gettoken();
     });
+
+
+    function setlocalStorage(key, value) {
+        var data = "";
+        data[key] = value[0];
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
     function validation() {
         debugger;
         var msg = "";
@@ -150,8 +159,8 @@
                 }
                 else {
                     if (response[0].msg == "Login success !") {
+                        setlocalStorage("recon_userdetail", response[0]);
                         window.location.href = '@Url.Action("Index", "Home")';
-
                     }
                     else {
                         $.dialog({
@@ -162,12 +171,10 @@
                     }
                 }
             },
-            error: function (er) {
-            }
+            error: function (er) { }
         });
-
-
     };
+
     function ForgotPassword() {
 
     @*var url = '@Url.Action("ForgetPassword", "login")'

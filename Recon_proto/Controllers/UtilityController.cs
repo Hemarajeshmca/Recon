@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -95,7 +96,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("jobinpogress", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -146,7 +152,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("jobcompleted", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -203,11 +214,14 @@ namespace Recon_proto.Controllers
 
         #region Downloads
 
-        public IActionResult getfilepath()
+        public JsonResult getfilepath()
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
-            DataTable result = new DataTable();
+			fileconfigmodel FileDownload = new fileconfigmodel();
+
+			var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
+			FileDownload.in_config_name = context;
+			DataTable result = new DataTable();
             string post_data = "";
             try
             {
@@ -216,18 +230,25 @@ namespace Recon_proto.Controllers
                     string Urlcon = "Common/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("configvalue", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    return Json(result);
-                }
-            }
-            catch (Exception ex)
+                    return Json(d2);
+
+
+				}
+			}
+			catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
                 objcom.errorlog(ex.Message, "Datasetdetail");
@@ -237,10 +258,14 @@ namespace Recon_proto.Controllers
 
         public IActionResult Downloads(string jobid)
 		{
-            urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
+			var out_result = getfilepath();
+			List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
+			urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
             fileModel FileDownloadgrid = new fileModel();
-			//string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon/";
-			string filepath = "/new_volume/tmp/mysqlrpt/flexi_recon_demo/";
+            string filepath = "";
+			if (myObjects.Count > 0){
+				filepath = myObjects[0].out_config_value;
+			}
 			FileDownloadgrid.jobGid= jobid;
 			FileDownloadgrid.jobName= "";
 			FileDownloadgrid.filePath = filepath.Replace("'","");
@@ -251,28 +276,23 @@ namespace Recon_proto.Controllers
                 {
                     string[] result = { };
                     client.BaseAddress = new Uri(urlstring);
-                    //client.BaseAddress = new Uri("http://146.56.55.230:9091/");
                     client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //var json = JsonConvert.SerializeObject(FileDownloadgrid);
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
                     content.Headers.Add("user_code", "12345");
-
                     var response = client.PostAsync("files", content).Result;
-
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     string base64data = string.Empty;
-
                     var bytes = new byte[data.Length];
                     data.Read(bytes, 0, bytes.Length);
-                    //byte[] bytes = Convert.FromBase64String(reader.ReadLine().Replace('"', ' '));
                     var responses = new FileContentResult(bytes, "application/octet-stream");
-                    //responses.FileDownloadName = Job_name;
-
                     var fileName = jobid.ToString() + ".zip";
-
-
                     var contentDisposition = new ContentDisposition
                     {
                         FileName = jobid,
@@ -284,18 +304,6 @@ namespace Recon_proto.Controllers
                     Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
                     Response.Headers.Add("Content-Type", "application/octet-stream");
                     return File(bytes, "application/octet-stream", fileName);
-
-
-                    //try
-                    //{
-                    //	var (fileType, archiveData, archiveName) = _fileservice.DownloadFiles(filepath, jobid);
-
-                    //	return File(archiveData, fileType, archiveName);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //	return BadRequest(ex.Message);
-                    //}
                 }
             }
             catch (Exception ex)
@@ -304,7 +312,6 @@ namespace Recon_proto.Controllers
                 objcom.errorlog(ex.Message, "files");
                 return Json(ex.Message);
             }
-
         }
 
 		public class fileModel
@@ -315,9 +322,17 @@ namespace Recon_proto.Controllers
 
 			public String? filePath { get; set; }
 		}
+		public class fileconfigmodel
+		{
+			public string? in_config_name { get; set; }
+			public string? out_config_value { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
 
-        #endregion
+		}
 
-    }
+		#endregion
+
+	}
 }
 
