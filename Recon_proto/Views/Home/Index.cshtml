@@ -1,677 +1,649 @@
 @{
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
 <html>
 <head>
-    <title></title>
-    <style>
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 33rem !important;
-        }
-        .border {
-            border: 1px solid #d9dee3 !important;
-            background: #fff;
-        }
+	<title></title>
+	<style>
+		.content-wrapper {
+			min-height: 564px !important;
+		}
 
-        .card-body {
-            position: relative;
-            display: flexbox;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0 solid #d9dee3;
-            border-radius: 0.5rem;
-        }
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
 
-        #chartdiv {
-            width: 100%;
-            height: 370px;
-        }
+		.border {
+			border: 1px solid #d9dee3 !important;
+			border-radius: 10px;
+			margin: 0px !important;
+			background: #fff;
+		}
 
-        #chartdivs {
-            width: 100%;
-            height: 370px;
-        }
+		.card-body {
+			position: relative;
+			display: flexbox;
+			flex-direction: column;
+			min-width: 0;
+			word-wrap: break-word;
+			background-color: #fff;
+			background-clip: border-box;
+			border: 0 solid #d9dee3;
+			border-radius: 0.5rem;
+		}
 
-        .amcharts-chart-div > a {
-            display: none !important;
-        }
+		#chartdiv {
+			width: 100%;
+			height: 370px;
+		}
 
-        text.highcharts-credits {
-            display: none;
-        }
+		#chartdivs {
+			width: 100%;
+			height: 370px;
+		}
 
-        path.highcharts-button-symbol {
-            display: none;
-        }
+		.amcharts-chart-div > a {
+			display: none !important;
+		}
 
-        .k-popup.k-list-container {
-            width: 300px !important;
-        }
+		text.highcharts-credits {
+			display: none;
+		}
 
-        .k-webkit {
-            overflow: hidden !important;
-        }
+		path.highcharts-button-symbol {
+			display: none;
+		}
 
-        .error_show {
-            color: red;
-            margin-left: 10px;
-        }
+		.k-popup.k-list-container {
+			width: 300px !important;
+		}
 
-        .k-grid.k-widget {
-            height: 360px;
-        }
+		.k-webkit {
+			overflow: hidden !important;
+		}
 
-        .k-grid-header th.k-header > .k-link {
-            width: 100px;
-        }
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
 
-        .k-grid-header {
-            font-weight: bold;
-        }
+		.k-grid.k-widget {
+			height: 360px;
+		}
 
-        .k-state-active {
-            display: none;
-        }
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
 
-        .k-content {
-            font-weight: normal;
-            font-size: 13px;
-        }
+		.k-grid-header {
+			font-weight: bold;
+		}
 
-        .k-widget.k-window {
-            padding-top: 35px;
-            min-width: 90px;
-            min-height: 50px;
-            width: 700px !important;
-            height: 300px !important;
-            top: 180.766px !important;
-            /*left: 120px !important;*/
-            z-index: 10003;
-            left: 300px !important;
-        }
+		.k-state-active {
+			display: none;
+		}
 
-        div.content-wrapper{
-            min-height:43px !important;
-        }
-    </style>
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
 </head>
 <body>
-    <div class="row" style="height:auto;padding: 0px 18px;">
-            <div class="col-md-12">
-                <div class="content-wrapper" style="min-height:43px">
-                <div class="row" style="margin-left:-6px;    margin-bottom: 25px;">
-                        <div class="col-sm-2">
-                            <div class="card shadow-none bg-transparent border border-primary mb-3" style="border-radius: 20px;border-color: #ff6a00 !important;margin: 25px;margin-left: 4px;margin-right: -15px;">
-                                <div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:8px">
-                                    <h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="recon_count"></span></h5>
-                                    <center><p class="card-text" style="font-weight:600;color:white;">Recons</p></center>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="card shadow-none bg-transparent border border-secondary mb-3" style="border-radius: 20px;border-color: #71DD37  !important;margin: 25px;margin-right: -45px;position: relative;left: -25px;">
-                                <div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:8px">
-                                    <h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="acc_count"></span></h5>
-                                    <center><p class="card-text" style="font-weight:600;color:white;">Dataset</p></center>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #FFAB00 !important;margin: 25px;margin-right: -41px;position: relative;left: -22px;">
-                                <div class="card-body" style="background:#FFAB00;border-radius: 17px;padding:8px">
-                                    <h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="tran_count"></span></h5>
-                                    <center><p class="card-text" style="font-weight:600;color:white;">Transactions</p></center>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #8592A3 !important;margin: 25px;margin-right: -38px;position: relative;left: -22px;">
-                                <div class="card-body" style="background:#8592A3;border-radius: 19px;padding:8px">
-                                    <h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_count"></span></h5>
-                                    <center><p class="card-text" style="font-weight:600;color:white;">Matches <span id="match_percentage"></span></p></center>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;margin: 25px;margin-right: -36px;position: relative;left: -24px;">
-                                <div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
-                                    <h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
-                                    <center><p class="card-text" style="font-weight:600;color:white;">Partial</p></center>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#696cff  !important;margin: 25px;margin-right: -22px;position: relative;left: -28px;">
-                                <div class="card-body" style="background:#696cff ;border-radius: 20px;padding:8px">
-                                    <h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="excp_count"></span></h5>
-                                <center><p class="card-text" style="font-weight:600;color:white;">Exceptions <span id="excp_percentage"></span></p></center>
-                                </div>
-                            </div>
-                        </div>
+	<div class="row" style="height:auto;padding: 0px 18px;">
+		<div class="col-md-12">
+			<div class="content-wrapper" style="min-height:43px">
+				<div class="row" style="margin-left:0%;padding-top:1%">
+					<div class="col-md-2">
+						<label for="period_from" class="title">Date From</label>
+						<input class="cusDate" data-role='datepicker' id="period_from" onclick="Dateformat()" style="width:100%" data-bind="value:period_from" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+						@*<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" style="width:100%" />*@
+					</div>
+					<div class="col-md-2">
+						<label for="period_from" class="title">Date To</label><br />
+						<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+					</div>
 
-                    </div>
-                    <div class="row" hidden>
-                        <div class="col-sm-3" style="margin-left:81%;">
-                            <label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span></label>
-                        </div>
-                    </div>
-                <div class="row" style="margin-top:-45px">
-                    <div class="col-md-6 col-xl-5 border" style="margin-left: 64px;">
-                        <h5>Auto Match Vs Manual Match</h5>
-                        <div id="chart" class="chart" style="height:300px;"></div>
-                    </div>
-                    <div class="col-md-6 col-xl-5 border">
-                        <h5 style="margin-bottom:25px !important;">Ageing of Exceptions</h5>
-                        <div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div>
-                    </div>
-                </div>
-                   @* <div class="row" style="margin-left:10px;padding-bottom:10px;margin-top: -25px;">
-                    <div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
-                            <h5 style="text-align:center;font-weight:600;display:block;">Auto Match Vs Manual Match</h5>
-                            <center><div id="chart" class="chart" style="height:300px;"></div></center>
-                        </div>
-                    <div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
-                            <h5 style="text-align: center;font-weight:600;">Ageing of Exceptions</h5>
-                            <center><div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div></center>
-                        </div>
-                    </div>*@
-                </div>
-            </div>
-        </div>
+					<div class="col-md-5">
+						<label for="" class="title">Recon Name</label><br />
+						<input id="cmbreconname" style="width:65%" />
+					</div>
+					<div class="col-md-2" style="margin-top:2%">
+						<button type="button" id="btn_search" class="btn btn-sm btn-primary me-2" onclick="getdashboarddetails()">
+							&nbsp;Refresh
+						</button>
+					</div>
+				</div>
+				<div class="row" style="margin-left:-6px; margin-bottom: 5px;margin-top:6px">
+					<div class="col-sm-2">
+						<div class="card shadow-none bg-transparent border border-primary mb-3" style="border-radius: 20px;border-color: #ff6a00 !important;margin: 25px;margin-left: 4px;margin-right: -15px;">
+							<div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:8px">
+								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="recon_count"></span></h5>
+								<center><p class="card-text" style="font-weight:600;color:white;">Recons</p></center>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2" style="margin-left: 18px;">
+						<div class="card shadow-none bg-transparent border border-secondary mb-3" style="border-radius: 20px;border-color: #71DD37  !important;margin: 25px;margin-right: -45px;position: relative;left: -25px;">
+							<div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:8px">
+								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="acc_count"></span></h5>
+								<center><p class="card-text" style="font-weight:600;color:white;">Dataset</p></center>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2" style="margin-left: -8px;">
+						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #FFAB00 !important;margin: 25px;margin-right: -41px;position: relative;left: -22px;">
+							<div class="card-body" style="background:#FFAB00;border-radius: 17px;padding:8px">
+								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="tran_count"></span></h5>
+								<center><p class="card-text" style="font-weight:600;color:white;">Transactions</p></center>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #8592A3 !important;margin: 25px;margin-right: -38px;position: relative;left: -22px;">
+							<div class="card-body" style="background:#8592A3;border-radius: 19px;padding:8px">
+								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_count"></span></h5>
+								<center><p class="card-text" style="font-weight:600;color:white;">Matches <span id="match_percentage"></span></p></center>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2" style="margin-left:-5px;">
+						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;margin: 25px;margin-right: -36px;position: relative;left: -24px;">
+							<div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
+								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
+								<center><p class="card-text" style="font-weight:600;color:white;">Partial</p></center>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2" style="margin-left:-6px;">
+						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#696cff  !important;margin: 25px;margin-right: -22px;position: relative;left: -28px;">
+							<div class="card-body" style="background:#696cff ;border-radius: 20px;padding:8px">
+								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="excp_count"></span></h5>
+								<center><p class="card-text" style="font-weight:600;color:white;">Exceptions <span id="excp_percentage"></span></p></center>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				@*<div class="row" hidden>
+					<div class="col-sm-3" style="margin-left:81%;">
+						<label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span></label>
+					</div>
+				</div>*@
+				<div class="row">
+					<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
+						<h5>Auto Match Vs Manual Match</h5>
+						<div id="chart" class="chart" style="height:300px;"></div>
+					</div>
+					<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
+						<h5 style="margin-bottom:25px !important;">Ageing of Exceptions</h5>
+						<div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div>
+					</div>
+				</div>
+				@* <div class="row" style="margin-left:10px;padding-bottom:10px;margin-top: -25px;">
+				<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
+				<h5 style="text-align:center;font-weight:600;display:block;">Auto Match Vs Manual Match</h5>
+				<center><div id="chart" class="chart" style="height:300px;"></div></center>
+				</div>
+				<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
+				<h5 style="text-align: center;font-weight:600;">Ageing of Exceptions</h5>
+				<center><div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div></center>
+				</div>
+				</div>*@
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        getdashboarddetails();
-        $("#kendoVersion").text(kendo.version);
+	$(document).ready(function () {
+		kendodate_format();
+		//getdashboarddetails();
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var arr = [];
+				for (i = 0; response.length > i; i++) {
+					var list1 = {};
+					list1.value = response[i].recon_code;
+					list1.text = response[i].recon_name;
+					arr.push(list1);
+				}
+				dropdown = $("#cmbreconname").kendoDropDownList({
+					dataTextField: "text",
+					dataValueField: "value",
+					template: $("#CheckboxTemplate").html(),
+					dataSource: arr,
+					placeholder: "Select...",
+					select: function (e) {
+						e.preventDefault();
+					}
+				}).data("kendoDropDownList");
 
-        $("#cmbEmployee").kendoComboBox({
-            dataSource: [{ EmployeeID: 1, EmployeeName: "Ash" }],
-            placeholder: "Select",
-            dataTextField: "EmployeeName",
-            dataValueField: "EmployeeID",
-            index: 0,
-            suggest: true,
-            filter: "contains",
-        });
+				dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
+					var $item = $(this);
+					var $input;
 
-        $("#grid").kendoGrid({
-            dataSource: [{ CustomerID: "1", ContactName: "Aysh1", CompanyName: "ABC", Country: "IND" },
-            { CustomerID: "2", ContactName: "Aysh2", CompanyName: "ABC", Country: "IND" },
-            { CustomerID: "3", ContactName: "Aysh3", CompanyName: "ABC", Country: "IND" },
-            { CustomerID: "4", ContactName: "Aysh4", CompanyName: "ABC", Country: "IND" },
-            { CustomerID: "5", ContactName: "Aysh5", CompanyName: "ABC", Country: "IND" }
-            ],
-            filterable: true,
-            sortable: true,
-            columns: CustomerHelper.GenerateColumns(),
-            editable: false,
-            navigatable: true,
-            selectable: "row"
-        });
-    });
-    var CustomerHelper = {
-        GenerateColumns: function () {
-            return columns = [
-                { field: "CustomerID", title: "ID", width: 40, editable: false },
-                { field: "ContactName", title: "Name", width: 60, editable: false },
-                { field: "CompanyName", title: "Company", width: 60, editable: false },
-                { field: "Country", title: "Country", width: 60, editable: false },
-            ]
-        }
-    }
+					if ($item.hasClass("check-item")) {
+						// Text was clicked
+						$input = $item.children(".check-input");
+						$input.prop("checked", !$input.is(':checked'));
+					}
+					else
+						// Checkbox was clicked
+						$input = $item;
+
+					// Check all clicked?
+					if ($input.val() == "")
+						dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
+
+					updateDropDown()
+
+					e.stopImmediatePropagation();
+				});
+
+				updateDropDown();
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		function updateDropDown() {
+			var items = [];
+			dropdown.list.find(".check-input").each(function () {
+				var $input = $(this);
+				if ($input.val() != "" && $input.is(':checked'))
+					items.push($input.next().text());
+			});
+			dropdown.text(items.toString());
+		}
+		$("#kendoVersion").text(kendo.version);
+
+		$("#cmbEmployee").kendoComboBox({
+			dataSource: [{ EmployeeID: 1, EmployeeName: "Ash" }],
+			placeholder: "Select",
+			dataTextField: "EmployeeName",
+			dataValueField: "EmployeeID",
+			index: 0,
+			suggest: true,
+			filter: "contains",
+		});
+
+		$("#grid").kendoGrid({
+			dataSource: [{ CustomerID: "1", ContactName: "Aysh1", CompanyName: "ABC", Country: "IND" },
+			{ CustomerID: "2", ContactName: "Aysh2", CompanyName: "ABC", Country: "IND" },
+			{ CustomerID: "3", ContactName: "Aysh3", CompanyName: "ABC", Country: "IND" },
+			{ CustomerID: "4", ContactName: "Aysh4", CompanyName: "ABC", Country: "IND" },
+			{ CustomerID: "5", ContactName: "Aysh5", CompanyName: "ABC", Country: "IND" }
+			],
+			filterable: true,
+			sortable: true,
+			columns: CustomerHelper.GenerateColumns(),
+			editable: false,
+			navigatable: true,
+			selectable: "row"
+		});
+	});
+	var CustomerHelper = {
+		GenerateColumns: function () {
+			return columns = [
+				{ field: "CustomerID", title: "ID", width: 40, editable: false },
+				{ field: "ContactName", title: "Name", width: 60, editable: false },
+				{ field: "CompanyName", title: "Company", width: 60, editable: false },
+				{ field: "Country", title: "Country", width: 60, editable: false },
+			]
+		}
+	}
 
 </script>
-
+<script type="text/x-kendo-template" id="CheckboxTemplate">
+	<li unselectable="on" class="k-item nowrap check-item">
+		<input type="checkbox"  name="cb" value="#= value #" class="check-input"  />
+		<span >#= text #</span>
+	</li>
+</script>
 
 <script>
-    var dataone = [];
+	var dataone = [];
 
-    (function ($) {
-        var MultiSelectBox = window.kendo.ui.DropDownList.extend({
-            _select: function (li) { },//Prevents highlighting
-            _blur: function () { },//Prevents auto close
-        });
+	(function ($) {
+		var MultiSelectBox = window.kendo.ui.DropDownList.extend({
+			_select: function (li) { },//Prevents highlighting
+			_blur: function () { },//Prevents auto close
+		});
 
-        window.kendo.ui.plugin(MultiSelectBox);
-    })(jQuery);
+		window.kendo.ui.plugin(MultiSelectBox);
+	})(jQuery);
 
-    function onSelect(e) {
-        debugger;
+	function onSelect(e) {
+		debugger;
 
-        var cbs = document.getElementsByName("cb");
-        var checkboxes = document.getElementsByTagName('input');
-        var ddl = $("#ReconName_id").data("kendoDropDownList");
-        var id = ddl.element.attr("ReconName_id");
-        multiselect();
-        var item = e.item;
-        var index = item.index();
-        if (index == 0) {
-            for (var i = 1; i < cbs.length; i++) {
-                var selectAll = cbs[0].checked;
-                if (cbs[0].checked) {
-                    for (var i = 0; i < checkboxes.length; i++) {
-                        if (checkboxes[i].type == 'checkbox') {
-                            checkboxes[i].checked = true;
-                        }
-                    }
-                    multiselect();
-                }
+		var cbs = document.getElementsByName("cb");
+		var checkboxes = document.getElementsByTagName('input');
+		var ddl = $("#ReconName_id").data("kendoDropDownList");
+		var id = ddl.element.attr("ReconName_id");
+		multiselect();
+		var item = e.item;
+		var index = item.index();
+		if (index == 0) {
+			for (var i = 1; i < cbs.length; i++) {
+				var selectAll = cbs[0].checked;
+				if (cbs[0].checked) {
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].type == 'checkbox') {
+							checkboxes[i].checked = true;
+						}
+					}
+					multiselect();
+				}
 
-                else {
-                    for (var i = 0; i < checkboxes.length; i++) {
-                        if (checkboxes[i].type == 'checkbox') {
-                            checkboxes[i].checked = false;
-                        }
-                    }
-                    multiselect();
-                }
-            }
-        }
+				else {
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].type == 'checkbox') {
+							checkboxes[i].checked = false;
+						}
+					}
+					multiselect();
+				}
+			}
+		}
 
-    }
+	}
 
-    function multiselect() {
-        debugger;
-        // var dataItem = this.dataItem(e.item);
-        var ddl = $("#ReconName_id").data("kendoDropDownList");
-        var isAllChecked = $('#cb').prop("checked");
-        var cbs = document.getElementsByName("cb");
-        var display;
+	function multiselect() {
+		debugger;
+		// var dataItem = this.dataItem(e.item);
+		var ddl = $("#ReconName_id").data("kendoDropDownList");
+		var isAllChecked = $('#cb').prop("checked");
+		var cbs = document.getElementsByName("cb");
+		var display;
 
-        var list = [];
-        for (var i = 1; i < cbs.length; i++) {
-            if (cbs[i].checked) {
-                list.push(cbs[i].value);
-            }
+		var list = [];
+		for (var i = 1; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				list.push(cbs[i].value);
+			}
 
-        }
-
-
-        if (list.length == 0) {
-            display = "-- SelectAll --";
-
-            $("#ReconAttr").html("Recon - All");
-        }
-        else {
-
-            display = list.join(", ");
-            $("#ReconAttr").html("Recon - " + display + "");
-        }
-
-        ddl.text(display);
-
-    }
+		}
 
 
-    function subtractMonths(date, months) {
-        debugger;
-        date.setMonth(date.getMonth() - months);
-        return date;
-    }
-    $(document).ready(function () {
-        call();
-        debugger;
-        $("#navhead").text("Dashboard");
-        //drawVisualization();
-        drawChart1();
-        $(".accordion_head").click(function () {
-            debugger;
+		if (list.length == 0) {
+			display = "-- SelectAll --";
 
-            if ($(this).next(".accordion_body").is(':visible')) {
-                $(this).next(".accordion_body").slideUp(300);
-                $(this).children(".plusminus").text('+');
-            } else {
-                $(this).next(".accordion_body").slideDown(300);
-                $(this).children(".plusminus").text('-');
-            }
-        });
-    });
+			$("#ReconAttr").html("Recon - All");
+		}
+		else {
 
-   
-    function call() {
-        debugger;
-        $(".accordion_body").slideUp(300)
-        $(".plusminus").text('+');
+			display = list.join(", ");
+			$("#ReconAttr").html("Recon - " + display + "");
+		}
+
+		ddl.text(display);
+
+	}
 
 
+	function subtractMonths(date, months) {
+		debugger;
+		date.setMonth(date.getMonth() - months);
+		return date;
+	}
+	$(document).ready(function () {
+		call();
+		debugger;
+		$("#navhead").text("Dashboard");
+		//drawVisualization();
+		drawChart1();
+		$(".accordion_head").click(function () {
+			debugger;
+
+			if ($(this).next(".accordion_body").is(':visible')) {
+				$(this).next(".accordion_body").slideUp(300);
+				$(this).children(".plusminus").text('+');
+			} else {
+				$(this).next(".accordion_body").slideDown(300);
+				$(this).children(".plusminus").text('-');
+			}
+		});
+	});
 
 
-    }
-    function openNav() {
-        $(document).ready(function () {
-            $('#layout-menu').toggleClass('active');
-        });
-    }
+	function call() {
+		debugger;
+		$(".accordion_body").slideUp(300)
+		$(".plusminus").text('+');
 
 
 
-    function drawVisualization(system,manual) {
 
-        debugger;
-
-        google.charts.load('current', {
-            callback: function () {
-                var manual_ko_count;
-                var system_ko_count;
-
-                //  var tags = dataone.objcat_lst;
-                var tags = dataone.objlist;
-                var opt1 = [];
-                var opt2 = [];
-                for (var i = 0; i < 2; i++) {
-                    var str = i;
-                    system_ko_count = system//1495929;
-                    manual_ko_count = manual;//51857;
-
-                }
-                new google.visualization.PieChart(document.getElementById('chart')).draw(
-                    google.visualization.arrayToDataTable([
-                        ['Manual Match', 'System Match'],
-                        ['Manual', { v: manual_ko_count }],
-                        ['System', { v: system_ko_count }]
-                    ]),
-                    {
-                        height: 240,
-                        // legend: { 'position': 'right', 'alignment': 'end' },
-                        legend: { position: 'bottom' },
-
-                        pieSliceText: 'value',
-                        //sliceVisibilityThreshold: 0.0000000000000001,
-                        sliceVisibilityThreshold: 0,
-                        //   title: 'Auto Match Vs Manual Match',
-
-                        //titlePosition: center,
-                        titleTextStyle: {
-                            bold: true,
-                            //  italic: true,
-                            fontSize: 14,
+	}
+	function openNav() {
+		$(document).ready(function () {
+			$('#layout-menu').toggleClass('active');
+		});
+	}
 
 
-                        },
 
-                        tooltip: {
-                            //showColorCode: true,
-                            //text: 'value',
-                            trigger: 'selection'
-                        },
-                        //width: 525
-                    }
-                );
-            },
-            packages: ['corechart', 'table']
-        });
+	function drawVisualization(system, manual) {
 
-    }
+		debugger;
 
+		google.charts.load('current', {
+			callback: function () {
+				var manual_ko_count;
+				var system_ko_count;
 
-    function drawChart1(arraytags) {
-        debugger;
-        google.charts.load('current', {
-            callback: function () {
+				//  var tags = dataone.objcat_lst;
+				var tags = dataone.objlist;
+				var opt1 = [];
+				var opt2 = [];
+				for (var i = 0; i < 2; i++) {
+					var str = i;
+					system_ko_count = system//1495929;
+					manual_ko_count = manual;//51857;
 
-                // var tags = [{ aging_desc: "0 - 5 Days", excp_count: 0 }, { aging_desc: "6 - 15 Days", excp_count: 0 },
-                // { aging_desc: "16 - 30 Days", excp_count: 43745 }, { aging_desc: "31 - 60 Days", excp_count: 1212 }, { aging_desc: "> 60 Days", excp_count: 1300 }];
-                var tags = arraytags;
-                var opt1 = [];
-                var opt2 = [];
-                for (var i = 0; i < tags.length; i++) {
-                    var aging_desc = tags[i].aging_desc;
-                    var excpcount = tags[i].excp_count;
-                    var opt1 = [aging_desc, excpcount];
-                    if (i == 0) {
+				}
+				new google.visualization.PieChart(document.getElementById('chart')).draw(
+					google.visualization.arrayToDataTable([
+						['Manual Match', 'System Match'],
+						['Manual', { v: manual_ko_count }],
+						['System', { v: system_ko_count }]
+					]),
+					{
+						height: 240,
+						// legend: { 'position': 'right', 'alignment': 'end' },
+						legend: { position: 'bottom' },
 
-                        opt2.push(['Task', 'Hours per Day']);
-                        opt2.push(opt1);
-                    } else {
-                        opt2.push(opt1);
-                    }
-                }
+						pieSliceText: 'value',
+						//sliceVisibilityThreshold: 0.0000000000000001,
+						sliceVisibilityThreshold: 0,
+						//   title: 'Auto Match Vs Manual Match',
 
-                new google.visualization.PieChart(document.getElementById('pie-chart')).draw(
-                    google.visualization.arrayToDataTable(opt2),
-
-                    {
-                        height: 240,
-                        //legend: { 'position': 'right', 'alignment': 'end' },
-                        legend: { position: 'bottom' },
-                        floating: true,
-                        pieSliceText: 'value',
-                        //sliceVisibilityThreshold: 0.0000000000000001,
-                        sliceVisibilityThreshold: 0,
-                        //  title: 'Ageing of Exceptions',
-                        titleTextStyle: {
-                            bold: true,
-                            //  italic: true,
-                            fontSize: 14,
+						//titlePosition: center,
+						titleTextStyle: {
+							bold: true,
+							//  italic: true,
+							fontSize: 14,
 
 
-                        },
-                        tooltip: {
-                            //showColorCode: true,
-                            //text: 'value',
-                            trigger: 'selection'
-                        },
-                        //width: 525
-                    }
-                );
-            },
-            packages: ['corechart', 'table']
-        });
-    }
+						},
 
-    function getdashboarddetails() {
-        debugger;
-        var currentDate = new Date();
-        var year = currentDate.getFullYear();
-        var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        var day = currentDate.getDate().toString().padStart(2, '0');
-        var formattedDate = year + '-' + month + '-' + day;
-        var data = {};
-        data.in_recon_code = "";
-        data.in_period_from = "2000-01-01";
-        data.in_period_to = formattedDate;
-        $.ajax({
-            type: "POST",
-            url: '../Common/GetDashboarddtl',
-            dataType: 'json',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                debugger;
+						tooltip: {
+							//showColorCode: true,
+							//text: 'value',
+							trigger: 'selection'
+						},
+						//width: 525
+					}
+				);
+			},
+			packages: ['corechart', 'table']
+		});
 
-                var ko_count = 0;
-                var excp_count = 0;
-                var ko_percentage = 0.00;
-                var excp_percentage =0.00;
-                var tran_count = 0;
-                var ko_txt = "";
-                var excp_txt = "";
+	}
 
-                if (response != null) {
-                    var data = JSON.parse(response);
 
-                    tran_count = data.DataSet1[0]["tran_count"];
-                    ko_count = data.DataSet1[0]["ko_count"];
-                    excp_count = data.DataSet1[0]["excp_count"];
-                    ko_percentage = (ko_count / tran_count) * 100.00;
-                    excp_percentage = (excp_count / tran_count) * 100.00;
+	function drawChart1(arraytags) {
+		debugger;
+		google.charts.load('current', {
+			callback: function () {
 
-                    if(tran_count > 0){
-                    ko_txt = " (" + ko_percentage.toFixed(2) + " %)";
-                    excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
-                    } 
+				// var tags = [{ aging_desc: "0 - 5 Days", excp_count: 0 }, { aging_desc: "6 - 15 Days", excp_count: 0 },
+				// { aging_desc: "16 - 30 Days", excp_count: 43745 }, { aging_desc: "31 - 60 Days", excp_count: 1212 }, { aging_desc: "> 60 Days", excp_count: 1300 }];
+				var tags = arraytags;
+				var opt1 = [];
+				var opt2 = [];
+				for (var i = 0; i < tags.length; i++) {
+					var aging_desc = tags[i].aging_desc;
+					var excpcount = tags[i].excp_count;
+					var opt1 = [aging_desc, excpcount];
+					if (i == 0) {
 
-                    $("#recon_count").text(data.DataSet1[0]["recon_count"]);
-                    $("#acc_count").text(data.DataSet1[0]["dataset_count"]);
-                    $("#tran_count").text(data.DataSet1[0]["tran_count"]);
-                    $("#ko_count").text(data.DataSet1[0]["ko_count"]);
-                    $("#excp_count").text(data.DataSet1[0]["excp_count"]);
-                    $("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]);
-                    $("#excp_percentage").text(excp_txt);
-                    $("#match_percentage").text(ko_txt);
-                    $("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
+						opt2.push(['Task', 'Hours per Day']);
+						opt2.push(opt1);
+					} else {
+						opt2.push(opt1);
+					}
+				}
 
-                    var sys_ko_count = data.DataSet2[0]["system_ko_count"];
-                    var man_ko_count = data.DataSet2[0]["manual_ko_count"];
-                    drawVisualization(sys_ko_count, man_ko_count);
-                    var tags = [];
+				new google.visualization.PieChart(document.getElementById('pie-chart')).draw(
+					google.visualization.arrayToDataTable(opt2),
 
-                    // Assuming DataSet3 is an array
-                    for (var i = 0; i < data.DataSet3.length; i++) {
-                        tags.push({
-                            aging_desc: data.DataSet3[i]["aging_desc"],
-                            excp_count: data.DataSet3[i]["excp_count"]
-                        });
-                    }
+					{
+						height: 240,
+						//legend: { 'position': 'right', 'alignment': 'end' },
+						legend: { position: 'bottom' },
+						floating: true,
+						pieSliceText: 'value',
+						//sliceVisibilityThreshold: 0.0000000000000001,
+						sliceVisibilityThreshold: 0,
+						//  title: 'Ageing of Exceptions',
+						titleTextStyle: {
+							bold: true,
+							//  italic: true,
+							fontSize: 14,
 
-                    drawChart1(tags);
-                
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
 
-        });
-    }
+						},
+						tooltip: {
+							//showColorCode: true,
+							//text: 'value',
+							trigger: 'selection'
+						},
+						//width: 525
+					}
+				);
+			},
+			packages: ['corechart', 'table']
+		});
+	}
+
+	function getdashboarddetails() {
+		debugger;
+		var currentDate = new Date();
+		var year = currentDate.getFullYear();
+		var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+		var day = currentDate.getDate().toString().padStart(2, '0');
+		var formattedDate = year + '-' + month + '-' + day;
+		var data = {};
+		data.in_recon_code = "";
+		data.in_period_from = "2000-01-01";
+		data.in_period_to = formattedDate;
+		$.ajax({
+			type: "POST",
+			url: '../Common/GetDashboarddtl',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+
+				var ko_count = 0;
+				var excp_count = 0;
+				var ko_percentage = 0.00;
+				var excp_percentage = 0.00;
+				var tran_count = 0;
+				var ko_txt = "";
+				var excp_txt = "";
+
+				if (response != null) {
+					var data = JSON.parse(response);
+
+					tran_count = data.DataSet1[0]["tran_count"];
+					ko_count = data.DataSet1[0]["ko_count"];
+					excp_count = data.DataSet1[0]["excp_count"];
+					ko_percentage = (ko_count / tran_count) * 100.00;
+					excp_percentage = (excp_count / tran_count) * 100.00;
+
+					if (tran_count > 0) {
+						ko_txt = " (" + ko_percentage.toFixed(2) + " %)";
+						excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
+					}
+
+					$("#recon_count").text(data.DataSet1[0]["recon_count"]);
+					$("#acc_count").text(data.DataSet1[0]["dataset_count"]);
+					$("#tran_count").text(data.DataSet1[0]["tran_count"]);
+					$("#ko_count").text(data.DataSet1[0]["ko_count"]);
+					$("#excp_count").text(data.DataSet1[0]["excp_count"]);
+					$("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]);
+					$("#excp_percentage").text(excp_txt);
+					$("#match_percentage").text(ko_txt);
+					$("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
+
+					var sys_ko_count = data.DataSet2[0]["system_ko_count"];
+					var man_ko_count = data.DataSet2[0]["manual_ko_count"];
+					drawVisualization(sys_ko_count, man_ko_count);
+					var tags = [];
+
+					// Assuming DataSet3 is an array
+					for (var i = 0; i < data.DataSet3.length; i++) {
+						tags.push({
+							aging_desc: data.DataSet3[i]["aging_desc"],
+							excp_count: data.DataSet3[i]["excp_count"]
+						});
+					}
+
+					drawChart1(tags);
+
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
 
 
 </script>
 
-
-@*<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Single Input Dropdown</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        /* Add some additional styling if needed */
-        .single-input-dropdown {
-            width: 300px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container mt-5">
-
-        <div class="form-group">
-            <label for="singleInputDropdown">Select or type to search:</label>
-            <div class="input-group single-input-dropdown">
-                <input type="text"
-                       class="form-control"
-                       id="singleInputDropdown"
-                       placeholder="Type to search..."
-                       data-toggle="dropdown"
-                       aria-haspopup="true"
-                       aria-expanded="false"
-                onkeyup="myFunction()">
-                <div class="dropdown-menu" aria-labelledby="singleInputDropdown">
-                   
-                </div>
-            </div>
-        </div>
-
-        <p id="selectedItem">Selected Item: </p>
-    </div>
-
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-        getGridComboList();
-   
-        });
-
-        function getGridComboList() {
-            debugger;
-            var DBresponse = "";
-            const inputElement = $('#singleInputDropdown');
-            const dropdownMenu = inputElement.next('.dropdown-menu');
-            var in_master_code = "QCD_RC_RCON_TYPE";
-            var in_user_code = "sundar";
-            $.ajax({
-                type: "POST",
-                url: '../Common/Qcdmaster',
-                dataType: 'json',
-                data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
-                contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    debugger;
-                    DBresponse = JSON.stringify(response)
-                    try {
-
-                        // Iterate over the array to populate the initial dropdown
-                        response.forEach(option => {
-                            debugger;
-                            const optionItem = $('<button class="dropdown-item" type="button"></button>').text(option.masterName);
-                            optionItem.on('click', function () {
-                                debugger;
-                                inputElement.val(option.masterName);
-                                $('#selectedItem').text('Selected Item: ' + option.masterName);
-                                dropdownMenu.html('');
-                            });
-                            dropdownMenu.append(optionItem);
-                        });
-                    } catch (error) {
-                        console.error('Error parsing JSON on page load:', error);
-                    }
-                 }
- 
-            });
-
-            inputElement.on('keyup', function () {
-                const searchTerm = $(this).val().toLowerCase();
-                dropdownMenu.html('');
-
-                try {
-                    const dataArray = JSON.parse(DBresponse);
-
-                    // Iterate over the array to dynamically populate the dropdown
-                    dataArray.forEach(option => {
-                        if (option.masterName.toLowerCase().includes(searchTerm)) {
-                            const optionItem = $('<button class="dropdown-item" type="button"></button>').text(option.masterName);
-                            optionItem.on('click', function () {
-                                inputElement.val(option.masterName);
-                                $('#selectedItem').text('Selected Item: ' + option.masterName);
-                                dropdownMenu.html('');
-                            });
-                            dropdownMenu.append(optionItem);
-                        }
-                    });
-                } catch (error) {
-                    console.error('Error parsing JSON dynamically:', error);
-                }
-            });
-                let firstClick = true;
-                inputElement.on('click', function () {
-                    if (firstClick) {
-                        inputElement.trigger('keyup');
-                        firstClick = false;
-                    }
-                });
-        }
-
-
-
-    </script>
-
-</body>
-</html>*@
