@@ -103,7 +103,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-3" hidden>
                         <label for="" class="form-label">Date From<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                         <div>
                             <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" data-value="1999-01-01" onclick="Dateformat()" style="width:100%" />
@@ -130,7 +130,7 @@
 
     <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 510px;left: 155px;">
+            <div class="modal-content" style="width: 75%;left: 18%;">
                 <div class="modal-header">
                 </div>
                 <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
@@ -145,17 +145,48 @@
                         </div>
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
-                    <div class="container">
-                        <p><strong>Rule Code&nbsp;&nbsp;:&nbsp;</strong><span id="rule_code"></span></p>
-                        <p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
-                        <p><strong>Rule Applied On&nbsp;&nbsp;:&nbsp;</strong><span id="rule_apply_on_desc"></span></p>
-                        <p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
-                        <p><strong>Rule Version&nbsp;&nbsp;:&nbsp;</strong><span id="rule_version"></span></p>
-                        <p><strong>Group Flag&nbsp;&nbsp;:&nbsp;</strong><span id="group_flag"></span></p>
-                        <p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
-                        <p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
-                        <p><strong>Rule Status&nbsp;&nbsp;:&nbsp;</strong><span id="active_status_desc"></span></p>
 
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Name </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7"> <p><span id="rule_code"> </span> <strong><span>&nbsp; - </span></strong> <span id="rule_name"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Applied On </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_apply_on_desc"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Order </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_order"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Version </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_version"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Group Flag </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="group_flag"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Source Dataset </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="source_dataset"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Comparision Dataset </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="comparision_dataset"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Status </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="active_status_desc"></span></p></div>
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
@@ -212,29 +243,107 @@
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Debit(Before) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong>Count:</strong> <span id="debit_before_count"></span> &nbsp; <strong>Value:</strong> <span id="debit_before_value"></span> </p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_before_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_before_value"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Debit(After) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong> Count:</strong> <span id="debit_after_count"></span> &nbsp; <strong>Value:</strong> <span id="debit_after_value"></span> </p>
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                       <p> <strong>:</strong></p>
+                                        </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_after_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_after_value"></span>
+                                    </div>
+                                </div>
+                          </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Credit(Before) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong>Count:</strong> <span id="credit_before_count"></span> &nbsp; <strong>Value:</strong> <span id="credit_before_value"></span> </p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_before_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_before_value"></span>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Credit(After) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong>Count:</strong> <span id="credit_after_count"></span> &nbsp; <strong>Value:</strong> <span id="credit_after_value"></span> </p>
-                            </div>
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_after_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_after_value"></span>
+                                    </div>
+                                </div>
+                           </div>
                         </div>
                         
                     </div>

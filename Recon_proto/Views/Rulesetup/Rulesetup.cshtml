@@ -119,7 +119,7 @@
 			$("#grid_rulesetup").kendoGrid({
 				dataSource: {
 					data: data,
-					pageSize: 10,
+					pageSize: 5,
 					schema: {
 						model: {
 							fields: {
@@ -141,15 +141,19 @@
 					var rows = $('#grid_rulesetup').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
 				},
+				pageable:true,
+				serverPaging: false,
 				pageable: {
-					refresh: false,
+					pageSize: 5,
 					pageSizes: true,
-					buttonCount: 5
+					buttonCount: 5,
+					change: function (e) {
+						console.log("Page changed to: " + (e.index + 1));
+					}
 				},
 				sortable: true,
 				selectable: true,
 				filterable: true,
-				navigatable: true,
 				change: selectRow,
 				columns: [{
 					command: [
