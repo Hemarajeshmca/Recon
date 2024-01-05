@@ -718,19 +718,21 @@
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var result = JSON.parse(response);
 				$("#cmbdatasetname").empty();
 				$("#cmbdatasetname").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(response, function (index, item) {
+				$.each(result, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbdatasetname").append($('<option>', {
-							value: item.datasetCode,
+							value: item.dataset_code,
 							text: item.dataset_name
 						}));
 					}
 				});
+				
 			}
 		});
 		// Dataset type

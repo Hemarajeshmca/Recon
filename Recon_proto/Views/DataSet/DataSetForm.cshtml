@@ -214,10 +214,10 @@
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
 				$("#datasetname").val(data.dataset_name);
 				$("#cmbcategory").val(cat);
-				$("#txtdatasetcode").val(data.datasetCode);
+				$("#txtdatasetcode").val(data.dataset_code);
 				$("#txtstatus").val(data.active_status_desc);
-				$("#datasetgid").val(data.dataset_id);
-				detailsfetch(data.dataset_id)
+				$("#datasetgid").val(data.dataset_gid);
+				detailsfetch(data.dataset_gid)
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
 			}
@@ -228,9 +228,9 @@
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
 				$("#datasetname").val(data.dataset_name);
 				$("#cmbcategory").val(cat);
-				$("#txtdatasetcode").val(data.datasetCode);
+				$("#txtdatasetcode").val(data.dataset_code);
 				$("#txtstatus").val(data.active_status_desc);
-				$("#datasetgid").val(data.dataset_id);
+				$("#datasetgid").val(data.dataset_gid);
 				detailsfetch(data.dataset_id)
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
@@ -241,12 +241,12 @@
 			}
 		}
 	}
-	function detailsfetch(datasetCode) {
+	function detailsfetch(datasetgid) {
 		$.ajax({
 			type: "POST",
 			url: '../DataSet/Datasetdetailreadlist',
 			dataType: 'json',
-			data: JSON.stringify({ datasetCode: datasetCode }),
+			data: JSON.stringify({ dataset_gid: datasetgid }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				debugger;
@@ -629,15 +629,16 @@
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var result = JSON.parse(response);
 				$("#Cmbclone").empty();
 				$("#Cmbclone").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(response, function (index, item) {
+				$.each(result, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#Cmbclone").append($('<option>', {
-							value: item.datasetCode,
+							value: item.dataset_code,
 							text: item.dataset_name
 						}));
 					}

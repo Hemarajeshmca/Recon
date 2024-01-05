@@ -87,8 +87,9 @@
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				if (response != null) {
-					grid_dataset_details(response);
+				var result = JSON.parse(response);
+				if (result != null) {
+					grid_dataset_details(result);
 				}
 				else {
 					grid_dataset_details([]);
@@ -122,8 +123,8 @@
 					schema: {
 						model: {
 							fields: {
-								dataset_id: { type: "string" },
-								datasetCode: { type: "string" },
+								dataset_gid: { type: "string" },
+								dataset_code: { type: "string" },
 								dataset_name: { type: "string" },
 								dataset_category: { type: "string" },
 								active_status: { type: "string" },
@@ -169,14 +170,14 @@
 					], title: "Action&nbsp;", width: "40px",
 				},
 				{
-					field: "dataset_id",
+					field: "dataset_gid",
 					title: "Row id",
 					width: 100,
 					hidden: true,
 				},
 
 				{
-					field: "datasetCode",
+					field: "dataset_code",
 					title: "Dataset Code",
 					width: 100,
 				},
@@ -272,7 +273,7 @@
 	function myDeleteJs() {
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var dataset_id = model.dataset_id;
+		var dataset_gid = model.dataset_gid;
 		$.confirm({
 			icon: 'fa fa-warning',
 			title: 'Recon',
@@ -307,13 +308,13 @@
 									var dataset_code = model.datasetCode;
 									var action = "DELETE";
 									var action_by = "vijay"
-									var dataset_id = model.dataset_id;
+									var dataset_gid = model.dataset_gid;
 									var status = "";
 									$.ajax({
 										type: "POST",
 										url: '../DataSet/Datasetheader',
 										dataType: 'json',
-										data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status, inactive_reason: name }),
+										data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_gid: dataset_gid, active_status: status, inactive_reason: name }),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {
 											var result = JSON.parse(response);
