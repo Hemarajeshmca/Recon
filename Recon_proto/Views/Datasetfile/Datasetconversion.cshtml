@@ -211,6 +211,38 @@
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
                     <div class="container">
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Description </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7"> <p><span id="job_desc"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Initiated Date-Time </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="initated_datetime"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Completed Date-Time </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="completed_datetime"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Initiated By </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="initatedby"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Status </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="status"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Remark </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="remarks"></span></p></div>
+                        </div>
+                    </div>
+                  @*  <div class="container">
 
                         <p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong><span id="job_desc"></span></p>
                         <p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="initated_datetime"></span></p>
@@ -219,7 +251,7 @@
                         <p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> <span id="status"></span></p>
                         <p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong><span id="remarks"></span></p>
 
-                    </div>
+                    </div>*@
                 </div>
                 <div class="row">
                     <div class="col-sm-4"> </div>
@@ -255,6 +287,7 @@
             data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
+                debugger;
                 if (response.length > 0) {
                     debugger;
                     const activeData = response.filter(item => item.active_status === "Y");

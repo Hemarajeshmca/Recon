@@ -1,438 +1,4 @@
-﻿@*@{
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
-}
-
-<!Doctype html>
-<html>
-<head>
-    <title></title>
-    <style>
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 28rem !important;
-        }
-
-        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-            color: #fff !important;
-        }
-
-        .error_show {
-            color: red;
-            margin-left: 10px;
-        }
-
-        .k-grid.k-widget {
-            height: 360px;
-        }
-
- /*       .k-grid-header th.k-header > .k-link {
-            width: 100px;
-        }*/
-
-        .k-grid-header {
-            font-weight: bold;
-        }
-
-        .k-state-active {
-            display: none;
-        }
-
-        .k-content {
-            font-weight: normal;
-            font-size: 13px;
-        }
-
-        .k-widget.k-window {
-            padding-top: 35px;
-            min-width: 90px;
-            min-height: 50px;
-            width: 700px !important;
-            height: 300px !important;
-            top: 180.766px !important;
-            /*left: 120px !important;*/
-            z-index: 10003;
-            left: 300px !important;
-        }
-
-        .tooltip-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .info-icon {
-            cursor: pointer;
-        }
-
-        .tooltip1 {
-            display: none;
-            position: absolute;
-            background-color: lightslategray;
-            color: #fff;
-            padding: 10px;
-            border-radius: 15px;
-            white-space: nowrap;
-            z-index: 1;
-            top: 100%;
-            margin-left: -142px;
-            transform: translateX(-50%);
-        }
-
-        .tooltip-container:hover .tooltip1 {
-            display: block;
-        }
-    </style>
-</head>
-<body class="hold-transition skin-blue sidebar-mini fixed">
-    <div class="content-wrapper">
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;height: 84%;">
-                <div class="row" style="margin-top:10px;margin-bottom: 2%;">
-                    <div class="col-md-3">
-                        <label for="" class="form-label">Date From</label>
-                        <div>
-                            <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
-                            <span data-for='valid' class='k-invalid-msg'></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Date To </label>
-                        <div>
-                            <input class="cusDate" data-role='datepicker2' id="initiated_to" name="initiated_to" onclick="Dateformat()" style="width:100%" />
-                            <span data-for='valid' class='k-invalid-msg'></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3" style="margin-top: 2%;">
-                        <button type="button" onclick="runselected()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
-                            Run Selected
-                        </button>
-                    </div>
-                </div>
-                <div id="grid_preview"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 510px;left: 155px;">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
-                    <div class="row">
-                        <div class="col-sm-4">
-                        </div>
-                        <div class="col-sm-4">
-                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
-                        </div>
-                        <div class="col-sm-4">
-                            <i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
-                        </div>
-                    </div>
-                    <hr style="margin-top:-1px; width:100%;">
-                    <div class="container">
-                        <p><strong>Recon Name&nbsp;&nbsp;:&nbsp;</strong><span id="recon_name"></span></p>
-                        <p><strong>Ko Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="initated_date"></span></p>
-                        <p><strong>Ko Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="completed_date"></span></p>
-                        <p><strong>Ko Initiated By&nbsp;&nbsp;:&nbsp;</strong><span id="initatedby"></span></p>
-                        <p><strong>KO Execution Status&nbsp;&nbsp;:&nbsp;</strong> <span id="status"></span></p>
-                        <p><strong>Ko Remark&nbsp;&nbsp;:&nbsp;</strong><span id="remarks"></span></p>
-                        <p><strong>Ko Exception Status&nbsp;&nbsp;:&nbsp;</strong><span id="execution_status"></span></p>
-                    </div>
-                </div>
-                <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
-                    <div class="col-sm-4"> </div>
-                    <div class="col-sm-4" style="margin-bottom:30px;float: right;">
-                        <center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
-                    </div>
-                    <div class="col-sm-4"> </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#navhead").text("Automatic Posting & Knockoff");
-        kendodate_format();
-        //getpreview();
-        getreconlist();
-    });
-    function rr1() {
-        debugger;
-        $("#infomodal").hide();
-    }
-
-    function getpreview() {
-        var in_master_code = "QCD_RC_PREVIEW_ON";
-        var in_user_code = "sundar";
-        $.ajax({
-            type: "POST",
-            url: '../Common/Qcdmaster',
-            dataType: 'json',
-            data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                $("#matchon").empty();
-                $("#matchon").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(response, function (index, item) {
-                    $("#matchon").append($('<option>', {
-                        value: item.masterCode,
-                        text: item.masterName
-                    }));
-                });
-            }
-        });
-    }
-
-    function getreconlist() {
-        debugger;
-        var data = {};
-        data.in_user_gid = 0;
-        data.in_active_status = '';
-        var Context = data;
-        $.ajax({
-            type: "POST",
-            url: '../Recon/Reconlistknockoff',
-            dataType: 'json',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                debugger;
-                if (response.length > 0) {
-                    grid_rule(response);
-                }
-                else {
-
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
-        });
-    }
-
-    function grid_rule(data) {
-        $("#grid_preview").kendoGrid({
-            dataSource: {
-                data: data,
-                pageSize: 15,
-                schema: {
-                    model: {
-                        fields: {
-                            recon_gid: { type: "string" },
-                            recon_code: { type: "string" },
-                            recon_name: { type: "string" },
-                            recontype_code: { type: "string" },
-                            recontype_desc: { type: "string" },
-                            start_date: { type: "string" },
-                            job_remark: { type: "string" },
-                            job_status: { type: "string" },
-                            jobstatus_desc: { type: "string" }
-                        }
-                    }
-                }
-            },
-            height: 407,
-            groupable: false,
-            dataBound: function (e) {
-                resultData = e.sender._data;
-                var rows = $('#grid_preview').data('kendoGrid').tbody.children();
-                setColor(rows, resultData);
-            },
-            sortable: true,
-            selectable: true,
-            filterable: true,
-            navigatable: true,
-            pageable: true,
-            pageable: {
-                refresh: false,
-                pageSizes: true,
-                buttonCount: 5
-            },
-            columns: [
-                {
-                    field: "recon_gid",
-                    title: "recon_gid",
-                    hidden: true,
-                },
-                {
-                    field: "job_status",
-                    title: "job_status",
-                    hidden: true,
-                },
-                {
-                    field: "name",
-                    title: "Action",
-                    template: function (dataItem) {
-                        if (dataItem.job_status == "P") {
-                            return "<input id='preview_checkbox' onclick='rowselected(this)' name='job_status' type='radio' disabled />";
-
-                        } else {
-                            return "<input  id='preview_checkbox' onclick='rowselected(this)' name='job_status' type='radio' />";
-                        }
-                    },
-                    width:30,
-                    filterable: false,
-                    attributes: {
-                        style: "text-align: center;"
-                    }
-                },
-                {
-                    field: "recon_code",
-                    title: "recon_code",
-                    hidden: true,
-                },
-                {
-                    field: "recon_name",
-                    title: "Recon Name",
-                    width: 200,
-                },
-                {
-                    field: "recontype_code",
-                    title: "recontype_code",
-                    width: 10,
-                    hidden: true
-                },
-                {
-                    field: "recontype_desc",
-                    title: "Recon Type",
-                    width: 100,
-                },
-                {
-                    field: "start_date",
-                    title: "Last KO Execution Date",
-                    width: 100,
-                },
-                {
-                    field: "jobstatus_desc",
-                    title: "Last KO Execution Status",
-                    width: 100,
-                },{
-                    field: "Info",
-                    title: "",
-                    template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
-                    width: 50,
-                    filterable: false,
-                    attributes: {
-                        style: "text-align: center;"
-                    }
-
-                }],
-            editable: false,
-        });
-    }
-
-
-    function runselected() {
-        debugger;
-        var rulepreview = $("#matchon").val();
-        var period_from = $("#initiated_from").val();
-        var ts = period_from.split("/");
-        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        var period_to = $("#initiated_to").val();
-        var ts1 = period_to.split("/");
-        var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-        var grid = $("#grid_preview").data("kendoGrid");
-        var checkedrows = $("#preview_checkbox:checked", grid.tbody).closest("tr");
-        var objpplmapupdlist = [];
-        var dropdownid = "";
-        for (var i = 0; i < checkedrows.length; i++) {
-            dropdownid = grid.dataItem(checkedrows[i]);
-        }
-        var in_recon_code = dropdownid.recon_code;
-        if (in_recon_code && period_from && period_to){
-        $.ajax({
-            type: "POST",
-            url: '../KnockOff/previewRulebase',
-            dataType: 'json',
-            data: JSON.stringify({
-                in_recon_code: in_recon_code + '$',
-                in_period_from: pr,
-                in_period_to: pr1,
-                in_automatch_flag: 'Y',
-                in_ip_addr: '',
-                in_user_code: 'Hema'
-            }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var res = JSON.parse(response);
-                if (res[0].out_result == '1') {
-                    $.alert({
-                        title: 'Recon',
-                        content: res[0].out_msg,
-                        type: 'green',
-                    });
-                        getreconlist();
-                }
-                else if (res[0].out_result == '0') {
-                    $.alert({
-                        title: 'Recon',
-                        content: res[0].out_msg,
-                        type: 'red',
-                    });
-                } else {
-                    $.alert({
-                        title: 'Recon',
-                        content: 'Something went wrong ..!',
-                        type: 'red',
-                    });
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
-        });
-        } else if (!in_recon_code) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Recon Code',
-                type: 'red',
-            });
-        } else if (!period_from) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Preiod From',
-                type: 'red',
-            });
-        } else if (!period_to) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Preiod From',
-                type: 'red',
-            });
-        }
-    }
-
-    function openInfoModel() {
-        debugger;
-        var grid = $("#grid_preview").data("kendoGrid");
-        var selectedItem = grid.dataItem(grid.select());
-        document.getElementById('recon_name').innerHTML = selectedItem.recon_name;
-        document.getElementById('initated_date').innerHTML = selectedItem.start_date;
-        document.getElementById('completed_date').innerHTML = selectedItem.start_date;
-        document.getElementById('initatedby').innerHTML = selectedItem.in_user_code;
-        document.getElementById('status').innerHTML = selectedItem.jobstatus_desc;
-        document.getElementById('remarks').innerHTML = selectedItem.job_remark;
-        document.getElementById('execution_status').innerHTML = selectedItem.jobstatus_desc;
-        $("#infomodal").modal("show");
-    }
-
-    function rowselected(val) {
-        debugger;
-        console.log(`val`, $("#dataset_selected").val());
-        $("#infomodal").modal("hide");
-    }
-
-
-</script>*@
-
-@{
+﻿@{
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -536,7 +102,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3" >
+                    <div class="col-md-3" hidden>
                         <label for="" class="form-label">Date From <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                         <div>
                             <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
@@ -563,7 +129,7 @@
 
     <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" style="width: 510px;left: 155px;">
+            <div class="modal-content" style="width: 75%;left: 18%;">
                 <div class="modal-header">
                 </div>
                 <div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
@@ -578,17 +144,48 @@
                         </div>
                     </div>
                     <hr style="margin-top:-1px; width:100%;">
-                    <div class="container">
-                        <p><strong>Rule Code&nbsp;&nbsp;:&nbsp;</strong><span id="rule_code"></span></p>
-                        <p><strong>Rule Name&nbsp;&nbsp;:&nbsp;</strong><span id="rule_name"></span></p>
-                        <p><strong>Rule Applied On&nbsp;&nbsp;:&nbsp;</strong><span id="rule_apply_on_desc"></span></p>
-                        <p><strong>Rule Order&nbsp;&nbsp;:&nbsp;</strong><span id="rule_order"></span></p>
-                        <p><strong>Rule Version&nbsp;&nbsp;:&nbsp;</strong><span id="rule_version"></span></p>
-                        <p><strong>Group Flag&nbsp;&nbsp;:&nbsp;</strong><span id="group_flag"></span></p>
-                        <p><strong>Source Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="source_dataset"></span></p>
-                        <p><strong>Comparision Dataset&nbsp;&nbsp;:&nbsp;</strong><span id="comparision_dataset"></span></p>
-                        <p><strong>Rule Status&nbsp;&nbsp;:&nbsp;</strong><span id="active_status_desc"></span></p>
 
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Name </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7"> <p><span id="rule_code"> </span> <strong><span>&nbsp; - </span></strong> <span id="rule_name"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Applied On </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_apply_on_desc"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Order </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_order"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Version </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_version"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Group Flag </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="group_flag"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Source Dataset </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="source_dataset"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Comparision Dataset </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="comparision_dataset"></span></p></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Status </strong></p></div>
+                            <div class="col-md-1">  <strong>:</strong> </div>
+                            <div class="col-md-7" style="white-space: nowrap;"> <p><span id="active_status_desc"></span></p></div>
+                        </div>
                     </div>
                 </div>
                 <div class="row" style="margin-top: -27px;margin-bottom: -12px;">
@@ -645,28 +242,104 @@
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Debit(Before) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong>Count:</strong> <span id="debit_before_count"></span> &nbsp; <strong>Value:</strong> <span id="debit_before_value"></span> </p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_before_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_before_value"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Debit(After) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong> Count:</strong> <span id="debit_after_count"></span> &nbsp; <strong>Value:</strong> <span id="debit_after_value"></span> </p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_after_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="debit_after_value"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Credit(Before) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong>Count:</strong> <span id="credit_before_count"></span> &nbsp; <strong>Value:</strong> <span id="credit_before_value"></span> </p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_before_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_before_value"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-3" style="white-space: nowrap;"> <p><strong>Credit(After) </strong></p></div>
                             <div class="col-md-1">  <strong>:</strong> </div>
                             <div class="col-md-6" style="white-space: nowrap;">
-                                <p><strong>Count:</strong> <span id="credit_after_count"></span> &nbsp; <strong>Value:</strong> <span id="credit_after_value"></span> </p>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <p><strong>Count</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p> <strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_after_count"></span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p><strong>Value</strong></p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <p><strong>:</strong></p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span id="credit_after_value"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
