@@ -58,26 +58,9 @@ namespace Recon_proto.Controllers
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    for (int i = 0; i < result.Rows.Count; i++)
-                    {
-                        Datasetlistmodel objcat = new Datasetlistmodel();
-                        objcat.dataset_id = Convert.ToInt32(result.Rows[i]["dataset_gid"]);
-                        objcat.dataset_name = result.Rows[i]["dataset_name"].ToString();
-                        objcat.datasetCode = result.Rows[i]["dataset_code"].ToString();
-                        objcat.active_status = result.Rows[i]["active_status"].ToString();
-                        objcat.dataset_category = result.Rows[i]["dataset_category"].ToString();
-                        objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
-                        objcat.sl_no = result.Rows[i]["sl_no"].ToString();
-                        objcat.last_sync_date = result.Rows[i]["last_sync_date"].ToString();
-                        objcat.last_sync_status = result.Rows[i]["last_sync_status"].ToString();
-                        objcat.completed_date = result.Rows[i]["completed_date"].ToString();
-                        objcat.job_remark = result.Rows[i]["job_remark"].ToString();
-                        objcat_lst.Add(objcat);
-                    }
-                    return Json(objcat_lst);
-                }
+                   string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
             } catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
@@ -90,7 +73,7 @@ namespace Recon_proto.Controllers
 		{
 			public string? dataset_name { get; set; }
 			public string? datasetCode { get; set; }
-			public int dataset_id { get; set; }
+			public int dataset_gid { get; set; }
 			public string? dataset_category { get; set; }
 			public string? active_status { get; set; }
 			public string? active_status_desc { get; set; }
@@ -148,7 +131,7 @@ namespace Recon_proto.Controllers
 		{
 			public string? dataset_name { get; set; }
 			public string? datasetCode { get; set; }
-			public Int32 dataset_id { get; set; }
+			public Int32 dataset_gid { get; set; }
 			public string? dataset_category { get; set; }
             public string? clone_dataset { get; set; }
             public string? active_status { get; set; }
@@ -265,7 +248,7 @@ namespace Recon_proto.Controllers
 
 		public class Datasetdetailfetch
 		{
-			public Int16 datasetCode { get; set; }			
+			public Int16 dataset_gid { get; set; }			
 		}
         #endregion
 
