@@ -64,9 +64,14 @@ namespace Recon_proto.Controllers
             return View();
         }
 
-        #region previewRulebase
+		public IActionResult UndoKObyRule()
+		{
+			return View();
+		}
 
-        public class getpreviewRulebase
+		#region previewRulebase
+
+		public class getpreviewRulebase
         {
             public String? in_recon_code { get; set; }
             public String? in_period_from { get; set; }
@@ -193,6 +198,11 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("http://localhost:44348/api/Recon/");
                     client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("getruleagainstRecon", content).Result;
@@ -234,6 +244,11 @@ namespace Recon_proto.Controllers
                     string Urlcon = "DatasettoRecon/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("DatasettoManualRead", content).Result;
@@ -271,6 +286,11 @@ namespace Recon_proto.Controllers
                     string Urlcon = "DatasettoRecon/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("ManuaMatchInfo", content).Result;
@@ -308,6 +328,11 @@ namespace Recon_proto.Controllers
                     string Urlcon = "DatasettoRecon/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("runManualfile", content).Result;
@@ -348,6 +373,11 @@ namespace Recon_proto.Controllers
                     string Urlcon = "knockoff/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("runkosumm", content).Result;
@@ -390,7 +420,12 @@ namespace Recon_proto.Controllers
 					string Urlcon = "knockoff/";
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 					var response = client.PostAsync("recondatasetinfo", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -431,7 +466,12 @@ namespace Recon_proto.Controllers
 					string Urlcon = "knockoff/";
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 					var response = client.PostAsync("undorunreport", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -476,7 +516,12 @@ namespace Recon_proto.Controllers
 					string Urlcon = "knockoff/";
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 					var response = client.PostAsync("undoKO", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -517,7 +562,12 @@ namespace Recon_proto.Controllers
 					string Urlcon = "knockoff/";
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 					var response = client.PostAsync("undoKOjob", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -559,7 +609,12 @@ namespace Recon_proto.Controllers
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					// client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
 					client.DefaultRequestHeaders.Accept.Clear();
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 					var response = client.PostAsync("undomatchjob", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
@@ -594,5 +649,106 @@ namespace Recon_proto.Controllers
 			public string? out_result { get; set; }
 		}
 		#endregion
-	}
+
+		#region getundoKOjobrule
+
+		public class getundoKOjobrulemodel
+		{
+			public string? in_recon_code { get; set; }
+			public string? in_start_date { get; set; }
+			public string? in_end_date { get; set; }
+		}
+
+        [HttpPost]
+		public JsonResult getundoKOjobrule([FromBody] getundoKOjobrulemodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					// client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getundojobrule", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "getundoKOjobrule");
+				return Json(ex.Message);
+			}
+
+		}
+        #endregion
+
+
+        #region KObyRule
+
+        public class kobyRuleModel
+        {
+            public string? reconcode { get; set; }
+            public int? job_id { get; set; }
+            public string? undo_job_reason { get; set; }
+
+            public string? in_ip_addr { get; set; }
+            public string? in_user_code { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult kobyRule([FromBody] kobyRuleModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "knockoff/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    // client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("undomatchjob", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "undomatchjob");
+                return Json(ex.Message);
+            }
+
+        }
+        #endregion
+    }
 }
