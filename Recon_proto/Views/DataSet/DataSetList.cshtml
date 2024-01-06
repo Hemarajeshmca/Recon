@@ -19,19 +19,19 @@
 			height: 360px;
 		}
 
-		.k-grid-header th.k-header > .k-link {
-			width: 100px;
-		}
+		/*.k-grid-header th.k-header > .k-link {
+					width: 100px;
+				}*/
 
 		.k-grid-header {
 			font-weight: bold;
 		}
 
-		.k-grid-filter.k-state-active {
-			color: #ffffff;
-			background-color: #1274AC;
-		}
-		
+		/*.k-grid-filter.k-state-active {
+					color: #ffffff;
+					background-color: #1274AC;
+				}*/
+
 		.k-content {
 			font-weight: normal;
 			font-size: 13px;
@@ -59,7 +59,9 @@
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
-						<div id="grid_dataset"> </div>
+						<div id="gd_dataset">
+							<div id="grid_dataset"> </div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -89,6 +91,8 @@
 			success: function (response) {
 				var result = JSON.parse(response);
 				if (result != null) {
+					$("#gd_dataset").empty();
+					$("#gd_dataset").append("<div id='grid_dataset'></div>");
 					grid_dataset_details(result);
 				}
 				else {
@@ -244,9 +248,9 @@
 				}
 				else {
 					if ($(mode).attr('value') == "edit") {
-						if (items.active_status != "N"){
-						btn_onClick("Edit");
-						document.location = '../DataSet/DataSetForm';
+						if (items.active_status != "N") {
+							btn_onClick("Edit");
+							document.location = '../DataSet/DataSetForm';
 						}
 					}
 					else if ($(mode).attr('value') == "view") {

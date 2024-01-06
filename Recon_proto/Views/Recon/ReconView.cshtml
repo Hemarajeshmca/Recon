@@ -166,7 +166,9 @@
 													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													@*<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
-														<div id="grid_datasetrecon">
+														<div id="gd_datasetrecon">
+															<div id="grid_datasetrecon">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -524,6 +526,8 @@
 
 							$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 							$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
+							$("#gd_datasetrecon").empty();
+							$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
 							grid_datasetrecon(res.ReconDataSet);
 							if (res.ReconDataSetmapping.length > 0) {
 								griddatamapping(res.ReconDataSetmapping);
@@ -620,6 +624,8 @@
 					}
 					$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 					$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
+					$("#gd_datasetrecon").empty();
+					$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
 					grid_datasetrecon(res.ReconDataSet);
 					if (res.ReconDataSetmapping.length > 0) {
 						griddatamapping(res.ReconDataSetmapping);
@@ -732,7 +738,7 @@
 						}));
 					}
 				});
-				
+
 			}
 		});
 		// Dataset type
@@ -1728,9 +1734,9 @@
 			if (in_recon_value_field == null) {
 				in_recon_value_field = '';
 			}
-			
+
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
-		
+
 			var in_threshold_plus_value = $("#thersholdplus").val();
 			var in_threshold_minus_value = $("#thersholdminus").val();
 			var in_active_reason = "";
