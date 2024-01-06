@@ -278,13 +278,13 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring);
                     client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
-					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
-					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
-					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					//client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					//client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					//client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					//client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
-                    content.Headers.Add("user_code", "12345");
+                    content.Headers.Add("user_code", HttpContext.Session.GetString("user_code"));
                     var response = client.PostAsync("files", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);

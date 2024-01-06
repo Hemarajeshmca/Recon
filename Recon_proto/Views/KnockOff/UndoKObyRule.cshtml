@@ -190,12 +190,18 @@
                             <div class="tab-pane fade" id="navs-pills-RuleList" role="tabpanel">
                                 <div class="panel panel-default">
                                     <div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
-                                        <div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+                                        <div class="col-md-12" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
                                             <div id="grid_rule"></div>
                                         </div>
                                     </div>
                                 </div>
+                                <div style="float:right !important;">
+                                    <button type="button" style="padding: 10px 5px; margin: 10px 5px 10px 0px;  width: 100px;border-radius: 20px;font-weight: bold;font-size: 14px;" onclick="undoRule()" class="btn btn-sm me-2 save_btn">
+                                        Undo
+                                    </button>
                                 <input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevdp();" />
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -207,10 +213,14 @@
 </body>
 </html>
 <script>
-    var selected_dataset = '';
+    var selected_reconCode = '';
+    var selected_ruleGid = '';
     $(document).ready(function () {
         $("#navhead").text("Undo KO by Rule");
+        kendodate_format();
         getReconName();
+        undojob_grid([]);
+        undorule_grid([]);
     });
 
     function getReconName() {
@@ -248,9 +258,8 @@
     }
 
     function showjob() {
+        debugger;
         var reconcode = $("#cmbreconname").val();
-        var jobtype = "A";
-        var jobstatus = "C";
         var period_from = $("#initiated_from").val();
         var ts = period_from.split("/");
         var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
@@ -259,17 +268,20 @@
         var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
         $.ajax({
             type: "POST",
-            url: '../KnockOff/undoKOjob',
+            url: '../KnockOff/getundoKOjobrule',
             dataType: 'json',
-            data: JSON.stringify({ in_recon_code: reconcode, in_job_type: jobtype, in_job_status: jobstatus, in_from_date: pr, in_to_date: pr1 }),
             contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ in_recon_code: reconcode, in_start_date: pr, in_end_date: pr1 }),
             success: function (response) {
+                debugger;
                 var result = JSON.parse(response);
                 if (result != null) {
-                    undojob_grid(result);
+                    undojob_grid(result.Table);
+                    undorule_grid(result.Table1);
                 }
                 else {
                     undojob_grid([]);
+                    undorule_grid([]);
                 }
             },
             error: function (er) {
@@ -281,7 +293,7 @@
     }
 
     function undojob_grid(data) {
-        $("#undojob_grid").kendoGrid({
+        $("#grid_job").kendoGrid({
             dataSource: {
                 data: data,
                 pageSize: 10,
@@ -303,11 +315,11 @@
                     }
                 }
             },
-            height: 400,
+            height: 280,
             groupable: false,
             dataBound: function (e) {
                 resultData = e.sender._data;
-                var rows = $('#undojob_grid').data('kendoGrid').tbody.children();
+                var rows = $('#grid_job').data('kendoGrid').tbody.children();
                 setColor(rows, resultData);
             },
             sortable: true,
@@ -326,7 +338,7 @@
                         {
                             name: "Action",
                             id: "Edit",
-                            template: "<input id='job_selected' onclick='rowselected(this)' name='dataset_code' type='radio'/>",
+                            template: "<input id='job_selected' onclick='rowselected(this)' name='job_selected' type='radio'/>",
                         },
                     ], title: "Action&nbsp;", width: "80px",
                 },
@@ -396,4 +408,201 @@
         });
     }
 
+    function undorule_grid(data){
+        $("#grid_rule").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 5,
+                schema: {
+                    model: {
+                        fields: {
+                            rule_gid: { type: "string" },
+                            rule_code: { type: "string" },
+                            rule_name: { type: "string" },
+                            rule_order: { type: "string" },
+                            recon_rule_version: { type: "string" },
+                            source_dataset_code: { type: "string" },
+                            comparison_dataset_code: { type: "string" },
+                            source_dataset_desc: { type: "string" },
+                            comparison_dataset_desc: { type: "string" },
+                            rule_apply_on_desc: { type: "string" },
+                            group_flag: { type: "string" },
+                            group_flag_desc: { type: "string" },
+                            active_status_desc: { type: "string" }
+                        }
+                    }
+                }
+            },
+            height: 250,
+            groupable: false,
+            dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_rule').data('kendoGrid').tbody.children();
+                setColor(rows, resultData);
+            },
+            sortable: true,
+            selectable: true,
+            filterable: true,
+            navigatable: true,
+            pageable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [
+                {
+                    command: [
+                        {
+                            name: "Action",
+                            id: "Edit",
+                            template: "<input id='rule_selected' onclick='ruleSelected(this)' name='rule_selected' type='radio'/>",
+                        },
+                    ], title: "Action&nbsp;", width: "80px",
+                },
+                {
+                    field: "rule_gid",
+                    title: "rule_gid",
+                    hidden: true,
+                },
+                {
+                    field: "name",
+                    title: "Action",
+                    template: "<input id='preview_checkbox' type='checkbox' />",
+                    width: 80,
+                    hidden: true,
+                },
+                {
+                    field: "rule_code",
+                    title: "Rule Code",
+                    width: 80,
+                },
+
+                {
+                    field: "rule_name",
+                    title: "Rule Name",
+                    width: 100,
+                },
+                {
+                    field: "rule_apply_on_desc",
+                    title: "Rule Applied On",
+                    width: 80,
+                },
+                {
+                    field: "rule_order",
+                    title: "Rule Order",
+                    width: 50,
+                    attributes: { style: "text-align: center;" }
+                },
+                {
+                    field: "recon_rule_version",
+                    title: "Rule Version",
+                    width: 50,
+                    hidden: true,
+                },
+                {
+                    field: "group_flag_desc",
+                    title: "Group Flag",
+                    width: 50,
+                },
+                {
+                    field: "active_status_desc",
+                    title: "Status",
+                    width: 50,
+                },
+                {
+                    field: "source_dataset_desc",
+                    title: "Source Dataset",
+                    width: 150,
+                    hidden: true
+                },
+                {
+                    field: "source_dataset_desc",
+                    title: "Comparision Dataset",
+                    width: 150,
+                    hidden: true
+                },
+                {
+                    field: "source_dataset_code",
+                    title: "Source Dataset",
+                    width: 100,
+                    hidden: true
+                },
+                {
+                    field: "comparison_dataset_code",
+                    title: "Comparision Dataset",
+                    width: 100,
+                    hidden: true
+
+                }],
+            editable: false,
+        });
+    }
+
+    function validateNextdataset() {
+        var grid = $("#grid_job").data("kendoGrid");
+        var objpplmapupdlist = [];
+        var dropdownid = "";
+        $("#Joblist").removeClass('nav-link active');
+        $("#Joblist").toggleClass('nav-link');
+        $("#navs-pills-RuleList").toggleClass('tab-pane fade active in');
+        $("#navs-pills-Joblist").toggleClass('tab-pane fade');
+        $("#RuleList").removeClass('nav-link');
+        $("#RuleList").toggleClass('nav-link active');
+        $("#navs-pills-Joblist").hide();
+        $("#navs-pills-RuleList").show();
+    }
+
+    function validatePrevdp() {
+        $("#RuleList").removeClass('nav-link active');
+        $("#RuleList").toggleClass('nav-link');
+        $("#navs-pills-Joblist").toggleClass('tab-pane fade active in');
+        $("#navs-pills-RuleList").toggleClass('tab-pane fade');
+        $("#Joblist").removeClass('nav-link');
+        $("#Joblist").toggleClass('nav-link active');
+        $("#navs-pills-RuleList").hide();
+        $("#navs-pills-Datasetlist").show();
+    }
+
+    function undoRule() {
+        debugger;
+        var reconcode = $("#cmbreconname").val();
+        var grid_job = $("#grid_job").data("kendoGrid");
+        var checkedrows = $("#job_selected:checked", grid_job.tbody).closest("tr");
+        for (var i = 0; i < checkedrows.length; i++) {
+            selected_jobid = grid_job.dataItem(checkedrows[i]);
+        }
+        var grid_rule = $("#grid_rule").data("kendoGrid");
+        var checkedrows = $("#rule_selected:checked", grid_rule.tbody).closest("tr");
+        for (var i = 0; i < checkedrows.length; i++) {
+            selected_ruleGid = grid_rule.dataItem(checkedrows[i]);
+        }
+        $.ajax({
+            url: '../KnockOff/kobyRule',
+            type: 'POST',
+            data: JSON.stringify({ reconcode: reconcode, job_id: selected_jobid.job_gid, undo_job_reason: 'test', in_ip_addr: '', in_user_code :''}),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                if(response != null){
+                    var res = JSON.parse(response)
+                $.alert({
+                    title: 'Recon',
+                        content: res[0].out_msg,
+                    type: 'Green',
+                });
+                } else {
+                	var res = JSON.parse(response)
+                	$.alert({
+                		title: 'Recon',
+                		content: res[0].out_msg,
+                		type: 'green',
+                	});
+                }
+            }
+        });
+    }
+
+   
 </script>
