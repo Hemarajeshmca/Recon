@@ -569,15 +569,17 @@
 
 	function getdashboarddetails() {
 		debugger;
-		var currentDate = new Date();
-		var year = currentDate.getFullYear();
-		var month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-		var day = currentDate.getDate().toString().padStart(2, '0');
-		var formattedDate = year + '-' + month + '-' + day;
+		var period_from = $("#period_from").val();
+		var ts = period_from.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var period_to = $("#period_to").val();
+			var ts1 = period_to.split("/");
+			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+		
 		var data = {};
 		data.in_recon_code = "";
-		data.in_period_from = "2000-01-01";
-		data.in_period_to = formattedDate;
+		data.in_period_from = pr;
+		data.in_period_to = pr1;
 		$.ajax({
 			type: "POST",
 			url: '../Common/GetDashboarddtl',

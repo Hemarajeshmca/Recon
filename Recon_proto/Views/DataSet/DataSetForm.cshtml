@@ -25,7 +25,7 @@
 
 		.k-grid-header {
 			font-weight: bold;
-		}		
+		}
 
 		.k-content {
 			font-weight: normal;
@@ -98,9 +98,11 @@
 
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
-							@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-							<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-							<div id="grid_datasetfield">
+							<div id="gd_datasetfield">
+								@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+								<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+								<div id="grid_datasetfield">
+								</div>
 							</div>
 						</div>
 
@@ -257,6 +259,8 @@
 					$("#txtdatasetcode").val(result.Header[0].dataset_code);
 					$("#txtstatus").val(result.Header[0].active_status_desc);
 					$("#datasetgid").val(result.Header[0].dataset_gid);
+					$("#gd_datasetfield").empty();
+					$("#gd_datasetfield").append("<div id='grid_datasetfield'></div>");
 					grid_datasetfield(result.DataSet);
 					if (response.length > 0) {
 						$("#Cmbclone").val();
@@ -356,7 +360,7 @@
 						}
 					}
 				},
-					change: function (e) {
+				change: function (e) {
 					setTimeout(function () {
 						var gd = $("#grid_datasetfield").data("kendoGrid");
 						$('.k-i-close').css('display', 'none');
@@ -518,7 +522,7 @@
 	function selectRow() {
 		try {
 			var grid = $("#grid_datasetfield").data("kendoGrid");
-			var selectedItem = grid.dataItem(grid.select());			
+			var selectedItem = grid.dataItem(grid.select());
 		}
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);

@@ -60,7 +60,9 @@
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
+						<div id="gd_reconlist">
 						<div id="grid_reconlist"> </div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -89,6 +91,8 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
+					$("#gd_reconlist").empty();
+					$("#gd_reconlist").append("<div id='grid_reconlist'></div>");
 					grid_reconlist_details(response);
 				}
 				else {
