@@ -418,7 +418,9 @@
 												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
-														<div id="grid_rulecondition">
+														<div id="gd_rulecondition">
+															<div id="grid_rulecondition">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -431,7 +433,9 @@
 												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
-														<div id="grid_sourceidentifier">
+														<div id="gd_sourceidentifier">
+															<div id="grid_sourceidentifier">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -444,7 +448,9 @@
 												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
-														<div id="grid_comparisionidentifier">
+														<div id="gd_comparisionidentifier">
+															<div id="grid_comparisionidentifier">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -455,7 +461,9 @@
 										<div class="panel panel-default">
 											<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 												<div class="col-xs-12">
-													<div id="grid_grouping">
+													<div id="gd_grouping">
+														<div id="grid_grouping">
+														</div>
 													</div>
 												</div>
 											</div>
@@ -468,7 +476,9 @@
 												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
-														<div id="grid_sourceorder">
+														<div id="gd_sourceorder">
+															<div id="grid_sourceorder">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -481,7 +491,9 @@
 												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
-														<div id="grid_comparisonorder">
+														<div id="gd_comparisonorder">
+															<div id="grid_comparisonorder">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -762,35 +774,47 @@
 								$('#untillactive').attr('checked', true);
 							}
 							if (res.RuleCondition.length > 0) {
+								$("#gd_rulecondition").empty();
+								$("#gd_rulecondition").append("<div id='grid_rulecondition'></div>");
 								grid_rulecondition(res.RuleCondition);
 							}
 							else {
 								grid_rulecondition([]);
 							}
 							if (res.RuleGrouping.length > 0) {
+								$("#gd_grouping").empty();
+								$("#gd_grouping").append("<div id='grid_grouping'></div>");
 								grid_grouping(res.RuleGrouping);
 							}
 							else {
 								grid_grouping([]);
 							}
 							if (res.sourceidentifier.length > 0) {
+								$("#gd_sourceidentifier").empty();
+								$("#gd_sourceidentifier").append("<div id='grid_sourceidentifier'></div>");
 								grid_sourceidentifier(res.sourceidentifier);
 							}
 							else {
 								grid_sourceidentifier([]);
 							}
 							if (res.comparisionidentifier.length > 0) {
+								$("#gd_comparisionidentifier").empty();
+								$("#gd_comparisionidentifier").append("<div id='grid_comparisionidentifier'></div>");
 								grid_comparisionidentifier(res.comparisionidentifier);
 							}
 							else {
 								grid_comparisionidentifier([]);
 							}
 							if (res.RulefieldorderSource.length > 0) {
+								$("#gd_sourceorder").empty();
+								$("#gd_sourceorder").append("<div id='grid_sourceorder'></div>");
 								grid_sourceorder(res.RulefieldorderSource);
 							} else {
 								grid_sourceorder([]);
 							}
 							if (res.Rulefieldordercomparison.length > 0) {
+								$("#gd_comparisonorder").empty();
+								$("#gd_comparisonorder").append("<div id='grid_comparisonorder'></div>");
 								grid_comparisonorder(res.Rulefieldordercomparison);
 							} else {
 								grid_comparisonorder([]);
@@ -1162,12 +1186,16 @@
 						}
 					} else if (screen == "rulecond") {
 						if (res.RuleCondition.length > 0) {
+							$("#gd_rulecondition").empty();
+							$("#gd_rulecondition").append("<div id='grid_rulecondition'></div>");
 							grid_rulecondition(res.RuleCondition);
 						} else {
 							grid_rulecondition([]);
 						}
 					} else if (screen == "group") {
 						if (res.RuleGrouping.length > 0) {
+							$("#gd_grouping").empty();
+							$("#gd_grouping").append("<div id='grid_grouping'></div>");
 							grid_grouping(res.RuleGrouping);
 
 						} else {
@@ -1175,12 +1203,16 @@
 						}
 					} else if (screen == "idents") {
 						if (res.sourceidentifier.length > 0) {
+							$("#gd_sourceidentifier").empty();
+							$("#gd_sourceidentifier").append("<div id='grid_sourceidentifier'></div>");
 							grid_sourceidentifier(res.sourceidentifier);
 						} else {
 							grid_sourceidentifier([]);
 						}
 					} else if (screen == "identc") {
 						if (res.comparisionidentifier.length > 0) {
+							$("#gd_comparisionidentifier").empty();
+							$("#gd_comparisionidentifier").append("<div id='grid_comparisionidentifier'></div>");
 							grid_comparisionidentifier(res.comparisionidentifier);
 						}
 						else {
@@ -1188,12 +1220,16 @@
 						}
 					} else if (screen == "orders") {
 						if (res.RulefieldorderSource.length > 0) {
+							$("#gd_sourceorder").empty();
+							$("#gd_sourceorder").append("<div id='grid_sourceorder'></div>");
 							grid_sourceorder(res.RulefieldorderSource);
 						} else {
 							grid_sourceorder([]);
 						}
 					} else if (screen == "orderc") {
 						if (res.Rulefieldordercomparison.length > 0) {
+							$("#gd_comparisonorder").empty();
+							$("#gd_comparisonorder").append("<div id='grid_comparisonorder'></div>");
 							grid_comparisonorder(res.Rulefieldordercomparison);
 						} else {
 							grid_comparisonorder([]);

@@ -81,9 +81,9 @@
 						</button>
 					</div>
 				</div>
-				<div id="grid_jobinprogress"> </div>
-
-
+				<div id="gd_jobinprogress">
+					<div id="grid_jobinprogress"> </div>
+				</div>				
 			</div>
 		</div>
 	</div>
@@ -136,6 +136,8 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response != null) {
+						$("#gd_jobinprogress").empty();
+						$("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
 						fetchGrid(response);
 					}
 					else {

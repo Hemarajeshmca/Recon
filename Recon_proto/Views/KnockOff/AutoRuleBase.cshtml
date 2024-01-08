@@ -82,7 +82,9 @@
                                 <div class="panel panel-default">
                                     <div class="panel-body">
                                         <div class="col-xs-12">
-                                            <div id="grid_preview">
+                                            <div id="gd_preview">
+                                                <div id="grid_preview">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -93,7 +95,9 @@
                                 <div class="panel panel-default">
                                     <div class="panel-body">
                                         <div class="col-xs-12">
-                                            <div id="dataset_grid"> </div>
+                                            <div id="gd_dataset_grid">
+                                                <div id="dataset_grid"> </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -422,7 +426,11 @@
                     debugger;
                     if (response != null) {
                         var result = JSON.parse(response);
+                        $("#gd_preview").empty();
+                        $("#gd_preview").append("<div id='grid_preview'></div>");
                         grid_rule(result.ReconRule);
+                        $("#gd_dataset_grid").empty();
+                        $("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
                         grid_dataset(result.ReconDataSet);
                         $("#reconversion").val(result.ReconRule[0].recon_rule_version)
                     } else {

@@ -83,7 +83,9 @@
 						</div>
 					</div>
 					<div class="col-xs-12">
-						<div id="grid_reconverion"> </div>
+						<div id="gd_reconverion">
+							<div id="grid_reconverion"> </div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -155,7 +157,7 @@
 					$.each(res.Reconversion, function (index, item) {
 						$("#comreconversion").append($('<option>', {
 							value: item.recon_rule_version,
-							text: item.recon_rule_version
+							text: parseFloat( item.recon_rule_version).toFixed
 						}));
 					});
 				}
@@ -265,6 +267,8 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
+					$("#gd_reconverion").empty();
+					$("#gd_reconverion").append("<div id='grid_reconverion'></div>");
 					var res = JSON.parse(response);
 					grid_reconverion(res);
 				}
