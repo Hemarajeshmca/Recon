@@ -5,6 +5,11 @@ using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
 using static Recon_proto.Controllers.CommonController;
+using ClosedXML.Excel;
+using System.Dynamic;
+using System.Text.RegularExpressions;
+using Recon_proto.Models;
+using DocumentFormat.OpenXml.InkML;
 
 namespace Recon_proto.Controllers
 {
@@ -384,6 +389,88 @@ namespace Recon_proto.Controllers
 			public string in_recon_code { get; set; }
 			public string in_version_code { get; set; }
 		}
-		#endregion
-	}
+        #endregion
+
+        #region
+
+        public ActionResult kendogrid_download(string in_tran_date, string in_recon_code, string in_recon_name)
+        {
+
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            DataTable Table1 = new DataTable();
+            string post_data = "";
+            string filename = "Recon-between A/cs.xlsx";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    reconbetweenaccmodel report = new reconbetweenaccmodel();
+                    report.in_tran_date = in_tran_date;
+                    report.in_recon_code = in_recon_code;
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("reconbetweenacc", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
+                    Table1.Columns.RemoveAt(0);
+                    Table1.Columns[0].ColumnName = "Particulars";
+                    Table1.Columns[1].ColumnName = "Amount";
+                    Table1.Columns[2].ColumnName = "Account Mode";
+                    Table1.Columns[3].ColumnName = "Balance Amount";
+
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+
+                        var ws = wb.AddWorksheet(in_recon_name);
+                        ws.Cell("A4").InsertTable(Table1);
+                        wb.Worksheet(1).Table(0).ShowAutoFilter = false;// Disable AutoFilter.
+                        wb.Worksheet(1).Table(0).Theme = XLTableTheme.None;
+                        wb.Worksheet(1).Table(0).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.BottomBorderColor = XLColor.Black;
+                        wb.Worksheet(1).Table(0).Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.TopBorderColor = XLColor.Black;
+                        wb.Worksheet(1).Table(0).Style.Border.LeftBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.LeftBorderColor = XLColor.Black;
+                        wb.Worksheet(1).Table(0).Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.RightBorderColor = XLColor.Black;
+                        ws.Range("A4:D4").Style.Font.Bold = true;
+                        ws.Range("A4:D4").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+                        ws.Range("A17:D17").Style.Font.Bold = true;
+                        ws.Range("A17:D17").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+                        ws.Cell("A11").Style.Font.Bold = true; ws.Cell("A13").Style.Font.Bold = true;
+                        ws.Range("A19:D19").Style.Font.Bold = true;
+                        ws.Range("A20:D20").Style.Font.Bold = true;
+                        ws.Range("A21:D21").Style.Font.Bold = true;
+
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            wb.SaveAs(stream);
+                            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        #endregion
+    }
+
+
 }
