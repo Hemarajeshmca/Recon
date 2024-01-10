@@ -567,8 +567,9 @@
 		});
 	}
 
-	function getdashboarddetails() {
-		debugger;
+	function getdashboarddetails() {		
+		var Attribid = [];
+		var arrstring = "";
 		var period_from = $("#period_from").val();
 		var ts = period_from.split("/");
 		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
@@ -576,8 +577,18 @@
 			var ts1 = period_to.split("/");
 			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
 		
+		var Config_MetricType = $("#cmbreconname").data("kendoDropDownList");
+		var reconarray = Config_MetricType.dataSource.data();
+		var cbs = document.getElementsByName("cb");
+		for (var i = 0; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				var item = reconarray[i].value;
+				Attribid.push(item);
+			}
+		}
+		arrstring = Attribid.join(", ");
 		var data = {};
-		data.in_recon_code = "";
+		data.in_recon_code = arrstring;
 		data.in_period_from = pr;
 		data.in_period_to = pr1;
 		$.ajax({
