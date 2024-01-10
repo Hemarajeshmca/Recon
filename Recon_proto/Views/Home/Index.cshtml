@@ -232,9 +232,11 @@
 				var arr = [];
 				for (i = 0; response.length > i; i++) {
 					var list1 = {};
+					if(response[i]["active_status"] == 'Y') {
 					list1.value = response[i].recon_code;
 					list1.text = response[i].recon_name;
 					arr.push(list1);
+					}
 				}
 				dropdown = $("#cmbreconname").kendoDropDownList({
 					dataTextField: "text",
@@ -421,7 +423,7 @@
 		debugger;
 		$("#navhead").text("Dashboard");
 		//drawVisualization();
-		drawChart1();
+		//drawChart1([]);
 		$(".accordion_head").click(function () {
 			debugger;
 
@@ -522,6 +524,7 @@
 				var tags = arraytags;
 				var opt1 = [];
 				var opt2 = [];
+				if (tags.length > 0) {
 				for (var i = 0; i < tags.length; i++) {
 					var aging_desc = tags[i].aging_desc;
 					var excpcount = tags[i].excp_count;
@@ -534,7 +537,7 @@
 						opt2.push(opt1);
 					}
 				}
-
+				}
 				new google.visualization.PieChart(document.getElementById('pie-chart')).draw(
 					google.visualization.arrayToDataTable(opt2),
 

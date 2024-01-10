@@ -157,6 +157,9 @@
                     <div class="col-md-3" style="margin-top: 2%;">
                         <button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%;margin-top:6px;">
                             Run
+                        </button> &nbsp;&nbsp;
+                        <button type="button" onclick="exportexcel()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:23%;margin-top: 7px">
+                            <i class="fa-solid fa-file-excel"></i>
                         </button>
                     </div>
                 </div>
@@ -176,6 +179,7 @@
         kendodate_format();
         getreconlist();
         loadGrid();
+        $("#exportExcel").hide();
     });
 
     function getreconlist() {
@@ -233,6 +237,7 @@
                     var res = JSON.parse(response)
                     if (res.Table.length > 0) {
                         loadGrid(res.Table);
+                        $("#exportExcel").show();
                     } else {
                         loadGrid([]);
                         $.alert({
@@ -257,92 +262,6 @@
             }
         });
     }
-
-    //function defaultgrid(){
-    //		try {
-    //		$("#grid").kendoGrid({
-    //				dataSource: {
-    //					data: [],
-    //					pageSize: 10,
-    //					schema: {
-    //						model: {
-    //							fields: {
-    //								row_label: { type: "string" },
-    //								dr_count: { type: "string" },
-    //								dr_value: { type: "string" },
-    //								cr_value: { type: "string" },
-    //								total_count: { type: "string" },
-    //								total_value: { type: "string" },
-    //								back_color: { type: "string" },
-    //								fore_color: { type: "string" },
-    //							}
-    //						}
-    //					}
-    //				},
-    //				height: 330,
-    //				groupable: false,
-    //				dataBound: function (e) {
-    //					resultData = e.sender._data;
-    //					var rows = $('#grid').data('kendoGrid').tbody.children();
-    //					setColor(rows, resultData);
-    //				},
-    //				pageable: {
-    //					refresh: false,
-    //					pageSizes: true,
-    //					buttonCount: 5
-    //				},
-    //				sortable: true,
-    //				selectable: true,
-    //				filterable: false,
-    //				navigatable: true,
-    //				columns: [{
-    //					field: "row_label",
-    //					title: "Row Label",
-    //				},
-    //				{
-    //					field: "dr_count",
-    //					title: "Dr Count",
-    //				},
-    //				{
-    //					field: "dr_value",
-    //					title: "Dr Value",
-    //				},
-    //				{
-    //					field: "cr_count",
-    //					title: "Cr Count",
-    //				},
-    //				{
-    //					field: "cr_value",
-    //					title: "Cr Value",
-    //				},
-    //				{
-    //					field: "total_count",
-    //					title: "Total Count",
-    //				},
-    //				{
-    //					field: "total_value",
-    //					title: "Total Value",
-    //				},
-    //				{
-    //					field: "backcolor",
-    //					title: "Backcolor",
-    //					width: 100,
-    //				},
-    //				{
-    //					field: "forecolor",
-    //					title: "Forecolor",
-    //				},
-    //				],
-    //				editable: false,
-
-    //			});
-    //		}
-    //		catch (err) {
-    //			console.log(err)
-
-    //		}
-
-    //}
 
     function loadGrid(data) {
 
@@ -483,6 +402,19 @@
         }
 
 
+
+    }
+
+    function exportexcel() {
+        debugger;
+        var in_recon_code = $("#reconname").val();
+        var in_tran_date = $("#period_from").val();
+        var ts = in_tran_date.split("/");
+        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+        var in_todate = $("#period_to").val();
+        var ts1 = in_todate.split("/");
+        var pr1 = ts[2] + "-" + ts1[1] + "-" + ts1[0];
+        window.location.href = '@Url.Action("KOMISreport", "KnockOff")?in_period_from=' + pr + '&in_period_to=' + pr1 + '&in_recon_code=' + in_recon_code + '';
 
     }
 </script>

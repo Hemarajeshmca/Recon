@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Data;
@@ -7,6 +8,7 @@ using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Text;
 using static Recon_proto.Controllers.ReconController;
+using static Recon_proto.Controllers.ReportsController;
 using static Recon_proto.Controllers.RulesetupController;
 
 namespace Recon_proto.Controllers
@@ -704,12 +706,11 @@ namespace Recon_proto.Controllers
 
         public class kobyRuleModel
         {
-            public string? reconcode { get; set; }
-            public int? job_id { get; set; }
-            public string? undo_job_reason { get; set; }
+            public string? in_recon_code { get; set; }
+            public int? in_job_gid { get; set; }
+            public string? in_rule_code { get; set; }
+            public string? in_undo_job_reason { get; set; }
 
-            public string? in_ip_addr { get; set; }
-            public string? in_user_code { get; set; }
         }
 
         [HttpPost]
@@ -730,10 +731,10 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
                     client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
                     client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
-                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipaddress"));
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("undomatchjob", content).Result;
+                    var response = client.PostAsync("setundojobrule", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -749,6 +750,128 @@ namespace Recon_proto.Controllers
             }
 
         }
+        #endregion
+
+        #region KOMISreport
+        public ActionResult KOMISreport(string in_period_from, string in_period_to, string in_recon_code)
+        {
+
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result2 = new DataSet();
+            DataTable Table1 = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            int subtotal_count = 0;
+            string filename = "Knockoff MIS.xlsx";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    runkosummodel report = new runkosummodel();
+                    report.in_period_from = in_period_from;
+                    report.in_period_to = in_period_to;
+                    report.in_recon_code = in_recon_code;
+                    report.in_ip_addr = "";
+                    report.in_user_code = "";
+                    string Urlcon = "knockoff/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("runkosumm", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result2 = JsonConvert.DeserializeObject<DataSet>(d2);
+                    Table1 = result2.Tables[0].Copy();
+                    Table1.Columns.RemoveAt(7);
+                    Table1.Columns.RemoveAt(7);
+                    Table1.Columns[0].ColumnName = "Rows Labels";
+                    Table1.Columns[1].ColumnName = "Debit Count";
+                    Table1.Columns[2].ColumnName = "Debit Amount";
+                    Table1.Columns[3].ColumnName = "Credit Count";
+                    Table1.Columns[4].ColumnName = "Credit Amount";
+                    Table1.Columns[5].ColumnName = "Total Count";
+                    Table1.Columns[6].ColumnName = "Total Amount";
+
+                    for (int i = 0; i < Table1.Rows.Count; i++)
+                    {
+                        string rowslabel = Table1.Rows[i]["Rows Labels"].ToString();
+                        if (rowslabel.Contains("Sub Total"))
+                        {
+                            subtotal_count = i + 4;
+                            break;
+                        }
+
+                    }
+
+                    int rowscount = Table1.Rows.Count + 3;
+                    string celltxt = "A" + rowscount.ToString() + "";
+                    string celltxt2 = "G" + rowscount.ToString() + "";
+                    string rangetxt = celltxt + ":" + celltxt2;
+                    using (XLWorkbook wb = new XLWorkbook())
+                    {
+
+                        var ws = wb.AddWorksheet("Recon-Knockoff MIS");
+
+                        //Insrting Table1 Data
+                        ws.Cell("A1").SetValue("FLEXICODE BUSINESS FINANCE LTD"); ws.Cell("A1").Style.Font.Bold = true;
+                        ws.Cell("A1").Style.Font.Underline = XLFontUnderlineValues.Single;
+                        ws.Cell("A4").Style.Font.Bold = true; ws.Cell("A5").Style.Font.Bold = true;
+                        ws.Cell("A3").InsertTable(Table1);
+                        wb.Worksheet(1).Table(0).ShowAutoFilter = false;// Disable AutoFilter.
+                        wb.Worksheet(1).Table(0).Theme = XLTableTheme.None;
+                        wb.Worksheet(1).Table(0).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.BottomBorderColor = XLColor.Black;
+                        wb.Worksheet(1).Table(0).Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.TopBorderColor = XLColor.Black;
+                        wb.Worksheet(1).Table(0).Style.Border.LeftBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.LeftBorderColor = XLColor.Black;
+                        wb.Worksheet(1).Table(0).Style.Border.RightBorder = XLBorderStyleValues.Thin;
+                        wb.Worksheet(1).Table(0).Style.Border.RightBorderColor = XLColor.Black;
+                        ws.Range("A3:G3").Style.Font.Bold = true;
+                        ws.Range("A3:G3").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+                        ws.Range(rangetxt).Style.Font.Bold = true;
+                        ws.Range(rangetxt).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+                        rowscount = rowscount - 2;
+                        celltxt = "A" + rowscount.ToString() + "";
+                        celltxt2 = "G" + rowscount.ToString() + "";
+                        rangetxt = celltxt + ":" + celltxt2;
+                        ws.Range(rangetxt).Style.Font.Bold = true;
+                        ws.Range(rangetxt).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+                        celltxt = "A" + subtotal_count.ToString() + "";
+                        celltxt2 = "G" + subtotal_count.ToString() + "";
+                        rangetxt = celltxt + ":" + celltxt2;
+                        ws.Range(rangetxt).Style.Font.Bold = true;
+                        ws.Range(rangetxt).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+                        subtotal_count = subtotal_count + 1;
+                        celltxt = "A" + subtotal_count.ToString() + "";
+                        ws.Cell(celltxt).Style.Font.Bold = true;
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            wb.SaveAs(stream);
+                            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "runkosumm");
+                return Json(ex.Message);
+            }
+        }
+
         #endregion
     }
 }
