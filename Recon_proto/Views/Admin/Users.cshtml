@@ -111,7 +111,9 @@
 					</div>
 					<div class="row" style="margin-top:10px;">
 						<div class="col-xs-12">
-							<div id="grid_user">
+							<div id="gd_user">
+								<div id="grid_user">
+								</div>
 							</div>
 						</div>
 					</div>
@@ -125,8 +127,38 @@
 	$(document).ready(function () {
 		$("#navhead").text("User Creation");
 		griduserlist();
+		gridlist();
 	});
+	function gridlist() {
+		var data = {};
+		data.user_code = '';
+		data.role_code = '';
+		data.lang_code = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Admin/userlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ user_code: Context.user_code, role_code: Context.role_code, lang_code: Context.lang_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					$("#gd_user").empty();
+					$("#gd_user").append("<div id='grid_user'></div>");
+					griduserlist(result);
+				}
+				else {
+					griduserlist([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
 
+		});
+	}
 	function griduserlist(data) {
 		try {
 			$("#grid_user").kendoGrid({
@@ -136,12 +168,15 @@
 					schema: {
 						model: {
 							fields: {
-								user_id: { type: "string" },
+								user_gid: { type: "string" },
 								user_code: { type: "string" },
 								user_name: { type: "string" },
-								contact_no: { type: "string" },
-								status: { type: "string" },
-								action: { type: "string" }
+								user_contactno: { type: "string" },
+								user_emailid: { type: "string" },
+								role_code: { type: "string" },
+								role_name: { type: "string" },
+								user_password: { type: "string" },
+								status: { type: "string" }
 							}
 						}
 					}
@@ -166,7 +201,7 @@
 					},
 
 					{
-						field: "user_id",
+						field: "user_code",
 						title: "User ID",
 						width: 100,
 					},
@@ -176,19 +211,31 @@
 						width: 100,
 					},
 					{
-						field: "contact_no",
+						field: "user_contactno",
 						title: "Contact No",
 						width: 100,
 					},
 					{
-						field: "emailid",
+						field: "user_emailid",
 						title: "Email ID",
 						width: 100,
 					},
 					{
-						field: "role",
+						field: "role_name",
 						title: "Role",
 						width: 100,
+					},
+					{
+						field: "role_code",
+						title: "role_code",
+						width: 100,
+						hidden: true,
+					},
+					{
+						field: "user_password",
+						title: "user_password",
+						width: 100,
+						hidden: true,
 					},
 					{
 						command: [
@@ -196,12 +243,7 @@
 								name: "edit",
 								id: "btn_Edit",
 								template: "<a href='' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-							},
-							{
-								name: "view",
-								id: "View",
-								template: "<a href='' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
-							},
+							},							
 							{
 								name: "Delete",
 								id: "Delete",

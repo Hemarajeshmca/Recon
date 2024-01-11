@@ -131,7 +131,7 @@ namespace Recon_proto.Controllers
 		{
 			public string? dataset_name { get; set; }
 			public string? datasetCode { get; set; }
-			public Int32 dataset_gid { get; set; }
+			public Int32 dataset_id { get; set; }
 			public string? dataset_category { get; set; }
             public string? clone_dataset { get; set; }
             public string? active_status { get; set; }
