@@ -98,9 +98,11 @@
 
 					<div class="row" style="margin-top:20px;">
 						<div class="col-xs-12">
+
+							@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+
+							<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" style="color:green"></i>
 							<div id="gd_datasetfield">
-								@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-								<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 								<div id="grid_datasetfield">
 								</div>
 							</div>
@@ -219,7 +221,8 @@
 				$("#txtdatasetcode").val(data.dataset_code);
 				$("#txtstatus").val(data.active_status_desc);
 				$("#datasetgid").val(data.dataset_gid);
-				detailsfetch(data.dataset_gid)
+				$("#datasetfieldadd").show();
+				detailsfetch(data.dataset_gid);
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
 			}
@@ -233,7 +236,7 @@
 				$("#txtdatasetcode").val(data.dataset_code);
 				$("#txtstatus").val(data.active_status_desc);
 				$("#datasetgid").val(data.dataset_gid);
-				detailsfetch(data.dataset_id)
+				detailsfetch(data.dataset_gid)
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
 				$("#savesubmit").prop('disabled', true)
@@ -360,24 +363,14 @@
 						}
 					}
 				},
-				change: function (e) {
-					setTimeout(function () {
-						var gd = $("#grid_datasetfield").data("kendoGrid");
-						$('.k-i-close').css('display', 'none');
-						$('button.k-button-icon').css('display', 'none');
-						$('#grid_datasetfield .k-input').prop('disabled', false);
-						$('#grid_datasetfield .k-input').prop('readonly', true);
-					}, 1);
-				},
 			},
-			change: selectRow,
 			height: 270,
 			groupable: false,
-			//dataBound: function (e) {
-			//	resultData = e.sender._data;
-			//	var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
-			//	setColor(rows, resultData);
-			//},
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
 			sortable: false,
 			selectable: true,
 			filterable: false,
@@ -519,15 +512,7 @@
 			console.log(e)
 		}
 	}
-	function selectRow() {
-		try {
-			var grid = $("#grid_datasetfield").data("kendoGrid");
-			var selectedItem = grid.dataItem(grid.select());
-		}
-		catch (err) {
-			javascript_log4j_root(arguments.callee.name, err);
-		}
-	}
+
 	function getdetailSelectedRows(mode) {
 		if ($("#txtmode").val() != "View") {
 			if ($(mode).attr('value') == "edit") {
