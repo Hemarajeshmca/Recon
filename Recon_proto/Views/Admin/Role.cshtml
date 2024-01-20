@@ -59,7 +59,9 @@
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
-						<div id="grid_role"> </div>
+						<div id="grid_role"> 
+							<div id="grid_rolelist"> </div>
+						</div>
 					</div>
 				</div>
 				<div class="modal" id="Roleform" tabindex="-1" aria-hidden="true">
@@ -83,7 +85,7 @@
 									<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 										<div class="col-sm-4">
 											<label for="" class="form-label">Role Code&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-											<input class="form-control" id="role_code" name="RoleCode" type="text" value="">
+											<input class="form-control" disabled id="role_code" name="RoleCode" type="text" value="">
 											<input type="hidden" id="role_gid" value="0" />
 											<input type="hidden" id="txtmodedataset" value="Create" />
 										</div>
@@ -93,7 +95,8 @@
 										</div>
 										<div class="col-sm-4">
 											<label for="" class="form-label">Status&nbsp;</label>
-											<select id="cmbstatus" class="form-select form-control" value="" disabled>
+											<select id="cmbstatus" class="form-select form-control" disabled>
+												<option value="Y" selected>ACTIVE</option>
 											</select>
 										</div>
 										
@@ -119,15 +122,41 @@
 		grid_role();
 		$("#navhead").text("Roles");
 		setlocalStorage("ls_pageList", "");
+		setlocalStorage("getRoleCode", "");
+
 	});
 
 	function grid_role() {
+		var data = {}
 		grid_role_details([]);
+		$.ajax({
+			type: "POST",
+			url: '../Admin/rolelist',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				var result = JSON.parse(response);
+				if (result != null) {
+					$("#grid_role").empty();
+					$("#grid_role").append("<div id='grid_rolelist'></div>");
+					grid_role_details(result);
+				}
+				else {
+					grid_role_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
 		
 	}
 	var status_Priority = [];
 	function grid_role_details(data) {
-
 		$("#grid_role").kendoGrid({
 			dataSource: {
 				data: data,
@@ -135,7 +164,7 @@
 				schema: {
 					model: {
 						fields: {
-							role_id: { type: "string" },
+							role_gid: { type: "string" },
 							role_code: { type: "string" },
 							role_name: { type: "string" },
 							active_status: { type: "string" },
@@ -178,11 +207,16 @@
 						id: "Delete",
 						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
+					{
+						name: "Role Access",
+						id: "Role Access",
+						template: "<a href='' onclick='roleAccess()' data-bs-toggle='modal' value='role'><img style='height:16px' src = '../Assets/images/participant.jpg'></a>&nbsp;&nbsp;&nbsp;",
+					},
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
-				field: "role_id",
-				title: "role_id",
+				field: "role_gid",
+				title: "role_gid",
 				width: 100,
 				hidden: true,
 			},
@@ -217,81 +251,90 @@
 	function getSerializedRows() {
 		btn_onClick('Create');
 		$("#Roleform").modal('show');
+		$("#role_code").val('');
+		$("#role_gid").val(0);
 	}
-	function getSerializedSelectedRows(mode) {
-		try {
-			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
-				var items = getlocalStorage("ls_pageList");
-				if (items.length == 0) {
-					kendoAlert("Please select records");
-				}
-				else {
-					if ($(mode).attr('value') == "edit") {
-						if (items.active_status != "N") {
-							btn_onClick("Edit");
-							//document.location = '../DataSet/DataSetForm';
-						}
-					}
-					else if ($(mode).attr('value') == "view") {
-						btn_onClick('View');
-						//document.location = "../DataSet/DataSetForm";
-					}
+	//function getSerializedSelectedRows(mode) {
+	//	try {
+	//		if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+	//			var items = getlocalStorage("ls_pageList");
+	//			if (items.length == 0) {
+	//				kendoAlert("Please select records");
+	//			}
+	//			else {
+	//				if ($(mode).attr('value') == "edit") {
+	//					if (items.active_status != "N") {
+	//						btn_onClick("Edit");
+	//						//document.location = '../DataSet/DataSetForm';
+	//					}
+	//				}
+	//				else if ($(mode).attr('value') == "view") {
+	//					btn_onClick('View');
+	//					//document.location = "../DataSet/DataSetForm";
+	//				}
+	//				else if ($(mode).attr('value') == "role") {
+	//					btn_onClick('role');
+	//					document.location = "../Admin/Rolemapping";
+	//					//document.location = "../DataSet/DataSetForm";
+	//				}
 
-				}
-			}
-		}
-		catch (err) {
+	//			}
+	//		}
+	//	}
+	//	catch (err) {
 
-		}
-	}
+	//	}
+	//}
 	function selectRow() {
+		debugger;
 		try {
-			var grid = $("#grid_dataset").data("kendoGrid");
+			var grid = $("#grid_role").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			setlocalStorage("ls_pageList", selectedItem);
+			$("#role_gid").val(selectedItem.role_gid);
+			$("#role_code").val(selectedItem.role_code);
 		}
 		catch (err) {
 
 		}
 	}
 	function saveRole(){
+		debugger;
 		try {
-			var rolecode = $("#role_code").val();
+			var rolecode = $("#role_code").val() ? $("#role_code").val() : '';
 			var rolename = $("#role_name").val();
 			var status = $("#cmbstatus").val();
 			var rolegid = $("#role_gid").val();
-			var action = "INSERT"
-			var action_by = "vijay";
-			var in_user_code = "vijay";
-			status = "Y"
-
+			var action = (rolegid && rolecode) ? 'UPDATE' : 'INSERT'
 			$.ajax({
 				type: "POST",
 				url: '../Admin/rolesave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
+				data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: '', in_action: action }),
 				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response.out_result == "1") {
+				success: function (res) {
+					if(res) {
+						debugger;
+					var response = JSON.parse(res);
+					if (response[0].out_result == "1") {
 						$.alert({
 							title: 'Recon',
-							content: response.out_msg,
+							content: response[0].out_msg,
 							type: 'green',
 						});
-						$("#txtmodedataset").val("");
-						$("#DatasetType").val("");
-						$("#cmbParentDataset").val("");
-						$("#cmbdatasetname").val("");
-						$("#recondataset_gid").val(response.in_recondataset_gid)
-						$("#Accountform").modal('hide');
-						detailfetch($("#recon_id").val());
+							$("#role_code").val("");
+							$("#role_name").val("");
+							$("#role_gid").val(response[0].in_role_gid);
+							$("#Roleform").modal('hide');
+							grid_role();
 					}
 					else {
 						$.alert({
 							title: 'Recon',
-							content: response.out_msg,
+							content: response[0].out_msg,
 							type: 'green',
 						});
+					}
 					}
 				},
 				error: function (er) {
@@ -303,5 +346,172 @@
 		catch (e) {
 			console.log(e)
 		}
+	}
+
+	function detailfetch(role_gid){
+		debugger;
+		try {
+			$.ajax({
+				type: "POST",
+				url: '../Admin/roledetails',
+				dataType: 'json',
+				data: JSON.stringify({ in_role_gid: role_gid }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (res) {
+					if (res) {
+						var response = JSON.parse(res);
+						if(response.length > 0) {
+							debugger;
+							$("#role_code").val(response[0].role_code);
+							$("#role_name").val(response[0].role_name);
+							$("#role_gid").val(response[0].role_gid);
+							$("#Roleform").modal('show');
+						}
+
+						
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+
+
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						if (items.active_status != "N") {
+							btn_onClick("Edit");
+							$("#Roleform").modal('show');
+							var grid = $("#grid_role").data("kendoGrid");
+							var selectedItem = grid.dataItem(grid.select());
+
+							detailfetch(selectedItem.role_gid);
+						}
+					}
+					else if ($(mode).attr('value') == "view") {
+						btn_onClick('View');
+						$("#Roleform").modal('show');
+						var grid = $("#grid_role").data("kendoGrid");
+						var selectedItem = grid.dataItem(grid.select());
+						detailfetch(selectedItem.role_gid);
+
+					} else if ($(mode).attr('value') == "role") {
+						btn_onClick('role');
+						var grid = $("#grid_role").data("kendoGrid");
+						var selectedItem = grid.dataItem(grid.select());
+						document.location = "../Admin/Rolemapping";
+					}
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+
+	function myDeleteJs() {
+		var grid = $("#grid_role").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var role_gid = model.role_gid;
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					$.confirm({
+						title: 'Delete Reason',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									var rolename = model.role_name;
+									var rolecode = model.role_code;
+									var action = "DELETE";
+									var rolegid = model.role_gid;
+									$.ajax({
+										type: "POST",
+										url: '../Admin/rolesave',
+										dataType: 'json',
+										data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: name, in_action: action }),
+										contentType: 'application/json; charset=utf-8',
+										success: function (response) {
+											var result = JSON.parse(response);
+											var data = result[0];
+											debugger;
+											if (data.out_result == "1") {
+												$.alert({
+													icon: 'fa fa-success',
+													title: 'Recon',
+													theme: 'dark',
+													content: data.out_msg,
+													type: 'green',
+													animationSpeed: 700,
+												});
+												grid_role();
+											} else {
+												$.alert({
+													title: 'Recon',
+													content: data.out_msg,
+													type: 'red',
+												});
+											}
+										}
+									})
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+	function roleAccess(){
+		document.location = "../Admin/Rolemapping";
 	}
 </script>
