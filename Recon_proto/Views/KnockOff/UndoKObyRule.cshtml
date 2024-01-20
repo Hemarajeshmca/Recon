@@ -12,10 +12,13 @@
             color: brown;
         }
 
-        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+      /*  .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
             color: #fff !important;
-        }
+        }*/
 
+        .k-grid-header th.k-header > .k-link {
+            color: white !important;
+        }
         .nav-item.me-2.me-xl-50 {
             margin-right: 33rem !important;
         }
@@ -138,7 +141,7 @@
                             <span data-for='valid' class='k-invalid-msg'></span>
                         </div>
                     </div>
-                    <div class="col-md-2" style="margin-top: 2%;">
+                    <div class="col-md-2" style="margin-top: 2.5%;">
                         <button type="submit" onclick="showjob()" class="btn btn-sm me-2 save_btn">
                             Search
                         </button>
@@ -344,9 +347,8 @@
                 },
                 {
                     field: "job_gid",
-                    title: "job_gid",
-                    width: 100,
-                    hidden: true,
+                    title: "Job Id",
+                    width: 80,
                 },
                 {
                     field: "job_name",
@@ -580,7 +582,7 @@
         $.ajax({
             url: '../KnockOff/kobyRule',
             type: 'POST',
-            data: JSON.stringify({ in_recon_code: reconcode, in_job_gid: selected_jobid.job_gid, in_rule_code: selected_ruleGid.rule_code, in_undo_job_reason: 'test' }),
+            data: JSON.stringify({ in_recon_code: reconcode, in_job_gid: selected_jobid.job_gid, in_rule_code: selected_ruleGid.rule_code, in_undo_job_reason: '' }),
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             success: function (response) {

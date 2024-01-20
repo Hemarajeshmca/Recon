@@ -453,6 +453,7 @@
 	}
 
 	function validateNextdataset() {
+		debugger;
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var checkedrows = $("#dataset_selected:checked", grid.tbody).closest("tr");
 		var objpplmapupdlist = [];
@@ -470,7 +471,7 @@
 			$("#navs-pills-Datasetlist").hide();
 			$("#navs-pills-DatasetProgress").show();
 			$('#selected_dataset_name').text('Selected Dataset :' + selected_dataset.dataset_name);
-			getpipelinelist(selected_dataset.datasetCode);
+			getpipelinelist(selected_dataset.dataset_code);
 		} else {
 			$.alert({
 				title: 'Recon',
@@ -604,22 +605,28 @@
 				async: true,
 				success: function (response) {
 					debugger;
-					$.alert({
-						title: 'Recon',
-						content: "Completed",
-						type: 'Green',
-					});
-					//} else {
-					//	var res = JSON.parse(response)
-					//	$.alert({
-					//		title: 'Recon',
-					//		content: res[0].out_msg,
-					//		type: 'green',
-					//	});
-					//	$("#FileName").val("");
-					//	$("#File_Import").val("");
-					//	$("#Pipeline").val("");
-					//}
+					//$.alert({
+					//	title: 'Recon',
+					//	content: "Completed",
+					//	type: 'Green',
+					//});
+					if(!response) {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong',
+							type: 'red',
+						});
+					} else {
+						var res = JSON.parse(response)
+						$.alert({
+							title: 'Recon',
+							content: 'Completed',
+							type: 'green',
+						});
+						$("#FileName").val("");
+						$("#File_Import").val("");
+						$("#Pipeline").val("");
+					}
 				}
 			});
 		}

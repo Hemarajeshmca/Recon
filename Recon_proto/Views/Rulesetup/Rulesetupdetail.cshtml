@@ -1623,7 +1623,7 @@
 		});
 		source_field_desc_list = cmbsourcefield();
 		comparison_field_desc_list = cmbsourcefield();
-		join_condition_list = [{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 	}
 	var gridRowID = -1;
 	function sel_checkbox(data) {
@@ -1657,6 +1657,7 @@
 		$("#grid_rulecondition").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
 	}
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		debugger;
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
 		var selectedItem = cmb_var.dataItem(cmb_var.select());
@@ -1742,6 +1743,7 @@
 		return arr1;
 	}
 	function saverulecondition() {
+		debugger;
 		try {
 			var grid = $("#grid_rulecondition").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
@@ -2026,7 +2028,7 @@
 			editable: true,
 		});
 		filter_field_list = cmbsourcefield();
-		join_condition_list = [{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+		join_condition_list = [{ code: '', desc: '' },{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 
 		function OnEdit(e) {
 			try {
@@ -2264,7 +2266,7 @@
 			editable: true,
 		});
 		filter_field_list = cmbsourcefield();
-		join_condition_list = [{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 
 		function OnEdit(e) {
 			try {

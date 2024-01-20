@@ -10,6 +10,9 @@
 			margin-right: 33rem !important;
 		}
 
+				.k-grid-header th.k-header > .k-link {		
+			color:white !important;
+		}
 		.error_show {
 			color: red;
 			margin-left: 10px;
@@ -157,6 +160,7 @@
 	}
 
 	function grid_reconverion(data) {	
+		debugger;
 		$("#grid_reconverion").kendoGrid({
 			dataSource: {
 				data: data,
@@ -165,6 +169,7 @@
 						fields: {
 							rule_gid: { type: "string" },
 							rule_name: { type: "string" },
+							rule_order: {type: "string"},
 							source_dataset_name: { type: "string" },
 							comparsion_dataset_name: { type: "string" },
 							system_match_flag_desc: { type: "string" },
@@ -203,7 +208,13 @@
 				{
 					field: "rule_name",
 					title: "Rule Name",
-					width: 100,
+					width: 120,
+				},
+				{
+					field: "rule_order",
+					title: "Rule Order",
+					attributes: { style: "text-align: center" },
+					width: 50,
 				},
 				{
 					field: "source_dataset_code",
@@ -229,14 +240,20 @@
 				},
 				{
 					field: "system_match_flag_desc",
-					title: "System Matchoff Flag",
-					width: 100,
+					title: "System Matchoff",
+					width: 50,
+					//template: "<input id='scheduler_gid' onclick='rowselected(this)' name='system_match_flag_desc' type='checkbox'/>",
+					attributes: { style: "text-align: center" },
+					filterable: false,
 					template: '#=sel_checkbox(data)#'					
 				},
 				{
 					field: "hold_flag_desc",
 					title: "Hold Flag",
-					width: 100,
+					width: 50,
+					filterable: false,
+					attributes: { style: "text-align: center" },
+					//template: "<input id='scheduler_gid1' onclick='rowselected(this)' name='hold_flag_desc' type='checkbox'/>"
 					template: '#=sel_checkbox1(data)#'					
 				},
 				],
@@ -251,20 +268,30 @@
 		});
 	}
 	function sel_checkbox(data) {	
+		debugger;
 		var isChecked = data.system_match_flag_desc;
 		var con = "";
 		if (isChecked == "YES") {
 			con = 'checked=checked';
+			return '<input id="chk_sel_' + data.rule_gid + '" checked name = "system_match_flag_desc" type = "checkbox" />'
+
+		} else {
+			return '<input id="chk_sel_' + data.rule_gid + '" name = "system_match_flag_desc" type = "checkbox" />'
+
 		}
-		return '<input id="chk_sel_' + data.rule_gid + '" class="customClass" ' + con + '"  type="checkbox"/> ';
+		//return '<input id="chk_sel_' + data.rule_gid + '" class="customClass" ' + con + '"  type="checkbox"/> ';
 	}
 	function sel_checkbox1(data) {
 		var isChecked1 = data.hold_flag_desc;
 		var con1 = "";
 		if (isChecked1 == "YES") {
 			con1 = 'checked=checked';
+			return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox"/> ';
+		} else {
+			return '<input id="chk_sel1_' + data.rule_gid + '" name = "hold_flag_desc" type="checkbox"/> ';
+
 		}
-		return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" ' + con1 + '" type="checkbox"/> ';
+		//return '<input id="chk_sel1_' + data.rule_gid + '" class="customClass1" ' + con1 + '" type="checkbox"/> ';
 	}
 
 	function createSwitch(element) {
@@ -318,6 +345,7 @@
 	}
 
 	function reconsubmit() {
+		debugger;
 		var in_recon_version = $("#reconversion").val();
 		if (in_recon_version =='') {	
 			$.alert({

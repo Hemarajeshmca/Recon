@@ -147,6 +147,7 @@
 			data: JSON.stringify({ in_recon_code: in_recon_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				debugger;
 				if (response != null) {
 					var res = JSON.parse(response);
 					$("#comreconversion").empty();
@@ -157,7 +158,7 @@
 					$.each(res.Reconversion, function (index, item) {
 						$("#comreconversion").append($('<option>', {
 							value: item.recon_rule_version,
-							text: parseFloat( item.recon_rule_version).toFixed
+							text:  item.recon_rule_version
 						}));
 					});
 				}
