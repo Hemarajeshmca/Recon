@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Math;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
@@ -22,6 +23,12 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
+
+        public IActionResult ReconViewClone()
+        {
+            return View();
+		}
+
 		#region list
 		[HttpPost]
 		public JsonResult Reconlistfetch([FromBody] Reconlistmodel context)
@@ -326,7 +333,7 @@ namespace Recon_proto.Controllers
 		#region reconfetch
 		public class fetchRecon
 		{
-			public Int16? in_recon_code { get; set; }
+			public String? in_recon_code { get; set; }
 
 		}
 		public class fetchRecondataset
@@ -643,6 +650,154 @@ namespace Recon_proto.Controllers
 		public class Datasetdetailfetch
 		{
 			public string? datasetCode { get; set; }
+		}
+		#endregion
+
+		#region CloneRecon
+		[HttpPost]
+		public JsonResult cloneRecon([FromBody] cloneReconModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Recon/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("cloneRecon", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "cloneRecon");
+				return Json(ex.Message);
+			}
+		}
+
+        public class cloneReconModel
+        {
+            public string in_recon_name { get; set; }
+            public string in_clone_recon_code { get; set; }
+		}
+
+		#endregion
+
+		#region clonedatasetrecon
+		[HttpPost]
+		public JsonResult cloneReconDataset([FromBody] cloneReconDatasetModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Recondataset objList = new Recondataset();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Recon/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("cloneReconDataset", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					//for (int i = 0; i < result.Rows.Count; i++)
+					//{
+					//	objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					//	objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
+					//}
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "cloneReconDataset");
+				return Json(ex.Message);
+			}
+		}
+
+		public class cloneReconDatasetModel
+		{
+			public String in_recon_code { get; set; }
+			public String in_dataset_code { get; set; }
+			public String in_parent_dataset_code { get; set; }
+			public String in_clone_recon_code { get; set; }
+			public String in_clone_dataset_code { get; set; }
+		}
+		#endregion
+
+		#region clonedetailsfetch
+		[HttpPost]
+		public JsonResult fetchcloneRecondetails([FromBody] fetchRecon context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			DataTable result1 = new DataTable();
+			List<fetchRecondataset> objcat_lst = new List<fetchRecondataset>();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Recon/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					//client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("fetchclonerecondetail", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataSet>(d2);
+					var rr = result.Tables.Count;
+					if (rr <= 0)
+					{
+						d2 = "";
+					}
+
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "fetchclonerecondetail");
+				return Json(ex.Message);
+			}
 		}
 		#endregion
 	}

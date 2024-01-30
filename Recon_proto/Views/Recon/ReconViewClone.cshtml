@@ -72,6 +72,7 @@
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Recon code</label>
 									<input class="form-control" type="text" id="reconcode" value="" disabled>
+									<input class="form-control" type="text" id="clone_reconcode" value="" hidden>
 								</div>
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Mode</label>
@@ -157,15 +158,26 @@
 												Addtional Configuration
 											</button>
 										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-Rule"
+													aria-controls="navs-pills-top-Rule"
+													aria-selected="true">
+												Rule
+											</button>
+										</li>
 									</ul>
+
 									<div class="tab-content">
 										@*Dataset*@
 										<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-													@*<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
+@*													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													*@													<div class="col-xs-12" style="margin-top:25px;">
 														<div id="gd_datasetrecon">
 															<div id="grid_datasetrecon">
 															</div>
@@ -178,8 +190,8 @@
 										<div class="tab-pane fade" id="navs-pills-top-Datasetmapping" role="tabpanel" style="margin-top:-25px;">
 											<div class="panel panel-default">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-													<div class="col-xs-12">
+@*													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													*@													<div class="col-xs-12" style="margin-top:25px;">
 														<div id="maingrid">
 														</div>
 														<div id="maingrid1">
@@ -240,6 +252,21 @@
 												</div>
 											</div>
 										</div>
+										@*Rule*@
+										<div class="tab-pane fade show" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+@*													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+*@													@*<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+													<div class="col-xs-12" style="margin-top:25px;">
+														<div id="gd_rule">
+															<div id="grid_rule">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -254,6 +281,7 @@
 							</div>
 						</div>
 					</div>
+
 					<div class="modal" id="Accountform" tabindex="-1" aria-hidden="true">
 						<div class="modal-dialog modal-lg" role="document">
 							<div class="modal-content">
@@ -274,34 +302,49 @@
 									<div class="container">
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 											<div class="col-sm-4">
-												<label for="" class="form-label">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-												<select id="cmbdatasetname" class="form-select form-control">
+												<label for="" class="form-label">Cloned Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbdatasetname" disabled class="form-select form-control">
 												</select>
 												<input type="hidden" id="recondataset_gid" value="0" />
 												<input type="hidden" id="txtmodedataset" value="Create" />
 											</div>
 											<div class="col-sm-4">
-												<label for="" class="form-label">Dataset Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-												<select id="DatasetType" class="form-select form-control" onchange="DatasetTypefield()">
+												<label for="" class="form-label">Cloned Dataset Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="DatasetType" disabled class="form-select form-control" onchange="DatasetTypefield()">
 												</select>
 											</div>
 											<div class="col-sm-4">
-												<label for="" class="form-label">Parent Dataset&nbsp;</label>
-												<select id="cmbParentDataset" class="form-select form-control" value="" disabled>
+												<label for="" class="form-label">Cloned Parent Dataset&nbsp;</label>
+												<select id="cmbParentDataset" disabled class="form-select form-control" value="">
 												</select>
 											</div>
-											@*<div class="col-sm-4">
-											<label for="" class="form-label">Status&nbsp;</label>
-											<div style="margin-left:2px;margin-top:5px">
-											<input type="radio" id="Status23" name="Status23" value="Y1" checked>&nbsp;&nbsp;Active&nbsp;
-											<input type="radio" id="Status23" style="margin-left: 10px;" name="Status23" value="N">&nbsp;&nbsp;InActive&nbsp;
-											</div>
-											</div>*@
+											
 										</div>
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbdatasetname_new" class="form-select form-control">
+												</select>
+												<input type="hidden" id="recondataset_gid_new" value="0" />
+												<input type="hidden" id="txtmodedataset_new" value="Create" />
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Dataset Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="DatasetType_new" class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Parent Dataset&nbsp;</label>
+												<select id="cmbParentDataset_new" class="form-select form-control" value="" disabled>
+												</select>
+											</div>
+											
+										</div>
+
 									</div>
 									<div class="col-sm-4" style="margin-top:30px;float: right;">
 										<center>
-											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveDataset()">Save</button>&nbsp;&nbsp;&nbsp;
+											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveClonedDataset()">Save</button>&nbsp;&nbsp;&nbsp;
 											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
 										</center>
 									</div>
@@ -309,6 +352,7 @@
 							</div>
 						</div>
 					</div>
+					
 					<div class="modal" id="Datasetmappingform" tabindex="-1" aria-hidden="true">
 						<div class="modal-dialog modal-lg" role="document">
 							<div class="modal-content">
@@ -372,6 +416,80 @@
 							</div>
 						</div>
 					</div>
+				
+				
+					<div class="modal" id="ReconRuleForm" tabindex="-1" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								</div>
+								<div class="modal-body" style="margin-top: -26px;">
+									<div class="row">
+										<div class="col-sm-4">
+										</div>
+										<div class="col-sm-4">
+											<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Rule</h4>
+										</div>
+										<div class="col-sm-4">
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										</div>
+									</div>
+									<hr style="margin-top:-1px; width:100%;">
+									<div class="container">
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Clone Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbrulename" disabled class="form-select form-control">
+												</select>
+												<input type="hidden" id="rule_gid" />
+												<input type="hidden" id="rule_code"  />
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Clone Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="sourcedataset" disabled class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Clone Comparision Dataset&nbsp;</label>
+												<select id="comparisondataset" disabled class="form-select form-control" value="">
+												</select>
+											</div>
+
+										</div>
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<input class="form-control" type="text" id="cmbrulename_new" />
+												@*<select id="cmbrulename_new" class="form-select form-control">
+												</select>
+												<input type="hidden" id="rule_gid_new" value="0" />
+												<input type="hidden" id="rule_code_new" />*@
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="sourcedataset_new" class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Comparision Dataset&nbsp;</label>
+												<select id="comparisondataset_new" class="form-select form-control" value="">
+												</select>
+											</div>
+
+										</div>
+
+									</div>
+									<div class="col-sm-4" style="margin-top:30px;float: right;">
+										<center>
+											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveCloneRule()">Save</button>&nbsp;&nbsp;&nbsp;
+											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+										</center>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
 				</form>
 			</div>
 		</div>
@@ -381,15 +499,19 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#navhead").text("Recon");
+		$("#reconcode").val(getlocalStorage('cloned_reconCode'));
 		kendodate_format();
-		getGridComboList();
-		grid_datasetrecon([]);
-		grid_recondatasetmapping([]);
-		recontypeconfig();
+		getGridComboList(); // recontype, Rule, dataset Comparision and Source
+		grid_datasetrecon([]); // recondataset
+		grid_recondatasetmapping([]);//recondatasetmapping
+		recontypeconfig(); //recontypeconfiguration
+		DatasetTypefield();
+		detailfetch(getlocalStorage('cloned_reconCode'));
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
-			$("#cmbParentDataset").attr('disabled', false);
+			$("#cmbParentDataset").attr('disabled', true);
+			$("#cmbParentDataset_new").attr('disabled', false);
 			var reconcode = $("#reconcode").val();
 			var recongid = $("#recon_id").val();
 			$.ajax({
@@ -413,6 +535,10 @@
 								value: item.dataset_code,
 								text: item.dataset_name
 							}));
+							$("#cmbParentDataset_new").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
 						});
 					}
 					else {
@@ -427,6 +553,7 @@
 			});
 		} else {
 			$("#cmbParentDataset").attr('disabled', true);
+			$("#cmbParentDataset_new").attr('disabled', true);
 		}
 	}
 	function checkactive() {
@@ -495,7 +622,6 @@
 				$("#period_to").val(data.period_to);
 				$("#txtstatus").val(data.active_status_desc);
 				$("#recon_id").val(data.recon_gid);
-				$("#reconcode").val(data.recon_code);
 				if (data.until_active_flag == "Y") {
 					$('#untillactive').attr('checked', true);
 				}
@@ -509,6 +635,7 @@
 
 						if (response != " ") {
 							var res = JSON.parse(response);
+							if(res.ReconHeader.length > 0){
 							if (res.ReconHeader[0].recon_value_flag == "Y") {
 								$("#reconvalueflag1").prop("checked", true);
 							} else {
@@ -524,11 +651,15 @@
 							} else {
 								$("#partialmatch2").prop("checked", true);
 							}
-
+							
 							$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 							$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
+							//debugger;
+							//getcloneddataset(res.ReconHeader[0].clone_recon_code);
 							$("#gd_datasetrecon").empty();
 							$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
+							
+							}							
 							grid_datasetrecon(res.ReconDataSet);
 							if (res.ReconDataSetmapping.length > 0) {
 								griddatamapping(res.ReconDataSetmapping);
@@ -592,15 +723,17 @@
 		}
 	}
 	function detailfetch(reconcode) {
+		debugger;
 		$.ajax({
 			type: "POST",
-			url: '../Recon/Reconheaderfetch',
+			url: '../Recon/fetchcloneRecondetails',
 			dataType: 'json',
 			data: JSON.stringify({ in_recon_code: reconcode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != " ") {
 					var res = JSON.parse(response);
+					if (res.ReconHeader.length >0){
 					$("#reconcode").val(res.ReconHeader[0].recon_code);
 					$("#cmbrecontype").val(res.ReconHeader[0].recontype_code);
 					$("#ReconName").val(res.ReconHeader[0].recon_name);
@@ -608,6 +741,10 @@
 					$("#period_to").val(res.ReconHeader[0].period_to);
 					$("#txtstatus").val(res.ReconHeader[0].active_status_desc);
 					$("#recon_id").val(res.ReconHeader[0].recon_gid);
+					$("#clone_reconcode").val(res.ReconHeader[0].clone_recon_code);
+					if (res.ReconHeader[0].until_active_flag == "Y") {
+						$('#untillactive').attr('checked', true);
+					}
 					if (res.ReconHeader[0].recon_value_flag == "Y") {
 						$("#reconvalueflag1").prop("checked", true);
 					} else {
@@ -625,14 +762,22 @@
 					}
 					$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 					$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
+					//debugger;
+					//	getcloneddataset(res.ReconHeader[0].clone_recon_code)
 					$("#gd_datasetrecon").empty();
 					$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
+					}
 					grid_datasetrecon(res.ReconDataSet);
 					if (res.ReconDataSetmapping.length > 0) {
 						griddatamapping(res.ReconDataSetmapping);
 						$("#maingrid1").hide()
 					} else {
 						gridmap([]);
+					} 
+					if (res.ReconRule.length > 0) {
+						gridruleMapping(res.ReconRule);
+					} else {
+						gridruleMapping([]);
 					}
 
 					$("#cmbdatasetmap").empty();
@@ -674,6 +819,22 @@
 					});
 					$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 					$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+					//Rule fetch
+					$("#sourcedataset").empty();
+					$("#sourcedataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.ReconRule, function (index, item) {
+						$("#sourcedataset").append($('<option>', {
+							value: item.clone_source_dataset_code,
+							text: item.clone_source_dataset_desc
+						}));
+						$("#comparisondataset").append($('<option>', {
+							value: item.clone_comparison_dataset_code,
+							text: item.clone_comparison_dataset_desc
+						}));
+					});
 					recontypeconfig();
 				}
 				else {
@@ -710,7 +871,7 @@
 						text: item.masterName
 					}));
 				});
-				load();
+				//load();
 			}
 		});
 		//dataset combo
@@ -734,6 +895,10 @@
 				$.each(result, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbdatasetname").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#cmbdatasetname_new").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
 						}));
@@ -762,9 +927,102 @@
 						value: item.masterSyscode,
 						text: item.masterName
 					}));
+					$("#DatasetType_new").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
 				});
 			}
 		});
+	
+	//rule list
+	debugger;
+		var data = {};
+		data.in_user_code = '';
+		var Context = data;
+		var reconCode = getlocalStorage('cloned_reconCode');
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/getallRule',
+			dataType: 'json',
+			data: JSON.stringify({}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				$("#cmbrulename").empty();
+				$("#cmbrulename").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(result, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbrulename").append($('<option>', {
+							value: item.rule_code,
+							text: item.rule_name
+						}));
+						$("#cmbrulename_new").append($('<option>', {
+							value: item.rule_code,
+							text: item.rule_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+		//dataset combo
+		var reconcode = getlocalStorage('cloned_reconCode');
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				debugger;
+				$("#sourcedataset").empty();
+				$("#sourcedataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#sourcedataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#comparisondataset").empty();
+				$("#comparisondataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#comparisondataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
+	
+	
 	}
 	function saveheader() {
 		try {
@@ -832,10 +1090,9 @@
 						//	content: response.out_msg,
 						//	type: 'green',
 						//});
-						$("#recon_id").val(response.recon_gid);
-						$("#reconcode").val(response.recon_code);
-
-						detailfetch(response.recon_code);
+						$("#recon_id").val(response.in_recon_gid);
+						$("#reconcode").val(response.in_recon_code);
+						detailfetch(response.in_recon_code);
 						$("#Accountform").modal('show');
 					}
 					else {
@@ -862,11 +1119,14 @@
 					model: {
 						fields: {
 							recondataset_gid: { type: "string" },
-							recon_code: { type: "string" },
-							dataset_code: { type: "string" },
-							dataset_name: { type: "string" },
-							dataset_type_desc: { type: "string" },
-							parent_dataset_code: { type: "string" },
+							clone_recon_code: { type: "string" },
+							clone_dataset_code: { type: "string" },
+							clone_dataset_name: { type: "string" },
+							clone_dataset_type_desc: { type: "string" },
+							clone_parent_dataset_code: { type: "string" },
+							clone_parent_dataset_name: {type:"string"},
+							new_dataset_name: {type: "string"},
+							new_parent_dataset_code: {type: "string"},
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
 							In_mode_flag: { type: "string", defaultValue: "I" }
@@ -898,11 +1158,6 @@
 						id: "Edit",
 						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					{
-						name: "Delete",
-						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsdataset()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
-					},
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
@@ -911,18 +1166,18 @@
 				hidden: true,
 			},
 			{
-				field: "recon_code",
-				title: "recon_code",
+				field: "clone_recon_code",
+				title: "clone_recon_code",
 				hidden: true,
 			},
 			{
-				field: "dataset_code",
-				title: "Dataset code",
+				field: "clone_dataset_code",
+				title: "Cloned Dataset code",
 				hidden: true,
 			},
 			{
-				field: "dataset_name",
-				title: "Dataset Name",
+				field: "clone_dataset_name",
+				title: "Cloned Dataset Name",
 				width: 100,
 			},
 			{
@@ -931,19 +1186,29 @@
 				hidden: true,
 			},
 			{
-				field: "dataset_type_desc",
-				title: "Dataset Type",
+				field: "clone_dataset_type_desc",
+				title: "Cloned Dataset Type",
 				width: 100,
 			},
 			{
-				field: "parent_dataset_code",
-				title: "Parent Dataset",
+				field: "clone_parent_dataset_code",
+				title: "Cloned Parent Dataset",
 				width: 100,
 				hidden: true,
 			},
 			{
-				field: "parent_dataset_name",
-				title: "Parent Dataset",
+				field: "clone_parent_dataset_name",
+				title: "Cloned Parent Dataset",
+				width: 100,
+			},
+			{
+				field: "new_dataset_name",
+				title: "New Dataset Name",
+				width: 100,
+			},
+			{
+				field: "new_parent_dataset_code",
+				title: "New Parent Dataset Name",
 				width: 100,
 			},
 			{
@@ -969,12 +1234,13 @@
 		if ($(mode).attr('value') == "edit") {
 			var grid = $("#grid_datasetrecon").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
-			$("#cmbdatasetname").val(selectedItem.dataset_code);
+			$("#cmbdatasetname").val(selectedItem.clone_dataset_code);
 			$("#Accountform").modal('show');
 			$("#recondataset_gid").val(selectedItem.recondataset_gid);
 			// Dataset type
 			var in_master_code = "QCD_DS_TYPE";
 			var in_user_code = "sundar";
+			DatasetTypefield();
 			$.ajax({
 				type: "POST",
 				url: '../Common/Qcdmaster',
@@ -994,9 +1260,8 @@
 							text: item.masterName
 						}));
 					});
-					$("#DatasetType").val(selectedItem.dataset_type);
-					DatasetTypefield();
-					$("#cmbParentDataset").val(selectedItem.parent_dataset_code);
+					$("#DatasetType").val(selectedItem.clone_dataset_type);
+					$("#cmbParentDataset").val(selectedItem.clone_parent_dataset_name);
 				}
 			});
 		} else if ($(mode).attr('value') == "create") {
@@ -1005,6 +1270,57 @@
 			$("#cmbParentDataset").val("");
 			$("#recondataset_gid").val(0);
 			saveheader();
+		}
+	}
+	function saveClonedDataset() {
+		var data = {};
+		try {
+			data.in_recon_code = $("#reconcode").val();
+			data.in_dataset_code = $("#cmbdatasetname_new").val();
+			data.in_parent_dataset_code = $("#cmbParentDataset_new").val() ? $("#cmbParentDataset_new").val() : '';
+			data.in_clone_recon_code = $("#clone_reconcode").val();
+			data.in_clone_dataset_code = $("#cmbdatasetname").val();
+			data.in_user_code = '';
+			debugger;
+			$.ajax({
+				type: "POST",
+				url: '../Recon/cloneRecondataset',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (res) {
+					debugger;
+					var response = JSON.parse(res);
+					if(response.length > 0) {
+					if (response[0].out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response[0].out_msg,
+							type: 'green',
+						});
+							$("#cmbParentDataset_new").val("");
+							$("#cmbdatasetname_new").val("");
+							$("#clone_reconcode").val("");
+							$("#cmbdatasetname").val("");
+							$("#Accountform").modal('hide');
+							detailfetch($("#reconcode").val());
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response[0].out_msg,
+							type: 'red',
+						});
+					}
+				}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} catch (e) {
+			console.log(e)
 		}
 	}
 	function saveDataset() {
@@ -1049,7 +1365,7 @@
 						$("#cmbdatasetname").val("");
 						$("#recondataset_gid").val(response.in_recondataset_gid)
 						$("#Accountform").modal('hide');
-						detailfetch($("#reconcode").val());
+						detailfetch($("#recon_id").val());
 					}
 					else {
 						$.alert({
@@ -1423,7 +1739,7 @@
 									content: response.out_msg,
 									type: 'green',
 								});
-								load();
+								//load();
 							}
 							else {
 
@@ -1538,7 +1854,7 @@
 									content: response.out_msg,
 									type: 'green',
 								});
-								load();
+							//	load();
 							}
 							else {
 
@@ -1649,7 +1965,7 @@
 	}
 	function rr3() {
 		$("#Datasetmappingform").modal('hide');
-		detailfetch($("#reconcode").val());
+		detailfetch($("#recon_id").val());
 	}
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
@@ -1759,9 +2075,9 @@
 							type: 'green',
 							animationSpeed: 700,
 						});
-						$("#recon_id").val(response.in_recon_gid)
-						$("#reconcode").val(response.in_recon_code)
-						detailfetch(response.in_recon_code);
+						$("#reconcode").val(response.in_recon_code);
+						$("#recon_id").val(response.in_recon_gid);
+						detailfetch(response.in_recon_gid);
 						window.location.href = "../Recon/ReconList";
 					} else {
 						$.alert({
@@ -1795,8 +2111,228 @@
 			$("#thersholdminus").prop('disabled', true)
 			$("#thersholdplus").prop('disabled', true)
 		}
-
 	}
+
+	function getcloneddataset(clonedreconCode){
+		debugger;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconheaderfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_code: clonedreconCode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+
+				if (response != " ") {
+					var res = JSON.parse(response);
+					grid_datasetrecon(res.ReconDataSet);
+				}
+				else {
+					grid_datasetrecon([]);
+					gridmap([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function gridruleMapping(data){
+		$("#grid_rule").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							rule_gid: { type: "string" },
+							new_recon_code: { type: "string" },
+							new_rule_code: { type: "string" },
+							new_rule_name: {type: "string"},
+							new_source_dataset_code: { type: "string" },
+							new_source_dataset_desc: { type: "string" },
+							new_comparison_dataset_code: { type: "string" },
+							new_comparison_dataset_desc: { type: "string" },
+							clone_rule_code: { type: "string" },
+							clone_rule_name: { type: "string" },
+							clone_source_dataset_code: { type: "string" },
+							clone_source_dataset_desc: {type: "string"},
+							clone_comparison_dataset_code : {type: "string"},
+							clone_comparison_dataset_desc: {type: "string"}
+						}
+					}
+				}
+			},
+			height: 250,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_rule').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getreconRule(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "rule_gid",
+				title: "rule_gid",
+				hidden: true,
+			},
+			{
+				field: "clone_rule_code",
+				title: "Clone Rule Code",
+				hidden: true
+			},
+			{
+				field: "clone_rule_name",
+				title: "Clone Rule Name",
+				width: 150,
+			},
+			{
+				field: "clone_comparison_dataset_code",
+				title: "clone_comparison_dataset_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "clone_source_dataset_code",
+				title: "clone_source_dataset_code",
+				width: 100,
+				hidden: true
+			}, {
+				field: "clone_source_dataset_desc",
+				title: "Clone Source Dataset",
+				width: 150,
+			},
+			{
+				field: "clone_comparison_dataset_desc",
+				title: "Clone Comparison Dataset",
+				width: 100,
+			}, {
+				field: "new_recon_code",
+				title: "new_recon_code",
+				hidden: true,
+			},
+			{
+				field: "new_rule_code",
+				title: "new_rule_code",
+				hidden: true,
+			},
+			{
+				field: "new_rule_name",
+				title: "New Rule Name",
+				width: 150,
+			},
+			{
+				field: "new_source_dataset_desc",
+				title: "New Source Dataset",
+				width: 150,
+			},
+			{
+				field: "new_comparison_dataset_desc",
+				title: "New Comparison Dataset",
+				width: 100,
+			},
+			{
+				field: "new_source_dataset_code",
+				title: "new_source_dataset_code",
+				hidden: true
+			},
+			{
+				field: "new_comparison_dataset_code",
+				title: "new_comparison_dataset_code",
+				hidden: true
+			}],
+			editable: false,
+
+		});
+	}
+
+	function getreconRule() {
+		debugger;
+		var grid = $("#grid_rule").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		$("#ReconRuleForm").modal('show');
+		$("#cmbrulename").val(selectedItem.clone_rule_code);
+		$("#rule_gid").val(selectedItem.rule_gid);
+		$("#rule_code").val(selectedItem.clone_rule_code);
+		$("#sourcedataset").val(selectedItem.clone_source_dataset_code);
+		$("#comparisondataset").val(selectedItem.clone_comparison_dataset_code);
+	}
+
+	function saveCloneRule(){
+		debugger;
+		//var reconcode = $("#reconcode").val();
+		//var grid = $("#grid_rule").data("kendoGrid");
+		//var selectedItem = grid.dataItem(grid.select());
+		//$("#cmbdatasetfieldname").val(selectedItem.dataset_table_field);
+		//$("#reconfieldmapping_gid").val(selectedItem.reconfieldmapping_gid);
+		var data={};
+		data.in_recon_code = $("#reconcode").val();
+		data.in_rule_name = $("#cmbrulename_new").val(); 
+		data.in_source_dataset_code = $("#sourcedataset_new").val();
+		data.in_comparison_dataset_code = $("#comparisondataset_new").val();
+		data.in_clone_recon_code = $("#clone_reconcode").val(); 
+		data.in_clone_rule_code = $("#cmbrulename").val();
+		data.in_clone_source_dataset_code = $("#sourcedataset").val();
+		data.in_clone_comparison_dataset_code = $("#comparisondataset").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/cloneReconRule',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response != "") {
+					var res = JSON.parse(response);
+					if(res.length > 0) {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: 'Something Went wrong',
+							type: 'red',
+						});
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		$("#ReconRuleForm").modal('hide');
+		detailfetch($("#reconcode").val());
+	}
+
+	//window.addEventListener('beforeunload', function () {
+	//	// Clear the localStorage
+	//	localStorage.removeItem("cloned_reconCode");
+	//});
 </script>
 
 
