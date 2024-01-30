@@ -104,6 +104,47 @@
 	</style>
 </head>
 <body>
+	<div class="row" style="background: #fff;border-radius: 15px;margin-right: 8px;margin-left: 8px;">
+		<div class="col-sm-12" style="margin-left: 10px;">
+			<div class="row" id="collapse_div">
+				<div class="col-sm-4">
+					<label for="orglvl1valO" id="orglvlNavigate" style="height:5px;color:#ff0000;font-size:15px;font-weight:bold">Set Context</label>
+				</div>
+				<div class="col-sm-4">
+				</div>
+				<div class="col-sm-4">
+					<img src="../Assets/images/plus.png" id="collapse_img" style="float: right; height: 15px; width: 15px; margin: 3px; display: block;">
+					<img src="../Assets/images/minus.png" id="collapse_img2" style="float: right; height: 15px; width: 15px; margin: 3px; display: none;">
+				</div>
+			</div>
+			<div class="row" id="collapse_org" style="margin-bottom: 22px; display: none;">
+				<div class="col-sm-4" style="width: 29%;">
+					<center><label for="orglvl1valO" id="orglvl1lblO">Entity</label></center>
+					<select id="orglvl1valO" class="form-select form-control" onchange="EntityChange(this)">
+					</select>
+				</div>
+				<div class="col-sm-4" style="width:29%;">
+					<center><label for="orglvl2valO" id="orglvl2lblO">Department</label></center>
+					<select id="orglvl2valO" class="form-select form-control" onchange="DepartmentChange(this)">
+					</select>
+				</div>
+				<div class="col-sm-4" style="width: 29%;">
+					<center><label for="orglvl3valO" id="orglvl3lblO">Unit</label></center>
+					<select id="orglvl3valO" class="form-select form-control">
+					</select>
+				</div>
+				@*<div class="col-sm-3" style="width: 23%;">
+				<center><label for="orglvl4valO" id="orglvl4lblO">Level 4</label></center>
+				<select id="orglvl4valO" class="form-select form-control">
+				</select>
+				</div>*@
+				<div class="col-sm-12">
+					<button type="button" id="btn_transferorg" class="btn btn-sm btn-primary" onclick="storeheader()" style="float: right;margin-top: -33px;margin-right: 28px;">Apply</button>
+					<img src="../Assets/images/login-refresh.png" id="refreshOrg" style="float: right;margin-top: -30px;height: 21px;width: 21px;margin-right: 3px;" onclick="loaddynamiccolumns('R')">
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="row" style="height:auto;padding: 0px 18px;">
 		<div class="col-md-12">
 			<div class="content-wrapper" style="min-height:43px">
@@ -232,10 +273,10 @@
 				var arr = [];
 				for (i = 0; response.length > i; i++) {
 					var list1 = {};
-					if(response[i]["active_status"] == 'Y') {
-					list1.value = response[i].recon_code;
-					list1.text = response[i].recon_name;
-					arr.push(list1);
+					if (response[i]["active_status"] == 'Y') {
+						list1.value = response[i].recon_code;
+						list1.text = response[i].recon_name;
+						arr.push(list1);
 					}
 				}
 				dropdown = $("#cmbreconname").kendoDropDownList({
@@ -312,6 +353,31 @@
 			editable: false,
 			navigatable: true,
 			selectable: "row"
+		});
+		var usergid = 0;
+		var usercode = "zxc";
+		$.ajax({
+			type: "POST",
+			url: '../Admin/setcontextread',
+			dataType: 'json',
+			data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				$("#orglvl1valO").empty();
+				$("#orglvl1valO").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(result, function (index, item) {
+					if (item.parent_code == "QCD_L1") {
+						$("#orglvl1valO").append($('<option>', {
+							value: item.master_code,
+							text: item.master_name
+						}));
+					}
+				});					
+			}
 		});
 	});
 	var CustomerHelper = {
@@ -442,18 +508,12 @@
 		debugger;
 		$(".accordion_body").slideUp(300)
 		$(".plusminus").text('+');
-
-
-
-
 	}
 	function openNav() {
 		$(document).ready(function () {
 			$('#layout-menu').toggleClass('active');
 		});
 	}
-
-
 
 	function drawVisualization(system, manual) {
 
@@ -513,7 +573,6 @@
 
 	}
 
-
 	function drawChart1(arraytags) {
 		debugger;
 		google.charts.load('current', {
@@ -525,18 +584,18 @@
 				var opt1 = [];
 				var opt2 = [];
 				if (tags.length > 0) {
-				for (var i = 0; i < tags.length; i++) {
-					var aging_desc = tags[i].aging_desc;
-					var excpcount = tags[i].excp_count;
-					var opt1 = [aging_desc, excpcount];
-					if (i == 0) {
+					for (var i = 0; i < tags.length; i++) {
+						var aging_desc = tags[i].aging_desc;
+						var excpcount = tags[i].excp_count;
+						var opt1 = [aging_desc, excpcount];
+						if (i == 0) {
 
-						opt2.push(['Task', 'Hours per Day']);
-						opt2.push(opt1);
-					} else {
-						opt2.push(opt1);
+							opt2.push(['Task', 'Hours per Day']);
+							opt2.push(opt1);
+						} else {
+							opt2.push(opt1);
+						}
 					}
-				}
 				}
 				new google.visualization.PieChart(document.getElementById('pie-chart')).draw(
 					google.visualization.arrayToDataTable(opt2),
@@ -570,16 +629,16 @@
 		});
 	}
 
-	function getdashboarddetails() {		
+	function getdashboarddetails() {
 		var Attribid = [];
 		var arrstring = "";
 		var period_from = $("#period_from").val();
 		var ts = period_from.split("/");
 		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-			var period_to = $("#period_to").val();
-			var ts1 = period_to.split("/");
-			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-		
+		var period_to = $("#period_to").val();
+		var ts1 = period_to.split("/");
+		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+
 		var Config_MetricType = $("#cmbreconname").data("kendoDropDownList");
 		var reconarray = Config_MetricType.dataSource.data();
 		var cbs = document.getElementsByName("cb");
@@ -659,7 +718,91 @@
 
 		});
 	}
-
-
+	$("#collapse_div").click(function () {
+		debugger;
+		if ($('#collapse_org').css('display') == 'none') {
+			$('#collapse_org').show();
+			$('#collapse_img2').css('display', 'block');
+			$('#collapse_img').css('display', 'none');
+			$("#orglvl1valO").val(sessionStorage.getItem("level1"));
+			jQuery('#orglvl1valO').trigger("change");
+			$("#orglvl2valO").val(sessionStorage.getItem("level2"));
+			jQuery('#orglvl2valO').trigger("change");
+			$("#orglvl3valO").val(sessionStorage.getItem("level3"));
+			
+		} else {
+			$('#collapse_org').css('display', 'none');
+			$('#collapse_img2').css('display', 'none');
+			$('#collapse_img').css('display', 'block');
+			
+		}
+	});
+	function storeheader() {		
+		sessionStorage.setItem("level1", $("#orglvl1valO").val());
+		sessionStorage.setItem("level2", $("#orglvl2valO").val());
+		sessionStorage.setItem("level3", $("#orglvl3valO").val());
+		sessionStorage.setItem("level1txt", $("#orglvl1valO :selected").text());		
+		sessionStorage.setItem("level2txt", $("#orglvl2valO :selected").text());		
+		sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
+		location.reload();
+	}
+	function EntityChange(selectElement) {
+		var selectedValue = selectElement.value;
+		var usergid = 0;
+		var usercode = "zxc";
+		$.ajax({
+			type: "POST",
+			url: '../Admin/setcontextread',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);	
+				$("#orglvl2valO").empty();
+				$("#orglvl2valO").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(result, function (index, item1) {
+					if (item1.parent_code == "QCD_L2" && item1.depend_code == selectedValue) {
+						$("#orglvl2valO").append($('<option>', {
+							value: item1.master_code,
+							text: item1.master_name
+						}));
+					}
+				});				
+			}
+		});
+	}
+	function DepartmentChange(selectElement) {
+		var selectedValue = selectElement.value;
+		var usergid = 0;
+		var usercode = "zxc";
+		$.ajax({
+			type: "POST",
+			url: '../Admin/setcontextread',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);					
+				$("#orglvl3valO").empty();
+				$("#orglvl3valO").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(result, function (index, item2) {
+					if (item2.parent_code == "QCD_L3" && item2.depend_code == selectedValue) {
+						$("#orglvl3valO").append($('<option>', {
+							value: item2.master_code,
+							text: item2.master_name
+						}));
+					}
+				});
+			}
+		});
+	}
 </script>
 

@@ -37,6 +37,7 @@ namespace Recon_proto.Models
         [Required(ErrorMessage = "user type Should Not Be Blank")]
         public string user_type { get; set; }
         public string user_type_desc { get; set; }
+		public string usergroup_desc { get; set; }
         public string user_status { get; set; }
         public string active_status_desc { get; set; }
 
