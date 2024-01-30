@@ -73,7 +73,8 @@ namespace Recon_proto.Controllers
                         objcat.user_name = result.Rows[i]["user_name"].ToString();
                         objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
                         objcat.usergroup_gid = Convert.ToInt32(result.Rows[i]["usergroup_code"]);
-                        objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
+						objcat.usergroup_desc = result.Rows[i]["usergroup_desc"].ToString();
+						objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
                         objcat.msg = result.Rows[i]["out_msg"].ToString();
                         objcat.oldpassworrd = Decrypt(pass);
                         objcat.user_status = result.Rows[i]["user_status"].ToString();
