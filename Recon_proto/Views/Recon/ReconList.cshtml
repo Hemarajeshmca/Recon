@@ -68,6 +68,58 @@
 			</div>
 		</div>
 	</div>
+
+
+
+	<div class="modal fade" id="pplclone_conf" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Role Clone</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="row">
+						<div class="col-md-6">
+									<label>New Recon Name</label>
+									<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+									<input class="form-control" id="newReconName" type="text" />
+								
+						</div>
+						<div class="col-md-6">
+									<label>Selected Recon Name</label>
+									<input class="form-control" id="selectedReconName" type="text" disabled/>
+									<input class="form-control" id="selectedReconCode" type="text" hidden />
+
+						</div>
+					</div>
+
+
+					<div class="row" style="margin-top: 2%;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-top:20px;float: right;">
+							<center>
+								<button type="button" class="btn btn-sm save_btn me-2" onclick="cloneRecon()">Clone</button>&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+							</center>
+						</div>
+						<div class="col-sm-4"></div>
+					
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 
@@ -122,6 +174,7 @@
 								recontype_desc: { type: "string" },
 								period_from: { type: "string" },
 								period_to: { type: "string" },
+								active_status:{type: "string"},
 								status: { type: "string" }
 							}
 						}
@@ -160,6 +213,17 @@
 							name: "Delete",
 							id: "Delete",
 							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "Clone",
+							id:"Clone",
+							//template: function (dataItem) {
+							//	if (dataItem.active_status == 'Active') {
+							//		debugger;
+							//		return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
+							//	}
+							//}
+							template: "<a href='' onclick='clonePopup(this)' value='clone' data-bs-toggle='modal'><img style='height: 20px;width:20px;' src = '../Assets/images/clone.png'></a>"
 						},
 					],
 					title: "Action&nbsp;",
@@ -255,6 +319,13 @@
 					else if (mode == "view") {
 						btn_onClick('View');
 						document.location = "../Recon/ReconView";
+					} else if(mode == 'clone') {
+						btn_onClick("Edit");
+						$("#pplclone_conf").modal('show');
+						var grid = $("#grid_reconlist").data("kendoGrid");
+						var selectedItem = grid.dataItem(grid.select());
+						$("#selectedReconName").val(selectedItem.recon_name);
+						$("#selectedReconCode").val(selectedItem.recon_code);
 					}
 				}
 			}
@@ -306,7 +377,7 @@
 										$.alert('Reason cannot be empty');
 										return false;
 									}
-									var reconcode = "";
+									var reconcode = model.recon_code;
 									var cmbrecontype = "";
 									var ReconName = "";
 									var pr = "1901-01-01";
@@ -364,6 +435,62 @@
 				},
 			}
 		});
+	}
+
+	function clonePopup(e) {
+		$("#pplclone_conf").modal('show');
+		var grid = $("#grid_reconlist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		$("#selectedReconName").val(selectedItem.recon_name);
+		$("#selectedReconCode").val(selectedItem.recon_code);
+	}
+
+	function cloneRecon(){
+		debugger;
+		btn_onClick("Edit");
+		var newReconName = $("#newReconName").val();
+		var selectedReconCode = $("#selectedReconCode").val();
+		debugger;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/cloneRecon',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_name: newReconName, in_clone_recon_code: selectedReconCode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				var result = JSON.parse(response);
+				if(result.length > 0) {
+				if (result[0].out_result == '1'){
+					$.alert({
+						title: 'Recon',
+						content: result[0].out_msg,
+						type: 'green',
+					});
+					$("#pplclone_conf").modal('hide');
+					btn_onClick("Edit");
+					setlocalStorage("cloned_reconCode", result[0].out_recon_code);
+					document.location = "../Recon/ReconViewClone";
+					//gridlist();
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: result[0].out_msg,
+						type: 'red',
+					});
+				}
+				}
+			}
+		});
+	}
+
+	function showCloneIcon() {
+		debugger;
+		var grid = $("#grid_reconlist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		if (selectedItem.active_status == "Y") {
+			return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
+		}
 	}
 </script>
 

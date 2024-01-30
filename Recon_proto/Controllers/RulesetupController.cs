@@ -570,6 +570,101 @@ namespace Recon_proto.Controllers
 				return Json(ex.Message);
 			}
 		
+
+
+
         }
-    }
+
+		[HttpPost]
+		public JsonResult cloneReconRule([FromBody] cloneReconRuleModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Rulesetup/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("cloneReconRule", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "cloneReconRule");
+				return Json(ex.Message);
+			}
+		}
+
+		public class cloneReconRuleModel
+		{
+			public string in_recon_code { get; set; }
+			public string in_rule_name { get; set; }
+			public string in_source_dataset_code { get; set; }
+			public string in_comparison_dataset_code { get; set; }
+			public string in_clone_recon_code { get; set; }
+			public string in_clone_rule_code { get; set; }
+			public string in_clone_source_dataset_code { get; set; }
+			public string in_clone_comparison_dataset_code { get; set; }
+		}
+
+		#region getallRule
+		[HttpPost]
+		public JsonResult getallRule()
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Rulesetup/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+					var response = client.GetAsync("getAllRuleList").Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "getAllRuleList");
+				return Json(ex.Message);
+			}
+		}
+
+		#endregion
+	}
+
 }
