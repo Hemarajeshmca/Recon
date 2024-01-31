@@ -76,7 +76,9 @@
 								</div>
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Mode</label>
-									<input class="form-control" type="text" id="txtmode" disabled>
+									<input class="form-control" type="text" id="mode" disabled>
+
+									<input class="form-control" type="text" id="txtmode" hidden>
 								</div>
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Status</label><br>
@@ -482,7 +484,7 @@
 									<div class="col-sm-4" style="margin-top:30px;float: right;">
 										<center>
 											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveCloneRule()">Save</button>&nbsp;&nbsp;&nbsp;
-											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="cancelRule()">Cancel</button>
 										</center>
 									</div>
 								</div>
@@ -499,6 +501,7 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		$("#navhead").text("Recon");
+		$("#mode").val("Clone");
 		$("#reconcode").val(getlocalStorage('cloned_reconCode'));
 		kendodate_format();
 		getGridComboList(); // recontype, Rule, dataset Comparision and Source
@@ -673,10 +676,12 @@
 								text: "  Select  "
 							}));
 							$.each(res.ReconDataSet, function (index, item) {
+								if(item.new_dataset_code != "") {
 								$("#cmbdatasetmap").append($('<option>', {
-									value: item.dataset_code,
-									text: item.dataset_name
+									value: item.new_dataset_code,
+									text: item.new_dataset_name
 								}));
+								}
 							});
 							$("#cmbrecondatefield").empty();
 							$("#cmbrecondatefield").append($('<option>', {
@@ -786,10 +791,12 @@
 						text: "  Select  "
 					}));
 					$.each(res.ReconDataSet, function (index, item) {
+						if(item.new_dataset_code != "") {
 						$("#cmbdatasetmap").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
+							value: item.new_dataset_code,
+							text: item.new_dataset_name
 						}));
+						}
 					});
 					$("#cmbrecondatefield").empty();
 					$("#cmbrecondatefield").append($('<option>', {
@@ -1156,7 +1163,7 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px; width: 20px;' src = '../Assets/images/clone.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1365,7 +1372,8 @@
 						$("#cmbdatasetname").val("");
 						$("#recondataset_gid").val(response.in_recondataset_gid)
 						$("#Accountform").modal('hide');
-						detailfetch($("#recon_id").val());
+						//detailfetch($("#recon_id").val());
+						detailfetch($("#reconcode").val());
 					}
 					else {
 						$.alert({
@@ -1656,6 +1664,7 @@
 		grid.hideColumn(4);
 	}
 	function getdetailSelectedRows(mode) {
+		debugger;
 		if ($(mode).attr('value') == "edit") {
 			var grid = $("#grid1").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
@@ -1965,7 +1974,8 @@
 	}
 	function rr3() {
 		$("#Datasetmappingform").modal('hide');
-		detailfetch($("#recon_id").val());
+		detailfetch($("#reconcode").val());
+		//detailfetch($("#recon_id").val());
 	}
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
@@ -2077,7 +2087,7 @@
 						});
 						$("#reconcode").val(response.in_recon_code);
 						$("#recon_id").val(response.in_recon_gid);
-						detailfetch(response.in_recon_gid);
+						detailfetch(response.in_recon_code);
 						window.location.href = "../Recon/ReconList";
 					} else {
 						$.alert({
@@ -2188,7 +2198,7 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getreconRule(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getreconRule(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px; width: 20px;' src = '../Assets/images/clone.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -2327,6 +2337,18 @@
 		});
 		$("#ReconRuleForm").modal('hide');
 		detailfetch($("#reconcode").val());
+	}
+
+	function cancelRule() {
+		$("#ReconRuleForm").modal('hide');
+		$("#cmbrulename").val("");
+		$("#rule_gid").val("");
+		$("#rule_code").val("");
+		$("#sourcedataset").val("");
+		$("#comparisondataset").val("");
+		$("#sourcedataset_new").val("");
+		$("#comparisondataset_new").val("");
+		$("#cmbrulename_new").val("");
 	}
 
 	//window.addEventListener('beforeunload', function () {
