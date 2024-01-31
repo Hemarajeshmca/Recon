@@ -71,7 +71,7 @@
 
 
 
-	<div class="modal fade" id="pplclone_conf" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="clone_recon" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -81,7 +81,7 @@
 						<div class="col-sm-4">
 						</div>
 						<div class="col-sm-4">
-							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Role Clone</h4>
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Recon Clone</h4>
 						</div>
 						<div class="col-sm-4">
 							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
@@ -125,6 +125,7 @@
 
 <script>
 	$(document).ready(function () {
+		$('[data-bs-toggle="tooltip"]').tooltip();
 		$("#navhead").text("Recon");
 		setlocalStorage("ls_pageList", "");
 		grid_reconlist_details([]);
@@ -163,7 +164,7 @@
 			$("#grid_reconlist").kendoGrid({
 				dataSource: {
 					data: data,
-					pageSize: 10,
+					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
@@ -223,7 +224,7 @@
 							//		return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
 							//	}
 							//}
-							template: "<a href='' onclick='clonePopup(this)' value='clone' data-bs-toggle='modal'><img style='height: 20px;width:20px;' src = '../Assets/images/clone.png'></a>"
+							template: "<a href='' title='Clone' id='cloneid' onclick='clonePopup(this)' data-bs-toggle='modal'><img style='height: 20px;width:20px;' src = '../Assets/images/clone.png' alt='Clone'></a>"
 						},
 					],
 					title: "Action&nbsp;",
@@ -294,6 +295,20 @@
 				editable: false,
 
 			});
+			$("#grid_reconlist").kendoTooltip({
+				filter: "td",
+				content: function (e) {
+					debugger;
+					var target = e.target;
+					if (target.id === "cloneid") {
+						// Get the alt attribute of the image (assuming it has an alt attribute)
+						return target.querySelector('img').getAttribute('alt');
+					} else {
+					var target = e.target;
+					return $(innerHTMLValue).text(); // You can customize the tooltip content as needed
+					}
+				},
+			});
 		}
 		catch (err) {
 			console.log(err)
@@ -321,7 +336,7 @@
 						document.location = "../Recon/ReconView";
 					} else if(mode == 'clone') {
 						btn_onClick("Edit");
-						$("#pplclone_conf").modal('show');
+						$("#clone_recon").modal('show');
 						var grid = $("#grid_reconlist").data("kendoGrid");
 						var selectedItem = grid.dataItem(grid.select());
 						$("#selectedReconName").val(selectedItem.recon_name);
@@ -438,11 +453,19 @@
 	}
 
 	function clonePopup(e) {
-		$("#pplclone_conf").modal('show');
 		var grid = $("#grid_reconlist").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
-		$("#selectedReconName").val(selectedItem.recon_name);
-		$("#selectedReconCode").val(selectedItem.recon_code);
+		if (selectedItem.active_status == 'Y') {
+			$("#clone_recon").modal('show');
+			$("#selectedReconName").val(selectedItem.recon_name);
+			$("#selectedReconCode").val(selectedItem.recon_code);
+		} else if (selectedItem.active_status == 'D') {
+			$("#clone_recon").modal('hide');
+			btn_onClick("Edit");
+			setlocalStorage("cloned_reconCode", selectedItem.recon_code);
+			document.location = "../Recon/ReconViewClone";
+		}
+
 	}
 
 	function cloneRecon(){
@@ -467,7 +490,7 @@
 						content: result[0].out_msg,
 						type: 'green',
 					});
-					$("#pplclone_conf").modal('hide');
+					$("#clone_recon").modal('hide');
 					btn_onClick("Edit");
 					setlocalStorage("cloned_reconCode", result[0].out_recon_code);
 					document.location = "../Recon/ReconViewClone";
