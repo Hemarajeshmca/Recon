@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -311,9 +312,11 @@ namespace Recon_proto.Controllers
 			usr.user_emailid = context.user_emailid;
 			usr.user_name = context.user_name;
 			usr.action_by = context.action_by;
+			usr.action = context.action;
 			usr.user_contact_no = context.user_contact_no;
 			usr.user_gid = context.user_gid;
 			usr.role_gid = context.role_gid;
+			usr.in_active_reason = context.in_active_reason;
 			try
 			{
 				using (var client = new HttpClient())
@@ -352,6 +355,8 @@ namespace Recon_proto.Controllers
 			public string user_name { get; set; }
 			public string user_password { get; set; }
 			public string action_by { get; set; }
+			public string in_active_reason { get; set; }
+			public string action { get; set; }
 			public int role_gid { get; set; }
 			public String? out_msg { get; set; }
 			public Int16? out_result { get; set; }
