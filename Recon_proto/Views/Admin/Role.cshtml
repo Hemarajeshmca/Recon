@@ -210,7 +210,7 @@
 					{
 						name: "Role Access",
 						id: "Role Access",
-						template: "<a href='' onclick='roleAccess()' data-bs-toggle='modal' value='role'><img style='height:16px' src = '../Assets/images/participant.jpg'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' title='Role Mapping' id='rolemapping' onclick='roleAccess()' data-bs-toggle='modal' value='role'><img style='height:16px' src = '../Assets/images/participant.jpg'></a>&nbsp;&nbsp;&nbsp;",
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -245,6 +245,19 @@
 			}],
 			editable: false,
 
+		});
+		$("#grid_role").kendoTooltip({
+			filter: "td",
+			content: function (e) {
+				debugger;
+				var target = e.target;
+				if (target.id === "rolemapping") {
+					return target.querySelector('img').getAttribute('alt');
+				} else {
+					var target = e.target;
+					return $(innerHTMLValue).text(); 
+				}
+			},
 		});
 	}
 

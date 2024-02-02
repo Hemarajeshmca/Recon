@@ -1,0 +1,2263 @@
+﻿@*@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}*@
+<!Doctype html>
+<html>
+<head>
+	<style type="text/css">
+		.k-tooltip-content {
+			white-space: nowrap !important;
+			font-size: 12px !important;
+		}
+
+		.k-grid td {
+			border-style: solid;
+			border-width: 0 0 0 1px;
+			padding: 0.4em 0.6em;
+			overflow: hidden;
+			line-height: 1.6em;
+			vertical-align: middle;
+			text-overflow: ellipsis;
+		}
+
+		.k-state-selected {
+			color: coral !important;
+		}
+
+		.footer {
+			position: fixed;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			background-color: #e4e4e4;
+			color: white;
+			text-align: center;
+			z-index: 2;
+			height: 30px;
+		}
+
+		.k-grid td {
+			white-space: nowrap;
+			background-color: #eceef1;
+			border-color: inherit;
+			/* text-align: center; */
+		}
+
+		#overlayy {
+			background-color: transparent;
+			z-index: 999;
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			display: none;
+		}
+
+
+		li {
+			display: block;
+		}
+
+		.ms-options {
+			min-height: 100px;
+			max-height: 100px;
+		}
+
+		ul {
+			padding-left: 0rem;
+		}
+
+		.navbar-nav > .home-menu .home-image {
+			float: left;
+			width: 25px;
+			height: 25px;
+			border-radius: 50%;
+			margin-right: 10px;
+			margin-top: -2px 0px;
+			background-color: blue;
+		}
+
+		#loader {
+			position: absolute;
+			background: url('http://sampsonresume.com/labs/pIkfp.gif') no-repeat center center;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		div#spinner {
+			width: 100%;
+			height: 100%;
+			top: 0px;
+			left: 0px;
+			position: fixed;
+			display: block;
+			opacity: 0.6;
+			background: #aaaaaa url('~/content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png');
+			z-index: 1006;
+			text-align: center;
+			display: none;
+		}
+
+			div#spinner img {
+				position: absolute;
+				/*width: 100px;
+																height: 100px;*/
+				top: 40%;
+				left: 42%;
+				opacity: 4.5;
+				z-index: 1007;
+			}
+
+			div#spinner span {
+				font-family: Arial Tahoma;
+				font-size: large;
+				font-weight: bold;
+				opacity: 4.5;
+				margin-top: 100px;
+				color: white;
+			}
+
+		/*grid content should not be wrap*/
+
+		.k-grid td {
+			white-space: nowrap;
+			border-style: solid;
+			border-width: 1px 0px 0px 1px !important;
+			padding: -3.6em 5.6em;
+			overflow: hidden;
+			line-height: -1.4em;
+			vertical-align: middle;
+			text-overflow: ellipsis;
+			border-color: #80808040;
+		}
+		/*grid header should not be wrap*/
+		.k-grid-header table {
+			width: 100% !important;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+			overflow-y: auto;
+		}
+
+		.info-label {
+			display: inline-block;
+			cursor: pointer;
+			color: blue;
+		}
+
+		.info-content {
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			border: 1px solid #ccc;
+			padding: 10px;
+			z-index: 1;
+		}
+
+		.info-label:hover .info-content,
+		.info-label.active .info-content {
+			display: block;
+		}
+	</style>
+	
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 84%;padding: 19px 0px;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Rule Code</label>
+									<input class="form-control" type="text" id="txtrulecode" value="" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							@*<center>
+								<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right; cursor:pointer;"></i>
+							</center>*@
+						</div>
+					</div>
+					<div class="box box-orange" style="height:auto">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-3">
+								<label for="" class="form-label">Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" id="ruleName" type="text" disabled>
+								<input class="form-control" type="hidden" id="rulegid">
+								<input class="form-control" type="hidden" id="recontype">
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoModel(this)" data-bs-toggle="modal"><img src='../images/info.png' style="width: 39%;"></span></label>
+								<select id="cmbreconname" class="form-select form-control" disabled>
+								</select>
+							</div>
+							<div class="col-md-2">
+								<label for="" class="form-label">Rule order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" id="ruleorder" type="number" value="0" disabled>
+							</div>
+							<div class="col-md-2">
+								<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<div>
+									<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" disabled />
+									<span data-for='valid' class='k-invalid-msg' disabled></span>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<label for="organization" class="form-label" style="white-space: nowrap;">
+									<span>Period To</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<input class="form-check-input" disabled style="margin: 0px;" type="checkbox" value="false" name="untillactive" onclick="checkactive()" id="untillactive" />&nbsp;&nbsp;
+									<span style="font-size:12px;">Until Active</span>
+								</label>
+								<div>
+									<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg' disabled></span>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-2">
+								<label for="" class="form-label">Rule Applied On&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="RuleAppliedOn" disabled class="form-select form-control" style=" width: 80%;" onchange="RuleApplied()">
+								</select>
+							</div>
+							<div class="col-sm-1" style="margin-left: -54px;">
+								<label for="" class="form-label" style="white-space: nowrap;">Group Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="cmbgroupflag" disabled class="form-select form-control" style=" width: 177%;" onchange="groupflagchange()">
+								</select>
+							</div>
+							<div class="col-sm-3" style="margin-left: 54px;margin-right: 28px;">
+								<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="sourcedataset" disabled class="form-select form-control" style=" width: 100%;" onchange="sourcefieldchange()">
+								</select>
+							</div>
+							<div class="col-sm-2" style="margin-left:-27px;">
+								<label id="" class="form-label">Source Account Mode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="souaccmode" disabled class="form-select form-control" style=" width: 100%;" onchange="Sourcemodechange()">
+								</select>
+							</div>
+							<div class="col-sm-2">
+								<label id=comsupdataset class="form-label">Target Dataset</label>
+								<select id="comdataset" disabled class="form-select form-control" style=" width: 100%;">
+								</select>
+							</div>
+							<div class="col-sm-2" style="margin-right: -38px;">
+								<label id="lblcomaccmode" class="form-label">Target Account Mode</label>
+								<select id="comaccmode" disabled class="form-select form-control" style=" width: 100%;">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="nav-align-top mb-3 mt-3">
+								<ul class="nav nav-pills mb-2" role="tablist">
+									<li class="nav-item">
+										<button type="button" id="ruleCondition"
+												class="nav-link active"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-FiedConfig"
+												aria-controls="navs-pills-FiedConfig"
+												aria-selected="true">
+											Rule Condition
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="sourceidentifier"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-sourceidentifier"
+												aria-controls="navs-pills-top-sourceidentifier"
+												aria-selected="true">
+											Source Identifier
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="comparisionidentifier"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-comparisionidentifier"
+												aria-controls="navs-pills-top-comparisionidentifier"
+												aria-selected="true">
+											Target Identifier
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="grouping"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-grouping"
+												aria-controls="navs-pills-top-grouping"
+												aria-selected="false">
+											Additional Grouping
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="sourceorder"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-sourceorder"
+												aria-controls="navs-pills-top-sourceorder"
+												aria-selected="true">
+											Source Processing Order
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button" id="Comparisonorder"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-comparisonorder"
+												aria-controls="navs-pills-top-comparisonorder"
+												aria-selected="true">
+											Target Processing Order
+										</button>
+									</li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-13px;">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+													<div class="col-xs-12">
+														<div id="gd_rulecondition">
+															<div id="grid_rulecondition">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-13px;">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+													<div class="col-xs-12">
+														<div id="gd_sourceidentifier">
+															<div id="grid_sourceidentifier">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-13px;">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+													<div class="col-xs-12">
+														<div id="gd_comparisionidentifier">
+															<div id="grid_comparisionidentifier">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-13px;">
+										<div class="panel panel-default">
+											<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+												<div class="col-xs-12">
+													<div id="gd_grouping">
+														<div id="grid_grouping">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+													<div class="col-xs-12">
+														<div id="gd_sourceorder">
+															<div id="grid_sourceorder">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-13px;">
+										<div class="panel panel-default">
+											<div class="panel-body">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+													<div class="col-xs-12">
+														<div id="gd_comparisonorder">
+															<div id="grid_comparisonorder">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+								<div class="modal-dialog modal-lg" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+										</div>
+										<div class="modal-body" style="margin-top: -26px;">
+											<div class="row">
+												<div class="col-sm-4">
+												</div>
+												<div class="col-sm-4">
+													<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+												</div>
+												<div class="col-sm-4">
+													<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+												</div>
+											</div>
+											<hr style="margin-top:-1px; width:100%;">
+											<div class="container">
+												<div class="row">
+													<div class="col-sm-4">
+														<label class="form-label">Recon Name&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recon_name"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Recon Type&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recon_type"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Period From&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="rperiod_from"></span>
+													</div>
+
+												</div>
+												<div class="row">
+													<div class="col-sm-4">
+														<label class="form-label">Period To&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="rperiod_to"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Partial Match&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="partial_match"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Threshold + Value&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdplus"></span>
+													</div>
+
+												</div>
+												<div class="row">
+													<div class="col-sm-4">
+														<label class="form-label">Threshold - Value&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdminus"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Recon Date Flag&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recondateflag"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Recon Date Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbrecondatefield"></span>
+													</div>
+
+												</div>
+												<div class="row">
+													<div class="col-sm-4">
+														<label class="form-label">Recon Value Flag&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="reconvalueflag"></span>
+													</div>
+													<div class="col-sm-4">
+														<label class="form-label">Recon Value Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbreconvaluefield"></span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+
+	function Reconload() {
+		if (getlocalStorage("rule_details") != undefined) {
+			var data = getlocalStorage("rule_details");
+				//var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#txtrulecode").val(data.clone_rule_code);
+				$("#ruleName").val(data.clone_rule_name);
+				$("#cmbreconname").val(data.clone_recon_code);
+				jQuery('#cmbreconname').trigger("change");
+				var reconcode = $("#cmbreconname").val();
+				$.ajax({
+					type: "POST",
+					url: '../Rulesetup/rulereconfetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_recon_code: reconcode }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var res = JSON.parse(response);
+						document.getElementById('recon_name').innerHTML = res[0].recon_name;
+						document.getElementById('recon_type').innerHTML = res[0].recontype_desc;
+						document.getElementById('rperiod_from').innerHTML = res[0].period_from;
+						document.getElementById('rperiod_to').innerHTML = res[0].period_to;
+						document.getElementById('thersholdplus').innerHTML = res[0].threshold_plus_value;
+						document.getElementById('thersholdminus').innerHTML = res[0].threshold_minus_value;
+						document.getElementById('recondateflag').innerHTML = res[0].recon_date_flag;
+						document.getElementById('cmbrecondatefield').innerHTML = res[0].recon_date_field;
+						document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
+						document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
+						document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+						$("#recontype").val(res[0].recontype_code);
+						recontypecondition();
+					}
+				});
+				//dataset combo
+				var reconcode = $("#cmbreconname").val();
+				$.ajax({
+					type: "POST",
+					url: '../Rulesetup/rulerecondatasetfetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_recon_code: reconcode }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var res = JSON.parse(response);
+						$("#sourcedataset").empty();
+						$("#sourcedataset").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							if (item.dataset_type != "S") {
+								$("#sourcedataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							}
+						});
+						$("#comdataset").empty();
+						$("#comdataset").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							if (item.dataset_type != "S") {
+								$("#comdataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							}
+						});
+					}
+				});
+				$("#txtstatus").val(data.active_status_desc);
+				$("#rulegid").val(data.rule_gid);
+				$.ajax({
+					type: "POST",
+					url: '../Rulesetup/rulefetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_rule_gid: data.rule_gid }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
+							var res = JSON.parse(response);
+							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
+							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
+							RuleApplied();
+							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
+							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
+							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
+							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
+							$("#period_from").val(res.RuleHeader[0].period_from);
+							$("#period_to").val(res.RuleHeader[0].period_to);
+							if (res.RuleHeader[0].until_active_flag == "Y") {
+								$('#untillactive').attr('checked', true);
+							}
+							if (res.RuleCondition.length > 0) {
+								$("#gd_rulecondition").empty();
+								$("#gd_rulecondition").append("<div id='grid_rulecondition'></div>");
+								grid_rulecondition(res.RuleCondition);
+							}
+							else {
+								grid_rulecondition([]);
+							}
+							if (res.RuleGrouping.length > 0) {
+								$("#gd_grouping").empty();
+								$("#gd_grouping").append("<div id='grid_grouping'></div>");
+								grid_grouping(res.RuleGrouping);
+							}
+							else {
+								grid_grouping([]);
+							}
+							if (res.sourceidentifier.length > 0) {
+								$("#gd_sourceidentifier").empty();
+								$("#gd_sourceidentifier").append("<div id='grid_sourceidentifier'></div>");
+								grid_sourceidentifier(res.sourceidentifier);
+							}
+							else {
+								grid_sourceidentifier([]);
+							}
+							if (res.comparisionidentifier.length > 0) {
+								$("#gd_comparisionidentifier").empty();
+								$("#gd_comparisionidentifier").append("<div id='grid_comparisionidentifier'></div>");
+								grid_comparisionidentifier(res.comparisionidentifier);
+							}
+							else {
+								grid_comparisionidentifier([]);
+							}
+							if (res.RulefieldorderSource.length > 0) {
+								$("#gd_sourceorder").empty();
+								$("#gd_sourceorder").append("<div id='grid_sourceorder'></div>");
+								grid_sourceorder(res.RulefieldorderSource);
+							} else {
+								grid_sourceorder([]);
+							}
+							if (res.Rulefieldordercomparison.length > 0) {
+								$("#gd_comparisonorder").empty();
+								$("#gd_comparisonorder").append("<div id='grid_comparisonorder'></div>");
+								grid_comparisonorder(res.Rulefieldordercomparison);
+							} else {
+								grid_comparisonorder([]);
+							}
+						}
+						else {
+
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
+	}
+	function RuleApplied() {
+		if ($("#RuleAppliedOn").val() == 'T') {
+			$("#lblcomaccmode").text("Target Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#comsupdataset").text("Target Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+
+		} else if ($("#RuleAppliedOn").val() == 'S') {
+			$("#comsupdataset").text("Supporting Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomaccmode").text("Supporting Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			//dataset combo
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/rulerecondatasetfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					var sodata = $("#sourcedataset").val();
+					$("#comdataset").empty();
+					$("#comdataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						if (item.dataset_type == "S") {
+							$("#comdataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					});
+				}
+			});
+		}
+	}
+	function groupflagchange() {
+		$("#souaccmode").val("");
+		$("#comaccmode").val("");
+	}
+	function recontypecondition() {
+		var recontype = $("#recontype").val();
+		if (recontype == "W" || recontype == 'B' || recontype == 'I') {
+			// Source account mode
+			var in_master_code = "QCD_RS_ACC_MODE";
+			var in_user_code = "sundar";
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#souaccmode").empty();
+					$("#souaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterShortCode == "S") {
+							$("#souaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+					$("#comaccmode").empty();
+					$("#comaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterSyscode != "NA") {
+							$("#comaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+				}
+			});
+		} else {
+			var in_master_code = "QCD_RS_ACC_MODE";
+			var in_user_code = "sundar";
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#souaccmode").empty();
+					$("#souaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterSyscode == "NA") {
+							$("#souaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+					$("#comaccmode").empty();
+					$("#comaccmode").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						if (item.masterSyscode == "NA") {
+							$("#comaccmode").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						}
+					});
+				}
+			});
+		}
+	}
+	function Sourcemodechange() {
+		var groupflag = $("#cmbgroupflag").val();
+		var sourceAccmode = $("#souaccmode").val();
+		var ruleappliedon = $("#RuleAppliedOn").val();
+		var in_master_code = "QCD_RS_ACC_MODE";
+		var in_user_code = "sundar";
+		var response = [];
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				response = data;
+			}
+		});
+		//-----Transaction-----
+		if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("C")
+		} else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+				if (item.code != "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("D")
+		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "T") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+
+			$.each(arr, function (index, item) {
+				if (item.code != "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		//----tranction----
+		//----Support----
+
+		if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("D")
+		} else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+				if (item.code != "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(response, function (index, item) {
+				if (item.masterSyscode == "C") {
+					$("#comaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				}
+			});
+			$("#comaccmode").val("C")
+		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "S") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+
+			$.each(arr, function (index, item) {
+				if (item.code != "D") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+	}
+	function checkactive() {
+		//debugger;
+		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
+			$("#period_to").val('');
+			//$("#period_to").removeAttr('disabled', true);
+			$("#period_to").prop("disabled", true);
+			$('#period_to').unbind('click');
+		}
+		else {
+
+			$("#period_to").removeAttr('disabled', false);
+		}
+	}
+	function getfetch(rulecode, screen) {
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_rule_gid: rulecode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					if (screen == "Header") {
+						$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
+						$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
+						$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
+						$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+						$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
+						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
+						$("#ruleorder").val(res.RuleHeader[0].ruleorder);
+						$("#txtrulecode").val(res.RuleHeader[0].rule_code);
+						$("#ruleName").val(res.RuleHeader[0].rule_name);
+						$("#cmbreconname").val(res.RuleHeader[0].recon_code);
+						jQuery('#cmbreconname').trigger("change");
+						$("#txtstatus").val(res.RuleHeader[0].active_status_desc);
+						$("#rulegid").val(res.RuleHeader[0].rule_gid);
+						$("#period_from").val(res.RuleHeader[0].period_from);
+						$("#period_to").val(res.RuleHeader[0].period_to);
+						if (res.RuleHeader[0].until_active_flag == "Y") {
+							$('#untillactive').attr('checked', true);
+						}
+					} else if (screen == "rulecond") {
+						if (res.RuleCondition.length > 0) {
+							$("#gd_rulecondition").empty();
+							$("#gd_rulecondition").append("<div id='grid_rulecondition'></div>");
+							grid_rulecondition(res.RuleCondition);
+						} else {
+							grid_rulecondition([]);
+						}
+					} else if (screen == "group") {
+						if (res.RuleGrouping.length > 0) {
+							$("#gd_grouping").empty();
+							$("#gd_grouping").append("<div id='grid_grouping'></div>");
+							grid_grouping(res.RuleGrouping);
+
+						} else {
+							grid_grouping([]);
+						}
+					} else if (screen == "idents") {
+						if (res.sourceidentifier.length > 0) {
+							$("#gd_sourceidentifier").empty();
+							$("#gd_sourceidentifier").append("<div id='grid_sourceidentifier'></div>");
+							grid_sourceidentifier(res.sourceidentifier);
+						} else {
+							grid_sourceidentifier([]);
+						}
+					} else if (screen == "identc") {
+						if (res.comparisionidentifier.length > 0) {
+							$("#gd_comparisionidentifier").empty();
+							$("#gd_comparisionidentifier").append("<div id='grid_comparisionidentifier'></div>");
+							grid_comparisionidentifier(res.comparisionidentifier);
+						}
+						else {
+							grid_comparisionidentifier([]);
+						}
+					} else if (screen == "orders") {
+						if (res.RulefieldorderSource.length > 0) {
+							$("#gd_sourceorder").empty();
+							$("#gd_sourceorder").append("<div id='grid_sourceorder'></div>");
+							grid_sourceorder(res.RulefieldorderSource);
+						} else {
+							grid_sourceorder([]);
+						}
+					} else if (screen == "orderc") {
+						if (res.Rulefieldordercomparison.length > 0) {
+							$("#gd_comparisonorder").empty();
+							$("#gd_comparisonorder").append("<div id='grid_comparisonorder'></div>");
+							grid_comparisonorder(res.Rulefieldordercomparison);
+						} else {
+							grid_comparisonorder([]);
+						}
+					}
+				}
+				else {
+
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	function getRuleGridComboList() {
+		// Dataset type
+		var in_master_code = "QCD_RS_RULE_APPLLIED";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#RuleAppliedOn").empty();
+				$.each(response, function (index, item) {
+					$("#RuleAppliedOn").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+
+			}
+		});
+
+		// group flag
+		var in_master_code = "QCD_RULE_GRP";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbgroupflag").empty();
+				$("#cmbgroupflag").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbgroupflag").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbreconname").append($('<option>', {
+						value: item.recon_code,
+						text: item.recon_name
+					}));
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		Reconload();
+		//sorce dataset
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#cmbsourcefield").empty();
+					$("#cmbsourcefield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#cmbsourcefield").append($('<option>', {
+							value: item.recon_field_desc,
+							text: item.recon_field_name
+						}).data('code', item.recon_field_type));
+					});
+					$("#cmbcomparisionfield").empty();
+					$("#cmbcomparisionfield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#cmbcomparisionfield").append($('<option>', {
+							value: item.recon_field_desc,
+							text: item.recon_field_name
+						}).data('code', item.recon_field_type));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	//-----------------------------------------------------          Rule condition ----------------------------------------------------------------
+	function grid_rulecondition(data) {
+		var source_field_desc_list = "";
+		var extraction_criteria_list = "";
+		var comparison_criteria_list = "";
+		$("#grid_rulecondition").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							open_parem: { type: "string" },
+							rulecondition_gid: { type: "string", defaultValue: "0" },
+							rule_code: { type: "string" },
+							source_field_code: { type: "string", defaultValue: "" },
+							source_field_desc: { type: "string", defaultValue: "" },
+							comparison_field: { type: "string", defaultValue: "" },
+							comparison_field_desc: { type: "string" },
+							extraction_criteria: { type: "string" },
+							extraction_criteria_code: { type: "string" },
+							comparison_criteria: { type: "string" },
+							comparison_criteria_code: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							close_param: { type: "string" },
+							join_condition: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			//dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: "row",
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			//toolbar: "<a class='k-grid-add' onclick='saveheader()' href='' > <span class='fa fa-plus' style = 'color:Black' > </span></a> ",
+			columns: [
+			{
+				title: "(", width: 20,
+				template: '#=sel_checkbox(data)#'
+			},
+			{
+				field: "rulecondition_gid",
+				title: "rulecondition_gid",
+				hidden: true,
+			},
+			{
+				field: "source_field_code",
+				title: "Source Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "source_field_desc",
+				title: "Source Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_rulecondition")
+				},
+				width: 120,
+			},
+			{
+				field: "extraction_criteria_code",
+				title: "Extraction criteria",
+				hidden: true,
+			},
+			{
+				field: "extraction_criteria",
+				title: "Extraction criteria",
+				editor: function (container, options) {
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_rulecondition", "SOURCE")
+				},
+				editable: true,
+				width: 170,
+			},
+			{
+				field: "comparison_field",
+				title: "comparison_field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "comparison_field_desc",
+				title: "Comparison Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_rulecondition")
+				},
+				width: 120,
+			},
+			{
+				field: "comparison_criteria_code",
+				title: "comparison_criteria_code",
+				hidden: true,
+			},
+			{
+				field: "comparison_criteria",
+				title: "Comparison criteria",
+				editor: function (container, options) {
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_rulecondition", "COMPARISON")
+				},
+				width: 170,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			},
+			{
+				title: ")", width: 20,
+				template: '#=sel_checkbox1(data)#'
+			},
+
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_rulecondition")
+				},
+				width: 40,
+			}],
+			editable: true,
+		});
+		source_field_desc_list = cmbsourcefield();
+		comparison_field_desc_list = cmbsourcefield();
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+	}
+	var gridRowID = -1;
+	function sel_checkbox(data) {
+		gridRowID++;
+		var isChecked = data.open_parentheses_flag;
+		var con = "";
+		if (isChecked == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel_' + data.rulecondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	var gridRowID1 = -1;
+	function sel_checkbox1(data) {
+		gridRowID1++;
+		var isChecked1 = data.close_parentheses_flag;
+		var con = "";
+		if (isChecked1 == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel1_' + data.rulecondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	function OnEdit(e) {
+		try {
+			setDefaultValues(e);
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+	}
+	function color() {
+		$("#grid_rulecondition").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
+	}
+	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		//debugger;
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.source_field_desc;
+		} else {
+			var codeValue = selectedItem.comparison_field_desc;
+		}
+		var in_recon_code = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "extraction_criteria") {
+					if (datafield == "extraction_criteria" && selectedItem.extraction_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.extraction_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.extraction_criteria_input = undefined;
+				}
+				if (datafield == "comparison_criteria") {
+					if (datafield == "comparison_criteria" && selectedItem.comparison_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.comparison_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.comparison_criteria_input = undefined;
+				}
+			},
+		});
+	}
+	function cmbsourcefield() {
+		//debugger;
+		var arr1 = [];
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;
+	}
+	//-----------------------------------------------------   Rule condition  ----------------------------------------------------------------
+
+	//-----------------------------------------------------     identifier    ----------------------------------------------------------------
+	function grid_sourceidentifier(data) {
+		var filter_criteria_list = "";
+		var ident_criteria_list = "";
+		$("#grid_sourceidentifier").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							ruleselefilter_gid: { type: "string", defaultValue: "0" },
+							filter_applied_on: { type: "string", defaultValue: "S" },
+							filter_field_code: { type: "string" },
+							filter_field: { type: "string" },
+							filter_criteria: { type: "string" },
+							ident_criteria: { type: "string" },
+							ident_value: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							join_condition: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_sourceidentifier').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			//toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+			columns: [
+			{
+				title: "(", width: 20,
+				template: '#=sel_checkboxsI(data)#'
+			},
+			{
+				field: "ruleselefilter_gid",
+				title: "ruleselefilter_gid",
+				hidden: true,
+			},
+			{
+				field: "dataset_name",
+				title: "Filter Applied On",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "filter_applied_on",
+				title: "Filter Applied On",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "filter_field_code",
+				title: "Filter Applied On",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "filter_field",
+				title: "Filter Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourceidentifier")
+				},
+			},
+			{
+				field: "filter_criteria",
+				title: "Filter Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_sourceidentifier", "SOURCE")
+				},
+			},
+			{
+				field: "ident_criteria",
+				title: "Identifier Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_criteria", "grid_sourceidentifier", "COMPARISON")
+				},
+			},
+			{
+				field: "ident_value",
+				title: "Identifier Value",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			},
+			{
+				title: ")", width: 20,
+				template: '#=sel_checkboxsI1(data)#'
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_sourceidentifier")
+				},
+				width: 120,
+			}],
+			editable: true,
+		});
+		filter_field_list = cmbsourcefield();
+		join_condition_list = [{ code: '', desc: '' },{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+
+		function OnEdit(e) {
+			try {
+				setDefaultValues(e);
+			}
+			catch (err) {
+				javascript_log4j_root(arguments.callee.name, err);
+			}
+		}
+	}
+	var gridRowID = -1;
+	function sel_checkboxsI(data) {
+		gridRowID++;
+		var isChecked = data.open_parentheses_flag;
+		var con = "";
+		if (isChecked == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	var gridRowID1 = -1;
+	function sel_checkboxsI1(data) {
+		gridRowID1++;
+		var isChecked1 = data.close_parentheses_flag;
+		var con = "";
+		if (isChecked1 == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel1_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.filter_field;
+		} else {
+			var codeValue = selectedItem.filter_field;
+		}
+		var in_recon_code = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_criteria") {
+					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.filter_criteria_input = undefined;
+				}
+				if (datafield == "ident_criteria") {
+					if (datafield == "ident_criteria" && selectedItem.ident_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.ident_criteria_input = undefined;
+				}
+			}
+		});
+	}
+	function grid_comparisionidentifier(data) {
+		var filter_criteria_list = "";
+		var ident_criteria_list = "";
+		$("#grid_comparisionidentifier").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							ruleselefilter_gid: { type: "string", defaultValue: "0" },
+							filter_applied_on: { type: "string", defaultValue: "C" },
+							filter_field: { type: "string" },
+							filter_field_code: { type: "string" },
+							filter_criteria: { type: "string" },
+							ident_criteria: { type: "string" },
+							ident_value: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							join_condition: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_comparisionidentifier').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			//toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+			columns: [
+			{
+				title: "(", width: 20,
+				template: '#=sel_checkboxCI(data)#'
+			},
+			{
+				field: "ruleselefilter_gid",
+				title: "ruleselefilter_gid",
+				hidden: true,
+			},
+			{
+				field: "dataset_name",
+				title: "Filter Applied On",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "filter_applied_on",
+				title: "Filter Applied On",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "filter_field_code",
+				title: "filter_field_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "filter_field",
+				title: "Filter Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionidentifier")
+				},
+			},
+			{
+				field: "filter_criteria",
+				title: "Filter Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_filter_field1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_comparisionidentifier", "SOURCE")
+				},
+			},
+			{
+				field: "ident_criteria",
+				title: "Identifier Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_filter_field1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_criteria", "grid_comparisionidentifier", "COMPARISON")
+				},
+			},
+			{
+				field: "ident_value",
+				title: "Identifier Value",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			},
+			{
+				title: ")", width: 20,
+				template: '#=sel_checkboxCI1(data)#'
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_comparisionidentifier")
+				},
+				width: 120,
+			}],
+			editable: true,
+		});
+		filter_field_list = cmbsourcefield();
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+
+		function OnEdit(e) {
+			try {
+				setDefaultValues(e);
+			}
+			catch (err) {
+				javascript_log4j_root(arguments.callee.name, err);
+			}
+		}
+	}
+	var gridRowID = -1;
+	function sel_checkboxCI(data) {
+		gridRowID++;
+		var isChecked = data.open_parentheses_flag;
+		var con = "";
+		if (isChecked == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	var gridRowID1 = -1;
+	function sel_checkboxCI1(data) {
+		gridRowID1++;
+		var isChecked1 = data.close_parentheses_flag;
+		var con = "";
+		if (isChecked1 == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel1_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	function combo_filter_field1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.filter_field;
+		} else {
+			var codeValue = selectedItem.filter_field;
+		}
+		var in_recon_code = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_criteria") {
+					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.filter_criteria_input = undefined;
+				}
+				if (datafield == "ident_criteria") {
+					if (datafield == "ident_criteria" && selectedItem.ident_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.ident_criteria_input = undefined;
+				}
+			}
+		});
+	}
+	function saveIdentifier() {
+		try {
+			var grid = $("#grid_sourceidentifier").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+
+			var in_rule_code = $("#txtrulecode").val();
+			var filterapplyon = model.filter_applied_on;
+			var cmbfiltername = model.filter_field_code;
+			var extractcriteria = model.filter_criteria;
+			var identifiercriteria = model.ident_criteria;
+			var identifiervalue = model.ident_value;
+			var action = "";
+			var action_by = "vijay"
+			var ruleselefilter_gid = model.ruleselefilter_gid;
+			if (ruleselefilter_gid == "0") {
+				ruleselefilter_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			var in_open_flag = "";
+			if ($('#chk_sel_' + model.ruleselefilter_gid).is(":checked")) {
+				in_open_flag = "Y";
+			} else {
+				in_open_flag = "N";
+			}
+			var in_close_flag = "";
+			if ($('#chk_sel1_' + model.ruleselefilter_gid).is(":checked")) {
+				in_close_flag = "Y";
+			} else {
+				in_close_flag = "N";
+			}
+			var in_join_condition = model.join_condition;
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/ruleIdentifiersave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag,
+					in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					//debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						getfetch($("#rulegid").val(), "idents");
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	//-----------------------------------------------------     identifier     ----------------------------------------------------------------
+	//-----------------------------------------------------     grouping    ----------------------------------------------------------------
+	function grid_grouping(data) {
+		$("#grid_grouping").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							rulegrpfield_gid: { type: "string", defaultValue: "0" },
+							grp_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_grouping').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			//toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+			columns: [
+			{
+				field: "rulegrpfield_gid",
+				title: "rulegrpfield_gid",
+				hidden: true,
+			},
+			{
+				field: "grp_field",
+				title: "Comparison Group Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recon_field_code",
+				title: "recon_field_code",
+				hidden: true,
+			},
+			{
+				field: "recon_field_name",
+				title: "Comparison Group Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recon_field_code", "grid_grouping")
+				},
+				width: 120,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			}],
+			editable: true,
+
+		});
+		recon_field_name_list = cmbsourcefield();
+	}
+	//-----------------------------------------------------     grouping    ----------------------------------------------------------------
+
+	//-----------------------------------------------------     Source order    ----------------------------------------------------------------
+	function grid_sourceorder(data) {
+		var recorder_field_list = "";
+		$("#grid_sourceorder").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							rulerecorder_gid: { type: "string", defaultValue: "0" },
+							rule_code: { type: "string" },
+							recorder_applied_on: { type: "string" },
+							recorder_seqno: { type: "number" },
+							recorder_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			//toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_sourceorder').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+			{
+				field: "rulerecorder_gid",
+				title: "rulerecorder_gid",
+				hidden: true,
+			},
+			{
+				field: "rule_code",
+				title: "rule_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_applied_on",
+				title: "recorder_applied_on",
+				hidden: true,
+			},
+			{
+				field: "recorder_field_code",
+				title: "rule_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_field",
+				title: "Source Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_sourceorder")
+				},
+			},
+			{
+				field: "recorder_seqno",
+				title: "Order Field",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+
+		});
+		recorder_field_list = cmbsourcefield();
+	}
+	function grid_comparisonorder(data) {
+		var recorder_field_list = "";
+		$("#grid_comparisonorder").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							rulerecorder_gid: { type: "string", defaultValue: "0" },
+							rule_code: { type: "string" },
+							recorder_applied_on: { type: "string" },
+							recorder_seqno: { type: "number" },
+							recorder_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			//toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_comparisonorder').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+			{
+				field: "rulerecorder_gid",
+				title: "rulerecorder_gid",
+				hidden: true,
+			},
+			{
+				field: "rule_code",
+				title: "rule_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_applied_on",
+				title: "recorder_applied_on",
+				hidden: true,
+			},
+			{
+				field: "recorder_field_code",
+				title: "rule_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_field",
+				title: "Target Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_comparisonorder")
+				},
+			},
+			{
+				field: "recorder_seqno",
+				title: "Order Field",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+
+		});
+		recorder_field_list = cmbsourcefield();
+	}
+	//-----------------------------------------------------     Source order    ----------------------------------------------------------------
+	function openInfoModel() {
+		$("#infomodal").modal("show");
+	}
+	function sourcefieldchange() {
+		if ($("#RuleAppliedOn").val() == 'S') {
+			$("#comdataset").empty();
+			$("#comdataset").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var reconcode = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/rulerecondatasetfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					$.each(res, function (index, item) {
+						if (item.dataset_type == "S" && item.parent_dataset_code == $("#sourcedataset").val()) {
+							$("#comdataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					});
+				}
+			});
+		}
+	}
+
+</script>
