@@ -5,6 +5,7 @@
 <!Doctype html>
 <html>
 <head>
+
 	<title></title>
 	<style>
 		.nav-item.me-2.me-xl-50 {
@@ -49,7 +50,7 @@
 			height: 176px;
 		}
 
-		.datepicker table tr td.active:active,
+/*		.datepicker table tr td.active:active,
 		.datepicker table tr td.active.highlighted:active,
 		.datepicker table tr td.active.active,
 		.datepicker table tr td.active.highlighted.active {
@@ -58,7 +59,7 @@
 
 			.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
 				background-color: red;
-			}
+			}*/
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -496,6 +497,31 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="modal" id="ReconRuledetail">
+		<div class="modal-dialog modal-xl">		
+			<div class="modal-content" style="height:603px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_Rulesetupdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
@@ -510,6 +536,7 @@
 		recontypeconfig(); //recontypeconfiguration
 		DatasetTypefield();
 		detailfetch(getlocalStorage('cloned_reconCode'));
+
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
@@ -657,7 +684,7 @@
 							
 							$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 							$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
-							//debugger;
+							////debugger;
 							//getcloneddataset(res.ReconHeader[0].clone_recon_code);
 							$("#gd_datasetrecon").empty();
 							$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
@@ -728,7 +755,6 @@
 		}
 	}
 	function detailfetch(reconcode) {
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../Recon/fetchcloneRecondetails',
@@ -767,7 +793,7 @@
 					}
 					$("#threshold_plus_value").val(res.ReconHeader[0].threshold_plus_value);
 					$("#threshold_minus_value").val(res.ReconHeader[0].threshold_minus_value);
-					//debugger;
+					////debugger;
 					//	getcloneddataset(res.ReconHeader[0].clone_recon_code)
 					$("#gd_datasetrecon").empty();
 					$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
@@ -900,7 +926,7 @@
 					text: "  Select  "
 				}));
 				$.each(result, function (index, item) {
-					if (item.active_status == "Y") {
+					if (item.active_status == "Y" && item.system_flag == "N") {
 						$("#cmbdatasetname").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
@@ -943,7 +969,6 @@
 		});
 	
 	//rule list
-	debugger;
 		var data = {};
 		data.in_user_code = '';
 		var Context = data;
@@ -962,7 +987,7 @@
 					text: "  Select  "
 				}));
 				$.each(result, function (index, item) {
-					if (item.active_status == "Y") {
+					//if (item.active_status == "Y") {
 						$("#cmbrulename").append($('<option>', {
 							value: item.rule_code,
 							text: item.rule_name
@@ -971,7 +996,7 @@
 							value: item.rule_code,
 							text: item.rule_name
 						}));
-					}
+					//}
 				});
 			},
 			error: function (er) {
@@ -991,7 +1016,6 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
-				debugger;
 				$("#sourcedataset").empty();
 				$("#sourcedataset").append($('<option>', {
 					value: "",
@@ -1288,7 +1312,6 @@
 			data.in_clone_recon_code = $("#clone_reconcode").val();
 			data.in_clone_dataset_code = $("#cmbdatasetname").val();
 			data.in_user_code = '';
-			debugger;
 			$.ajax({
 				type: "POST",
 				url: '../Recon/cloneRecondataset',
@@ -1296,7 +1319,6 @@
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				success: function (res) {
-					debugger;
 					var response = JSON.parse(res);
 					if(response.length > 0) {
 					if (response[0].out_result == "1") {
@@ -1664,7 +1686,7 @@
 		grid.hideColumn(4);
 	}
 	function getdetailSelectedRows(mode) {
-		debugger;
+		//debugger;
 		if ($(mode).attr('value') == "edit") {
 			var grid = $("#grid1").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
@@ -2052,7 +2074,7 @@
 				recon_id = 0;
 				action = "INSERT"
 			}
-			var status = "Y";
+			var status = "D";
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
 			var in_recon_date_field = $("#cmbrecondatefield").val();
@@ -2124,7 +2146,7 @@
 	}
 
 	function getcloneddataset(clonedreconCode){
-		debugger;
+		//debugger;
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Reconheaderfetch',
@@ -2200,7 +2222,12 @@
 						id: "Edit",
 						template: "<a href='' onclick='getreconRule(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px; width: 20px;' src = '../Assets/images/clone.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
-				], title: "Action&nbsp;", width: "40px",
+					{
+						name: "view",
+						id: "View",
+						template: "<a href=''onclick='openRuleModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "60px",
 			},
 			{
 				field: "rule_gid",
@@ -2278,19 +2305,20 @@
 	}
 
 	function getreconRule() {
-		debugger;
+		//debugger;
 		var grid = $("#grid_rule").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
-		$("#ReconRuleForm").modal('show');
 		$("#cmbrulename").val(selectedItem.clone_rule_code);
 		$("#rule_gid").val(selectedItem.rule_gid);
 		$("#rule_code").val(selectedItem.clone_rule_code);
 		$("#sourcedataset").val(selectedItem.clone_source_dataset_code);
 		$("#comparisondataset").val(selectedItem.clone_comparison_dataset_code);
+		$("#ReconRuleForm").modal('show');
 	}
 
+
 	function saveCloneRule(){
-		debugger;
+		//debugger;
 		//var reconcode = $("#reconcode").val();
 		//var grid = $("#grid_rule").data("kendoGrid");
 		//var selectedItem = grid.dataItem(grid.select());
@@ -2312,7 +2340,7 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
+				//debugger;
 				if (response != "") {
 					var res = JSON.parse(response);
 					if(res.length > 0) {
@@ -2321,6 +2349,7 @@
 							content: res[0].out_msg,
 							type: 'green',
 						});
+						detailfetch($("#reconcode").val());
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -2355,6 +2384,22 @@
 	//	// Clear the localStorage
 	//	localStorage.removeItem("cloned_reconCode");
 	//});
+
+	function openRuleModel(event) {
+		event.preventDefault();
+		var grid = $("#grid_rule").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		setlocalStorage("rule_details", selectedItem); 
+		btn_onClick('Edit');
+		getRuleGridComboList();
+		cmbsourcefield();
+		// Prevent modal close when clicking inside it
+		$("#ReconRuledetail").on("click", function (event) {
+			event.stopPropagation();
+		});
+		$("#ReconRuledetail").modal('show');
+
+	}
 </script>
 
 
