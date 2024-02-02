@@ -9,12 +9,13 @@
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
-
 		.error_show {
 			color: red;
 			margin-left: 10px;
 		}
-
+		.k-grid-filter.k-state-active {
+			background-color: initial !important;
+		}
 		.k-grid.k-widget {
 			height: 360px;
 		}
@@ -460,7 +461,10 @@
 		try {
 			var datasetfield = $("#datasetfield").val();
 			var FieldType = $("#cmbFieldType").val();
-			var fieldlength = $("#fieldlength").val();
+			var fieldlength ="";
+			if (FieldType != "NUMERIC") {
+			fieldlength = $("#fieldlength").val();
+			}
 			var dataset_code = $("#txtdatasetcode").val();
 			var datasetdetail_id = $("#datasetdetail_id").val();
 			var precision_length = $("#fieldPrecision").val();

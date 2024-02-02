@@ -113,7 +113,7 @@
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Mobile No&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="text" id="mobileno">
+							<input class="form-control" type="text" id="mobileno" onblur="validateMobileNumber()">
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">User ID&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -135,7 +135,7 @@
 							</select>
 						</div>
 						<div class="col-sm-2" style="margin-top:30px">
-							<button type="button" class="btn btn-sm btn-primary me-2" id="btnreconstatus" onclick="Addroleuser()">Recon Status</button>&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-sm btn-primary me-2" id="btnreconstatus" onclick="Addroleuser()">Recon Access</button>&nbsp;&nbsp;&nbsp;
 						</div>
 						<div class="col-sm-1" style="margin-top:30px">
 							<button type="button" class="btn btn-sm btn-primary me-2" id="btnsave" onclick="saveUser()">Save</button>&nbsp;&nbsp;&nbsp;
@@ -376,14 +376,21 @@
 			} else {
 				usergid = 0;
 			}
-			var action_by = "vijay";
+			var action_by = "";
+			var action = "";
 			var Cmbrole = parseInt($("#Cmbrole").val());
-
+			var mode = $("#txtmode :selected").val();
+			if (mode == "create"){
+				action="INSERT"
+			}else{
+				action = "UPDATE"
+			}
+			var in_active_reason="";
 			$.ajax({
 				type: "POST",
 				url: '../Admin/usersave',
 				dataType: 'json',
-				data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser, role_gid: Cmbrole }),
+				data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser, role_gid: Cmbrole, action: action, in_active_reason: in_active_reason }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -393,8 +400,17 @@
 							title: 'Recon',
 							content: data.out_msg,
 							type: 'green',
-						});
-						$("#datasetgid").val(data.in_dataset_gid);
+							buttons: {
+								ok: {
+									text: 'OK',
+									btnClass: 'btn-green',
+									action: function () {
+										// Reload the page when OK button is clicked
+										location.reload();
+									}
+								}
+							}
+						});	
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -435,7 +451,7 @@
 			top: 121,
 			left: 300, height: 200, width: 500
 		});
-		dialog.title("User Mapping");
+		dialog.title("Recon Access");
 		var usergid = $("#usergid").val();
 		var usercode = $("#userid").val();
 		if (usergid > 0) {
@@ -522,8 +538,10 @@
 							content: data.out_msg,
 							type: 'green',
 						});
-						$("#treeviewpop").hide();
+						var dialog = $("#treeviewpop").data("kendoWindow");
+						dialog.close();
 						$("#datasetgid").val(data.in_dataset_gid);
+						location.reload();
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -545,5 +563,109 @@
 	}
 	function modechange() {
 		location.reload();
+	}
+	function myDeleteJs() {
+		var grid = $("#grid_user").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var user_gid = model.user_gid;
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					$.confirm({
+						title: 'Delete Reason',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									var user_name = "";
+									var mobileno = "";
+									var userid = "";
+									var emailid = "";
+									var passworduser = "123";
+									var usergid =parseInt(user_gid);
+									var action_by = "";
+									var action = "DELETE";
+									var Cmbrole = 0;
+									var in_active_reason = name;
+									$.ajax({
+										type: "POST",
+										url: '../Admin/usersave',
+										dataType: 'json',
+											data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser, role_gid: Cmbrole, action: action, in_active_reason: in_active_reason }),
+										contentType: 'application/json; charset=utf-8',
+										success: function (response) {
+											var result = JSON.parse(response);
+											var data = result[0];
+											debugger;
+											if (data.out_result == "1") {
+												$.alert({
+													icon: 'fa fa-success',
+													title: 'Recon',
+													theme: 'dark',
+													content: data.out_msg,
+													type: 'green',
+													animationSpeed: 700,
+												});
+												gridlist();
+											} else {
+												$.alert({
+													title: 'Recon',
+													content: data.out_msg,
+													type: 'red',
+												});
+											}
+										}
+									})
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+	function validateMobileNumber() {
+		var mobileNumber = document.getElementById("mobileno").value;
+		var regex = /^[0-9]{10}$/; // Assumes a 10-digit mobile number
+
+		if (regex.test(mobileNumber)) {
+			document.getElementById("validationMessage").innerText = "Valid mobile number!";
+		} else {
+			document.getElementById("validationMessage").innerText = "Invalid mobile number. Please enter a 10-digit number.";
+		}
 	}
 </script>
