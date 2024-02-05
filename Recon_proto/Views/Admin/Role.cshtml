@@ -56,9 +56,10 @@
 			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
 				<div class="row">
 					<div class="col-xs-12">
-						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+						@*<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
-						</a>
+						</a>*@
+							<i class="fa fa-plus cursor-pointer" onclick="roleAccess('Create')" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						<div id="grid_role"> 
 							<div id="grid_rolelist"> </div>
 						</div>
@@ -160,7 +161,7 @@
 		$("#grid_role").kendoGrid({
 			dataSource: {
 				data: data,
-				pageSize: 10,
+				pageSize: 15,
 				schema: {
 					model: {
 						fields: {
@@ -200,18 +201,18 @@
 					{
 						name: "view",
 						id: "View",
-						template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
 						id: "Delete",
 						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					{
-						name: "Role Access",
-						id: "Role Access",
-						template: "<a href='' title='Role Mapping' id='rolemapping' onclick='roleAccess()' data-bs-toggle='modal' value='role'><img style='height:16px' src = '../Assets/images/participant.jpg'></a>&nbsp;&nbsp;&nbsp;",
-					},
+					//{
+					//	name: "Role Access",
+					//	id: "Role Access",
+					//	template: "<a href='' title='Role Mapping' id='rolemapping' onclick='roleAccess()' data-bs-toggle='modal' value='role'><img style='height:16px' src = '../Assets/images/participant.jpg'></a>&nbsp;&nbsp;&nbsp;",
+					//},
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
@@ -246,24 +247,24 @@
 			editable: false,
 
 		});
-		$("#grid_role").kendoTooltip({
-			filter: "td",
-			content: function (e) {
-				debugger;
-				var target = e.target;
-				if (target.id === "rolemapping") {
-					return target.querySelector('img').getAttribute('alt');
-				} else {
-					var target = e.target;
-					return $(innerHTMLValue).text(); 
-				}
-			},
-		});
+		//$("#grid_role").kendoTooltip({
+		//	filter: "td",
+		//	content: function (e) {
+		//		debugger;
+		//		var target = e.target;
+		//		if (target.id === "rolemapping") {
+		//			return target.querySelector('img').getAttribute('alt');
+		//		} else {
+		//			var target = e.target;
+		//			return $(innerHTMLValue).text(); 
+		//		}
+		//	},
+		//});
 	}
 
 	function getSerializedRows() {
 		btn_onClick('Create');
-		$("#Roleform").modal('show');
+		//$("#Roleform").modal('show');
 		$("#role_code").val('');
 		$("#role_gid").val(0);
 	}
@@ -378,7 +379,7 @@
 							$("#role_code").val(response[0].role_code);
 							$("#role_name").val(response[0].role_name);
 							$("#role_gid").val(response[0].role_gid);
-							$("#Roleform").modal('show');
+							//$("#Roleform").modal('show');
 						}
 
 						
@@ -407,19 +408,20 @@
 					if ($(mode).attr('value') == "edit") {
 						if (items.active_status != "N") {
 							btn_onClick("Edit");
-							$("#Roleform").modal('show');
+							//$("#Roleform").modal('show');
 							var grid = $("#grid_role").data("kendoGrid");
 							var selectedItem = grid.dataItem(grid.select());
-
 							detailfetch(selectedItem.role_gid);
+							document.location = "../Admin/Rolemapping";
 						}
 					}
 					else if ($(mode).attr('value') == "view") {
 						btn_onClick('View');
-						$("#Roleform").modal('show');
+						//$("#Roleform").modal('show');
 						var grid = $("#grid_role").data("kendoGrid");
 						var selectedItem = grid.dataItem(grid.select());
 						detailfetch(selectedItem.role_gid);
+						document.location = "../Admin/Rolemapping";
 
 					} else if ($(mode).attr('value') == "role") {
 						btn_onClick('role');
@@ -524,7 +526,8 @@
 		});
 	}
 
-	function roleAccess(){
+	function roleAccess(mode){
+		btn_onClick('Create'); 
 		document.location = "../Admin/Rolemapping";
 	}
 </script>
