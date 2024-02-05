@@ -63,10 +63,11 @@
 								<div class="col-sm-3">
 									<label for="lbldatasetcode" class="form-label">Role Code</label>
 									<input class="form-control" type="text" id="txtrolecode" disabled>
+									<input class="form-control" type="text" id="txtrolegid" hidden>
 								</div>
 								<div class="col-sm-3">
 									<label for="lblstatus" class="form-label">Role Name</label><br>
-									<input class="form-control" type="text" id="txtrolename" value="Active" disabled>
+									<input class="form-control" type="text" id="txtrolename" value="Active">
 								</div>
 								<div class="col-sm-3">
 									<label for="lblmode" class="form-label">Mode</label>
@@ -103,27 +104,49 @@
 <script>
 	var checkedIds = {};
 	$(document).ready(function () {
+		$("#txtrolecode").val("0");
+		$("#txtrolegid").val("0");
 		$("#navhead").text("Role Mapping");
 		fetchroleaccess();
 	});
 
 	function fetchroleaccess() {
-		var data = getlocalStorage("ls_pageList");
-		var in_role_code = data.role_code;
-		$("#txtrolecode").val(data.role_code);
-		$("#txtrolename").val(data.role_name);
-			$.ajax({
+		debugger;
+		var getls_pageList = getlocalStorage("ls_pageList");
+		if ((getls_pageList != "" && getlocalStorage('btn_clk_val') == "Edit" || getlocalStorage('btn_clk_val') == "View")) {
+				var data = getlocalStorage("ls_pageList");
+				var in_role_code = data.role_code;
+				$("#txtrolecode").val(data.role_code);
+				$("#txtrolename").val(data.role_name);
+				$("#txtrolegid").val(data.role_gid);
+			if (getlocalStorage('btn_clk_val') == "Edit") {
+				$("#txtmode").val("Modify");
+			} else if (getlocalStorage('btn_clk_val') == "View") {
+				$("#txtmode").val("View");
+			}			
+		} else if (getlocalStorage('btn_clk_val') == "Create" && ($("#txtrolecode").val() == '0' || $("#txtrolecode").val() == 0)) {
+			$("#txtrolename").val("");
+			$("#txtmode").val("Create");
+			$("#txtstatus").val("Active");	
+			$("#txtrolegid").val("0");
+		} if ((getls_pageList == "" && getlocalStorage('btn_clk_val') == "Create")) {
+			in_role_code = $("#txtrolecode").val();
+		}
+		$.ajax({
 				type: "POST",
 				url: '../Admin/rolefetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_role_code: in_role_code }),
+			data: JSON.stringify({ in_role_code: in_role_code ? in_role_code : '' }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var data = JSON.parse(response)
 					if (data.length > 0) {
 						//loadGrid(data);
 						grid_datasetfield(data);
+					if ($("#txtmode").val() == 'Create' && ($("#txtrolecode").val() != '0' || $("#txtrolecode").val() != 0)) {
+						saveroleaccess();
+					}
 					}
 				},
 				error: function (er) {
@@ -302,7 +325,7 @@
 				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Download")
 					.attr("checked", "checked");
 			}
-			if (view[i].entries[7] == "y") {
+			if (view[i].entries[7] == "y" || view[i].entries[7] == "Y") {
 				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Deny")
 					.attr("checked", "checked");
 			}
@@ -349,6 +372,68 @@
 	}
 
 	function save_rolemap() {
+		if ($("#txtmode").val() == 'Create' && $("#txtrolename").val() == "") {
+			$.alert({
+				title: 'Recon',
+				content: 'Role Name is missing',
+				type: 'red',
+			});
+		} else if ($("#txtmode").val() != 'Create' && ($("#txtrolename").val() == "" || $("#txtrolecode").val() == "")) {
+			$.alert({
+				title: 'Recon',
+				content: 'Role Name is missing',
+				type: 'red',
+			});
+		}
+
+		try {
+			debugger;
+			var rolecode = ($("#txtrolecode").val() == '0' || $("#txtrolecode").val() == 0) ? '0' : $("#txtrolecode").val();
+			var rolename = $("#txtrolename").val();
+			var status = 'Y';
+			var rolegid = $("#txtrolegid").val();
+			var action = ($("#txtrolecode").val() == '0' || $("#txtrolecode").val() == 0) ? 'INSERT' : 'UPDATE'
+				$.ajax({
+				type: "POST",
+				url: '../Admin/rolesave',
+				dataType: 'json',
+				data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: '', in_action: action }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (res) {
+					if (res) {
+						debugger;
+						var response = JSON.parse(res);
+						if (response[0].out_result == "1") {
+							$("#txtrolecode").val(response[0].in_role_code);
+							$("#txtrolegid").val(response[0].in_role_gid);
+							saveroleaccess();
+							//if ($("#txtmode").val() == 'Edit' || $("#txtmode").val() == 'View') {
+							//	fetchroleaccess();
+							//}
+						}
+						else {
+							$.alert({
+								title: 'Recon',
+								content: response[0].out_msg,
+								type: 'green',
+							});
+						}
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+
+
+	}
+
+	function saveroleaccess() {
 		var modelobj = {};
 		var modelArr = [];
 		var displayedData = $("#grid").data().kendoGrid.dataSource.view();
@@ -367,6 +452,7 @@
 				in_active_status: 'y',
 				in_action_by: 'Hema'
 			}
+			debugger;
 			modelArr.push(modelobj);
 		}
 		var displayedDataAsJSON = JSON.stringify(modelArr);
@@ -383,18 +469,23 @@
 						content: result[0].out_msg,
 						type: 'green',
 					});
-					setTimeout(function () {
-						window.location.reload(1);
-					}, 2500);
+					if($("#txtmode").val() == 'Create' && $("#txtrolegid") != '0'){
+						$("#txtmode").val('Edit');
+						$("#txtstatus").val("Active");
+						fetchroleaccess();
+					}
+					//setTimeout(function () {
+					//	window.location.reload(1);
+					//}, 2500);
 				} else {
 					$.alert({
 						title: 'Recon',
 						content: 'Something went wrong..! Please try after sometime..!',
 						type: 'red',
 					});
-					setTimeout(function () {
-						window.location.reload(1);
-					}, 2500);
+					//setTimeout(function () {
+					//	window.location.reload(1);
+					//}, 2500);
 				}
 			},
 			error: function (er) {
