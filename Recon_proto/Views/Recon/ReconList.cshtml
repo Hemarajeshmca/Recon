@@ -218,12 +218,6 @@
 						{
 							name: "Clone",
 							id:"Clone",
-							//template: function (dataItem) {
-							//	if (dataItem.active_status == 'Active') {
-							//		debugger;
-							//		return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
-							//	}
-							//}
 							template: "<a href='' title='Clone' id='cloneid' onclick='clonePopup(this)' data-bs-toggle='modal'><img style='height: 20px;width:20px;' src = '../Assets/images/clone.png' alt='Clone'></a>"
 						},
 					],
@@ -298,7 +292,6 @@
 			$("#grid_reconlist").kendoTooltip({
 				filter: "td",
 				content: function (e) {
-					debugger;
 					var target = e.target;
 					if (target.id === "cloneid") {
 						// Get the alt attribute of the image (assuming it has an alt attribute)
@@ -469,11 +462,9 @@
 	}
 
 	function cloneRecon(){
-		debugger;
 		btn_onClick("Edit");
 		var newReconName = $("#newReconName").val();
 		var selectedReconCode = $("#selectedReconCode").val();
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../Recon/cloneRecon',
@@ -481,7 +472,6 @@
 			data: JSON.stringify({ in_recon_name: newReconName, in_clone_recon_code: selectedReconCode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				var result = JSON.parse(response);
 				if(result.length > 0) {
 				if (result[0].out_result == '1'){
@@ -494,7 +484,6 @@
 					btn_onClick("Edit");
 					setlocalStorage("cloned_reconCode", result[0].out_recon_code);
 					document.location = "../Recon/ReconViewClone";
-					//gridlist();
 				} else {
 					$.alert({
 						title: 'Recon',
@@ -508,13 +497,14 @@
 	}
 
 	function showCloneIcon() {
-		debugger;
 		var grid = $("#grid_reconlist").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		if (selectedItem.active_status == "Y") {
 			return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
 		}
 	}
+
+
 </script>
 
 

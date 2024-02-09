@@ -180,7 +180,7 @@
 								</div>
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Mode</label>
-									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+									<input class="form-control" type="text" id="Ruletxtmode" value="View" disabled>
 								</div>
 								<div class="col-sm-4">
 									<label for="organization" class="form-label">Status</label><br>
@@ -500,11 +500,12 @@
 		debugger;
 		if (getlocalStorage("rule_details") != undefined) {
 			var data = getlocalStorage("rule_details");
+			debugger;
 				//var cat = data.dataset_category;
-				$("#txtmode").val(getlocalStorage('btn_clk_val'));
-				$("#txtrulecode").val(data.clone_rule_code);
-				$("#ruleName").val(data.clone_rule_name);
-				$("#cmbreconname").val(data.clone_recon_code);
+				$("#Ruletxtmode").val('View');
+				$("#txtrulecode").val(data.rule_code);
+				$("#ruleName").val(data.rule_name);
+				$("#cmbreconname").val(data.recon_code);
 				jQuery('#cmbreconname').trigger("change");
 				var reconcode = $("#cmbreconname").val();
 				$.ajax({

@@ -424,16 +424,17 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     debugger;
-                    if (response != null) {
-                        var result = JSON.parse(response);
+                    var result = JSON.parse(response);
+                    if (result.ReconRule.length > 0) {
                         $("#gd_preview").empty();
                         $("#gd_preview").append("<div id='grid_preview'></div>");
                         grid_rule(result.ReconRule);
+                        $("#reconversion").val(result.ReconRule[0].recon_rule_version)
+                    } if (result.ReconDataSet.length > 0) {
                         $("#gd_dataset_grid").empty();
                         $("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
                         grid_dataset(result.ReconDataSet);
-                        $("#reconversion").val(result.ReconRule[0].recon_rule_version)
-                    } else {
+                    }else {
                         grid_rule([]);
                         grid_dataset([]);
                     }
@@ -690,7 +691,7 @@
         if (firstColumnValues != "") {
             firstColumnValues = firstColumnValues.slice(0, -1);
         }
-        if (in_recon_code && period_from && period_to) {
+        if (in_recon_code && period_from && period_to && firstColumnValues) {
             $.alert({
                 title: 'Recon',
                 content: "Job Initated, Please check the Job Status in Utility",
@@ -743,6 +744,12 @@
             $.alert({
                 title: 'Recon',
                 content: 'Please select Preiod To',
+                type: 'red',
+            });
+        } else if (!firstColumnValues) {
+            $.alert({
+                title: 'Recon',
+                content: 'No Rules to KnockOff',
                 type: 'red',
             });
         }

@@ -51,9 +51,11 @@
 					</div>
 					<div class="col-md-2" style="margin-top: 2.5%;">
 						<button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:50%">
-							Run
+							View
 						</button>
-
+						<button type="button" onclick="monthbrs()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:23%;">
+							<i class="fa-solid fa-file-excel"></i>
+						</button>
 					</div>
 					<div class="col-md-2">
 					</div>
@@ -74,6 +76,7 @@
 		$("#navhead").text("Recon - Within A/cs");
 		kendodate_format();
 		getreconlist();
+		$("#exportExcel").hide();
 	});
 
 	function getreconlist() {
@@ -129,6 +132,7 @@
 				var data = JSON.parse(response)
 				if (data.length > 0){
 					loadGrid(data);
+					$("#exportExcel").show();
 				}
 				
 				debugger;
@@ -197,30 +201,29 @@
 				{
 						field: "proof_gid",
 						title: "proof_gid",
-					width: 100,
-					hidden: true,
+						width: 100,
+						hidden: true,
 				},
 				{
 						field: "particulars",
 						title: "Particular",
-					width: 100,
+						width: 200,
 				},
 				{
 						field: "tran_value",
 						title: "Amount",
-					width: 100,
+						width: 100,
 						attributes: { style: "text-align: right;" },
 				},
 				{
 						field: "tran_acc_mode",
 						title: "Account Mode",
-					width: 100,
-						attributes: { style: "text-align: right;" },
+						width: 50,
 				},
 				{
 						field: "bal_value",
 						title: "Balance Amount",
-					width: 100,
+						width: 100,
 						attributes: { style: "text-align: right;" },
 				},
 				],
@@ -233,4 +236,15 @@
 
 		}
 	}
+
+	function monthbrs() {
+		var in_recon_code = $("#reconname").val();
+		var in_recon_name = $("#reconname").find(":selected").text();
+		var in_tran_date = $("#tran_date").val();
+		var ts = in_tran_date.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		window.location.href = '@Url.Action("kendogrid_download", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+	}
+
+
 </script>
