@@ -191,9 +191,72 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-        #endregion
+		#endregion
 
-      
+		#region rolevalidate
+		[HttpPost]
+		public JsonResult rolevalidate([FromBody] rolevalidatemodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			List<mainQCDMaster> objcat_lst = new List<mainQCDMaster>();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Qcdmaster/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					//client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("QcdMasterGridRead", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					for (int i = 0; i < result.Rows.Count; i++)
+					{
+						mainQCDMaster objcat = new mainQCDMaster();
+						objcat.master_gid = Convert.ToInt32(result.Rows[i]["master_gid"]);
+						objcat.masterCode = result.Rows[i]["master_code"].ToString();
+						objcat.masterName = result.Rows[i]["master_name"].ToString();
+						objcat.masterShortCode = result.Rows[i]["master_short_code"].ToString();
+						objcat.masterSyscode = result.Rows[i]["master_syscode"].ToString();
+						objcat.ParentMasterSyscode = result.Rows[i]["parent_master_syscode"].ToString();
+						objcat.mastermutiplename = result.Rows[i]["master_multiple_name"].ToString();
+						objcat.active_status = result.Rows[i]["active_status"].ToString();
+						objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+						objcat_lst.Add(objcat);
+					}
+					return Json(objcat_lst);
+				}
+			}
+			catch (Exception ex)
+			{
+				errorlog(ex.Message, "QcdMasterGridRead");
+				return Json(ex);
+			}
+		}
+		public class rolevalidatemodel
+		{
+			public string in_screen_code { get; set; }
+			public string add { get; set; }
+			public string edit { get; set; }
+			public string delete { get; set; }
+			public string view { get; set; }
+			public string process { get; set; }
+			public string download { get; set; }
+			public string deny { get; set; }
+		}
+		#endregion
 
-    }
+	}
 }
