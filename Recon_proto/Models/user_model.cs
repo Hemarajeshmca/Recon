@@ -32,7 +32,7 @@ namespace Recon_proto.Models
         public string security_answer { get; set; }
         [Range(1, 50)]
         [Required(ErrorMessage = "user group Should Not Be Blank")]
-        public int usergroup_gid { get; set; }
+       //public int usergroup_gid { get; set; }
         public string usergroup_code { get; set; }
         [Required(ErrorMessage = "user type Should Not Be Blank")]
         public string user_type { get; set; }
@@ -70,7 +70,8 @@ namespace Recon_proto.Models
             public int parent_menu_gid { get; set; }
             public int menu_order { get; set; }
             public bool rights_flag { get; set; }
-        }
+			public string icon_path { get; set; }
+		}
 
 
     }

@@ -8,10 +8,11 @@
 	  data-template="vertical-menu-template" style="overflow:hidden">
 <head>
 	<style type="text/css">
-		.k-tooltip-content{
+		.k-tooltip-content {
 			white-space: nowrap !important;
 			font-size: 12px !important;
 		}
+
 		.k-grid td {
 			border-style: solid;
 			border-width: 0 0 0 1px;
@@ -112,7 +113,7 @@
 			div#spinner img {
 				position: absolute;
 				/*width: 100px;
-																										height: 100px;*/
+																																height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -200,7 +201,7 @@
 	@*<script src="~/scripts/kendo1/2015.1.318/kendo.mobile.min.js"></script>*@
 	<link href="~/css/kendo.common.min.css" rel="stylesheet" />
 	@*<link href="~/css/kendo.default.min.css" rel="stylesheet" />*@
-	
+
 </head>
 
 <body>
@@ -221,123 +222,7 @@
 					</a>
 				</div>
 				<div class="menu-inner-shadow"></div>
-				<ul class="menu-inner py-1">
-					<li class="menu-item">
-						<a href="#" class="menu-link menu-toggle">
-							<i class="menu-icon tf-icons bx bx-file" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-							<div data-i18n="">Process</div>
-						</a>
-						<ul class="menu-sub">
-							<li class="menu-item">
-								<a href="~/Datasetfile/Datasetconversion" class="menu-link">
-									<div data-i18n="">Data Import</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/Datasetfile/deletedata" class="menu-link">
-									<div data-i18n="">Data Delete</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/KnockOff/AutoRuleBase" class="menu-link">
-									<div data-i18n="">Automatic Posting & Knockoff</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/KnockOff/ManualMatching" class="menu-link">
-									<div data-i18n="">Manual Matching and Posting</div>
-								</a>
-							</li>
-							@*<li class="menu-item">
-							<a href="~/KnockOff/ManualKO" class="menu-link">
-							<div data-i18n="">Manual Posting & Knockoff</div>
-							</a>
-							</li>*@
-							<li class="menu-item">
-								<a href="~/KnockOff/UndoKO" class="menu-link">
-									<div data-i18n="">Undo KO</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/KnockOff/UndoKObyRule" class="menu-link">
-									<div data-i18n="">Undo KO by Rule</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/KnockOff/UndoKObyJob" class="menu-link">
-									<div data-i18n="">Undo KO by Job ID</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/ExceptionTheming/ExceptionTheming" class="menu-link">
-									<div data-i18n="">Exception Theming</div>
-								</a>
-							</li>
-
-						</ul>
-					</li>
-
-					<li class="menu-item">
-						<a href="#" class="menu-link menu-toggle">
-							<i class="menu-icon tf-icons bx bx-analyse" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-							<div data-i18n="Utility">Utility</div>
-						</a>
-						<ul class="menu-sub">
-							<li class="menu-item">
-								<a href="~/Utility/InProgress" class="menu-link">
-									<div data-i18n="JIP">Jobs In Progress</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/Utility/ProcessCompleted" class="menu-link">
-									<div data-i18n="JC">Jobs Completed</div>
-								</a>
-							</li>
-						</ul>
-					</li>
-					<li class="menu-item">
-						<a href="~/Reports/WithinAccounts" class="menu-link menu-toggle">
-							<i class="menu-icon tf-icons bx bx-notepad" data-bs-toggle="tooltip" data-bs-placement="bottom" title=""></i>
-							<div data-i18n="Report">Report</div>
-						</a>
-						<ul class="menu-sub">
-							<li class="menu-item">
-								<a href="~/Reports/WithinAccounts" class="menu-link">
-									<div data-i18n="Recon">Recon - Within A/cs</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/Reports/BetweenAccounts" class="menu-link">
-									<div data-i18n="Recon">Recon - Between A/cs</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/Reports/ReportGeneration" class="menu-link">
-									<div data-i18n="Recon">Report Generation</div>
-								</a>
-							</li>
-							<li class="menu-item">
-								<a href="~/KnockOff/MIS" class="menu-link">
-									<div data-i18n="">Knockoff MIS</div>
-								</a>
-							</li>
-							@*<li class="menu-item">
-							<a href="~/Reports/KnockoffMIS" class="menu-link">
-							<div data-i18n="Recon">Report KnockOff MIS</div>
-							</a>
-							</li>
-							<li class="menu-item">
-							<a href="~/Reports/PaginationReport" class="menu-link">
-							<div data-i18n="Recon">Pagination Report</div>
-							</a>
-							</li>*@
-							<li class="menu-item">
-								<a href="~/Reports/ReconHistory" class="menu-link">
-									<div data-i18n="Recon">Recon Rule Version History</div>
-								</a>
-							</li>
-						</ul>
-					</li>
+				<ul class="menu-inner py-1" id="menus">
 				</ul>
 			</aside>
 			<footer class="footer">
@@ -363,7 +248,7 @@
 					<div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
 
 						<center>  <h5 class="card-header" id="navhead" style="margin-left: 38.5vw !important;">Dashboard</h5></center>
-						<ul class="navbar-nav flex-row align-items-center ms-auto">							
+						<ul class="navbar-nav flex-row align-items-center ms-auto">
 							<li class="nav-item lh-1 me-1">
 								<i style="cursor:pointer;" class="bx bxs-home" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" onclick="window.location.href='../Home/Index'" data-bs-original-title="Home" aria-label="Home"></i>
 							</li>
@@ -372,62 +257,17 @@
 									<i class="bx bxs-cog" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Settings" aria-label="Settings" aria-describedby="tooltip32655"></i>
 								</a>
 
-								<ul class="dropdown-menu dropdown-menu-end">
-
-									<li>
-										<a class="dropdown-item" href="~/DataSet/DataSetList">
-											<span class="align-middle">Dataset Setup</span>
-										</a>
-										<a class="dropdown-item" href="~/Recon/ReconList">
-											<span class="align-middle">Recon Setup</span>
-										</a>
-										<a class="dropdown-item" href="~/Connnector/connectors">
-											<span class="align-middle">Connector Setup</span>
-										</a>
-										<a class="dropdown-item" href="~/Pipeline/Pipeline">
-											<span class="align-middle">Pipeline Setup</span>
-										</a>
-										<a class="dropdown-item" href="~/Rulesetup/Rulesetup">
-											<span class="align-middle">Rule Setup</span>
-										</a>
-										<a class="dropdown-item" href="~/Knockoff/PreviewRuleBase">
-											<span class="align-middle">Rule Preview</span>
-										</a>
-										<a class="dropdown-item" href="~/QCDmaster/QcdMaster">
-											<span class="align-middle">QCD Master</span>
-										</a>
-
-										<a class="dropdown-item" href="~/Reconversion/ReconversionList">
-											<span class="align-middle">Recon Rule Version</span>
-										</a>
-									</li>
-
+								<ul class="dropdown-menu dropdown-menu-end" id="menusmaintance">
+									
 								</ul>
-
-
 							</li>
 							<li class="nav-item dropdown-language dropdown lh-1 me-1">
 								<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
 									<i class="bx bxs-user-plus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User Admin" aria-label="User Admin" aria-describedby="tooltip229672"></i>
 								</a>
 
-								<ul class="dropdown-menu dropdown-menu-end">
-									<li>
-										<a class="dropdown-item" href="~/Admin/Users" data-language="fr">
-											<i class="bx bx-user fs-4 me-1"></i>
-											<span class="align-middle">User Mgmt</span>
-										</a>
-									</li>
-									<li>
-										<a class="dropdown-item" href="~/Admin/Role" data-language="fr">
-											<i class="bx bx-user fs-4 me-1"></i>
-											<span class="align-middle">Role Mgmt</span>
-										</a>
-									</li>
-
+								<ul class="dropdown-menu dropdown-menu-end" id="adminmenu">								
 								</ul>
-
-
 							</li>
 							<li class="nav-item navbar-dropdown dropdown-user dropdown">
 								<a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -563,6 +403,7 @@
 				type: "POST",
 				url: '../Admin/setcontextread',
 				dataType: 'json',
+				async: false,
 				data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -582,7 +423,97 @@
 					});
 				}
 			});
-			if (sessionStorage.getItem("level1txt") != null) {				
+			var usercode = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Admin/getcontext',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ user_code: usercode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					if (result.length > 0) {
+						$("#orglvl1valO").val(result[0].master_syscode);
+						jQuery('#orglvl1valO').trigger("change");
+						$("#orglvl2valO").val(result[1].master_syscode);
+						jQuery('#orglvl2valO').trigger("change");
+						$("#orglvl3valO").val(result[2].master_syscode);
+						sessionStorage.setItem("level1", $("#orglvl1valO").val());
+						sessionStorage.setItem("level2", $("#orglvl2valO").val());
+						sessionStorage.setItem("level3", $("#orglvl3valO").val());
+						sessionStorage.setItem("level1txt", $("#orglvl1valO :selected").text());
+						sessionStorage.setItem("level2txt", $("#orglvl2valO :selected").text());
+						sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
+					}
+				}
+			});
+			var usercode = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Admin/getmenu',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ user_code: usercode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var main_menu = result.Menu;
+					var sub_menu = result.SubMenu;
+					var strmenu = "";
+					var adminmenu = "";
+					var maintancemenu = "";
+					strmenu = ' <li class="menu-item">';
+					$.each(main_menu, function (mkey, mvalue) {
+						if (mvalue.menu_gid > 2) {
+							strmenu += '<li class="menu-item"><a class="menu-link menu-toggle" title="' + mvalue.menu_name + '"> <i class="' + mvalue.icon_path + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="' + mvalue.menu_name + '"></i> <span>' + mvalue.menu_name + '</span></a>';
+							strmenu += '<ul class="menu-sub">';
+							$.each(sub_menu, function (skey, svalue) {
+								if (mvalue.menu_gid == svalue.parent_menu_code) {
+									if (svalue.menu_code != "" && svalue.menu_url != "") {
+										strmenu += '<li class="menu-item"><a class="menu-link" href="/' + svalue.menu_url + '" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span> </a></li>';
+									}
+									else {
+										if (svalue.menu_code == "" && svalue.menu_url == "") {
+											strmenu += '<li class="dropdown-item"><a href="#" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span><i class="fa fa-angle-left  pull-right"></i> </a>';
+											
+										}
+									}
+								}
+							});
+
+							strmenu += '</ul></li>';
+						}
+						if (mvalue.menu_gid == 1) {
+							$.each(sub_menu, function (skey, svalue) {
+								if (mvalue.menu_gid == svalue.parent_menu_code) {
+									if (svalue.menu_code != "" && svalue.menu_url != "") {
+										adminmenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="/' + svalue.menu_url + '" ><i class="bx bx-user fs-4 me-1" > </i><span> ' + svalue.menu_name + ' </span></a>';
+									}									
+								}
+							});
+
+							adminmenu += '</ul></li>';
+						}
+						if (mvalue.menu_gid == 2) {
+							$.each(sub_menu, function (skey, svalue) {
+								if (mvalue.menu_gid == svalue.parent_menu_code) {
+									if (svalue.menu_code != "" && svalue.menu_url != "") {
+										maintancemenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="/' + svalue.menu_url + '" ><span> ' + svalue.menu_name + ' </span></a>';
+									}
+								}
+							});
+
+							maintancemenu += '</ul></li>';
+						}
+					});
+					$("#menusmaintance").append(maintancemenu)
+					$("#adminmenu").append(adminmenu);
+					$("#menus").append(strmenu);
+					strmenu = "";
+				}
+			});
+			if (sessionStorage.getItem("level1txt") != null) {
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 			}
@@ -639,13 +570,13 @@
 			});
 		}
 
-
 		function Signout() {
-
-			sessionStorage.removeItem('arr1');
-			sessionStorage.removeItem('arr2');
-			sessionStorage.removeItem('arr3');
-			sessionStorage.removeItem('arr4');
+			sessionStorage.removeItem('level1txt');
+			sessionStorage.removeItem('level2txt');
+			sessionStorage.removeItem('level3txt');
+			sessionStorage.removeItem('level1');
+			sessionStorage.removeItem('level2');
+			sessionStorage.removeItem('level3');
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
@@ -658,7 +589,7 @@
 				},
 				error: function (data) {
 					$.alert({
-						title: 'DMS',
+						title: 'Recon',
 						content: 'Error' + data,
 						type: 'red',
 					});
@@ -768,11 +699,13 @@
 				$('#collapse_org').show();
 				$('#collapse_img2').css('display', 'block');
 				$('#collapse_img').css('display', 'none');
-				$("#orglvl1valO").val(sessionStorage.getItem("level1"));
-				jQuery('#orglvl1valO').trigger("change");
-				$("#orglvl2valO").val(sessionStorage.getItem("level2"));
-				jQuery('#orglvl2valO').trigger("change");
-				$("#orglvl3valO").val(sessionStorage.getItem("level3"));
+				if ($("#orglvl1valO").val() == "") {
+					$("#orglvl1valO").val(sessionStorage.getItem("level1"));
+					jQuery('#orglvl1valO').trigger("change");
+					$("#orglvl2valO").val(sessionStorage.getItem("level2"));
+					jQuery('#orglvl2valO').trigger("change");
+					$("#orglvl3valO").val(sessionStorage.getItem("level3"));
+				}
 			} else {
 				$('#collapse_org').css('display', 'none');
 				$('#collapse_img2').css('display', 'none');
@@ -781,6 +714,12 @@
 			}
 		});
 		function storeheader() {
+			sessionStorage.setItem("level1", "");
+			sessionStorage.setItem("level2", "");
+			sessionStorage.setItem("level3", "");
+			sessionStorage.setItem("level1txt", "");
+			sessionStorage.setItem("level2txt", "");
+			sessionStorage.setItem("level3txt", "");
 			sessionStorage.setItem("level1", $("#orglvl1valO").val());
 			sessionStorage.setItem("level2", $("#orglvl2valO").val());
 			sessionStorage.setItem("level3", $("#orglvl3valO").val());
@@ -789,7 +728,39 @@
 			sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
 			location.reload();
 			var myLabel = document.getElementById("orglvlNavigate");
-			myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt");
+			myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
+			var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+			var user_code = txtusername.user_name;
+			var level_mapping = $("#orglvl1valO").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO").val() + "#" + "QCD_L3";
+			$.ajax({
+				type: "POST",
+				url: '../Admin/applycontextsave',
+				dataType: 'json',
+				data: JSON.stringify({ user_code: user_code, level_mapping: level_mapping }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
 		}
 		function EntityChange(selectElement) {
 			var selectedValue = selectElement.value;
@@ -865,7 +836,7 @@
 		sessionStorage.setItem("usrname", txtusername.user_name);
 		document.getElementById("roledata").textContent = txtusername.usergroup_desc;
 		var level1txtValue = sessionStorage.getItem("level1txt");
-		if (level1txtValue != "") {
+		if (level1txtValue != null) {
 			document.getElementById("level1txt").textContent = level1txtValue;
 			var level1txtValue = sessionStorage.getItem("level2txt");
 			document.getElementById("level2txt").textContent = level1txtValue;

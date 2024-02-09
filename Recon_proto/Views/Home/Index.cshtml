@@ -233,7 +233,11 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var arr = [];
-				for (i = 0; response.length > i; i++) {
+				var list2 = {};
+				list2.value = "";
+				list2.text = "ALL";
+				arr.push(list2);
+				for (i = 0; response.length > i; i++) {		
 					var list1 = {};
 					if (response[i]["active_status"] == 'Y') {
 						list1.value = response[i].recon_code;

@@ -315,7 +315,7 @@ namespace Recon_proto.Controllers
 			usr.action = context.action;
 			usr.user_contact_no = context.user_contact_no;
 			usr.user_gid = context.user_gid;
-			usr.role_gid = context.role_gid;
+			usr.role_code = context.role_code;
 			usr.in_active_reason = context.in_active_reason;
 			try
 			{
@@ -357,7 +357,7 @@ namespace Recon_proto.Controllers
 			public string action_by { get; set; }
 			public string in_active_reason { get; set; }
 			public string action { get; set; }
-			public int role_gid { get; set; }
+			public string role_code { get; set; }
 			public String? out_msg { get; set; }
 			public Int16? out_result { get; set; }
 		}
@@ -558,7 +558,6 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
-
 		#region context
 		[HttpPost]
 		public JsonResult setcontextread([FromBody] getcheckedmodel context)
@@ -596,6 +595,141 @@ namespace Recon_proto.Controllers
 				objcom.errorlog(ex.Message, "userlistfetch");
 				return Json(ex.Message);
 			}
+		}
+		#endregion
+
+		#region applycontext
+		[HttpPost]
+		public JsonResult applycontextsave([FromBody] applycontextmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			List<treeviewllist> objList = new List<treeviewllist>();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "UserManagement/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("applycontext", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "userlistfetch");
+				return Json(ex.Message);
+			}
+		}
+		public class applycontextmodel
+		{
+			public string user_code { get; set; }
+			public string level_mapping { get; set; }
+			public String? out_msg { get; set; }
+			public Int16? out_result { get; set; }
+		}
+		#endregion
+
+		#region getcontext
+		[HttpPost]
+		public JsonResult getcontext([FromBody] getcontexttmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			List<treeviewllist> objList = new List<treeviewllist>();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "UserManagement/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getcontext", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "userlistfetch");
+				return Json(ex.Message);
+			}
+		}
+		public class getcontexttmodel
+		{
+			public string user_code { get; set; }	
+		}
+		#endregion
+
+		#region getmenu
+		[HttpPost]
+		public JsonResult getmenu([FromBody] getmenutmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			List<treeviewllist> objList = new List<treeviewllist>();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "UserManagement/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getmenu", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "userlistfetch");
+				return Json(ex.Message);
+			}
+		}
+		public class getmenutmodel
+		{
+			public string user_code { get; set; }
 		}
 		#endregion
 	}

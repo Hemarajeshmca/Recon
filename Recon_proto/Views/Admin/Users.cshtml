@@ -208,7 +208,7 @@
 				}));
 				$.each(result, function (index, item) {
 					$("#Cmbrole").append($('<option>', {
-						value: item.role_gid,
+						value: item.role_code,
 						text: item.role_name
 					}));
 				});
@@ -378,7 +378,7 @@
 			}
 			var action_by = "";
 			var action = "";
-			var Cmbrole = parseInt($("#Cmbrole").val());
+			var Cmbrole = $("#Cmbrole").val();
 			var mode = $("#txtmode :selected").val();
 			if (mode == "create"){
 				action="INSERT"
@@ -390,7 +390,7 @@
 				type: "POST",
 				url: '../Admin/usersave',
 				dataType: 'json',
-				data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser, role_gid: Cmbrole, action: action, in_active_reason: in_active_reason }),
+				data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser, role_code: Cmbrole, action: action, in_active_reason: in_active_reason }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);

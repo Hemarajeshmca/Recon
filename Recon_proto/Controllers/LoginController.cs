@@ -72,7 +72,7 @@ namespace Recon_proto.Controllers
                         objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
                         objcat.user_name = result.Rows[i]["user_name"].ToString();
                         objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
-                        objcat.usergroup_gid = Convert.ToInt32(result.Rows[i]["usergroup_code"]);
+                        objcat.usergroup_code =result.Rows[i]["usergroup_code"].ToString();
 						objcat.usergroup_desc = result.Rows[i]["usergroup_desc"].ToString();
 						objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
                         objcat.msg = result.Rows[i]["out_msg"].ToString();
@@ -248,6 +248,21 @@ namespace Recon_proto.Controllers
             }
             return cipherText;
         }
-
-    }
+		#region signout
+		[HttpPost]
+		public ActionResult Signout()
+		{
+			try
+			{
+				return this.RedirectToAction("Login", "Login");
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "Signout");
+				return Json(ex.Message);
+			}
+		}
+		#endregion
+	}
 }
