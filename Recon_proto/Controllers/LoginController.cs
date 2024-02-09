@@ -86,7 +86,7 @@ namespace Recon_proto.Controllers
                         //HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
                         //HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
                         HttpContext.Session.SetString("user_gid", result.Rows[i]["user_gid"].ToString());
-						HttpContext.Session.SetString("role_code", "Admin");
+						HttpContext.Session.SetString("role_code", result.Rows[i]["usergroup_code"].ToString());
 						HttpContext.Session.SetString("lang_code", "en_US");
 						HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
                         HttpContext.Session.SetString("userrole", "ADMIN");

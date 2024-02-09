@@ -471,7 +471,7 @@
 							$.each(sub_menu, function (skey, svalue) {
 								if (mvalue.menu_gid == svalue.parent_menu_code) {
 									if (svalue.menu_code != "" && svalue.menu_url != "") {
-										strmenu += '<li class="menu-item"><a class="menu-link" href="/' + svalue.menu_url + '" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span> </a></li>';
+										strmenu += '<li class="menu-item"><a class="menu-link" href="' + svalue.menu_url + '" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span> </a></li>';
 									}
 									else {
 										if (svalue.menu_code == "" && svalue.menu_url == "") {
@@ -488,7 +488,7 @@
 							$.each(sub_menu, function (skey, svalue) {
 								if (mvalue.menu_gid == svalue.parent_menu_code) {
 									if (svalue.menu_code != "" && svalue.menu_url != "") {
-										adminmenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="/' + svalue.menu_url + '" ><i class="bx bx-user fs-4 me-1" > </i><span> ' + svalue.menu_name + ' </span></a>';
+										adminmenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="' + svalue.menu_url + '" ><i class="bx bx-user fs-4 me-1" > </i><span> ' + svalue.menu_name + ' </span></a>';
 									}									
 								}
 							});
@@ -499,7 +499,7 @@
 							$.each(sub_menu, function (skey, svalue) {
 								if (mvalue.menu_gid == svalue.parent_menu_code) {
 									if (svalue.menu_code != "" && svalue.menu_url != "") {
-										maintancemenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="/' + svalue.menu_url + '" ><span> ' + svalue.menu_name + ' </span></a>';
+										maintancemenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="' + svalue.menu_url + '" ><span> ' + svalue.menu_name + ' </span></a>';
 									}
 								}
 							});
@@ -820,6 +820,23 @@
 				}
 			});
 		}
+
+		function rolevalidatescreen(selectElement) {
+			var result = {};
+			$.ajax({
+				type: "POST",
+				url: '../Common/rolevalidate',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_screen_code: selectElement }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					result = response;
+				}
+			});
+			return result;
+		}
+
 		function setColor(rows, resultData) {
 			for (var i = 0; i < rows.length; i++) {
 				var row = $(rows[i]);
