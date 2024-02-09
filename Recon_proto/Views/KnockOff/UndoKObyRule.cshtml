@@ -192,8 +192,8 @@
                             </div>
                             <div class="tab-pane fade" id="navs-pills-RuleList" role="tabpanel">
                                 <div class="panel panel-default">
-                                    <div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
-                                        <div class="col-md-12" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+                                    <div class="panel-body" style="padding-left: 10px;padding-right: 10px;">
+                                        <div class="col-md-12" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
                                             <div id="grid_rule"></div>
                                         </div>
                                     </div>
@@ -278,11 +278,19 @@
             success: function (response) {
                 debugger;
                 var result = JSON.parse(response);
-                if (result != null) {
-                    undojob_grid(result.Table);
+                console.log(`result.Table`, result.Table);
+                console.log(`result.Table1`, result.Table1);
+                if (result.Table.length > 0) {
+                    debugger;
+                    undojob_grid(result.Table);    
+                   // undorule_grid(result.Table1);
+                } 
+                if (result.Table1.length > 0) {
+                    debugger;
                     undorule_grid(result.Table1);
                 }
                 else {
+                    debugger;
                     undojob_grid([]);
                     undorule_grid([]);
                 }
@@ -341,9 +349,12 @@
                         {
                             name: "Action",
                             id: "Edit",
-                            template: "<input id='job_selected' onclick='rowselected(this)' name='job_selected' type='radio'/>",
+                            template: "<input id='job_selected' name='job_selected' type='radio'/>",
                         },
-                    ], title: "Action&nbsp;", width: "80px",
+                    ], title: "Action&nbsp;", width: "70px",
+                    attributes: {
+                        style: "text-align: center;"
+                    }
                 },
                 {
                     field: "job_gid",
@@ -414,7 +425,7 @@
         $("#grid_rule").kendoGrid({
             dataSource: {
                 data: data,
-                pageSize: 5,
+                pageSize: 10,
                 schema: {
                     model: {
                         fields: {
@@ -460,7 +471,10 @@
                             id: "Edit",
                             template: "<input id='rule_selected' onclick='ruleSelected(this)' name='rule_selected' type='radio'/>",
                         },
-                    ], title: "Action&nbsp;", width: "80px",
+                    ], title: "Action&nbsp;", width: "40px",
+                    attributes: {
+                        style: "text-align: center;"
+                    }
                 },
                 {
                     field: "rule_gid",
@@ -505,7 +519,7 @@
                 {
                     field: "group_flag_desc",
                     title: "Group Flag",
-                    width: 50,
+                    width: 70,
                 },
                 {
                     field: "active_status_desc",
@@ -563,7 +577,7 @@
         $("#Joblist").removeClass('nav-link');
         $("#Joblist").toggleClass('nav-link active');
         $("#navs-pills-RuleList").hide();
-        $("#navs-pills-Datasetlist").show();
+        $("#navs-pills-Joblist").show();
     }
 
     function undoRule() {
@@ -579,6 +593,7 @@
         for (var i = 0; i < checkedrows.length; i++) {
             selected_ruleGid = grid_rule.dataItem(checkedrows[i]);
         }
+        if (selected_ruleGid && reconcode && selected_jobid) {
         $.ajax({
             url: '../KnockOff/kobyRule',
             type: 'POST',
@@ -604,6 +619,25 @@
                 }
             }
         });
+        } else if (!selected_ruleGid) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Rule',
+                type: 'red',
+            });
+        } else if (!reconcode) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Recon',
+                type: 'red',
+            });
+        } else if (!selected_jobid) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Job',
+                type: 'red',
+            });
+        }
     }
 
    

@@ -68,6 +68,85 @@
 		</div>
 	</div>
 
+	<div class="modal" id="clone_rule" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Rule</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding: 0px 0px;">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" type="text" id="cmbreconname_clone" disabled/>
+								<input class="form-control" type="text" id="cmbreconcode_clone" hidden />
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								@*<select id="cmbrulename" disabled class="form-select form-control">
+								</select>*@
+								<input class="form-control" type="text" id="cmbrulename" disabled />
+								<input type="hidden" id="rule_gid" />
+								<input type="hidden" id="rule_code" />
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="sourcedataset" disabled class="form-select form-control" onchange="DatasetTypefield()">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Comparision Dataset&nbsp;</label>
+								<select id="comparisondataset" disabled class="form-select form-control" value="">
+								</select>
+							</div>
+
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="cmbreconname_new" class="form-select form-control" onchange="reconchangelist_new()">
+								</select>
+								</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" type="text" id="cmbrulename_new" />
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="sourcedataset_new" class="form-select form-control" onchange="DatasetTypefield()">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Comparision Dataset&nbsp;</label>
+								<select id="comparisondataset_new" class="form-select form-control" value="">
+								</select>
+							</div>
+
+						</div>
+
+					</div>
+					<div class="col-sm-4" style="margin-top:30px;float: right;">
+						<center>
+							<button type="button" class="btn btn-sm save_btn me-2" onclick="saveCloneRule()">Save</button>&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="cancelRule()">Cancel</button>
+						</center>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </body>
 </html>
 <script type="text/javascript">
@@ -92,13 +171,22 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				$("#cmbreconname").empty();
+				$("#cmbreconname_new").empty();
 				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$("#cmbreconname_new").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+						$("#cmbreconname_new").append($('<option>', {
 							value: item.recon_code,
 							text: item.recon_name
 						}));
@@ -121,7 +209,7 @@
 			$("#grid_rulesetup").kendoGrid({
 				dataSource: {
 					data: data,
-					pageSize: 5,
+					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
@@ -130,6 +218,10 @@
 								rule_name: { type: "string" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
+								source_dataset_code: {type: "string"},
+								comparison_dataset_code: {type: "string"},
+								source_dataset_desc: {type: "string"},
+								comparison_dataset_desc: {type: "string"},
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" }
 							}
@@ -173,8 +265,12 @@
 							name: "Delete",
 							id: "Delete",
 							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						}, {
+							name: "Clone",
+							id: "Clone",
+							template: "<a href='' title='Clone' id='cloneid' onclick='clonePopup(this)' data-bs-toggle='modal'><img style='height: 20px;width:20px;' src = '../Assets/images/clone.png' alt='Clone'></a>"
 						},
-					], title: "Action&nbsp;", width: "50px",
+					], title: "Action&nbsp;", width: "70px",
 				},
 				{
 					field: "rule_gid",
@@ -196,6 +292,30 @@
 				{
 					field: "rule_apply_on",
 					title: "rule_apply_on",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "source_dataset_code",
+					title: "source_dataset_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_dataset_code",
+					title: "comparison_dataset_code",
+					width: 100,
+					hidden: true,
+				},
+					{
+					field: "source_dataset_desc",
+					title: "source_dataset_desc",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_dataset_desc",
+					title: "comparison_dataset_desc",
 					width: 100,
 					hidden: true,
 				},
@@ -321,6 +441,7 @@
 				if (res != null) {
 					$("#gd_rulesetup").empty();
 					$("#gd_rulesetup").append("<div id='grid_rulesetup'></div>");
+					getReconDataset();
 					grid_rulesetup_details(res);
 				}
 				else {
@@ -440,4 +561,164 @@
 			}
 		});
 	}
+
+	function clonePopup(e) {
+		debugger;
+		var grid = $("#grid_rulesetup").data("kendoGrid");
+		var selectedItem = grid.dataItem($(event.target).closest("tr"));
+		//if (selectedItem.active_status == 'Y') {
+			$("#clone_rule").modal('show');
+			$("#cmbreconname_clone").val(selectedItem.recon_name);
+			$("#cmbreconcode_clone").val(selectedItem.recon_code);
+			$("#cmbrulename").val(selectedItem.rule_name);
+			$("#rule_code").val(selectedItem.rule_code);
+			$("#sourcedataset").val(selectedItem.source_dataset_code); 
+			$("#comparisondataset").val(selectedItem.comparison_dataset_code);
+			$("#sourcedataset_new").val("");
+			$("#comparisondataset_new").val("");
+			$("#cmbrulename_new").val("");
+			$("#cmbreconname_new").val(selectedItem.recon_code);
+			reconchangelist_new();
+		//}
+
+	}
+
+	function getReconDataset() {
+		debugger;
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset").empty();
+				$("#sourcedataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#sourcedataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#comparisondataset").empty();
+				$("#comparisondataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#comparisondataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
+	}
+
+	function reconchangelist_new(){
+		debugger;
+		var reconcode = $("#cmbreconname_new").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset_new").empty();
+				$("#sourcedataset_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#comparisondataset_new").empty();
+				$("#comparisondataset_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
+	}
+
+	function saveCloneRule() {
+		debugger;
+		var data = {};
+		data.in_recon_code = $("#cmbreconname_new").val();
+		data.in_rule_name = $("#cmbrulename_new").val();
+		data.in_source_dataset_code = $("#sourcedataset_new").val();
+		data.in_comparison_dataset_code = $("#comparisondataset_new").val();
+		data.in_clone_recon_code = $("#cmbreconcode_clone").val();
+		data.in_clone_rule_code = $("#rule_code").val();
+		data.in_clone_source_dataset_code = $("#sourcedataset").val();
+		data.in_clone_comparison_dataset_code = $("#comparisondataset").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/cloneReconRule',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response != "") {
+					var res = JSON.parse(response);
+					if (res.length > 0) {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+						$("#clone_rule").modal('hide');
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: 'Something Went wrong',
+							type: 'red',
+						});
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		$("#clone_rule").modal('hide');
+		window.location.href = "../Rulesetup/Rulesetup";
+	}
+
 </script>

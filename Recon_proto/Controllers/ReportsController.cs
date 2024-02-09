@@ -6,10 +6,14 @@ using System.Net.Http.Headers;
 using System.Text;
 using static Recon_proto.Controllers.CommonController;
 using ClosedXML.Excel;
+using System.IO;
 using System.Dynamic;
 using System.Text.RegularExpressions;
 using Recon_proto.Models;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace Recon_proto.Controllers
 {
@@ -423,12 +427,14 @@ namespace Recon_proto.Controllers
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
-                    Table1.Columns.RemoveAt(0);
-                    Table1.Columns[0].ColumnName = "Particulars";
-                    Table1.Columns[1].ColumnName = "Amount";
-                    Table1.Columns[2].ColumnName = "Account Mode";
-                    Table1.Columns[3].ColumnName = "Balance Amount";
+						Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
+						Table1.Columns.RemoveAt(0);
+						Table1.Columns[0].ColumnName = "Particulars";
+						Table1.Columns[1].ColumnName = "Amount";
+						Table1.Columns[2].ColumnName = "Account Mode";
+						Table1.Columns[3].ColumnName = "Balance Amount";
+					
+
 
                     using (XLWorkbook wb = new XLWorkbook())
                     {
@@ -470,7 +476,383 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
+
+        #region monthendreport
+        //monthendreport
+        public ActionResult monthendreport(string in_tran_date, string in_recon_code)
+        {
+            string post_data = "";
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            try
+            {
+                List<TransactionRpt_model> objcat_3st = new List<TransactionRpt_model>();
+                DataSet result2 = new DataSet();
+                DataSet dt = new DataSet();
+                DataTable Table = new DataTable();
+                DataTable Table1 = new DataTable();
+                DataTable Table2 = new DataTable();
+                DataTable Table3 = new DataTable();
+                DataTable Table4 = new DataTable();
+                DataTable Table6 = new DataTable();
+                DataTable Table7 = new DataTable();
+
+                long row = 0;
+                long col = 0;
+                string cellTxt = "";
+                string cellTxt1 = "";
+                string formulaTxt = "";
+                string calcCellTxt = "";
+                var recon_name1 = "";
+
+                monthendreportModel contect = new monthendreportModel();
+                contect.in_tran_date = in_tran_date;
+                contect.in_recon_code = in_recon_code;
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(contect), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("MonthendReport", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result2 = (DataSet)JsonConvert.DeserializeObject(d2, result2.GetType());
+                    Table = result2.Tables[0].Copy();
+                    Table1 = result2.Tables[1].Copy();
+                    Table2 = result2.Tables[2].Copy();
+                    Table3 = result2.Tables[3].Copy();
+                    Table4 = result2.Tables[4].Copy();
+                    Table6 = result2.Tables[6].Copy();
+                    Table7 = result2.Tables[7].Copy();
+
+                    var entity_name = Table.Rows[0]["entity"].ToString();
+                    var recon_name = Table.Rows[0]["recon_name"].ToString();
+                    int i = recon_name.Length;
+                    if (i >= 30)
+                    {
+                        recon_name1 = recon_name.Substring(0, 30);
+                    }
+                    else
+                    {
+                        recon_name1 = recon_name;
+                    }
+                    var acc_no1 = Table.Rows[0]["acc_no1"].ToString();
+                    //  string s2 = Regex.Replace(recon_name, @"[^A-Z]+", String.Empty);
+                    var acc_no2 = Table.Rows[0]["acc_no2"].ToString();
+                    string Acc1date = Table.Rows[0]["acc_no1_bal_date"].ToString();
+                    string Acc2date = Table.Rows[0]["acc_no2_bal_date"].ToString();
+                    Decimal acc1Bal_amount = Convert.ToDecimal(Table.Rows[0]["acc_no1_bal_amount"].ToString());
+                    Decimal acc2Bal_amount = Convert.ToDecimal(Table.Rows[0]["acc_no2_bal_amount"].ToString());
+                    Decimal accno1_drtotal = Convert.ToDecimal(Table.Rows[0]["acc_no1_dr_total"].ToString());
+                    Decimal accno2_drtotal = Convert.ToDecimal(Table.Rows[0]["acc_no2_dr_total"].ToString());
+                    Decimal accno1_crtotal = Convert.ToDecimal(Table.Rows[0]["acc_no1_cr_total"].ToString());
+                    Decimal accno2_crtotal = Convert.ToDecimal(Table.Rows[0]["acc_no2_cr_total"].ToString());
+
+                    dt = result2.Copy();
+                    dt.Tables.Remove("Table");
+
+                    string fileName = acc_no1 + ".xlsx";
+
+                    using (XLWorkbook wb = new XLWorkbook())// wb.Worksheets.Add(dt);
+                    {
+                        ///Setting Table Data static & Dynamic;
+
+                        var ws = wb.AddWorksheet(recon_name1);
+                        ws.FirstCell().SetValue(entity_name); ws.Cell("A1").Style.Font.Bold = true;
+                        ws.Cell("A1").Style.Font.Underline.ToString(); ws.Cell("A1").Style.Font.Underline = XLFontUnderlineValues.Single;
+                        ws.Range("A1:D1").Row(1).Merge();
+
+                        ws.Cell("E1").SetValue("GL CODE").SetActive(); ws.Cell("E1").Style.Font.Bold = true;
+                        ws.Cell("F1").SetValue(acc_no2).SetActive(); ws.Cell("F1").Style.Font.Bold = true;
+
+                        ws.FirstCell().CellBelow().SetValue(recon_name);
+                        ws.Cell("A2").Style.Font.Bold = true;
+                        ws.Range("A2:F2").Row(1).Merge();
+
+                        ws.Cell("A3").SetValue("CC A/c No.").SetActive(); ws.Cell("A3").Style.Font.Bold = true;
+                        ws.Range("A3:B3").Row(1).Merge();
+
+                        ws.Cell("C3").SetValue(acc_no1).SetActive(); ws.Cell("C3").Style.Font.Bold = true;
+                        ws.Range("C3:F3").Row(1).Merge();
+
+                        ws.Cell("A4").SetValue("Bank Reconciliation Statement as on date " + Acc1date + "").SetActive();
+                        ws.Cell("A4").Style.Font.Bold = true;
+                        ws.Range("A4:F4").Row(1).Merge();
+
+                        ws.Cell("A6").SetValue("S U M M A R Y").SetActive(); ws.Cell("A6").Style.Font.Bold = true;
+                        ws.Cell("A6").Style.Font.Underline = XLFontUnderlineValues.Single;
+                        ws.Cell("A6").Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        ws.Range("A6:F6").Row(1).Merge();
+
+                        ws.Cell("A7").SetValue("Closing balance  as per our bank book as on " + Acc2date + "").SetActive();
+                        ws.Cell("A7").Style.Font.Bold = true;
+                        ws.Range("A7:E7").Row(1).Merge();
+                        ws.Cell("I7").SetValue(acc2Bal_amount).SetActive(); ws.Cell("I7").Style.NumberFormat.Format = "###0.00";
+
+                        ws.Cell("A9").SetValue("Less: Cheques deposited but not credited in bank passbook").SetActive();
+                        ws.Range("A9:E9").Row(1).Merge();
+                        ws.Cell("I9").SetValue(accno2_drtotal).SetActive(); ws.Cell("FI9").Style.Font.Bold = true; ws.Cell("I9").Style.NumberFormat.Format = "###0.00";
+
+                        ws.Cell("A11").SetValue("Add: Cheques issued but not presented in the bank").SetActive();
+                        ws.Range("A11:E11").Row(1).Merge();
+                        ws.Cell("I11").SetValue(accno2_crtotal).SetActive(); ws.Cell("I11").Style.NumberFormat.Format = "###0.00";
+
+                        ws.Cell("A13").SetValue("Less: Amount debited in bank but not accounted").SetActive();
+                        ws.Range("A13:E13").Row(1).Merge();
+                        ws.Cell("I13").SetValue(accno1_drtotal).SetActive(); ws.Cell("I13").Style.NumberFormat.Format = "###0.00";
+
+                        ws.Cell("A15").SetValue("Add: Amount credited in bank but not accounted").SetActive();
+                        ws.Range("A15:E15").Row(1).Merge();
+                        ws.Cell("I15").SetValue(accno1_crtotal).SetActive(); ws.Cell("I15").Style.NumberFormat.Format = "###0.00";
+
+                        ws.Cell("A17").SetValue("Closing balance as per bank passbook").SetActive();
+                        ws.Cell("A17").Style.Font.Bold = true;
+                        ws.Range("A17:E17").Row(1).Merge();
+
+                        ws.Cell("I17").SetValue(acc1Bal_amount).SetActive(); ws.Cell("I17").Style.Font.Bold = true; ws.Cell("I17").Style.NumberFormat.Format = "###0.00";
+                        ws.Cell("I17").Style.Font.Bold = true; //ws.Cell("F17").Style.Font.Underline = XLFontUnderlineValues.Double;
+                        ws.Cell("I17").Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        ws.Cell("I17").Style.Border.TopBorderColor = XLColor.Black;
+                        ws.Cell("I17").Style.Border.BottomBorder = XLBorderStyleValues.Double;
+                        ws.Cell("I17").Style.Border.BottomBorderColor = XLColor.Black;
+
+                        ws.Cell("A19").SetValue("Less: Cheques deposited but not credited").SetActive(); ws.Cell("A19").Style.Font.Bold = true;
+                        ws.Cell("A19").Style.Font.Underline = XLFontUnderlineValues.Single;
+                        ws.Range("A19:F19").Row(1).Merge();
+
+                        //Inserting  Table1 Data
+                        wb.Worksheet(1).Cell("A20").InsertTable(Table1);
+                        ws.Table(0).ShowAutoFilter = false;// Disable AutoFilter.
+                        ws.Table(0).Theme = XLTableTheme.None;
+                        ws.Range("A20:H20").Style.Font.Bold = true;
+                        ws.Range("A20:H20").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+
+                        //Inserting  Table1 Total
+                        formulaTxt = "=sum(I21:I" + (20 + Table1.Rows.Count).ToString() + ")";
+                        row = 20 + Table1.Rows.Count + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        ws.Cell(cellTxt).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        ws.Cell(cellTxt).Style.Border.BottomBorderColor = XLColor.Black;
+
+                        var cellFormulaTableSum = ws.Cell(cellTxt);
+
+                        cellFormulaTableSum.FormulaA1 = formulaTxt; cellFormulaTableSum.Style.NumberFormat.Format = "###0.00";
+
+                        //Inserting calculation
+                        calcCellTxt = "I7";
+                        formulaTxt = "=+(" + calcCellTxt + "*1)-" + cellTxt;
+
+                        row = row + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        calcCellTxt = cellTxt;
+
+                        var cellFormulaCalc = ws.Cell(cellTxt);
+                        cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
+
+                        //Inserting  Table2 Data
+                        row = row + 2;
+                        cellTxt = "A" + row.ToString() + "";
+
+                        ws.Cell(cellTxt).SetValue("Add: Cheques issued but not presented").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+                        ws.Cell(cellTxt).Style.Font.Underline = XLFontUnderlineValues.Single;
+                        cellTxt = "A" + row.ToString() + ":F" + row.ToString();
+                        ws.Range(cellTxt).Row(1).Merge();
+
+                        row = row + 1;
+                        cellTxt = "A" + row.ToString() + "";
+
+                        wb.Worksheet(1).Cell(cellTxt).InsertTable(Table2);
+                        ws.Table(1).ShowAutoFilter = false;// Disable AutoFilter.
+                        ws.Table(1).Theme = XLTableTheme.None;
+                        cellTxt1 = "A" + row.ToString() + ":H" + row.ToString();
+                        ws.Range(cellTxt1).Style.Font.Bold = true;
+                        ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+
+                        //Inserting  Table2 Total
+                        formulaTxt = "=sum(I" + (row + 1).ToString() + ":I" + (row + Table2.Rows.Count).ToString() + ")";
+                        row = row + Table2.Rows.Count + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        ws.Cell(cellTxt).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        ws.Cell(cellTxt).Style.Border.BottomBorderColor = XLColor.Black;
+                        cellFormulaTableSum = ws.Cell(cellTxt);
+                        cellFormulaTableSum.FormulaA1 = formulaTxt; cellFormulaTableSum.Style.NumberFormat.Format = "###0.00";
+
+                        formulaTxt = "=+" + calcCellTxt + "+" + cellTxt;
+
+                        row = row + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        calcCellTxt = cellTxt;
+
+                        cellFormulaCalc = ws.Cell(cellTxt);
+                        cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
+
+                        row = row + 2;
+                        cellTxt = "A" + row.ToString() + "";
+
+                        ws.Cell(cellTxt).SetValue("Less: Amount  debited  in pass Book").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+                        ws.Cell(cellTxt).Style.Font.Underline = XLFontUnderlineValues.Single;
+                        cellTxt = "A" + row.ToString() + ":F" + row.ToString();
+                        ws.Range(cellTxt).Row(1).Merge();
+
+                        //Inserting  Table3 Data
+                        row = row + 1;
+                        cellTxt = "A" + row.ToString() + "";
+
+                        wb.Worksheet(1).Cell(cellTxt).InsertTable(Table3);
+                        ws.Table(2).ShowAutoFilter = false;// Disable AutoFilter.
+                        ws.Table(2).Theme = XLTableTheme.None;
+                        cellTxt1 = "A" + row.ToString() + ":H" + row.ToString();
+                        ws.Range(cellTxt1).Style.Font.Bold = true;
+                        ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+                        //Inserting  Table3 Total
+                        formulaTxt = "=sum(I" + (row + 1).ToString() + ":I" + (row + Table3.Rows.Count).ToString() + ")";
+                        row = row + Table3.Rows.Count + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        ws.Cell(cellTxt).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        ws.Cell(cellTxt).Style.Border.BottomBorderColor = XLColor.Black;
+                        cellFormulaTableSum = ws.Cell(cellTxt);
+                        cellFormulaTableSum.FormulaA1 = formulaTxt; cellFormulaTableSum.Style.NumberFormat.Format = "###0.00";
+
+                        formulaTxt = "=+" + calcCellTxt + "-" + cellTxt;
+
+                        row = row + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        calcCellTxt = cellTxt;
+
+                        cellFormulaCalc = ws.Cell(cellTxt);
+                        cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
+
+                        row = row + 2;
+                        cellTxt = "A" + row.ToString() + "";
+
+                        ws.Cell(cellTxt).SetValue("Add: Amount credited in pass Book").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+                        ws.Cell(cellTxt).Style.Font.Underline = XLFontUnderlineValues.Single;
+
+                        cellTxt = "A" + row.ToString() + ":F" + row.ToString();
+                        ws.Range(cellTxt).Row(1).Merge();
+
+                        row = row + 1;
+                        cellTxt = "A" + row.ToString() + "";
+
+                        wb.Worksheet(1).Cell(cellTxt).InsertTable(Table4);
+                        ws.Table(3).ShowAutoFilter = false;// Disable AutoFilter.
+                        ws.Table(3).Theme = XLTableTheme.None;
+                        cellTxt1 = "A" + row.ToString() + ":H" + row.ToString();
+                        ws.Range(cellTxt1).Style.Font.Bold = true;
+                        ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+                        //Inserting  Table4 Total
+                        formulaTxt = "=sum(I" + (row + 1).ToString() + ":I" + (row + Table4.Rows.Count).ToString() + ")";
+                        row = row + Table4.Rows.Count + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        ws.Cell(cellTxt).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        ws.Cell(cellTxt).Style.Border.BottomBorderColor = XLColor.Black;
+                        cellFormulaTableSum = ws.Cell(cellTxt);
+                        cellFormulaTableSum.FormulaA1 = formulaTxt; cellFormulaTableSum.Style.NumberFormat.Format = "###0.00";
+
+                        formulaTxt = "=+" + calcCellTxt + "+" + cellTxt;
+
+                        row = row + 1;
+                        cellTxt = "I" + row.ToString() + "";
+                        calcCellTxt = cellTxt;
+
+                        cellFormulaCalc = ws.Cell(cellTxt);
+                        cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
+                        cellFormulaCalc.Style.Font.Bold = true;
+                        // cellFormulaCalc.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        // cellFormulaCalc.Style.Border.TopBorderColor = XLColor.Black;
+                        //cellFormulaCalc.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+                        //cellFormulaCalc.Style.Border.BottomBorderColor = XLColor.Black;
+                        //cellFormulaCalc.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                        //Total Balance & Difference
+                        cellTxt = "B" + row.ToString() + "";
+                        ws.Cell(cellTxt).SetValue("Balance as per bank pass book").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+
+                        row = row + 2;
+                        cellTxt = "B" + row.ToString() + "";
+                        ws.Cell(cellTxt).SetValue("Difference").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+
+                        formulaTxt = "=+" + calcCellTxt + "-I17";
+
+                        cellTxt = "I" + row.ToString() + "";
+
+                        cellFormulaCalc = ws.Cell(cellTxt);
+                        cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
+                        cellFormulaCalc.Style.Font.Bold = true;
+                        cellFormulaCalc.Style.Border.TopBorder = XLBorderStyleValues.Thin;
+                        cellFormulaCalc.Style.Border.TopBorderColor = XLColor.Black;
+                        cellFormulaCalc.Style.Border.BottomBorder = XLBorderStyleValues.Double;
+                        cellFormulaCalc.Style.Border.BottomBorderColor = XLColor.Black;
+                        cellFormulaCalc.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+
+                        ws.Columns("A").AdjustToContents();
+                        ws.Columns("F").AdjustToContents();
+
+                        //Insert Transaction
+                        ws = wb.AddWorksheet("Transaction");
+                        ws.Cell("A1").InsertTable(Table6).Theme = XLTableTheme.None;
+                       // ws.Tables.ForEach(x => x.ShowAutoFilter = false);
+                        foreach (var table in ws.Tables)
+                        {
+                            table.ShowAutoFilter = false;
+                        }
+                        ws.Cell("A1").Style.Font.Bold = true;
+                        ws.Range("A1:Z1").Style.Font.Bold = true;
+                        ws.Range("A1:Z1").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+                        // ws.Table(6).Theme = XLTableTheme.None;
+
+                        if (Table7.Rows.Count > 0)
+                        {
+                            //Insert Supporting File
+                            ws = wb.AddWorksheet("SupportingFile");
+                            ws.Cell("A1").InsertTable(Table7).Theme = XLTableTheme.None;
+                            //ws.Tables.ForEach(x => x.ShowAutoFilter = false);
+                            foreach (var table in ws.Tables)
+                            {
+                                table.ShowAutoFilter = false;
+                            }
+                            ws.Range("A1:Z1").Style.Font.Bold = true;
+                            ws.Range("A1:Z1").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+                            // ws.Table(7).Theme = XLTableTheme.None;
+                        }
+
+                        using (MemoryStream stream = new MemoryStream())
+                        {
+                            wb.SaveAs(stream);
+                            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                        }
+
+                    }
+                }
+            }
+
+            catch (Exception e)
+            {
+                // return Json(e.Message, JsonRequestBehavior.AllowGet);
+            }
+                return View();
+        }
+
+        public class monthendreportModel
+        {
+            public string in_recon_code { get; set; }
+
+            public string in_tran_date { get; set; }
+
+        }
+
+        #endregion
     }
-
-
 }

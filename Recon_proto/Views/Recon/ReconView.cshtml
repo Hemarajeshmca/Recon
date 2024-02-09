@@ -157,6 +157,18 @@
 												Addtional Configuration
 											</button>
 										</li>
+
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-Rule"
+													aria-controls="navs-pills-top-Rule"
+													aria-selected="true">
+												Rule
+											</button>
+										</li>
 									</ul>
 									<div class="tab-content">
 										@*Dataset*@
@@ -235,6 +247,19 @@
 															<label for="" class="form-label">Recon Value Field&nbsp;</label>
 															<select id="cmbreconvaluefield" class="form-select form-control">
 															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*Rule*@
+										<div class="tab-pane fade" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="col-xs-12" style="margin-top:25px;">
+														<div id="gd_rule">
+															<div id="grid_rule">
+															</div>
 														</div>
 													</div>
 												</div>
@@ -322,7 +347,7 @@
 											<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Field Mapping</h4>
 										</div>
 										<div class="col-sm-4">
-											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right" onclick="rr3()"></i>
 										</div>
 									</div>
 									<hr style="margin-top:-1px; width:100%;">
@@ -373,6 +398,31 @@
 						</div>
 					</div>
 				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="ReconRuledetail">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:603px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_Ruleviewdetail")
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -437,7 +487,6 @@
 			$('#period_to').unbind('click');
 		}
 		else {
-
 			$("#period_to").removeAttr('disabled', false);
 		}
 	}
@@ -476,6 +525,7 @@
 		});
 	}
 	function load() {
+		debugger;
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Draft");
@@ -534,6 +584,10 @@
 								griddatamapping(res.ReconDataSetmapping);
 							} else {
 								gridmap([]);
+							} if (res.ReconRule.length > 0) {
+								gridruleMapping(res.ReconRule);
+							} else {
+								gridruleMapping([]);
 							}
 
 							$("#cmbdatasetmap").empty();
@@ -592,6 +646,7 @@
 		}
 	}
 	function detailfetch(reconcode) {
+		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Reconheaderfetch',
@@ -599,6 +654,7 @@
 			data: JSON.stringify({ in_recon_code: reconcode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				debugger;
 				if (response != " ") {
 					var res = JSON.parse(response);
 					$("#reconcode").val(res.ReconHeader[0].recon_code);
@@ -633,6 +689,10 @@
 						$("#maingrid1").hide()
 					} else {
 						gridmap([]);
+					} if (res.ReconRule.length > 0) {
+						gridruleMapping(res.ReconRule);
+					} else {
+						gridruleMapping([]);
 					}
 
 					$("#cmbdatasetmap").empty();
@@ -1338,6 +1398,7 @@
 		grid.hideColumn(2);
 		grid.hideColumn(3);
 		grid.hideColumn(4);
+		grid.hideColumn(7);
 	}
 	function getdetailSelectedRows(mode) {
 		if ($(mode).attr('value') == "edit") {
@@ -1502,6 +1563,7 @@
 		});
 	}
 	function myDeletedatamapping() {
+		debugger;
 		var grid = $("#grid1").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		$.confirm({
@@ -1514,9 +1576,10 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var reconcode = model.recon_code;
-					var Reconfieldname = model.recon_field_name;
-					var displayorder = model.display_order;
+					debugger;
+					var reconcode = model.entries[2];
+					var Reconfieldname = model.entries[6];
+					var displayorder = parseInt(model.entries[5]);
 					var cmbdatasetmap = "";
 					var cmbdatasetfieldname = "";
 					var action = "DELETE";
@@ -1564,6 +1627,7 @@
 		});
 	}
 	function myDeleteJsdatasetmapping() {
+		debugger;
 		$("#Datasetmappingform").modal('show');
 		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
@@ -1797,6 +1861,113 @@
 		}
 
 	}
+
+	function gridruleMapping(data) {
+		debugger;
+		$("#grid_rule").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							rule_gid: { type: "string" },
+							rule_code: { type: "string" },
+							rule_name: { type: "string" },
+							rule_order: { type: "string" },
+							rule_apply_on_desc: { type: "string" },
+							group_flag_desc: { type: "string" },
+							source_dataset_desc: { type: "string" },
+							comparison_dataset_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 250,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_rule').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "view",
+						id: "View",
+						template: "<a href=''onclick='openRuleModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "rule_gid",
+				title: "rule_gid",
+				hidden: true,
+			},
+			{
+				field: "rule_code",
+				title: "Rule Code",
+				hidden: true
+			},
+			{
+				field: "rule_name",
+				title: "Rule Name",
+				width: 150,
+			},
+			{
+				field: "rule_order",
+				title: "Rule Order",
+				width: 50,
+			},
+			{
+				field: "rule_apply_on_desc",
+				title: "Rule apply on",
+				width: 100,
+			}, {
+				field: "group_flag_desc",
+				title: "Group Flag",
+				width: 100,
+			},
+			{
+				field: "source_dataset_desc",
+				title: "Source Dataset",
+				width: 100,
+			}, {
+				field: "comparison_dataset_desc",
+				title: "Comparison Dataset",
+				width: 100,
+			}],
+			editable: false,
+
+		});
+	}
+
+	function openRuleModel(event) {
+		event.preventDefault();
+		var grid = $("#grid_rule").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		setlocalStorage("rule_details", selectedItem);
+		btn_onClick('Edit');
+		getRuleGridComboList();
+		cmbsourcefield();
+		// Prevent modal close when clicking inside it
+		$("#ReconRuledetail").on("click", function (event) {
+			event.stopPropagation();
+		});
+		$("#ReconRuledetail").modal('show');
+
+	}
+
 </script>
 
 

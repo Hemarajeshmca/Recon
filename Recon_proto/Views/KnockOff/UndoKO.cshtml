@@ -91,6 +91,7 @@
 		debugger;
 		var in_recon_code = $("#cmbreconname").val();
 		var Ko_id = $("#Ko_id").val();
+		if (in_recon_code && Ko_id) {
 		$.ajax({
 			type: "POST",
 			url: '../knockoff/undorunreport',
@@ -116,6 +117,19 @@
 				console.log(er)
 			}
 		});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Recon',
+				type: 'red',
+			});
+		} else if (!Ko_id) {
+			$.alert({
+				title: 'Recon',
+				content: 'KO Id is missing',
+				type: 'red',
+			});
+		}
 	}
 
 	function grid_reconverion(data) {
@@ -366,6 +380,7 @@
 		data.in_ko_gid = $("#Ko_id").val();
 		data.in_undo_ko_reason = reason;
 		data.in_user_code ="";
+		if (data.in_ko_gid && data.in_undo_ko_reason) {
 		$.ajax({
 			type: "POST",
 			url: '../knockoff/undoKO',
@@ -396,6 +411,18 @@
 				console.log(er)
 			}
 		});
-
+		} else if (!data.in_ko_gid) {
+			$.alert({
+				title: 'Recon',
+				content: 'KO id is missing',
+				type: 'red',
+			});
+		} else if (!data.in_undo_ko_reason) {
+			$.alert({
+				title: 'Recon',
+				content: 'KO reason is missing',
+				type: 'red',
+			});
+		}
 	}
 </script>
