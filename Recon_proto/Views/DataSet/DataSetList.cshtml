@@ -22,10 +22,11 @@
 		.k-grid.k-widget {
 			height: 360px;
 		}
-		
+
 		.k-grid-header {
 			font-weight: bold;
 		}
+
 		.k-content {
 			font-weight: normal;
 			font-size: 13px;
@@ -50,7 +51,7 @@
 			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
 				<div class="row">
 					<div class="col-xs-12">
-						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
 						<div id="gd_dataset">
@@ -68,6 +69,19 @@
 		gridlist();
 		$("#navhead").text("Dataset");
 		setlocalStorage("ls_pageList", "");
+		var screen_code = rolevalidatescreen('ds_setup')
+		if (screen_code[0].add == "N") {
+			$("#btn_new").hide();
+		} 
+		if (screen_code[0].edit == "N") {
+			$("#btn_Edit").hide();
+		} 
+		if (screen_code[0].view == "N") {
+			$("#btn_View").hide();
+		}
+		if (screen_code[0].delete == "N") {
+			$("#btn_Delete").hide();
+		}
 	});
 
 	function gridlist() {
@@ -153,17 +167,17 @@
 						{
 							name: "edit",
 							id: "btn_Edit",
-							template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)'  value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 						{
 							name: "view",
 							id: "View",
-							template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' id='btn_View' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 						{
 							name: "Delete",
 							id: "Delete",
-							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal' id='btn_Delete' ><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 					], title: "Action&nbsp;", width: "40px",
 				},

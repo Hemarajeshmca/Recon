@@ -199,15 +199,23 @@ namespace Recon_proto.Controllers
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DataTable result = new DataTable();
-			List<mainQCDMaster> objcat_lst = new List<mainQCDMaster>();
+			rolevalidatemodel role = new rolevalidatemodel();
+            role.in_screen_code=context.in_screen_code;
+			role.add = "";
+			role.edit = "";
+			role.delete = "";
+			role.view = "";
+			role.process = "";
+			role.download = "";
+			role.deny = "";
+			List<rolevalidatemodel> objcat_lst = new List<rolevalidatemodel>();
 			string post_data = "";
 			try
 			{
 				using (var client = new HttpClient())
 				{
-					string Urlcon = "Qcdmaster/";
+					string Urlcon = "Common/";
 					client.BaseAddress = new Uri(urlstring + Urlcon);
-					//client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
 					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
@@ -215,8 +223,8 @@ namespace Recon_proto.Controllers
 					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
 					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-					var response = client.PostAsync("QcdMasterGridRead", content).Result;
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(role), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("roleconfig", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
 					StreamReader reader = new StreamReader(data);
 					post_data = reader.ReadToEnd();
@@ -224,16 +232,15 @@ namespace Recon_proto.Controllers
 					result = JsonConvert.DeserializeObject<DataTable>(d2);
 					for (int i = 0; i < result.Rows.Count; i++)
 					{
-						mainQCDMaster objcat = new mainQCDMaster();
-						objcat.master_gid = Convert.ToInt32(result.Rows[i]["master_gid"]);
-						objcat.masterCode = result.Rows[i]["master_code"].ToString();
-						objcat.masterName = result.Rows[i]["master_name"].ToString();
-						objcat.masterShortCode = result.Rows[i]["master_short_code"].ToString();
-						objcat.masterSyscode = result.Rows[i]["master_syscode"].ToString();
-						objcat.ParentMasterSyscode = result.Rows[i]["parent_master_syscode"].ToString();
-						objcat.mastermutiplename = result.Rows[i]["master_multiple_name"].ToString();
-						objcat.active_status = result.Rows[i]["active_status"].ToString();
-						objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+						rolevalidatemodel objcat = new rolevalidatemodel();
+						objcat.in_screen_code = result.Rows[i]["menu_code"].ToString();
+						objcat.add = result.Rows[i]["add_flag"].ToString();
+						objcat.edit = result.Rows[i]["modify_flag"].ToString();
+						objcat.delete = result.Rows[i]["deleteflag"].ToString();
+						objcat.view = result.Rows[i]["view_flag"].ToString();
+						objcat.process = result.Rows[i]["process_flag"].ToString();
+						objcat.download = result.Rows[i]["download_flag"].ToString();
+						objcat.deny = result.Rows[i]["deny_flag"].ToString();
 						objcat_lst.Add(objcat);
 					}
 					return Json(objcat_lst);
@@ -241,7 +248,7 @@ namespace Recon_proto.Controllers
 			}
 			catch (Exception ex)
 			{
-				errorlog(ex.Message, "QcdMasterGridRead");
+				errorlog(ex.Message, "rolevalidate");
 				return Json(ex);
 			}
 		}
