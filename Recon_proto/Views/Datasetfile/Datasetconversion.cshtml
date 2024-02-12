@@ -517,7 +517,7 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				debugger;
-				if (response.length = 1) {
+				if (response.length == 1) {
 					$.each(response, function (index, item) {
 						$("#Pipeline").empty();
 						$("#Pipeline").append($('<option>', {
@@ -525,7 +525,7 @@
 							text: item.pipeline_name
 						}));
 					});
-				} else if (response > 1) {
+				} else if (response.length > 1) {
 					$("#Pipeline").empty();
 					$("#Pipeline").append($('<option>', {
 						value: "",
@@ -537,6 +537,12 @@
 							text: item.pipeline_name
 						}));
 					});
+				} else {
+					$("#Pipeline").empty();
+					$("#Pipeline").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
 				}
 
 			}
