@@ -240,10 +240,11 @@
 				detailsfetch(data.dataset_gid)
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
-				$("#savesubmit").prop('disabled', true)
+				$("#savesubmit").hide();
 				$("#adddataset").hide();
 				$("#datasetfieldadd").hide();
-				$("#grid_datasetfield .k-grid-edit").hide();
+				$(".k-grid-edit").hide();
+				$("#btnsubmit").hide();
 			}
 		}
 	}
@@ -371,6 +372,10 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+				$(".k-grid-edit").hide();
+					$(".k-grid-delete").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -387,12 +392,12 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
