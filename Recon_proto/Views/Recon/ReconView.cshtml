@@ -173,9 +173,9 @@
 									<div class="tab-content">
 										@*Dataset*@
 										<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
+											<div class="panel panel-default" style="margin-top:5px;">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' id="btn_new_dataset" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													@*<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 													<div class="col-xs-12">
 														<div id="gd_datasetrecon">
@@ -188,9 +188,9 @@
 										</div>
 										@*Datasetmapping*@
 										<div class="tab-pane fade" id="navs-pills-top-Datasetmapping" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
+											<div class="panel panel-default" style="margin-top:5px;">
 												<div class="panel-body">
-													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="btn_new_datasetmap" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 													<div class="col-xs-12">
 														<div id="maingrid">
 														</div>
@@ -254,9 +254,9 @@
 										</div>
 										@*Rule*@
 										<div class="tab-pane fade" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
+											<div class="panel panel-default" style="margin-top:15px;">
 												<div class="panel-body">
-													<div class="col-xs-12" style="margin-top:25px;">
+													<div class="col-xs-12">
 														<div id="gd_rule">
 															<div id="grid_rule">
 															</div>
@@ -272,7 +272,7 @@
 							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 								<div class="col-sm-4"></div>
 								<div class="col-sm-4" style="text-align:center">
-									<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
 									<a href="../Recon/ReconList" class="btn btn-sm cancel_btn me-2">Cancel</a>
 								</div>
 								<div class="col-sm-4"></div>
@@ -436,6 +436,7 @@
 		grid_datasetrecon([]);
 		grid_recondatasetmapping([]);
 		recontypeconfig();
+
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
@@ -643,6 +644,17 @@
 
 				});
 			}
+		}
+		if ($("#txtmode").val() == "View") {
+			$("#reconcode").prop('disabled', true);
+			$("#cmbrecontype").prop('disabled', true);
+			$("#ReconName").prop('disabled', true);
+			$("#period_from").prop('disabled', true);
+			$("#period_to").prop('disabled', true);
+			$('#untillactive').prop('disabled', true);
+			$("#btn_new_dataset").hide();
+			$("#btn_new_datasetmap").hide();
+			$("#btnsubmit").hide();	
 		}
 	}
 	function detailfetch(reconcode) {
@@ -934,12 +946,16 @@
 					}
 				}
 			},
-			height: 250,
+			height: 220,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
 				var rows = $('#grid_datasetrecon').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-edit").hide();
+					$(".k-grid-delete").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -956,12 +972,12 @@
 					{
 						name: "edit",
 						id: "Edit",
-						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsdataset()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsdataset()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1148,7 +1164,7 @@
 					}
 				}
 			},
-			height: 250,
+			height: 220,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1308,6 +1324,7 @@
 		var chkval = datamapping;
 		var data = datamapping;
 		var i = 0;
+		if ($("#txtmode").val() != "View") {
 		columns.push({
 			field: entryIndex - 1,
 			title: 'Action',
@@ -1317,6 +1334,7 @@
 			editable: true,
 			width: '100px'
 		});
+		}
 
 		var entryIndex = "entries[" + i + "]";
 		for (var key in data[0]) {
@@ -1362,7 +1380,7 @@
 		});
 		var configuration = {
 			pageSize: 10,
-			height: 250,
+			height: 220,
 			navigatable: true,
 			groupable: false,
 			editable: false,
@@ -1378,6 +1396,7 @@
 			//		}
 			//	}
 			//},
+			pageable: true,
 			pageable: {
 				pageSize: 10,
 				buttonCount: 4
@@ -1525,7 +1544,7 @@
 					}
 				}
 			},
-			height: 250,
+			height: 220,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1867,7 +1886,7 @@
 		$("#grid_rule").kendoGrid({
 			dataSource: {
 				data: data,
-				pageSize: 10,
+				pageSize: 5,
 				schema: {
 					model: {
 						fields: {
@@ -1883,7 +1902,7 @@
 					}
 				}
 			},
-			height: 250,
+			height: 235,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
