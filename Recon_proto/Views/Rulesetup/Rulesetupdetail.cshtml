@@ -9,7 +9,9 @@
 		.editable-dropdown {
 			position: relative;
 		}
-
+		.mb-3 {
+			margin-bottom: 0.5rem !important;
+		}
 		.form-select1 {
 			display: block;
 			width: 75%;
@@ -308,7 +310,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+						<div class="row" style="margin-top:5px;padding-right:5px">
 							<div class="col-sm-2">
 								<label for="" class="form-label">Rule Applied On&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<select id="RuleAppliedOn" class="form-select form-control" style=" width: 80%;" onchange="RuleApplied()">
@@ -505,7 +507,7 @@
 							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 								<div class="col-sm-4"></div>
 								<div class="col-sm-4" style="text-align:center">
-									<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+									<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
 									<a href="../Rulesetup/Rulesetup" class="btn btn-sm cancel_btn me-2">Cancel</a>
 								</div>
 								<div class="col-sm-4"></div>
@@ -831,6 +833,23 @@
 
 				});
 			}
+		}
+		if ($("#txtmode").val() == "View") {
+			$("#ruleName").prop('disabled', true);
+			$("#cmbreconname").prop('disabled', true);
+			$("#ruleorder").prop('disabled', true);
+			$("#period_from").prop('disabled', true);
+			$("#period_to").prop('disabled', true);
+			$('#untillactive').prop('disabled', true);
+			$('#RuleAppliedOn').prop('disabled', true);
+			$('#cmbgroupflag').prop('disabled', true);
+			$('#sourcedataset').prop('disabled', true);
+			$('#souaccmode').prop('disabled', true);
+			$('#comdataset').prop('disabled', true);
+			$('#comaccmode').prop('disabled', true);
+			$("#btn_new_dataset").hide();
+			$("#btn_new_datasetmap").hide();
+			$("#btnsubmit").hide();
 		}
 	}
 	function RuleApplied() {
@@ -1500,6 +1519,11 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
 			},
 			sortable: false,
 			selectable: "row",
@@ -1517,7 +1541,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saverulecondition()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saverulecondition()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -1527,7 +1551,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsrulecondition()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsrulecondition()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1915,6 +1939,11 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_sourceidentifier').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -1932,7 +1961,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saveIdentifier()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saveIdentifier()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -1942,7 +1971,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsidentifier()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsidentifier()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "50px",
 			},
@@ -2027,7 +2056,6 @@
 			}],
 			editable: true,
 		});
-		filter_field_list = cmbsourcefield();
 		join_condition_list = [{ code: '', desc: '' },{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 
 		function OnEdit(e) {
@@ -2153,6 +2181,11 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_comparisionidentifier').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -2170,7 +2203,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saveIdentifierC()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saveIdentifierC()'  class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -2180,7 +2213,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsidentifier1()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsidentifier1()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -2665,6 +2698,11 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_grouping').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -2682,7 +2720,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='savegrouping()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='savegrouping()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -2692,7 +2730,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsgrouping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsgrouping()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "10px",
 			},
@@ -2885,6 +2923,11 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_sourceorder').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -2901,7 +2944,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saverulesourceorder()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:10%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saverulesourceorder()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:10%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -2911,7 +2954,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJssourceorder()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJssourceorder()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -3047,6 +3090,11 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_comparisonorder').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -3063,7 +3111,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saverulecomparisonorder()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:10%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saverulecomparisonorder()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:10%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -3073,7 +3121,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJscomparisonorder()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJscomparisonorder()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},

@@ -81,7 +81,7 @@ namespace Recon_proto.Controllers
                         objcat_lst.Add(objcat);
                         ViewBag.user_gid = objcat.user_gid;
                         ViewBag.user_name = objcat.user_name;
-                        HttpContext.Session.SetString("user_code", result.Rows[i]["user_gid"].ToString());
+                        HttpContext.Session.SetString("user_code", model.UserName);
                         HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
                         //HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
                         //HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());

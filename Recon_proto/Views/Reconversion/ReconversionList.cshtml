@@ -81,7 +81,7 @@
 							<input class="form-control" type="hidden" id="rulegid">
 						</div>
 						<div class="col-md-3" style="margin-top: 2%;">
-							<button type="button" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="reconsubmit()">
+						<button type="button" id="btnsubmit" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="reconsubmit()">
 								Submit
 							</button>
 						</div>
@@ -99,6 +99,10 @@
 		grid_reconverion([]);
 		$("#navhead").text("Recon Rule Version");
 		gridlist();
+		var screen_code = rolevalidatescreen('rule_version')
+		if (screen_code[0].process == "N") {
+			$("#btnsubmit").hide();
+		}
 	});
 	function gridlist() {
 		//recon name

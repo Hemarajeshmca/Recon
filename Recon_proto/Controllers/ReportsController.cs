@@ -485,7 +485,7 @@ namespace Recon_proto.Controllers
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             try
             {
-                List<TransactionRpt_model> objcat_3st = new List<TransactionRpt_model>();
+                //List<TransactionRpt_model> objcat_3st = new List<TransactionRpt_model>();
                 DataSet result2 = new DataSet();
                 DataSet dt = new DataSet();
                 DataTable Table = new DataTable();

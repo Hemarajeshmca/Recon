@@ -122,7 +122,7 @@
 						</div>
 					</div>
 					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="button" onclick="showPreview()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
+						<button type="button" onclick="showPreview()" id="btnpreview" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
 							Preview
 						</button> &nbsp;&nbsp;&nbsp;
 					</div>
@@ -376,6 +376,10 @@
 		getreconlist();
 		grid_rule([]);
 		grid_dataset([]);
+		var screen_code = rolevalidatescreen('rule_preview')
+		if (screen_code[0].process == "N") {
+			$("#btnpreview").hide();
+		}
 	});
 
 	function getreconlist() {
