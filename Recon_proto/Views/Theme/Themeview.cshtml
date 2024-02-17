@@ -1,0 +1,696 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-filter.k-state-active {
+			background-color: initial !important;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 82%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="lbldatasetcode" class="form-label">Theme Code</label>
+									<input class="form-control" type="text" id="txtthemecode" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblmode" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblstatus" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../Theme/Themelist"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10px;">
+						<div class="col-sm-3">
+							<label class="form-label" for="">Theme Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" id="themename">
+							<input class="form-control" type="hidden" id="themegid" value=0;>
+						</div>
+						<div class="col-sm-3">
+							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()">
+							</select>
+						</div>
+						<div class="col-sm-2">
+							<label class="form-label" for="">Clone Dataset&nbsp;</label>
+							<select id="Cmbclone" class="form-select form-control">
+							</select>
+						</div>
+						<div class="col-sm-2" style="margin-top:30px">
+							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
+						</div>
+					</div>
+
+					<div class="row" style="margin-top:20px;">
+						<div class="col-xs-12">
+							<div id="gd_themefilter">
+								<div id="grid_themefilterfield">
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="row" style="padding-bottom:8px;padding-left:10px;padding-right:10px">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
+							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+							<a href="../Theme/ThemeList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		getGridComboList();
+		$("#navhead").text("Theme");
+	});
+	function getGridComboList() {
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbrecon").empty();
+				$("#cmbrecon").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#cmbrecon").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		var in_master_code = "QCD_RS_ACC_MODE";
+		var in_user_code = "sundar";
+		var response = [];
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				response = data;
+				$("#Cmbdatasetaccmode").empty();
+				$("#Cmbdatasetaccmode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#Cmbdatasetaccmode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		load()
+	}
+	function reconchange() {
+		//sorce dataset
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#cmbsourcefield").empty();
+					$("#cmbsourcefield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						$("#cmbsourcefield").append($('<option>', {
+							value: item.recon_field_desc,
+							text: item.recon_field_name
+						}).data('code', item.recon_field_type));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		cmbsourcefield();
+	};
+	function load() {
+		if (getlocalStorage('btn_clk_val') == "Create") {
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#txtstatus").val("Draft");
+			grid_themefilter([]);
+		}
+		else if (getlocalStorage('btn_clk_val') == "Edit") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#themename").val(data.theme_desc);
+				$("#cmbrecon").val(data.recon_code);
+				$("#txtthemecode").val(data.theme_code);
+				$("#themegid").val(data.theme_gid);
+				detailsfetch(data.theme_code);
+			}
+		} else if (getlocalStorage('btn_clk_val') == "View") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				detailsfetch(data.theme_code)
+				$("#Cmbclone").prop('disabled', true)
+				$("#btnclone").prop('disabled', true)
+				$("#savesubmit").hide();
+				$("#adddataset").hide();
+				$("#datasetfieldadd").hide();
+				$(".k-grid-edit").hide();
+				$("#btnsubmit").hide();
+			}
+		}
+	}
+	function grid_themefilter(data) {
+		try {
+			var join_condition_list = "";
+			var filter_field_list = "";
+			var filter_criteria_list = "";
+			$("#grid_themefilterfield").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 5,
+					schema: {
+						model: {
+							fields: {
+								themefilter_gid: { type: "string", defaultValue: "0" },
+								theme_code: { type: "string" },
+								filter_field_code: { type: "string", defaultValue: "" },
+								filter_field: { type: "string" },
+								filter_criteria: { type: "string", defaultValue: "" },
+								ident_value: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" },
+								join_condition: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 300,
+				groupable: false,
+				//dataBinding: setDefaultValues,
+				edit: OnEdit,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_themefilterfield').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+
+				},
+				sortable: false,
+				selectable: "row",
+				filterable: false,
+				navigatable: true,
+				pageable: true,
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				toolbar: "<a class='k-grid-add' onclick=saveheader()  href='' > <span class='fa fa-plus' style = 'color:Black' > </span></a> ",
+				columns: [{
+					command: [
+						{
+							name: "save",
+							id: "Save",
+							template: "<a href=''onclick='savedetail()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						},
+
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteJsrulecondition()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						},
+					], title: "Action&nbsp;", width: "40px",
+				},
+				{
+					title: "(", width: 20,
+					template: '#=sel_checkbox(data)#'
+				},
+				{
+					field: "themefilter_gid",
+					title: "themefilter_gid",
+					hidden: true,
+				},
+				{
+					field: "theme_code",
+					title: "theme_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "filter_field_code",
+					title: "filter_field_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "filter_field",
+					title: "Filter Field",
+					width: 100,
+					editor: function (container, options) {
+						combo_editor_man_theme(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_themefilterfield")
+					},
+				},
+				{
+					field: "filter_criteria",
+					title: "Filter Criteria",
+					width: 100,
+					editor: function (container, options) {
+						combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_themefilterfield", "SOURCE")
+					},
+				},
+				{
+					field: "ident_value",
+					title: "Identifier Value",
+					width: 100,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true
+				},
+				{
+					title: ")", width: 20,
+					template: '#=sel_checkbox1(data)#'
+				},
+
+				{
+					field: "join_condition",
+					title: "Joins",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_themefilterfield")
+					},
+					width: 40,
+				}],
+				editable: true,
+			});
+			join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+
+		function OnEdit(e) {
+			try {
+				setDefaultValues(e);
+			}
+			catch (err) {
+				javascript_log4j_root(arguments.callee.name, err);
+			}
+		}		
+	}
+	var gridRowID = -1;
+	function sel_checkbox(data) {
+		gridRowID++;
+		var isChecked = data.open_parentheses_flag;
+		var con = "";
+		if (isChecked == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel_' + data.themefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	var gridRowID1 = -1;
+	function sel_checkbox1(data) {
+		gridRowID1++;
+		var isChecked1 = data.close_parentheses_flag;
+		var con = "";
+		if (isChecked1 == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel1_' + data.themefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.filter_field;
+		} else {
+			var codeValue = selectedItem.filter_field;
+		}
+		var in_recon_code = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_criteria") {
+					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.filter_criteria_input = undefined;
+				}
+				if (datafield == "ident_criteria") {
+					if (datafield == "ident_criteria" && selectedItem.ident_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.ident_criteria_input = undefined;
+				}
+			}
+		});
+	}
+	function combo_editor_man_theme(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+
+		debugger;
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function saveheader() {
+		try {
+			var themename = $("#themename").val();
+			var cmbrecon = $("#cmbrecon").val();
+			var theme_code = $("#txtthemecode").val();
+			var clone_theme = $("#Cmbclone").val();
+			var clone_theme = "";
+			var action = "";
+			var theme_gid = $("#themegid").val();
+
+			if (theme_gid > 0) {
+				theme_gid = $("#themegid").val();
+				return;
+			} else {
+				theme_gid = 0;
+			}
+
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "vijay";
+			var status = "D"
+			$.ajax({
+				type: "POST",
+				url: '../theme/themeheader',
+				dataType: 'json',
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						//$.alert({
+						//	title: 'Recon',
+						//	content: data.out_msg,
+						//	type: 'green',
+						//});
+						$("#themegid").val(data.in_theme_gid);
+						$("#txtthemecode").val(data.in_theme_code);
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+
+	function savedetail() {
+		try {
+			var grid = $("#grid_themefilterfield").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var theme_code = $("#txtthemecode").val();
+			var recon_field = model.filter_field_code;
+			var filter_criteria = model.filter_criteria;
+			var filter_value = model.ident_value;
+			var in_open_flag = "";
+			if ($('#chk_sel_' + model.themefilter_gid).is(":checked")) {
+				in_open_flag = "Y";
+			} else {
+				in_open_flag = "N";
+			}
+			var in_close_flag = "";
+			if ($('#chk_sel1_' + model.themefilter_gid).is(":checked")) {
+				in_close_flag = "Y";
+			} else {
+				in_close_flag = "N";
+			}
+			var in_join_condition = model.join_condition;
+			var action = "";
+			var action_by = ""
+			var themefilter_gid = model.themefilter_gid;
+			if (themefilter_gid == "0") {
+				themefilter_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var active_status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../theme/themedetail',
+				dataType: 'json',
+				data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					if (res[0].out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+
+	function detailsfetch(theme_code) {
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themedetailfetch',
+			dataType: 'json',
+			data: JSON.stringify({ theme_code: theme_code }),
+			async: false,
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response != null) {
+					var res = JSON.parse(response);
+					//$("#gd_themefilter").empty();
+					//$("#gd_themefilter").append("<div id='gd_themefilter'></div>");
+					grid_themefilter(res.themedetail);
+					if (response.length > 0) {
+						$("#Cmbclone").val();
+						$("#Cmbclone").prop('disabled', true)
+						$("#btnclone").prop('disabled', true)
+					}
+				}
+				else {
+					grid_themefilter([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+</script>
