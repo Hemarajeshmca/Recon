@@ -215,7 +215,8 @@ namespace Recon_proto.Controllers
 			public String? in_recon_date_field { get; set; }
 			public String? in_recon_value_flag { get; set; }
 			public String? in_recon_value_field { get; set; }
-			public Double in_threshold_plus_value { get; set; }
+			public Double in_
+			{ get; set; }
 			public Double in_threshold_minus_value { get; set; }
 			public String in_active_reason { get; set; }
 			public String in_action { get; set; }

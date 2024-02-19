@@ -1,0 +1,814 @@
+﻿@{
+	ViewData["Title"] = "Report Templete";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.editable-dropdown {
+			position: relative;
+		}
+
+		.form-select1 {
+			display: block;
+			width: 75%;
+			background-clip: padding-box;
+			padding: 0.4375rem 1.875rem 0.4375rem 0.875rem;
+			-moz-padding-start: calc(0.875rem - 3px);
+			font-size: 0.7375rem;
+			font-weight: 400;
+			line-height: 1.53;
+			color: #697a8d;
+			background-color: #fff;
+			background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%2867, 89, 113, 0.6%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e);
+			background-repeat: no-repeat;
+			background-position: right 0.875rem center;
+			background-size: 17px 12px;
+			border: 1px solid #d9dee3;
+			border-radius: 0.375rem;
+			transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+		}
+
+		#dropdown-list {
+			list-style: none;
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			border: 1px solid #ccc;
+			background-color: #fff;
+			z-index: 1;
+		}
+
+			#dropdown-list li {
+				padding: 5px;
+				cursor: pointer;
+			}
+
+		#editable-input {
+			width: 100%;
+		}
+
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.action-button {
+			width: 120px;
+			background: #673AB7;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 0px 10px 5px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		.action-button-previous {
+			width: 100px;
+			background: #616161;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 5px 10px 0px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		div.k-header.k-grid-toolbar {
+			background-image: none;
+		}
+
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: white !important;
+		}
+
+		.control-label.required:after {
+			content: "*";
+			color: red;
+		}
+
+		span.k-tooltip {
+			white-space: pre-line;
+		}
+
+		span.k-tooltip {
+			position: fixed;
+			display: -webkit-box;
+			border-width: 1px;
+			padding: 2px 5px 1px 6px;
+		}
+
+		.tab-content {
+			padding: 0.9rem;
+			border-radius: 0.375rem;
+		}
+
+		.k-grid .k-grouping-header {
+			height: 20px;
+			font-size: 12px;
+		}
+
+		.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
+			float: left;
+		}
+
+		.k-grid-header {
+			background-color: #FEE7D5;
+			color: black;
+			font-size: 12px;
+		}
+
+			.k-grid-header th.k-header.k-filter-row th {
+				text-align: center;
+			}
+
+		.k-grid td {
+			padding: 0.3em 0.3em;
+			font-size: 12px;
+		}
+
+		.k-grid .k-grouping-header {
+			height: 20px;
+			font-size: 12px;
+		}
+
+		.k-grouping-header .k-group-indicator, .k-pivot-toolbar .k-button {
+			height: 20px !important;
+		}
+
+		.k-state-selected, .k-state-selected:link, .k-state-selected:visited, .k-list > .k-state-selected, .k-list > .k-state-highlight, .k-panel > .k-state-selected, .k-ghost-splitbar-vertical, .k-ghost-splitbar-horizontal, .k-draghandle.k-state-selected:hover, .k-scheduler .k-scheduler-toolbar .k-state-selected, .k-scheduler .k-today.k-state-selected, .k-marquee-color {
+			border-color: #872E7B !important;
+			color: #e74949 !important;
+		}
+
+		.k-grid-content > table > tbody > .k-alt {
+			/*background: #E0E6F8;*/
+			line-height: 1px;
+		}
+
+		.form-horizontal .control-label {
+			text-align: left;
+		}
+
+		div.k-grid tbody .k-button {
+			min-width: 0;
+		}
+
+		.form-horizontal .control-label {
+			font-weight: 400;
+		}
+
+		.k-grid .k-autocomplete.k-state-default, .k-grid .k-picker-wrap.k-state-default, .k-grid .k-numeric-wrap.k-state-default {
+			height: 18px;
+		}
+
+		.content-wrapper, .right-side {
+			background-color: #e7e7e7;
+		}
+
+		.info-box-icon {
+			background: white;
+		}
+
+		div.k-window-content {
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.info-label {
+			display: inline-block;
+			cursor: pointer;
+			color: blue;
+		}
+
+		.info-content {
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			border: 1px solid #ccc;
+			padding: 10px;
+			z-index: 1;
+		}
+
+		.info-label:hover .info-content,
+		.info-label.active .info-content {
+			display: block;
+		}
+
+		.nav-align-top > .tab-content, .nav-align-right > .tab-content, .nav-align-bottom > .tab-content, .nav-align-left > .tab-content {
+			box-shadow: none !important;
+			margin-top: 18px !important;
+		}
+
+		.nav-align-top > .tab-content, .nav-align-right > .tab-content, .nav-align-bottom > .tab-content, .nav-align-left > .tab-content {
+			box-shadow: none !important;
+			margin-top: 18px;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 84%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Templete code</label>
+									<input class="form-control" type="text" id="reporttemplate_code" value="" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5"></div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../Reports/ReportTemplete"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="box box-orange" style="height:auto;">
+							<div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
+								<div class="col-sm-4">
+									<label for="" class="form-label">Report Templete Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<input class="form-control" id="rt_name" name="ReportTemplete" type="text">
+									<input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Report Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select id="cmbreporttype" class="form-select form-control">
+									</select>
+								</div>
+								<div class="col-sm-2"> </div>
+								<div class="col-sm-2"> </div>
+							</div>
+
+							<div class="row">
+								<div class="nav-align-top mb-3 mt-3">
+									<ul class="nav nav-pills mb-2" role="tablist">
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link active"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-ReportFilter"
+													aria-controls="navs-pills-top-ReportFilter"
+													aria-selected="true">
+												Report Filter
+											</button>
+										</li>
+									</ul>
+									<div class="tab-content">
+										@*Dataset*@
+										<div class="tab-pane fade show active" id="navs-pills-top-ReportFilter" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="col-xs-12">
+														<div id="gd_tempfilter">
+															<div id="grid_tempfilter">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										</div>
+								</div>
+							</div>
+
+				@*			<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+								<div class="col-sm-4"></div>
+								<div class="col-sm-4" style="text-align:center">
+									<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+									<a href="../Recon/ReconList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+								</div>
+								<div class="col-sm-4"></div>
+							</div>*@
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	
+</body>
+</html>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Recon");
+		kendodate_format();
+		detailfetch();
+
+	});
+
+	function getreportlist() {
+		debugger;
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Reports/ReportList',
+			dataType: 'json',
+			data: JSON.stringify({}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				$("#cmbreporttype").empty();
+				$("#cmbreporttype").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbreporttype").append($('<option>', {
+						value: item.report_code,
+						text: item.report_desc
+					}));
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+
+	function detailfetch() {
+		if (getlocalStorage('btn_clk_val') == "Create") {
+			gridmap([]);
+		}
+		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				$.ajax({
+					type: "POST",
+					url: '../Reports/ReportList',
+					dataType: 'json',
+					data: JSON.stringify({}),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						debugger;
+						$("#cmbreporttype").empty();
+						$("#cmbreporttype").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(response, function (index, item) {
+							$("#cmbreporttype").append($('<option>', {
+								value: item.report_code,
+								text: item.report_desc
+							}));
+						});
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+				});
+				//detail fetch
+				$.ajax({
+					type: "POST",
+					url: '../Reports/reporttemplatefetch',
+					dataType: 'json',
+					data: JSON.stringify({ in_reporttemplate_code: data.reporttemplate_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						debugger;
+						if (response != " ") {
+							debugger;
+							var res = JSON.parse(response);
+							$("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
+							$("#txtmode").val(getlocalStorage('btn_clk_val'));
+							$("#txtstatus").val("Active");
+							$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
+							$("#rt_name").val(res.Table[0].reporttemplate_name);
+							$("#cmbreporttype").val(res.Table[0].report_code);
+							$("#cmbreporttype").prop("disabled", true);
+							grid_tempfilter(res.Table1);
+						}
+						else {
+							//grid_datasetrecon([]);
+							//gridmap([]);
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
+		}
+
+	}
+
+	function grid_tempfilter(data){
+		var filter_criteria_list = "";
+		var join_condition_list = "";
+		var report_field_list = "";
+		$("#grid_tempfilter").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							reporttemplatefilter_gid: { type: "string", defaultValue: "0" },
+							reporttemplate_code: { type: "string" },
+							filter_seqno: { type: "string" },
+							report_field : {type: "string"},
+							filter_criteria: {type: "string"},
+							filter_value: {type: "string"},
+							open_parentheses_flag: { type: "string" },
+							close_parentheses_flag: { type: "string" },
+							join_condition: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			//dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_tempfilter').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: "row",
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a class='k-grid-add' href='' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='savereportFilter()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					//{
+					//	name: "edit",
+					//	id: "Edit",
+					//	template: "<a href=''class='k-grid-edit'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					//},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJsrulecondition()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				title: "(", width: 20,
+				template: '#=sel_checkbox(data)#'
+			},
+			{
+				field: "reporttemplatefilter_gid",
+				title: "reporttemplatefilter_gid",
+				hidden: true,
+			},
+			{
+				field: "reporttemplate_code",
+				title: "reporttemplate_code",
+				hidden: true,
+			},
+			{
+				field: "filter_seqno",
+				title: "Seq No",
+				width: 50,
+			},
+			{
+				field: "report_field_code",
+				title: "report_field",
+				width: 120,
+				hidden: true
+			},
+			{
+				field: "report_field",
+				title: "Report Field",
+				editor: function (container, options) {
+					combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field_code", "grid_tempfilter")
+				},
+				width: 120,
+			},
+			{
+				field: "filter_criteria_code",
+				title: "Filter Criteria",
+				width: 120,
+				hidden:true
+			},
+			{
+				field: "filter_criteria",
+				title: "Filter criteria",
+				editor: function (container, options) {
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria_code", "grid_tempfilter", "SOURCE")
+				},
+				editable: true,
+				width: 120
+			},
+			{
+				field: "filter_value",
+				title: "Filter Value",				
+				width: 120
+			},
+			{
+				field: "close_parentheses_flag",
+				title: ")",		
+				template: '#=sel_checkbox1(data)#',
+				width: 20
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_tempfilter")
+				},
+				width: 60
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+		});
+		
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+
+	}
+
+	function OnEdit(e) {
+		try {
+			setDefaultValues(e);
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+	}
+
+	var gridRowID = -1;
+	function sel_checkbox(data) {
+		gridRowID++;
+		var isChecked = data.open_parentheses_flag;
+		var con = "";
+		if (isChecked == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+	var gridRowID1 = -1;
+	function sel_checkbox1(data) {
+		gridRowID1++;
+		var isChecked1 = data.close_parentheses_flag;
+		var con = "";
+		if (isChecked1 == "true") {
+			con = 'checked';
+		}
+		return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+	}
+
+	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		debugger;
+		var arr = [];
+		var in_master_code = "QCD_RP_CONSTRAINT";
+		var in_user_code = "sundar";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response.length > 0) {
+					for (i = 0; response.length > i; i++) {
+						var list = {};
+						list.code = response[i].masterCode;
+						list.desc = response[i].masterName;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		debugger;
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				debugger;
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	
+	function combo_editor_reportfiled(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var data = {};
+		data.in_reportparam_gid = 0;
+		data.in_report_code = $("#cmbreporttype").val();
+		data.in_action = '';
+		$.ajax({
+			type: "POST",
+			url: "../Reports/getreportparam",
+			dataType: "json",
+			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response.length > 0) {
+					for (i = 0; response.length > i; i++) {
+						var list = {};
+						list.code = response[i].report_code;
+						list.desc = response[i].reportparam_value;
+						arr1.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		debugger;
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				debugger;
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+
+
+	function savereportFilter() {
+		debugger;
+		try {
+			var grid = $("#grid_tempfilter").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var data = {};
+			data.in_reporttemplatefilter_gid = 0;
+			data.in_reporttemplate_code = $("#reporttemplate_code").val();
+			data.in_filter_seqno = model.filter_seqno;
+			data.in_report_field = model.report_field_code;
+			data.in_filter_criteria = model.filter_criteria_code;
+			data.in_filter_value = model.filter_value;
+			data.in_join_condition = model.join_condition;
+			data.in_action = 'INSERT'
+			data.in_active_status = 'Y';
+			data.in_open_parentheses_flag = "";
+			if ($('#chk_sel_' + model.reporttemplatefilter_gid).is(":checked")) {
+				data.in_open_parentheses_flag = "Y";
+			} else {
+				data.in_open_parentheses_flag = "N";
+			}
+			data.in_close_parentheses_flag = "";
+			if ($('#chk_sel1_' + model.reporttemplatefilter_gid).is(":checked")) {
+				data.in_close_parentheses_flag = "Y";
+			} else {
+				data.in_close_parentheses_flag = "N";
+			}
+			$.ajax({
+				type: "POST",
+				url: '../Reports/reporttemplatefilter',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						var res = JSON.parse(response);
+						if(res.length > 0) {
+							$.alert({
+								title: 'Recon',
+								content: res[0].out_msg,
+								type: 'green',
+							});
+						}			
+					}
+					else {}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+
+</script>
