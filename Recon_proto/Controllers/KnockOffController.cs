@@ -872,6 +872,54 @@ namespace Recon_proto.Controllers
             }
         }
 
-        #endregion
-    }
+		#endregion
+
+
+		#region getRuleAgainstJob
+		[HttpPost]
+		public JsonResult getRuleAgainstJob([FromBody] getRuleAgainstJobmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					// client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getruleagainstjob", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "getruleagainstjob");
+				return Json(ex.Message);
+			}
+
+		}
+
+        public class getRuleAgainstJobmodel
+        {
+            public int in_job_gid { get; set; }
+        }
+
+		#endregion
+	}
 }

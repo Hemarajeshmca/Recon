@@ -50,10 +50,19 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
-    
-    #region Reportlist
 
-		public JsonResult ReportList()
+        public IActionResult ReportTemplete()
+        {
+            return View();
+        }
+        public IActionResult ReportTempletedetail()
+        {
+            return View();
+        }
+
+        #region Reportlist
+
+        public JsonResult ReportList()
 
 		{
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -854,5 +863,180 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
+
+        #region reportTemplete
+        [HttpGet]
+        public JsonResult reportTempletelist()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+                    var response = client.GetAsync("getReportTemplateList").Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getReportTemplateList");
+                return Json(ex.Message);
+            }
+        }
+        #endregion
+        //reporttemplate
+        [HttpPost]
+        public JsonResult reporttemplate([FromBody] reporttemplateModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("reportTemplate", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "reportTemplate");
+                return Json(ex.Message);
+            }
+        }
+        public class reporttemplateModel
+        {
+            public Int32? in_reporttemplate_gid { get; set; }
+            public String? in_reporttemplate_code { get; set; }
+            public String? in_reporttemplate_name { get; set; }
+            public String? in_report_code { get; set; }
+            public String? in_action { get; set; }
+            public String? in_active_status { get; set; }
+        }
+        //Report Templete fetch
+        [HttpPost]
+        public JsonResult reporttemplatefetch([FromBody] reporttemplatefetchModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("fetchReportTemplate", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "fetchReportTemplate");
+                return Json(ex.Message);
+            }
+        }
+        public class reporttemplatefetchModel
+        {
+            public String? in_reporttemplate_code { get; set; }
+        }
+        #region reportfilter
+        public JsonResult reporttemplatefilter([FromBody] reporttemplatefilterModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("reporttemplatefilter", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "reporttemplatefilter");
+                return Json(ex.Message);
+            }
+        }
+        public class reporttemplatefilterModel
+        {
+            public Int32? in_reporttemplatefilter_gid { get; set; }
+            public String? in_reporttemplate_code { get; set; }
+            public Int32? in_filter_seqno { get; set; }
+            public string? in_report_field { get; set; }
+            public string? in_filter_criteria { get; set; }
+            public string? in_filter_value { get; set; }
+            public string? in_open_parentheses_flag { get; set; }
+            public string? in_close_parentheses_flag { get; set; }
+            public string? in_join_condition { get; set; }
+            public string? in_action { get; set; }
+            public String? in_active_status { get; set; }
+        }
+        #endregion
+
     }
 }

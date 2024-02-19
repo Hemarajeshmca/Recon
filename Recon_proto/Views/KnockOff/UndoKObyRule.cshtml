@@ -262,6 +262,14 @@
 
     function showjob() {
         debugger;
+        //$("#RuleList").removeClass('nav-link active');
+        //$("#RuleList").toggleClass('nav-link');
+        //$("#navs-pills-Joblist").toggleClass('tab-pane fade active in');
+        //$("#navs-pills-RuleList").toggleClass('tab-pane fade');
+        //$("#Joblist").removeClass('nav-link');
+        //$("#Joblist").toggleClass('nav-link active');
+        //$("#navs-pills-RuleList").hide();
+        //$("#navs-pills-Joblist").show();
         var reconcode = $("#cmbreconname").val();
         var period_from = $("#initiated_from").val();
         var ts = period_from.split("/");
@@ -278,21 +286,14 @@
             success: function (response) {
                 debugger;
                 var result = JSON.parse(response);
-                console.log(`result.Table`, result.Table);
-                console.log(`result.Table1`, result.Table1);
                 if (result.Table.length > 0) {
                     debugger;
                     undojob_grid(result.Table);    
                    // undorule_grid(result.Table1);
                 } 
-                if (result.Table1.length > 0) {
-                    debugger;
-                    undorule_grid(result.Table1);
-                }
                 else {
                     debugger;
                     undojob_grid([]);
-                    undorule_grid([]);
                 }
             },
             error: function (er) {
@@ -556,17 +557,44 @@
     }
 
     function validateNextdataset() {
+        var selected_job = '';
         var grid = $("#grid_job").data("kendoGrid");
+        var checkedrows = $("#job_selected:checked", grid.tbody).closest("tr");
+        for (var i = 0; i < checkedrows.length; i++) {
+           selected_job = grid.dataItem(checkedrows[i]);
+        }
         var objpplmapupdlist = [];
         var dropdownid = "";
-        $("#Joblist").removeClass('nav-link active');
-        $("#Joblist").toggleClass('nav-link');
-        $("#navs-pills-RuleList").toggleClass('tab-pane fade active in');
-        $("#navs-pills-Joblist").toggleClass('tab-pane fade');
-        $("#RuleList").removeClass('nav-link');
-        $("#RuleList").toggleClass('nav-link active');
-        $("#navs-pills-Joblist").hide();
-        $("#navs-pills-RuleList").show();
+        $.ajax({
+            type: "POST",
+            url: '../KnockOff/getRuleAgainstJob',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ in_job_gid: selected_job.job_gid }),
+            success: function (response) {
+                debugger;
+                var result = JSON.parse(response);
+                if (result.length > 0) {
+                    debugger;
+                    undorule_grid(result);
+                } else {
+                    undorule_grid([]);
+                }
+                $("#Joblist").removeClass('nav-link active');
+                $("#Joblist").toggleClass('nav-link');
+                $("#navs-pills-RuleList").toggleClass('tab-pane fade active in');
+                $("#navs-pills-Joblist").toggleClass('tab-pane fade');
+                $("#RuleList").removeClass('nav-link');
+                $("#RuleList").toggleClass('nav-link active');
+                $("#navs-pills-Joblist").hide();
+                $("#navs-pills-RuleList").show();
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
     }
 
     function validatePrevdp() {
@@ -582,6 +610,7 @@
 
     function undoRule() {
         debugger;
+        var selected_jobid = '';
         var reconcode = $("#cmbreconname").val();
         var grid_job = $("#grid_job").data("kendoGrid");
         var checkedrows = $("#job_selected:checked", grid_job.tbody).closest("tr");
@@ -593,7 +622,7 @@
         for (var i = 0; i < checkedrows.length; i++) {
             selected_ruleGid = grid_rule.dataItem(checkedrows[i]);
         }
-        if (selected_ruleGid && reconcode && selected_jobid) {
+        if (selected_ruleGid && reconcode && selected_jobid.job_gid) {
         $.ajax({
             url: '../KnockOff/kobyRule',
             type: 'POST',
@@ -622,7 +651,7 @@
         } else if (!selected_ruleGid) {
             $.alert({
                 title: 'Recon',
-                content: 'Please select Rule',
+                content: 'No Rule Selected to KO',
                 type: 'red',
             });
         } else if (!reconcode) {
@@ -631,7 +660,7 @@
                 content: 'Please select Recon',
                 type: 'red',
             });
-        } else if (!selected_jobid) {
+        } else if (!selected_jobid.job_gid) {
             $.alert({
                 title: 'Recon',
                 content: 'Please select Job',
