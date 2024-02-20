@@ -43,8 +43,8 @@ namespace Recon_proto.Controllers
                 {
                     string Urlcon = "Recon/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
-                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
-                    client.DefaultRequestHeaders.Accept.Clear();
+					//client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
 					client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
 					client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
@@ -187,7 +187,8 @@ namespace Recon_proto.Controllers
                     for (int i = 0; i < result.Rows.Count; i++)
                     {
                         objList.in_recon_gid = Convert.ToInt16(result.Rows[i]["in_recon_gid"]);
-                        objList.out_msg = result.Rows[i]["out_msg"].ToString();
+						objList.in_recon_code = result.Rows[i]["in_recon_code"].ToString();
+						objList.out_msg = result.Rows[i]["out_msg"].ToString();
                         objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
                     }
                     return Json(objList);
