@@ -61,7 +61,7 @@
 			width: 100%;
 			height: 100%;
 			display: none;
-		}		
+		}
 
 		li {
 			display: block;
@@ -114,7 +114,7 @@
 			div#spinner img {
 				position: absolute;
 				/*width: 100px;
-																																height: 100px;*/
+																																		height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -259,7 +259,6 @@
 								</a>
 
 								<ul class="dropdown-menu dropdown-menu-end" id="menusmaintance">
-									
 								</ul>
 							</li>
 							<li class="nav-item dropdown-language dropdown lh-1 me-1">
@@ -267,7 +266,7 @@
 									<i class="bx bxs-user-plus" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="User Admin" aria-label="User Admin" aria-describedby="tooltip229672"></i>
 								</a>
 
-								<ul class="dropdown-menu dropdown-menu-end" id="adminmenu">								
+								<ul class="dropdown-menu dropdown-menu-end" id="adminmenu">
 								</ul>
 							</li>
 							<li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -362,6 +361,48 @@
 						</div>
 					</div>
 				</div>
+				<div class="modal fade" id="setcon" tabindex="-1" aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+							</div>
+							<div class="modal-body" style="margin-top: -26px;">
+								<div class="row">
+									<div class="col-sm-4">
+									</div>
+									<div class="col-sm-4">
+										<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Set Context</h4>
+									</div>
+									<div class="col-sm-4">
+										<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+									</div>
+								</div>
+								<hr style="margin-top:-1px; width:100%;">
+								<div class="row">
+								<div class="col-sm-3">
+									<center><label for="orglvl1valO" id="orglvl1lblO">Entity</label></center>
+									<select id="orglvl1valO1" class="form-select form-control" onchange="EntityChange(this)">
+									</select>
+								</div>
+								<div class="col-sm-3" style="width:29%;">
+									<center><label for="orglvl2valO" id="orglvl2lblO">Department</label></center>
+									<select id="orglvl2valO" class="form-select form-control" onchange="DepartmentChange(this)">
+									</select>
+								</div>
+								<div class="col-sm-3" style="width: 29%;">
+									<center><label for="orglvl3valO" id="orglvl3lblO">Unit</label></center>
+									<select id="orglvl3valO" class="form-select form-control">
+									</select>
+								</div>								
+								<div class="col-sm-12">
+									<button type="button" id="btn_transferorg" class="btn btn-sm btn-primary" onclick="storeheader()" style="float: right;margin-top: -33px;margin-right: 28px;">Apply</button>
+									<img src="../Assets/images/login-refresh.png" id="refreshOrg" style="float: right;margin-top: -30px;height: 21px;width: 21px;margin-right: 3px;" onclick="loaddynamiccolumns('R')">
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="content-wrapper">
 					@RenderBody()
 				</div>
@@ -422,36 +463,10 @@
 							}));
 						}
 					});
+					setcon();
 				}
 			});
-			var usercode = sessionStorage.getItem("usrname");
-			$.ajax({
-				type: "POST",
-				url: '../Admin/getcontext',
-				dataType: 'json',
-				async: false,
-				data: JSON.stringify({ user_code: usercode }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var result = JSON.parse(response);
-					if (result.length > 0) {
-						$("#orglvl1valO").val(result[0].master_syscode);
-						jQuery('#orglvl1valO').trigger("change");
-						$("#orglvl2valO").val(result[1].master_syscode);
-						jQuery('#orglvl2valO').trigger("change");
-						$("#orglvl3valO").val(result[2].master_syscode);
-						sessionStorage.setItem("level1", $("#orglvl1valO").val());
-						sessionStorage.setItem("level2", $("#orglvl2valO").val());
-						sessionStorage.setItem("level3", $("#orglvl3valO").val());
-						sessionStorage.setItem("level1txt", $("#orglvl1valO :selected").text());
-						sessionStorage.setItem("level2txt", $("#orglvl2valO :selected").text());
-						sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
-					}
-					else{
-						
-					}
-				}
-			});
+			
 			var usercode = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
@@ -480,7 +495,7 @@
 									else {
 										if (svalue.menu_code == "" && svalue.menu_url == "") {
 											strmenu += '<li class="dropdown-item"><a href="#" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span><i class="fa fa-angle-left  pull-right"></i> </a>';
-											
+
 										}
 									}
 								}
@@ -493,7 +508,7 @@
 								if (mvalue.menu_gid == svalue.parent_menu_code) {
 									if (svalue.menu_code != "" && svalue.menu_url != "") {
 										adminmenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="' + svalue.menu_url + '" ><i class="bx bx-user fs-4 me-1" > </i><span> ' + svalue.menu_name + ' </span></a>';
-									}									
+									}
 								}
 							});
 
@@ -520,7 +535,7 @@
 			if (sessionStorage.getItem("level1txt") != null) {
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-			}
+			}			
 		});
 		var maxorglvl;
 		$(document).ajaxStart(function () {
@@ -536,7 +551,37 @@
 		$(document).ajaxError(function () {
 			hideProgress();
 		})
-
+		function setcon() {
+			var usergid = 0;
+			var usercode = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Admin/getcontext',
+				dataType: 'json',	
+				async: false,
+				data: JSON.stringify({ user_code: usercode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					if (result.length > 0) {
+						$("#orglvl1valO").val(result[0].master_syscode);
+						jQuery('#orglvl1valO').trigger("change");
+						$("#orglvl2valO").val(result[1].master_syscode);
+						jQuery('#orglvl2valO').trigger("change");
+						$("#orglvl3valO").val(result[2].master_syscode);
+						sessionStorage.setItem("level1", $("#orglvl1valO").val());
+						sessionStorage.setItem("level2", $("#orglvl2valO").val());
+						sessionStorage.setItem("level3", $("#orglvl3valO").val());
+						sessionStorage.setItem("level1txt", $("#orglvl1valO :selected").text());
+						sessionStorage.setItem("level2txt", $("#orglvl2valO :selected").text());
+						sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
+					}
+					else {
+						
+					}
+				}
+			});
+		}
 		var spinnerVisible = false;
 		function getconcatval(mastercode) {
 
@@ -856,14 +901,14 @@
 		document.getElementById("userdata").textContent = txtusername.user_name;
 		sessionStorage.setItem("usrname", txtusername.user_name);
 		document.getElementById("roledata").textContent = txtusername.usergroup_desc;
-		//var level1txtValue = sessionStorage.getItem("level1txt");
-		//if (level1txtValue != null) {
-		//	document.getElementById("level1").textContent = level1txtValue;
-		//	var level2txtValue = sessionStorage.getItem("level2txt");
-		//	document.getElementById("level2").textContent = level1txtValue;
-		//	var level3txtValue = sessionStorage.getItem("level3txt");
-		//	document.getElementById("level3").textContent = level1txtValue;
-		//}
+				//var level1txtValue = sessionStorage.getItem("level1txt");
+				//if (level1txtValue != null) {
+				//	document.getElementById("level1").textContent = level1txtValue;
+				//	var level2txtValue = sessionStorage.getItem("level2txt");
+				//	document.getElementById("level2").textContent = level1txtValue;
+				//	var level3txtValue = sessionStorage.getItem("level3txt");
+				//	document.getElementById("level3").textContent = level1txtValue;
+				//}
 	</script>
 </body>
 </html>
