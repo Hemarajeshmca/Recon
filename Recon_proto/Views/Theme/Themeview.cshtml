@@ -275,6 +275,7 @@
 								filter_field_code: { type: "string", defaultValue: "" },
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
+								theme_seqno: { type: "string" },
 								ident_value: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
@@ -334,6 +335,11 @@
 					title: "theme_code",
 					width: 100,
 					hidden: true,
+				},
+				{
+					field: "theme_seqno",
+					title: "Theme Seqno",
+					width: 100,
 				},
 				{
 					field: "filter_field_code",
@@ -402,7 +408,7 @@
 			catch (err) {
 				javascript_log4j_root(arguments.callee.name, err);
 			}
-		}		
+		}
 	}
 	var gridRowID = -1;
 	function sel_checkbox(data) {
@@ -558,7 +564,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "vijay";
+			var action_by = "";
 			var status = "D"
 			$.ajax({
 				type: "POST",
@@ -642,20 +648,14 @@
 							content: res[0].out_msg,
 							type: 'green',
 						});
-					}
-					else {
+					} else {
 						$.alert({
 							title: 'Recon',
-							content: res[0].out_msg,	`
+							content: res[0].out_msg,
 							type: 'green',
 						});
 					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
 				}
-
 			});
 		}
 		catch (e) {
