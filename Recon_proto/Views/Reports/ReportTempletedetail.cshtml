@@ -353,15 +353,12 @@
 		$("#navhead").text("Recon");
 		kendodate_format();
 		detailfetch();
-
+		$("#cmbreporttype").prop("disabled", false);
 	});
 
-	function getreportlist() {
+	function detailfetch() {
 		debugger;
-		var data = {};
-		data.in_user_gid = 0;
-		data.in_active_status = '';
-		var Context = data;
+		var data = getlocalStorage("ls_pageList");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/ReportList',
@@ -387,47 +384,21 @@
 				console.log(er)
 			}
 		});
-	}
-
-
-	function detailfetch() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
-			gridmap([]);
+			$("#txtstatus").val("Active");
+			$("#reporttemplate_gid").val("0");
+			$("#reporttemplate_code").val("");
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			grid_tempfilter([]);
 		}
 		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
-				var data = getlocalStorage("ls_pageList");
-				$.ajax({
-					type: "POST",
-					url: '../Reports/ReportList',
-					dataType: 'json',
-					data: JSON.stringify({}),
-					contentType: 'application/json; charset=utf-8',
-					success: function (response) {
-						debugger;
-						$("#cmbreporttype").empty();
-						$("#cmbreporttype").append($('<option>', {
-							value: "",
-							text: "  Select  "
-						}));
-						$.each(response, function (index, item) {
-							$("#cmbreporttype").append($('<option>', {
-								value: item.report_code,
-								text: item.report_desc
-							}));
-						});
-					},
-					error: function (er) {
-						alert(er)
-						console.log(er)
-					}
-				});
 				//detail fetch
 				$.ajax({
 					type: "POST",
 					url: '../Reports/reporttemplatefetch',
 					dataType: 'json',
-					data: JSON.stringify({ in_reporttemplate_code: data.reporttemplate_code }),
+					data: JSON.stringify({ in_reporttemplate_code: data }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 						debugger;
@@ -444,8 +415,7 @@
 							grid_tempfilter(res.Table1);
 						}
 						else {
-							//grid_datasetrecon([]);
-							//gridmap([]);
+							grid_tempfilter([])
 						}
 					},
 					error: function (er) {
@@ -456,17 +426,17 @@
 				});
 			}
 		}
-
 	}
 
 	function grid_tempfilter(data){
-		var filter_criteria_list = "";
+		debugger;
+		var filter_criteria_desc_list = "";
 		var join_condition_list = "";
-		var report_field_list = "";
+		var reportparam_value_list = "";
 		$("#grid_tempfilter").kendoGrid({
 			dataSource: {
 				data: data,
-				pageSize: 5,
+				pageSize: 10,
 				schema: {
 					model: {
 						fields: {
@@ -474,7 +444,9 @@
 							reporttemplate_code: { type: "string" },
 							filter_seqno: { type: "string" },
 							report_field : {type: "string"},
+							reportparam_value: {type: "string"},
 							filter_criteria: {type: "string"},
+							filter_criteria_desc: {type:"string"},
 							filter_value: {type: "string"},
 							open_parentheses_flag: { type: "string" },
 							close_parentheses_flag: { type: "string" },
@@ -485,9 +457,8 @@
 					}
 				}
 			},
-			height: 185,
+			height: 300,
 			groupable: false,
-			//dataBinding: setDefaultValues,
 			edit: OnEdit,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -505,7 +476,7 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' href='' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
+			toolbar: "<a class='k-grid-add' href='' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
 			columns: [{
 				command: [
 					{
@@ -513,15 +484,10 @@
 						id: "Save",
 						template: "<a href=''onclick='savereportFilter()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					//{
-					//	name: "edit",
-					//	id: "Edit",
-					//	template: "<a href=''class='k-grid-edit'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsrulecondition()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -545,30 +511,30 @@
 				width: 50,
 			},
 			{
-				field: "report_field_code",
+				field: "report_field",
 				title: "report_field",
 				width: 120,
 				hidden: true
 			},
 			{
-				field: "report_field",
+				field: "reportparam_value",
 				title: "Report Field",
 				editor: function (container, options) {
-					combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field_code", "grid_tempfilter")
+					combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
 				},
 				width: 120,
 			},
 			{
-				field: "filter_criteria_code",
+				field: "filter_criteria",
 				title: "Filter Criteria",
 				width: 120,
 				hidden:true
 			},
 			{
-				field: "filter_criteria",
+				field: "filter_criteria_desc",
 				title: "Filter criteria",
 				editor: function (container, options) {
-					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria_code", "grid_tempfilter", "SOURCE")
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_tempfilter", "SOURCE")
 				},
 				editable: true,
 				width: 120
@@ -621,10 +587,11 @@
 
 	var gridRowID = -1;
 	function sel_checkbox(data) {
+		debugger;
 		gridRowID++;
 		var isChecked = data.open_parentheses_flag;
 		var con = "";
-		if (isChecked == "true") {
+		if (isChecked == "Y") {
 			con = 'checked';
 		}
 		return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
@@ -634,7 +601,7 @@
 		gridRowID1++;
 		var isChecked1 = data.close_parentheses_flag;
 		var con = "";
-		if (isChecked1 == "true") {
+		if (isChecked1 == "Y") {
 			con = 'checked';
 		}
 		return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
@@ -713,7 +680,7 @@
 				if (response.length > 0) {
 					for (i = 0; response.length > i; i++) {
 						var list = {};
-						list.code = response[i].report_code;
+						list.code = response[i].reportparam_code;
 						list.desc = response[i].reportparam_value;
 						arr1.push(list);
 					}
@@ -760,26 +727,32 @@
 			var grid = $("#grid_tempfilter").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var data = {};
-			data.in_reporttemplatefilter_gid = 0;
+			data.in_reporttemplatefilter_gid = model.reporttemplatefilter_gid;
 			data.in_reporttemplate_code = $("#reporttemplate_code").val();
 			data.in_filter_seqno = model.filter_seqno;
-			data.in_report_field = model.report_field_code;
-			data.in_filter_criteria = model.filter_criteria_code;
+			data.in_report_field = model.report_field;
+			data.in_filter_criteria = model.filter_criteria;
 			data.in_filter_value = model.filter_value;
 			data.in_join_condition = model.join_condition;
-			data.in_action = 'INSERT'
+			data.in_action = ''
 			data.in_active_status = 'Y';
 			data.in_open_parentheses_flag = "";
+			data.in_close_parentheses_flag = "";
 			if ($('#chk_sel_' + model.reporttemplatefilter_gid).is(":checked")) {
 				data.in_open_parentheses_flag = "Y";
 			} else {
 				data.in_open_parentheses_flag = "N";
 			}
-			data.in_close_parentheses_flag = "";
 			if ($('#chk_sel1_' + model.reporttemplatefilter_gid).is(":checked")) {
 				data.in_close_parentheses_flag = "Y";
 			} else {
 				data.in_close_parentheses_flag = "N";
+			}
+			if (data.in_reporttemplatefilter_gid == "0") {
+				data.in_reporttemplatefilter_gid = 0;
+				data.in_action = "INSERT"
+			} else {
+				data.in_action = "UPDATE"
 			}
 			$.ajax({
 				type: "POST",
@@ -797,6 +770,7 @@
 								content: res[0].out_msg,
 								type: 'green',
 							});
+							detailfetch();
 						}			
 					}
 					else {}
@@ -810,6 +784,118 @@
 		catch (e) {
 			console.log(e)
 		}
+	}
+
+	function myDeleteJs() {
+		var grid = $("#grid_tempfilter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var reporttemplatefilter_gid = parseInt(model.reporttemplatefilter_gid);
+		if (reporttemplatefilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var data = {};
+						data.in_reporttemplatefilter_gid = parseInt(model.reporttemplatefilter_gid);
+						data.in_reporttemplate_code = $("#reporttemplate_code").val();
+						data.in_filter_seqno = model.filter_seqno;
+						data.in_report_field = model.reporttemplate_code;
+						data.in_filter_criteria = model.filter_criteria;
+						data.in_filter_value = model.filter_value;
+						data.in_join_condition = model.join_condition;
+						data.in_action = 'DELETE'
+						data.in_active_status = 'Y';
+						data.in_open_parentheses_flag = "";
+						data.in_close_parentheses_flag = "";
+						$.ajax({
+							type: "POST",
+							url: '../Reports/reporttemplatefilter',
+							dataType: 'json',
+							data: JSON.stringify(data),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+							if (response != null) {
+								var res = JSON.parse(response);
+								if (res.length > 0) {
+									$.alert({
+										title: 'Recon',
+										content: res[0].out_msg,
+										type: 'green',
+									});
+									detailfetch();
+								}
+							} else { }
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+
+	function saveheader() {
+		debugger;
+		if ($("#reporttemplate_gid").val() == 0){
+			var data = {};
+			data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
+			data.in_reporttemplate_code = $("#reporttemplate_code").val();
+			data.in_reporttemplate_name = $("#rt_name").val();
+			data.in_report_code = $("#cmbreporttype").val();
+			data.in_action = 'INSERT';
+			data.in_active_status = 'Y';
+			$.ajax({
+				type: "POST",
+				url: '../Reports/reporttemplate',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					if (result.length > 0) {
+						if (result[0].out_result == '1') {
+							$.alert({
+								title: 'Recon',
+								content: result[0].out_msg,
+								type: 'green',
+							});
+							setlocalStorage("ls_pageList", result[0].in_reporttemplate_code);
+							btn_onClick("Edit");
+							$("#reporttemplate_code").val(result[0].in_reporttemplate_code);
+							$("#txtmode").val("Edit");
+							$("#txtstatus").val("Active");
+							$("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
+							$("#cmbreporttype").prop("disabled", true);
+							//detailfetch();
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: result[0].out_msg,
+								type: 'red',
+							});
+						}
+					}
+				}
+			});
+		}
+
 	}
 
 </script>

@@ -95,10 +95,13 @@
 	});
 
 	function getSerializedRows(){
-		$("#mode").val('INSERT');
-		$("#reporttemplate_gid").val(0);
-		$("#reporttemplate_code").val("");
-		$("#show-popup").modal('show');
+		//$("#mode").val('INSERT');
+		//$("#reporttemplate_gid").val(0);
+		//$("#reporttemplate_code").val("");
+		//$("#show-popup").modal('show');
+		debugger;
+		btn_onClick('Create');
+		document.location = "../Reports/ReportTempletedetail";
 	}
 
 	function gridlist() {
@@ -239,7 +242,7 @@
 		try {
 			var grid = $("#grid_reporttemplist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
-			setlocalStorage("ls_pageList", selectedItem);
+			setlocalStorage("ls_pageList", selectedItem.reporttemplate_code);
 		}
 		catch (err) {
 
@@ -312,7 +315,10 @@
 					else if (mode == "view") {
 						btn_onClick('View');
 						document.location = "../Reports/ReportTempletedetail";
-					} 
+					} else {
+						btn_onClick('create');
+						document.location = "../Reports/ReportTempletedetail";
+					}
 				}
 			}
 		}
