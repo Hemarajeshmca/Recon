@@ -1,0 +1,326 @@
+﻿@{
+	ViewBag.title = "Report Templete";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 82%;">
+				<div class="row">
+					<div class="col-xs-12">
+						@*<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+						</a>*@
+						<div id="gd_reporttemplist">
+							<div id="grid_reporttemplist"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Report Generation");
+		kendodate_format();
+		grid_reportTemplist([]);
+		gridlist();
+	});
+
+	function getSerializedRows() {
+		debugger;
+		btn_onClick('Create');
+		document.location = "../Reports/ReportTempletedetail";
+	}
+
+	function gridlist() {
+		var data = {};
+		$.ajax({
+			type: "GET",
+			url: '../Reports/reportTempletelist',
+			dataType: 'json',
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response)
+					$("#gd_reporttemplist").empty();
+					$("#gd_reporttemplist").append("<div id='grid_reporttemplist'></div>");
+					grid_reportTemplist(res);
+				}
+				else {
+					grid_reportTemplist([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function grid_reportTemplist(data) {
+		try {
+			$("#grid_reporttemplist").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								reporttemplate_gid: { type: "string" },
+								reporttemplate_code: { type: "string" },
+								reporttemplate_name: { type: "string" },
+								report_code: { type: "string" },
+								report_desc: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 450,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_reporttemplist').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				change: selectRow,
+				resizable: true,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						//{
+						//	name: "Delete",
+						//	id: "Delete",
+						//	template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						//},
+					],
+					title: "Action&nbsp;",
+					width: "60px",
+				},
+				{
+					field: "reporttemplate_gid",
+					title: "reporttemplate_gid",
+					width: 10,
+					hidden: true,
+				},
+
+				{
+					field: "reporttemplate_code",
+					title: "Report Templete Code",
+					width: 100,
+				},
+				{
+					field: "reporttemplate_name",
+					title: "Recon Templete Name",
+					width: 100,
+				},
+				{
+					field: "report_code",
+					title: "report_code",
+					width: 10,
+					hidden: true,
+				},
+				{
+					field: "report_desc",
+					title: "Report Name",
+					width: 75,
+				},
+				{
+					field: "active_status",
+					title: "active_status",
+					width: 75,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+	function selectRow() {
+		try {
+			var grid = $("#grid_reporttemplist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem.reporttemplate_code);
+		}
+		catch (err) {
+
+		}
+	}
+
+	function saveReportTemplete() {
+		var data = {};
+		data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
+		data.in_reporttemplate_code = $("#reporttemplate_code").val();
+		data.in_reporttemplate_name = $("#reportTempleteName").val();
+		data.in_report_code = $("#report_name").val();
+		data.in_action = $("#mode").val();
+		data.in_active_status = 'Y';
+		$.ajax({
+			type: "POST",
+			url: '../Reports/reporttemplate',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result.length > 0) {
+					if (result[0].out_result == '1') {
+						$.alert({
+							title: 'Recon',
+							content: result[0].out_msg,
+							type: 'green',
+						});
+						$("#show-popup").modal('hide');
+						gridlist();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: result[0].out_msg,
+							type: 'red',
+						});
+					}
+				}
+			}
+		});
+	}
+
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						btn_onClick("Edit");
+						document.location = '../Reports/ReportGeneration';
+					}
+					else if (mode == "view") {
+						btn_onClick('View');
+						document.location = "../Reports/ReportGeneration";
+					} 
+					//else {
+					//	btn_onClick('create');
+					//	document.location = "../Reports/ReportGeneration";
+					//}
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+
+	function myDeleteJs() {
+
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					deleteconfirm();
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+	function deleteconfirm(data) {
+		var grid = $("#grid_reporttemplist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var data = {};
+		data.in_reporttemplate_gid = selectedItem.reporttemplate_gid;
+		data.in_reporttemplate_code = selectedItem.reporttemplate_code;
+		data.in_reporttemplate_name = selectedItem.reporttemplate_name;
+		data.in_report_code = selectedItem.report_code;
+		data.in_action = 'DELETE';
+		data.in_active_status = 'N';
+		debugger;
+		$.ajax({
+			type: "POST",
+			url: '../Reports/reporttemplate',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result.length > 0) {
+					if (result[0].out_result == '1') {
+						$.alert({
+							title: 'Recon',
+							content: result[0].out_msg,
+							type: 'green',
+						});
+						gridlist();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: result[0].out_msg,
+							type: 'red',
+						});
+					}
+				}
+			}
+		});
+	}
+</script>
