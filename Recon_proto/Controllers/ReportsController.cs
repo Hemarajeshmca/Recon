@@ -61,14 +61,19 @@ namespace Recon_proto.Controllers
             return View();
         }
 
-		public IActionResult ReportGenerationlist()
-		{
-			return View();
-		}
+        public IActionResult ReportGeneration_newlist()
+        {
+            return View();
+        }
 
-		#region Reportlist
+        public IActionResult ReportGeneration_newdetail()
+        {
+            return View();
+        }
 
-		public JsonResult ReportList()
+        #region Reportlist
+
+        public JsonResult ReportList()
 
 		{
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
