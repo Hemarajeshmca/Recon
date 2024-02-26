@@ -61,6 +61,16 @@ namespace Recon_proto.Controllers
             return View();
         }
 
+        public IActionResult ReportGeneration_newlist()
+        {
+            return View();
+        }
+
+        public IActionResult ReportGeneration_newdetail()
+        {
+            return View();
+        }
+
         #region Reportlist
 
         public JsonResult ReportList()
