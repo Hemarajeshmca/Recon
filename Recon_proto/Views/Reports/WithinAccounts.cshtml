@@ -99,10 +99,12 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
+					if (item.active_status == 'Y') {
 					$("#reconname").append($('<option>', {
 						value: item.recon_code,
 						text: item.recon_name
 					}));
+					}
 				});
 			},
 			error: function (er) {
@@ -133,6 +135,8 @@
 				if (data.length > 0){
 					loadGrid(data);
 					$("#exportExcel").show();
+				} else {
+					loadGrid([]);
 				}
 				
 				debugger;

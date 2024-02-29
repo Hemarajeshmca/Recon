@@ -15,6 +15,11 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Bibliography;
 using Irony.Parsing;
+using System.Net;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.Extensions.Configuration;
+using Recon_proto.Controllers;
+using System.Data.SqlTypes;
 
 namespace Recon_proto.Controllers
 {
@@ -1133,7 +1138,309 @@ namespace Recon_proto.Controllers
 		}
 
 
-		#endregion
+        #endregion
 
-	}
-}
+
+        #region Pagination Report
+
+        //ReportmatchoffGridRead
+
+        public ActionResult ReportmatchoffGridRead(paginationModel context)   // ProgressView  Read
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Manualmatchoffgridload", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Manualmatchoffgridload");
+                return Json(ex.Message);
+            }
+
+            //First grid load
+            // List<ManualMatchoff_model> objcat_lst = new List<ManualMatchoff_model>();
+            //DataTable result = new DataTable();
+            //string Data1 = "";
+            // ManualMatchoff_model ReportgridRead = new ManualMatchoff_model();
+            //ReportgridRead.outresult = outresult;
+            //ReportgridRead.count = _count;
+            //ReportgridRead.pageno = _pageno;
+            //ReportgridRead.pagesize = _pagesize;
+            //ReportgridRead.table_name = table_name;
+            //ReportgridRead.Report_condition = condition;
+            //ReportgridRead.in_outfile_flag = radio_checked;
+            //ReportgridRead.report_gid = recon_id;
+            //ReportgridRead.user_code = user_codes;
+            //ReportgridRead.ip_address = ipAddress;
+            //string post_data = objcommon.getApiResult(JsonConvert.SerializeObject(ReportgridRead), "Manualmatchoffgridload");
+            // result = (DataTable)JsonConvert.DeserializeObject(post_data, result.GetType());
+            //List<dynamic> dynamicDt = new List<dynamic>();
+            //int i = result.Rows.Count;
+            //foreach (DataRow row in result.Rows)
+            //{
+            //    dynamic dyn = new ExpandoObject();
+            //    dynamicDt.Add(dyn);
+            //    foreach (DataColumn column in result.Columns)
+            //    {
+            //        var dic = (IDictionary<string, object>)dyn;
+            //        dic[column.ColumnName] = row[column];
+            //    }
+       // }
+
+            //Data1 = JsonConvert.SerializeObject(dynamicDt);
+            //return Json(Data1, JsonRequestBehavior.AllowGet);
+            //return Json(objcat_lst.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+            //return Json(objcat_lst, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+    public class paginationModel
+    {
+        public int _count { get; set; }
+        public int _pageno { get; set; } = 1;
+        public int _pagesize { get; set; } = 100;
+        public string? table_name { get; set; }
+        public string? condition { get; set; }
+        public Boolean radio_checked { get; set; } = false;
+        public int recon_id { get; set; } = 0;
+    }
+
+        #endregion
+
+
+        #region Report Run Pagination
+
+        public ActionResult Report_Runpagereport([FromBody] runPageReportModel context)
+        {   //first sp call
+            try
+            {
+                urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+                DataTable result = new DataTable();
+                string post_data = "";
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        string Urlcon = "Report/";
+                        client.BaseAddress = new Uri(urlstring + Urlcon);
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.Timeout = Timeout.InfiniteTimeSpan;
+                        client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                        client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                        client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                        client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                        var response = client.PostAsync("runPageReport", content).Result;
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        post_data = reader.ReadToEnd();
+                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                        return Json(d2);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CommonController objcom = new CommonController(_configuration);
+                    objcom.errorlog(ex.Message, "runPageReport");
+                    return Json(ex.Message);
+                }
+                //ManualMatchoff_model ManualMatchoffload = new ManualMatchoff_model();
+
+                //ManualMatchoffload.table_name = table_name;
+                //ManualMatchoffload.Report_condition = condition;
+                //ManualMatchoffload.in_outfile_flag = radio_checked;
+                //ManualMatchoffload.report_gid = recon_id;
+                //ManualMatchoffload.recongid = Recon_gid;
+                //ManualMatchoffload.user_code = user_codes;
+                //ManualMatchoffload.ip_address = ipAddress;
+                //ManualMatchoffload.user_code = user_codes;
+
+                //string[] result = { };
+                //string post_data = objcommon.getApiResult(JsonConvert.SerializeObject(ManualMatchoffload), "ManulaMatchfirstload");
+                //result = (string[])JsonConvert.DeserializeObject(post_data, result.GetType());
+                //return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                string control = this.ControllerContext.RouteData.Values["controller"].ToString();
+                //LogHelper.WriteLog(ex.ToString(), control);
+            }
+            return View();
+        }
+
+        public class runPageReportModel
+        {
+            public string? in_report_code { get; set; }
+            public string? in_recon_code { get; set; }
+            public string? in_report_condition { get; set; }
+        }
+
+
+        #endregion
+
+
+
+        #region RemarkReson
+        public ActionResult RemarkReason(remarkResonModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("RemarkReason", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "RemarkReason");
+                return Json(ex.Message);
+            }
+        }
+
+        public class remarkResonModel
+        {
+            public string remark1 { get; set; }
+            public int tran_gid { get; set; }
+        }
+
+        #endregion
+
+        #region  ReportExpenceGrid_Read
+        public ActionResult ReportExpenceGrid_Read(ReportExpenceGridModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("ExectionReport", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "ExectionReport");
+                return Json(ex.Message);
+            }
+        }
+
+        public class ReportExpenceGridModel
+        {
+            public string? table_name { get; set; }
+            public string? condition { get; set;}
+            public Boolean radio_checked { get; set;}
+            public int recon_id { get; set;}
+            public int recon_gid { get; set;}
+        }
+        #endregion
+
+
+        #region getPageNoReport
+        public ActionResult getPageNoReport([FromBody] getPageNoReportModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
+                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
+                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getPageNoReport", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "ExectionReport");
+                return Json(ex.Message);
+            }
+        }
+
+        public class getPageNoReportModel
+        {
+            public string? in_recon_code { get; set; }
+            public int? in_rptsession_gid { get; set; }
+            public int in_page_no { get; set; }
+            public int in_page_size { get; set; }
+            public int in_tot_records { get; set; }
+        }
+
+        #endregion
+    }
+
+    }
