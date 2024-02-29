@@ -901,7 +901,11 @@
                 joins = " ";
             }
             else  {
-                joins = grid._data[i].join_condition + " ";
+                if (grid._data[i].join_condition) {
+                    joins = grid._data[i].join_condition + " ";
+                } else {
+                    joins = 'AND '
+                }
             }
 
             // close braces assigning
@@ -944,7 +948,7 @@
         }
 
         var data = {
-            "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": "Exception Value",
+            "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
             "reportcondition": rpt_cond,
             "in_ip_addr": "localhost", "in_outputfile_flag": true, "in_user_code": "Hema"
         };
