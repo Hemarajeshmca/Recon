@@ -92,7 +92,7 @@
 							</select>
 						</div>
 						<div class="col-sm-2">
-							<label class="form-label" for="">Clone Dataset&nbsp;</label>
+							<label class="form-label" for="">Clone Theme&nbsp;</label>
 							<select id="Cmbclone" class="form-select form-control">
 							</select>
 						</div>
@@ -189,6 +189,36 @@
 				});
 			}
 		});
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themelistfetch',
+			dataType: 'json',
+			data: "",
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {					
+					$("#Cmbclone").empty();
+					$("#Cmbclone").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result, function (index, item) {
+						$("#Cmbclone").append($('<option>', {
+							value: item.theme_code,
+							text: item.theme_desc
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
 		load()
 	}
 	function reconchange() {
@@ -224,7 +254,6 @@
 				console.log(er)
 			}
 		});
-		cmbsourcefield();
 	};
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
@@ -241,6 +270,7 @@
 				$("#txtthemecode").val(data.theme_code);
 				$("#themegid").val(data.theme_gid);
 				detailsfetch(data.theme_code);
+				
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -275,7 +305,7 @@
 								filter_field_code: { type: "string", defaultValue: "" },
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
-								theme_seqno: { type: "string" },
+								theme_seqno: { type: "number" },
 								ident_value: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
@@ -547,8 +577,7 @@
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
 			var theme_code = $("#txtthemecode").val();
-			var clone_theme = $("#Cmbclone").val();
-			var clone_theme = "";
+			var clone_theme = $("#Cmbclone").val();			
 			var action = "";
 			var theme_gid = $("#themegid").val();
 
@@ -565,7 +594,7 @@
 				action = "UPDATE"
 			}
 			var action_by = "";
-			var status = "D"
+			var status = "Y"
 			$.ajax({
 				type: "POST",
 				url: '../theme/themeheader',
@@ -575,14 +604,10 @@
 				success: function (response) {
 					var result = JSON.parse(response);
 					var data = result[0];
-					if (data.out_result == "1") {
-						//$.alert({
-						//	title: 'Recon',
-						//	content: data.out_msg,
-						//	type: 'green',
-						//});
+					if (data.out_result == "1") {						
 						$("#themegid").val(data.in_theme_gid);
 						$("#txtthemecode").val(data.in_theme_code);
+						$("#txtstatus").val("Active");
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -602,7 +627,6 @@
 			console.log(e)
 		}
 	}
-
 	function savedetail() {
 		try {
 			var grid = $("#grid_themefilterfield").data("kendoGrid");
@@ -662,7 +686,6 @@
 			console.log(e)
 		}
 	}
-
 	function detailsfetch(theme_code) {
 		$.ajax({
 			type: "POST",
@@ -678,6 +701,7 @@
 					//$("#gd_themefilter").empty();
 					//$("#gd_themefilter").append("<div id='gd_themefilter'></div>");
 					grid_themefilter(res.themedetail);
+					$("#txtstatus").val("Active");
 					if (response.length > 0) {
 						$("#Cmbclone").val();
 						$("#Cmbclone").prop('disabled', true)
@@ -694,5 +718,158 @@
 			}
 
 		});
+	}
+	function saveclone() {
+		$.confirm({
+			icon: 'fa fa-info',
+			title: 'Recon',
+			theme: 'dark',
+			content: 'Are you sure to Clone ?',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					try {
+						var themename = $("#themename").val();
+						var cmbrecon = $("#cmbrecon").val();
+						var theme_code = $("#txtthemecode").val();
+						var clone_theme = $("#Cmbclone").val();
+						var action = "";
+						var theme_gid = $("#themegid").val();
+
+						if (theme_gid > 0) {
+							theme_gid = $("#themegid").val();
+							return;
+						} else {
+							theme_gid = 0;
+						}
+
+						if ($("#txtmode").val() == "Create") {
+							action = "INSERT"
+						} else if ($("#txtmode").val() == "Edit") {
+							action = "UPDATE"
+						}
+						var action_by = "";
+						var status = "Y"
+						$.ajax({
+							type: "POST",
+							url: '../theme/themeheader',
+							dataType: 'json',
+							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var result = JSON.parse(response);
+								var data = result[0];
+								if (data.out_result == "1") {
+									$("#themegid").val(data.in_theme_gid);
+									$("#txtthemecode").val(data.in_theme_code);
+									detailsfetch(data.in_theme_code);
+									var grid = $("#grid_themefilterfield").data("kendoGrid");
+									var dataSource = grid.dataSource;
+									var recordsOnCurrentView = dataSource.view().length;
+									if (recordsOnCurrentView > 0) {
+										$.alert({
+											title: 'Recon',
+											content: data.out_msg,
+											type: 'green',
+										});
+									}
+
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: data.out_msg,
+										type: 'red',
+									});
+								}
+							},
+							error: function (er) {
+								alert(er)
+								console.log(er)
+							}
+
+						});
+					}
+					catch (e) {
+						console.log(e)
+					}
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'clone Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			},
+		});
+	}	
+	function saveheadersubmit() {
+		try {
+			var themename = $("#themename").val();
+			var cmbrecon = $("#cmbrecon").val();
+			var theme_code = $("#txtthemecode").val();
+			var clone_theme = $("#Cmbclone").val();
+			var action = "";
+			var theme_gid = $("#themegid").val();
+
+			if (theme_gid > 0) {
+				theme_gid = $("#themegid").val();
+				return;
+			} else {
+				theme_gid = 0;
+			}
+
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "";
+			var status = "Y"
+			$.ajax({
+				type: "POST",
+				url: '../theme/themeheader',
+				dataType: 'json',
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$("#themegid").val(data.in_theme_gid);
+						$("#txtthemecode").val(data.in_theme_code);
+						detailsfetch(data.in_theme_code);
+						var grid = $("#grid_themefilterfield").data("kendoGrid");
+						var dataSource = grid.dataSource;
+						var recordsOnCurrentView = dataSource.view().length;
+						if (recordsOnCurrentView > 0) {
+							$.alert({
+								title: 'Recon',
+								content: data.out_msg,
+								type: 'green',
+							});
+						}
+
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
 	}
 </script>
