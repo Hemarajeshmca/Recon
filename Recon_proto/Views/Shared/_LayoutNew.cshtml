@@ -361,7 +361,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="modal fade" id="setcon" tabindex="-1" aria-hidden="true">
+				<div class="modal fade" id="setcont" tabindex="-1" aria-hidden="true">
 					<div class="modal-dialog modal-lg" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -371,10 +371,10 @@
 									<div class="col-sm-4">
 									</div>
 									<div class="col-sm-4">
-										<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Set Context</h4>
+										<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;" id="userdata1"></h4>
 									</div>
 									<div class="col-sm-4">
-										<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										<a onclick="return Signout();"><i class="bx bx-x cursor-pointer" style="color: #000000;float:right"></i></a>
 									</div>
 								</div>
 								<hr style="margin-top:-1px; width:100%;">
@@ -386,25 +386,26 @@
 								</div>
 								<div class="col-sm-3" style="width:29%;">
 									<center><label for="orglvl2valO" id="orglvl2lblO">Department</label></center>
-									<select id="orglvl2valO" class="form-select form-control" onchange="DepartmentChange(this)">
+									<select id="orglvl2valO1" class="form-select form-control" onchange="DepartmentChange(this)">
 									</select>
 								</div>
 								<div class="col-sm-3" style="width: 29%;">
 									<center><label for="orglvl3valO" id="orglvl3lblO">Unit</label></center>
-									<select id="orglvl3valO" class="form-select form-control">
+									<select id="orglvl3valO1" class="form-select form-control">
 									</select>
 								</div>								
 								<div class="col-sm-12">
-									<button type="button" id="btn_transferorg" class="btn btn-sm btn-primary" onclick="storeheader()" style="float: right;margin-top: -33px;margin-right: 28px;">Apply</button>
-									<img src="../Assets/images/login-refresh.png" id="refreshOrg" style="float: right;margin-top: -30px;height: 21px;width: 21px;margin-right: 3px;" onclick="loaddynamiccolumns('R')">
+									<button type="button" id="btn_transferorg" class="btn btn-sm btn-primary" onclick="storeheadernew()" style="float: right;margin-top: -33px;margin-right: 28px;">Apply</button>
+									@*<img src="../Assets/images/login-refresh.png" id="refreshOrg" style="float: right;margin-top: -30px;height: 21px;width: 21px;margin-right: 3px;" onclick="loaddynamiccolumns('R')">*@
 								</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="content-wrapper">
+				<div class="content-wrapper">					
 					@RenderBody()
+					
 				</div>
 			</div>
 
@@ -425,6 +426,7 @@
 	@*	<script async defer src="https://buttons.github.io/buttons.js"></script>
 	*@
 	<script>
+		
 		function openNav() {
 			$(document).ready(function () {
 				$('#layout-menu').toggleClass('active');
@@ -439,6 +441,8 @@
 
 	<script>
 		$(document).ready(function () {
+			$('.modal').attr('data-bs-backdrop', 'static');
+			$('.modal').attr('data-bs-keyboard', 'false');
 			var usergid = 0;
 			var usercode = sessionStorage.getItem("usrname");
 			$.ajax({
@@ -535,7 +539,8 @@
 			if (sessionStorage.getItem("level1txt") != null) {
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-			}			
+			}		
+			
 		});
 		var maxorglvl;
 		$(document).ajaxStart(function () {
@@ -543,7 +548,7 @@
 			showProgress();
 			getlocalStorage('recon_userdetail');
 		});
-
+		
 		$(document).ajaxStop(function () {
 			hideProgress();
 		});
@@ -551,14 +556,33 @@
 		$(document).ajaxError(function () {
 			hideProgress();
 		})
+		$("#collapse_div").click(function () {
+			debugger;
+			if ($('#collapse_org').css('display') == 'none') {
+				$('#collapse_org').show();
+				$('#collapse_img2').css('display', 'block');
+				$('#collapse_img').css('display', 'none');
+				if ($("#orglvl1valO").val() == "") {
+					$("#orglvl1valO").val(sessionStorage.getItem("level1"));
+					jQuery('#orglvl1valO').trigger("change");
+					$("#orglvl2valO").val(sessionStorage.getItem("level2"));
+					jQuery('#orglvl2valO').trigger("change");
+					$("#orglvl3valO").val(sessionStorage.getItem("level3"));
+				}
+			} else {
+				$('#collapse_org').css('display', 'none');
+				$('#collapse_img2').css('display', 'none');
+				$('#collapse_img').css('display', 'block');
+
+			}
+		});
 		function setcon() {
 			var usergid = 0;
 			var usercode = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Admin/getcontext',
-				dataType: 'json',	
-				async: false,
+				dataType: 'json',				
 				data: JSON.stringify({ user_code: usercode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -575,13 +599,45 @@
 						sessionStorage.setItem("level1txt", $("#orglvl1valO :selected").text());
 						sessionStorage.setItem("level2txt", $("#orglvl2valO :selected").text());
 						sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
+						if (sessionStorage.getItem("level1txt") != null) {
+							var myLabel = document.getElementById("orglvlNavigate");
+							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
+						}
 					}
 					else {
-						
+						$("#setcont").modal('show');
+						var usergid = 0;
+						var usercode = sessionStorage.getItem("usrname");
+						$.ajax({
+							type: "POST",
+							url: '../Admin/setcontextread',
+							dataType: 'json',
+							async: false,
+							data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var result = JSON.parse(response);
+								$("#orglvl1valO1").empty();
+								$("#orglvl1valO1").append($('<option>', {
+									value: "",
+									text: "  Select  "
+								}));
+								$.each(result, function (index, item) {
+									if (item.parent_code == "QCD_L1") {
+										$("#orglvl1valO1").append($('<option>', {
+											value: item.master_code,
+											text: item.master_name
+										}));
+									}
+								});								
+							}
+						});
+
 					}
 				}
 			});
 		}
+		
 		var spinnerVisible = false;
 		function getconcatval(mastercode) {
 
@@ -617,6 +673,7 @@
 				value: new Date(),
 				format: "yyyy-MM-dd"
 			});
+			
 		}
 
 		function Signout() {
@@ -646,7 +703,6 @@
 			});
 		}
 		function showchangepasswordscreen() {
-
 			var url = '@Url.Action("ChangePassword", "Login")'
 			window.location.href = url;
 		}
@@ -707,7 +763,6 @@
 				}
 			}
 		}
-
 		function btn_onClick(event) {
 			click_btn_val = "";
 			if (event != "") {
@@ -731,7 +786,6 @@
 			data[key] = value[0];
 			localStorage.setItem(key, JSON.stringify(value));
 		}
-
 		function getlocalStorage(key) {
 			if (key == "getlocalStorage") {
 				var data = localStorage.getItem(key);
@@ -742,26 +796,7 @@
 				return JSON.parse(guid);
 			}
 		}
-		$("#collapse_div").click(function () {
-			debugger;
-			if ($('#collapse_org').css('display') == 'none') {
-				$('#collapse_org').show();
-				$('#collapse_img2').css('display', 'block');
-				$('#collapse_img').css('display', 'none');
-				if ($("#orglvl1valO").val() == "") {
-					$("#orglvl1valO").val(sessionStorage.getItem("level1"));
-					jQuery('#orglvl1valO').trigger("change");
-					$("#orglvl2valO").val(sessionStorage.getItem("level2"));
-					jQuery('#orglvl2valO').trigger("change");
-					$("#orglvl3valO").val(sessionStorage.getItem("level3"));
-				}
-			} else {
-				$('#collapse_org').css('display', 'none');
-				$('#collapse_img2').css('display', 'none');
-				$('#collapse_img').css('display', 'block');
-
-			}
-		});
+	
 		function storeheader() {
 			sessionStorage.setItem("level1", "");
 			sessionStorage.setItem("level2", "");
@@ -829,9 +864,22 @@
 						value: "",
 						text: "  Select  "
 					}));
+					$("#orglvl2valO1").empty();
+					$("#orglvl2valO1").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
 					$.each(result, function (index, item1) {
 						if (item1.parent_code == "QCD_L2" && item1.depend_code == selectedValue) {
 							$("#orglvl2valO").append($('<option>', {
+								value: item1.master_code,
+								text: item1.master_name
+							}));
+						}
+					});
+					$.each(result, function (index, item1) {
+						if (item1.parent_code == "QCD_L2" && item1.depend_code == selectedValue) {
+							$("#orglvl2valO1").append($('<option>', {
 								value: item1.master_code,
 								text: item1.master_name
 							}));
@@ -858,6 +906,11 @@
 						value: "",
 						text: "  Select  "
 					}));
+					$("#orglvl3valO1").empty();
+					$("#orglvl3valO1").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
 					$.each(result, function (index, item2) {
 						if (item2.parent_code == "QCD_L3" && item2.depend_code == selectedValue) {
 							$("#orglvl3valO").append($('<option>', {
@@ -866,10 +919,17 @@
 							}));
 						}
 					});
+					$.each(result, function (index, item2) {
+						if (item2.parent_code == "QCD_L3" && item2.depend_code == selectedValue) {
+							$("#orglvl3valO1").append($('<option>', {
+								value: item2.master_code,
+								text: item2.master_name
+							}));
+						}
+					});
 				}
 			});
 		}
-
 		function rolevalidatescreen(selectElement) {
 			var result = {};
 			$.ajax({
@@ -885,7 +945,6 @@
 			});
 			return result;
 		}
-
 		function setColor(rows, resultData) {
 			for (var i = 0; i < rows.length; i++) {
 				var row = $(rows[i]);
@@ -899,16 +958,66 @@
 		}
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		document.getElementById("userdata").textContent = txtusername.user_name;
+		document.getElementById("userdata1").innerHTML = "Welcome " + txtusername.user_name + "<br>" + "Please Select Context"
 		sessionStorage.setItem("usrname", txtusername.user_name);
 		document.getElementById("roledata").textContent = txtusername.usergroup_desc;
-				//var level1txtValue = sessionStorage.getItem("level1txt");
-				//if (level1txtValue != null) {
-				//	document.getElementById("level1").textContent = level1txtValue;
-				//	var level2txtValue = sessionStorage.getItem("level2txt");
-				//	document.getElementById("level2").textContent = level1txtValue;
-				//	var level3txtValue = sessionStorage.getItem("level3txt");
-				//	document.getElementById("level3").textContent = level1txtValue;
-				//}
-	</script>
+		function storeheadernew() {
+			if ($("#orglvl1valO1").val() != "" && $("#orglvl2valO1").val() != "" && $("#orglvl3valO1").val() != ""){
+			sessionStorage.setItem("level1", "");
+			sessionStorage.setItem("level2", "");
+			sessionStorage.setItem("level3", "");
+			sessionStorage.setItem("level1txt", "");
+			sessionStorage.setItem("level2txt", "");
+			sessionStorage.setItem("level3txt", "");
+			sessionStorage.setItem("level1", $("#orglvl1valO1").val());
+			sessionStorage.setItem("level2", $("#orglvl2valO1").val());
+			sessionStorage.setItem("level3", $("#orglvl3valO1").val());
+			sessionStorage.setItem("level1txt", $("#orglvl1valO1 :selected").text());
+			sessionStorage.setItem("level2txt", $("#orglvl2valO1 :selected").text());
+			sessionStorage.setItem("level3txt", $("#orglvl3valO1 :selected").text());
+			location.reload();
+			var myLabel = document.getElementById("orglvlNavigate");
+			myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
+			var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+			var user_code = txtusername.user_name;
+			var level_mapping = $("#orglvl1valO1").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO1").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO1").val() + "#" + "QCD_L3";
+			$.ajax({
+				type: "POST",
+				url: '../Admin/applycontextsave',
+				dataType: 'json',
+				data: JSON.stringify({ user_code: user_code, level_mapping: level_mapping }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+			}else {
+				$.alert({
+					title: 'Recon',
+					content:"Invalid",
+					type: 'red',
+				});
+			}
+		}
+	</script>	
 </body>
 </html>

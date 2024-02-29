@@ -213,13 +213,13 @@
 															</div>
 														</div>
 														<div class="col-sm-2">
-															<label for="" class="form-label">Threshold + Value&nbsp;</label>
+															<label for="" class="form-label">Knock Off Threshold Value&nbsp;</label>
 															<input class="form-control" id="thersholdplus" type="text" value="0">
 														</div>
-														<div class="col-sm-2">
+														@*<div class="col-sm-2">
 															<label for="" class="form-label">Threshold - Value&nbsp;</label>
 															<input class="form-control" id="thersholdminus" type="text" value="0">
-														</div>
+														</div>*@
 													</div>
 													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 														<div class="col-sm-2">
@@ -554,6 +554,7 @@
 					type: "POST",
 					url: '../Recon/Reconheaderfetch',
 					dataType: 'json',
+					async: false,
 					data: JSON.stringify({ in_recon_code: data.recon_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
@@ -628,9 +629,10 @@
 									}));
 								}
 							});
+							recontypeconfig();
 							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
-							recontypeconfig();
+							
 						}
 						else {
 							grid_datasetrecon([]);
@@ -1775,6 +1777,8 @@
 			$('#reconvalueflag1').prop('disabled', true);
 			$('#recondateflag1').prop('disabled', false);
 			$('#reconvalueflag2').prop('disabled', false);
+			$("#thersholdplus").prop('disabled', true);
+			$("#thersholdminus").prop('disabled', true);
 		}
 	}
 	function saveheadersubmit() {
