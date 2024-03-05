@@ -213,12 +213,12 @@
 															</div>
 														</div>
 														<div class="col-sm-2">
-															<label for="" class="form-label">Knock Off Threshold Value&nbsp;</label>
+															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
 															<input class="form-control" id="thersholdplus" type="text" value="0">
 														</div>
 														@*<div class="col-sm-2">
-															<label for="" class="form-label">Threshold - Value&nbsp;</label>
-															<input class="form-control" id="thersholdminus" type="text" value="0">
+														<label for="" class="form-label">Threshold - Value&nbsp;</label>
+														<input class="form-control" id="thersholdminus" type="text" value="0">
 														</div>*@
 													</div>
 													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
@@ -435,7 +435,6 @@
 		getGridComboList();
 		grid_datasetrecon([]);
 		grid_recondatasetmapping([]);
-		recontypeconfig();
 
 	});
 	function DatasetTypefield() {
@@ -632,7 +631,7 @@
 							recontypeconfig();
 							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
-							
+
 						}
 						else {
 							grid_datasetrecon([]);
@@ -656,7 +655,7 @@
 			$('#untillactive').prop('disabled', true);
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
-			$("#btnsubmit").hide();	
+			$("#btnsubmit").hide();
 		}
 	}
 	function detailfetch(reconcode) {
@@ -890,7 +889,7 @@
 			}
 			var in_active_reason = "";
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
-			var in_threshold_minus_value = parseFloat($("#thersholdminus").val()).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',
@@ -1329,15 +1328,15 @@
 		var data = datamapping;
 		var i = 0;
 		if ($("#txtmode").val() != "View") {
-		columns.push({
-			field: entryIndex - 1,
-			title: 'Action',
-			template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;<a href='' onclick='myDeletedatamapping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
-			filterable: false,
-			sortable: false,
-			editable: true,
-			width: '100px'
-		});
+			columns.push({
+				field: entryIndex - 1,
+				title: 'Action',
+				template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;<a href='' onclick='myDeletedatamapping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
+				filterable: false,
+				sortable: false,
+				editable: true,
+				width: '100px'
+			});
 		}
 
 		var entryIndex = "entries[" + i + "]";
@@ -1768,7 +1767,13 @@
 			$("#thersholdminus").prop('disabled', true);
 
 		} else {
-			$('#partialmatch2').prop('checked', true);
+			if ($("#thersholdplus").val() > 0) {
+				$('#partialmatch1').prop('checked', true);
+				$("#thersholdplus").prop('disabled', false);
+			} else {
+				$('#partialmatch2').prop('checked', true);
+				$("#thersholdplus").prop('disabled', true);
+			}
 			$('#recondateflag1').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
 			$("#cmbreconvaluefield").prop('disabled', true);
@@ -1777,7 +1782,7 @@
 			$('#reconvalueflag1').prop('disabled', true);
 			$('#recondateflag1').prop('disabled', false);
 			$('#reconvalueflag2').prop('disabled', false);
-			$("#thersholdplus").prop('disabled', true);
+			
 			$("#thersholdminus").prop('disabled', true);
 		}
 	}
@@ -1830,7 +1835,7 @@
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
 
 			var in_threshold_plus_value = $("#thersholdplus").val();
-			var in_threshold_minus_value = $("#thersholdminus").val();
+			var in_threshold_minus_value = $("#thersholdplus").val();
 			var in_active_reason = "";
 			$.ajax({
 				type: "POST",
@@ -1879,6 +1884,7 @@
 			$("#thersholdminus").prop('disabled', false)
 			$("#thersholdplus").prop('disabled', false)
 		} else {
+
 			$("#thersholdplus").val(0);
 			$("#thersholdminus").val(0)
 			$("#thersholdminus").prop('disabled', true)
