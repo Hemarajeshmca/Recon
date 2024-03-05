@@ -26,7 +26,7 @@ namespace Recon_proto.Controllers
 		#region Themelistfetch
 
 		[HttpPost]
-		public JsonResult Themelistfetch()
+		public JsonResult Themelistfetch([FromBody] themelistmodel context)
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();			
 			DataTable result = new DataTable();		
@@ -44,7 +44,7 @@ namespace Recon_proto.Controllers
 					client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
 					client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-					HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
 					var response = client.PostAsync("themeRead", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
 					StreamReader reader = new StreamReader(data);
@@ -61,10 +61,14 @@ namespace Recon_proto.Controllers
 			}
 
 		}
-		#endregion
+		public class themelistmodel
+		{
+			public string? recon_code { get; set; }
+		}
+			#endregion
 
-		#region themeheader
-		[HttpPost]
+			#region themeheader
+			[HttpPost]
 		public JsonResult themeheader([FromBody] themeheadermodel context)
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();

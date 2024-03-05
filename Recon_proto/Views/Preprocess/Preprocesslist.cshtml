@@ -1,6 +1,7 @@
-﻿@{
-	ViewBag.title = "Theme";
-	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+﻿
+@{
+    ViewData["Title"] = "Preprocess";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <!Doctype html>
 <html>
@@ -50,92 +51,50 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
-				<div class="row" style="margin-top:-19px">
-					<div class="col-sm-4" style="margin-bottom:5px;">
-						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
-						</select>
-					</div>
+				<div class="row">
 					<div class="col-xs-12">
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
-						<div id="gd_theme">
-							<div id="grid_theme"> </div>
+						<div id="gd_preprocess">
+							<div id="grid_preprocess"> </div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	
 </body>
 </html>
 <script>
 	$(document).ready(function () {
 		gridlist();
-		$("#navhead").text("Theme");
+		$("#navhead").text("Preprocess");
 		setlocalStorage("ls_pageList", "");
 
 	});
 
 	function gridlist() {
+		grid_preprocess_details([]);
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '../Recon/Reconlistfetch',
+			url: '../Preprocess/Preprocesslistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				$("#cmbreconname").empty();			
-				$("#cmbreconname").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));				
-				$.each(response, function (index, item) {
-					if (item.active_status == "Y") {
-						$("#cmbreconname").append($('<option>', {
-							value: item.recon_code,
-							text: item.recon_name
-						}));					
-					}
-				});
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-
-		});
-		grid_theme_details([]);
-		
-
-	}
-	function reconchangelist() {
-		var cmbreconname = $("#cmbreconname").val();
-		var data = {};
-		data.in_user_gid = 0;
-		data.in_active_status = '';
-		var Context = data;
-		$.ajax({
-			type: "POST",
-			url: '../Theme/Themelistfetch',
-			dataType: 'json',
-			data: JSON.stringify({ recon_code: cmbreconname }),
+			data: "",
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
 				if (result != null) {
-					$("#gd_theme").empty();
-					$("#gd_theme").append("<div id='grid_theme'></div>");
-					grid_theme_details(result);
+					$("#gd_preprocess").empty();
+					$("#gd_preprocess").append("<div id='grid_preprocess'></div>");
+					grid_preprocess_details(result);
 				}
 				else {
-					grid_theme_details([]);
+					grid_preprocess_details([]);
 				}
 			},
 			error: function (er) {
@@ -144,9 +103,10 @@
 			}
 
 		});
+
 	}
 	var status_Priority = [];
-	function grid_theme_details(data) {
+	function grid_preprocess_details(data) {
 		try {
 			$.each(data, function (index, value) {
 				var flag = false;
@@ -159,17 +119,16 @@
 					status_Priority.push(value.active_status_desc);
 				}
 			});
-			$("#grid_theme").kendoGrid({
+			$("#grid_preprocess").kendoGrid({
 				dataSource: {
 					data: data,
 					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
-								theme_gid: { type: "string" },
-								theme_code: { type: "string" },
-								theme_desc: { type: "string" },
-								recon_code: { type: "string" },
+								preprocess_gid: { type: "string" },
+								preprocess_code: { type: "string" },
+								preprocess_name: { type: "string" },
 								recon_name: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" }
@@ -177,13 +136,13 @@
 						}
 					}
 				},
-				height: 420,
+				height: 458,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
-					var rows = $('#grid_theme').data('kendoGrid').tbody.children();
+					var rows = $('#grid_preprocess').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					var screen_code = rolevalidatescreen('theme_setup')
+					var screen_code = rolevalidatescreen('ds_setup')
 					if (screen_code[0].add == "N") {
 						$("#btn_new").hide();
 					}
@@ -228,31 +187,26 @@
 					], title: "Action&nbsp;", width: "40px",
 				},
 				{
-					field: "theme_gid",
+					field: "preprocess_gid",
 					title: "Row id",
 					width: 100,
 					hidden: true,
 				},
 
 				{
-					field: "theme_code",
-					title: "Theme Code",
-					width: 50,
+					field: "preprocess_code",
+					title: "Preprocess Code",
+					width: 100,
 				},
 				{
-					field: "theme_desc",
-					title: "Theme Description",
-					width: 120,
-				},
-				{
-					field: "recon_code",
-					title: "Recon Code",
-					width: 50,
+					field: "preprocess_name",
+					title: "Preprocess Name",
+					width: 100,
 				},
 				{
 					field: "recon_name",
-					title: "Recon Name",
-					width: 120,
+					title: "Recon",
+					width: 100,
 				},
 				{
 					field: "active_status",
@@ -298,18 +252,7 @@
 	}
 	function getSerializedRows() {
 		btn_onClick('Create');
-		var selectedItem = $("#cmbreconname").val();
-		if (selectedItem != "") {
-			setlocalStorage("ls_pageList", selectedItem);
-			document.location = "../Theme/Themeview";
-		} else {
-			$.alert({
-				title: 'Recon',
-				content: "Please Select Recon ",
-				type: 'red',
-			});
-		}
-		
+		document.location = "../Preprocess/PreprocessForm";
 	}
 	function getSerializedSelectedRows(mode) {
 		try {
@@ -322,12 +265,12 @@
 					if ($(mode).attr('value') == "edit") {
 						if (items.active_status != "N") {
 							btn_onClick("Edit");
-							document.location = '../Theme/Themeview';
+							document.location = '../Preprocess/PreprocessForm';
 						}
 					}
 					else if ($(mode).attr('value') == "view") {
 						btn_onClick('View');
-						document.location = "../Theme/Themeview";
+						document.location = "../Preprocess/PreprocessForm";
 					}
 				}
 			}
@@ -338,7 +281,7 @@
 	}
 	function selectRow() {
 		try {
-			var grid = $("#grid_theme").data("kendoGrid");
+			var grid = $("#grid_preprocess").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			setlocalStorage("ls_pageList", selectedItem);
 		}
@@ -347,7 +290,7 @@
 		}
 	}
 	function myDeleteJs() {
-		var grid = $("#grid_theme").data("kendoGrid");
+		var grid = $("#grid_preprocess").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var dataset_gid = model.dataset_gid;
 		$.confirm({
@@ -438,3 +381,6 @@
 		});
 	}
 </script>
+
+
+

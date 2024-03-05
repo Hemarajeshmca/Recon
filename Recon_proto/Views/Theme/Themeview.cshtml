@@ -82,7 +82,7 @@
 					</div>
 					<div class="row" style="margin-top:10px;">
 						<div class="col-sm-3">
-							<label class="form-label" for="">Theme Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<label class="form-label" for="">Theme Description&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="themename">
 							<input class="form-control" type="hidden" id="themegid" value=0;>
 						</div>
@@ -91,7 +91,7 @@
 							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()">
 							</select>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-4">
 							<label class="form-label" for="">Clone Theme&nbsp;</label>
 							<select id="Cmbclone" class="form-select form-control">
 							</select>
@@ -141,6 +141,7 @@
 			type: "POST",
 			url: '../Recon/Reconlistfetch',
 			dataType: 'json',
+			dataType: 'json',
 			async: false,
 			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
@@ -188,42 +189,13 @@
 					}));
 				});
 			}
-		});
-		$.ajax({
-			type: "POST",
-			url: '../Theme/Themelistfetch',
-			dataType: 'json',
-			data: "",
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var result = JSON.parse(response);
-				if (result != null) {					
-					$("#Cmbclone").empty();
-					$("#Cmbclone").append($('<option>', {
-						value: "",
-						text: "  Select  "
-					}));
-					$.each(result, function (index, item) {
-						$("#Cmbclone").append($('<option>', {
-							value: item.theme_code,
-							text: item.theme_desc
-						}));
-					});
-				}
-				else {
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-
-		});
-		load()
+		});		
+		load();
+		
 	}
 	function reconchange() {
 		//sorce dataset
-		var reconcode = $("#cmbreconname").val();
+		var reconcode = $("#cmbrecon").val();
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
@@ -254,12 +226,46 @@
 				console.log(er)
 			}
 		});
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themelistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					$("#Cmbclone").empty();
+					$("#Cmbclone").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result, function (index, item) {
+						var recontheme = item.theme_code + " / " + item.theme_desc
+						$("#Cmbclone").append($('<option>', {
+							value: item.theme_code,
+							text: recontheme
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
 	};
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Draft");
 			grid_themefilter([]);
+			var data = getlocalStorage("ls_pageList");
+			$("#cmbrecon").val(data);
+			jQuery('#cmbrecon').trigger("change");
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
