@@ -77,7 +77,8 @@ namespace Recon_proto.Controllers
                         {
                             res = setProcessdataset(post_data);
                         }
-                        return post_data;
+                        // return post_data;
+                        return res;
                     }
                 }
                 catch (Exception ex)

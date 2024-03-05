@@ -1268,26 +1268,10 @@ namespace Recon_proto.Controllers
                     objcom.errorlog(ex.Message, "runPageReport");
                     return Json(ex.Message);
                 }
-                //ManualMatchoff_model ManualMatchoffload = new ManualMatchoff_model();
-
-                //ManualMatchoffload.table_name = table_name;
-                //ManualMatchoffload.Report_condition = condition;
-                //ManualMatchoffload.in_outfile_flag = radio_checked;
-                //ManualMatchoffload.report_gid = recon_id;
-                //ManualMatchoffload.recongid = Recon_gid;
-                //ManualMatchoffload.user_code = user_codes;
-                //ManualMatchoffload.ip_address = ipAddress;
-                //ManualMatchoffload.user_code = user_codes;
-
-                //string[] result = { };
-                //string post_data = objcommon.getApiResult(JsonConvert.SerializeObject(ManualMatchoffload), "ManulaMatchfirstload");
-                //result = (string[])JsonConvert.DeserializeObject(post_data, result.GetType());
-                //return Json(result, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 string control = this.ControllerContext.RouteData.Values["controller"].ToString();
-                //LogHelper.WriteLog(ex.ToString(), control);
             }
             return View();
         }
