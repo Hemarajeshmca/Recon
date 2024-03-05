@@ -132,15 +132,18 @@
 		gridlist();
 	});
 	function gridlist() {
+		debugger;
 		var data = {};
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
 		data.in_active_status = '';
+		data.in_user_code = txtusername.user_name;
 		var Context = data;
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Reconlistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {

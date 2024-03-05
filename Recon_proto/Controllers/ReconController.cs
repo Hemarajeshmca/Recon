@@ -95,8 +95,9 @@ namespace Recon_proto.Controllers
 			public string? until_active_flag { get; set; }
 			public string? active_status { get; set; }
 			public string? active_status_desc { get; set; }			
-			public string? in_user_code { get; set; }			
-		}
+			public string? in_user_code { get; set; }	
+			
+        }
 		#endregion
 
 		#region recon type
