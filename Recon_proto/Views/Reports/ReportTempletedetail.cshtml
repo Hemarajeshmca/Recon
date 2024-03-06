@@ -156,6 +156,10 @@
 			float: left;
 		}
 
+		.k-block, .k-header, .k-grid-header, .k-toolbar, .k-grouping-header, .k-pager-wrap, .k-button, .k-draghandle, .k-treemap-tile, html .km-pane-wrapper .k-header {
+			background-color: rgb(135, 46, 123) !important;
+		}
+
 		.k-grid-header {
 			background-color: #FEE7D5;
 			color: black;
@@ -350,7 +354,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Recon");
+		$("#navhead").text("Report Templete");
 		kendodate_format();
 		detailfetch();
 		$("#cmbreporttype").prop("disabled", false);
@@ -507,7 +511,7 @@
 			},
 			{
 				field: "filter_seqno",
-				title: "Seq No",
+				title: "Filter Seq No",
 				width: 50,
 			},
 			{
@@ -518,7 +522,7 @@
 			},
 			{
 				field: "reportparam_value",
-				title: "Report Field",
+				title: "Filter Field",
 				editor: function (container, options) {
 					combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
 				},
@@ -532,7 +536,7 @@
 			},
 			{
 				field: "filter_criteria_desc",
-				title: "Filter criteria",
+				title: "Filter Criteria",
 				editor: function (container, options) {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_tempfilter", "SOURCE")
 				},
