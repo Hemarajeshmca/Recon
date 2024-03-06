@@ -88,7 +88,7 @@
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="cmbrecon" class="form-select form-control" onchange="reconcode()">
+							<select id="cmbrecon" class="form-select form-control" onchange="reconcode()" disabled>
 							</select>
 						</div>
 						<div class="col-sm-3">
@@ -106,7 +106,7 @@
 						<div class="nav-align-top mb-3 mt-3">
 							<ul class="nav nav-pills mb-2" role="tablist">
 								<li class="nav-item">
-									<button type="button" id="filter" disabled
+									<button type="button" id="filter"  onclick="filterdata()"
 											class="nav-link active"
 											role="tab"
 											data-bs-toggle="tab"
@@ -239,8 +239,7 @@
 	$(document).ready(function () {
 		$("#navhead").text("Preprocess");
 		getGridComboList();
-		grid_filter([]);
-		grid_lookup([]);
+
 	});
 	function getGridComboList() {
 		//recon type
@@ -298,6 +297,44 @@
 				console.log(er)
 			}
 		});
+		load();
+	}
+	function load() {
+		if (getlocalStorage('btn_clk_val') == "Create") {
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#txtstatus").val("Draft");
+			grid_filter([]);
+			grid_lookup([]);
+			var data = getlocalStorage("ls_pageList");
+			$("#cmbrecon").val(data);
+			jQuery('#cmbrecon').trigger("change");
+		}
+		else if (getlocalStorage('btn_clk_val') == "Edit") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#themename").val(data.theme_desc);
+				$("#cmbrecon").val(data.recon_code);
+				$("#txtthemecode").val(data.theme_code);
+				$("#themegid").val(data.theme_gid);
+				detailsfetch(data.theme_code);
+
+			}
+		} else if (getlocalStorage('btn_clk_val') == "View") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				detailsfetch(data.theme_code)
+				$("#Cmbclone").prop('disabled', true)
+				$("#btnclone").prop('disabled', true)
+				$("#savesubmit").hide();
+				$("#adddataset").hide();
+				$("#datasetfieldadd").hide();
+				$(".k-grid-edit").hide();
+				$("#btnsubmit").hide();
+			}
+		}
 	}
 	function reconcode() {
 		var reconcode = $("#cmbrecon").val();
@@ -965,7 +1002,7 @@
 			$("#filter").removeClass('nav-link active');
 			$("#filter").toggleClass('nav-link');
 			$("#navs-pills-top-filter").removeClass('tab-pane fade show active');
-			$("#navs-pills-top-filter").toggleClass('tab-pane fade');			
+			$("#navs-pills-top-filter").toggleClass('tab-pane fade');
 			$("#lookup").removeClass('nav-link active');
 			$("#lookup").toggleClass('nav-link');
 			$("navs-pills-top-LookUp").removeClass('tab-pane fade show active');
@@ -973,28 +1010,76 @@
 			$("#function").removeClass('nav-link');
 			$("#function").toggleClass('nav-link active');
 			$("#navs-pills-top-function").removeClass('tab-pane fade');
-			$("#navs-pills-top-function").toggleClass('tab-pane fade show active');			
+			$("#navs-pills-top-function").toggleClass('tab-pane fade show active');
+			$("#query").removeClass('nav-link active');
+			$("#query").toggleClass('nav-link');
 			$("#navs-pills-top-filter").hide();
 			$("#navs-pills-top-LookUp").hide();
+			$("#navs-pills-top-Query").hide();
 			$("#navs-pills-top-function").show();
-			
+
 		} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
 			$("#filter").removeClass('nav-link active');
 			$("#filter").toggleClass('nav-link');
-			$("#navs-pills-top-filter").('tab-pane fade show active');
-			$("#navs-pills-top-filter").toggleClass('tab-pane fade');	
+			$("#navs-pills-top-filter").removeClass('tab-pane fade show active');
+			$("#navs-pills-top-filter").toggleClass('tab-pane fade');
 			$("#function").removeClass('nav-link active');
-			$("#function").toggleClass('nav-link');	
+			$("#function").toggleClass('nav-link');
 			$("#navs-pills-top-function").toggleClass('tab-pane fade show active');
-			$("#navs-pills-top-function").toggleClass('tab-pane fade');			
+			$("#navs-pills-top-function").toggleClass('tab-pane fade');
 			$("#lookup").removeClass('nav-link');
 			$("#lookup").toggleClass('nav-link active');
 			$("#navs-pills-top-LookUp").removeClass('tab-pane fade');
 			$("#navs-pills-top-LookUp").toggleClass('tab-pane fade show active');
+			$("#query").removeClass('nav-link active');
+			$("#query").toggleClass('nav-link');
 			$("#navs-pills-top-filter").hide();
 			$("#navs-pills-top-function").hide();
+			$("#navs-pills-top-Query").hide();
 			$("#navs-pills-top-LookUp").show();
+		} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+			$("#filter").removeClass('nav-link active');
+			$("#filter").toggleClass('nav-link');
+			$("#navs-pills-top-filter").removeClass('tab-pane fade show active');
+			$("#navs-pills-top-filter").toggleClass('tab-pane fade');
+			$("#function").removeClass('nav-link active');
+			$("#function").toggleClass('nav-link');
+			$("#navs-pills-top-function").removeClass('tab-pane fade show active');
+			$("#navs-pills-top-function").toggleClass('tab-pane fade');
+			$("#lookup").removeClass('nav-link active');
+			$("#lookup").toggleClass('nav-link');
+			$("#navs-pills-top-LookUp").removeClass('tab-pane fade show active');
+			$("#navs-pills-top-LookUp").toggleClass('tab-pane fade');
+			$("#navs-pills-top-filter").hide();
+			$("#navs-pills-top-function").hide();
+			$("#navs-pills-top-LookUp").hide(); 
+			$("#query").removeClass('nav-link');
+			$("#query").toggleClass('nav-link active');
+			$("#navs-pills-top-Query").removeClass('tab-pane fade');
+			$("#navs-pills-top-Query").toggleClass('tab-pane fade show active');
+			$("#navs-pills-top-Query").show();
 		}
+	}
+	function filterdata() {
+		$("#function").removeClass('nav-link active');
+		$("#function").toggleClass('nav-link');
+		$("#query").removeClass('nav-link active');
+		$("#query").toggleClass('nav-link');
+		$("#lookup").removeClass('nav-link active');
+		$("#lookup").toggleClass('nav-link');
+		$("#navs-pills-top-filter").removeClass('tab-pane fade show active');
+		$("#navs-pills-top-filter").toggleClass('tab-pane fade');
+		$("#navs-pills-top-function").removeClass('tab-pane fade show active');
+		$("#navs-pills-top-function").toggleClass('tab-pane fade');
+		$("#navs-pills-top-LookUp").removeClass('tab-pane fade show active');
+		$("#navs-pills-top-LookUp").toggleClass('tab-pane fade');
+		$("#navs-pills-top-Query").removeClass('tab-pane fade show active');
+		$("#navs-pills-top-Query").toggleClass('tab-pane fade');
+		$("#navs-pills-top-filter").show();
+		$("#navs-pills-top-function").hide();
+		$("#navs-pills-top-LookUp").hide();
+		$("#navs-pills-top-Query").hide();
+		$("#Cmbprocessmethod").val("");
 	}
 </script>
 

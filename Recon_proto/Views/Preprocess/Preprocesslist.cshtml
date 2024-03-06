@@ -51,7 +51,12 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
-				<div class="row">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
 					<div class="col-xs-12">
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
@@ -75,7 +80,46 @@
 	});
 
 	function gridlist() {
+		
+		var data = {};
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = txtusername.user_name;
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
 		grid_preprocess_details([]);
+		
+
+	}
+	function reconchangelist() {
+		var cmbreconname = $("#cmbreconname").val();
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -84,7 +128,7 @@
 			type: "POST",
 			url: '../Preprocess/Preprocesslistfetch',
 			dataType: 'json',
-			data: "",
+			data: JSON.stringify({ recon_code: cmbreconname }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -103,7 +147,6 @@
 			}
 
 		});
-
 	}
 	var status_Priority = [];
 	function grid_preprocess_details(data) {
@@ -136,7 +179,7 @@
 						}
 					}
 				},
-				height: 458,
+				height: 420,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -184,7 +227,7 @@
 							id: "Delete",
 							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal' class='k-grid-delete' ><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
-					], title: "Action&nbsp;", width: "40px",
+					], title: "Action&nbsp;", width: 30,
 				},
 				{
 					field: "preprocess_gid",
@@ -196,17 +239,18 @@
 				{
 					field: "preprocess_code",
 					title: "Preprocess Code",
-					width: 100,
+					width: 40,
 				},
 				{
 					field: "preprocess_name",
 					title: "Preprocess Name",
-					width: 100,
+					width: 150,
 				},
 				{
 					field: "recon_name",
 					title: "Recon",
 					width: 100,
+					hidden: true,
 				},
 				{
 					field: "active_status",
@@ -217,16 +261,8 @@
 				{
 					field: "active_status_desc",
 					title: "Status",
-					width: 50,
-					filterable: {
-						ui: priorityFilter,
-						extra: false,
-						operators: {
-							string: {
-								eq: "Is equal to"
-							}
-						},
-					},
+					width: 40,
+					
 				},
 				{
 					field: "In_mode_flag",
@@ -252,7 +288,18 @@
 	}
 	function getSerializedRows() {
 		btn_onClick('Create');
-		document.location = "../Preprocess/PreprocessForm";
+		var selectedItem = $("#cmbreconname").val();
+		if (selectedItem != "") {
+			setlocalStorage("ls_pageList", selectedItem);
+			document.location = "../Preprocess/PreprocessForm";
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ",
+				type: 'red',
+			});
+		}
+		
 	}
 	function getSerializedSelectedRows(mode) {
 		try {

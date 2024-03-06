@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
+using static Recon_proto.Controllers.ThemeController;
 
 namespace Recon_proto.Controllers
 {
@@ -26,7 +27,7 @@ namespace Recon_proto.Controllers
         #region Preprocesslistfetch
 
         [HttpPost]
-        public JsonResult Preprocesslistfetch()
+        public JsonResult Preprocesslistfetch([FromBody] Preprocesslistmodel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();           
             DataTable result = new DataTable();         
@@ -39,12 +40,12 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", HttpContext.Session.GetString("user_code"));
-                    client.DefaultRequestHeaders.Add("lang_code", HttpContext.Session.GetString("lang_code"));
-                    client.DefaultRequestHeaders.Add("role_code", HttpContext.Session.GetString("role_code"));
-                    client.DefaultRequestHeaders.Add("ipaddress", HttpContext.Session.GetString("ipAddress"));
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     var response = client.PostAsync("Preprocesslist", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -61,7 +62,10 @@ namespace Recon_proto.Controllers
             }
 
         }
-       
-        #endregion
-    }
+		public class Preprocesslistmodel
+		{
+			public string? recon_code { get; set; }
+		}
+		#endregion
+	}
 }

@@ -88,7 +88,7 @@
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()">
+							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()" disabled>
 							</select>
 						</div>
 						<div class="col-sm-4">
@@ -231,9 +231,9 @@
 		var reconcode = $("#cmbrecon").val();
 		$.ajax({
 			type: "POST",
-			url: '../Theme/Themelistfetch',
+			url: '../Theme/Themeclonefetch',
 			dataType: 'json',
-			data: JSON.stringify({ recon_code: reconcode }),
+			data: "",
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -243,11 +243,10 @@
 						value: "",
 						text: "  Select  "
 					}));
-					$.each(result, function (index, item) {
-						var recontheme = item.theme_code + " / " + item.theme_desc
+					$.each(result, function (index, item) {					
 						$("#Cmbclone").append($('<option>', {
 							value: item.theme_code,
-							text: recontheme
+							text: item.theme_desc
 						}));
 					});
 				}
@@ -398,7 +397,7 @@
 					title: "Filter Criteria",
 					width: 100,
 					editor: function (container, options) {
-						combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_themefilterfield", "SOURCE")
+						combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_themefilterfield", "COMPARISON")
 					},
 				},
 				{
@@ -473,7 +472,7 @@
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
 		var selectedItem = cmb_var.dataItem(cmb_var.select());
 		var sourcedata = Sdata;
-		if (sourcedata == "SOURCE") {
+		if (sourcedata == "COMPARISON") {
 			var codeValue = selectedItem.filter_field;
 		} else {
 			var codeValue = selectedItem.filter_field;
