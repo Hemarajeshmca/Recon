@@ -10,9 +10,11 @@
 		.editable-dropdown {
 			position: relative;
 		}
+
 		.mb-3 {
 			margin-bottom: 0.5rem !important;
 		}
+
 		.form-select1 {
 			display: block;
 			width: 75%;
@@ -208,9 +210,9 @@
 			height: 18px;
 		}
 
-		.content-wrapper, .right-side {
+		/*.content-wrapper, .right-side {
 			background-color: #e7e7e7;
-		}
+		}*/
 
 		.info-box-icon {
 			background: white;
@@ -286,21 +288,13 @@
 								</select>
 							</div>
 							<div class="col-md-2">
-								<label for="" class="form-label">Rule order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<input class="form-control" id="ruleorder" type="number" value="0">
-							</div>
-							@*<div class="col-md-1" style="padding-left:0">
-							<label for="" class="form-label">Recon Value&nbsp;</label>
-							<input class="form-control" id="reconvalue" type="text" disabled>
-							</div>*@
-							<div class="col-md-2">
 								<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<div>
-									<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+									<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" data-value="2022-12-21" onclick="Dateformat()" style="width:80%" />
 									<span data-for='valid' class='k-invalid-msg'></span>
 								</div>
 							</div>
-							<div class="col-sm-2">
+							<div class="col-sm-2" style="margin-left:-39px;">
 								<label for="organization" class="form-label">
 									<span>Period To</span>&nbsp;&nbsp;&nbsp;&nbsp;
 									<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="untillactive" onclick="checkactive()" id="untillactive" />&nbsp;&nbsp;
@@ -310,6 +304,15 @@
 									<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
 								</div>
 							</div>
+							<div class="col-md-1">
+								<label for="" class="form-label">Rule order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" id="ruleorder" type="number" value="0">
+							</div>
+							<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
+								<label for="" class="form-label">Probable Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="probableflag" class="form-select form-control" style=" width:142%;">
+								</select>
+							</div>							
 						</div>
 						<div class="row" style="margin-top:5px;padding-right:5px">
 							<div class="col-sm-2">
@@ -329,17 +332,17 @@
 							</div>
 							<div class="col-sm-2" style="margin-left:-27px;">
 								<label id="" class="form-label">Source Account Mode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="souaccmode" class="form-select form-control" style=" width: 100%;" onchange="Sourcemodechange()">
+								<select id="souaccmode" class="form-select form-control" style=" width: 80%;" onchange="Sourcemodechange()">
 								</select>
 							</div>
-							<div class="col-sm-2">
+							<div class="col-sm-2" style="margin-left:-39px;">
 								<label id=comsupdataset class="form-label">Target Dataset</label>
 								<select id="comdataset" class="form-select form-control" style=" width: 100%;">
 								</select>
 							</div>
 							<div class="col-sm-2" style="margin-right: -38px;">
 								<label id="lblcomaccmode" class="form-label">Target Account Mode</label>
-								<select id="comaccmode" class="form-select form-control" style=" width: 100%;">
+								<select id="comaccmode" class="form-select form-control" style=" width: 120%;">
 								</select>
 							</div>
 						</div>
@@ -1289,7 +1292,32 @@
 
 			}
 		});
+		// probableflag flag
+		var in_master_code = "QCD_YN";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#probableflag").empty();
+				$("#probableflag").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#probableflag").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
 
+			}
+		});
+		
 		// group flag
 		var in_master_code = "QCD_RULE_GRP";
 		var in_user_code = "sundar";
@@ -2061,7 +2089,7 @@
 			}],
 			editable: true,
 		});
-		join_condition_list = [{ code: '', desc: '' },{ code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 
 		function OnEdit(e) {
 			try {
