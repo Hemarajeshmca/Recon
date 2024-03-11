@@ -630,6 +630,7 @@
 					document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
 					document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
 					document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+					
 					$("#recontype").val(res[0].recontype_code);
 					recontypecondition();
 				}
@@ -711,6 +712,7 @@
 						document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
 						document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
 						document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
+					
 						$("#recontype").val(res[0].recontype_code);
 						recontypecondition();
 					}
@@ -776,6 +778,7 @@
 							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 							$("#period_from").val(res.RuleHeader[0].period_from);
 							$("#period_to").val(res.RuleHeader[0].period_to);
+							$("#probableflag").val(res.RuleHeader[0].probable_match_flag);
 							if (res.RuleHeader[0].until_active_flag == "Y") {
 								$('#untillactive').attr('checked', true);
 							}
@@ -1474,6 +1477,7 @@
 			var status = "D";
 			var Groupflag = $("#cmbgroupflag").val();
 			var in_inactive_reason = "";
+			var probableflag =  $("#probableflag").val();
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/Ruleheader',
@@ -1482,7 +1486,7 @@
 					in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
-					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode,
+					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
 					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -3456,6 +3460,7 @@
 			var status = "Y";
 			var Groupflag = $("#cmbgroupflag").val();
 			var in_inactive_reason = "";
+			var probableflag = $("#probableflag").val();
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/Ruleheader',
@@ -3464,7 +3469,7 @@
 					in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
-					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode,
+					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag:probableflag,
 					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
