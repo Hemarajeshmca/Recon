@@ -87,133 +87,106 @@
 							<input class="form-control" type="hidden" id="datasetgid" value=0;>
 						</div>
 						<div class="col-sm-3">
-							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="cmbrecon" class="form-select form-control" onchange="reconcode()" disabled>
-							</select>
-						</div>
-						<div class="col-sm-3">
 							<label class="form-label" for="">Process Method&nbsp;</label>
 							<select id="Cmbprocessmethod" class="form-select form-control" onchange="processmethod()">
 							</select>
 						</div>
 						<div class="col-sm-3">
-							<label class="form-label" for="">Set Recon Field&nbsp;</label>
-							<select id="Cmbreconfield" class="form-select form-control">
+							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="cmbrecon" class="form-select form-control" onchange="reconcode()" disabled>
 							</select>
 						</div>
 					</div>
-					<div class="row">
-						<div class="nav-align-top mb-3 mt-3">
-							<ul class="nav nav-pills mb-2" role="tablist">
-								<li class="nav-item">
-									<button type="button" id="filter"  onclick="filterdata()"
-											class="nav-link active"
-											role="tab"
-											data-bs-toggle="tab"
-											data-bs-target="#navs-pills-top-filter"
-											aria-controls="navs-pills-top-filter"
-											aria-selected="true">
-										Filter
-									</button>
-								</li>
-								<li class="nav-item">
-									<button type="button"
-											class="nav-link" id="function" disabled
-											role="tab"
-											data-bs-toggle="tab"
-											data-bs-target="#navs-pills-top-function"
-											aria-controls="navs-pills-top-function"
-											aria-selected="true">
-										Function
-									</button>
-								</li>
+					<div class="row" style="height:300px;overflow-x:auto;padding-top:15px;margin-top:20px">
+						<div class="accordion-item">
+							<h2 class="accordion_header" id="headingfilter">
+								<button style="padding: 10px 0px;font-size: 0.95rem;  color: #566a7f" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefilter" aria-expanded="false" aria-controls="collapsefilter">
+									Filter
+								</button>
+							</h2>
+							<div id="collapsefilter" class="accordion-collapse collapse" aria-labelledby="headingfilter" data-bs-parent="#accordionfilter">
+								<div class="accordion-body" style="padding-left:15px;">
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_filter">
+											<div id="grid_filter">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingfunction">
+								<button style="padding: 10px 0px;font-size: 0.95rem;  color: #566a7f" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefunction" aria-expanded="false" aria-controls="collapsefunction">
+									Function
+								</button>
+							</h2>
+							<div id="collapsefunction" class="accordion-collapse collapse" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
+								<div class="accordion-body" style="padding-left:15px;">
+									<div class="row">
 
-								<li class="nav-item">
-									<button type="button"
-											class="nav-link" id="lookup" disabled
-											role="tab"
-											data-bs-toggle="tab"
-											data-bs-target="#navs-pills-top-LookUp"
-											aria-controls="navs-pills-top-LookUp"
-											aria-selected="true">
-										LookUp
-									</button>
-								</li>
-								<li class="nav-item">
-									<button type="button"
-											class="nav-link" id="query" disabled
-											role="tab"
-											data-bs-toggle="tab"
-											data-bs-target="#navs-pills-top-Query"
-											aria-controls="navs-pills-top-Query"
-											aria-selected="true">
-										Query
-									</button>
-								</li>
-							</ul>
-							<div class="tab-content">
-								@*Filter*@
-								<div class="tab-pane fade show active" id="navs-pills-top-filter" role="tabpanel" style="margin-top:-15px;">
-									<div class="panel panel-default" style="margin-top:5px;">
-										<div class="panel-body">
-											<div class="col-xs-12" style="margin-top:5px;">
-												<div id="gd_filter">
-													<div id="grid_filter">
-													</div>
-												</div>
-											</div>
+										<div class="col-sm-3">
+											<label class="form-label" for="">Get Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
+											</select>
+										</div>
+										<div class="col-sm-3">
+											<label class="form-label" for="">Set Recon Field&nbsp;</label>
+											<select id="Cmbreconfield" class="form-select form-control">
+											</select>
+										</div>
+										<div class="col-sm-3">
+											<label class="form-label" for="">Process Function&nbsp;</label>
+											<select id="Cmbfunction" class="form-select form-control">
+											</select>
 										</div>
 									</div>
 								</div>
-								@*Function*@
-								<div class="tab-pane fade" id="navs-pills-top-function" role="tabpanel" style="margin-top:-15px;">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<div class="row">
-												<div class="col-sm-3">
-													<label class="form-label" for="">Get Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-													<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
-													</select>
-												</div>
-												<div class="col-sm-3">
-													<label class="form-label" for="">Process Function&nbsp;</label>
-													<select id="Cmbfunction" class="form-select form-control">
-													</select>
-												</div>
-											</div>
+							</div>
+						</div>
+
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headinglookup">
+								<button style="padding: 10px 0px;font-size: 0.95rem;  color: #566a7f" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapselookup" aria-expanded="false" aria-controls="collapselookup">
+									Look Up
+								</button>
+							</h2>
+							<div id="collapselookup" class="accordion-collapse collapse" aria-labelledby="headinglookup" data-bs-parent="#accordionlookup">
+								<div class="accordion-body" style="padding-left:15px;">
+									<div class="row" style="margin-bottom:5px;">
+										<div class="col-sm-3">
+											<label class="form-label" for="">Get Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<select id="cmbdataset" class="form-select form-control" onchange="cmbdataset()">
+											</select>
+										</div>
+										<div class="col-sm-3">
+											<label class="form-label" for="">Lookup Return Field&nbsp;</label>
+											<select id="Cmbdatasetfield" class="form-select form-control">
+											</select>
+										</div>
+										<div class="col-sm-3">
+											<label class="form-label" for="">Set Recon Field&nbsp;</label>
+											<select id="Cmbreconfield" class="form-select form-control">
+											</select>
+										</div>
+									</div>
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="grid_lookup">
 										</div>
 									</div>
 								</div>
-								@*Lookup*@
-								<div class="tab-pane fade" id="navs-pills-top-LookUp" role="tabpanel" style="margin-top:-15px;">
-									<div class="panel panel-default" style="margin-top:5px;">
-										<div class="panel-body">
-											<div class="row" style="margin-bottom:5px;">
-												<div class="col-sm-3">
-													<label class="form-label" for="">Get Dataset Code&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-													<select id="cmbdataset" class="form-select form-control" onchange="cmbdataset()">
-													</select>
-												</div>
-												<div class="col-sm-3">
-													<label class="form-label" for="">Dataset Return Field&nbsp;</label>
-													<select id="Cmbdatasetfield" class="form-select form-control">
-													</select>
-												</div>
-											</div>
-											<div class="col-xs-12" style="margin-top:5px;">
-												<div id="grid_lookup">
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								@*Query*@
-								<div class="tab-pane fade" id="navs-pills-top-Query" role="tabpanel" style="margin-top:-15px;">
-									<div class="panel panel-default">
-										<div class="panel-body">
-											<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 178px;width: 1125px;"></textarea>
-										</div>
-									</div>
+							</div>
+						</div>
+
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingquery">
+								<button style="padding: 10px 0px;font-size: 0.95rem;  color: #566a7f" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsequery" aria-expanded="false" aria-controls="collapsequery">
+									Query
+								</button>
+							</h2>
+							<div id="collapsequery" class="accordion-collapse collapse" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
+								<div class="accordion-body" style="padding-left:15px;">
+									<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 178px;width: 1125px;"></textarea>
 								</div>
 							</div>
 						</div>
@@ -1052,7 +1025,7 @@
 			$("#navs-pills-top-LookUp").toggleClass('tab-pane fade');
 			$("#navs-pills-top-filter").hide();
 			$("#navs-pills-top-function").hide();
-			$("#navs-pills-top-LookUp").hide(); 
+			$("#navs-pills-top-LookUp").hide();
 			$("#query").removeClass('nav-link');
 			$("#query").toggleClass('nav-link active');
 			$("#navs-pills-top-Query").removeClass('tab-pane fade');

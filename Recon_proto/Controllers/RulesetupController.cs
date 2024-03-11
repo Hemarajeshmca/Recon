@@ -84,6 +84,7 @@ namespace Recon_proto.Controllers
 			public string? in_user_code { get; set; }
 			public string? out_msg { get; set; }
 			public string? out_result { get; set; }
+			public string probableflag { get; set; }
 		}
         [HttpPost]
         public JsonResult Ruleheader([FromBody] Rulesetupheader context)

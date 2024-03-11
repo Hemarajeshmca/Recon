@@ -91,12 +91,16 @@
 							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()" disabled>
 							</select>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-2">
+							<label class="form-label" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" id="theme_order" value="0">
+						</div>
+						<div class="col-sm-3">
 							<label class="form-label" for="">Clone Theme&nbsp;</label>
 							<select id="Cmbclone" class="form-select form-control">
 							</select>
 						</div>
-						<div class="col-sm-2" style="margin-top:30px">
+						<div class="col-sm-1" style="margin-top:30px">
 							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
 						</div>
 					</div>
@@ -276,6 +280,7 @@
 				$("#cmbrecon").val(data.recon_code);
 				$("#txtthemecode").val(data.theme_code);
 				$("#themegid").val(data.theme_gid);
+				$("#theme_order").val(data.theme_order);
 				detailsfetch(data.theme_code);
 				
 			}
@@ -284,6 +289,7 @@
 				var data = getlocalStorage("ls_pageList");
 				var cat = data.dataset_category;
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#theme_order").val(data.theme_order);
 				detailsfetch(data.theme_code)
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
@@ -359,6 +365,11 @@
 					], title: "Action&nbsp;", width: "40px",
 				},
 				{
+					field: "theme_seqno",
+					title: "Theme Seqno",
+					width: 100,
+				},
+				{
 					title: "(", width: 20,
 					template: '#=sel_checkbox(data)#'
 				},
@@ -373,11 +384,7 @@
 					width: 100,
 					hidden: true,
 				},
-				{
-					field: "theme_seqno",
-					title: "Theme Seqno",
-					width: 100,
-				},
+				
 				{
 					field: "filter_field_code",
 					title: "filter_field_code",
@@ -602,11 +609,12 @@
 			}
 			var action_by = "";
 			var status = "Y"
+			var theme_order = $("#theme_order").val();
 			$.ajax({
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -655,6 +663,7 @@
 				in_close_flag = "N";
 			}
 			var in_join_condition = model.join_condition;
+			var theme_seqno = model.theme_seqno
 			var action = "";
 			var action_by = ""
 			var themefilter_gid = model.themefilter_gid;
@@ -669,7 +678,7 @@
 				type: "POST",
 				url: '../theme/themedetail',
 				dataType: 'json',
-				data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition }),
+				data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition, theme_seqno: theme_seqno }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
@@ -756,12 +765,13 @@
 							action = "UPDATE"
 						}
 						var action_by = "";
-						var status = "Y"
+						var status = "Y";
+						var theme_order = $("#theme_order").val();
 						$.ajax({
 							type: "POST",
 							url: '../theme/themeheader',
 							dataType: 'json',
-							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status }),
+							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
 								var result = JSON.parse(response);
@@ -818,13 +828,12 @@
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
 			var theme_code = $("#txtthemecode").val();
-			var clone_theme = $("#Cmbclone").val();
+			var clone_theme = "";
 			var action = "";
 			var theme_gid = $("#themegid").val();
 
 			if (theme_gid > 0) {
-				theme_gid = $("#themegid").val();
-				return;
+				theme_gid = $("#themegid").val();				
 			} else {
 				theme_gid = 0;
 			}
@@ -835,12 +844,13 @@
 				action = "UPDATE"
 			}
 			var action_by = "";
-			var status = "Y"
+			var status = "Y";
+			var theme_order = $("#theme_order").val();
 			$.ajax({
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);

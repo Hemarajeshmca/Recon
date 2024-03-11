@@ -109,6 +109,7 @@ namespace Recon_proto.Controllers
 		{
 			public string? theme_name { get; set; }
 			public string theme_Code { get; set; }
+			public string theme_order { get; set; }
 			public Int32 theme_gid { get; set; }
 			public string? recon_code { get; set; }
 			public string? active_status { get; set; }
