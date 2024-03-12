@@ -748,7 +748,6 @@
                 contentType: 'application/json; charset=utf-8',
                 //success: function (response) {
                 //    var res = JSON.parse(response);
-
                 //    if (res.length > 0) {
                 //        var data = res[0];
                 //        if (data.out_result != '0') {
@@ -757,6 +756,7 @@
                 //                content: data.out_msg,
                 //                type: 'green',
                 //            });
+                //            downloadJob(data.out_result);
 
                 //        } else {
                 //            $.alert({
@@ -813,44 +813,25 @@
         hideProgress();
     }
 
-                //function griddata() {
-                //	$("#grid").kendoGrid({
-                //		dataSource: {
-                //			data: @Html.Raw(Json.Serialize(Model)),
-                //			pageSize: 10,
-                //			schema: {
-                //				model: {
-                //					id: "ProductId",
-                //					fields: {
-                //						Attributes: { type: "string" },
-                //						Constraints: { type: "string" },
-                //						Joins: { type: "string" },
-                //						close: { type: "boolean" },
-                //						Value: { type: "number" },
-                //						open: { type: "boolean" }
-                //					}
-                //				}
-                //			}
-                //		},
-                //		height: 550,
-                //		sortable: true,
-                //		pageable: {
-                //			input: true,
-                //			numeric: false
-                //		},
-                //		columns: [
-                //			{ field: "Attributes", title: "Attributes", width: 100 },
-                //			{ field: "Constraints", title: "Constraints", width: 200 },
-                //			{ field: "Price", title: "Price", width: 100 },
-                //			{ command: ["edit", "destroy"], title: "&nbsp;", width: 200 }
-                //		],
-                //		editable: "inline", // Enables inline editing
-                //		save: function (e) {
-                //			// Implement logic to save the edited data
-                //			// e.model will contain the updated data
-                //		}
-                //	});
-                //}
+    function downloadJob(val) {
+        debugger;
+        // window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + val + '';
+        var data = {};
+        data.jobid = val;
+        $.ajax({
+            type: "POST",
+            url: '../Utility/Downloads?jobid='+val+'',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify(val),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                debugger;
+                var res = JSON.parse(response);
+            }
+        });
+    }
+
 
 </script>
 

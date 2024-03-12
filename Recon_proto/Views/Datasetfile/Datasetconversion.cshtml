@@ -119,6 +119,15 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-12px;height: 84%;">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
+					
+				</div>
+				
 				<div class="row">
 					<div class="nav-align-top mb-3 mt-3">
 						<ul class="nav nav-pills mb-2" role="tablist">
@@ -224,11 +233,11 @@
 							<div class="col-md-1">  <strong>:</strong> </div>
 							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="initated_datetime"></span></p></div>
 						</div>
-						<div class="row">
+						@*<div class="row">
 							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Completed Date-Time </strong></p></div>
 							<div class="col-md-1">  <strong>:</strong> </div>
 							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="completed_datetime"></span></p></div>
-						</div>
+						</div>*@
 						<div class="row">
 							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Initiated By </strong></p></div>
 							<div class="col-md-1">  <strong>:</strong> </div>
@@ -278,31 +287,32 @@
 	});
 
 	function gridlist() {
-		grid_dataset_details([]);
 		var data = {};
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
 		data.in_active_status = '';
+		data.in_user_code = txtusername.user_name;
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '../DataSet/Datasetlistfetch',
+			url: '../Recon/Reconlistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
-				if (response.length > 0) {
-					debugger;
-					$("#gd_dataset").empty();
-					$("#gd_dataset").append("<div id='grid_dataset'></div>");
-					var res = JSON.parse(response);
-					const activeData = res.filter(item => item.active_status == "Y");
-
-					grid_dataset_details(activeData);
-				}
-				else {
-					grid_dataset_details([]);
-				}
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
 			},
 			error: function (er) {
 				alert(er)
@@ -310,6 +320,50 @@
 			}
 
 		});
+	}
+
+	function reconchangelist() {
+		//$("#DatasetProgress").removeClass('nav-link active');
+		//$("#DatasetProgress").toggleClass('nav-link');
+		//$("#navs-pills-Datasetlist").toggleClass('tab-pane fade active in');
+		//$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade');
+		//$("#Datasetlist").removeClass('nav-link');
+		//$("#Datasetlist").toggleClass('nav-link active');
+		//$("#navs-pills-DatasetProgress").hide();
+		//$("#navs-pills-Datasetlist").show();
+		//$("#FileName").val("");
+		//$("#File_Import").val("");
+		//$("#Pipeline").val("");
+		//$("#Pipeline").empty();
+			grid_dataset_details([]);
+			var data = {};
+			data.in_recon_code = $("#cmbreconname").val();
+			$.ajax({
+				type: "POST",
+			url: '../Datasetfile/datasetAgainstRecon',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response.length > 0) {
+						debugger;
+						$("#gd_dataset").empty();
+						$("#gd_dataset").append("<div id='grid_dataset'></div>");
+					const activeData = response.filter(item => item.active_status == "Y");
+
+						grid_dataset_details(activeData);
+					}
+					else {
+						grid_dataset_details([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
 	}
 
 	var status_Priority = [];
@@ -333,8 +387,7 @@
 					schema: {
 						model: {
 							fields: {
-								dataset_id: { type: "string" },
-								datasetCode: { type: "string" },
+								dataset_code: { type: "string" },
 								dataset_name: { type: "string" },
 								dataset_category: { type: "string" },
 								active_status: { type: "string" },
@@ -348,7 +401,7 @@
 						}
 					}
 				},
-				height: 345,
+				height: 300,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -386,14 +439,7 @@
 						hidden: true,
 					},
 					{
-						field: "dataset_id",
-						title: "Row id",
-						width: 100,
-						hidden: true,
-					},
-
-					{
-						field: "datasetCode",
+						field: "dataset_code",
 						title: "Dataset Code",
 						width: 100,
 						hidden: true
@@ -686,7 +732,7 @@
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('job_desc').innerHTML = selectedItem.dataset_name;
 		document.getElementById('initated_datetime').innerHTML = selectedItem.last_sync_date;
-		document.getElementById('completed_datetime').innerHTML = selectedItem.completed_date;
+		//document.getElementById('completed_datetime').innerHTML = selectedItem.completed_date;
 		document.getElementById('initatedby').innerHTML = selectedItem.in_user_code ? selectedItem.in_user_code : 'Sundar';
 		document.getElementById('status').innerHTML = selectedItem.last_sync_status;
 		document.getElementById('remarks').innerHTML = selectedItem.job_remark;
