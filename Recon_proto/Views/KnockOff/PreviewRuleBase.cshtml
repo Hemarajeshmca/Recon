@@ -436,15 +436,24 @@
 				success: function (response) {
 					debugger;
 					var result = JSON.parse(response);
-					if (result.ReconRule.length > 0) {
+					if (result.ReconRule.length > 0 && result.ReconDataSet.length > 0) {
 						$("#gd_preview").empty();
 						$("#gd_preview").append("<div id='grid_preview'></div>");
 						grid_rule(result.ReconRule);
 						$("#reconversion").val(result.ReconRule[0].recon_rule_version)
-					} else if (result.ReconDataSet.length > 0) {
 						$("#gd_dataset_grid").empty();
 						$("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
 						grid_dataset(result.ReconDataSet);
+					} else if (result.ReconDataSet.length > 0 && result.ReconRule.length == 0) {
+						$("#gd_dataset_grid").empty();
+						$("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
+						grid_dataset(result.ReconDataSet);
+						grid_rule([]);
+					} else if (result.ReconDataSet.length == 0 && result.ReconRule.length > 0) {
+						grid_dataset([]);
+						$("#gd_preview").empty();
+						$("#gd_preview").append("<div id='grid_preview'></div>");
+						grid_rule(result.ReconRule);
 					} else {
 						grid_rule([]);
 						grid_dataset([]);
@@ -652,7 +661,7 @@
 					hidden: true
 				},
 				{
-					field: "source_dataset_desc",
+					field: "comparison_dataset_desc",
 					title: "Comparision Dataset",
 					width: 150,
 					hidden: true
@@ -785,7 +794,7 @@
 		document.getElementById('rule_order').innerHTML = selectedItem.rule_order;
 		document.getElementById('rule_version').innerHTML = selectedItem.recon_rule_version;
 		document.getElementById('source_dataset').innerHTML = selectedItem.source_dataset_desc;
-		document.getElementById('comparision_dataset').innerHTML = selectedItem.source_dataset_desc;
+		document.getElementById('comparision_dataset').innerHTML = selectedItem.comparison_dataset_desc;
 		document.getElementById('active_status_desc').innerHTML = selectedItem.active_status_desc;
 		$("#infomodal").modal("show");
 	}

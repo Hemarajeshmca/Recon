@@ -131,6 +131,10 @@
             color: red;
         }
 
+        .k-block, .k-header, .k-grid-header, .k-toolbar, .k-grouping-header, .k-pager-wrap, .k-button, .k-draghandle, .k-treemap-tile, html .km-pane-wrapper .k-header {
+            background-color: rgb(135, 46, 123) !important;
+        }
+
         span.k-tooltip {
             white-space: pre-line;
         }
@@ -266,11 +270,14 @@
                                     <button type="button" onclick="generateReport()" class="btn btn-sm save_btn me-2" style="margin-top: 11%;">
                                         Generate Report
                                     </button> &nbsp;&nbsp;
+                                    <button type="button" onclick="preview()" class="btn btn-sm save_btn me-2" style="margin-top: 11%;">
+                                        Generate Report
+                                    </button> &nbsp;&nbsp;
                                  </div>
                                 <div class="col-sm-5">
 
                                  </div>
-                                <div class="col-sm-1" style="margin-top: 2%;">
+                                <div class="col-sm-1" style="margin-top: 2%;text-align: right;">
                                     <a href="../Reports/ReportGeneration_newlist"><img style="cursor:pointer;margin-top: 11%;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
                             </div>
@@ -281,7 +288,7 @@
                                     <input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
                                 </div>
                                 <div class="col-sm-3">
-                                    <label for="" class="form-label">Report Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                                    <label for="" class="form-label">Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <select id="cmbreporttype" class="form-select form-control">
                                     </select>
                                 </div>
@@ -470,12 +477,13 @@
             dataSource: {
                 data: data,
                 pageSize: 10,
+                sort: [{ field: "filter_seqno", dir: "asc" }],
                 schema: {
                     model: {
                         fields: {
                             reporttemplatefilter_gid: { type: "string", defaultValue: "0" },
                             reporttemplate_code: { type: "string" },
-                            filter_seqno: { type: "string" },
+                            filter_seqno: { type: "number", defaultValue: "0" },
                             report_field: { type: "string" },
                             reportparam_value: { type: "string" },
                             filter_criteria: { type: "string" },
@@ -493,13 +501,13 @@
             height: 300,
             groupable: false,
             edit: OnEdit,
+            sortable: false,
             dataBound: function (e) {
                 resultData = e.sender._data;
                 var rows = $('#grid_tempfilter').data('kendoGrid').tbody.children();
                 setColor(rows, resultData);
             },
-            sortable: false,
-            selectable: "row",
+
             filterable: false,
             navigatable: true,
             pageable: true,
@@ -509,7 +517,7 @@
                 pageSizes: true,
                 buttonCount: 5
             },
-            toolbar: "<a class='k-grid-add' href='' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
+            toolbar: "<a  href='javascript:void(0)' onclick='addRow()' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
             columns: [{
                 command: [
                     {
@@ -518,6 +526,12 @@
                         template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
                     },
                 ], title: "Action&nbsp;", width: "40px",
+            },
+            {
+                field: "filter_seqno",
+                title: "Seq No",
+                width: 50,
+
             },
             {
                 title: "(", width: 20,
@@ -533,12 +547,7 @@
                 title: "reporttemplate_code",
                 hidden: true,
             },
-            {
-                field: "filter_seqno",
-                title: "Seq No",
-                width: 50,
-                hidden: true,
-            },
+
             {
                 field: "report_field",
                 title: "report_field",
@@ -547,7 +556,7 @@
             },
             {
                 field: "reportparam_value",
-                title: "Report Field",
+                title: "Filter Field",
                 editor: function (container, options) {
                     combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
                 },
@@ -602,9 +611,21 @@
         });
 
         join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
-
     }
 
+    function addRow() {
+        var grid = $("#grid_tempfilter").data("kendoGrid");
+        var dataSource = grid.dataSource;
+
+        // Get the last sequence number and increment it
+        var lastSeqNo = grid.dataSource._data.length;
+        var newSeqNo = parseInt(lastSeqNo) + 1;
+
+        // Add a new row with the incremented sequence number
+        dataSource.add({ filter_seqno: newSeqNo });
+    }
+
+ 
     function OnEdit(e) {
         try {
             setDefaultValues(e);
@@ -871,20 +892,6 @@
 
     function generateReport() {
         debugger;
-        //var grid = $("#grid_tempfilter").data("kendoGrid");
-        //var model = grid.dataItem($(event.target).closest("tr"));
-        //var data = {};
-        //data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
-        //data.in_reporttemplate_code = $("#reporttemplate_code").val();
-        //data.in_reporttemplate_name = $("#rt_name").val();
-        //data.in_report_code = $("#cmbreporttype").val();
-
-
-        //$("#btn_fieldmapsave").click(function () {
-        //report_field: { type: "string" },
-        //reportparam_value: { type: "string" },
-        //filter_criteria: { type: "string" },
-        //Mohan
         var grid = $("#grid_tempfilter").data("kendoGrid");
         var objpplmapupdlist = [];
         var rpt_cond = "";
@@ -962,11 +969,11 @@
         };
 
         if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
-            //$.alert({
-            //    title: 'Recon',
-            //    content: "Report Generated, Please check the Job Status in Utility",
-            //    type: 'green',
-            //});
+            $.alert({
+                title: 'Recon',
+                content: "Report Generated, Please check the Job Status in Utility",
+                type: 'green',
+            });
             $.ajax({
                 type: "POST",
                 url: '../Reports/generateReport',
@@ -974,9 +981,144 @@
                 async: false,
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
+                //success: function (response) {
+                //    var res = JSON.parse(response);
+
+                //    if (res.length > 0) {
+                //        var data = res[0];
+                //        if (data.out_result != '0') {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'green',
+                //            });
+
+                //        } else {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'red',
+                //            });
+                //        }
+                //    } else {
+                //        $.alert({
+                //            title: 'Recon',
+                //            content: "Something Went Wrong ..!",
+                //            type: 'red',
+                //        });
+                //    }
+                //},
+                //error: function (er) {
+                //    debugger;
+                //    alert(er)
+                //    console.log(er)
+                //}
+            });
+        }
+        else if (!$("#reconname").val()) {
+            $.alert({
+                title: 'Recon',
+                content: "Recon code is missing ..!",
+                type: 'red',
+            });
+        } else if (!$("#cmbreporttype").val()) {
+            $.alert({
+                title: 'Recon',
+                content: "Report code is missing ..!",
+                type: 'red',
+            });
+        }  
+    }
+
+    function preview() {
+        debugger;
+        var grid = $("#grid_tempfilter").data("kendoGrid");
+        var objpplmapupdlist = [];
+        var rpt_cond = "";
+        var value = "";
+        var open_braces = "";
+        var close_braces = "";
+        var joins = "";
+        var joins1 = "";
+
+        for (var i = 0; i < grid._data.length; i++) {
+            value = "";
+            open_braces = "";
+            close_braces = "";
+            joins = "";
+            joins1 = "";
+
+            if (i == 0) {
+                joins1 = 'AND ';
+            }
+
+            if (i == grid._data.length - 1) {
+                joins = " ";
+            }
+            else {
+                if (grid._data[i].join_condition) {
+                    joins = grid._data[i].join_condition + " ";
+                } else {
+                    joins = 'AND '
+                }
+            }
+
+            // close braces assigning
+            if ($('#chk_sel1_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
+                close_braces = " ) ";
+            }
+
+            // open braces assigning
+            if ($('#chk_sel_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
+                open_braces = "(";
+            }
+
+            // Condition based value assigning
+            if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+                value = " != '" + grid._data[i].filter_value + "'";
+            }
+            else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
+                value = " like '%" + grid._data[i].filter_value + "'";
+            }
+            else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
+                value = " like '" + grid._data[i].filter_value + "%'";
+            }
+            else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
+                value = " = '" + grid._data[i].filter_value + "'";
+            } else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
+                value = " like '%'" + grid._data[i].filter_value + "%'";
+            } else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
+                value = " > '" + grid._data[i].filter_value + "'";
+            } else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
+                value = " < '" + grid._data[i].filter_value + "'";
+            } else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
+                value = " <= '" + grid._data[i].filter_value + "'";
+            } else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
+                value = " >= '" + grid._data[i].filter_value + "'";
+            } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
+                value = " not like '%'" + grid._data[i].filter_value + "%'";
+            }
+
+            rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
+        }
+
+        var data = {
+            "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
+            "reportcondition": rpt_cond,
+            "in_ip_addr": "localhost", "in_outputfile_flag": true, "in_user_code": "Hema"
+        };
+
+        if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
+            $.ajax({
+                type: "POST",
+                url: '../Reports/generateReportView',
+                dataType: 'json',
+                async: false,
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     var res = JSON.parse(response);
-
+                    debugger;
                     if (res.length > 0) {
                         var data = res[0];
                         if (data.out_result != '0') {
@@ -1020,7 +1162,7 @@
                 content: "Report code is missing ..!",
                 type: 'red',
             });
-        }  
+        }
     }
 
 </script>
