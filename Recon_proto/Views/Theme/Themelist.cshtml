@@ -349,7 +349,7 @@
 	function myDeleteJs() {
 		var grid = $("#grid_theme").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var dataset_gid = model.dataset_gid;
+		var dataset_gid = model.theme_gid;
 		$.confirm({
 			icon: 'fa fa-warning',
 			title: 'Recon',
@@ -379,18 +379,20 @@
 										$.alert('Reason cannot be empty');
 										return false;
 									}
-									var dataset_name = "";
-									var dataset_category = "";
-									var dataset_code = model.datasetCode;
+									var themename = "";
+									var cmbrecon = "";
+									var theme_code = "";
+									var clone_theme = "";
 									var action = "DELETE";
-									var action_by = ""
-									var dataset_gid = model.dataset_gid;
-									var status = "";
+									var theme_gid = model.theme_gid;
+									var action_by = "";
+									var status = "Y"
+									var theme_order = "";
 									$.ajax({
 										type: "POST",
-										url: '../DataSet/Datasetheader',
+										url: '../theme/themeheader',
 										dataType: 'json',
-										data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_gid, active_status: status, inactive_reason: name }),
+										data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {
 											var result = JSON.parse(response);
