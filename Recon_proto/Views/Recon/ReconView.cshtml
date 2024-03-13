@@ -738,7 +738,7 @@
 						text: "  Select  "
 					}));
 					$.each(res.Reconfield, function (index, item) {
-						if (item.recon_field_type == "number") {
+						if (item.recon_field_type == "NUMERIC") {
 							$("#cmbreconvaluefield").append($('<option>', {
 								value: item.recon_field_name,
 								text: item.recon_field_desc
@@ -1740,7 +1740,7 @@
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
 		if (recontype == "V") {
-			$("#partialmatch1").prop('disabled', true);
+			$("#partialmatch1").prop('disabled', false);
 			$('#partialmatch2').prop('checked', true);
 			$('#reconvalueflag1').prop('checked', true);
 			$('#recondateflag2').prop('checked', true);
@@ -1773,6 +1773,7 @@
 			} else {
 				$('#partialmatch2').prop('checked', true);
 				$("#thersholdplus").prop('disabled', true);
+				$("#partialmatch1").prop('disabled', false);
 			}
 			$('#recondateflag1').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
@@ -1782,7 +1783,6 @@
 			$('#reconvalueflag1').prop('disabled', true);
 			$('#recondateflag1').prop('disabled', false);
 			$('#reconvalueflag2').prop('disabled', false);
-			
 			$("#thersholdminus").prop('disabled', true);
 		}
 	}
