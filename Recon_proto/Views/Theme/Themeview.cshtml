@@ -68,7 +68,7 @@
 								</div>
 								<div class="col-sm-4">
 									<label for="lblstatus" class="form-label">Status</label><br>
-									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+									<input class="form-control" type="text" id="txtstatus" value="" disabled>
 								</div>
 							</div>
 						</div>
@@ -91,21 +91,26 @@
 							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()" disabled>
 							</select>
 						</div>
-						<div class="col-sm-2">
-							<label class="form-label" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<div class="col-sm-1">
+							<label class="form-label" style="width: 84px;" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="theme_order" value="0">
+						</div>
+						<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
+							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="holdflag" class="form-select form-control" style=" width:100%;">
+							</select>
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Clone Theme&nbsp;</label>
 							<select id="Cmbclone" class="form-select form-control">
 							</select>
 						</div>
-						<div class="col-sm-1" style="margin-top:30px">
+						<div class="col-sm-1" style="margin-top:30px;margin-left: -15px;">
 							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
 						</div>
 					</div>
 
-					<div class="row" style="margin-top:20px;">
+					<div class="row">
 						<div class="col-xs-12">
 							<div id="gd_themefilter">
 								<div id="grid_themefilterfield">
@@ -195,9 +200,34 @@
 					}));
 				});
 			}
-		});		
+		});
+		// holdflag flag
+		var in_master_code = "QCD_YN";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#holdflag").empty();
+				$("#holdflag").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#holdflag").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+
+			}
+		});
 		load();
-		
+
 	}
 	function reconchange() {
 		//sorce dataset
@@ -247,7 +277,7 @@
 						value: "",
 						text: "  Select  "
 					}));
-					$.each(result, function (index, item) {					
+					$.each(result, function (index, item) {
 						$("#Cmbclone").append($('<option>', {
 							value: item.theme_code,
 							text: item.theme_desc
@@ -281,14 +311,21 @@
 				$("#txtthemecode").val(data.theme_code);
 				$("#themegid").val(data.theme_gid);
 				$("#theme_order").val(data.theme_order);
+				$("#txtstatus").val(data.active_status_desc);
 				detailsfetch(data.theme_code);
-				
+
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
 				var data = getlocalStorage("ls_pageList");
 				var cat = data.dataset_category;
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#themename").val(data.theme_desc);
+				$("#cmbrecon").val(data.recon_code);
+				$("#txtthemecode").val(data.theme_code);
+				$("#themegid").val(data.theme_gid);
+				$("#theme_order").val(data.theme_order);
+				$("#txtstatus").val(data.active_status_desc);
 				$("#theme_order").val(data.theme_order);
 				detailsfetch(data.theme_code)
 				$("#Cmbclone").prop('disabled', true)
@@ -310,6 +347,7 @@
 				dataSource: {
 					data: data,
 					pageSize: 5,
+					sort: [{ field: "theme_seqno", dir: "asc" }],
 					schema: {
 						model: {
 							fields: {
@@ -318,11 +356,11 @@
 								filter_field_code: { type: "string", defaultValue: "" },
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
-								theme_seqno: { type: "number" },
+								theme_seqno: { type: "NUMBER" },
 								ident_value: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
-								join_condition: { type: "string" },
+								join_condition: { type: "string", defaultValue: "" },
 							}
 						}
 					}
@@ -348,7 +386,7 @@
 					pageSizes: true,
 					buttonCount: 5
 				},
-				toolbar: "<a class='k-grid-add' onclick=saveheader()  href='' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+				toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 				columns: [{
 					command: [
 						{
@@ -360,14 +398,14 @@
 						{
 							name: "Delete",
 							id: "Delete",
-							template: "<a href='' onclick='myDeleteJsrulecondition()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+							template: "<a href='' onclick='myDeleteJstheme()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 						},
 					], title: "Action&nbsp;", width: "40px",
 				},
 				{
 					field: "theme_seqno",
-					title: "Theme Seq.no.",
-					width: 50,
+					title: "Theme Seq No.",
+					width: 50,					
 				},
 				{
 					title: "(", width: 20,
@@ -384,7 +422,7 @@
 					width: 100,
 					hidden: true,
 				},
-				
+
 				{
 					field: "filter_field_code",
 					title: "filter_field_code",
@@ -409,7 +447,7 @@
 				},
 				{
 					field: "ident_value",
-					title: "Identifier Value",
+					title: "Filter Value",
 					width: 100,
 				},
 				{
@@ -444,16 +482,35 @@
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
 		}
-
+		
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
+				
 			}
 			catch (err) {
 				javascript_log4j_root(arguments.callee.name, err);
 			}
-		}
+		}	
+		
 	}
+	
+	function addRow() {
+		var grid = $("#grid_themefilterfield").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].theme_seqno > max) {
+				max = grid.dataSource._data[i].theme_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ theme_seqno: newSeqNo, themefilter_gid :0 });
+	}
+	
 	var gridRowID = -1;
 	function sel_checkbox(data) {
 		gridRowID++;
@@ -586,20 +643,24 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
+
 	function saveheader() {
 		try {
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
 			var theme_code = $("#txtthemecode").val();
-			var clone_theme = $("#Cmbclone").val();			
+			var clone_theme = $("#Cmbclone").val();
 			var action = "";
 			var theme_gid = $("#themegid").val();
 
 			if (theme_gid > 0) {
 				theme_gid = $("#themegid").val();
+				addRow();
 				return;
+				
 			} else {
 				theme_gid = 0;
+
 			}
 
 			if ($("#txtmode").val() == "Create") {
@@ -619,10 +680,10 @@
 				success: function (response) {
 					var result = JSON.parse(response);
 					var data = result[0];
-					if (data.out_result == "1") {						
+					if (data.out_result == "1") {
 						$("#themegid").val(data.in_theme_gid);
 						$("#txtthemecode").val(data.in_theme_code);
-						$("#txtstatus").val("Active");
+						addRow();
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -662,7 +723,11 @@
 			} else {
 				in_close_flag = "N";
 			}
-			var in_join_condition = model.join_condition;
+			var in_join_condition ='';
+			if (model.join_condition != undefined) {
+				in_join_condition = model.join_condition;
+			}
+			
 			var theme_seqno = model.theme_seqno
 			var action = "";
 			var action_by = ""
@@ -688,6 +753,7 @@
 							content: res[0].out_msg,
 							type: 'green',
 						});
+						detailsfetch($("#txtthemecode").val())
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -717,7 +783,6 @@
 					//$("#gd_themefilter").empty();
 					//$("#gd_themefilter").append("<div id='gd_themefilter'></div>");
 					grid_themefilter(res.themedetail);
-					$("#txtstatus").val("Active");
 					if (response.length > 0) {
 						$("#Cmbclone").val();
 						$("#Cmbclone").prop('disabled', true)
@@ -765,7 +830,7 @@
 							action = "UPDATE"
 						}
 						var action_by = "";
-						var status = "Y";
+						var status = "D";
 						var theme_order = $("#theme_order").val();
 						$.ajax({
 							type: "POST",
@@ -822,7 +887,7 @@
 				},
 			},
 		});
-	}	
+	}
 	function saveheadersubmit() {
 		try {
 			var themename = $("#themename").val();
@@ -833,16 +898,12 @@
 			var theme_gid = $("#themegid").val();
 
 			if (theme_gid > 0) {
-				theme_gid = $("#themegid").val();				
+				theme_gid = $("#themegid").val();
+				action = "UPDATE"
 			} else {
 				theme_gid = 0;
 			}
 
-			if ($("#txtmode").val() == "Create") {
-				action = "INSERT"
-			} else if ($("#txtmode").val() == "Edit") {
-				action = "UPDATE"
-			}
 			var action_by = "";
 			var status = "Y";
 			var theme_order = $("#theme_order").val();
@@ -889,4 +950,73 @@
 			console.log(e)
 		}
 	}
+	function myDeleteJstheme() {
+		var grid = $("#grid_themefilterfield").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var themefilter_gid = parseInt(model.themefilter_gid);
+		if (themefilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var theme_code = "";
+						var recon_field = "";
+						var filter_criteria = "";
+						var filter_value = "";
+						var in_open_flag = "";
+						var in_close_flag = "";
+						var in_join_condition = "";
+						var theme_seqno = 0;
+						var action = "DELETE";
+						var action_by = ""
+						var themefilter_gid = model.themefilter_gid;
+						var active_status = "";
+						$.ajax({
+							type: "POST",
+							url: '../theme/themedetail',
+							dataType: 'json',
+							data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition, theme_seqno: theme_seqno }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var res = JSON.parse(response);
+								if (res[0].out_result == "1") {
+									$.alert({
+										title: 'Recon',
+										content: res[0].out_msg,
+										type: 'green',
+									});
+									detailsfetch($("#txtthemecode").val())
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: res[0].out_msg,
+										type: 'green',
+									});
+								}
+							}
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+
 </script>
