@@ -272,7 +272,6 @@ namespace Recon_proto.Controllers
             FileDownloadgrid.jobGid = jobid;
             FileDownloadgrid.jobName = "";
             FileDownloadgrid.filePath = filepath.Replace("'", "");
-           // exceltodataset(FileDownloadgrid.filePath);
             try
             {
                 using (var client = new HttpClient())
@@ -304,39 +303,6 @@ namespace Recon_proto.Controllers
                     return File(bytes, "application/octet-stream", fileName);
                 }
             }
-
-            //try
-            //{
-            //    using (var client = new HttpClient())
-            //    {
-            //        string[] result = { };
-            //        client.BaseAddress = new Uri(urlstring);
-            //        client.DefaultRequestHeaders.Accept.Clear();
-            //        client.Timeout = Timeout.InfiniteTimeSpan;
-            //        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //        HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
-            //        content.Headers.Add("user_code", HttpContext.Session.GetString("user_code"));
-            //        var response = client.PostAsync("files", content).Result;
-            //        Stream data = response.Content.ReadAsStreamAsync().Result;
-            //        StreamReader reader = new StreamReader(data);
-            //        string base64data = string.Empty;
-            //        var bytes = new byte[data.Length];
-            //        data.Read(bytes, 0, bytes.Length);
-            //        ConvertCsvByteArrayToDataTable(bytes);
-            //        var responses = new FileContentResult(bytes, "application/octet-stream");
-            //        var fileName = jobid.ToString() + ".zip";
-            //        var contentDisposition = new ContentDisposition
-            //        {
-            //            FileName = jobid,
-            //            Inline = true,
-            //        };
-
-            //        Response.Clear();
-            //        Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-            //        Response.Headers.Add("Content-Type", "application/octet-stream");
-            //        return File(bytes, "application/octet-stream", fileName);
-            //    }
-            //}
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
@@ -344,64 +310,6 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-
-        static DataTable ConvertCsvByteArrayToDataTable(byte[] csvData)
-        {
-            using (var stream = new MemoryStream(csvData))
-            using (var reader = new StreamReader(stream))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                DataTable dataTable = new DataTable();
-
-                // Read the CSV data and populate the DataTable
-                csv.Read();
-                csv.ReadHeader();
-
-                foreach (var header in csv.HeaderRecord)
-                {
-                    dataTable.Columns.Add(header);
-                }
-
-                while (csv.Read())
-                {
-                    DataRow row = dataTable.NewRow();
-                    for (int i = 0; i < csv.ColumnCount; i++)
-                    {
-                        row[i] = csv.GetField(i);
-                    }
-                    dataTable.Rows.Add(row);
-                }
-
-                return dataTable;
-            }
-        }
-
-        public DataTable exceltodataset(string filepath)
-        {
-            DataTable dtexcel = new DataTable();//datatable object.
-            try
-            {
-                //var out_result = getfilepath();
-                filepath = "C:/temp/1.csv";
-                string excelConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filepath + ";Extended Properties=\"Excel 12.0;HDR=Yes;IMEX=1\"";
-                //string excelConnectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filepath + ";Extended Properties=\"Excel 8.0;HDR=Yes;IMEX=1\"";
-                OleDbConnection excelConnection = new OleDbConnection(excelConnectionString);//connection for excel.
-                excelConnection.Open();//excel connection open.
-               
-                dtexcel = excelConnection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                if (dtexcel == null)
-                {
-                    return null;
-                }
-                excelConnection.Dispose();
-            }catch (Exception ex)
-            {
-
-            }
-            
-            return (dtexcel);
-        }
-
         public class fileModel
         {
             public String? jobGid { get; set; }
