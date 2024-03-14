@@ -1472,6 +1472,63 @@ namespace Recon_proto.Controllers
 		#endregion
 
 
+		#region getreportparamwithrecon
+		public JsonResult getreportparamrecon([FromBody] Reconparamreconlistmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result1 = new DataTable();
+			List<getreportparamlist> objcat_lst = new List<getreportparamlist>();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Report/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					//client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getreportparamlistrecon", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					//result1 = JsonConvert.DeserializeObject<DataTable>(d2);
+					//for (int i = 0; i < result1.Rows.Count; i++)
+					//{
+					//	getreportparamlist objcat = new getreportparamlist();
+					//	//objcat.report_code = Convert.ToInt16(result1.Rows[i]["report_code"]);
+					//	objcat.reportparam_code = result1.Rows[i]["reportparam_code"].ToString();
+					//	objcat.reportparam_value = result1.Rows[i]["reportparam_value"].ToString();
+					//	objcat.report_code = result1.Rows[i]["report_code"].ToString();
+
+					//	objcat_lst.Add(objcat);
+					//}
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "getreportparam");
+				return Json(ex.Message);
+			}
+		}		
+
+		public class Reconparamreconlistmodel
+		{
+			public String? in_report_code { get; set; }
+			public String? in_recon_code { get; set; }
+		}
+		#endregion
+
+
 	}
 
 }
