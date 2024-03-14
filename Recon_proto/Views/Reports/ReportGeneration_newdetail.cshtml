@@ -252,6 +252,64 @@
             box-shadow: none !important;
             margin-top: 18px;
         }
+
+        .plusminus {
+            float: right;
+        }
+
+        .ioniconplus {
+            width: 15px;
+            background-image: url('../images/minus-circled.png');
+            background-repeat: no-repeat;
+            background-position: -50px -128px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .k-grouping-header {
+            color: #fff !important;
+        }
+
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: #fff !important;
+        }
+
+        .previous {
+            /*background-color: #84b6e1;*/
+            border: 1px solid #fff;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            padding: 2px 10px;
+        }
+
+        .next {
+/*            background-color: #367fa9;
+*/            
+            border: 1px solid #fff;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            padding: 2px 10px;
+        }
+
+        .round {
+            border-radius: 50%;
+        }
+
+        .page_bg {
+            width: 100%;
+            background-color: rgb(135, 46, 123);
+        }
+
+        .accordion_head {
+            background-color: rgb(135, 46, 123);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 6px 6px 0px;
+            padding: 1px 3px;
+        }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -262,93 +320,82 @@
                     <div class="col-md-12">
                         <div class="box box-orange" style="height:auto;">
                             <div class="row">
-                                <div class="col-md-3">
-                                    <label for="organization" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label><br>
-                                    <select id="reconname" class="form-select form-control"> </select>
-                                </div>
-                                <div class="col-sm-3">
-                                    <button type="button" onclick="generateReport()" class="btn btn-sm save_btn me-2" style="margin-top: 11%;">
-                                        Generate Report
-                                    </button> &nbsp;&nbsp;
-                                    <button type="button" onclick="preview()" class="btn btn-sm save_btn me-2" style="margin-top: 11%;">
-                                        Report Preview
-                                    </button> &nbsp;&nbsp;
-                                 </div>
-                                <div class="col-sm-5">
-
-                                 </div>
-                                <div class="col-sm-1" style="margin-top: 2%;text-align: right;">
-                                    <a href="../Reports/ReportGeneration_newlist"><img style="cursor:pointer;margin-top: 11%;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </div>
-                            </div>
-                            <div class="row" style="padding-bottom: 15px; padding-top: 10px;padding-left:5px;padding-right:5px">
                                 <div class="col-sm-3">
                                     <label for="" class="form-label">Report Templete Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <input class="form-control" id="rt_name" name="ReportTemplete" type="text" disabled>
                                     <input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label for="" class="form-label">Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <select id="cmbreporttype" class="form-select form-control">
                                     </select>
                                 </div>
-                               
-                                @*<div class="col-sm-3">
-                                    <a href="../Reports/ReportGeneration_newlist"><img style="cursor:pointer;margin-top: 11%;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                </div>*@
+                                <div class="col-md-3">
+                                    <label for="organization" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label><br>
+                                    <select id="reconname" class="form-select form-control"> </select>
+                                </div>
+                                <div class="col-sm-2" style="text-align: right;">
+                                    <img onclick="generateReport()" style="cursor:pointer;margin-top: 20%;height: 23px;width: 27px;" src="~/Assets/images/gen_report.png" title="Generate Report">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img onclick="preview()" style="cursor:pointer;margin-top: 20%;height: 23px;width: 27px;" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="../Reports/ReportGeneration_newlist"><img style="cursor:pointer;margin-top: 20%;" src="~/Content/images/toplist.png" title="Back"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
                             </div>
 
-                            <div class="row">
-                                <div id="gd_tempfilter">
-                                    <div id="grid_tempfilter">
+                            <div class="col-md-12">
+                                <div class="accordion_container">
+                                    <div class=" panel panel-primary" style="margin-bottom:5px;">
+                                        <div class="accordion_head">Attribute Search <span class="plusminus">+</span> </div>
+                                        <div class="accordion_body">
+                                            <div class="panel-body" style="padding-right:50px;width:100%;max-height:100%">
+                                                <div id="Partialone" style="margin:auto;height:200px;width:104%;">
+                                                    <div id="gd_tempfilter">
+                                                        <div id="grid_tempfilter">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            @*<div class="row">
-                            <div class="nav-align-top mb-3 mt-3">
-                            <ul class="nav nav-pills mb-2" role="tablist">
-                            <li class="nav-item">
-                            <button type="button"
-                            class="nav-link active"
-                            role="tab"
-                            data-bs-toggle="tab"
-                            data-bs-target="#navs-pills-top-ReportFilter"
-                            aria-controls="navs-pills-top-ReportFilter"
-                            aria-selected="true">
-                            Report Filter
-                            </button>
-                            </li>
-                            </ul>
-                            <div class="tab-content">
-
-                            <div class="tab-pane fade show active" id="navs-pills-top-ReportFilter" role="tabpanel" style="margin-top:-25px;">
-                            <div class="panel panel-default">
-                            <div class="panel-body">
-                            <div class="col-xs-12">
-                            <div id="gd_tempfilter">
-                            <div id="grid_tempfilter">
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>*@
+                                <div class="col-md-12" style="padding:0px; margin:0px;" id="Dynamic_grid">
+                                    <div id="Maingrid" style="margin:auto;height:auto;top:-2px;width:100%;margin-left:0%;"> </div>
+                                <div class="page_bg" style="display:none;margin-top:1%;padding: 5px 2px;">
+                                        <a href="#" onclick="pagination('first')" class="previous round">&#171;</a>
+                                        &nbsp;<a href="#" onclick="pagination('previous')" class="previous round">&#8249;</a>&nbsp; <input type="text" id="gotoPage" style="padding: 1px 2px; border: 1px solid #b1a6a6; border-radius: 5px; width:36px;">
+                                        &nbsp;<a href="#" onclick="pagination('next')" class="next round">&#8250;</a>
+                                        &nbsp;<a href="#" onclick="pagination('last')" class="next round">&#187;</a>
+                                        &nbsp;<select name="items" id="items" style="padding: 5px; border: 1px solid #b1a6a6; border-radius: 5px" onchange="gridpage()">
+                                            <option value="100">100</option>
+                                            <option value="500">500</option>
+                                            <option value="1000">1000</option>
+                                            <option value="2000">2000</option>
+                                        </select>
+                                        &nbsp;<label style="color: #fff">items per page </label>
+                                    &nbsp; &nbsp; &nbsp; &nbsp;<label style="margin-left:109px;color: #fff;">Total No Of Records : </label>
+                                        <span id="total" style="width:20%;border:none;margin-left:0px;color:#fff"></span>
+                                        &nbsp;<label style="margin-left:4px; color: #fff;">Total pages : </label>
+                                        <span id="totalpage" style="width:20%;border:none;margin-left:-1px; color:#fff;"></span>
+                                    </div>
+                                </div>
+                            </div>                        
                         </div>
-                    </div>
                 </form>
             </div>
         </div>
     </div>
-
-
 </body>
 </html>
 
 <script type="text/javascript">
+    var trangid;
+    var count;
+    var result = 0;
+    var orgindata = "";
+    var radiochecked;
+    var Rec_id;
+    var getreconid = [];
     $(document).ready(function () {
         var gridcopy = [];
         $("#navhead").text("Report Generation");
@@ -356,6 +403,7 @@
         getreconlist();
         detailfetch();
         $("#cmbreporttype").prop("disabled", false);
+        $("#gotoPage").val(1);
     });
 
     function getreconlist() {
@@ -498,7 +546,7 @@
                     }
                 }
             },
-            height: 300,
+            height: 260,
             groupable: false,
             edit: OnEdit,
             sortable: false,
@@ -625,7 +673,7 @@
         dataSource.add({ filter_seqno: newSeqNo });
     }
 
- 
+
     function OnEdit(e) {
         try {
             setDefaultValues(e);
@@ -912,10 +960,10 @@
                 joins1 = 'AND ';
             }
 
-            if (i == grid._data.length-1) {
+            if (i == grid._data.length - 1) {
                 joins = " ";
             }
-            else  {
+            else {
                 if (grid._data[i].join_condition) {
                     joins = grid._data[i].join_condition + " ";
                 } else {
@@ -958,7 +1006,7 @@
             } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
                 value = " not like '%'" + grid._data[i].filter_value + "%'";
             }
-            
+
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
         }
 
@@ -1027,7 +1075,7 @@
                 content: "Report code is missing ..!",
                 type: 'red',
             });
-        }  
+        }
     }
 
     function preview() {
@@ -1103,15 +1151,15 @@
         }
 
         var data = {
-            "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
-            "reportcondition": rpt_cond,
-            "in_ip_addr": "localhost", "in_outputfile_flag": true, "in_user_code": "Hema"
+            "in_recon_code": $("#reconname").val(), 
+            "in_report_code": $("#cmbreporttype").val(), 
+            "in_report_condition": rpt_cond,
         };
 
         if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
             $.ajax({
                 type: "POST",
-                url: '../Reports/generateReportView',
+                url: '../Reports/Report_Runpagereport',
                 dataType: 'json',
                 async: false,
                 data: JSON.stringify(data),
@@ -1122,12 +1170,11 @@
                     if (res.length > 0) {
                         var data = res[0];
                         if (data.out_result != '0') {
-                            $.alert({
-                                title: 'Recon',
-                                content: data.out_msg,
-                                type: 'green',
-                            });
-
+                            result = res[0].out_rec_count;
+                            count = res[0].out_result;
+                            if (res[0].out_rec_count > 0) {
+                                Runprogress();
+                            }
                         } else {
                             $.alert({
                                 title: 'Recon',
@@ -1164,5 +1211,401 @@
             });
         }
     }
+
+    function Runprogress() {
+        if (result == 0) {
+            $.alert({
+                title: 'Impact',
+                content: "Please Generate the report",
+                type: 'blue',
+
+
+            });
+            return false;
+        }
+        $("#Dynamic_grid").show();
+        debugger;
+
+        document.getElementById('total').innerHTML = result;
+        var Actpageno = parseInt(parseInt(result) / parseInt(pagesize));
+        document.getElementById('totalpage').innerHTML = Actpageno;
+        var data = {};
+        data.in_rptsession_gid = count;
+        data.in_page_no = pageno;
+        data.in_page_size = pagesize;
+        data.in_tot_records = result;
+        data.in_recon_code = $("#reconname").val();
+        console.log(`data`, data);
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: '../Reports/getPageNoReport',
+            dataType: "json",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (Data1) {
+                debugger;
+                if (Data1 != '') {
+                    var columns = [];
+                    var chkval = JSON.parse(Data1);
+                    var arr = [];
+                    $.each(chkval, function (i, e) {
+
+                        $.each(e, function (key, val) {
+                            arr.push(val);
+                        });
+
+                    });
+
+                    var data = JSON.parse(Data1);
+                    var i = 0;
+
+                    var entryIndex = "entries[" + i + "]";
+
+                    for (var key in data[0]) {
+
+                        var propType = typeof data[0][key];
+                        //alert(key);
+                        if (key != "") {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,
+                                width: 150,
+                            });
+                        }
+                        i = i + 1;
+                        entryIndex = "entries[" + i + "]";
+                    }
+                    var rows = [];
+                    var data1 = JSON.parse(Data1);
+
+                    $.each(data1, function (i, e) {
+                        var entryArray = [];
+                        $.each(e, function (key, val) {
+
+                            entryArray.push(val);
+                        });
+
+                        rows.push(kendo.observable({
+                            entries: entryArray
+
+                        }));
+
+
+
+                    });
+
+                    var viewModel = kendo.observable({
+                        gridRows: rows
+                    });
+
+                    var configuration = {
+                        height: 280,
+                        navigatable: true,
+                        groupable: false,
+                        editable: false,
+                        sortable: true,
+                        Scrollable: true,
+                        filterable: true,
+                        pagable: false,
+                        resizable: true,
+                        persistSelection: true,
+                        selectable: "false",
+                        columns: columns,
+                        rows: viewModel,
+                    };
+                    $("#example").remove();
+                    $('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+                    $("#grid").kendoGrid(configuration).data("kendoGrid");
+                    kendo.bind($("#grid"), viewModel);
+                    $(".page_bg").show();
+                }
+            }
+        });
+
+
+
+        $("#exportExcel").show();
+        if ($('.accordion_body').is(':visible')) {
+            $(".accordion_body").slideUp(300);
+            $(".plusminus").text('+');
+        }
+    }
+    var currentpage = 0;
+    var pageno = 1;
+    var pagesize = 100;
+    var currentpage = 0;
+    function pagination(data) {
+        debugger;
+        if (data == "next") {
+            currentpage = $("#gotoPage").val();
+            pageno = parseInt(currentpage) + 1;
+            pagesize = $("#items").val();
+            $("#gotoPage").val(pageno);
+            Runprogress();
+
+        } else if (data == "last") {
+            pageno = parseInt(parseInt(result) / parseInt(pagesize));
+            pagesize = $("#items").val();
+            $("#gotoPage").val(pageno);
+            Runprogress();
+        } else if (data == "first") {
+            pageno = 1;
+            pagesize = $("#items").val();
+            $("#gotoPage").val(pageno);
+            Runprogress();
+        }
+        else {
+            currentpage = $("#gotoPage").val();
+            pageno = currentpage - 1;
+            pagesize = $("#items").val();
+            $("#gotoPage").val(pageno);
+            Runprogress();
+        }
+
+    }
+
+
+    function gridpage() {
+        debugger;
+        pagesize = $('#items').val();
+        var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
+        $('#totalpage').val(Actpageno);
+    }
+
+
+    function CloseQcdpopup() {
+        debugger;
+        $("#processGrid").data("kendoGrid").dataSource.read();
+    }
+
+    function additionalinfo() {
+        debugger;
+        var r = Table_Name;
+        //$("#total").val(count);
+        document.getElementById('total').innerHTML = result;
+        var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
+        // $('#totalpage').val(Actpageno);
+        document.getElementById('totalpage').innerHTML = Actpageno;
+        return {
+            outresult: result,
+            _count: count,
+            _pageno: pageno,
+            _pagesize: pagesize,
+            table_name: Table_Name,
+            condition: orgindata,
+            radio_checked: radiochecked,
+            recon_id: Rec_id
+        }
+
+    }
+
+    function onRequestEnd(e) {
+        debugger;
+    }
+    function editDetails() {
+        debugger;
+        var grid = $("#processGrid").data("kendoGrid");
+        var model = grid.dataItem($(event.target).closest("tr"));
+        var tranrecon_gid = $("#tranrecon_gid").val();
+        var remark1 = $("#remark_desc").data("kendoDropDownList").value();
+        $.ajax({
+            type: "POST",
+            data: '{remark1: "' + remark1 + '",tran_gid:  "' + trangid + '" }',
+            url: '@Url.Action("RemarkReason", "SetUp")',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                debugger;
+                if (data[1] > 0) {
+                    $.dialog({
+                        title: 'Imapct',
+                        content: data[0],
+                        type: 'green',
+
+                    });
+                    $("#tabs1").show();
+                    $("#applyruledtl_gid").val(data[1]).trigger("change");
+                    var wnd1 = $("#dialog1").data("kendoWindow");
+                    if (wnd1) {
+                        wnd1.close();
+                    }
+                }
+                else {
+                    $.dialog({
+                        title: 'Impact',
+                        content: data[0],
+                        type: 'green',
+                    });
+                    //event.container.data("kendoWindow").one("close", onEditorTemplateClosing);
+                }
+            },
+
+        });
+    }
+
+    function Reason(e) {
+        window_open1();
+    }
+    function window_open1() {
+        var grid = $("#processGrid").data("kendoGrid");
+        var model = grid.dataItem($(event.target).closest("tr"));
+        var tranrecon_gid = model.tranrecon_gid;
+        trangid = (model.tran_gid);
+        $("#tranrecon_gid").val(tranrecon_gid);
+        $("#dialog1").kendoWindow();
+        var dialog1 = $("#dialog1").data("kendoWindow");
+        dialog1.open().element.closest(".k-window").css({
+            top: 143,
+            left: 424, height: 144, width: 351
+        });
+        dialog1.title("Remark");
+        dialog1.bind("open", window_open);
+    }
+    function viewDetails(e) {
+        var grid = this,
+            selectedRow = $(e.target).closest("tr")[0];
+        grid.editRow(selectedRow);
+        $(".k-grid-update").hide();
+        $(".k-window-title").text("View");
+        // window_open();
+    }
+    function window_open() {
+        debugger
+        var table_name = "recon_trn_vtranrecon"
+        var grid = $("#processGrid").data("kendoGrid");
+        var model = grid.dataItem($(event.target).closest("tr"));
+
+        var filetype = model.filetype;
+        var tranrecon_gid = model.tranrecon_gid;
+        var reportcondition = "and tranrecon_gid = " + tranrecon_gid
+        $.ajax({
+            type: "POST",
+            data: '{table_name: "' + table_name + '",condition:  "' + reportcondition + '" }',
+            // url: "/Report/ReportExpenceGrid_Read",
+            url: '@Url.Action("ReportExpenceGrid_Read", "Report")',
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (Data1) {
+                $("#dialog").kendoWindow();
+                var dialog = $("#dialog").data("kendoWindow");
+                dialog.open().element.closest(".k-window").css({
+                    top: 121,
+                    left: 300, height: 400, width: 900
+                });
+                dialog.title("Manual Match - Rule Based");
+                dialog.bind("open", window_open);
+                debugger
+                $("#exportExcel1").show();
+                var columns = [];
+                var chkval = JSON.parse(Data1);
+                var arr = [];
+                $.each(chkval, function (i, e) {
+                    debugger;
+                    $.each(e, function (key, val) {
+                        arr.push(val);
+                    });
+
+                });
+                if (arr == "No Records Found!" || arr == "Error in Data!") {
+                    alert("No Records found..!");
+                    return false;
+                }
+                var data = JSON.parse(Data1);
+                var i = 0;
+                var entryIndex = "entries[" + i + "]";
+                for (var val in data[0]) {
+                    if (val == "Collection Center Name") {
+                        columns.push({
+                            field: entryIndex,
+                            title: key,
+                            attributes: { style: "text-align: left;" }
+                        });
+                    }
+                    else {
+                        if (val != "Collection Center Name")
+                            columns.push({
+                                field: entryIndex,
+                                title: val,
+                            });
+                    }
+                    i = i + 1;
+                    entryIndex = "entries[" + i + "]";
+                }
+                var rows = [];
+                var data1 = JSON.parse(Data1);
+
+                $.each(data1, function (i, e) {
+                    var entryArray = [];
+                    $.each(e, function (key, val) {
+
+                        entryArray.push(val);
+                    });
+                    rows.push(kendo.observable({
+                        entries: entryArray
+                    }));
+
+                });
+
+                var viewModel = kendo.observable({
+                    gridRows: rows
+                });
+
+                var configuration = {
+                    //dataBound: onDataBound,
+                    height: 350,
+                    navigatable: true,
+                    groupable: false,
+                    editable: false,
+                    sortable: true,
+                    Scrollable: true,
+                    filterable: false,
+                    pagable: false,
+                    resizable: false,
+                    persistSelection: true,
+                    selectable: "false",
+                    columns: columns,
+                    rows: viewModel,
+                    excel: {
+                        fileName: "Manual Match.xlsx",
+                        filterable: true,
+                        allPages: false
+                    },
+                };
+                $("#example").remove();
+                $('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+                var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
+                kendo.bind($("#grid"), viewModel);
+
+                var grid = $("#grid").data("kendoGrid");
+                for (var i = 0; i < grid.columns.length; i++) {
+                    if (i != grid.columns.length) {
+                        grid.autoFitColumn(i);  //autofit each column.
+                    }
+                }
+            },
+            error: function (result) {
+                console.log(result);
+            }
+        });
+    }
+    $(".accordion_head").click(function () {
+        debugger;
+        if ($('.accordion_body').is(':visible')) {
+            $(".accordion_body").slideUp(300);
+            $(".plusminus").text('+');
+        }
+        if ($(this).next(".accordion_body").is(':visible')) {
+            $(this).next(".accordion_body").slideUp(300);
+            $(this).children(".plusminus").text('+');
+            $("#Dynamic_grid").show();
+        } else {
+            $(this).next(".accordion_body").slideDown(300);
+            $(this).children(".plusminus").text('-');
+            $("#Dynamic_grid").hide();
+        }
+
+    });
 
 </script>

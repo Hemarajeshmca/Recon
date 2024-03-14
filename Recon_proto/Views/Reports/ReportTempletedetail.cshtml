@@ -328,7 +328,7 @@
 												</div>
 											</div>
 										</div>
-										</div>
+									</div>
 								</div>
 							</div>
 
@@ -350,7 +350,7 @@
 		</div>
 	</div>
 
-	
+
 </body>
 </html>
 
@@ -434,7 +434,7 @@
 		}
 	}
 
-	function grid_tempfilter(data){
+	function grid_tempfilter(data) {
 		debugger;
 		var filter_criteria_desc_list = "";
 		var join_condition_list = "";
@@ -449,11 +449,11 @@
 							reporttemplatefilter_gid: { type: "string", defaultValue: "0" },
 							reporttemplate_code: { type: "string" },
 							filter_seqno: { type: "string" },
-							report_field : {type: "string"},
-							reportparam_value: {type: "string"},
-							filter_criteria: {type: "string"},
-							filter_criteria_desc: {type:"string"},
-							filter_value: {type: "string"},
+							report_field: { type: "string" },
+							reportparam_value: { type: "string" },
+							filter_criteria: { type: "string" },
+							filter_criteria_desc: { type: "string" },
+							filter_value: { type: "string" },
 							open_parentheses_flag: { type: "string" },
 							close_parentheses_flag: { type: "string" },
 							join_condition: { type: "string" },
@@ -499,7 +499,7 @@
 			},
 			{
 				field: "filter_seqno",
-				title: "Filter Seq No.",
+				title: "Filter Seq No",
 				width: 50,
 			},
 			{
@@ -534,7 +534,7 @@
 				field: "filter_criteria",
 				title: "Filter Criteria",
 				width: 120,
-				hidden:true
+				hidden: true
 			},
 			{
 				field: "filter_criteria_desc",
@@ -547,12 +547,12 @@
 			},
 			{
 				field: "filter_value",
-				title: "Filter Value",				
+				title: "Filter Value",
 				width: 120
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")",		
+				title: ")",
 				template: '#=sel_checkbox1(data)#',
 				width: 20
 			},
@@ -577,7 +577,7 @@
 			}],
 			editable: true,
 		});
-		
+
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 
 	}
@@ -668,7 +668,8 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
-	
+
+
 	function combo_editor_reportfiled(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var data = {};
@@ -770,16 +771,16 @@
 					debugger;
 					if (response != null) {
 						var res = JSON.parse(response);
-						if(res.length > 0) {
+						if (res.length > 0) {
 							$.alert({
 								title: 'Recon',
 								content: res[0].out_msg,
 								type: 'green',
 							});
 							detailfetch();
-						}			
+						}
 					}
-					else {}
+					else { }
 				},
 				error: function (er) {
 					alert(er)
@@ -828,17 +829,17 @@
 							data: JSON.stringify(data),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
-							if (response != null) {
-								var res = JSON.parse(response);
-								if (res.length > 0) {
-									$.alert({
-										title: 'Recon',
-										content: res[0].out_msg,
-										type: 'green',
-									});
-									detailfetch();
-								}
-							} else { }
+								if (response != null) {
+									var res = JSON.parse(response);
+									if (res.length > 0) {
+										$.alert({
+											title: 'Recon',
+											content: res[0].out_msg,
+											type: 'green',
+										});
+										detailfetch();
+									}
+								} else { }
 							}
 						})
 					},
@@ -859,7 +860,7 @@
 
 	function saveheader() {
 		debugger;
-		if ($("#reporttemplate_gid").val() == 0){
+		if ($("#reporttemplate_gid").val() == 0) {
 			var data = {};
 			data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
 			data.in_reporttemplate_code = $("#reporttemplate_code").val();
@@ -867,6 +868,68 @@
 			data.in_report_code = $("#cmbreporttype").val();
 			data.in_action = 'INSERT';
 			data.in_active_status = 'Y';
+			if (data.in_reporttemplate_name && data.in_report_code) {
+				$.ajax({
+					type: "POST",
+					url: '../Reports/reporttemplate',
+					dataType: 'json',
+					data: JSON.stringify(data),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var result = JSON.parse(response);
+						if (result.length > 0) {
+							if (result[0].out_result == '1') {
+								$.alert({
+									title: 'Recon',
+									content: result[0].out_msg,
+									type: 'green',
+								});
+								setlocalStorage("ls_pageList", result[0].in_reporttemplate_code);
+								btn_onClick("Edit");
+								$("#reporttemplate_code").val(result[0].in_reporttemplate_code);
+								$("#txtmode").val("Edit");
+								$("#txtstatus").val("Active");
+								$("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
+								$("#cmbreporttype").prop("disabled", true);
+								//detailfetch();
+							} else {
+								$.alert({
+									title: 'Recon',
+									content: result[0].out_msg,
+									type: 'red',
+								});
+							}
+						}
+					}
+				});
+			} else if (!data.in_reporttemplate_name) {
+				$.alert({
+					title: 'Recon',
+					content: 'Report Templete Name is missing',
+					type: 'red',
+				});
+			}
+			else if (!data.in_report_code) {
+				$.alert({
+					title: 'Recon',
+					content: 'Report is missing',
+					type: 'red',
+				});
+			}
+		}
+
+	}
+
+	function saveheadersubmit() {
+		debugger;
+		var data = {};
+		data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
+		data.in_reporttemplate_code = $("#reporttemplate_code").val();
+		data.in_reporttemplate_name = $("#rt_name").val();
+		data.in_report_code = $("#cmbreporttype").val();
+		data.in_action = $("#reporttemplate_gid").val() == '0' ? 'INSERT' : 'UPDATE';
+		data.in_active_status = 'Y';
+		if (data.in_reporttemplate_name && data.in_report_code) {
 			$.ajax({
 				type: "POST",
 				url: '../Reports/reporttemplate',
@@ -882,13 +945,20 @@
 								content: result[0].out_msg,
 								type: 'green',
 							});
-							setlocalStorage("ls_pageList", result[0].in_reporttemplate_code);
-							btn_onClick("Edit");
-							$("#reporttemplate_code").val(result[0].in_reporttemplate_code);
-							$("#txtmode").val("Edit");
-							$("#txtstatus").val("Active");
-							$("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
-							$("#cmbreporttype").prop("disabled", true);
+							if (data.in_action = 'INSERT') {
+								setlocalStorage("ls_pageList", result[0].in_reporttemplate_code);
+								btn_onClick("Edit");
+								$("#reporttemplate_code").val(result[0].in_reporttemplate_code);
+								$("#txtmode").val("Edit");
+								$("#txtstatus").val("Active");
+								$("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
+								$("#cmbreporttype").prop("disabled", true);
+							} else {
+								btn_onClick("Edit");
+								$("#txtmode").val("Edit");
+								$("#txtstatus").val("Active");
+							}
+
 							//detailfetch();
 						} else {
 							$.alert({
@@ -900,47 +970,20 @@
 					}
 				}
 			});
+		} else if (!data.in_reporttemplate_name) {
+			$.alert({
+				title: 'Recon',
+				content: 'Report Templete Name is missing',
+				type: 'red',
+			});
 		}
-
-	}
-
-	function saveheadersubmit() {
-		var data = {};
-		data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
-		data.in_reporttemplate_code = $("#reporttemplate_code").val();
-		data.in_reporttemplate_name = $("#rt_name").val();
-		data.in_report_code = $("#cmbreporttype").val();
-		data.in_action = 'UPDATE';
-		data.in_active_status = 'Y';
-		$.ajax({
-			type: "POST",
-			url: '../Reports/reporttemplate',
-			dataType: 'json',
-			data: JSON.stringify(data),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var result = JSON.parse(response);
-				if (result.length > 0) {
-					if (result[0].out_result == '1') {
-						$.alert({
-							title: 'Recon',
-							content: result[0].out_msg,
-							type: 'green',
-						});
-						btn_onClick("Edit");
-						$("#txtmode").val("Edit");
-						$("#txtstatus").val("Active");
-						//detailfetch();
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: result[0].out_msg,
-							type: 'red',
-						});
-					}
-				}
-			}
-		});
+		else if (!data.in_report_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Report is missing',
+				type: 'red',
+			});
+		}
 	}
 
 </script>
