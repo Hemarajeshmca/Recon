@@ -516,8 +516,6 @@
     }
 
     function grid_tempfilter(data) {
-       
-        //Mohan
         var filter_criteria_desc_list = "";
         var join_condition_list = "";
         var reportparam_value_list = "";
@@ -557,6 +555,7 @@
             },
 
             filterable: false,
+            selectable: "row",
             navigatable: true,
             pageable: true,
             resizable: true,
@@ -709,7 +708,7 @@
        
         var arr = [];
         var in_master_code = "QCD_RP_CONSTRAINT";
-        var in_user_code = "sundar";
+        var in_user_code = "";
         $.ajax({
             type: "POST",
             url: '../Common/Qcdmaster',
@@ -1066,13 +1065,13 @@
         else if (!$("#reconname").val()) {
             $.alert({
                 title: 'Recon',
-                content: "Recon code is missing ..!",
+                content: "Please select Recon Code ..!",
                 type: 'red',
             });
         } else if (!$("#cmbreporttype").val()) {
             $.alert({
                 title: 'Recon',
-                content: "Report code is missing ..!",
+                content: "Please select Report Code ..!",
                 type: 'red',
             });
         }
@@ -1174,6 +1173,15 @@
                             count = res[0].out_result;
                             if (res[0].out_rec_count > 0) {
                                 Runprogress();
+                            } else {
+                                $.alert({
+                                    title: 'Recon',
+                                    content: 'No Records Found',
+                                    type: 'red',
+                                });
+                                $(this).next(".accordion_body").slideDown(300);
+                                $(".plusminus").text('+');
+                                $("#Dynamic_grid").hide();
                             }
                         } else {
                             $.alert({
@@ -1200,13 +1208,13 @@
         else if (!$("#reconname").val()) {
             $.alert({
                 title: 'Recon',
-                content: "Recon code is missing ..!",
+                content: "Please Select Recon code..!",
                 type: 'red',
             });
         } else if (!$("#cmbreporttype").val()) {
             $.alert({
                 title: 'Recon',
-                content: "Report code is missing ..!",
+                content: "Please Select Report code..!",
                 type: 'red',
             });
         }
@@ -1223,8 +1231,7 @@
             });
             return false;
         }
-        $("#Dynamic_grid").show();
-       
+        $("#Dynamic_grid").show();     
 
         document.getElementById('total').innerHTML = result;
         var Actpageno = parseInt(parseInt(result) / parseInt(pagesize));
@@ -1234,9 +1241,7 @@
         data.in_page_no = pageno;
         data.in_page_size = pagesize;
         data.in_tot_records = result;
-        data.in_recon_code = $("#reconname").val();
-        console.log(`data`, data);
-       
+        data.in_recon_code = $("#reconname").val();      
         $.ajax({
             type: "POST",
             url: '../Reports/getPageNoReport',
