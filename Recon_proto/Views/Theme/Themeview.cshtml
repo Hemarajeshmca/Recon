@@ -312,8 +312,8 @@
 				$("#themegid").val(data.theme_gid);
 				$("#theme_order").val(data.theme_order);
 				$("#txtstatus").val(data.active_status_desc);
+				$("#holdflag").val(data.hold_flag);
 				detailsfetch(data.theme_code);
-
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -405,7 +405,7 @@
 				{
 					field: "theme_seqno",
 					title: "Theme Seq No.",
-					width: 50,					
+					width: 50,
 				},
 				{
 					title: "(", width: 20,
@@ -482,19 +482,19 @@
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
 		}
-		
+
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
-				
+
 			}
 			catch (err) {
 				javascript_log4j_root(arguments.callee.name, err);
 			}
-		}	
-		
+		}
+
 	}
-	
+
 	function addRow() {
 		var grid = $("#grid_themefilterfield").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -508,9 +508,9 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ theme_seqno: newSeqNo, themefilter_gid :0 });
+		dataSource.add({ theme_seqno: newSeqNo, themefilter_gid: 0 });
 	}
-	
+
 	var gridRowID = -1;
 	function sel_checkbox(data) {
 		gridRowID++;
@@ -652,12 +652,12 @@
 			var clone_theme = $("#Cmbclone").val();
 			var action = "";
 			var theme_gid = $("#themegid").val();
-
+			var holdflag = $("#holdflag").val();
 			if (theme_gid > 0) {
 				theme_gid = $("#themegid").val();
 				addRow();
 				return;
-				
+
 			} else {
 				theme_gid = 0;
 
@@ -675,7 +675,7 @@
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order,holdflag: holdflag }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -723,11 +723,11 @@
 			} else {
 				in_close_flag = "N";
 			}
-			var in_join_condition ='';
+			var in_join_condition = '';
 			if (model.join_condition != undefined) {
 				in_join_condition = model.join_condition;
 			}
-			
+
 			var theme_seqno = model.theme_seqno
 			var action = "";
 			var action_by = ""
@@ -823,7 +823,7 @@
 						} else {
 							theme_gid = 0;
 						}
-
+						var holdflag = $("#holdflag").val();
 						if ($("#txtmode").val() == "Create") {
 							action = "INSERT"
 						} else if ($("#txtmode").val() == "Edit") {
@@ -836,7 +836,7 @@
 							type: "POST",
 							url: '../theme/themeheader',
 							dataType: 'json',
-							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
+							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
 								var result = JSON.parse(response);
@@ -903,7 +903,7 @@
 			} else {
 				theme_gid = 0;
 			}
-
+			var holdflag = $("#holdflag").val();
 			var action_by = "";
 			var status = "Y";
 			var theme_order = $("#theme_order").val();
@@ -911,7 +911,7 @@
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
