@@ -1740,8 +1740,14 @@
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
 		if (recontype == "V") {
-			$("#partialmatch1").prop('disabled', false);
-			$('#partialmatch2').prop('checked', true);
+			if ($("#thersholdplus").val() > 0) {
+				$('#partialmatch1').prop('checked', true);
+				$("#thersholdplus").prop('disabled', false);
+			} else {
+				$('#partialmatch2').prop('checked', true);
+				$("#thersholdplus").prop('disabled', true);
+				$("#partialmatch1").prop('disabled', false);
+			}
 			$('#reconvalueflag1').prop('checked', true);
 			$('#recondateflag2').prop('checked', true);
 			$("#cmbrecondatefield").prop('disabled', true);
@@ -1749,8 +1755,7 @@
 			$("#recondateflag1").prop('disabled', true);
 			$("#reconvalueflag2").prop('disabled', true);
 			$("#recondateflag2").prop('disabled', false);
-			$("#reconvalueflag1").prop('disabled', false);
-			$("#thersholdplus").prop('disabled', true);
+			$("#reconvalueflag1").prop('disabled', false);			
 			$("#thersholdminus").prop('disabled', true);
 		} else if (recontype == "N") {
 			$("#partialmatch1").prop('disabled', true);
