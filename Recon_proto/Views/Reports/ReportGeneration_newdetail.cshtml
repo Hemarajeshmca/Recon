@@ -420,7 +420,7 @@
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
+               
                 $("#reconname").empty();
                 $("#reconname").append($('<option>', {
                     value: "",
@@ -443,7 +443,7 @@
     }
 
     function detailfetch() {
-        debugger;
+       
         var data = getlocalStorage("ls_pageList");
         $.ajax({
             type: "POST",
@@ -452,7 +452,7 @@
             data: JSON.stringify({}),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
+               
                 $("#cmbreporttype").empty();
                 $("#cmbreporttype").append($('<option>', {
                     value: "",
@@ -487,9 +487,9 @@
                     data: JSON.stringify({ in_reporttemplate_code: data }),
                     contentType: 'application/json; charset=utf-8',
                     success: function (response) {
-                        debugger;
+                       
                         if (response != " ") {
-                            debugger;
+                           
                             var res = JSON.parse(response);
                             $("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
                             $("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -516,7 +516,7 @@
     }
 
     function grid_tempfilter(data) {
-        debugger;
+       
         //Mohan
         var filter_criteria_desc_list = "";
         var join_condition_list = "";
@@ -685,7 +685,7 @@
 
     var gridRowID = -1;
     function sel_checkbox(data) {
-        debugger;
+       
         gridRowID++;
         var isChecked = data.open_parentheses_flag;
         var con = "";
@@ -706,7 +706,7 @@
     }
 
     function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-        debugger;
+       
         var arr = [];
         var in_master_code = "QCD_RP_CONSTRAINT";
         var in_user_code = "sundar";
@@ -717,7 +717,7 @@
             data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
+               
                 if (response.length > 0) {
                     for (i = 0; response.length > i; i++) {
                         var list = {};
@@ -732,13 +732,13 @@
                 console.log(er)
             }
         });
-        debugger;
+       
         $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
             autoBind: false,
             filter: "contains",
             dataSource: arr,
             change: function (e) {
-                debugger;
+               
                 var cmb_value = this.value();
                 if (cmb_value && this.selectedIndex == -1) {
                     this.value("");
@@ -766,20 +766,22 @@
         var data = {};
         data.in_reportparam_gid = 0;
         data.in_report_code = $("#cmbreporttype").val();
+        data.in_recon_code = $("#reconname").val()
         data.in_action = '';
         $.ajax({
             type: "POST",
-            url: "../Reports/getreportparam",
+            url: "../Reports/getreportparamrecon",
             dataType: "json",
-            data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action }),
+            async: false,
+            data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
-                if (response.length > 0) {
-                    for (i = 0; response.length > i; i++) {
+                var res = JSON.parse(response);
+                if (res.length > 0) {
+                    for (i = 0; res.length > i; i++) {
                         var list = {};
-                        list.code = response[i].reportparam_code;
-                        list.desc = response[i].reportparam_value;
+                        list.code = res[i].reportparam_code;
+                        list.desc = res[i].reportparam_desc;
                         arr1.push(list);
                     }
                 }
@@ -789,13 +791,12 @@
                 console.log(er)
             }
         });
-        debugger;
+       
         $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
             autoBind: false,
             filter: "contains",
             dataSource: arr1,
             change: function (e) {
-                debugger;
                 var cmb_value = this.value();
                 if (cmb_value && this.selectedIndex == -1) {
                     this.value("");
@@ -814,13 +815,12 @@
                 }
             }
         });
-
         $("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
     }
 
 
     function savereportFilter() {
-        debugger;
+       
         try {
             var grid = $("#grid_tempfilter").data("kendoGrid");
             var model = grid.dataItem($(event.target).closest("tr"));
@@ -859,7 +859,7 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    debugger;
+                   
                     if (response != null) {
                         var res = JSON.parse(response);
                         if (res.length > 0) {
@@ -892,7 +892,7 @@
     }
 
     function saveheader() {
-        debugger;
+       
         if ($("#reporttemplate_gid").val() == 0) {
             var data = {};
             data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
@@ -939,7 +939,7 @@
     }
 
     function generateReport() {
-        debugger;
+       
         var grid = $("#grid_tempfilter").data("kendoGrid");
         var objpplmapupdlist = [];
         var rpt_cond = "";
@@ -1057,7 +1057,7 @@
                 //    }
                 //},
                 //error: function (er) {
-                //    debugger;
+                //   
                 //    alert(er)
                 //    console.log(er)
                 //}
@@ -1079,7 +1079,7 @@
     }
 
     function preview() {
-        debugger;
+       
         var grid = $("#grid_tempfilter").data("kendoGrid");
         var objpplmapupdlist = [];
         var rpt_cond = "";
@@ -1166,7 +1166,7 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     var res = JSON.parse(response);
-                    debugger;
+                   
                     if (res.length > 0) {
                         var data = res[0];
                         if (data.out_result != '0') {
@@ -1191,7 +1191,7 @@
                     }
                 },
                 error: function (er) {
-                    debugger;
+                   
                     alert(er)
                     console.log(er)
                 }
@@ -1224,7 +1224,7 @@
             return false;
         }
         $("#Dynamic_grid").show();
-        debugger;
+       
 
         document.getElementById('total').innerHTML = result;
         var Actpageno = parseInt(parseInt(result) / parseInt(pagesize));
@@ -1236,7 +1236,7 @@
         data.in_tot_records = result;
         data.in_recon_code = $("#reconname").val();
         console.log(`data`, data);
-        debugger;
+       
         $.ajax({
             type: "POST",
             url: '../Reports/getPageNoReport',
@@ -1244,7 +1244,7 @@
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             success: function (Data1) {
-                debugger;
+               
                 if (Data1 != '') {
                     var columns = [];
                     var chkval = JSON.parse(Data1);
@@ -1337,7 +1337,7 @@
     var pagesize = 100;
     var currentpage = 0;
     function pagination(data) {
-        debugger;
+       
         if (data == "next") {
             currentpage = $("#gotoPage").val();
             pageno = parseInt(currentpage) + 1;
@@ -1368,7 +1368,7 @@
 
 
     function gridpage() {
-        debugger;
+       
         pagesize = $('#items').val();
         var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
         $('#totalpage').val(Actpageno);
@@ -1376,12 +1376,12 @@
 
 
     function CloseQcdpopup() {
-        debugger;
+       
         $("#processGrid").data("kendoGrid").dataSource.read();
     }
 
     function additionalinfo() {
-        debugger;
+       
         var r = Table_Name;
         //$("#total").val(count);
         document.getElementById('total').innerHTML = result;
@@ -1402,10 +1402,10 @@
     }
 
     function onRequestEnd(e) {
-        debugger;
+       
     }
     function editDetails() {
-        debugger;
+       
         var grid = $("#processGrid").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
         var tranrecon_gid = $("#tranrecon_gid").val();
@@ -1417,7 +1417,7 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
-                debugger;
+               
                 if (data[1] > 0) {
                     $.dialog({
                         title: 'Imapct',
@@ -1502,7 +1502,7 @@
                 var chkval = JSON.parse(Data1);
                 var arr = [];
                 $.each(chkval, function (i, e) {
-                    debugger;
+                   
                     $.each(e, function (key, val) {
                         arr.push(val);
                     });
@@ -1591,7 +1591,7 @@
         });
     }
     $(".accordion_head").click(function () {
-        debugger;
+       
         if ($('.accordion_body').is(':visible')) {
             $(".accordion_body").slideUp(300);
             $(".plusminus").text('+');
