@@ -1172,6 +1172,15 @@
 	}
 
 	function saveclone(){
+
+		$.confirm({
+			icon: 'fa fa-info',
+			title: 'Recon',
+			theme: 'dark',
+			content: 'Are you sure to Clone ?',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
 		debugger;
 		var data = {};
 		data.in_clone_reporttemplate_code = $("#clonereport").val();
@@ -1233,6 +1242,19 @@
 				type: 'red',
 			});
 		}
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'clone Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			},
+		});
 	}
 
 </script>
