@@ -324,24 +324,12 @@
 	}
 
 	function reconchangelist() {
-		//$("#DatasetProgress").removeClass('nav-link active');
-		//$("#DatasetProgress").toggleClass('nav-link');
-		//$("#navs-pills-Datasetlist").toggleClass('tab-pane fade active in');
-		//$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade');
-		//$("#Datasetlist").removeClass('nav-link');
-		//$("#Datasetlist").toggleClass('nav-link active');
-		//$("#navs-pills-DatasetProgress").hide();
-		//$("#navs-pills-Datasetlist").show();
-		//$("#FileName").val("");
-		//$("#File_Import").val("");
-		//$("#Pipeline").val("");
-		//$("#Pipeline").empty();
 			grid_dataset_details([]);
 			var data = {};
 			data.in_recon_code = $("#cmbreconname").val();
 			$.ajax({
 				type: "POST",
-			url: '../Datasetfile/datasetAgainstRecon',
+				url: '../Datasetfile/datasetAgainstRecon',
 				dataType: 'json',
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
