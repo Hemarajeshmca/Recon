@@ -544,10 +544,10 @@
 					strmenu = "";
 				}
 			});
-			if (sessionStorage.getItem("level1txt") != null) {
-				var myLabel = document.getElementById("orglvlNavigate");
-				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-			}		
+			//if (sessionStorage.getItem("level1txt") != null) {
+			//	var myLabel = document.getElementById("orglvlNavigate");
+			//	myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
+			//}		
 			
 		});
 		var maxorglvl;
@@ -610,6 +610,12 @@
 						if (sessionStorage.getItem("level1txt") != null) {
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
+						}
+						if ($("#navhead").text() == "Dataset"){
+							var myLabel = document.getElementById("orglvlNavigate");
+							myLabel.innerHTML = sessionStorage.getItem("level1txt");
+							$("#orglvl2valO").prop("disabled",true);
+							$("#orglvl3valO").prop("disabled", true);
 						}
 					}
 					else {

@@ -220,6 +220,11 @@
 														<label for="" class="form-label">Threshold - Value&nbsp;</label>
 														<input class="form-control" id="thersholdminus" type="text" value="0">
 														</div>*@
+														<div class="col-sm-2">
+															<label for="" class="form-label">Applied On&nbsp;</label>
+															<select id="cmbthersholdvalue" class="form-select form-control">
+															</select>
+														</div>
 													</div>
 													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 														<div class="col-sm-2">
@@ -300,7 +305,7 @@
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 											<div class="col-sm-4">
 												<label for="" class="form-label">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-												<select id="cmbdatasetname" class="form-select form-control">
+												<select id="cmbdatasetname" class="form-select form-control" onchange="cmbdatasetname1()">
 												</select>
 												<input type="hidden" id="recondataset_gid" value="0" />
 												<input type="hidden" id="txtmodedataset" value="Create" />
@@ -578,6 +583,7 @@
 
 							$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
+							$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
 							$("#gd_datasetrecon").empty();
 							$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
 							grid_datasetrecon(res.ReconDataSet);
@@ -694,6 +700,7 @@
 					}
 					$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 					$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
+					$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
 					$("#gd_datasetrecon").empty();
 					$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
 					grid_datasetrecon(res.ReconDataSet);
@@ -762,9 +769,33 @@
 		});
 	}
 	function getGridComboList() {
+		// THERSOLD type
+		var in_master_code = "TV";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbthersholdvalue").empty();
+				$("#cmbthersholdvalue").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbthersholdvalue").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
 		//recon type
 		var in_master_code = "QCD_RC_RCON_TYPE";
-		var in_user_code = "sundar";
+		var in_user_code = "";
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -817,7 +848,7 @@
 		});
 		// Dataset type
 		var in_master_code = "QCD_DS_TYPE";
-		var in_user_code = "sundar";
+		var in_user_code = "";
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -838,7 +869,9 @@
 				});
 			}
 		});
+		
 	}
+	
 	function saveheader() {
 		try {
 			var reconcode = $("#reconcode").val();
@@ -890,6 +923,7 @@
 			var in_active_reason = "";
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',
@@ -925,6 +959,33 @@
 		catch (e) {
 			console.log(e)
 		}
+	}
+	function cmbdatasetname1() {
+		$("#DatasetType").val("");
+		$("#DatasetType").prop("disabled", false);
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		var dat = $("#cmbdatasetname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetlistfetch',
+			dataType: 'json',
+			data: "",
+			async:false,
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				$.each(result, function (index, item) {					
+					if (item.dataset_code == dat && item.system_flag == 'Y') {
+						$("#DatasetType").val("Y");
+						$("#DatasetType").prop("disabled",true);
+					}
+				});
+
+			}
+		});
 	}
 	function grid_datasetrecon(data) {
 		$("#grid_datasetrecon").kendoGrid({
@@ -1052,7 +1113,7 @@
 			$("#recondataset_gid").val(selectedItem.recondataset_gid);
 			// Dataset type
 			var in_master_code = "QCD_DS_TYPE";
-			var in_user_code = "sundar";
+			var in_user_code = "";
 			$.ajax({
 				type: "POST",
 				url: '../Common/Qcdmaster',
@@ -1743,10 +1804,12 @@
 			if ($("#thersholdplus").val() > 0) {
 				$('#partialmatch1').prop('checked', true);
 				$("#thersholdplus").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', false);
 			} else {
 				$('#partialmatch2').prop('checked', true);
 				$("#thersholdplus").prop('disabled', true);
 				$("#partialmatch1").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', true);
 			}
 			$('#reconvalueflag1').prop('checked', true);
 			$('#recondateflag2').prop('checked', true);
@@ -1770,15 +1833,18 @@
 			$("#reconvalueflag1").prop('disabled', true);
 			$("#thersholdplus").prop('disabled', true);
 			$("#thersholdminus").prop('disabled', true);
+			$("#cmbthersholdvalue").prop('disabled', true);
 
 		} else {
 			if ($("#thersholdplus").val() > 0) {
 				$('#partialmatch1').prop('checked', true);
 				$("#thersholdplus").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', false);
 			} else {
 				$('#partialmatch2').prop('checked', true);
 				$("#thersholdplus").prop('disabled', true);
 				$("#partialmatch1").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', true);
 			}
 			$('#recondateflag1').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
@@ -1841,12 +1907,13 @@
 
 			var in_threshold_plus_value = $("#thersholdplus").val();
 			var in_threshold_minus_value = $("#thersholdplus").val();
+			var in_threshold_code = $("#cmbthersholdvalue").val();
 			var in_active_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason }),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {
@@ -1888,12 +1955,15 @@
 			$("#thersholdminus").val(0);
 			$("#thersholdminus").prop('disabled', false)
 			$("#thersholdplus").prop('disabled', false)
+			$("#cmbthersholdvalue").prop('disabled', false)		
 		} else {
 
 			$("#thersholdplus").val(0);
 			$("#thersholdminus").val(0)
 			$("#thersholdminus").prop('disabled', true)
 			$("#thersholdplus").prop('disabled', true)
+			$("#cmbthersholdvalue").prop('disabled', true)
+			$("#cmbthersholdvalue").val("N");
 		}
 
 	}
