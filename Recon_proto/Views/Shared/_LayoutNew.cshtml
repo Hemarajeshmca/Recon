@@ -611,7 +611,7 @@
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 						}
-						if ($("#navhead").text() == "Dataset"){
+						if ($("#navhead").text() == "Dataset" || $("#navhead").text() == "QCD Master" || $("#navhead").text() == "Custom Report Templete") {
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt");
 							$("#orglvl2valO").prop("disabled",true);
@@ -861,6 +861,8 @@
 			});
 		}
 		function EntityChange(selectElement) {
+			$("#orglvl3valO").val("");
+			$("#orglvl3valO1").val("");
 			var selectedValue = selectElement.value;
 			var usergid = 0;
 			var usercode = sessionStorage.getItem("usrname");
