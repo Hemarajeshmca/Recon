@@ -170,6 +170,11 @@
 		});
 	}
 	function reconchange() {
+		if ($("#reconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#reconname").val());
+			sessionStorage.setItem("reconname", $("#reconname :selected").text());
+			setcon();
+		}
 		$("#report_name").val("");
 		$("#report_param").val("");
 	}
@@ -234,6 +239,8 @@
 							text: item.recon_name
 						}));
 					}
+					$("#reconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#reconname').trigger("change");
 				});
 			},
 			error: function (er) {

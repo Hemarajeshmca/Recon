@@ -411,6 +411,8 @@
 							text: item.recon_name
 						}));
 					}
+					$("#reconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#reconname').trigger("change");
 				});
 			},
 			error: function (er) {
@@ -421,6 +423,11 @@
 	}
 
 	function showRule() {
+		if ($("#reconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#reconname").val());
+			sessionStorage.setItem("reconname", $("#reconname :selected").text());
+			setcon();
+		}
 		debugger;
 		try {
 			var in_recon_code = $("#reconname").val();
@@ -774,7 +781,7 @@
 				content: 'Please select Rules',
 				type: 'red',
 			});
-		} 
+		}
 		hideProgress();
 	}
 

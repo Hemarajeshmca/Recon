@@ -134,6 +134,8 @@
 							text: item.recon_name
 						}));
 					}
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
 				});
 			},
 			error: function (er) {
@@ -143,6 +145,11 @@
 		});
 	}
 	function reconchange() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 		var in_recon_code = $("#cmbreconname").val();
 		$.ajax({
 			type: "POST",
@@ -158,8 +165,8 @@
 						$("#reconversion").val(res.versionlist[0].recon_rule_version)
 					} else {
 						grid_reconverion([]);
-					}					
-				}				
+					}
+				}
 			},
 			error: function (er) {
 				alert(er)
@@ -323,12 +330,12 @@
 
 	function onChange2(e) {
 		var isCheck = e.target.checked
-		var id=e.target.id
+		var id = e.target.id
 		var id1 = id.split("_")
 		if (isCheck == true) {
 			$('#chk_sel_' + id1[2]).attr('checked', false);
 			//$('#chk_sel_' + id1[2]).attr('disabled', true);
-		}else{
+		} else {
 			$('#chk_sel_' + id1[2]).attr('disabled', false);
 		}
 	}

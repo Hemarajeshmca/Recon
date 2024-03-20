@@ -607,7 +607,11 @@
 						sessionStorage.setItem("level1txt", $("#orglvl1valO :selected").text());
 						sessionStorage.setItem("level2txt", $("#orglvl2valO :selected").text());
 						sessionStorage.setItem("level3txt", $("#orglvl3valO :selected").text());
-						if (sessionStorage.getItem("level1txt") != null) {
+						if (sessionStorage.getItem("reconname") != null) {
+							var myLabel = document.getElementById("orglvlNavigate");
+							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("reconname");
+						}
+						if (sessionStorage.getItem("level1txt") != null && sessionStorage.getItem("reconname") == null) {
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 						}
@@ -616,6 +620,10 @@
 							myLabel.innerHTML = sessionStorage.getItem("level1txt");
 							$("#orglvl2valO").prop("disabled",true);
 							$("#orglvl3valO").prop("disabled", true);
+						}
+						if ($("#navhead").text() == "Recon" || $("#navhead").text() == "Connectors" || $("#navhead").text() == "Pipeline" || $("#navhead").text() == "Recon-Between A/cs" || $("#navhead").text() == "Recon - Within A/cs") {
+							var myLabel = document.getElementById("orglvlNavigate");
+							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 						}
 					}
 					else {

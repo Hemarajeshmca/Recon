@@ -68,7 +68,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 </body>
 </html>
 <script>
@@ -93,18 +93,20 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				$("#cmbreconname").empty();			
+				$("#cmbreconname").empty();
 				$("#cmbreconname").append($('<option>', {
 					value: "",
 					text: "  Select  "
-				}));				
+				}));
 				$.each(response, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbreconname").append($('<option>', {
 							value: item.recon_code,
 							text: item.recon_name
-						}));					
+						}));
 					}
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
 				});
 			},
 			error: function (er) {
@@ -113,9 +115,14 @@
 			}
 
 		});
-		grid_theme_details([]);	
+		grid_theme_details([]);
 	}
 	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 		var cmbreconname = $("#cmbreconname").val();
 		var data = {};
 		data.in_user_gid = 0;
@@ -266,7 +273,7 @@
 				{
 					field: "hold_flag_desc",
 					title: "Hold Flag",
-					width: 40,					
+					width: 40,
 				},
 				{
 					field: "active_status",
@@ -279,15 +286,15 @@
 					title: "hold_flag",
 					width: 40,
 					hidden: true,
-				},	
-				
+				},
+
 				{
 					field: "active_status_desc",
 					title: "Status",
 					width: 40,
-					
+
 				},
-				
+
 				{
 					field: "In_mode_flag",
 					title: "Mode",
@@ -324,7 +331,7 @@
 				type: 'red',
 			});
 		}
-		
+
 	}
 	function getSerializedSelectedRows(mode) {
 		try {

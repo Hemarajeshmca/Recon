@@ -1,7 +1,6 @@
-﻿
-@{
-    ViewData["Title"] = "Preprocess";
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+﻿@{
+	ViewData["Title"] = "Preprocess";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <!Doctype html>
 <html>
@@ -80,7 +79,7 @@
 	});
 
 	function gridlist() {
-		
+
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
@@ -106,6 +105,8 @@
 							text: item.recon_name
 						}));
 					}
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
 				});
 			},
 			error: function (er) {
@@ -115,10 +116,15 @@
 
 		});
 		grid_preprocess_details([]);
-		
+
 
 	}
 	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 		var cmbreconname = $("#cmbreconname").val();
 		var data = {};
 		data.in_user_gid = 0;
@@ -173,7 +179,7 @@
 								preprocess_code: { type: "string" },
 								preprocess_desc: { type: "string" },
 								recon_name: { type: "string" },
-								recon_code:{type:"string"},
+								recon_code: { type: "string" },
 								preprocess_order: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" }
@@ -256,7 +262,7 @@
 					field: "hold_flag_desc",
 					title: "Hold Flag",
 					width: 40,
-				},				
+				},
 				{
 					field: "hold_flag",
 					title: "hold_flag",
@@ -279,7 +285,7 @@
 					field: "active_status_desc",
 					title: "Status",
 					width: 40,
-					
+
 				},
 				{
 					field: "In_mode_flag",
@@ -316,7 +322,7 @@
 				type: 'red',
 			});
 		}
-		
+
 	}
 	function getSerializedSelectedRows(mode) {
 		try {
