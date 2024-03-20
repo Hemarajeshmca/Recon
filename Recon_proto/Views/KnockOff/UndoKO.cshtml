@@ -150,7 +150,12 @@
 				field = "field"+index.toString();
 				var propType = typeof data[0][key];
 				var bool = false;
-				var txtalign = "left";				
+				var txtalign = "";
+				if (propType == 'number') {
+					var txtalign = "right";
+				} else {
+					var txtalign = "left";
+				}	
 				columns.push({
 					field: field,
 					title: key,

@@ -152,11 +152,21 @@
     }
 
     function grid_manual_details1(data) {
+        debugger;
         var columns = [];
         var rows = [];
         for (var key in data[0]) {
             var field = key.replace(/\s+/g, '_');
             var propType = typeof data[0][key];
+            if(propType == 'number') {
+                columns.push({
+                field: field,
+                title: key,
+                type: propType,
+                attributes: { style: "text-align: right;" },
+                filterable: false,
+            });
+            } else {
             columns.push({
                 field: field,
                 title: key,
@@ -164,6 +174,7 @@
                 attributes: { style: "text-align: left;" },
                 filterable: false,
             });
+            }
         }
         $.each(data, function (i, e) {
             var entryObject = {};
@@ -213,13 +224,23 @@
         for (var key in data[0]) {
             var field = key.replace(/\s+/g, '_');
             var propType = typeof data[0][key];
+                if (propType == 'number'){
             columns.push({
                 field: field,
                 title: key,
                 type: propType,
-                attributes: { style: "text-align: left;" },
+                attributes: { style: "text-align: right;" },
                 filterable: false,
             });
+                } else {
+                    columns.push({
+                        field: field,
+                        title: key,
+                        type: propType,
+                        attributes: { style: "text-align: left;" },
+                        filterable: false,
+                    });
+                }
         }
         $.each(data, function (i, e) {
             var entryObject = {};
@@ -268,13 +289,23 @@
         for (var key in data[0]) {
             var field = key.replace(/\s+/g, '_');
             var propType = typeof data[0][key];
+                if (propType == 'number') {
             columns.push({
                 field: field,
                 title: key,
                 type: propType,
-                attributes: { style: "text-align: left;" },
+                attributes: { style: "text-align: right;" },
                 filterable: true,
             });
+                } else {
+                    columns.push({
+                        field: field,
+                        title: key,
+                        type: propType,
+                        attributes: { style: "text-align: left;" },
+                        filterable: true,
+                    });
+                }
         }
         $.each(data, function (i, e) {
             var entryObject = {};
@@ -314,6 +345,7 @@
         for (var key in data[0]) {
             var field = key.replace(/\s+/g, '_');
             var propType = typeof data[0][key];
+                if (propType == 'number'){
             columns.push({
                 field: field,
                 title: key,
@@ -321,6 +353,15 @@
                 attributes: { style: "text-align: right;" },
                 filterable: false,
             });
+                } else {
+                    columns.push({
+                        field: field,
+                        title: key,
+                        type: propType,
+                        attributes: { style: "text-align: left;" },
+                        filterable: false,
+                    });
+                }
         }
         $.each(data, function (i, e) {
             var entryObject = {};
