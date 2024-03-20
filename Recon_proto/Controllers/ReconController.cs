@@ -220,6 +220,7 @@ namespace Recon_proto.Controllers
 			public Double in_threshold_plus_value { get; set; }
 			public Double in_threshold_minus_value { get; set; }
 			public String in_active_reason { get; set; }
+			public String threshold_code { get; set; }
 			public String in_action { get; set; }
 			public String? in_action_by { get; set; }
 			public String? out_msg { get; set; }

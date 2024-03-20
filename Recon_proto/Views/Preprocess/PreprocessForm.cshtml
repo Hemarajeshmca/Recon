@@ -49,16 +49,77 @@
 			left: 300px !important;
 		}
 
-		.accordion_head {
-			/*background-color: #337ab7;*/
-			background-color: rgb(200,46,123);
+		.accordion-wrapper {
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5);
+			width: 100%;
+			margin: 0 auto;
+		}
+
+		.accordion {
+			width: 100%;
 			color: white;
+			overflow: hidden;
+			margin-bottom: 3px;
+		}
+
+			.accordion:last-child {
+				margin-bottom: 0;
+			}
+
+		.accordion-label {
+			display: flex;
+			-webkit-box-pack: justify;
+			justify-content: space-between;
+			padding: 4px;
+			background: rgba(4,57,94,.8);
+			font-weight: bold;
 			cursor: pointer;
-			/*font-family: arial;*/
 			font-size: 14px;
-			margin: 0 0 1px 0;
-			padding: 1px 3px;
-			/*font-weight: normal;*/
+			color: white;
+		}
+
+			.accordion-label:hover {
+				background: rgba(4,57,94,1);
+			}
+
+			.accordion-label::after {
+				content: "\276F";
+				width: 16px;
+				height: 16px;
+				text-align: center;
+				-webkit-transition: all 0.3s;
+				transition: all 0.3s;
+			}
+
+		.accordion-content {
+			max-height: 0;
+			padding: 0 16px;
+			color: rgba(4,57,94,1);
+			background: LAVENDEr;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
+
+			.accordion-content p {
+				margin: 0;
+				color: rgba(4,57,94,.7);
+				font-size: 18px;
+			}
+
+		input:checked + .accordion-label {
+			background: rgba(4,57,94,1);
+		}
+
+			input:checked + .accordion-label::after {
+				-webkit-transform: rotate(90deg);
+				transform: rotate(90deg);
+			}
+
+		input:checked ~ .accordion-content {
+			max-height: 100vh;
+			padding: 16px;
 		}
 	</style>
 </head>
@@ -98,7 +159,7 @@
 							<input class="form-control" type="text" id="preprocessname">
 							<input class="form-control" type="hidden" id="preprocessgid" value=0;>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-2">
 							<label class="form-label" for="">Process Method&nbsp;</label>
 							<select id="Cmbprocessmethod" class="form-select form-control" onchange="processmethod()">
 							</select>
@@ -108,19 +169,22 @@
 							<select id="cmbrecon" class="form-select form-control" onchange="reconcode()" disabled>
 							</select>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-2">
 							<label class="form-label" for="">Preprocess Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="number" id="preprocessorder">
 						</div>
+						<div class="col-md-2" style="width: 14%;">
+							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="holdflag" class="form-select form-control" style=" width:100%;">
+							</select>
+						</div>
 					</div>
-					<div style="height:300px;overflow-x:auto;padding-top:15px;margin-top:20px">
-						<div class="accordion-item" id="headingfilter">
-							<div class="accordion_head" id="headingfilter" style="padding: 10px 0px;font-size: 0.95rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefilter" aria-expanded="false" aria-controls="collapsefilter">
-								&nbsp;&nbsp;&nbsp;&nbsp;Filter&nbsp;&nbsp;
-							</div>
-						
-							<div id="collapsefilter" class="accordion-collapse collapse" aria-labelledby="headingfilter" data-bs-parent="#accordionfilter">
-								<div class="accordion-body" style="padding-left:15px;">
+					<div style="height:300px;overflow-x:auto;padding-top:10px;margin-top:10px">
+						<div class="accordion-wrapper">
+							<div class="accordion" id="headingfilter">
+								<input type="radio" name="radio-a" id="check1" style="display:none">
+								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
+								<div class="accordion-content">
 									<div class="col-xs-12" style="margin-top:5px;">
 										<div id="gd_filter">
 											<div id="grid_filter">
@@ -129,47 +193,41 @@
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="accordion-item" id="headingfunction">
-							<div class="accordion_head" id="headingfunction" style="padding: 10px 0px;font-size: 0.95rem;" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefunction" aria-expanded="false" aria-controls="collapsefunction">
-								&nbsp;&nbsp;&nbsp;&nbsp;Function&nbsp;&nbsp;
-							</div>
-							
-							<div id="collapsefunction" class="accordion-collapse collapse" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
-								<div class="accordion-body" style="padding-left:15px;">
-									<div class="row">
+							<div class="accordion" id="headingfunction">
+								<input type="radio" name="radio-a" id="check2" style="display:none">
+								<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Function</label>
+								<div id="collapsefunction" class="accordion-content" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
+									<div class="accordion-body" style="padding-left:15px;">
+										<div class="row">
+											<div class="col-sm-3">
+												<label class="form-label" for="">Lookup Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
+												</select>
+											</div>
+											<div class="col-sm-3">
+												<label class="form-label" for="">Lookup Function&nbsp;</label>
+												<input class="form-control" id="Cmbfunction" name="Cmbfunction" type="text" value="" data-bind="value:Cmbfunction">
+												@*<select id="Cmbfunction" class="form-select form-control">
+												</select>*@
+											</div>
+											<div class="col-sm-3">
+												<label class="form-label" for="">Update Recon Field&nbsp;</label>
+												<select id="Cmbreconfield" class="form-select form-control">
+												</select>
+											</div>
 
-										<div class="col-sm-3">
-											<label class="form-label" for="">Lookup Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-											<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
-											</select>
 										</div>
-										<div class="col-sm-3">
-											<label class="form-label" for="">Lookup Function&nbsp;</label>
-											<input class="form-control" id="Cmbfunction" name="Cmbfunction" type="text" value="" data-bind="value:Cmbfunction">
-											@*<select id="Cmbfunction" class="form-select form-control">
-											</select>*@
-										</div>
-										<div class="col-sm-3">
-											<label class="form-label" for="">Update Recon Field&nbsp;</label>
-											<select id="Cmbreconfield" class="form-select form-control">
-											</select>
-										</div>
-										
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="accordion-item" id="headinglookup">
-							<div  class="accordion_head" id="headinglookup"	 style="padding: 10px 0px;font-size: 0.95rem;"  type="button" data-bs-toggle="collapse" data-bs-target="#collapselookup" aria-expanded="false" aria-controls="collapselookup">
-								&nbsp;&nbsp;&nbsp;&nbsp;Look Up&nbsp;&nbsp;
-							</div>
-							<div id="collapselookup" class="accordion-collapse collapse" aria-labelledby="headinglookup" data-bs-parent="#accordionlookup">
-								<div class="accordion-body" style="padding-left:15px;">
+							<div class="accordion" id="headinglookup">
+								<input type="radio" name="radio-a" id="check3" style="display:none">
+								<label class="accordion-label" for="check3">&nbsp;&nbsp;&nbsp;Look Up</label>
+								<div id="collapselookup" class="accordion-content">
 									<div class="row" style="margin-bottom:5px;">
 										<div class="col-sm-3">
 											<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-											<select id="cmblookupdataset" class="form-select form-control" onchange="cmbdataset()">
+											<select id="cmblookupdataset" class="form-select form-control" onchange="lookupchange()">
 											</select>
 										</div>
 										<div class="col-sm-3">
@@ -179,7 +237,7 @@
 										</div>
 										<div class="col-sm-3">
 											<label class="form-label" for="">Update Recon Field&nbsp;</label>
-											<select id="Cmbreconfield" class="form-select form-control">
+											<select id="Cmbreconfield1" class="form-select form-control">
 											</select>
 										</div>
 									</div>
@@ -189,21 +247,18 @@
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="accordion-item" id="headingquery">
-							<div class="accordion_head" id="headingquery" style="padding: 10px 0px;font-size: 0.95rem;"  type="button" data-bs-toggle="collapse" data-bs-target="#collapsequery" aria-expanded="false" aria-controls="collapsequery">
-								&nbsp;&nbsp;&nbsp;&nbsp;Query&nbsp;&nbsp;
-							</div>
-							<div id="collapsequery" class="accordion-collapse collapse" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
-								<div class="accordion-body" style="padding-left:15px;">
-									<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 150px;width: 1125px;border-radius: 0.375rem;"></textarea>
+							<div class="accordion" id="headingquery">
+								<input type="radio" name="radio-a" id="check4" style="display:none">
+								<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Query</label>
+								<div id="collapsequery" class="accordion-content" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
+									<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 115px;width: 1155px;border-radius: 0.375rem;"></textarea>
+									<button type="button" id="validatequery" class="btn btn-sm btn btn-primary" onclick="validatequery1()">Validate</button>&nbsp;&nbsp;&nbsp;
 								</div>
-								<button type="button" id="validatequery" class="btn btn-primary" style="float:right" onclick="">Validate</button>&nbsp;&nbsp;&nbsp;
 							</div>
 						</div>
 					</div>
 
-					<div class="row">
+					<div class="row" style="padding-top:16px">
 						<div class="col-sm-4">
 						</div>
 						<div class="col-sm-4" style="margin-left:58px;">
@@ -287,12 +342,63 @@
 				console.log(er)
 			}
 		});
+		// holdflag flag
+		var in_master_code = "QCD_YN";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#holdflag").empty();
+				$("#holdflag").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#holdflag").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+
+			}
+		});
 		load();
+		//dataset combo
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmblookupdataset").empty();
+				$("#cmblookupdataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type == "L") {
+						$("#cmblookupdataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
 	}
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
-			$("#txtstatus").val("Draft");			
+			$("#txtstatus").val("Draft");
 			var data = getlocalStorage("ls_pageList");
 			$("#cmbrecon").val(data);
 			jQuery('#cmbrecon').trigger("change");
@@ -314,11 +420,11 @@
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
+				preprocessfetch(data.preprocess_code);
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
 				var data = getlocalStorage("ls_pageList");
-				var cat = data.dataset_category;
 				$("#txtpreprocesscode").val(data.preprocess_code);
 				$("#cmbrecon").val(data.recon_code);
 				jQuery('#cmbrecon').trigger("change");
@@ -362,6 +468,11 @@
 						value: "",
 						text: "  Select  "
 					}));
+					$("#Cmbreconfield1").empty();
+					$("#Cmbreconfield1").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
 					$.each(res, function (index, item) {
 						$("#Cmbreconfield").append($('<option>', {
 							value: item.recon_field_name,
@@ -370,6 +481,12 @@
 					});
 					$.each(res, function (index, item) {
 						$("#cmbgetrecon").append($('<option>', {
+							value: item.recon_field_name,
+							text: item.recon_field_desc
+						}).data('code', item.recon_field_type));
+					});
+					$.each(res, function (index, item) {
+						$("#Cmbreconfield1").append($('<option>', {
 							value: item.recon_field_name,
 							text: item.recon_field_desc
 						}).data('code', item.recon_field_type));
@@ -427,7 +544,7 @@
 					model: {
 						fields: {
 							preprocessfilter_gid: { type: "string", defaultValue: "0" },
-							filter_applied_on: { type: "string", defaultValue: "S" },
+							filter_seqno: { type: "NUMBER" },
 							filter_field_code: { type: "string" },
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
@@ -468,20 +585,26 @@
 			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
 			columns: [{
 				command: [
+
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saveIdentifier()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='savefilter()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					{
 						name: "Delete",
 						id: "Delete",
 						template: "<a href='' onclick='myDeleteJsidentifier()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
-				], title: "Action&nbsp;", width: "50px",
+				], title: "Action&nbsp;", width: "40px",
 			},
 			{
-				title: "(", width: 20,
+				field: "filter_seqno",
+				title: "Seq No.",
+				width: 50
+			},
+			{
+				title: "(", width: "20px",
 				template: '#=sel_checkboxsI(data)#'
 			},
 			{
@@ -490,21 +613,8 @@
 				hidden: true,
 			},
 			{
-				field: "dataset_name",
-				title: "Filter Applied On",
-				width: 100,
-				hidden: true,
-			},
-			{
-				field: "filter_applied_on",
-				title: "Filter Applied On",
-				width: 100,
-				hidden: true,
-			},
-			{
 				field: "filter_field_code",
-				title: "Filter Applied On",
-				width: 100,
+				title: "filter_field_code",
 				hidden: true,
 			},
 			{
@@ -525,7 +635,7 @@
 			},
 			{
 				field: "ident_value",
-				title: "Identifier Value",
+				title: "Filter Value",
 				width: 100,
 			},
 			{
@@ -549,7 +659,7 @@
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_filter")
 				},
-				width: 120,
+				width: 50,
 			}],
 			editable: true,
 		});
@@ -608,7 +718,7 @@
 			}
 		});
 
-		debugger;
+
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
@@ -700,12 +810,14 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
+				sort: [{ field: "condition_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
 							open_parem: { type: "string" },
 							preprocesscondition_gid: { type: "string", defaultValue: "0" },
 							preprocess_code: { type: "string" },
+							condition_seqno: { type: "NUMBER" },
 							source_field_code: { type: "string", defaultValue: "" },
 							source_field_desc: { type: "string", defaultValue: "" },
 							comparison_field: { type: "string", defaultValue: "" },
@@ -747,21 +859,26 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' onclick='saveheader()' href='' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+			toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 			columns: [{
 				command: [
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saverulecondition()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='savelookup()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsrulecondition()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJslookup()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "condition_seqno",
+				title: "Seq No.",
+				width: 50
 			},
 			{
 				title: "(", width: 20,
@@ -774,13 +891,13 @@
 			},
 			{
 				field: "source_field_code",
-				title: "Source Field",
+				title: "Recon Field",
 				width: 100,
 				hidden: true,
 			},
 			{
 				field: "source_field_desc",
-				title: "Source Field",
+				title: "Recon Field",
 				editor: function (container, options) {
 					combo_editor_man_lookup(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_lookup")
 				},
@@ -798,7 +915,7 @@
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookup", "SOURCE")
 				},
 				editable: true,
-				width: 170,
+				width: 120,
 			},
 			{
 				field: "comparison_field",
@@ -808,7 +925,7 @@
 			},
 			{
 				field: "comparison_field_desc",
-				title: "Comparison Field",
+				title: "Lookup Field",
 				editor: function (container, options) {
 					combo_editor_man_lookup(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_lookup")
 				},
@@ -825,7 +942,7 @@
 				editor: function (container, options) {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_lookup", "COMPARISON")
 				},
-				width: 170,
+				width: 120,
 			},
 			{
 				field: "active_status",
@@ -865,7 +982,7 @@
 		if (isChecked == "true") {
 			con = 'checked';
 		}
-		return '<input id="chk_sel_' + data.preprocesscondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+		return '<input id="chk_sels_' + data.preprocesscondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
 	}
 	var gridRowID1 = -1;
 	function sel_checkbox1(data) {
@@ -875,7 +992,7 @@
 		if (isChecked1 == "true") {
 			con = 'checked';
 		}
-		return '<input id="chk_sel1_' + data.preprocesscondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+		return '<input id="chk_sels1_' + data.preprocesscondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
 	}
 	function OnEdit(e) {
 		try {
@@ -884,6 +1001,21 @@
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
 		}
+	}
+	function addRow() {
+		var grid = $("#grid_lookup").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].condition_seqno > max) {
+				max = grid.dataSource._data[i].condition_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ condition_seqno: newSeqNo, preprocesscondition_gid: 0 });
 	}
 	function color() {
 		$("#grid_lookup").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
@@ -911,7 +1043,7 @@
 			}
 		});
 
-		debugger;
+
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
@@ -939,7 +1071,6 @@
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-		debugger;
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
 		var selectedItem = cmb_var.dataItem(cmb_var.select());
@@ -949,7 +1080,7 @@
 		} else {
 			var codeValue = selectedItem.comparison_field_desc;
 		}
-		var in_recon_code = $("#cmbreconname").val();
+		var in_recon_code = $("#cmbrecon").val();
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
@@ -1003,28 +1134,24 @@
 	function processmethod() {
 		if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 			$("#headingquery").hide();
-			$("#headinglookup").hide();			
+			$("#headinglookup").hide();
 			$("#headingfunction").show();
 			$("#headingfilter").show();
-			$("#collapsefunction").removeClass('accordion-collapse collapse');
-			$("#collapsefunction").toggleClass('accordion-collapse collapse show');
-			
+			$("#check2").prop('checked', true);
 
 		} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
 			$("#headingquery").hide();
-			$("#headinglookup").show();		
+			$("#headinglookup").show();
 			$("#headingfunction").hide();
 			$("#headingfilter").show();
-			$("#collapselookup").removeClass('accordion-collapse collapse');
-			$("#collapselookup").toggleClass('accordion-collapse collapse show');
-			
+			$("#check3").prop('checked', true);
+
 		} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 			$("#headingquery").show();
-			$("#headinglookup").hide();			
+			$("#headinglookup").hide();
 			$("#headingfunction").hide();
 			$("#headingfilter").hide();
-			$("#collapsequery").removeClass('accordion-collapse collapse');
-			$("#collapsequery").toggleClass('accordion-collapse collapse show');
+			$("#check4").prop('checked', true);
 		}
 	}
 	function saveheadersubmit() {
@@ -1039,20 +1166,20 @@
 			var lookup_dataset_code = "";
 			var lookup_return_field = "";
 			var process_query = "";
-			var clone_process="";
+			var clone_process = "";
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
-				 get_recon_field = $("#cmbgetrecon").val();
-				 set_recon_field = $("#Cmbreconfield").val();
-				 process_function = $("#Cmbfunction").val();
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
 				lookup_dataset_code = $("#cmblookupdataset").val();
 				lookup_return_field = $("#Cmblookupdatasetfield").val();
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
-				 process_query = $("#querydata").val();
+				process_query = $("#querydata").val();
 			}
-						
+
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
 			var preprocess_gid = $("#preprocessgid").val();
@@ -1063,7 +1190,7 @@
 			} else {
 				preprocess_gid = 0;
 			}
-			
+
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
 			} else if ($("#txtmode").val() == "Edit") {
@@ -1077,7 +1204,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
-					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code:preprocess_Code,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -1085,13 +1212,11 @@
 					var result = JSON.parse(response);
 					var data = result[0];
 					if (data.out_result == "1") {
-						//$.alert({
-						//	title: 'Recon',
-						//	content: data.out_msg,
-						//	type: 'green',
-						//});
-						//detailsfetch(data.in_dataset_gid);
-						//$("#datasetgid").val(data.in_dataset_gid);
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -1110,6 +1235,408 @@
 		catch (e) {
 			console.log(e)
 		}
+	}
+	function savefilter() {
+		try {
+			var grid = $("#grid_filter").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+			var in_recon_code = $("#cmbrecon").val();
+			var cmbfiltername = model.filter_field_code;
+			var extractcriteria = model.filter_criteria;
+			var identifiercriteria = model.ident_criteria;
+			var identifiervalue = model.ident_value;
+			var action = "";
+			var action_by = ""
+			var preprocessfilter_gid = model.preprocessfilter_gid;
+			if (preprocessfilter_gid == "0") {
+				preprocessfilter_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			var in_open_flag = "";
+			if ($('#chk_sel_' + model.preprocessfilter_gid).is(":checked")) {
+				in_open_flag = "Y";
+			} else {
+				in_open_flag = "N";
+			}
+			var in_close_flag = "";
+			if ($('#chk_sel1_' + model.preprocessfilter_gid).is(":checked")) {
+				in_close_flag = "Y";
+			} else {
+				in_close_flag = "N";
+			}
+			var in_join_condition = model.join_condition;
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/filterdatasave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag,
+					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						preprocessfetch($("#txtpreprocesscode").val());
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function preprocessfetch(preprocess_code) {
+		var cmbpreprocess_code = preprocess_code;
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/Preprocessfetch',
+			dataType: 'json',
+			data: JSON.stringify({ preprocess_code: cmbpreprocess_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					if (result.filter.length > 0) {
+						$("#gd_filter").empty();
+						$("#gd_filter").append("<div id='grid_filter'></div>");
+						grid_filter(result.filter);
+					}
+					else {
+						grid_filter([]);
+					}
+					if (result.condition.length > 0) {
+						grid_lookup(result.condition)
+					} else {
+						grid_lookup([]);
+					}
+					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
+					$("#cmbrecon").val(result.header[0].recon_code);
+					jQuery('#cmbrecon').trigger("change");
+					$("#preprocessname").val(result.header[0].preprocess_desc);
+					$("#preprocessorder").val(result.header[0].preprocess_order);
+					$("#preprocessgid").val(result.header[0].preprocess_gid);
+					$("#Cmbprocessmethod").val(result.header[0].process_method);
+					jQuery('#Cmbprocessmethod').trigger("change");
+					$("#cmbgetrecon").val(result.header[0].get_recon_field);
+					jQuery('#cmbgetrecon').trigger("change");
+					$("#Cmbfunction").val(result.header[0].process_function);
+					$("#Cmbreconfield").val(result.header[0].set_recon_field);
+					$("#querydata").val(result.header[0].process_query);
+					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
+					jQuery('#cmblookupdataset').trigger("change");
+					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
+					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
+				}
+				else {
+					grid_filter([]);
+					grid_lookup([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	function lookupchange() {
+		var datasetcode = $("#cmblookupdataset").val();
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					$("#Cmblookupdatasetfield").empty();
+					$("#Cmblookupdatasetfield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result.DataSet, function (index, item) {
+						$("#Cmblookupdatasetfield").append($('<option>', {
+							value: item.dataset_table_field,
+							text: item.field_name
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	function savelookup() {
+		try {
+			var grid = $("#grid_lookup").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+			var in_Ldataset_code = $("#cmblookupdataset").val();
+			var in_Lreturn_field = $("#Cmblookupdatasetfield").val();
+			var in_setrecon_field = $("#Cmbreconfield1").val();
+			var comparison_field = model.comparison_field;
+			var condition_seqno = model.condition_seqno;
+			var source_field_code = model.source_field_code;
+			var extraction_criteria = model.extraction_criteria;
+			var comparison_criteria = model.comparison_criteria;
+			var in_extraction_filter = "0";
+			var in_comparison_filter = "0";
+			var action = "";
+			var action_by = ""
+			var preprocesscondition_gid = model.preprocesscondition_gid;
+			if (preprocesscondition_gid == "0") {
+				preprocesscondition_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			var in_open_flag = "";
+			if ($('#chk_sels_' + model.preprocesscondition_gid).is(":checked")) {
+				in_open_flag = "Y";
+			} else {
+				in_open_flag = "N";
+			}
+			var in_close_flag = "";
+			if ($('#chk_sels1_' + model.preprocesscondition_gid).is(":checked")) {
+				in_close_flag = "Y";
+			} else {
+				in_close_flag = "N";
+			}
+			var in_join_condition = model.join_condition;
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/conditiondatasave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno,
+					in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
+					in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter,
+					in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
+					in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						preprocessfetch($("#txtpreprocesscode").val());
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function saveheader() {
+		try {
+			if ($("#preprocessname").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Preprocess Name cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+			if ($("#preprocessorder").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Preprocess Order cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+			var preprocess_name = $("#preprocessname").val();
+			var preprocess_Code = $("#txtpreprocesscode").val();
+			var recon_code = $("#cmbrecon").val();
+			var process_method = $("#Cmbprocessmethod").val();
+			var get_recon_field = "";
+			var set_recon_field = "";
+			var process_function = "";
+			var lookup_dataset_code = "";
+			var lookup_return_field = "";
+			var process_query = "";
+			var clone_process = "";
+			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Dataset Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				lookup_dataset_code = $("#cmblookupdataset").val();
+				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+				process_query = $("#querydata").val();
+			}
+
+			var preprocess_order = $("#preprocessorder").val();
+			var action = "";
+			var preprocess_gid = $("#preprocessgid").val();
+
+			if (preprocess_gid > 0) {
+				preprocess_gid = $("#preprocessgid").val();
+				addRow();
+				return;
+			} else {
+				preprocess_gid = 0;
+			}
+
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "";
+			var status = "D"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code,
+					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						addRow();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function validatequery1() {
+		var in_sql = $("#querydata").val();
+		var index = in_sql.indexOf("Where");
+		if (index !== -1) {
+			in_sql = in_sql + "  and 1=2"
+		} else {
+			in_sql = in_sql + "  where 1=2"
+		}
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/validatequery',
+			dataType: 'json',
+			data: JSON.stringify({ in_sql: in_sql }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != "[]") {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				}else{
+					$.alert({
+						title: 'Recon',
+						content: "failed",
+						type: 'red',
+					});
+					$("#querydata").val("");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
 	}
 </script>
 
