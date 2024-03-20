@@ -306,7 +306,7 @@
 								</div>
 							</div>
 							<div class="col-md-1">
-								<label for="" class="form-label">Rule order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<label for="" class="form-label">Rule Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<input class="form-control" id="ruleorder" type="number" value="0">
 							</div>
 							<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
@@ -835,7 +835,6 @@
 						}
 					},
 					error: function (er) {
-						alert(er)
 						console.log(er)
 					}
 
@@ -1494,13 +1493,16 @@
 				success: function (response) {
 					debugger;
 					if (response != null) {
-						//$.alert({
-						//	title: 'Recon',
-						//	content: response.out_msg,
-						//	type: 'green',
-						//});
-						$("#rulegid").val(response.in_rule_gid);
-						getfetch(response.in_rule_gid, "Header");
+						if(response.out_result == '1') {
+							$("#rulegid").val(response.in_rule_gid);
+							getfetch(response.in_rule_gid, "Header");
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: response.out_msg,
+								type: 'green',
+							});
+						}						
 					}
 					else {
 
@@ -3274,8 +3276,10 @@
 	function myDeleteJssourceorder() {
 		var grid = $("#grid_sourceorder").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
+		var model = grid.dataItem($(event.target).closest("tr"));
 		var rulerecorder_gid = parseInt(model.rulerecorder_gid);
 		if (rulerecorder_gid == 0) {
+			grid.dataSource.remove(model);
 			grid.dataSource.remove(model);
 		} else {
 			$.confirm({
