@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "Report Templete";
+	ViewData["Title"] = "Custom Report Templete";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <!Doctype html>
@@ -286,21 +286,34 @@
 					<div class="col-md-12">
 						<div class="box box-orange" style="height:auto;">
 							<div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 									<label for="" class="form-label">Report Templete Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 									<input class="form-control" id="rt_name" name="ReportTemplete" type="text">
 									<input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-3">
 									<label for="" class="form-label">Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 									<select id="cmbreporttype" class="form-select form-control">
 									</select>
 								</div>
-								<div class="col-sm-2"> </div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">System Template&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select id="sys_flag" class="form-select form-control">
+									</select>
+								</div>
+								<div class="col-sm-3"> 
+
+									<label for="" class="form-label">Clone Report Template&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select id="clonereport" class="form-select form-control">
+									</select>
+								</div>
+								<div class="col-sm-1" style="margin-top: 2.5%;">
+									<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
+								</div>
 							</div>
 
 							<div class="row">
-								<div class="nav-align-top mb-3 mt-3">
+								<div class="nav-align-top mb-3">
 									<ul class="nav nav-pills mb-2" role="tablist" style="margin-right: 13px;margin-left: 10px;">
 										<li class="nav-item">
 											<button type="button"
@@ -356,13 +369,138 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Report Templete");
+		$("#navhead").text("Custom Report Templete");
 		kendodate_format();
 		detailfetch();
+		//getreportTemplateList();
 		$("#cmbreporttype").prop("disabled", false);
 	});
 
+	function getreportTemplateList(){
+		var data = {};
+		$.ajax({
+			type: "GET",
+			url: '../Reports/reportTempletelist',
+			dataType: 'json',
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response != null) {
+					var res = JSON.parse(response)
+					$("#clonereport").empty();
+					$("#clonereport").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						debugger;
+						if (item.active_status == 'Y') {
+						$("#clonereport").append($('<option>', {
+							value: item.reporttemplate_code,
+							text: item.reporttemplate_name
+						}));
+						}
+					});
+				}
+
+				// system flag
+				var in_master_code = "QCD_YN";
+				var in_user_code = "";
+				$.ajax({
+					type: "POST",
+					url: '../Common/Qcdmaster',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						$("#sys_flag").empty();
+						$("#sys_flag").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(response, function (index, item) {
+							$("#sys_flag").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						});
+
+					}
+				});
+				
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
 	function detailfetch() {
+		//report list
+
+		var data = {};
+		$.ajax({
+			type: "GET",
+			url: '../Reports/reportTempletelist',
+			dataType: 'json',
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				debugger;
+				if (response != null) {
+					var res = JSON.parse(response)
+					$("#clonereport").empty();
+					$("#clonereport").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						debugger;
+						if (item.active_status == 'Y') {
+							$("#clonereport").append($('<option>', {
+								value: item.reporttemplate_code,
+								text: item.reporttemplate_name
+							}));
+						}
+					});
+				}
+
+				// system flag
+				var in_master_code = "QCD_YN";
+				var in_user_code = "";
+				$.ajax({
+					type: "POST",
+					url: '../Common/Qcdmaster',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						$("#sys_flag").empty();
+						$("#sys_flag").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(response, function (index, item) {
+							$("#sys_flag").append($('<option>', {
+								value: item.masterSyscode,
+								text: item.masterName
+							}));
+						});
+
+					}
+				});
+
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+
 		debugger;
 		var data = getlocalStorage("ls_pageList");
 		$.ajax({
@@ -390,6 +528,37 @@
 				console.log(er)
 			}
 		});
+
+		// system flag
+		var in_master_code = "QCD_YN";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#sys_flag").empty();
+				$("#sys_flag").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#sys_flag").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+
+			}
+		});
+
+		
+
+
+
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtstatus").val("Active");
 			$("#reporttemplate_gid").val("0");
@@ -417,7 +586,9 @@
 							$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
 							$("#rt_name").val(res.Table[0].reporttemplate_name);
 							$("#cmbreporttype").val(res.Table[0].report_code);
+							$("#sys_flag").val(res.Table[0].system_flag);
 							$("#cmbreporttype").prop("disabled", true);
+							$("#clonereport").prop('disabled', true)
 							grid_tempfilter(res.Table1);
 						}
 						else {
@@ -866,9 +1037,10 @@
 			data.in_reporttemplate_code = $("#reporttemplate_code").val();
 			data.in_reporttemplate_name = $("#rt_name").val();
 			data.in_report_code = $("#cmbreporttype").val();
+			data.in_system_flag = $("#sys_flag").val();
 			data.in_action = 'INSERT';
 			data.in_active_status = 'Y';
-			if (data.in_reporttemplate_name && data.in_report_code) {
+			if (data.in_reporttemplate_name && data.in_report_code && data.in_system_flag) {
 				$.ajax({
 					type: "POST",
 					url: '../Reports/reporttemplate',
@@ -905,17 +1077,23 @@
 			} else if (!data.in_reporttemplate_name) {
 				$.alert({
 					title: 'Recon',
-					content: 'Report Templete Name is missing',
+					content: 'Report Templete Name should not be empty',
 					type: 'red',
 				});
 			}
 			else if (!data.in_report_code) {
 				$.alert({
 					title: 'Recon',
-					content: 'Report is missing',
+					content: 'Please Select Report',
 					type: 'red',
 				});
-			}
+			} else if (!data.in_system_flag) {
+				$.alert({
+					title: 'Recon',
+					content: 'Please select System flag',
+					type: 'red',
+				});
+			} 
 		}
 
 	}
@@ -927,9 +1105,10 @@
 		data.in_reporttemplate_code = $("#reporttemplate_code").val();
 		data.in_reporttemplate_name = $("#rt_name").val();
 		data.in_report_code = $("#cmbreporttype").val();
+		data.in_system_flag = $("#sys_flag").val();
 		data.in_action = $("#reporttemplate_gid").val() == '0' ? 'INSERT' : 'UPDATE';
 		data.in_active_status = 'Y';
-		if (data.in_reporttemplate_name && data.in_report_code) {
+		if (data.in_reporttemplate_name && data.in_report_code && data.in_system_flag) {
 			$.ajax({
 				type: "POST",
 				url: '../Reports/reporttemplate',
@@ -973,14 +1152,84 @@
 		} else if (!data.in_reporttemplate_name) {
 			$.alert({
 				title: 'Recon',
-				content: 'Report Templete Name is missing',
+				content: 'Report Templete Name Should not be empty',
 				type: 'red',
 			});
 		}
 		else if (!data.in_report_code) {
 			$.alert({
 				title: 'Recon',
-				content: 'Report is missing',
+				content: 'Please select Report',
+				type: 'red',
+			});
+		} else if (!data.in_system_flag) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select System Flag',
+				type: 'red',
+			});
+		} 
+	}
+
+	function saveclone(){
+		debugger;
+		var data = {};
+		data.in_clone_reporttemplate_code = $("#clonereport").val();
+		data.in_reporttemplate_name = $("#rt_name").val();
+		data.in_report_code = $("#cmbreporttype").val();
+		data.in_action = 'INSERT';
+		data.in_active_status = 'Y';
+		if (data.in_reporttemplate_name && data.in_clone_reporttemplate_code) {
+			$.ajax({
+				type: "POST",
+				url: '../Reports/clonereporttemplate',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					if (result.length > 0) {
+						if (result[0].out_result == '1') {
+							$.alert({
+								title: 'Recon',
+								content: result[0].out_msg,
+								type: 'green',
+							});
+								setlocalStorage("ls_pageList", result[0].out_reporttemplate_code);
+								btn_onClick("Edit");
+								$("#reporttemplate_code").val(result[0].out_reporttemplate_code);
+								$("#txtmode").val("Edit");
+								$("#txtstatus").val("Active");
+								$("#cmbreporttype").prop("disabled", true);
+								$("#clonereport").prop("disabled", true);
+							} else {
+								btn_onClick("Edit");
+								$("#txtmode").val("Edit");
+								$("#txtstatus").val("Active");
+							}
+
+							detailfetch();
+						} 
+						else {
+							$.alert({
+								title: 'Recon',
+								content: result[0].out_msg,
+								type: 'red',
+							});
+						}
+					}
+			});
+		} else if (!data.in_reporttemplate_name) {
+			$.alert({
+				title: 'Recon',
+				content: 'Report Templete Name should not be empty',
+				type: 'red',
+			});
+		}
+		else if (!data.in_clone_reporttemplate_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Clone report template',
 				type: 'red',
 			});
 		}

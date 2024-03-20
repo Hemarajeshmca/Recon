@@ -1,5 +1,5 @@
 ﻿@{
-	ViewBag.title = "Report Templete";
+	ViewBag.title = "Custom Report Templete";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -88,7 +88,7 @@
 </html>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Report Templete");
+		$("#navhead").text("Custom Report Templete");
 		kendodate_format();
 		grid_reportTemplist([]);
 		gridlist();
@@ -144,6 +144,8 @@
 								reporttemplate_name: { type: "string" },
 								report_code: { type: "string" },
 								report_desc: { type: "string" },
+								system_flag: {type: "string"},
+								system_flag_desc: {type: "string"},
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" }
 							}
@@ -187,7 +189,7 @@
 						},
 					],
 					title: "Action&nbsp;",
-					width: "30px",
+					width: "40px",
 				},
 				{
 					field: "reporttemplate_gid",
@@ -199,7 +201,7 @@
 				{
 					field: "reporttemplate_code",
 					title: "Report Templete Code",
-					width: 60,
+					width: 70,
 				},
 				{
 					field: "reporttemplate_name",
@@ -215,8 +217,13 @@
 				{
 					field: "report_desc",
 					title: "Report Name",
-					width: 120,
+					width: 90,
 				},
+				{
+					field: "system_flag_desc",
+					title: "System Templete",
+					width: 60,
+				},					
 				{
 					field: "active_status",
 					title: "active_status",
