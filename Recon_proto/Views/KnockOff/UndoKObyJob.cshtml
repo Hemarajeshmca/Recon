@@ -20,10 +20,10 @@
 			height: 360px;
 		}
 
-		.k-grid-header th.k-header > .k-link {		
-			color:white !important;
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
 		}
-	
+
 
 		.k-grid-header {
 			font-weight: bold;
@@ -59,19 +59,19 @@
 				<div class="row" style="margin-top: -19px;margin-bottom: 13px;">
 					<div class="col-sm-3">
 						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<select id="cmbreconname" class="form-select form-control">
+						<select id="cmbreconname" class="form-select form-control" onchange="onc()">
 						</select>
 					</div>
 					<div class="col-md-3">
 						<label class="form-label">
 							Job Type
 						</label>
-						<input class="form-control" value="Auto Matching"  disabled />
+						<input class="form-control" value="Auto Matching" disabled />
 					</div>
 					<div class="col-md-2">
 						<label for="" class="form-label">Initiated From Date</label>
 						<div>
-							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from"  style="width:100%" />
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
@@ -138,6 +138,13 @@
 			}
 		});
 	});
+	function onc() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+	}
 	function undojob_grid(data) {
 		$("#undojob_grid").kendoGrid({
 			dataSource: {
@@ -258,7 +265,7 @@
 		var reconcode = $("#cmbreconname").val();
 		var jobtype = "A";
 		var jobstatus = "C";
-		var period_from = $("#initiated_from").val();	
+		var period_from = $("#initiated_from").val();
 		var ts = period_from.split("/");
 		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
 		var period_to = $("#initiated_to").val();
@@ -288,8 +295,8 @@
 	}
 	function downloadFile() {
 		var reconcode = $("#cmbreconname").val();
-		var ip_addr="";
-		var user_code="";
+		var ip_addr = "";
+		var user_code = "";
 		var grid = $("#undojob_grid").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var jobgid = parseInt((model.job_gid));
@@ -303,7 +310,7 @@
 				confirm: function () {
 					var knockoff = $("#undoknockoff").val();
 					$.ajax({
-						type: "POST",	
+						type: "POST",
 						url: '../KnockOff/undomatchjob',
 						async: false,
 						dataType: 'json',

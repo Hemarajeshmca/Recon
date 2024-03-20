@@ -132,6 +132,8 @@
 							value: item.recon_code,
 							text: item.recon_name
 						}));
+						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#cmbreconname').trigger("change");
 					}
 				});
 			},
@@ -142,6 +144,11 @@
 		});
 	}
 	function reconchange() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 		var in_recon_code = $("#cmbreconname").val();
 		$.ajax({
 			type: "POST",
@@ -161,7 +168,7 @@
 					$.each(res.Reconversion, function (index, item) {
 						$("#comreconversion").append($('<option>', {
 							value: item.recon_rule_version,
-							text:  item.recon_rule_version
+							text: item.recon_rule_version
 						}));
 					});
 				}

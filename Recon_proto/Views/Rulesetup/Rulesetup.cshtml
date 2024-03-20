@@ -90,7 +90,7 @@
 						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
 							<div class="col-sm-3">
 								<label for="" class="form-label">Clone Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<input class="form-control" type="text" id="cmbreconname_clone" disabled/>
+								<input class="form-control" type="text" id="cmbreconname_clone" disabled />
 								<input class="form-control" type="text" id="cmbreconcode_clone" hidden />
 							</div>
 							<div class="col-sm-3">
@@ -118,7 +118,7 @@
 								<label for="" class="form-label">New Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<select id="cmbreconname_new" class="form-select form-control" onchange="reconchangelist_new()">
 								</select>
-								</div>
+							</div>
 							<div class="col-sm-3">
 								<label for="" class="form-label">New Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<input class="form-control" type="text" id="cmbrulename_new" />
@@ -194,6 +194,10 @@
 							text: item.recon_name
 						}));
 					}
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					$("#cmbreconname_new").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+					jQuery('#cmbreconname_new').trigger("change");
 				});
 			},
 			error: function (er) {
@@ -221,10 +225,10 @@
 								rule_name: { type: "string" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
-								source_dataset_code: {type: "string"},
-								comparison_dataset_code: {type: "string"},
-								source_dataset_desc: {type: "string"},
-								comparison_dataset_desc: {type: "string"},
+								source_dataset_code: { type: "string" },
+								comparison_dataset_code: { type: "string" },
+								source_dataset_desc: { type: "string" },
+								comparison_dataset_desc: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" }
 							}
@@ -324,7 +328,7 @@
 					width: 100,
 					hidden: true,
 				},
-					{
+				{
 					field: "source_dataset_desc",
 					title: "source_dataset_desc",
 					width: 100,
@@ -443,6 +447,11 @@
 		}
 	}
 	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 		var cmbreconname = $("#cmbreconname").val();
 		var data = {};
 		data.in_user_code = '';
@@ -585,18 +594,18 @@
 		var grid = $("#grid_rulesetup").data("kendoGrid");
 		var selectedItem = grid.dataItem($(event.target).closest("tr"));
 		//if (selectedItem.active_status == 'Y') {
-			$("#clone_rule").modal('show');
-			$("#cmbreconname_clone").val(selectedItem.recon_name);
-			$("#cmbreconcode_clone").val(selectedItem.recon_code);
-			$("#cmbrulename").val(selectedItem.rule_name);
-			$("#rule_code").val(selectedItem.rule_code);
-			$("#sourcedataset").val(selectedItem.source_dataset_code); 
-			$("#comparisondataset").val(selectedItem.comparison_dataset_code);
-			$("#sourcedataset_new").val("");
-			$("#comparisondataset_new").val("");
-			$("#cmbrulename_new").val("");
-			$("#cmbreconname_new").val(selectedItem.recon_code);
-			reconchangelist_new();
+		$("#clone_rule").modal('show');
+		$("#cmbreconname_clone").val(selectedItem.recon_name);
+		$("#cmbreconcode_clone").val(selectedItem.recon_code);
+		$("#cmbrulename").val(selectedItem.rule_name);
+		$("#rule_code").val(selectedItem.rule_code);
+		$("#sourcedataset").val(selectedItem.source_dataset_code);
+		$("#comparisondataset").val(selectedItem.comparison_dataset_code);
+		$("#sourcedataset_new").val("");
+		$("#comparisondataset_new").val("");
+		$("#cmbrulename_new").val("");
+		$("#cmbreconname_new").val(selectedItem.recon_code);
+		reconchangelist_new();
 		//}
 
 	}
@@ -651,7 +660,7 @@
 		});
 	}
 
-	function reconchangelist_new(){
+	function reconchangelist_new() {
 		debugger;
 		var reconcode = $("#cmbreconname_new").val();
 		$.ajax({
@@ -735,7 +744,7 @@
 				alert(er)
 				console.log(er)
 			}
-		});	
+		});
 	}
 
 </script>
