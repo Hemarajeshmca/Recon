@@ -134,6 +134,7 @@ namespace Recon_proto.Controllers
 			public int? in_preprocessfilter_gid { get; set; }
 			public string? in_preprocess_code { get; set; }
 			public string? in_recon_code { get; set; }
+			public Double in_filter_seqno { get; set; }
 			public string? in_filter_field { get; set; }
 			public string? in_filter_criteria { get; set; }
 			public string? in_ident_value { get; set; }

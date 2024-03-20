@@ -180,19 +180,7 @@
 						</div>
 					</div>
 					<div style="height:300px;overflow-x:auto;padding-top:10px;margin-top:10px">
-						<div class="accordion-wrapper">
-							<div class="accordion" id="headingfilter">
-								<input type="radio" name="radio-a" id="check1" style="display:none">
-								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
-								<div class="accordion-content">
-									<div class="col-xs-12" style="margin-top:5px;">
-										<div id="gd_filter">
-											<div id="grid_filter">
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+						<div class="accordion-wrapper">							
 							<div class="accordion" id="headingfunction">
 								<input type="radio" name="radio-a" id="check2" style="display:none">
 								<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Function</label>
@@ -243,6 +231,18 @@
 									</div>
 									<div class="col-xs-12" style="margin-top:5px;">
 										<div id="grid_lookup">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headingfilter">
+								<input type="radio" name="radio-a" id="check1" style="display:none">
+								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
+								<div class="accordion-content">
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_filter">
+											<div id="grid_filter">
+											</div>
 										</div>
 									</div>
 								</div>
@@ -421,6 +421,7 @@
 				$("#Cmbreconfield").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
 				preprocessfetch(data.preprocess_code);
+				$("#holdflag").val(data.hold_flag);
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -438,6 +439,7 @@
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
+				$("#holdflag").val(data.hold_flag);
 				$("#savesubmit").hide();
 				$("#adddataset").hide();
 				$("#datasetfieldadd").hide();
@@ -582,7 +584,7 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			toolbar: "<a onclick=savefilterheader()  href='javascript:void(0)'><span class='fa fa-plus' style='color:white'></span></a>",
 			columns: [{
 				command: [
 
@@ -594,7 +596,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsidentifier()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJsfilter()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -800,7 +802,21 @@
 			}
 		});
 	}
-
+	function addRowfilter() {
+		var grid = $("#grid_filter").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].filter_seqno > max) {
+				max = grid.dataSource._data[i].filter_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0 });
+	}
 	//---- Look up ----------------
 	function grid_lookup(data) {
 		var source_field_desc_list = "";
@@ -871,7 +887,7 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJslookup()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: "<a href='' onclick='myDeleteJslookup()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1186,7 +1202,6 @@
 
 			if (preprocess_gid > 0) {
 				preprocess_gid = $("#preprocessgid").val();
-				return;
 			} else {
 				preprocess_gid = 0;
 			}
@@ -1197,14 +1212,15 @@
 				action = "UPDATE"
 			}
 			var action_by = "";
-			var status = "Y"
+			var status = "Y";
+			var holdflag = $("#holdflag").val();
 			$.ajax({
 				type: "POST",
 				url: '../Preprocess/preprocessheader',
 				dataType: 'json',
 				data: JSON.stringify({
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
-					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -1246,6 +1262,7 @@
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
+			var in_filter_seqno = model.filter_seqno
 			var action = "";
 			var action_by = ""
 			var preprocessfilter_gid = model.preprocessfilter_gid;
@@ -1275,7 +1292,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition,
-					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
 					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -1302,6 +1319,92 @@
 		}
 		catch (e) {
 			console.log(e)
+		}
+	}
+	function myDeleteJsfilter() {
+		var grid = $("#grid_filter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessfilter_gid = parseInt(model.preprocessfilter_gid);
+		if (preprocessfilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_recon_code = $("#cmbrecon").val();
+						var cmbfiltername = model.filter_field_code;
+						var extractcriteria = model.filter_criteria;
+						var identifiercriteria = model.ident_criteria;
+						var identifiervalue = model.ident_value;
+						var in_filter_seqno = model.filter_seqno
+						var action = "DELETE";
+						var action_by = ""
+						var preprocessfilter_gid = model.preprocessfilter_gid;
+						var status = "Y";
+						var in_open_flag = "";
+						if ($('#chk_sel_' + model.preprocessfilter_gid).is(":checked")) {
+							in_open_flag = "Y";
+						} else {
+							in_open_flag = "N";
+						}
+						var in_close_flag = "";
+						if ($('#chk_sel1_' + model.preprocessfilter_gid).is(":checked")) {
+							in_close_flag = "Y";
+						} else {
+							in_close_flag = "N";
+						}
+						var in_join_condition = model.join_condition;
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/filterdatasave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition,
+								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+								in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
 		}
 	}
 	function preprocessfetch(preprocess_code) {
@@ -1349,6 +1452,7 @@
 					jQuery('#cmblookupdataset').trigger("change");
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
+					$("#holdflag").val(result.header[0].hold_flag);
 				}
 				else {
 					grid_filter([]);
@@ -1471,6 +1575,99 @@
 			console.log(e)
 		}
 	}
+	function myDeleteJslookup() {
+		var grid = $("#grid_lookup").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocesscondition_gid = parseInt(model.preprocesscondition_gid);
+		if (preprocesscondition_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_Ldataset_code = $("#cmblookupdataset").val();
+						var in_Lreturn_field = $("#Cmblookupdatasetfield").val();
+						var in_setrecon_field = $("#Cmbreconfield1").val();
+						var comparison_field = model.comparison_field;
+						var condition_seqno = model.condition_seqno;
+						var source_field_code = model.source_field_code;
+						var extraction_criteria = model.extraction_criteria;
+						var comparison_criteria = model.comparison_criteria;
+						var in_extraction_filter = "0";
+						var in_comparison_filter = "0";
+						var action = "DELETE";
+						var action_by = ""
+						var preprocesscondition_gid = model.preprocesscondition_gid;
+
+						var status = "Y";
+						var in_open_flag = "";
+						if ($('#chk_sels_' + model.preprocesscondition_gid).is(":checked")) {
+							in_open_flag = "Y";
+						} else {
+							in_open_flag = "N";
+						}
+						var in_close_flag = "";
+						if ($('#chk_sels1_' + model.preprocesscondition_gid).is(":checked")) {
+							in_close_flag = "Y";
+						} else {
+							in_close_flag = "N";
+						}
+						var in_join_condition = model.join_condition;
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/conditiondatasave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno,
+								in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
+								in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter,
+								in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
+								in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
 	function saveheader() {
 		try {
 			if ($("#preprocessname").val() == "") {
@@ -1549,7 +1746,7 @@
 			} else {
 				preprocess_gid = 0;
 			}
-
+			var holdflag = $("#holdflag").val();
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
 			} else if ($("#txtmode").val() == "Edit") {
@@ -1563,7 +1760,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
-					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -1623,7 +1820,7 @@
 							type: 'red',
 						});
 					}
-				}else{
+				} else {
 					$.alert({
 						title: 'Recon',
 						content: "failed",
@@ -1637,6 +1834,127 @@
 				console.log(er)
 			}
 		});
+	}
+	function savefilterheader() {
+		try {
+			if ($("#preprocessname").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Preprocess Name cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+			if ($("#preprocessorder").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Preprocess Order cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+			var preprocess_name = $("#preprocessname").val();
+			var preprocess_Code = $("#txtpreprocesscode").val();
+			var recon_code = $("#cmbrecon").val();
+			var process_method = $("#Cmbprocessmethod").val();
+			var get_recon_field = "";
+			var set_recon_field = "";
+			var process_function = "";
+			var lookup_dataset_code = "";
+			var lookup_return_field = "";
+			var process_query = "";
+			var clone_process = "";
+			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Dataset Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				lookup_dataset_code = $("#cmblookupdataset").val();
+				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+				process_query = $("#querydata").val();
+			}
+
+			var preprocess_order = $("#preprocessorder").val();
+			var action = "";
+			var preprocess_gid = $("#preprocessgid").val();
+
+			if (preprocess_gid > 0) {
+				preprocess_gid = $("#preprocessgid").val();
+				addRowfilter();
+				return;
+			} else {
+				preprocess_gid = 0;
+			}
+			var holdflag = $("#holdflag").val();
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "";
+			var status = "D"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						addRowfilter();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
 	}
 </script>
 
