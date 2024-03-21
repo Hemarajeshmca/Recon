@@ -6,7 +6,7 @@
 <html>
 <head>
 	<title></title>
-	<style>
+		<style>
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
@@ -88,7 +88,7 @@
 				var result = JSON.parse(response);
 				if (result != null) {
 					$("#gd_dataset").empty();
-					$("#gd_dataset").append("<div id='grid_dataset'></div>");
+					$("#gd_dataset").append("<div id='grid_dataset' style='width:100%'></div>");
 					grid_dataset_details(result);					
 				}
 				else {
@@ -216,6 +216,7 @@
 					field: "active_status_desc",
 					title: "Status",
 					width: 50,
+					resizable: false,
 					filterable: {
 						ui: priorityFilter,
 						extra: false,
@@ -229,7 +230,7 @@
 				{
 					field: "In_mode_flag",
 					title: "Mode",
-					hidden: true
+					hidden: true,
 				}],
 				editable: false,
 				
