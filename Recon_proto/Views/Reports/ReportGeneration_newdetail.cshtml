@@ -569,7 +569,7 @@
                 schema: {
                     model: {
                         fields: {
-                            reporttemplatefilter_gid: { type: "string", defaultValue: "0" },
+                            reporttemplatefilter_gid: { type: "number", defaultValue: 0 },
                             reporttemplate_code: { type: "string" },
                             filter_seqno: { type: "number", defaultValue: "0" },
                             report_field: { type: "string" },
@@ -577,8 +577,8 @@
                             filter_criteria: { type: "string" },
                             filter_criteria_desc: { type: "string" },
                             filter_value: { type: "string" },
-                            open_parentheses_flag: { type: "string" },
-                            close_parentheses_flag: { type: "string" },
+                            open_parentheses_flag: { type: "string", editable: false },
+                            close_parentheses_flag: { type: "string", editable: false },
                             join_condition: { type: "string" },
                             active_status: { type: "string" },
                             active_status_desc: { type: "string" },
@@ -593,7 +593,7 @@
             dataBound: function (e) {
                 resultData = e.sender._data;
                 var rows = $('#grid_tempfilter').data('kendoGrid').tbody.children();
-                setColor(rows, resultData);
+                setColor(rows, resultData);               
             },
 
             filterable: false,
@@ -607,6 +607,7 @@
                 buttonCount: 5
             },
             toolbar: "<a  href='javascript:void(0)' onclick='addRow()' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+            //toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:Black'></span></a>",
             columns: [{
                 command: [
                     {
@@ -622,8 +623,15 @@
                 width: 50,
             },
             {
-                title: "(", width: 20,
-                template: '#=sel_checkbox(data)#',
+                field: "open_parentheses_flag",
+                title: "(", width: 20,              
+                template: function (dataItem) {                  
+                    if (dataItem.reporttemplatefilter_gid > 0) {
+                        return '<input type="checkbox" disabled="disabled" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+                    } else {
+                        return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+                    }
+                }              
             },
             {
                 field: "reporttemplatefilter_gid",
@@ -672,8 +680,14 @@
             {
                 field: "close_parentheses_flag",
                 title: ")",
-                template: '#=sel_checkbox1(data)#',
-                width: 20
+                template: function (dataItem) {
+                    if (dataItem.reporttemplatefilter_gid > 0) {
+                        return '<input type="checkbox" disabled="disabled" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+                    } else {
+                        return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+                    }
+                } ,                
+                width: 20,
             },
             {
                 field: "join_condition",
@@ -708,25 +722,8 @@
         var newSeqNo = parseInt(lastSeqNo) + 1;
 
         // Add a new row with the incremented sequence number
-        dataSource.add({ filter_seqno: newSeqNo });
+        dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N" });
     }
-
-    function addRow1() {
-        var grid = $("#grid_tempfilter").data("kendoGrid");
-        var dataSource = grid.dataSource;
-
-        // Get the last sequence number and increment it
-        var lastSeqNo = grid.dataSource._data.length;
-        var newSeqNo = parseInt(lastSeqNo) + 1;
-
-        // Add a new row with the incremented sequence number
-        var newRow = dataSource.add({ filter_seqno: newSeqNo });
-
-        // Enter edit mode for each cell in the newly added row
-        grid.editRow(newRow);
-
-    }
-
 
 
     function OnEdit(e) {
@@ -740,41 +737,64 @@
             javascript_log4j_root(arguments.callee.name, err);
         }
     }
-
-    var gridRowID = -1;
-    function sel_checkbox(data) {
-
-        gridRowID++;
-        var isChecked = data.open_parentheses_flag;
-        var con = "";
-        var dis = "disabled";
-        if (isChecked == "Y") {
-            con = 'checked';
-        }
-        if (data.reporttemplatefilter_gid > 0) {
-            return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" disabled class="checkbox" type="checkbox" ' + con + ' /> ';
-
-        } 
-        
-        else {
-            return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-
-        }
-    }
-    var gridRowID1 = -1;
-    function sel_checkbox1(data) {
-        gridRowID1++;
-        var isChecked1 = data.close_parentheses_flag;
-        var con = "";
-        if (isChecked1 == "Y") {
-            con = 'checked';
-        }
-        if (data.reporttemplatefilter_gid > 0) {
-            return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" disabled class="checkbox" type="checkbox" ' + con + ' /> ';
-        } else {
-            return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-        }
-    }
+    $(function () {
+        $('#grid_tempfilter').on('click', '.chkbx1', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_tempfilter').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('open_parentheses_flag', 'Y');
+            }
+            else {
+                dataItem._set('open_parentheses_flag', 'N');
+            }
+        })
+    })
+    $(function () {
+        $('#grid_tempfilter').on('click', '.chkbx2', function () {
+            var checked = $(this).is(':checked');
+            var grid = $('#grid_tempfilter').data().kendoGrid;
+            var dataItem = grid.dataItem($(this).closest('tr'));
+            var row = $(this).closest('tr');
+            if (checked == true) {
+                dataItem._set('close_parentheses_flag', 'Y');
+            }
+            else {
+                dataItem._set('close_parentheses_flag', 'N');
+            }
+        })
+    })
+    //var gridRowID = -1;
+    //function sel_checkbox(data) {
+    //    gridRowID++;
+    //    var isChecked = data.open_parentheses_flag;
+    //    var con = "";
+    //    var dis = "disabled";
+    //    if (isChecked == "Y") {
+    //        con = 'checked';
+    //    }
+    //    if (data.reporttemplatefilter_gid > 0) {
+    //        return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" disabled class="checkbox" type="checkbox" ' + con + ' /> ';
+    //    }         
+    //    else {
+    //        return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+    //    }
+    //}
+    //var gridRowID1 = -1;
+    //function sel_checkbox1(data) {
+    //    gridRowID1++;
+    //    var isChecked1 = data.close_parentheses_flag;
+    //    var con = "";
+    //    if (isChecked1 == "Y") {
+    //        con = 'checked';
+    //    }
+    //    if (data.reporttemplatefilter_gid > 0) {
+    //        return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" disabled class="checkbox" type="checkbox" ' + con + ' /> ';
+    //    } else {
+    //        return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+    //    }
+    //}
 
     function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 
