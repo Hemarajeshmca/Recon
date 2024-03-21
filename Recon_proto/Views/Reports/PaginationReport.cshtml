@@ -189,12 +189,12 @@
 
     @*Pagination*@
     <style>
-        a {
+      /*  a {
             text-decoration: none;
             display: inline-block;
             padding: 8px 16px;
         }
-
+*/
             a:hover {
                 background-color: #ddd;
                 color: black;
@@ -212,6 +212,9 @@
 
         .round {
             border-radius: 50%;
+            padding: 8px 16px;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .page_bg {
@@ -255,6 +258,7 @@
         a.k-button.k-button-icontext.k-grid-edit, a.k-button.k-button-icontext.k-grid-View, a.k-button.k-button-icontext.k-grid-Delete {
             background: transparent;
             border-color: transparent;
+        }
         }
 
         span.k-icon.k-edit {
@@ -416,6 +420,9 @@
     <style>
         .plusminus {
             float: right;
+            font-weight: 900;
+            font-size: 16px;
+            margin-top: -2px;
         }
 
         .ioniconplus {
@@ -453,7 +460,7 @@
                                 </div>
                                 <div class="col-sm-4" style="margin-top:22px;">
                                     <button type="button" value="Refresh" onclick="OnRefresh()" id="btn_submit" class="btn btn-sm save_btn me-2"><i class="fa fa-filter" aria-hidden="true"></i>&nbsp;Refresh</button>&nbsp;
-                                    <button type="button" id="run" class="btn btn-primary" onclick="Runprogress()" style="padding: 4px 10px;"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Show</button>&nbsp;
+                                    <button type="button" id="run" class="btn btn-sm save_btn me-2" onclick="Runprogress()" style="padding: 4px 10px; background-color:#5490ff;border: 1px solid #5490ff;"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Show</button>&nbsp;
                                 </div>
 
 
@@ -473,10 +480,9 @@
                                         <div class="accordion_footer">
                                             <div class="row">
                                                 <div class="col-sm-10">
-                                                    @Html.TextArea("Message", new { rows = 1, columns = 40, id = "framevalue", style = "width:90%;background-color:rgb(135,46,123);border:none;color:white;font-size:smaller;" })
+                                                        @Html.TextArea("Message", new { rows = 1, columns = 40, id = "framevalue", style = "width:90%;background-color:rgb(135,46,123);border:none;color:white;font-size:smaller;resize: none;" })
                                                 </div>
-
-                                            </div>
+                                                </div>
 
                                         </div>
                                     </div>
