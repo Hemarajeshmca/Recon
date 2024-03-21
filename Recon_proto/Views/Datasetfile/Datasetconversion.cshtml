@@ -313,6 +313,8 @@
 							text: item.recon_name
 						}));
 					}
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));					
+					jQuery('#cmbreconname').trigger("change");
 				});
 			},
 			error: function (er) {
@@ -324,6 +326,11 @@
 	}
 
 	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 			grid_dataset_details([]);
 			var data = {};
 			data.in_recon_code = $("#cmbreconname").val();
