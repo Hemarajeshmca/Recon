@@ -146,8 +146,9 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				debugger;
 				var res = JSON.parse(response);
-				if (res != null) {
+				if (response != null) {
 					$("#gd_reconlist").empty();
 					$("#gd_reconlist").append("<div id='grid_reconlist'></div>");
 					grid_reconlist_details(res);
@@ -168,7 +169,6 @@
 			$("#grid_reconlist").kendoGrid({
 				dataSource: {
 					data: data,
-					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
@@ -180,10 +180,11 @@
 								period_from: { type: "date" },
 								period_to: { type: "date" },
 								active_status:{type: "string"},
-								status: { type: "string" }
+								status: { type: "string" },
 							}
 						}
-					}
+					},
+					pageSize: 15
 				},
 				height: 450,
 				groupable: false,
@@ -246,56 +247,57 @@
 					field: "recon_gid",
 					title: "Row id",
 					width: 10,
-					hidden: true,
+					hidden: true
 				},
 
 				{
 					field: "recon_code",
 					title: "Recon Code",
-					width: 50,
+					width: 50
 				},
 				{
 					field: "recon_name",
 					title: "Recon Name",
-					width: 120,
+					width: 120
 				},
 				{
 					field: "recontype_code",
 					title: "Recon Type Code",
 					width: 10,
-					hidden: true,
+					hidden: true
 				},
 				{
 					field: "recontype_desc",
 					title: "Recon Type",
-					width: 50,
+					width: 50
 				},
 				{
 					field: "period_from",
 					title: "Period From",
-					//format: "{0:ddMM/yyyy}",
-					width: 50,					
+					format: "{0:dd-MM-yyyy}",
+					width: 50,			
 					filterable: {
 						ui: "datepicker", // Use a datepicker for date filtering
-						
 						extra: false,
-						operators: {
-							date: {
-								eq: "Equal to",
-								lt: "Before",
-								gt: "After"
-							}, string: {
-								eq: "Is equal to"
-							}
-						}
+						//operators: {
+						//	date: {
+						//		eq: "Equal to",
+						//		lt: "Before",
+						//		gt: "After"
+						//	}, 
+						//}
 					},
 				},
 				{
 					field: "period_to",
 					title: "Period To",
 					width: 50,
+					format: "{0:dd-MM-yyyy}",
+					filterable: {
+						ui: "datepicker", // Use a datepicker for date filtering
+						extra: false,
+					},
 				},
-
 				{
 					field: "active_status_desc",
 					title: "Status",
@@ -311,7 +313,7 @@
 					field: "until_active_flag",
 					title: "until_active_flag",
 					width: 10,
-					hidden: true,
+					hidden: true
 				},
 				{
 					field: "active_status",

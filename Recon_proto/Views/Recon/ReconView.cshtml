@@ -16,9 +16,9 @@
 			margin-left: 10px;
 		}
 
-		.k-grid.k-widget {
+		/*.k-grid.k-widget {
 			height: 360px;
-		}
+		}*/
 
 		.k-grid-header {
 			font-weight: bold;
@@ -45,9 +45,9 @@
 			left: 300px !important;
 		}
 
-		.k-grid-content {
+		/*.k-grid-content {
 			height: 176px;
-		}
+		}*/
 
 		.datepicker table tr td.active:active,
 		.datepicker table tr td.active.highlighted:active,
@@ -546,8 +546,8 @@
 				$("#reconcode").val(data.recon_code);
 				$("#cmbrecontype").val(data.recontype_code);
 				$("#ReconName").val(data.recon_name);
-				$("#period_from").val(data.period_from);
-				$("#period_to").val(data.period_to);
+				//$("#period_from").val(data.period_from);
+				//$("#period_to").val(data.period_to);
 				$("#txtstatus").val(data.active_status_desc);
 				$("#recon_id").val(data.recon_gid);
 				$("#reconcode").val(data.recon_code);
@@ -565,6 +565,8 @@
 
 						if (response != " ") {
 							var res = JSON.parse(response);
+							$("#period_from").val(res.ReconHeader[0].period_from);
+							$("#period_to").val(res.ReconHeader[0].period_to);
 							if (res.ReconHeader[0].recon_value_flag == "Y") {
 								$("#reconvalueflag1").prop("checked", true);
 							} else {
@@ -1008,7 +1010,7 @@
 					}
 				}
 			},
-			height: 220,
+			height: 225,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1227,7 +1229,7 @@
 					}
 				}
 			},
-			height: 220,
+			height: 225,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1404,13 +1406,18 @@
 		for (var key in data[0]) {
 
 			var propType = typeof data[0][key];
-
+				var textalign = '';
+				if(propType == 'number') {
+					textalign = 'right';
+				} else {
+					textalign = 'left';
+			}
 			if (key == "display_order" || key == "display_order") {
 				columns.push({
 					field: entryIndex,
 					title: key,
 					type: propType,
-					attributes: { style: "text-align: right;" },
+					attributes: { style: "text-align:" + textalign },
 					filterable: true,
 				});
 			}
@@ -1419,7 +1426,7 @@
 					field: entryIndex,
 					title: key,
 					type: propType,
-					attributes: { style: "text-align: right;" },
+					attributes: { style: "text-align:" + textalign },
 					filterable: true,
 				});
 			}
@@ -1444,7 +1451,7 @@
 		});
 		var configuration = {
 			pageSize: 10,
-			height: 220,
+			height: 225,
 			navigatable: true,
 			groupable: false,
 			editable: false,
@@ -1608,7 +1615,7 @@
 					}
 				}
 			},
-			height: 220,
+			height: 225,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1990,7 +1997,7 @@
 					}
 				}
 			},
-			height: 235,
+			height: 225,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;

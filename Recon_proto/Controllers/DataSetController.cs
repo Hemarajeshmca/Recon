@@ -194,8 +194,8 @@ namespace Recon_proto.Controllers
 			public int datasetdetail_id { get; set; }
 			public string? field_name { get; set; }
 			public string? field_length { get; set; }
-			public int? precision_length { get; set; }
-			public int? scale_length { get; set; }
+            public int? precision_length { get; set; } = 0;
+            public int? scale_length { get; set; } = 0;
 			public string? field_type { get; set; }
 			public string? field_mandatory { get; set; }
 			public string? in_action { get; set; }
