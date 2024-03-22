@@ -201,9 +201,28 @@
 		if (FieldType == "NUMERIC") {
 			$("#fielddataset").hide();
 			$("#numeric").show();
-		} else {
+			$("#fieldlength").prop('disabled', false);
+			$("#fieldPrecision").prop('disabled', false);
+			$("#fieldscale").prop('disabled', false);
+			$("#fieldlength").val("");
+			$("#fieldPrecision").val("");
+			$("#fieldscale").val("");
+		} else if (FieldType == "DATE") {
+			$("#fieldlength").val("");
+			$("#fieldPrecision").val("");
+			$("#fieldscale").val("");
+			$("#fieldlength").prop('disabled', true);
+			$("#fieldPrecision").prop('disabled', true);
+			$("#fieldscale").prop('disabled', true);
+		}else {
 			$("#fielddataset").show();
 			$("#numeric").hide();
+			$("#fieldlength").prop('disabled', false);
+			$("#fieldPrecision").prop('disabled', false);
+			$("#fieldscale").prop('disabled', false);
+			$("#fieldlength").val("");
+			$("#fieldPrecision").val("");
+			$("#fieldscale").val("");
 		}
 	}
 	function load() {
@@ -462,7 +481,7 @@
 		});
 	}
 	function savedetail() {
-
+		debugger;
 		try {
 			var datasetfield = $("#datasetfield").val();
 			var FieldType = $("#cmbFieldType").val();
@@ -485,6 +504,7 @@
 			}
 			var status = "Y";
 			var mandatory = $("input[name='mandatory']:checked").val();
+			console.log(`data`,{ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory });
 			$.ajax({
 				type: "POST",
 				url: '../DataSet/Datasetdetail',
@@ -542,76 +562,81 @@
 				$("#fieldscale").val(selectedItem.scale_length);
 				$("#newdebit").modal('show');
 			} else if ($(mode).attr('value') == "create") {
-				var dataset_id = $("#datasetgid").val();
-				if (dataset_id > 0) {
-					dataset_id = $("#datasetgid").val();
-					$("#newdebit").modal('show');
-					$("#datasetfield").val("");
-					$("#datasetdetail_id").val(0);
-					$("#cmbFieldType").val("");
-					$("#fieldlength").val("");
-					$("#mandatory2").prop("checked", true);
-					$("#fieldPrecision").val(5);
-					$("#fieldscale").val(2);
-					fieldtype();
-					return;
+				if ($("#Cmbclone").val()) {
+					debugger;
+					saveclone();
+					setTimeout(() => {
+						$("#newdebit").modal('show');
+					}, 500);					
 				} else {
-					dataset_id = 0;
-				}
-				var dataset_name = $("#datasetname").val();
-				var dataset_category = $("#cmbcategory").val();
-				var dataset_code = $("#txtdatasetcode").val();
-				var clone_dataset = $("#Cmbclone").val();
-				var action = "";
-				var dataset_id = $("#datasetgid").val();
-
-				if (dataset_id > 0) {
-					dataset_id = $("#datasetgid").val();
-
-					return;
-				} else {
-					dataset_id = 0;
-				}
-				action = "INSERT"
-
-				var action_by = ""
-				var status = "D"
-
-				$.ajax({
-					type: "POST",
-					url: '../DataSet/Datasetheader',
-					dataType: 'json',
-					data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
-					contentType: 'application/json; charset=utf-8',
-					success: function (response) {
-						var result = JSON.parse(response);
-						var data = result[0];
-
-						if (data.out_result == "1") {
-							detailsfetch(data.in_dataset_gid);
-							$("#datasetgid").val(data.in_dataset_gid);
-							$("#newdebit").modal('show');
-							$("#datasetfield").val("");
-							$("#datasetdetail_id").val(0);
-							$("#cmbFieldType").val("");
-							$("#fieldlength").val("");
-							$("#mandatory2").prop("checked", true);
-							$("#fieldPrecision").val(5);
-							$("#fieldscale").val(2);
-						} else {
-							$.alert({
-								title: 'Recon',
-								content: data.out_msg,
-								type: 'red',
-							});
-						}
-					},
-					error: function (er) {
-						alert(er)
-						console.log(er)
+					var dataset_id = $("#datasetgid").val();
+					if (dataset_id > 0) {
+						dataset_id = $("#datasetgid").val();
+						$("#newdebit").modal('show');
+						$("#datasetfield").val("");
+						$("#datasetdetail_id").val(0);
+						$("#cmbFieldType").val("");
+						$("#fieldlength").val("");
+						$("#mandatory2").prop("checked", true);
+						$("#fieldPrecision").val(5);
+						$("#fieldscale").val(2);
+						fieldtype();
+						return;
+					} else {
+						dataset_id = 0;
 					}
+					var dataset_name = $("#datasetname").val();
+					var dataset_category = $("#cmbcategory").val();
+					var dataset_code = $("#txtdatasetcode").val();
+					var clone_dataset = $("#Cmbclone").val();
+					var action = "";
+					var dataset_id = $("#datasetgid").val();
+					if (dataset_id > 0) {
+						dataset_id = $("#datasetgid").val();
 
-				});
+						return;
+					} else {
+						dataset_id = 0;
+					}
+					action = "INSERT"
+					var action_by = ""
+					var status = "D"
+					$.ajax({
+						type: "POST",
+						url: '../DataSet/Datasetheader',
+						dataType: 'json',
+						data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, clone_dataset: clone_dataset, in_action: action, in_action_by: action_by, dataset_id: dataset_id, active_status: status }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var result = JSON.parse(response);
+							var data = result[0];
+
+							if (data.out_result == "1") {
+								detailsfetch(data.in_dataset_gid);
+								$("#datasetgid").val(data.in_dataset_gid);
+								$("#newdebit").modal('show');
+								$("#datasetfield").val("");
+								$("#datasetdetail_id").val(0);
+								$("#cmbFieldType").val("");
+								$("#fieldlength").val("");
+								$("#mandatory2").prop("checked", true);
+								$("#fieldPrecision").val(5);
+								$("#fieldscale").val(2);
+							} else {
+								$.alert({
+									title: 'Recon',
+									content: data.out_msg,
+									type: 'red',
+								});
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				}
+				
 			}
 		}
 	}
@@ -731,7 +756,8 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									load();
+									detailsfetch($("#datasetgid").val());
+									//load();
 									//window.location.reload(1);
 								} else {
 									$.alert({

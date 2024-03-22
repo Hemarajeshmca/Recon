@@ -57,23 +57,23 @@ namespace Recon_proto.Controllers
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    for (int i = 0; i < result.Rows.Count; i++)
-                    {
-                        Reconlistmodel objcat = new Reconlistmodel();
-                        objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
-                        objcat.recon_code = result.Rows[i]["recon_code"].ToString();
-                        objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-                        objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
-                        objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
-                        objcat.period_from = result.Rows[i]["period_from"].ToString();
-                        objcat.period_to = result.Rows[i]["period_to"].ToString();
-                        objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
-                        objcat.active_status = result.Rows[i]["active_status"].ToString();
-                        objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
-                        objcat_lst.Add(objcat);
-                    }
-                    return Json(d2);
+					//result = JsonConvert.DeserializeObject<DataTable>(d2);
+					//for (int i = 0; i < result.Rows.Count; i++)
+					//{
+					//	Reconlistmodel objcat = new Reconlistmodel();
+					//	objcat.recon_gid = Convert.ToInt32(result.Rows[i]["recon_gid"]);
+					//	objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+					//	objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+					//	objcat.recontype_code = result.Rows[i]["recontype_code"].ToString();
+					//	objcat.recontype_desc = result.Rows[i]["recontype_desc"].ToString();
+					//	objcat.period_from = result.Rows[i]["period_from"].ToString();
+					//	objcat.period_to = result.Rows[i]["period_to"].ToString();
+					//	objcat.until_active_flag = result.Rows[i]["until_active_flag"].ToString();
+					//	objcat.active_status = result.Rows[i]["active_status"].ToString();
+					//	objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
+					//	objcat_lst.Add(objcat);
+					//}
+					return Json(d2);
                 }
             }  catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace Recon_proto.Controllers
 			public string? recontype_code { get; set; }
 			public string? recontype_desc { get; set; }
 			public string? period_from { get; set; }
-			public string? period_to { get; set; }
+            public string? period_to { get; set; }
 			public string? until_active_flag { get; set; }
 			public string? active_status { get; set; }
 			public string? active_status_desc { get; set; }			
