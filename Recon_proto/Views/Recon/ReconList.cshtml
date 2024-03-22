@@ -146,10 +146,11 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				if (response != null) {
+				var res = JSON.parse(response);
+				if (res != null) {
 					$("#gd_reconlist").empty();
 					$("#gd_reconlist").append("<div id='grid_reconlist'></div>");
-					grid_reconlist_details(response);
+					grid_reconlist_details(res);
 				}
 				else {
 					grid_reconlist_details([]);
@@ -176,8 +177,8 @@
 								recon_name: { type: "string" },
 								recontype_code: { type: "string" },
 								recontype_desc: { type: "string" },
-								period_from: { type: "string" },
-								period_to: { type: "string" },
+								period_from: { type: "date" },
+								period_to: { type: "date" },
 								active_status:{type: "string"},
 								status: { type: "string" }
 							}
@@ -272,7 +273,22 @@
 				{
 					field: "period_from",
 					title: "Period From",
-					width: 50,
+					//format: "{0:ddMM/yyyy}",
+					width: 50,					
+					filterable: {
+						ui: "datepicker", // Use a datepicker for date filtering
+						
+						extra: false,
+						operators: {
+							date: {
+								eq: "Equal to",
+								lt: "Before",
+								gt: "After"
+							}, string: {
+								eq: "Is equal to"
+							}
+						}
+					},
 				},
 				{
 					field: "period_to",
@@ -306,19 +322,19 @@
 				editable: false,
 
 			});
-			$("#grid_reconlist").kendoTooltip({
-				filter: "td",
-				content: function (e) {
-					var target = e.target;
-					if (target.id === "cloneid") {
-						// Get the alt attribute of the image (assuming it has an alt attribute)
-						return target.querySelector('img').getAttribute('alt');
-					} else {
-					var target = e.target;
-					return $(innerHTMLValue).text(); // You can customize the tooltip content as needed
-					}
-				},
-			});
+			//$("#grid_reconlist").kendoTooltip({
+			//	filter: "td",
+			//	content: function (e) {
+			//		var target = e.target;
+			//		if (target.id === "cloneid") {
+			//			// Get the alt attribute of the image (assuming it has an alt attribute)
+			//			return target.querySelector('img').getAttribute('alt');
+			//		} else {
+			//		var target = e.target;
+			//		return $(innerHTMLValue).text(); // You can customize the tooltip content as needed
+			//		}
+			//	},
+			//});
 		}
 		catch (err) {
 			console.log(err)

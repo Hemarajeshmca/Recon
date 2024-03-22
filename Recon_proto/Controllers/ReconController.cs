@@ -73,7 +73,7 @@ namespace Recon_proto.Controllers
                         objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
                         objcat_lst.Add(objcat);
                     }
-                    return Json(objcat_lst);
+                    return Json(d2);
                 }
             }  catch (Exception ex)
             {

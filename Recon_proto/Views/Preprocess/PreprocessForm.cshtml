@@ -123,6 +123,17 @@
 			max-height: 100vh;
 			padding: 16px;
 		}
+
+		.validated1 {
+			background-color: green; /* Change to desired color */
+			color: white; /* Change to desired text color */
+		}
+
+		.validated {
+			background-color: red; /* Change to desired color */
+			color: white; /* Change to desired text color */
+		}
+
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -160,6 +171,7 @@
 							<label class="form-label" for="">Preprocess Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="preprocessname">
 							<input class="form-control" type="hidden" id="preprocessgid" value=0;>
+							<input class="form-control" type="hidden" id="validquery" />
 						</div>
 						<div class="col-sm-2">
 							<label class="form-label" for="">Process Method&nbsp;</label>
@@ -182,7 +194,7 @@
 						</div>
 					</div>
 					<div style="height:300px;overflow-x:auto;padding-top:10px;margin-top:10px">
-						<div class="accordion-wrapper">							
+						<div class="accordion-wrapper">
 							<div class="accordion" id="headingfunction">
 								<input type="radio" name="radio-a" id="check2" style="display:none">
 								<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Function</label>
@@ -1172,8 +1184,24 @@
 			$("#headingfunction").hide();
 			$("#headingfilter").hide();
 			$("#check4").prop('checked', true);
+			$("#validquery").val("false");
 		}
 	}
+	const button = document.getElementById('validatequery');
+	function validateAndChangeColor() {
+		// Perform validation here
+		if ($("#validquery").val() == "true") {
+			button.classList.remove('validated');
+			button.classList.add('validated1');
+		} else {
+			// If validation fails, remove 'validateds' class
+			button.classList.remove('btn-primary');
+			button.classList.add('validated');
+			
+		}
+	}
+	button.addEventListener('click', validateAndChangeColor);
+
 	function saveheadersubmit() {
 		try {
 			var preprocess_name = $("#preprocessname").val();
@@ -1198,6 +1226,14 @@
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
+				if ($("#validquery").val() == "false") {
+					$.alert({
+						title: 'Recon',
+						content: "Kindly Validate the Query",
+						type: 'green',
+					});
+					return;
+				}
 			}
 
 			var preprocess_order = $("#preprocessorder").val();
@@ -1737,6 +1773,14 @@
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
+				if ($("#validquery").val() == "false") {
+					$.alert({
+						title: 'Recon',
+						content: "Kindly Validate the Query",
+						type: 'green',
+					});
+					return;
+				}				
 			}
 
 			var preprocess_order = $("#preprocessorder").val();
@@ -1805,6 +1849,7 @@
 			type: "POST",
 			url: '../Preprocess/validatequery',
 			dataType: 'json',
+			async: false,
 			data: JSON.stringify({ in_sql: in_sql }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
@@ -1817,6 +1862,7 @@
 							content: data.out_msg,
 							type: 'red',
 						});
+						$("#validquery").val("true");
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -1831,6 +1877,7 @@
 						type: 'red',
 					});
 					$("#querydata").val("");
+					$("#validquery").val("false");
 				}
 			},
 			error: function (er) {
@@ -1904,6 +1951,14 @@
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
+				if ($("#validquery").val() == "false") {
+					$.alert({
+						title: 'Recon',
+						content: "Kindly Validate the Query",
+						type: 'green',
+					});
+					return;
+				}
 			}
 
 			var preprocess_order = $("#preprocessorder").val();
