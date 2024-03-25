@@ -64,9 +64,9 @@
 			margin-bottom: 3px;
 		}
 
-			.accordion:last-child {
+		.accordion:last-child {
 				margin-bottom: 0;
-			}
+		}
 
 		.accordion-label {
 			display: flex;
@@ -81,19 +81,19 @@
 			color: white;
 		}
 
-			.accordion-label:hover {
+		.accordion-label:hover {
 				/*background: rgba(4,57,94,1);*/
 				background: rgb(135, 46, 123)
-			}
+		}
 
-			.accordion-label::after {
+		.accordion-label::after {
 				content: "\276F";
 				width: 16px;
 				height: 16px;
 				text-align: center;
 				-webkit-transition: all 0.3s;
 				transition: all 0.3s;
-			}
+		}
 
 		.accordion-content {
 			max-height: 0;
@@ -103,22 +103,18 @@
 			-webkit-transition: all 0.3s;
 			transition: all 0.3s;
 		}
-
-			.accordion-content p {
+		.accordion-content p {
 				margin: 0;
 				color: rgba(4,57,94,.7);
 				font-size: 18px;
-			}
-
+		}
 		input:checked + .accordion-label {
 			background: rgba(4,57,94,1);
 		}
-
-			input:checked + .accordion-label::after {
+		input:checked + .accordion-label::after {
 				-webkit-transform: rotate(90deg);
 				transform: rotate(90deg);
-			}
-
+		}
 		input:checked ~ .accordion-content {
 			max-height: 100vh;
 			padding: 16px;
@@ -196,9 +192,9 @@
 					<div style="height:300px;overflow-x:auto;padding-top:10px;margin-top:10px">
 						<div class="accordion-wrapper">
 							<div class="accordion" id="headingfunction">
-								<input type="radio" name="radio-a" id="check2" style="display:none">
+								<input type="checkbox" name="radio-a" id="check2" style="display:none">
 								<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Function</label>
-								<div id="collapsefunction" class="accordion-content" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
+								<div id="headingfunction" class="accordion-content" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
 									<div class="accordion-body" style="padding-left:15px;">
 										<div class="row">
 											<div class="col-sm-3">
@@ -223,9 +219,9 @@
 								</div>
 							</div>
 							<div class="accordion" id="headinglookup">
-								<input type="radio" name="radio-a" id="check3" style="display:none">
+								<input type="checkbox" name="radio-a" id="check3" style="display:none">
 								<label class="accordion-label" for="check3">&nbsp;&nbsp;&nbsp;Look Up</label>
-								<div id="collapselookup" class="accordion-content">
+								<div id="headinglookup" class="accordion-content">
 									<div class="row" style="margin-bottom:5px;">
 										<div class="col-sm-3">
 											<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -250,9 +246,9 @@
 								</div>
 							</div>
 							<div class="accordion" id="headingfilter">
-								<input type="radio" name="radio-a" id="check1" style="display:none">
+								<input type="checkbox" name="radio-a" id="check1" style="display:none">
 								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
-								<div class="accordion-content">
+								<div class="accordion-content" id="headingfilter">
 									<div class="col-xs-12" style="margin-top:5px;">
 										<div id="gd_filter">
 											<div id="grid_filter">
@@ -262,7 +258,7 @@
 								</div>
 							</div>
 							<div class="accordion" id="headingquery">
-								<input type="radio" name="radio-a" id="check4" style="display:none">
+								<input type="checkbox" name="radio-a" id="check4" style="display:none">
 								<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Query</label>
 								<div id="collapsequery" class="accordion-content" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
 									<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 115px;width: 1155px;border-radius: 0.375rem;"></textarea>
@@ -339,12 +335,13 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var res = JSON.parse(response);
 				$("#cmbrecon").empty();
 				$("#cmbrecon").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(response, function (index, item) {
+				$.each(res, function (index, item) {
 					$("#cmbrecon").append($('<option>', {
 						value: item.recon_code,
 						text: item.recon_name
@@ -617,7 +614,7 @@
 			{
 				field: "filter_seqno",
 				title: "Seq No.",
-				width: 50,
+				width:30,
 				attributes: { style: "text-align: right;" },
 			},
 			{
@@ -909,7 +906,7 @@
 			{
 				field: "condition_seqno",
 				title: "Seq No.",
-				width: 50,
+				width: 40,
 				attributes: { style: "text-align: right;" },
 			},
 			{
@@ -1197,7 +1194,7 @@
 			// If validation fails, remove 'validateds' class
 			button.classList.remove('btn-primary');
 			button.classList.add('validated');
-			
+
 		}
 	}
 	button.addEventListener('click', validateAndChangeColor);
@@ -1780,7 +1777,7 @@
 						type: 'green',
 					});
 					return;
-				}				
+				}
 			}
 
 			var preprocess_order = $("#preprocessorder").val();

@@ -93,12 +93,13 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var res = JSON.parse(response);
 				$("#cmbreconname").empty();
 				$("#cmbreconname").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(response, function (index, item) {
+				$.each(res, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbreconname").append($('<option>', {
 							value: item.recon_code,
@@ -106,7 +107,9 @@
 						}));
 					}
 					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#cmbreconname').trigger("change");
+					if ($("#cmbreconname").val() != '') {
+						jQuery('#cmbreconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
@@ -363,7 +366,7 @@
 	function myDeleteJs() {
 		var grid = $("#grid_preprocess").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var dataset_gid = model.dataset_gid;
+		var preprocess_gid = model.preprocess_gid;
 		$.confirm({
 			icon: 'fa fa-warning',
 			title: 'Recon',
@@ -393,20 +396,37 @@
 										$.alert('Reason cannot be empty');
 										return false;
 									}
-									var dataset_name = "";
-									var dataset_category = "";
-									var dataset_code = model.datasetCode;
+									var preprocess_name = "";
+									var preprocess_Code = "";
+									var recon_code = "";
+									var process_method = "";
+									var get_recon_field = "";
+									var set_recon_field = "";
+									var process_function = "";
+									var lookup_dataset_code = "";
+									var lookup_return_field = "";
+									var process_query = "";
+									var clone_process = "";
+
+									var preprocess_order = "";
 									var action = "DELETE";
-									var action_by = ""
-									var dataset_gid = model.dataset_gid;
+									var preprocess_gid = model.preprocess_gid;
+
+									var holdflag = "";
+									var action_by = "";
 									var status = "";
 									$.ajax({
 										type: "POST",
-										url: '../DataSet/Datasetheader',
+										url: '../Preprocess/preprocessheader',
 										dataType: 'json',
-										data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_gid, active_status: status, inactive_reason: name }),
+										data: JSON.stringify({
+											preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+											lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+											set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+										}),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {
+											var result = JSON.parse(response);
 											var result = JSON.parse(response);
 											var data = result[0];
 											debugger;
