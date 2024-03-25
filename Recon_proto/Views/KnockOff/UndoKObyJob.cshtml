@@ -118,12 +118,13 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var res = JSON.parse(response);
 				$("#cmbreconname").empty();
 				$("#cmbreconname").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(response, function (index, item) {
+				$.each(res, function (index, item) {
 					if (item.active_status == 'Y') {
 						$("#cmbreconname").append($('<option>', {
 							value: item.recon_code,

@@ -238,16 +238,17 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var res = JSON.parse(response);
 				var arr = [];
 				var list2 = {};
 				list2.value = "";
 				list2.text = "ALL";
 				arr.push(list2);
-				for (i = 0; response.length > i; i++) {		
+				for (i = 0; res.length > i; i++) {		
 					var list1 = {};
-					if (response[i]["active_status"] == 'Y') {
-						list1.value = response[i].recon_code;
-						list1.text = response[i].recon_name;
+					if (res[i]["active_status"] == 'Y') {
+						list1.value = res[i].recon_code;
+						list1.text = res[i].recon_name;
 						arr.push(list1);
 					}
 				}

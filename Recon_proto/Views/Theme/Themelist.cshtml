@@ -93,12 +93,13 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
+				var res = JSON.parse(response);
 				$("#cmbreconname").empty();
 				$("#cmbreconname").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(response, function (index, item) {
+				$.each(res, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbreconname").append($('<option>', {
 							value: item.recon_code,
@@ -106,7 +107,9 @@
 						}));
 					}
 					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#cmbreconname').trigger("change");
+					if ($("#cmbreconname").val() != '') {
+						jQuery('#cmbreconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
@@ -401,6 +404,7 @@
 										$.alert('Reason cannot be empty');
 										return false;
 									}
+									var holdflag ="";
 									var themename = "";
 									var cmbrecon = "";
 									var theme_code = "";
@@ -414,7 +418,7 @@
 										type: "POST",
 										url: '../theme/themeheader',
 										dataType: 'json',
-										data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order }),
+										data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order,holdflag: holdflag }),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {
 											var result = JSON.parse(response);
