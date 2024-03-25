@@ -204,10 +204,10 @@
 			$("#fieldlength").prop('disabled', false);
 			$("#fieldPrecision").prop('disabled', false);
 			$("#fieldscale").prop('disabled', false);
-			$("#fieldlength").val("");
-			$("#fieldPrecision").val("");
-			$("#fieldscale").val("");
-		} else if (FieldType == "DATE") {
+			$("#fieldlength").val('');
+			$("#fieldPrecision").val('');
+			$("#fieldscale").val('');
+		} else if (FieldType == "DATE" || FieldType == "DATETIME") {
 			$("#fieldlength").val("");
 			$("#fieldPrecision").val("");
 			$("#fieldscale").val("");
@@ -485,14 +485,14 @@
 		try {
 			var datasetfield = $("#datasetfield").val();
 			var FieldType = $("#cmbFieldType").val();
-			var fieldlength ="";
+			var fieldlength = '0';
 			if (FieldType != "NUMERIC") {
-			fieldlength = $("#fieldlength").val();
+			fieldlength = $("#fieldlength").val() ? $("#fieldlength").val() : '0';
 			}
 			var dataset_code = $("#txtdatasetcode").val();
 			var datasetdetail_id = $("#datasetdetail_id").val();
-			var precision_length = $("#fieldPrecision").val();
-			var scale_length = $("#fieldscale").val();
+			var precision_length = $("#fieldPrecision").val() ? $("#fieldPrecision").val() : '5';
+			var scale_length = $("#fieldscale").val() ? $("#fieldscale").val() : '2';
 			var action = "";
 			var action_by = ""
 			if (datasetdetail_id > 0) {
