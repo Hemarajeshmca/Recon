@@ -84,7 +84,7 @@
 						<div class="col-sm-3">
 							<label class="form-label" for="">Theme Description&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="themename">
-							<input class="form-control" type="hidden" id="themegid" value=0;>
+							<input class="form-control" type="hidden" id="themegid" value=0>
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -302,6 +302,7 @@
 			var data = getlocalStorage("ls_pageList");
 			$("#cmbrecon").val(data);
 			jQuery('#cmbrecon').trigger("change");
+			$("#holdflag").val('N');
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -362,6 +363,8 @@
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
 								join_condition: { type: "string", defaultValue: "" },
+								open_parentheses_flag: { type: "string", editable: false },
+								close_parentheses_flag: { type: "string", editable: false },
 							}
 						}
 					}
@@ -410,8 +413,16 @@
 					attributes: { style: "text-align: right;" },
 				},
 				{
+					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					template: '#=sel_checkbox(data)#'
+					//template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						if (dataItem.themefilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						}
+					}
 				},
 				{
 					field: "themefilter_gid",
@@ -464,8 +475,16 @@
 					hidden: true
 				},
 				{
+					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					template: '#=sel_checkbox1(data)#'
+					//template: '#=sel_checkbox1(data)#'
+					template: function (dataItem) {
+						if (dataItem.themefilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						}
+					},
 				},
 
 				{
@@ -496,7 +515,34 @@
 		}
 
 	}
-
+	$(function () {
+		$('#grid_themefilterfield').on('click', '.chkbx1', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_themefilterfield').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_themefilterfield').on('click', '.chkbx2', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_themefilterfield').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
 	function addRow() {
 		var grid = $("#grid_themefilterfield").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -510,29 +556,10 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ theme_seqno: newSeqNo, themefilter_gid: 0 });
+		dataSource.add({ theme_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
 	}
 
-	var gridRowID = -1;
-	function sel_checkbox(data) {
-		gridRowID++;
-		var isChecked = data.open_parentheses_flag;
-		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel_' + data.themefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
-	var gridRowID1 = -1;
-	function sel_checkbox1(data) {
-		gridRowID1++;
-		var isChecked1 = data.close_parentheses_flag;
-		var con = "";
-		if (isChecked1 == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel1_' + data.themefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
+	
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -713,18 +740,8 @@
 			var recon_field = model.filter_field_code;
 			var filter_criteria = model.filter_criteria;
 			var filter_value = model.ident_value;
-			var in_open_flag = "";
-			if ($('#chk_sel_' + model.themefilter_gid).is(":checked")) {
-				in_open_flag = "Y";
-			} else {
-				in_open_flag = "N";
-			}
-			var in_close_flag = "";
-			if ($('#chk_sel1_' + model.themefilter_gid).is(":checked")) {
-				in_close_flag = "Y";
-			} else {
-				in_close_flag = "N";
-			}
+			var in_open_flag = model.open_parentheses_flag;
+			var in_close_flag = model.close_parentheses_flag;
 			var in_join_condition = '';
 			if (model.join_condition != undefined) {
 				in_join_condition = model.join_condition;
@@ -904,6 +921,7 @@
 				action = "UPDATE"
 			} else {
 				theme_gid = 0;
+				action = "INSERT"
 			}
 			var holdflag = $("#holdflag").val();
 			var action_by = "";

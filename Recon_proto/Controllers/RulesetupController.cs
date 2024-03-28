@@ -264,7 +264,8 @@ namespace Recon_proto.Controllers
         {
             public int? in_rulecondition_gid { get; set; }
             public string? in_rule_code { get; set; }
-            public string? in_source_field { get; set; }
+			public Decimal? in_rulecondition_seqno { get; set; }
+			public string? in_source_field { get; set; }
             public string? in_comparison_field { get; set; }
             public string? in_extraction_criteria { get; set; }
             public string? in_comparison_criteria { get; set; }
@@ -318,8 +319,9 @@ namespace Recon_proto.Controllers
         #region grouping
         public class Rulegrouping
         {
-            public int? in_rulegrpfield_gid { get; set; }          
-            public string? in_grp_field { get; set; }
+            public int? in_rulegrpfield_gid { get; set; }
+			public Decimal? rulegrpfield_seqno { get; set; }
+			public string? in_grp_field { get; set; }
             public string? in_rule_code { get; set; }
             public string? in_active_status { get; set; }
             public string? in_action { get; set; }
@@ -402,7 +404,8 @@ namespace Recon_proto.Controllers
         {
             public int? in_ruleselefilter_gid { get; set; }
             public string? in_rule_code { get; set; }
-            public string? in_filter_applied_on { get; set; }
+			public Decimal? ruleselefilter_seqno { get; set; }
+			public string? in_filter_applied_on { get; set; }
             public string? in_filter_field { get; set; }
             public string? in_filter_criteria { get; set; }
             public string? in_ident_criteria { get; set; }

@@ -433,6 +433,7 @@
 				$("#querydata").val(data.process_query);
 				preprocessfetch(data.preprocess_code);
 				$("#holdflag").val(data.hold_flag);
+				$("#txtstatus").val(data.active_status_desc);
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -456,6 +457,7 @@
 				$("#datasetfieldadd").hide();
 				$(".k-grid-edit").hide();
 				$("#btnsubmit").hide();
+				$("#txtstatus").val(data.active_status_desc);
 			}
 		}
 	}
@@ -566,6 +568,8 @@
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
 							join_condition: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
 						}
 					}
 				}
@@ -618,8 +622,16 @@
 				attributes: { style: "text-align: right;" },
 			},
 			{
-				title: "(", width: "20px",
-				template: '#=sel_checkboxsI(data)#'
+				field: "open_parentheses_flag",
+				title: "(", width: 20,
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocessfilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					}
+				}
 			},
 			{
 				field: "preprocessfilter_gid",
@@ -664,8 +676,16 @@
 				hidden: true,
 			},
 			{
+				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				template: '#=sel_checkboxsI1(data)#'
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocessfilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					}
+				},
 			},
 			{
 				field: "join_condition",
@@ -689,26 +709,34 @@
 			}
 		}
 	}
-	var gridRowID = -1;
-	function sel_checkboxsI(data) {
-		gridRowID++;
-		var isChecked = data.open_parentheses_flag;
-		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel_' + data.preprocessfilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
-	var gridRowID1 = -1;
-	function sel_checkboxsI1(data) {
-		gridRowID1++;
-		var isChecked1 = data.close_parentheses_flag;
-		var con = "";
-		if (isChecked1 == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel1_' + data.preprocessfilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
+	$(function () {
+		$('#grid_filter').on('click', '.chkbx1', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_filter').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_filter').on('click', '.chkbx2', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_filter').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
 	function combo_editor_man_process(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
@@ -827,7 +855,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0 });
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
 	}
 	//---- Look up ----------------
 	function grid_lookup(data) {
@@ -841,8 +869,7 @@
 				sort: [{ field: "condition_seqno", dir: "asc" }],
 				schema: {
 					model: {
-						fields: {
-							open_parem: { type: "string" },
+						fields: {							
 							preprocesscondition_gid: { type: "string", defaultValue: "0" },
 							preprocess_code: { type: "string" },
 							condition_seqno: { type: "NUMBER" },
@@ -855,9 +882,10 @@
 							comparison_criteria: { type: "string" },
 							comparison_criteria_code: { type: "string" },
 							active_status: { type: "string" },
-							active_status_desc: { type: "string" },
-							close_param: { type: "string" },
+							active_status_desc: { type: "string" },							
 							join_condition: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
 						}
 					}
 				}
@@ -910,8 +938,16 @@
 				attributes: { style: "text-align: right;" },
 			},
 			{
+				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				template: '#=sel_checkbox(data)#'
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocesscondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					}
+				}
 			},
 			{
 				field: "preprocesscondition_gid",
@@ -941,7 +977,7 @@
 				field: "extraction_criteria",
 				title: "Extraction criteria",
 				editor: function (container, options) {
-					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookup", "SOURCE")
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookup", "COMPARISON")
 				},
 				editable: true,
 				width: 120,
@@ -985,10 +1021,17 @@
 				hidden: true
 			},
 			{
+				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				template: '#=sel_checkbox1(data)#'
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocesscondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					}
+				},
 			},
-
 			{
 				field: "join_condition",
 				title: "Joins",
@@ -1003,26 +1046,34 @@
 		comparison_field_desc_list = "";
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 	}
-	var gridRowID = -1;
-	function sel_checkbox(data) {
-		gridRowID++;
-		var isChecked = data.open_parentheses_flag;
-		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sels_' + data.preprocesscondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
-	var gridRowID1 = -1;
-	function sel_checkbox1(data) {
-		gridRowID1++;
-		var isChecked1 = data.close_parentheses_flag;
-		var con = "";
-		if (isChecked1 == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sels1_' + data.preprocesscondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
+	$(function () {
+		$('#grid_lookup').on('click', '.chkbx1', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_lookup').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_lookup').on('click', '.chkbx2', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_lookup').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
 	function OnEdit(e) {
 		try {
 			setDefaultValues(e);
@@ -1044,7 +1095,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ condition_seqno: newSeqNo, preprocesscondition_gid: 0 });
+		dataSource.add({ condition_seqno: newSeqNo, preprocesscondition_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
 	}
 	function color() {
 		$("#grid_lookup").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
@@ -1310,18 +1361,8 @@
 				action = "UPDATE"
 			}
 			var status = "Y";
-			var in_open_flag = "";
-			if ($('#chk_sel_' + model.preprocessfilter_gid).is(":checked")) {
-				in_open_flag = "Y";
-			} else {
-				in_open_flag = "N";
-			}
-			var in_close_flag = "";
-			if ($('#chk_sel1_' + model.preprocessfilter_gid).is(":checked")) {
-				in_close_flag = "Y";
-			} else {
-				in_close_flag = "N";
-			}
+			var in_open_flag = model.open_parentheses_flag;			
+			var in_close_flag = model.close_parentheses_flag;			
 			var in_join_condition = model.join_condition;
 			$.ajax({
 				type: "POST",
@@ -1562,18 +1603,8 @@
 				action = "UPDATE"
 			}
 			var status = "Y";
-			var in_open_flag = "";
-			if ($('#chk_sels_' + model.preprocesscondition_gid).is(":checked")) {
-				in_open_flag = "Y";
-			} else {
-				in_open_flag = "N";
-			}
-			var in_close_flag = "";
-			if ($('#chk_sels1_' + model.preprocesscondition_gid).is(":checked")) {
-				in_close_flag = "Y";
-			} else {
-				in_close_flag = "N";
-			}
+			var in_open_flag = model.open_parentheses_flag;
+			var in_close_flag = model.close_parentheses_flag;
 			var in_join_condition = model.join_condition;
 			$.ajax({
 				type: "POST",
