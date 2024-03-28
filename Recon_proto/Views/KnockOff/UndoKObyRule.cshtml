@@ -325,7 +325,7 @@
 				schema: {
 					model: {
 						fields: {
-							job_gid: { type: "string" },
+							job_gid: { type: "number" },
 							job_name: { type: "string" },
 							job_type: { type: "string" },
 							jobtype_desc: { type: "string" },
@@ -377,6 +377,10 @@
 					title: "Job Id",
 					width: 80,
 					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
 				},
 				{
 					field: "job_name",
@@ -449,8 +453,8 @@
 							rule_gid: { type: "string" },
 							rule_code: { type: "string" },
 							rule_name: { type: "string" },
-							rule_order: { type: "string" },
-							recon_rule_version: { type: "string" },
+							rule_order: { type: "number" },
+							recon_rule_version: { type: "number" },
 							source_dataset_code: { type: "string" },
 							comparison_dataset_code: { type: "string" },
 							source_dataset_desc: { type: "string" },
@@ -526,13 +530,21 @@
 					field: "rule_order",
 					title: "Rule Order",
 					width: 50,
-					attributes: { style: "text-align: right;" }
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
 				},
 				{
 					field: "recon_rule_version",
 					title: "Rule Version",
 					width: 50,
 					hidden: true,
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
 				},
 				{
 					field: "group_flag_desc",

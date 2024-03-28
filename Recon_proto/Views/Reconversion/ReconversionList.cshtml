@@ -70,7 +70,7 @@
 <body class="hold-transition skin-blue sidebar-mini fixed">
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;padding-top: 5px ">
 				<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
 					<div class="col-sm-4">
 						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -186,7 +186,7 @@
 						fields: {
 							rule_gid: { type: "string" },
 							rule_name: { type: "string" },
-							rule_order: { type: "string" },
+							rule_order: { type: "number" },
 							source_dataset_name: { type: "string" },
 							comparsion_dataset_name: { type: "string" },
 							system_match_flag_desc: { type: "string" },
@@ -233,6 +233,10 @@
 					title: "Rule Order",
 					attributes: { style: "text-align: right" },
 					width: 60,
+					filterable: {
+						ui: "numericInput",
+						extra: false,
+					},
 				},
 				{
 					field: "source_dataset_code",

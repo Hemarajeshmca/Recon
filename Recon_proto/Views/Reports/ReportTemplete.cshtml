@@ -18,6 +18,13 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-1%;height: 82%;">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="gridlist()">
+						</select>
+					</div>
+					</div>
 				<div class="row">
 					<div class="col-xs-12">
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
@@ -91,26 +98,82 @@
 		$("#navhead").text("Custom Report Templete");
 		kendodate_format();
 		grid_reportTemplist([]);
-		gridlist();
+		//recon name
+		gridreconlist();
 	});
 
+	function gridreconlist() {
+		var data = {};
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = txtusername.user_name;
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));						
+					}
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
 	function getSerializedRows(){
-		//$("#mode").val('INSERT');
-		//$("#reporttemplate_gid").val(0);
-		//$("#reporttemplate_code").val("");
-		//$("#show-popup").modal('show');
 		debugger;
 		btn_onClick('Create');
+		var selectedItem = $("#cmbreconname").val();
+		if ($("#cmbreconname").val()) {
+		setlocalStorage("ls_pageList", selectedItem);
 		document.location = "../Reports/ReportTempletedetail";
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Recon',
+				type: 'red',
+			});
+		}
 	}
 
 	function gridlist() {
+		console.log('$("#cmbreconname").val()', $("#cmbreconname").val());
+		debugger;
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
 		var data = {};
+		data.in_recon_code = $("#cmbreconname").val();
+		if (data.in_recon_code) {
 		$.ajax({
-			type: "GET",
+			type: "POST",
 			url: '../Reports/reportTempletelist',
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(data),
 			success: function (response) {				
 				if (response != null) {
 					var res = JSON.parse(response)
@@ -128,6 +191,7 @@
 			}
 
 		});
+	}
 	}
 
 	function grid_reportTemplist(data){
@@ -152,7 +216,7 @@
 						}
 					}
 				},
-				height: 450,
+				height: 343,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
