@@ -560,7 +560,7 @@
 							rule_gid: { type: "string" },
 							rule_code: { type: "string" },
 							rule_name: { type: "string" },
-							rule_order: { type: "string" },
+							rule_order: { type: "number" },
 							recon_rule_version: { type: "string" },
 							source_dataset_code: { type: "string" },
 							comparison_dataset_code: { type: "string" },
@@ -625,7 +625,11 @@
 					field: "rule_order",
 					title: "Rule Order",
 					width: 50,
-					attributes: { style: "text-align: right;" }
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
 				},
 				{
 					field: "recon_rule_version",
