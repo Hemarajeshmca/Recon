@@ -124,12 +124,12 @@
 
 		div.k-header.k-grid-toolbar {
 			background-image: none, -webkit-linear-gradient(top, rgb(135, 46, 123) 0, rgb(135, 46, 123) 100%);
-			color:white;
+			color: white;
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-			color: white !important;
-		}*/
+											color: white !important;
+										}*/
 
 		.control-label.required:after {
 			content: "*";
@@ -212,8 +212,8 @@
 		}
 
 		/*.content-wrapper, .right-side {
-			background-color: #e7e7e7;
-		}*/
+											background-color: #e7e7e7;
+										}*/
 
 		.info-box-icon {
 			background: white;
@@ -313,7 +313,7 @@
 								<label for="" class="form-label">Probable Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<select id="probableflag" class="form-select form-control" style=" width:120%;">
 								</select>
-							</div>							
+							</div>
 						</div>
 						<div class="row" style="margin-top:5px;padding-right:5px">
 							<div class="col-sm-2">
@@ -631,7 +631,7 @@
 					document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
 					document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
 					document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
-					
+
 					$("#recontype").val(res[0].recontype_code);
 					recontypecondition();
 				}
@@ -713,7 +713,7 @@
 						document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
 						document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
 						document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
-					
+
 						$("#recontype").val(res[0].recontype_code);
 						recontypecondition();
 					}
@@ -1320,7 +1320,7 @@
 
 			}
 		});
-		
+
 		// group flag
 		var in_master_code = "QCD_RULE_GRP";
 		var in_user_code = "";
@@ -1472,13 +1472,14 @@
 			if (rulegid == "") {
 				rulegid = 0;
 			} else {
+				addRowrule();
 				return
 			}
 			var in_rule_order = parseFloat($("#ruleorder").val()).toFixed(2);
 			var status = "D";
 			var Groupflag = $("#cmbgroupflag").val();
 			var in_inactive_reason = "";
-			var probableflag =  $("#probableflag").val();
+			var probableflag = $("#probableflag").val();
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/Ruleheader',
@@ -1494,16 +1495,17 @@
 				success: function (response) {
 					debugger;
 					if (response != null) {
-						if(response.out_result == '1') {
+						if (response.out_result == '1') {
 							$("#rulegid").val(response.in_rule_gid);
 							getfetch(response.in_rule_gid, "Header");
+							addRowrule();
 						} else {
 							$.alert({
 								title: 'Recon',
 								content: response.out_msg,
 								type: 'green',
 							});
-						}						
+						}
 					}
 					else {
 
@@ -1528,12 +1530,12 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
-				sort: [{ field: "rulecondition_gid", dir: "desc" }],
+				sort: [{ field: "rulecondition_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
-							open_parem: { type: "string" },
 							rulecondition_gid: { type: "string", defaultValue: "0" },
+							rulecondition_seqno: { type: "NUMBER", defaultValue: 0 },
 							rule_code: { type: "string" },
 							source_field_code: { type: "string", defaultValue: "" },
 							source_field_desc: { type: "string", defaultValue: "" },
@@ -1545,7 +1547,8 @@
 							comparison_criteria_code: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
-							close_param: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
 							join_condition: { type: "string" },
 						}
 					}
@@ -1576,7 +1579,7 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' onclick='saveheader()' href='' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+			toolbar: "<a href='javascript:void(0)' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 			columns: [{
 				command: [
 					{
@@ -1597,8 +1600,23 @@
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
+				field: "rulecondition_seqno",
+				title: "Seq No.",
+				width: 40,
+				attributes: { style: "text-align: right;" },
+				hidden: true,
+			},
+			{
+				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				template: '#=sel_checkbox(data)#'
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.rulecondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					}
+				}
 			},
 			{
 				field: "rulecondition_gid",
@@ -1672,8 +1690,16 @@
 				hidden: true
 			},
 			{
+				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				template: '#=sel_checkbox1(data)#'
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.rulecondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					}
+				},
 			},
 
 			{
@@ -1690,26 +1716,7 @@
 		comparison_field_desc_list = cmbsourcefield();
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 	}
-	var gridRowID = -1;
-	function sel_checkbox(data) {
-		gridRowID++;
-		var isChecked = data.open_parentheses_flag;
-		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel_' + data.rulecondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
-	var gridRowID1 = -1;
-	function sel_checkbox1(data) {
-		gridRowID1++;
-		var isChecked1 = data.close_parentheses_flag;
-		var con = "";
-		if (isChecked1 == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel1_' + data.rulecondition_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
+
 	function OnEdit(e) {
 		try {
 			setDefaultValues(e);
@@ -1807,6 +1814,49 @@
 		});
 		return arr1;
 	}
+	function addRowrule() {
+		var grid = $("#grid_rulecondition").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].rulecondition_seqno > max) {
+				max = grid.dataSource._data[i].rulecondition_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ rulecondition_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulecondition_gid: 0 });
+	}
+	$(function () {
+		$('#grid_rulecondition').on('click', '.chkbx1', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_rulecondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_rulecondition').on('click', '.chkbx2', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_rulecondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
 	function saverulecondition() {
 		debugger;
 		try {
@@ -1818,6 +1868,7 @@
 			var in_comparison_field = model.comparison_field;
 			var in_extraction_criteria = model.extraction_criteria;
 			var in_comparison_criteria = model.comparison_criteria;
+			var rulecondition_seqno = model.rulecondition_seqno;
 			var action = "";
 			var action_by = ""
 			var rulecondtion_gid = model.rulecondition_gid;
@@ -1828,25 +1879,16 @@
 				action = "UPDATE"
 			}
 			var status = "Y";
-			var in_open_flag = "";
-			if ($('#chk_sel_' + model.rulecondition_gid).is(":checked")) {
-				in_open_flag = "Y";
-			} else {
-				in_open_flag = "N";
-			}
-			var in_close_flag = "";
-			if ($('#chk_sel1_' + model.rulecondition_gid).is(":checked")) {
-				in_close_flag = "Y";
-			} else {
-				in_close_flag = "N";
-			}
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
+
 			var in_join_condition = model.join_condition;
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/ruleconditionsave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_rulecondition_gid: rulecondtion_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_open_flag: in_open_flag, in_close_flag: in_close_flag,
+					in_rulecondition_gid: rulecondtion_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_rulecondition_seqno: rulecondition_seqno,
 					in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status, in_join_condition: in_join_condition
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -1892,7 +1934,7 @@
 				type: 'orange',
 				buttons: {
 					confirm: function () {
-						var in_rule_code = "";
+						var in_rule_code = model.rule_code;
 						var in_source_field = "";
 						var in_comparison_field = "";
 						var in_extraction_criteria = "";
@@ -1900,13 +1942,13 @@
 						var action = "Delete";
 						var action_by = "";
 						var status = "";
-
+						var rulecondition_seqno = 0;
 						$.ajax({
 							type: "POST",
 							url: '../Rulesetup/ruleconditionsave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_rulecondition_gid: rulecondition_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field,
+								in_rulecondition_gid: rulecondition_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_rulecondition_seqno: rulecondition_seqno,
 								in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -1955,15 +1997,18 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
-				sort: [{ field: "ruleselefilter_gid", dir: "desc" }],
+				sort: [{ field: "ruleselefilter_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
 							ruleselefilter_gid: { type: "string", defaultValue: "0" },
+							ruleselefilter_seqno: { type: "number", defaultValue: "0" },
 							filter_applied_on: { type: "string", defaultValue: "S" },
 							filter_field_code: { type: "string" },
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
 							ident_criteria: { type: "string" },
 							ident_value: { type: "string" },
 							active_status: { type: "string" },
@@ -1998,7 +2043,7 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			toolbar: "<a href='javascript:void(0)' onclick='addRowsourceidentifier()' ><span class='fa fa-plus' style='color:white'></span></a>",
 			columns: [{
 				command: [
 					{
@@ -2019,12 +2064,25 @@
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
+				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				template: '#=sel_checkboxsI(data)#'
+				template: function (dataItem) {
+					if (dataItem.ruleselefilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+					}
+				}
+				//template: '#=sel_checkboxsI(data)#'
 			},
 			{
 				field: "ruleselefilter_gid",
 				title: "ruleselefilter_gid",
+				hidden: true,
+			},
+			{
+				field: "ruleselefilter_seqno",
+				title: "ruleselefilter_seqno",
 				hidden: true,
 			},
 			{
@@ -2086,8 +2144,16 @@
 				hidden: true,
 			},
 			{
+				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				template: '#=sel_checkboxsI1(data)#'
+				//template: '#=sel_checkboxsI1(data)#'
+				template: function (dataItem) {
+					if (dataItem.ruleselefilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+					}
+				},
 			},
 			{
 				field: "join_condition",
@@ -2110,26 +2176,50 @@
 			}
 		}
 	}
-	var gridRowID = -1;
-	function sel_checkboxsI(data) {
-		gridRowID++;
-		var isChecked = data.open_parentheses_flag;
-		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
+
+	function addRowsourceidentifier() {
+		var grid = $("#grid_sourceidentifier").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].ruleselefilter_seqno > max) {
+				max = grid.dataSource._data[i].ruleselefilter_seqno;
+			}
 		}
-		return '<input id="chk_sel_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "S" });
 	}
-	var gridRowID1 = -1;
-	function sel_checkboxsI1(data) {
-		gridRowID1++;
-		var isChecked1 = data.close_parentheses_flag;
-		var con = "";
-		if (isChecked1 == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel1_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
+	$(function () {
+		$('#grid_sourceidentifier').on('click', '.chkbx3', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_sourceidentifier').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_sourceidentifier').on('click', '.chkbx4', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_sourceidentifier').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -2199,11 +2289,12 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
-				sort: [{ field: "ruleselefilter_gid", dir: "desc" }],
+				sort: [{ field: "ruleselefilter_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
 							ruleselefilter_gid: { type: "string", defaultValue: "0" },
+							ruleselefilter_seqno: { type: "number", defaultValue: 0 },
 							filter_applied_on: { type: "string", defaultValue: "C" },
 							filter_field: { type: "string" },
 							filter_field_code: { type: "string" },
@@ -2213,6 +2304,8 @@
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
 							join_condition: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
 						}
 					}
 				}
@@ -2241,13 +2334,13 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			toolbar: "<a onclick='addRowcomparisionidentifier()'  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
 			columns: [{
 				command: [
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saveIdentifierC()'  class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='saveIdentifierC()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -2262,12 +2355,25 @@
 				], title: "Action&nbsp;", width: "40px",
 			},
 			{
+				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				template: '#=sel_checkboxCI(data)#'
+				//template: '#=sel_checkboxCI(data)#'
+				template: function (dataItem) {
+					if (dataItem.ruleselefilter_gid > 0) {
+						return '<input type="checkbox"' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
+					}
+				}
 			},
 			{
 				field: "ruleselefilter_gid",
 				title: "ruleselefilter_gid",
+				hidden: true,
+			},
+			{
+				field: "ruleselefilter_seqno",
+				title: "ruleselefilter_seqno",
 				hidden: true,
 			},
 			{
@@ -2329,8 +2435,16 @@
 				hidden: true,
 			},
 			{
+				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				template: '#=sel_checkboxCI1(data)#'
+				//template: '#=sel_checkboxsI1(data)#'
+				template: function (dataItem) {
+					if (dataItem.ruleselefilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
+					}
+				},
 			},
 			{
 				field: "join_condition",
@@ -2354,26 +2468,49 @@
 			}
 		}
 	}
-	var gridRowID = -1;
-	function sel_checkboxCI(data) {
-		gridRowID++;
-		var isChecked = data.open_parentheses_flag;
-		var con = "";
-		if (isChecked == "true") {
-			con = 'checked';
+	function addRowcomparisionidentifier() {
+		var grid = $("#grid_comparisionidentifier").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].ruleselefilter_seqno > max) {
+				max = grid.dataSource._data[i].ruleselefilter_seqno;
+			}
 		}
-		return '<input id="chk_sel_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "C" });
 	}
-	var gridRowID1 = -1;
-	function sel_checkboxCI1(data) {
-		gridRowID1++;
-		var isChecked1 = data.close_parentheses_flag;
-		var con = "";
-		if (isChecked1 == "true") {
-			con = 'checked';
-		}
-		return '<input id="chk_sel1_' + data.ruleselefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-	}
+	$(function () {
+		$('#grid_comparisionidentifier').on('click', '.chkbx5', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_comparisionidentifier').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_comparisionidentifier').on('click', '.chkbx6', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_comparisionidentifier').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
 	function combo_filter_field1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -2447,6 +2584,7 @@
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
+			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
 			var action_by = ""
 			var ruleselefilter_gid = model.ruleselefilter_gid;
@@ -2457,18 +2595,8 @@
 				action = "UPDATE"
 			}
 			var status = "Y";
-			var in_open_flag = "";
-			if ($('#chk_sel_' + model.ruleselefilter_gid).is(":checked")) {
-				in_open_flag = "Y";
-			} else {
-				in_open_flag = "N";
-			}
-			var in_close_flag = "";
-			if ($('#chk_sel1_' + model.ruleselefilter_gid).is(":checked")) {
-				in_close_flag = "Y";
-			} else {
-				in_close_flag = "N";
-			}
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
 			var in_join_condition = model.join_condition;
 			$.ajax({
 				type: "POST",
@@ -2476,7 +2604,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition,
-					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, ruleselefilter_seqno: ruleselefilter_seqno,
 					in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -2516,6 +2644,7 @@
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
+			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
 			var action_by = ""
 			var ruleselefilter_gid = model.ruleselefilter_gid;
@@ -2526,18 +2655,8 @@
 				action = "UPDATE"
 			}
 			var status = "Y";
-			var in_open_flag = "";
-			if ($('#chk_sel_' + model.ruleselefilter_gid).is(":checked")) {
-				in_open_flag = "Y";
-			} else {
-				in_open_flag = "N";
-			}
-			var in_close_flag = "";
-			if ($('#chk_sel1_' + model.ruleselefilter_gid).is(":checked")) {
-				in_close_flag = "Y";
-			} else {
-				in_close_flag = "N";
-			}
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
 			var in_join_condition = model.join_condition;
 			$.ajax({
 				type: "POST",
@@ -2545,7 +2664,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition,
-					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, ruleselefilter_seqno: ruleselefilter_seqno,
 					in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -2601,13 +2720,14 @@
 						var action_by = ""
 						var ruleselefilter_gid = parseInt(model.ruleselefilter_gid);
 						var status = "";
+						var ruleselefilter_seqno = 0;
 						$.ajax({
 							type: "POST",
 							url: '../Rulesetup/ruleIdentifiersave',
 							dataType: 'json',
 							data: JSON.stringify({
 								in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon,
-								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue,
+								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, ruleselefilter_seqno: ruleselefilter_seqno,
 								in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -2673,13 +2793,14 @@
 						var action_by = ""
 						var ruleselefilter_gid = parseInt(model.ruleselefilter_gid);
 						var status = "";
+						var ruleselefilter_seqno = 0;
 						$.ajax({
 							type: "POST",
 							url: '../Rulesetup/ruleIdentifiersave',
 							dataType: 'json',
 							data: JSON.stringify({
 								in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon,
-								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue,
+								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, ruleselefilter_seqno: ruleselefilter_seqno,
 								in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -2725,11 +2846,12 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
-				sort: [{ field: "rulegrpfield_gid", dir: "desc" }],
+				sort: [{ field: "rulegrpfield_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
 							rulegrpfield_gid: { type: "string", defaultValue: "0" },
+							rulegrpfield_seqno: { type: "number", defaultValue: "0" },
 							grp_field: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" }
@@ -2760,7 +2882,7 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			toolbar: "<a href='javascript:void(0)' onclick='addRowgroup()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
 			columns: [{
 				command: [
 					{
@@ -2785,6 +2907,12 @@
 				title: "rulegrpfield_gid",
 				hidden: true,
 			},
+			{
+				field: "rulegrpfield_seqno",
+				title: "rulegrpfield_seqno",
+				hidden: true,
+			},
+
 			{
 				field: "grp_field",
 				title: "Comparison Group Field",
@@ -2820,12 +2948,24 @@
 		});
 		recon_field_name_list = cmbsourcefield();
 	}
+	function addRowgroup() {
+		var grid = $("#grid_grouping").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ rulegrpfield_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulegrpfield_gid:0 });
+	}
 	function savegrouping() {
 		try {
 			var grid = $("#grid_grouping").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var in_rule_code = $("#txtrulecode").val();
 			var cmbcomgrpfield = model.recon_field_code;
+			var rulegrpfield_seqno = model.rulegrpfield_seqno;
 			var action = "";
 			var action_by = ""
 			var rulegrpfield_gid = model.rulegrpfield_gid;
@@ -2841,7 +2981,7 @@
 				url: '../Rulesetup/rulegroupsave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code,
+					in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, rulegrpfield_seqno: rulegrpfield_seqno,
 					in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -2893,14 +3033,14 @@
 						var in_manytomany_match_flag = "";
 						var action = "DELETE";
 						var action_by = ""
+						var rulegrpfield_seqno = 0;
 						var status = "";
 						$.ajax({
 							type: "POST",
 							url: '../Rulesetup/rulegroupsave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, in_rule_gid: rulegid,
-								in_group_method_flag: in_group_method_flag, in_manytomany_match_flag: in_manytomany_match_flag,
+								in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, rulegrpfield_seqno: rulegrpfield_seqno,
 								in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -2948,7 +3088,7 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
-				sort: [{ field: "rulerecorder_gid", dir: "desc" }],
+				sort: [{ field: "recorder_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
@@ -2963,7 +3103,7 @@
 					}
 				}
 			},
-			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			toolbar: "<a onclick=addrowSorder()  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
 			height: 185,
 			groupable: false,
 			dataBound: function (e) {
@@ -3057,6 +3197,17 @@
 		});
 		recorder_field_list = cmbsourcefield();
 	}
+	function addrowSorder() {
+		var grid = $("#grid_sourceorder").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
+	}
 	function saverulesourceorder() {
 		try {
 			var grid = $("#grid_sourceorder").data("kendoGrid");
@@ -3117,7 +3268,7 @@
 			dataSource: {
 				data: data,
 				pageSize: 5,
-				sort: [{ field: "rulerecorder_gid", dir: "desc" }],
+				sort: [{ field: "recorder_seqno", dir: "asc" }],
 				schema: {
 					model: {
 						fields: {
@@ -3132,7 +3283,7 @@
 					}
 				}
 			},
-			toolbar: "<a class='k-grid-add' id='btnSave' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			toolbar: "<a onclick=addrowCorder()  href='javascript:void(0)'><span class='fa fa-plus' style='color:white'></span></a>",
 			height: 185,
 			groupable: false,
 			dataBound: function (e) {
@@ -3225,6 +3376,17 @@
 
 		});
 		recorder_field_list = cmbsourcefield();
+	}
+	function addrowCorder() {
+		var grid = $("#grid_comparisonorder").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
 	}
 	function saverulecomparisonorder() {
 		try {
@@ -3481,7 +3643,7 @@
 					in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
-					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag:probableflag,
+					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
 					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
