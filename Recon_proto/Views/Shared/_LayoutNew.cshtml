@@ -118,7 +118,7 @@
 			div#spinner img {
 				position: absolute;
 				/*width: 100px;
-																																				height: 100px;*/
+																																						height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -149,9 +149,9 @@
 
 
 		/*.k-grid.k-widget {
-			height: 360px;
-			overflow-y: auto;
-		}*/
+					height: 360px;
+					overflow-y: auto;
+				}*/
 
 		.k-i-arrow-s {
 			background-position: -161px -209px !important;
@@ -701,12 +701,15 @@
 		}
 
 		function Signout() {
-			sessionStorage.removeItem('level1txt');
-			sessionStorage.removeItem('level2txt');
-			sessionStorage.removeItem('level3txt');
-			sessionStorage.removeItem('level1');
-			sessionStorage.removeItem('level2');
-			sessionStorage.removeItem('level3');
+			sessionStorage.setItem("level1", "");
+			sessionStorage.setItem("level2", "");
+			sessionStorage.setItem("level3", "");
+			sessionStorage.setItem("level1txt", "");
+			sessionStorage.setItem("level2txt", "");
+			sessionStorage.setItem("level3txt", "");
+			sessionStorage.setItem("reconcode", "");
+			sessionStorage.setItem("reconname", "");
+
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
@@ -730,8 +733,23 @@
 			var url = '@Url.Action("ChangePassword", "Login")'
 			window.location.href = url;
 		}
-		function bindmultiselectvalues(arr, _id) {
+		function lastlogin() {			
+			var usercode = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Admin/setcontextread',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({user_code: usercode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+				}
+			})
+		}
+						
 
+		function bindmultiselectvalues(arr, _id) {
 			if (arr != null) {
 				$("#" + _id).empty();
 				for (var t = 0; t < arr.length; t++) {
