@@ -327,8 +327,25 @@
 	}
 	function getSerializedRows() {
 		btn_onClick('Create');
-		var selectedItem = $("#cmbreconname").val();
-		if (selectedItem != "") {
+		var grid = $("#grid_theme").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].theme_order > max) {
+				max = grid.dataSource._data[i].theme_order;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+	
+		var selectedItem =[];
+		var list = {};
+		list.recon_code = $("#cmbreconname").val();
+		list.theme_order = newSeqNo;
+		selectedItem.push(list);
+
+		if (selectedItem.recon_code != "") {
 			setlocalStorage("ls_pageList", selectedItem);
 			document.location = "../Theme/Themeview";
 		} else {
@@ -338,7 +355,6 @@
 				type: 'red',
 			});
 		}
-
 	}
 	function getSerializedSelectedRows(mode) {
 		try {
