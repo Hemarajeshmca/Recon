@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -59,8 +60,9 @@ namespace Recon_proto.Models
         public string recon_gid { get; set; }
 
         public string ip_address { get; set; }
+		public DateTime lastlogin { get; set; }
 
-        public DateOnly password_expiry_date { get; set; }
+		public DateOnly password_expiry_date { get; set; }
 
         public partial class menu
         {
