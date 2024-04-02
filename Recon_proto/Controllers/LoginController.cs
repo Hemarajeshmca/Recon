@@ -181,8 +181,12 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
+		public IActionResult session_expires()
+		{
+			return View();
+		}
 
-        public class changePassword
+		public class changePassword
         {
             public string? user_gid { get; set; }
             public string? oldpass { get; set; }

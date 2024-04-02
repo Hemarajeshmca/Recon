@@ -751,8 +751,8 @@
 					if (lastlog != dbdate) {
 						$.alert({
 							title: 'Recon',
-							content: 'User Id login to Other System',
-							type: 'green',
+							content: 'You have been disconnected bacause another login was made. ',
+							type: 'Red',
 							onClose: function () {
 								Signout();
 							}
@@ -1090,6 +1090,24 @@
 				});
 			}
 		}
+		//window.setTimeout(function () {
+		//	window.location.href = '@Url.Action("session_expires", "Login")'
+		//},180000);
+		var sessionTimer;
+		// Reset the timer function
+		function resetSessionTimer() {
+			// Clear the existing timer (if any)
+			clearTimeout(sessionTimer);
+			// Start a new timer
+			sessionTimer = setTimeout(function () {
+				// Redirect to the session expires page after 180000 milliseconds (3 minutes)
+				window.location.href = '@Url.Action("session_expires", "Login")';
+			}, 180000); // 180000 milliseconds = 3 minutes
+		}
+		// Call resetSessionTimer() whenever there is a user interaction event
+		document.addEventListener("mousemove", resetSessionTimer);
+		document.addEventListener("keypress", resetSessionTimer);
+		resetSessionTimer();
 	</script>
 </body>
 </html>

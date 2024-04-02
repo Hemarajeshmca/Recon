@@ -663,7 +663,104 @@
 			$('#untillactive').prop('disabled', true);
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
-			$("#btnsubmit").hide();
+			$("#btnsubmit").hide(); $.ajax({
+				type: "POST",
+				url: '../Recon/Reconheaderfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: data.recon_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+
+					if (response != " ") {
+						var res = JSON.parse(response);
+						$("#period_from").val(res.ReconHeader[0].period_from);
+						$("#period_to").val(res.ReconHeader[0].period_to);
+						if (res.ReconHeader[0].recon_value_flag == "Y") {
+							$("#reconvalueflag1").prop("checked", true);
+						} else {
+							$("#reconvalueflag2").prop("checked", true);
+						}
+						if (res.ReconHeader[0].recon_date_flag == "Y") {
+							$("#recondateflag1").prop("checked", true);
+						} else {
+							$("#recondateflag2").prop("checked", true);
+						}
+						if (res.ReconHeader[0].recon_automatch_partial == "Y") {
+							$("#partialmatch1").prop("checked", true);
+						} else {
+							$("#partialmatch2").prop("checked", true);
+						}
+
+						$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
+						$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
+						$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
+						$("#gd_datasetrecon").empty();
+						$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
+						grid_datasetrecon(res.ReconDataSet);
+						if (res.ReconDataSetmapping.length > 0) {
+							griddatamapping(res.ReconDataSetmapping);
+						} else {
+							gridmap([]);
+						} if (res.ReconRule.length > 0) {
+							gridruleMapping(res.ReconRule);
+						} else {
+							gridruleMapping([]);
+						}
+
+						$("#cmbdatasetmap").empty();
+						$("#cmbdatasetmap").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res.ReconDataSet, function (index, item) {
+							$("#cmbdatasetmap").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						});
+						$("#cmbrecondatefield").empty();
+						$("#cmbrecondatefield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res.Reconfield, function (index, item) {
+							if (item.recon_field_type == "DATE") {
+								$("#cmbrecondatefield").append($('<option>', {
+									value: item.recon_field_name,
+									text: item.recon_field_desc
+								}));
+							}
+						});
+						$("#cmbreconvaluefield").empty();
+						$("#cmbreconvaluefield").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res.Reconfield, function (index, item) {
+							if (item.recon_field_type == "NUMERIC") {
+								$("#cmbreconvaluefield").append($('<option>', {
+									value: item.recon_field_name,
+									text: item.recon_field_desc
+								}));
+							}
+						});
+						recontypeconfig();
+						$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
+						$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+
+					}
+					else {
+						grid_datasetrecon([]);
+						gridmap([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
 		}
 	}
 	function detailfetch(reconcode) {
@@ -1483,12 +1580,20 @@
 		var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
 		kendo.bind($("#grid1"), viewModel);
 
-		var grid = $("#grid1").data("kendoGrid");
-		grid.hideColumn(1);
-		grid.hideColumn(2);
-		grid.hideColumn(3);
-		grid.hideColumn(4);
-		grid.hideColumn(7);
+		var grid = $("#grid1").data("kendoGrid");		
+		if ($("#txtmode").val() == "View") {
+			grid.hideColumn(0);
+			grid.hideColumn(1);
+			grid.hideColumn(2);
+			grid.hideColumn(3);
+			grid.hideColumn(6);
+		}else{
+			grid.hideColumn(1);
+			grid.hideColumn(2);
+			grid.hideColumn(3);
+			grid.hideColumn(4);
+			grid.hideColumn(7);
+		}
 	}
 	function getdetailSelectedRows(mode) {
 		if ($(mode).attr('value') == "edit") {
