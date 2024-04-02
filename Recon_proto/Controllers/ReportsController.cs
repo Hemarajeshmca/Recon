@@ -419,6 +419,7 @@ namespace Recon_proto.Controllers
             public Boolean? in_outputfile_flag { get; set; }
             public string? in_user_code { get; set; }
         }
+
         #endregion
 
         #region reconwithinacc
@@ -1805,6 +1806,262 @@ namespace Recon_proto.Controllers
 
         #endregion
 
+
+        #region uploadreporttempletefile
+
+        //public JsonResult uploadreporttempletefile([FromBody] uploadreporttempletefileModel context)
+        //{
+        //    urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+        //    DataTable result1 = new DataTable();
+        //    string post_data = "";
+        //    try
+        //    {
+        //        using (var client = new HttpClient())
+        //        {
+        //            string Urlcon = "Report/";
+        //            client.BaseAddress = new Uri(urlstring + Urlcon);
+        //            client.DefaultRequestHeaders.Accept.Clear();
+        //            client.Timeout = Timeout.InfiniteTimeSpan;
+        //            client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+        //            client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+        //            client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+        //            client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        //            HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+        //            var response = client.PostAsync("uploadreporttempletefile", content).Result;
+        //            Stream data = response.Content.ReadAsStreamAsync().Result;
+        //            StreamReader reader = new StreamReader(data);
+        //            post_data = reader.ReadToEnd();
+        //            string d2 = JsonConvert.DeserializeObject<string>(post_data);
+        //            return Json(d2);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        CommonController objcom = new CommonController(_configuration);
+        //        objcom.errorlog(ex.Message, "uploadreporttempletefile");
+        //        return Json(ex.Message);
+        //    }
+        //}
+
+        public async Task<JsonResult> uploadreporttempletefile(string in_file_path, string in_reporttemplate_code, IFormFile file, string in_action_by, string in_file_name)
+        {
+            var out_result = getuploadfolderpath();
+            string folder_path = "";
+            List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
+            //var folderPath = _configuration.GetConnectionString("Uploadpath");
+            if (myObjects.Count > 0)
+            {
+                folder_path = myObjects[0].out_config_value;
+            }
+            var filePath = "";
+            uploadreporttempletefileModel objcontent = new uploadreporttempletefileModel();
+            objcontent.in_reporttemplate_code = in_reporttemplate_code;
+            objcontent.file = file;
+            objcontent.in_action_by = in_action_by;
+            objcontent.in_file_name = in_file_name;
+            objcontent.in_file_path = folder_path;
+
+            if (file != null && file.Length > 0)
+            {
+                // Create the folder if it doesn't exist.
+                if (!Directory.Exists(folder_path))
+                {
+                    Directory.CreateDirectory(folder_path);
+                }
+                string[] parts = file.FileName.Split('.');
+                string extension = "." + parts.Last();
+                string dummy_file_name = in_reporttemplate_code + extension;
+                HttpContext.Session.SetString("session_folderpath", folder_path);
+                HttpContext.Session.SetString("session_filename", file.FileName);
+                HttpContext.Session.SetString("session_dummy_filename", dummy_file_name);
+
+                // Generate a unique file name to avoid overwriting existing files.
+                string uniqueFileName = Path.Combine(folder_path, dummy_file_name);
+
+                // Save the uploaded file to the specified path.
+                using (var fileStream = new FileStream(uniqueFileName, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+                HttpContext.Session.SetString("session_uniqueFileName", uniqueFileName);
+
+                var result = setfilePath(objcontent);
+
+                if(result != null)
+                {
+                    return Json(new { success = true, message = "File uploaded successfully!", path = uniqueFileName });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Something went wrong." });
+                }
+
+            }
+            else
+            {
+                return Json(new { success = false, message = "No file selected." });
+            }
+        }
+
+        
+
+            public JsonResult setfilePath([FromBody] uploadreporttempletefileModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result1 = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("uploadreporttempletefile", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "uploadreporttempletefile");
+                return Json(ex.Message);
+            }
+        }
+
+        public class uploadreporttempletefileModel
+        {
+            public string? in_reporttemplate_code { get; set; }
+            public string? in_file_name { get; set; }
+            public string? in_file_path { get; set; }
+            public string? in_action_by { get; set; }
+            public IFormFile? file { get; set; }
+        }
+
+        #endregion
+
+
+        public JsonResult getuploadfolderpath()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
+
+            var context = _configuration.GetSection("Appsettings")["Uploadpath"].ToString();
+            FileDownload.in_config_name = context;
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Common/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("configvalue", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    return Json(d2);
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Datasetdetail");
+                return Json(ex.Message);
+            }
+        }
+
+        public class fileconfigmodel
+        {
+            public string? in_config_name { get; set; }
+            public string? out_config_value { get; set; }
+            public string? out_msg { get; set; }
+            public string? out_result { get; set; }
+
+        }
+
+        #region generatedynamicreport
+
+
+        [HttpPost]
+        public JsonResult generatedynamicreport([FromBody] generatedynamicReportmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("generatedynamicreport", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+
+                    //DataTable newdt = new DataTable();
+                    //DownloadExcel();
+                    //return Json("");
+
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "generateReport");
+                return Json(ex.Message);
+            }
+        }
+
+        public class generatedynamicReportmodel
+        {
+
+            public String? in_reporttemplate_code { get; set; }
+            public String? in_report_param { get; set; }
+            public String? in_report_condition { get; set; }
+            public String? in_ip_addr { get; set; }
+            public Boolean? in_outputfile_flag { get; set; }
+            public String? in_outputfile_type { get; set; }
+            public string? in_user_code { get; set; }
+        }
+
+        #endregion
     }
 
 }
