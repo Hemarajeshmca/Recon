@@ -427,7 +427,25 @@
                                         <div class="tab-pane fade" id="navs-pills-top-attachment" role="tabpanel" style="margin-top:-25px;">
                                             <div class="panel panel-default">
                                                 <div class="panel-body">
-                                                    <div class="col-xs-12">
+                                                        <div class="row" style="padding-bottom:15%;margin-top:5px;padding-left:30px;padding-right:5px">
+                                                            @*<div class="col-sm-4">
+                                                                <label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                                                                <select id="Pipeline" class="form-select form-control"> </select>
+                                                            </div>*@
+                                                            <div class="col-sm-4">
+                                                                <form id="theuploadformempff">
+                                                                    <div class="form-group">
+                                                                        <label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                                                                        <input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+                                                                        <label class="col-md-6 control-label" id="FileName" hidden></label>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <div class="col-sm-2" style="margin-top:29px">
+                                                                <label class="form-label"></label>
+                                                                <input type="button" onclick="upload()" style="background: #175650;border-color: #175650;width:40%; color:#fff;" name="Start" class="btn btn-sm btn-success me-2" value="Upload" />
+
+                                                            </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -437,7 +455,7 @@
                                 </div>
                             </div>
 
-                            <div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+                            <div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4" style="text-align:center">
                                     <button type="button" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
@@ -474,7 +492,7 @@
         var reconcode = getlocalStorage("ls_pageList");
         $("#cmbreconname").val(reconcode);
         $("#cmbreporttype").prop("disabled", true);
-        data.in_recon_code = $("#cmbreconname").val();
+        data.in_recon_code = reconcode;
         $.ajax({
             type: "POST",
             url: '../Reports/reportTempletelist',
@@ -482,7 +500,6 @@
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data),
             success: function (response) {
-                debugger;
                 if (response != null) {
                     var res = JSON.parse(response)
                     $("#clonereport").empty();
@@ -491,7 +508,6 @@
                         text: "  Select  "
                     }));
                     $.each(res, function (index, item) {
-                        debugger;
                         if (item.active_status == 'Y') {
                             $("#clonereport").append($('<option>', {
                                 value: item.reporttemplate_code,
@@ -535,7 +551,6 @@
 
         });
 
-        debugger;
         var data = getlocalStorage("ls_pageList");
         $.ajax({
             type: "POST",
@@ -544,7 +559,6 @@
             data: JSON.stringify({}),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
                 $("#cmbreporttype").empty();
                 $("#cmbreporttype").append($('<option>', {
                     value: "",
@@ -646,9 +660,7 @@
                     data: JSON.stringify({ in_reporttemplate_code: data }),
                     contentType: 'application/json; charset=utf-8',
                     success: function (response) {
-                        debugger;
                         if (response != " ") {
-                            debugger;
                             var res = JSON.parse(response);
                             $("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
                             $("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -658,12 +670,19 @@
                             $("#cmbreporttype").val(res.Table[0].report_code);
                             $("#sys_flag").val(res.Table[0].system_flag);
                             $("#cmbreconname").val(res.Table[0].recon_code);
+                           // $("#File_Import").val(res.Table[0].file_name);
+                           // document.getElementById('File_Import').textContent = (res.Table[0].file_name) ? res.Table[0].file_name : '';
                             $("#cmbreporttype").prop("disabled", true);
                             $("#clonereport").prop('disabled', true);
                             $("#cmbreconname").prop('disabled', true);
+                            if (res.Table[0].sortby_code == "dsc") {
+                                $("#sort2").prop("checked", true);
+                            } else {
+                                $("#sort1").prop("checked", true);
+                            }
                             grid_tempfilter(res.Table1);
                             grid_columfilter(res.Table2);
-                            grid_sorting([]);
+                            grid_sorting(res.Table3);
                         }
                         else {
                             grid_tempfilter([]);
@@ -684,7 +703,6 @@
 
     // report filter
     function grid_tempfilter(data) {
-        debugger;
         var filter_criteria_desc_list = "";
         var join_condition_list = "";
         var reportparam_value_list = "";
@@ -731,7 +749,7 @@
                 pageSizes: true,
                 buttonCount: 5
             },
-            toolbar: "<a class='k-grid-add' href='' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
+            toolbar: "<a href='javascript:void(0)' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
             columns: [{
                 command: [
                     {
@@ -842,7 +860,6 @@
 
     var gridRowID = -1;
     function sel_checkbox(data) {
-        debugger;
         gridRowID++;
         var isChecked = data.open_parentheses_flag;
         var con = "";
@@ -863,7 +880,6 @@
     }
 
     function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-        debugger;
         var arr = [];
         var in_master_code = "QCD_RP_CONSTRAINT";
         var in_user_code = "sundar";
@@ -874,7 +890,6 @@
             data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
                 if (response.length > 0) {
                     for (i = 0; response.length > i; i++) {
                         var list = {};
@@ -889,13 +904,11 @@
                 console.log(er)
             }
         });
-        debugger;
         $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
             autoBind: false,
             filter: "contains",
             dataSource: arr,
             change: function (e) {
-                debugger;
                 var cmb_value = this.value();
                 if (cmb_value && this.selectedIndex == -1) {
                     this.value("");
@@ -932,7 +945,6 @@
             data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
                 if (response.length > 0) {
                     for (i = 0; response.length > i; i++) {
                         var list = {};
@@ -947,13 +959,11 @@
                 console.log(er)
             }
         });
-        debugger;
         $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
             autoBind: false,
             filter: "contains",
             dataSource: arr1,
             change: function (e) {
-                debugger;
                 var cmb_value = this.value();
                 if (cmb_value && this.selectedIndex == -1) {
                     this.value("");
@@ -988,7 +998,7 @@
                             report_field: { type: "string" },
                             report_field_desc: { type: "string", editable: false },
                             display_order: { type: "number" },
-                            display_flag: { type: "string" },
+                            display_flag: { type: "string" }
                         }
                     }
                 }
@@ -1041,26 +1051,31 @@
         if (isChecked1 == "Y") {
             con = 'checked';
         }
-        return '<input id="display_sel1_' + data.report_field + '" class="checkbox" type="checkbox" ' + con + ' /> ';
+        return '<input id="display_sel" class="checkbox" type="checkbox" ' + con + ' /> ';
     }
 
+
     function savecolfilter() {
-        debugger;
-        var modelobj = {};
         var modelArr = [];
+        var grid = $("#grid_colfilter").data("kendoGrid");
         var colfilterData = $("#grid_colfilter").data().kendoGrid.dataSource.view();
+        var checkedrows = $("#display_sel:checked", grid.tbody).closest("tr");
+      
         for (var i = 0; i < colfilterData.length; i++) {
-            modelobj = {
+            var dataItem = colfilterData[i];
+            var display_flag = "N"; 
+            if (checkedrows.is(grid.tbody.find("tr:eq(" + i + ")"))) {
+                display_flag = "Y";
+            }
+            modelArr.push({
                 in_reporttemplatefield_gid: 0,
                 in_reporttemplate_code: $("#reporttemplate_code").val(),
-                in_report_field: colfilterData[i].report_field,
-                in_display_flag: colfilterData[i].display_flag,
-                in_display_order: colfilterData[i].display_order,
+                in_report_field: dataItem.report_field,
+                in_display_flag: display_flag,
+                in_display_order: dataItem.display_order,
                 in_active_status: 'Y',
                 in_action_by: 'Hema',
-            }
-            debugger;
-            modelArr.push(modelobj);
+            });
         }
         var displayedDataAsJSON = JSON.stringify(modelArr);
         $.ajax({
@@ -1098,7 +1113,8 @@
     // Sorting
 
     function grid_sorting(data) {
-        var sortparam_value_list = "";
+
+        var reportparam_value_list = "";
         $("#grid_sorting").kendoGrid({
             dataSource: {
                 data: data,
@@ -1106,14 +1122,17 @@
                 schema: {
                     model: {
                         fields: {
-                            sort_field: { type: "string" },
+                            active_status: {type: "string"},
+                            report_field: { type: "string" },
                             sort_order: { type: "number" },
-                            sortparam_value: { type: "string" }
+                            reportparam_value: { type: "string" },
+                            reporttemplate_code: {type: "string"},
+                            reporttemplatesorting_gid: {type: "number"},
                         }
                     }
                 }
             },
-            height: 190,
+            height: 205,
             groupable: false,
             edit: OnEdit,
             dataBound: function (e) {
@@ -1148,26 +1167,32 @@
                     {
                         name: "Delete",
                         id: "Delete",
-                        template: "<a href='' onclick='deleteJs()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+                        template: "<a href='' onclick='deleteSort()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
                     },
                 ], title: "Action&nbsp;", width: "40px",
+            }, 
+            {
+                field: "reporttemplatesorting_gid",
+                title: "reporttemplatesorting_gid",
+                width: 100,
+                hidden: true
             },
             {
-                field: "sort_field",
+                field: "report_field",
                 title: "Report Field",
                 width: 100,
                 hidden: true
             },
             {
-                field: "sortparam_value",
+                field: "reportparam_value",
                 title: "Filter Field",
                 editor: function (container, options) {
-                    combo_editor_sortfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "sort_field", "grid_sorting")
+                    combo_editor_sortfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_sorting")
                 },
                 width: 120,
             },
             {
-                field: "sort_order",
+                field: "sorting_order",
                 title: "Sort Order",
                 width: 50
             }],
@@ -1189,7 +1214,6 @@
             data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
                 var res = JSON.parse(response);
                 if (res.length > 0) {
                     for (i = 0; res.length > i; i++) {
@@ -1207,13 +1231,11 @@
                 console.log(er)
             }
         });
-        debugger;
         $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
             autoBind: false,
             filter: "contains",
             dataSource: arr1,
             change: function (e) {
-                debugger;
                 var cmb_value = this.value();
                 if (cmb_value && this.selectedIndex == -1) {
                     this.value("");
@@ -1239,7 +1261,6 @@
     // save
 
     function savereportFilter() {
-        debugger;
         try {
             var grid = $("#grid_tempfilter").data("kendoGrid");
             var model = grid.dataItem($(event.target).closest("tr"));
@@ -1278,7 +1299,6 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    debugger;
                     if (response != null) {
                         var res = JSON.parse(response);
                         if (res.length > 0) {
@@ -1368,8 +1388,79 @@
         }
     }
 
+    function deleteSort() {
+        var grid = $("#grid_sorting").data("kendoGrid");
+        var model = grid.dataItem($(event.target).closest("tr"));
+        var reporttemplatesorting_gid = parseInt(model.reporttemplatesorting_gid);
+        if (reporttemplatesorting_gid == 0) {
+            grid.dataSource.remove(model);
+        } else {
+            $.confirm({
+                icon: 'fa fa-warning',
+                title: 'Recon',
+                autoClose: 'cancel|10000',
+                theme: 'dark',
+                animationSpeed: 700,
+                content: 'Are you sure do you want to delete this record!',
+                type: 'orange',
+                buttons: {
+                    confirm: function () {
+                        var data = {};
+                        data.in_reporttemplatesorting_gid = model.reporttemplatesorting_gid;
+                        data.in_reporttemplate_code = $("#reporttemplate_code").val();
+                        data.in_report_field = model.report_field;
+                        data.in_sorting_order = model.sorting_order;
+                        data.in_active_status = 'Y';
+                        data.in_action = 'DELETE';
+                        data.in_action_by = 'Hema';
+                        data.in_delete_flag = 'N'
+                        $.ajax({
+                            url: '@Url.Action("reporttemplatesorting", "Reports")',
+                            type: "post",
+                            data: JSON.stringify(data),
+                            contentType: "application/json",
+                            success: function (data) {
+                                var result = JSON.parse(data);
+                                if (result[0].out_result == 1 || result[0].out_result == "1") {
+                                    $.alert({
+                                        title: 'Recon',
+                                        content: result[0].out_msg,
+                                        type: 'green',
+                                    });
+                                    detailfetch();
+                                } else {
+                                    $.alert({
+                                        title: 'Recon',
+                                        content: 'Something went wrong..! Please try after sometime..!',
+                                        type: 'red',
+                                    });
+                                }
+                            },
+                            error: function (er) {
+                                $.alert({
+                                    title: 'Recon',
+                                    content: 'Role Mapping Failed.!',
+                                    type: 'green',
+                                });
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert({
+                            icon: 'fa fa-success',
+                            title: 'Recon',
+                            theme: 'dark',
+                            content: 'Delete Canceled.!',
+                            type: 'blue',
+                            animationSpeed: 700,
+                        });
+                    },
+                }
+            });
+        }
+    }
+
     function saveheader() {
-        debugger;
         if ($("#reporttemplate_gid").val() == 0) {
             var data = {};
             data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
@@ -1404,6 +1495,7 @@
                                 $("#txtstatus").val("Active");
                                 $("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
                                 $("#cmbreporttype").prop("disabled", true);
+                                addRow();
                                 //detailfetch();
                             } else {
                                 $.alert({
@@ -1435,12 +1527,26 @@
                     type: 'red',
                 });
             }
+        } else {
+            addRow();
+            return;
         }
 
     }
 
+    function addRow() {
+        var grid = $("#grid_tempfilter").data("kendoGrid");
+        var dataSource = grid.dataSource;
+
+        // Get the last sequence number and increment it
+        var lastSeqNo = grid.dataSource._data.length;
+        var newSeqNo = parseInt(lastSeqNo) + 1;
+
+        // Add a new row with the incremented sequence number
+        dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", reporttemplatefilter_gid: 0 });
+    }
+
     function saveheadersubmit() {
-        debugger;
         var data = {};
         data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
@@ -1524,7 +1630,6 @@
             type: 'orange',
             buttons: {
                 confirm: function () {
-                    debugger;
                     var data = {};
                     data.in_clone_reporttemplate_code = $("#clonereport").val();
                     data.in_reporttemplate_name = $("#rt_name").val();
@@ -1601,19 +1706,17 @@
     }
 
     function saveSorting() {
-        debugger;
         var grid = $("#grid_sorting").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
-        var data={};
-        data.in_reporttemplatesorting_gid = 0;
+        var data = {};
+        data.in_reporttemplatesorting_gid = model.reporttemplatesorting_gid ? model.reporttemplatesorting_gid : 0;
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
-        data.in_report_field = model.sort_field;
-        data.in_sorting_order = model.sort_order;
+        data.in_report_field = model.report_field;
+        data.in_sorting_order = model.sorting_order;
         data.in_active_status = 'Y';
-        data.in_action = 'INSERT';
+        data.in_action = model.reporttemplatesorting_gid ? 'UPDATE' : 'INSERT';
         data.in_action_by = 'Hema';
         data.in_delete_flag = 'N'
-        // check here
         $.ajax({
             url: '@Url.Action("reporttemplatesorting", "Reports")',
             type: "post",
@@ -1639,10 +1742,59 @@
             error: function (er) {
                 $.alert({
                     title: 'Recon',
-                    content: 'Role Mapping Failed.!',
+                    content: 'Failed, Please try again.!',
                     type: 'green',
                 });
             }
         });
+    }
+
+    function upload() {
+        debugger;
+        var data = {};
+        var formData = new FormData();
+        data.in_file_path = 'C:\\Users\\Hema\\Desktop\\HEMa';
+        data.in_reporttemplate_code = $("#reporttemplate_code").val();
+        data.in_action_by = 'Hema';
+        var fileInput = '';
+        var filepath = $("#File_Import").val();
+        fileInput = document.getElementById('File_Import');
+        if (fileInput.files.length > 0) {
+            formData.append('file', fileInput.files[0]);
+            data.in_file_name = fileInput.files[0].name;
+        } 
+        formData.append('in_file_path', data.in_file_path);
+        formData.append('in_reporttemplate_code', data.in_reporttemplate_code);
+        formData.append('in_action_by', data.in_action_by);
+        formData.append('in_file_name', data.in_file_name);
+
+
+        $.ajax({
+            url: '@Url.Action("uploadreporttempletefile", "Reports")',
+            type: "post",
+            data: formData,
+            processData: false,
+            contentType: false,
+            async: true,
+            success: function (response) {
+                debugger;
+                if (response.success) {
+                    $.alert({
+                            title: 'Recon',
+                        content: response.message,
+                            type: 'green',
+                         });
+                    detailfetch();
+                }
+            },
+            error: function (er) {
+                $.alert({
+                    title: 'Recon',
+                    content: 'Failed, Please try again.!',
+                    type: 'green',
+                });
+            }
+        });
+
     }
 </script>
