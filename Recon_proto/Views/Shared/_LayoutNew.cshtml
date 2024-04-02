@@ -118,7 +118,7 @@
 			div#spinner img {
 				position: absolute;
 				/*width: 100px;
-																																						height: 100px;*/
+																																																height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -149,9 +149,9 @@
 
 
 		/*.k-grid.k-widget {
-					height: 360px;
-					overflow-y: auto;
-				}*/
+															height: 360px;
+															overflow-y: auto;
+														}*/
 
 		.k-i-arrow-s {
 			background-position: -161px -209px !important;
@@ -207,12 +207,12 @@
 	<script src="~/Assets/assets/js/config.js"></script>
 	<script src="~/Assets/assets/js/jquery.multiselect.js"></script>
 	<link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
-	<script src="~/scripts/jquery-confirm.min.js"></script>
+	<script src="~/Scripts/jquery-confirm.min.js"></script>
 	<link href="~/Content/css/jquery-confirm.min.css" rel="stylesheet" />
 
 	<link rel="stylesheet" href="~/Assets/assets/css/jquery.multiselect.css" />
 	@*<script src="~/scripts/kendo1/2015.1.318/kendo.mobile.min.js"></script>*@
-	<link href="~/css/kendo.common.min.css" rel="stylesheet" />
+	@*<link href="~/css/kendo.common.min.css" rel="stylesheet" />*@
 	@*<link href="~/css/kendo.default.min.css" rel="stylesheet" />*@
 
 </head>
@@ -478,6 +478,7 @@
 						}
 					});
 					setcon();
+					lastlogin();
 				}
 			});
 
@@ -709,7 +710,7 @@
 			sessionStorage.setItem("level3txt", "");
 			sessionStorage.setItem("reconcode", "");
 			sessionStorage.setItem("reconname", "");
-
+			setlocalStorage("lastlogindb","");
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
@@ -733,21 +734,36 @@
 			var url = '@Url.Action("ChangePassword", "Login")'
 			window.location.href = url;
 		}
-		function lastlogin() {			
+		function lastlogin() {
+			debugger;
 			var usercode = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
-				url: '../Admin/setcontextread',
+				url: '../Login/lastlogin',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({user_code: usercode }),
+				data: JSON.stringify({ user_code: usercode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
+					var lastlog = JSON.parse(localStorage.getItem("lastlogindb"));
+					var dbdate = result[0].date;
+					if (lastlog != dbdate) {
+						$.alert({
+							title: 'Recon',
+							content: 'You have been disconnected bacause another login was made. ',
+							type: 'Red',
+							onClose: function () {
+								Signout();
+							}
+						});
+						
+					}
 				}
 			})
+
 		}
-						
+
 
 		function bindmultiselectvalues(arr, _id) {
 			if (arr != null) {
@@ -1015,6 +1031,7 @@
 		document.getElementById("userdata").textContent = txtusername.user_name;
 		document.getElementById("userdata1").innerHTML = "Welcome " + txtusername.user_name + "<br>" + "Please Select Context"
 		sessionStorage.setItem("usrname", txtusername.user_name);
+		sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
 		document.getElementById("roledata").textContent = txtusername.usergroup_desc;
 		function storeheadernew() {
 			if ($("#orglvl1valO1").val() != "" && $("#orglvl2valO1").val() != "" && $("#orglvl3valO1").val() != "") {
@@ -1073,6 +1090,24 @@
 				});
 			}
 		}
+		//window.setTimeout(function () {
+		//	window.location.href = '@Url.Action("session_expires", "Login")'
+		//},180000);
+		var sessionTimer;
+		// Reset the timer function
+		function resetSessionTimer() {
+			// Clear the existing timer (if any)
+			clearTimeout(sessionTimer);
+			// Start a new timer
+			sessionTimer = setTimeout(function () {
+				// Redirect to the session expires page after 180000 milliseconds (3 minutes)
+				window.location.href = '@Url.Action("session_expires", "Login")';
+			}, 180000); // 180000 milliseconds = 3 minutes
+		}
+		// Call resetSessionTimer() whenever there is a user interaction event
+		document.addEventListener("mousemove", resetSessionTimer);
+		document.addEventListener("keypress", resetSessionTimer);
+		resetSessionTimer();
 	</script>
 </body>
 </html>

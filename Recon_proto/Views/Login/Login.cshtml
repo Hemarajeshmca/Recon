@@ -161,6 +161,8 @@
                 else {
                     if (response[0].msg == "Login success !") {
                         setlocalStorage("recon_userdetail", response[0]);
+                        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+                        setlocalStorage("lastlogindb", txtusername.lastlogin);
                         window.location.href = '@Url.Action("Index", "Home")';
                     }
                     else {

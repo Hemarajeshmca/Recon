@@ -78,7 +78,8 @@ namespace Recon_proto.Controllers
                         objcat.msg = result.Rows[i]["out_msg"].ToString();
                         objcat.oldpassworrd = Decrypt(pass);
                         objcat.user_status = result.Rows[i]["user_status"].ToString();
-                        objcat_lst.Add(objcat);
+                        objcat.lastlogin = Convert.ToDateTime(result.Rows[i]["lastlogin"].ToString());
+						objcat_lst.Add(objcat);
                         ViewBag.user_gid = objcat.user_gid;
                         ViewBag.user_name = objcat.user_name;
                         _configuration.GetSection("AppSettings")["user_code"] = model.UserName;
@@ -180,8 +181,12 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
+		public IActionResult session_expires()
+		{
+			return View();
+		}
 
-        public class changePassword
+		public class changePassword
         {
             public string? user_gid { get; set; }
             public string? oldpass { get; set; }
@@ -268,6 +273,50 @@ namespace Recon_proto.Controllers
 				return Json(ex.Message);
 			}
 		}
-		#endregion
-	}
+        #endregion
+
+        #region lastlogin
+        [HttpPost]
+        public JsonResult lastlogin([FromBody] lastloginmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "UserManagement/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("lastlogin", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);                   
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "lastlogin");
+                return Json(ex.Message);
+            }
+        }
+
+        public class lastloginmodel
+        {            
+            public String user_code { get; set; }
+        }
+        #endregion
+    }
 }

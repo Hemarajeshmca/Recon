@@ -432,6 +432,7 @@
 				jQuery('#cmbgetrecon').trigger("change");
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
+				$("#Cmbreconfield1").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
 				preprocessfetch(data.preprocess_code);
 				$("#holdflag").val(data.hold_flag);
@@ -452,6 +453,7 @@
 				jQuery('#cmbgetrecon').trigger("change");
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
+				$("#Cmbreconfield1").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
 				$("#holdflag").val(data.hold_flag);
 				$("#savesubmit").hide();
@@ -517,7 +519,7 @@
 		});
 	}
 	function cmbgetfunction() {
-		var sourcedata = "SOURCE";
+		var sourcedata = "SOURCE1";
 		var codeValue = $('#cmbgetrecon').find(":selected").text();
 		var in_recon_code = $("#cmbrecon").val()
 		$.ajax({
@@ -1386,6 +1388,7 @@
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
 				lookup_dataset_code = $("#cmblookupdataset").val();
 				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
