@@ -189,11 +189,11 @@
 							rule_order: { type: "number" },
 							source_dataset_name: { type: "string" },
 							comparsion_dataset_name: { type: "string" },
-							system_match_flag_desc: { type: "string" },
-							hold_flag_desc: { type: "string" },
-							system_match_flag: { type: "string" },
+							system_match_flag_desc: { type: "string", editable: false, },
+							hold_flag_desc: { type: "string", editable: false, },
+							system_match_flag: { type: "string", editable: false, },
 							hold_flag: { type: "string" },
-							probable_flag: { type: "string" },
+							probable_flag: { type: "string", editable: false, },
 							rule_code: { type: "string" },
 						}
 					}
@@ -303,10 +303,10 @@
 		var con = "";
 		if (isChecked == "YES") {
 			con = 'checked=checked';
-			return '<input id="chk_sel_' + data.rule_gid + '" checked name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" />'
+			return '<input id="chk_sel_' + data.rule_gid + '" checked name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
 
 		} else {
-			return '<input id="chk_sel_' + data.rule_gid + '" name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" />'
+			return '<input id="chk_sel_' + data.rule_gid + '" name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
 
 		}
 	}
@@ -315,9 +315,9 @@
 		var con1 = "";
 		if (isChecked1 == "YES") {
 			con1 = 'checked=checked';
-			return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox"/> ';
+			return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox" /> ';
 		} else {
-			return '<input id="chk_sel1_' + data.rule_gid + '" name = "hold_flag_desc" type="checkbox"/> ';
+			return '<input id="chk_sel1_' + data.rule_gid + '"  name = "hold_flag_desc" type="checkbox"/> ';
 
 		}
 	}
@@ -326,9 +326,9 @@
 		var con1 = "";
 		if (isChecked2 == "YES") {
 			con1 = 'checked=checked';
-			return '<input id="chk_sel2_' + data.rule_gid + '" checked name = "probable_match_desc" type="checkbox" onchange="onChange2(event)"/> ';
+			return '<input id="chk_sel2_' + data.rule_gid + '" checked  name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
 		} else {
-			return '<input id="chk_sel2_' + data.rule_gid + '" name = "probable_match_desc" type="checkbox" onchange="onChange2(event)"/> ';
+			return '<input id="chk_sel2_' + data.rule_gid + '" disabled name = "probable_match_desc" type="checkbox" onchange="onChange2(event)"/> ';
 
 		}
 	}
