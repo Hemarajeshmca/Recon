@@ -179,7 +179,8 @@ namespace Recon_proto.Controllers
                         objcat.jobtype_desc = result.Rows[i]["jobtype_desc"].ToString();
                         objcat.recon_code = result.Rows[i]["recon_code"].ToString();
                         objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-                        objcat_lst.Add(objcat);
+						objcat.file_type = result.Rows[i]["file_type"].ToString();
+						objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
                 }
@@ -203,7 +204,9 @@ namespace Recon_proto.Controllers
             public String? jobtype_desc { get; set; }
             public String? recon_code { get; set; }
             public String? recon_name { get; set; }
-        }
+            public String? file_type { get; set; }
+
+		}
 
         public class Jobstatusmodel
         {
@@ -216,12 +219,12 @@ namespace Recon_proto.Controllers
 
         #region Downloads
 
-        public JsonResult getfilepath()
+        public JsonResult getfilepath(string confing_val)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             fileconfigmodel FileDownload = new fileconfigmodel();
 
-            var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
+            var context = _configuration.GetSection("Appsettings")[confing_val];
             FileDownload.in_config_name = context;
             DataTable result = new DataTable();
             string post_data = "";
@@ -258,9 +261,9 @@ namespace Recon_proto.Controllers
             }
         }
 
-        public IActionResult Downloads(string jobid)
+        public IActionResult Downloads(string jobid, string filetype)
         {
-            var out_result = getfilepath();
+            var out_result = getfilepath("fileconfig_value");
             List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
             urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
             fileModel FileDownloadgrid = new fileModel();
@@ -284,24 +287,45 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
                     content.Headers.Add("user_code", HttpContext.Session.GetString("user_code"));
                     var response = client.PostAsync("files", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    string base64data = string.Empty;
-                    var bytes = new byte[data.Length];
-                    data.Read(bytes, 0, bytes.Length);
-                    var responses = new FileContentResult(bytes, "application/octet-stream");
-                    var fileName = jobid.ToString() + ".zip";
-                    var contentDisposition = new ContentDisposition
+                    if(filetype == "csv")
                     {
-                        FileName = jobid,
-                        Inline = true,
-                    };
+						Stream data = response.Content.ReadAsStreamAsync().Result;
+						StreamReader reader = new StreamReader(data);
+						string base64data = string.Empty;
+						var bytes = new byte[data.Length];
+						data.Read(bytes, 0, bytes.Length);
+						var responses = new FileContentResult(bytes, "application/octet-stream");
+						var fileName = jobid.ToString() + ".zip";
+						var contentDisposition = new ContentDisposition
+						{
+							FileName = jobid,
+							Inline = true,
+						};
+						Response.Clear();
+						Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+						Response.Headers.Add("Content-Type", "application/octet-stream");
+						return File(bytes, "application/octet-stream", fileName);
+					} else
+                    {
+						var get_outresult = getfilepath("download_xls_folder");
+						List<fileconfigmodel> obj_outresult = JsonConvert.DeserializeObject<List<fileconfigmodel>>(get_outresult.Value.ToString());
+                        string out_filepath = "";
+                        if (obj_outresult.Count > 0)
+						{
+							out_filepath = obj_outresult[0].out_config_value;
+						}
+                        string fileName = jobid + ".xlsx";
+						string filePath = Path.Combine(out_filepath, fileName);
 
-                    Response.Clear();
-                    Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-                    Response.Headers.Add("Content-Type", "application/octet-stream");
-                    return File(bytes, "application/octet-stream", fileName);
-                }
+						if (!System.IO.File.Exists(filePath))
+						{
+							return NotFound(); 
+						}
+                        var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+						string mimeType = "application/octet-stream"; 
+						return File(fileStream, mimeType, fileName);
+					}
+				}
             }
             catch (Exception ex)
             {
@@ -313,9 +337,7 @@ namespace Recon_proto.Controllers
         public class fileModel
         {
             public String? jobGid { get; set; }
-
             public string? jobName { get; set; }
-
             public String? filePath { get; set; }
         }
         public class fileconfigmodel
@@ -324,7 +346,6 @@ namespace Recon_proto.Controllers
             public string? out_config_value { get; set; }
             public string? out_msg { get; set; }
             public string? out_result { get; set; }
-
         }
 
         #endregion

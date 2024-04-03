@@ -428,18 +428,15 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-body">
                                                         <div class="row" style="padding-bottom:15%;margin-top:5px;padding-left:30px;padding-right:5px">
-                                                            @*<div class="col-sm-4">
-                                                                <label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                                                <select id="Pipeline" class="form-select form-control"> </select>
-                                                            </div>*@
-                                                            <div class="col-sm-4">
-                                                                <form id="theuploadformempff">
+                                                               <div class="col-sm-4">
                                                                     <div class="form-group">
                                                                         <label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                                                        <input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+                                                                    <input type="file" onchange="filechange(this)" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
                                                                         <label class="col-md-6 control-label" id="FileName" hidden></label>
                                                                     </div>
-                                                                </form>
+                                                                <div>
+                                                                <label id="fetch_filename"> </label>
+                                                                </div>
                                                             </div>
                                                             <div class="col-sm-2" style="margin-top:29px">
                                                                 <label class="form-label"></label>
@@ -484,6 +481,14 @@
         detailfetch();
         $("#cmbreporttype").prop("disabled", false);
     });
+
+    function filechange(val){
+        var fileInput = val;
+        if (fileInput.files.length > 0) {
+            $("#fetch_filename").val(fileInput.files[0].name);
+            document.getElementById("fetch_filename").textContent = fileInput.files[0].name;
+        }
+    }
 
     function detailfetch() {
         //report list
@@ -670,8 +675,7 @@
                             $("#cmbreporttype").val(res.Table[0].report_code);
                             $("#sys_flag").val(res.Table[0].system_flag);
                             $("#cmbreconname").val(res.Table[0].recon_code);
-                           // $("#File_Import").val(res.Table[0].file_name);
-                           // document.getElementById('File_Import').textContent = (res.Table[0].file_name) ? res.Table[0].file_name : '';
+                            document.getElementById("fetch_filename").textContent = res.Table[0].file_name ? res.Table[0].file_name : '';
                             $("#cmbreporttype").prop("disabled", true);
                             $("#clonereport").prop('disabled', true);
                             $("#cmbreconname").prop('disabled', true);

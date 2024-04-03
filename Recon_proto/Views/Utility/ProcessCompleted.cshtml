@@ -176,6 +176,7 @@
 								start_date: { type: "string" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
+								file_type: {type: "string"}
 							}
 						}
 					}
@@ -265,7 +266,12 @@
 						field: "jobtype_code",
 						title: "Job Type Code",
 						hidden: true
-					}
+					}, 
+						{
+						field: "file_type",
+						title: "File Type",
+						width:50
+					},
 				],
 				editable: false,
 			});
@@ -281,7 +287,11 @@
 		var grid = $("#grid_jobinprogress").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var job_gid = model.job_gid;
-		window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '';
+		if (model.file_type == 'csv') {
+			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '';
+		} else {
+			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '';
+		}
 
 		//window.location.href = '@Url.Action("DownloadFile", "KnockOff")?Subfolder=' + 'foldername' + '&Excelfiles=' + 'excelfile' + '';
 
