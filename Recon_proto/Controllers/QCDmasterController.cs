@@ -67,7 +67,10 @@ namespace Recon_proto.Controllers
                         objcat.active_status_desc = result.Rows[i]["active_status_desc"].ToString();
                         objcat.master_multiple_name = result.Rows[i]["master_multiple_name"].ToString();
                         objcat.parent_master_syscode_desc = result.Rows[i]["parent_master_syscode_desc"].ToString();
-                        objcat_lst.Add(objcat);
+						objcat.depend_flag = result.Rows[i]["depend_flag"].ToString();
+						objcat.depend_parent_master_syscode_desc = result.Rows[i]["depend_parent_master_syscode_desc"].ToString();
+						objcat.depend_parent_master_syscode = result.Rows[i]["depend_parent_master_syscode"].ToString();
+						objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
                 }
@@ -140,8 +143,10 @@ namespace Recon_proto.Controllers
             public string? masterShortCode { get; set; }
             public string? masterSyscode { get; set; }
             public string? parentMasterSyscode { get; set; }
+			public string? depend_parent_master_syscode { get; set; }
+			public string? depend_master_syscode { get; set; }
 
-        }
+		}
         #endregion
  
        

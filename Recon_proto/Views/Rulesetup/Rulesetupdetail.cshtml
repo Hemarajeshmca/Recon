@@ -1561,7 +1561,7 @@
 			dataBound: function (e) {
 				resultData = e.sender._data;
 				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);
+				setColor(rows, resultData);				
 				if ($("#txtmode").val() == "View") {
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
@@ -1602,7 +1602,7 @@
 			{
 				field: "rulecondition_seqno",
 				title: "Seq No.",
-				width: 40,
+				width: 50,
 				attributes: { style: "text-align: right;" },			
 			},
 			{
@@ -1816,6 +1816,8 @@
 	function addRowrule() {
 		var grid = $("#grid_rulecondition").data("kendoGrid");
 		var dataSource = grid.dataSource;
+		var rowIndex = 2; // Change this to the index of the row you want to focus on
+		grid.select("tr:eq(" + rowIndex + ")");
 		var max = 0;
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
@@ -2065,7 +2067,8 @@
 			{
 				field: "ruleselefilter_seqno",
 				title: "Seq No.",
-				width: 30,
+				width: 40,
+				attributes: { style: "text-align: right;" },
 			},
 			{
 				field: "open_parentheses_flag",
@@ -2161,7 +2164,7 @@
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_sourceidentifier")
 				},
-				width: 120,
+				width: 40,
 			}],
 			editable: true,
 		});
@@ -2357,7 +2360,8 @@
 			{
 				field: "ruleselefilter_seqno",
 				title: "Seq No.",
-				width: 30,
+				width: 50,
+				attributes: { style: "text-align: right;" },
 			},
 			{
 				field: "open_parentheses_flag",
@@ -2453,7 +2457,7 @@
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_comparisionidentifier")
 				},
-				width: 120,
+				width: 50,
 			}],
 			editable: true,
 		});
@@ -2912,6 +2916,7 @@
 				field: "rulegrpfield_seqno",
 				title: "Seq No.",
 				width: 30,
+				attributes: { style: "text-align: right;" },
 			},
 
 			{
@@ -3181,6 +3186,7 @@
 				field: "recorder_seqno",
 				title: "Order Field",
 				width: 100,
+				attributes: { style: "text-align: right;" },
 			},
 			{
 				field: "active_status",
@@ -3361,6 +3367,7 @@
 				field: "recorder_seqno",
 				title: "Order Field",
 				width: 100,
+				attributes: { style: "text-align: right;" },
 			},
 			{
 				field: "active_status",
