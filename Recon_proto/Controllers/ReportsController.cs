@@ -2034,17 +2034,12 @@ namespace Recon_proto.Controllers
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
-
-                    //DataTable newdt = new DataTable();
-                    //DownloadExcel();
-                    //return Json("");
-
                 }
             }
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "generateReport");
+                objcom.errorlog(ex.Message, "generatedynamicreport");
                 return Json(ex.Message);
             }
         }
@@ -2062,6 +2057,115 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
-    }
+
+
+
+        #region generatedynamicXLSX
+        public ActionResult generateReportXLSXdynamic([FromBody] generatexlsxdynamicReportmodel context)
+        {
+
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            DataTable Table1 = new DataTable();
+            string post_data = "";
+            string filename = "test" + ".xlsx";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                   
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("generatedynamicreport", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
+                    return null;
+                    //using (XLWorkbook wb = new XLWorkbook())
+                    //{
+                    //    var worksheet = wb.Worksheets.Add(Table1, "Sheet1");
+                    //    using (MemoryStream stream = new MemoryStream())
+                    //    {
+                    //        wb.SaveAs(stream);
+                    //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                    //    }
+                    //}
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+
+        public class generatexlsxdynamicReportmodel
+        {
+
+            public String? in_reporttemplate_code { get; set; }
+            public String? in_report_param { get; set; }
+            public String? in_report_condition { get; set; }
+            public String? in_ip_addr { get; set; }
+            public Boolean? in_outputfile_flag { get; set; }
+            public String? in_outputfile_type { get; set; }
+            public string? in_user_code { get; set; }
+        }
+
+
+		public JsonResult getfilepath()
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			fileconfigmodel FileDownload = new fileconfigmodel();
+
+			var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
+			FileDownload.in_config_name = context;
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Common/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("configvalue", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					return Json(d2);
+
+
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "Datasetdetail");
+				return Json(ex.Message);
+			}
+		}
+
+
+		#endregion
+	}
 
 }

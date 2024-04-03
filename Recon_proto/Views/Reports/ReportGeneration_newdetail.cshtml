@@ -346,7 +346,7 @@
                                 </div>
                                 <div class="col-sm-2" style="text-align: right; margin-left: -8px;">
                                     <img onclick="generateReport()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 22px;" src="~/Assets/images/csv.png" title="Generate Report">&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <img onclick="generateXlsx()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 23px;" src="~/Assets/images/xlsx.png" title="Xlsx Report">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img onclick="generateXlsxdynamic()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 23px;" src="~/Assets/images/xlsx.png" title="Xlsx Report">&nbsp;&nbsp;&nbsp;&nbsp;
                                     <img onclick="preview()" style="cursor:pointer;margin-top: 20%;height: 23px;width: 27px;" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="../Reports/ReportGeneration_newlist"><img style="cursor:pointer;margin-top: 20%;" src="~/Content/images/toplist.png" title="Back"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
@@ -1044,17 +1044,17 @@
             "in_report_param": $("#cmbreporttype").find(":selected").text(),
             "in_report_condition": rpt_cond, 
             "in_outputfile_flag": true, 
-            "in_outputfile_type": 'CSV',
+            "in_outputfile_type": 'csv',
             "in_ip_addr": "localhost", 
             "in_user_code": "Hema"
         };
 
         if (data.in_reporttemplate_code && data.in_report_param && data.in_report_condition) {
-            //$.alert({
-            //    title: 'Recon',
-            //    content: "Report Generated, Please check the Job Status in Utility",
-            //    type: 'green',
-            //});
+            $.alert({
+                title: 'Recon',
+                content: "Report Generated, Please check the Job Status in Utility",
+                type: 'green',
+            });
             $.ajax({
                 type: "POST",
                 url: '../Reports/generatedynamicreport',
@@ -1062,38 +1062,38 @@
                 async: false,
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    var res = JSON.parse(response);
+                //success: function (response) {
+                //    var res = JSON.parse(response);
 
-                    if (res.length > 0) {
-                        var data = res[0];
-                        if (data.out_result != '0') {
-                            $.alert({
-                                title: 'Recon',
-                                content: data.out_msg,
-                                type: 'green',
-                            });
+                //    if (res.length > 0) {
+                //        var data = res[0];
+                //        if (data.out_result != '0') {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'green',
+                //            });
 
-                        } else {
-                            $.alert({
-                                title: 'Recon',
-                                content: data.out_msg,
-                                type: 'red',
-                            });
-                        }
-                    } else {
-                        $.alert({
-                            title: 'Recon',
-                            content: "Something Went Wrong ..!",
-                            type: 'red',
-                        });
-                    }
-                },
-                error: function (er) {
+                //        } else {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'red',
+                //            });
+                //        }
+                //    } else {
+                //        $.alert({
+                //            title: 'Recon',
+                //            content: "Something Went Wrong ..!",
+                //            type: 'red',
+                //        });
+                //    }
+                //},
+                //error: function (er) {
                 
-                    alert(er)
-                    console.log(er)
-                }
+                //    alert(er)
+                //    console.log(er)
+                //}
             });
         }
         else if (!data.in_report_param) {
@@ -1667,7 +1667,7 @@
 
     });
 
-    function generateXlsx() {
+    function generateXlsxdynamic() {
         var grid = $("#grid_tempfilter").data("kendoGrid");
         var objpplmapupdlist = [];
         var rpt_cond = "";
@@ -1695,15 +1695,12 @@
                     joins = 'AND '
                 }
             }
-            // close braces assigning
             if ($('#chk_sel1_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
                 close_braces = " ) ";
             }
-            // open braces assigning
             if ($('#chk_sel_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
                 open_braces = "(";
             }
-            // Condition based value assigning
             if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
                 value = " != '" + grid._data[i].filter_value + "'";
             }
@@ -1730,61 +1727,191 @@
             }
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
         }
+        var template_code = getlocalStorage("ls_pageList");
         var data = {
-            "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
-            "reportcondition": rpt_cond,
-            "in_ip_addr": "localhost", "in_outputfile_flag": false, "in_user_code": "Hema"
+            "in_reporttemplate_code": template_code,
+            "in_report_param": $("#cmbreporttype").find(":selected").text(),
+            "in_report_condition": rpt_cond,
+            "in_outputfile_flag": true,
+            "in_outputfile_type": 'xlsx',
+            "in_ip_addr": "localhost",
+            "in_user_code": "Hema"
         };
-        if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
-            window.location.href = '@Url.Action("generateReportXLSX", "Reports")?in_recon_code=' + data.in_recon_code + '&in_report_code=' + data.in_report_code + '&in_report_param=' + data.in_report_param + '&reportcondition=' + data.reportcondition + '&in_ip_addr=' + data.in_ip_addr + '&in_outputfile_flag=' + data.in_outputfile_flag + '&in_user_code=' + data.in_user_code + '';
-            //$.ajax({
-            //    type: "POST",
-            //    url: '../Reports/generateReport',
-            //    dataType: 'json',
-            //    async: false,
-            //    data: JSON.stringify(data),
-            //    contentType: 'application/json; charset=utf-8',
-            //    success: function (response) {
-            //        alert("Success");
-            //        //var res = JSON.parse(response);
-            //        //if (res.length > 0) {
-            //        //    var data = res[0];
-            //        //    if (data.out_result != '0') {
-
-            //        //    } else {
-            //        //        $.alert({
-            //        //            title: 'Recon',
-            //        //            content: data.out_msg,
-            //        //            type: 'red',
-            //        //        });
-            //        //    }
-            //        //} else {
-            //        //    $.alert({
-            //        //        title: 'Recon',
-            //        //        content: "Something Went Wrong ..!",
-            //        //        type: 'red',
-            //        //    });
-            //        //}
-            //    },
-            //    error: function (er) {
-            //        alert(er)
-            //        console.log(er)
-            //    }
-            //});
-        }
-        else if (!$("#reconname").val()) {
+        if (data.in_reporttemplate_code && data.in_report_param && rpt_cond) {
             $.alert({
                 title: 'Recon',
-                content: "Please select Recon Name ..!",
+                content: "Report Generated, Please check the Job Status in Utility",
+                type: 'green',
+            });
+            $.ajax({
+                type: "POST",
+                url: '../Reports/generateReportXLSXdynamic',
+                dataType: 'json',
+                async: false,
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                //success: function (response) {
+                //    var res = JSON.parse(response);
+                //    if (res.length > 0) {
+                //        var data = res[0];
+                //        if (data.out_result != '0') {
+
+                //        } else {
+                //            $.alert({
+                //                title: 'Recon',
+                //                content: data.out_msg,
+                //                type: 'red',
+                //            });
+                //        }
+                //    } else {
+                //        $.alert({
+                //            title: 'Recon',
+                //            content: "Something Went Wrong ..!",
+                //            type: 'red',
+                //        });
+                //    }
+                //},
+                //error: function (er) {
+                //    alert(er)
+                //    console.log(er)
+                //}
+            });
+        }
+        else if (!data.in_reporttemplate_code) {
+            $.alert({
+                title: 'Recon',
+                content: "Report Template code is missing!",
                 type: 'red',
             });
-        } else if (!$("#cmbreporttype").val()) {
+        } else if (!data.data.in_report_param) {
             $.alert({
                 title: 'Recon',
-                content: "Please select Report..!",
+                content: "Report Param is missing!",
                 type: 'red',
             });
         }
     }
+
+
+    // XLSX Download working
+    //function generateXlsx() {
+    //    var grid = $("#grid_tempfilter").data("kendoGrid");
+    //    var objpplmapupdlist = [];
+    //    var rpt_cond = "";
+    //    var value = "";
+    //    var open_braces = "";
+    //    var close_braces = "";
+    //    var joins = "";
+    //    var joins1 = "";
+    //    for (var i = 0; i < grid._data.length; i++) {
+    //        value = "";
+    //        open_braces = "";
+    //        close_braces = "";
+    //        joins = "";
+    //        joins1 = "";
+    //        if (i == 0) {
+    //            joins1 = 'AND ';
+    //        }
+    //        if (i == grid._data.length - 1) {
+    //            joins = " ";
+    //        }
+    //        else {
+    //            if (grid._data[i].join_condition) {
+    //                joins = grid._data[i].join_condition + " ";
+    //            } else {
+    //                joins = 'AND '
+    //            }
+    //        }
+    //        // close braces assigning
+    //        if ($('#chk_sel1_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
+    //            close_braces = " ) ";
+    //        }
+    //        // open braces assigning
+    //        if ($('#chk_sel_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
+    //            open_braces = "(";
+    //        }
+    //        // Condition based value assigning
+    //        if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+    //            value = " != '" + grid._data[i].filter_value + "'";
+    //        }
+    //        else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
+    //            value = " like '%" + grid._data[i].filter_value + "'";
+    //        }
+    //        else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
+    //            value = " like '" + grid._data[i].filter_value + "%'";
+    //        }
+    //        else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
+    //            value = " = '" + grid._data[i].filter_value + "'";
+    //        } else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
+    //            value = " like '%'" + grid._data[i].filter_value + "%'";
+    //        } else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
+    //            value = " > '" + grid._data[i].filter_value + "'";
+    //        } else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
+    //            value = " < '" + grid._data[i].filter_value + "'";
+    //        } else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
+    //            value = " <= '" + grid._data[i].filter_value + "'";
+    //        } else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
+    //            value = " >= '" + grid._data[i].filter_value + "'";
+    //        } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
+    //            value = " not like '%'" + grid._data[i].filter_value + "%'";
+    //        }
+    //        rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
+    //    }
+    //    var data = {
+    //        "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
+    //        "reportcondition": rpt_cond,
+    //        "in_ip_addr": "localhost", "in_outputfile_flag": false, "in_user_code": "Hema"
+    //    };
+    //    if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
+    //        window.location.href = '@Url.Action("generateReportXLSX", "Reports")?in_recon_code=' + data.in_recon_code + '&in_report_code=' + data.in_report_code + '&in_report_param=' + data.in_report_param + '&reportcondition=' + data.reportcondition + '&in_ip_addr=' + data.in_ip_addr + '&in_outputfile_flag=' + data.in_outputfile_flag + '&in_user_code=' + data.in_user_code + '';
+    //        //$.ajax({
+    //        //    type: "POST",
+    //        //    url: '../Reports/generateReport',
+    //        //    dataType: 'json',
+    //        //    async: false,
+    //        //    data: JSON.stringify(data),
+    //        //    contentType: 'application/json; charset=utf-8',
+    //        //    success: function (response) {
+    //        //        alert("Success");
+    //        //        //var res = JSON.parse(response);
+    //        //        //if (res.length > 0) {
+    //        //        //    var data = res[0];
+    //        //        //    if (data.out_result != '0') {
+
+    //        //        //    } else {
+    //        //        //        $.alert({
+    //        //        //            title: 'Recon',
+    //        //        //            content: data.out_msg,
+    //        //        //            type: 'red',
+    //        //        //        });
+    //        //        //    }
+    //        //        //} else {
+    //        //        //    $.alert({
+    //        //        //        title: 'Recon',
+    //        //        //        content: "Something Went Wrong ..!",
+    //        //        //        type: 'red',
+    //        //        //    });
+    //        //        //}
+    //        //    },
+    //        //    error: function (er) {
+    //        //        alert(er)
+    //        //        console.log(er)
+    //        //    }
+    //        //});
+    //    }
+    //    else if (!$("#reconname").val()) {
+    //        $.alert({
+    //            title: 'Recon',
+    //            content: "Please select Recon Name ..!",
+    //            type: 'red',
+    //        });
+    //    } else if (!$("#cmbreporttype").val()) {
+    //        $.alert({
+    //            title: 'Recon',
+    //            content: "Please select Report..!",
+    //            type: 'red',
+    //        });
+    //    }
+    //}
 
 </script>
