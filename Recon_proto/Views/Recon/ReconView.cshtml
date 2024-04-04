@@ -538,7 +538,7 @@
 			$('#partialmatch2').attr('checked', true);
 			onpartial();
 		}
-		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
 				var data = getlocalStorage("ls_pageList");
 				var cat = data.dataset_category;
@@ -652,18 +652,33 @@
 					}
 
 				});
+			} 
+		} else if (getlocalStorage('btn_clk_val') == "View") {
+			var data = getlocalStorage("ls_pageList");
+			var cat = data.dataset_category;
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#reconcode").val(data.recon_code);
+			$("#cmbrecontype").val(data.recontype_code);
+			$("#ReconName").val(data.recon_name);
+			$("#txtstatus").val(data.active_status_desc);
+			$("#recon_id").val(data.recon_gid);
+			$("#reconcode").val(data.recon_code);
+			if (data.until_active_flag == "Y") {
+				$('#untillactive').attr('checked', true);
 			}
-		}
-		if ($("#txtmode").val() == "View") {
 			$("#reconcode").prop('disabled', true);
 			$("#cmbrecontype").prop('disabled', true);
-			$("#ReconName").prop('disabled', true);
-			$("#period_from").prop('disabled', true);
-			$("#period_to").prop('disabled', true);
+			$("#ReconName").prop('disabled', true);		
 			$('#untillactive').prop('disabled', true);
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
-			$("#btnsubmit").hide(); $.ajax({
+			$("#thersholdplus").prop('disabled', true);
+			$("#thersholdminus").prop('disabled', true);
+			$("#cmbthersholdvalue").prop('disabled', true);
+			$("#cmbreconvaluefield").prop('disabled', true);
+			$("#cmbrecondatefield").prop('disabled', true);
+			$("#btnsubmit").hide();
+			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheaderfetch',
 				dataType: 'json',
@@ -676,6 +691,7 @@
 						var res = JSON.parse(response);
 						$("#period_from").val(res.ReconHeader[0].period_from);
 						$("#period_to").val(res.ReconHeader[0].period_to);
+						
 						if (res.ReconHeader[0].recon_value_flag == "Y") {
 							$("#reconvalueflag1").prop("checked", true);
 						} else {
@@ -1948,6 +1964,20 @@
 			$("#thersholdminus").prop('disabled', true);
 			$("#cmbthersholdvalue").prop('disabled', true);
 
+		} else if ($("#txtmode").val() == "View"){
+			$("#partialmatch1").prop('disabled', true);
+			$('#partialmatch2').prop('disabled', true);		
+			$('#reconvalueflag2').prop('disabled', true);
+			$('#recondateflag2').prop('disabled', true);
+			$("#cmbrecondatefield").prop('disabled', true);
+			$("#cmbreconvaluefield").prop('disabled', true);
+			$("#recondateflag1").prop('disabled', true);
+			$("#reconvalueflag2").prop('disabled', true);
+			$("#recondateflag2").prop('disabled', true);
+			$("#reconvalueflag1").prop('disabled', true);
+			$("#thersholdplus").prop('disabled', true);
+			$("#thersholdminus").prop('disabled', true);
+			$("#cmbthersholdvalue").prop('disabled', true);
 		} else {
 			if ($("#thersholdplus").val() > 0) {
 				$('#partialmatch1').prop('checked', true);

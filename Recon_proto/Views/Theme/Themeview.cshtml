@@ -11,6 +11,11 @@
 			margin-right: 33rem !important;
 		}
 
+		.k-state-selected, .k-state-selected:link, .k-state-selected:visited, .k-list > .k-state-selected, .k-list > .k-state-highlight, .k-panel > .k-state-selected, .k-ghost-splitbar-vertical, .k-ghost-splitbar-horizontal, .k-draghandle.k-state-selected:hover, .k-scheduler .k-scheduler-toolbar .k-state-selected, .k-scheduler .k-today.k-state-selected, .k-marquee-color {
+			border-color: #872E7B !important;
+			color: #e74949 !important;
+		}
+
 		.error_show {
 			color: red;
 			margin-left: 10px;
@@ -330,6 +335,7 @@
 				$("#theme_order").val(data.theme_order);
 				$("#txtstatus").val(data.active_status_desc);
 				$("#theme_order").val(data.theme_order);
+				$("#holdflag").val(data.hold_flag);
 				detailsfetch(data.theme_code)
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
@@ -338,6 +344,7 @@
 				$("#datasetfieldadd").hide();
 				$(".k-grid-edit").hide();
 				$("#btnsubmit").hide();
+				$("#grid_themefilterfield .k-grid-toolbar").hide();				
 			}
 		}
 	}
@@ -378,7 +385,9 @@
 					resultData = e.sender._data;
 					var rows = $('#grid_themefilterfield').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-
+					if ($("#txtmode").val() == "View") {
+						$(".k-grid-save").hide();
+					}
 				},
 				sortable: false,
 				selectable: "row",
@@ -403,7 +412,15 @@
 						{
 							name: "Delete",
 							id: "Delete",
-							template: "<a href='' onclick='myDeleteJstheme()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+							template: function (dataItem) {
+								// Check your condition here to determine whether to show or hide the delete button
+								if ($("#txtmode").val() == "View")  {
+									return ""; // Return empty string to hide the delete button
+								} else {
+									return "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
+								}
+							}
+							//template: "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 						},
 					], title: "Action&nbsp;", width: "40px",
 				},
@@ -560,7 +577,7 @@
 		dataSource.add({ theme_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
 	}
 
-	
+
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -705,7 +722,7 @@
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order,holdflag: holdflag }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -972,71 +989,74 @@
 		}
 	}
 	function myDeleteJstheme() {
-		var grid = $("#grid_themefilterfield").data("kendoGrid");
-		var model = grid.dataItem($(event.target).closest("tr"));
-		var themefilter_gid = parseInt(model.themefilter_gid);
-		if (themefilter_gid == 0) {
-			grid.dataSource.remove(model);
-		} else {
-			$.confirm({
-				icon: 'fa fa-warning',
-				title: 'Recon',
-				autoClose: 'cancel|10000',
-				theme: 'dark',
-				animationSpeed: 700,
-				content: 'Are you sure do you want to delete this record!',
-				type: 'orange',
-				buttons: {
-					confirm: function () {
-						var theme_code = "";
-						var recon_field = "";
-						var filter_criteria = "";
-						var filter_value = "";
-						var in_open_flag = "";
-						var in_close_flag = "";
-						var in_join_condition = "";
-						var theme_seqno = 0;
-						var action = "DELETE";
-						var action_by = ""
-						var themefilter_gid = model.themefilter_gid;
-						var active_status = "";
-						$.ajax({
-							type: "POST",
-							url: '../theme/themedetail',
-							dataType: 'json',
-							data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition, theme_seqno: theme_seqno }),
-							contentType: 'application/json; charset=utf-8',
-							success: function (response) {
-								var res = JSON.parse(response);
-								if (res[0].out_result == "1") {
-									$.alert({
-										title: 'Recon',
-										content: res[0].out_msg,
-										type: 'green',
-									});
-									detailsfetch($("#txtthemecode").val())
-								} else {
-									$.alert({
-										title: 'Recon',
-										content: res[0].out_msg,
-										type: 'green',
-									});
+		if ($("#txtmode").val() != "View") {
+			var grid = $("#grid_themefilterfield").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var themefilter_gid = parseInt(model.themefilter_gid);
+			if (themefilter_gid == 0) {
+				grid.dataSource.remove(model);
+			}
+			if (themefilter_gid != 0) {
+				$.confirm({
+					icon: 'fa fa-warning',
+					title: 'Recon',
+					autoClose: 'cancel|10000',
+					theme: 'dark',
+					animationSpeed: 700,
+					content: 'Are you sure do you want to delete this record!',
+					type: 'orange',
+					buttons: {
+						confirm: function () {
+							var theme_code = "";
+							var recon_field = "";
+							var filter_criteria = "";
+							var filter_value = "";
+							var in_open_flag = "";
+							var in_close_flag = "";
+							var in_join_condition = "";
+							var theme_seqno = 0;
+							var action = "DELETE";
+							var action_by = ""
+							var themefilter_gid = model.themefilter_gid;
+							var active_status = "";
+							$.ajax({
+								type: "POST",
+								url: '../theme/themedetail',
+								dataType: 'json',
+								data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition, theme_seqno: theme_seqno }),
+								contentType: 'application/json; charset=utf-8',
+								success: function (response) {
+									var res = JSON.parse(response);
+									if (res[0].out_result == "1") {
+										$.alert({
+											title: 'Recon',
+											content: res[0].out_msg,
+											type: 'green',
+										});
+										detailsfetch($("#txtthemecode").val())
+									} else {
+										$.alert({
+											title: 'Recon',
+											content: res[0].out_msg,
+											type: 'green',
+										});
+									}
 								}
-							}
-						});
-					},
-					cancel: function () {
-						$.alert({
-							icon: 'fa fa-success',
-							title: 'Recon',
-							theme: 'dark',
-							content: 'Delete Canceled.!',
-							type: 'blue',
-							animationSpeed: 700,
-						});
-					},
-				}
-			});
+							});
+						},
+						cancel: function () {
+							$.alert({
+								icon: 'fa fa-success',
+								title: 'Recon',
+								theme: 'dark',
+								content: 'Delete Canceled.!',
+								type: 'blue',
+								animationSpeed: 700,
+							});
+						},
+					}
+				});
+			}
 		}
 	}
 
