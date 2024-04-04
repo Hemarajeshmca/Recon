@@ -128,8 +128,8 @@
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-											color: white !important;
-										}*/
+													color: white !important;
+												}*/
 
 		.control-label.required:after {
 			content: "*";
@@ -212,8 +212,8 @@
 		}
 
 		/*.content-wrapper, .right-side {
-											background-color: #e7e7e7;
-										}*/
+													background-color: #e7e7e7;
+												}*/
 
 		.info-box-icon {
 			background: white;
@@ -857,6 +857,12 @@
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
 			$("#btnsubmit").hide();
+			$("#grid_rulecondition .k-grid-toolbar").hide();
+			$("#grid_sourceidentifier .k-grid-toolbar").hide();
+			$("#grid_comparisionidentifier .k-grid-toolbar").hide();
+			$("#grid_grouping .k-grid-toolbar").hide();
+			$("#grid_sourceorder .k-grid-toolbar").hide();
+			$("#grid_comparisonorder .k-grid-toolbar").hide();
 		}
 	}
 	function RuleApplied() {
@@ -1561,7 +1567,7 @@
 			dataBound: function (e) {
 				resultData = e.sender._data;
 				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);				
+				setColor(rows, resultData);
 				if ($("#txtmode").val() == "View") {
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
@@ -1595,7 +1601,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1603,7 +1617,7 @@
 				field: "rulecondition_seqno",
 				title: "Seq No.",
 				width: 50,
-				attributes: { style: "text-align: right;" },			
+				attributes: { style: "text-align: right;" },
 			},
 			{
 				field: "open_parentheses_flag",
@@ -2060,7 +2074,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsidentifier()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsidentifier()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsidentifier()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -2087,7 +2109,7 @@
 				title: "ruleselefilter_gid",
 				hidden: true,
 			},
-			
+
 			{
 				field: "dataset_name",
 				title: "Filter Applied On",
@@ -2353,7 +2375,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsidentifier1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsidentifier1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsidentifier1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -2380,7 +2410,7 @@
 				title: "ruleselefilter_gid",
 				hidden: true,
 			},
-			
+
 			{
 				field: "dataset_name",
 				title: "Filter Applied On",
@@ -2903,7 +2933,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "20px",
 			},
@@ -2963,7 +3001,7 @@
 		var newSeqNo = parseInt(lastSeqNo) + 1;
 
 		// Add a new row with the incremented sequence number
-		dataSource.add({ rulegrpfield_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulegrpfield_gid:0 });
+		dataSource.add({ rulegrpfield_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulegrpfield_gid: 0 });
 	}
 	function savegrouping() {
 		try {
@@ -3148,7 +3186,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJssourceorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJssourceorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJssourceorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "20px",
 			},
@@ -3329,7 +3375,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJscomparisonorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJscomparisonorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJscomparisonorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "20px",
 			},
