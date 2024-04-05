@@ -16,11 +16,6 @@
 			margin-left: 10px;
 		}
 
-		.k-state-selected, .k-state-selected:link, .k-state-selected:visited, .k-list > .k-state-selected, .k-list > .k-state-highlight, .k-panel > .k-state-selected, .k-ghost-splitbar-vertical, .k-ghost-splitbar-horizontal, .k-draghandle.k-state-selected:hover, .k-scheduler .k-scheduler-toolbar .k-state-selected, .k-scheduler .k-today.k-state-selected, .k-marquee-color {
-			border-color: #872E7B !important;
-			color: #e74949 !important;
-		}
-
 		.k-grid-filter.k-state-active {
 			background-color: initial !important;
 		}
@@ -441,7 +436,6 @@
 				jQuery('#cmbgetrecon').trigger("change");
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
-				$("#Cmbreconfield1").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
 				preprocessfetch(data.preprocess_code);
 				$("#holdflag").val(data.hold_flag);
@@ -463,14 +457,60 @@
 				jQuery('#cmbgetrecon').trigger("change");
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
-				$("#Cmbreconfield1").val(data.set_recon_field);
-				$("#querydata").val(data.process_query);				
+				$("#querydata").val(data.process_query);
+				preprocessfetch(data.preprocess_code);
 				$("#holdflag").val(data.hold_flag);
 				$("#txtstatus").val(data.active_status_desc);
 				$("#savesubmit").hide();				
-				$(".k-grid-edit").hide();
 				$("#btnsubmit").hide();
 				$("#txtstatus").val(data.active_status_desc);
+				$.ajax({
+					type: "POST",
+					url: '../Preprocess/Preprocessfetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ preprocess_code: data.preprocess_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var result = JSON.parse(response);
+						if (result != null) {
+							if (result.filter.length > 0) {
+								$("#gd_filter").empty();
+								$("#gd_filter").append("<div id='grid_filter'></div>");
+								grid_filter(result.filter);
+							}
+							else {
+								grid_filter([]);
+							}
+							if (result.condition.length > 0) {
+								grid_lookup(result.condition)
+							} else {
+								grid_lookup([]);
+							}
+							$("#txtpreprocesscode").val(result.header[0].preprocess_code);
+							$("#cmbrecon").val(result.header[0].recon_code);
+							jQuery('#cmbrecon').trigger("change");
+							$("#preprocessname").val(result.header[0].preprocess_desc);
+							$("#preprocessorder").val(result.header[0].preprocess_order);
+							$("#preprocessgid").val(result.header[0].preprocess_gid);
+							$("#Cmbprocessmethod").val(result.header[0].process_method);
+							jQuery('#Cmbprocessmethod').trigger("change");
+							$("#cmbgetrecon").val(result.header[0].get_recon_field);
+							jQuery('#cmbgetrecon').trigger("change");
+							$("#Cmbfunction").val(result.header[0].process_function);
+							$("#Cmbreconfield").val(result.header[0].set_recon_field);
+							$("#querydata").val(result.header[0].process_query);
+							$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
+							jQuery('#cmblookupdataset').trigger("change");
+							$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
+							$("#Cmbreconfield1").val(result.header[0].set_recon_field);
+							$("#holdflag").val(result.header[0].hold_flag);
+						}
+					}
+
+				});
+				$("#grid_filter .k-grid-toolbar").hide();
+				$("#grid_lookup .k-grid-toolbar").hide();
 				$("#preprocessname").prop('disabled', true);
 				$("#preprocessorder").prop('disabled', true);
 				$("#Cmbprocessmethod").prop('disabled', true);
@@ -479,15 +519,12 @@
 				$("#Cmbreconfield").prop('disabled', true);
 				$("#Cmbreconfield1").prop('disabled', true);
 				$("#querydata").prop('disabled', true);
-				$("#holdflag").prop('disabled', true);				
+				$("#holdflag").prop('disabled', true);
 				$("#txtpreprocesscode").prop('disabled', true);
-				$("#cmbrecon").prop('disabled', true);				
+				$("#cmbrecon").prop('disabled', true);
 				$("#querydata").prop('disabled', true);
 				$("#cmblookupdataset").prop('disabled', true);
-				$("#Cmblookupdatasetfield").prop('disabled', true);					
-				preprocessfetch(data.preprocess_code);
-				$("#grid_filter .k-grid-toolbar").hide();
-				$("#grid_lookup .k-grid-toolbar").hide();
+				$("#Cmblookupdatasetfield").prop('disabled', true);
 			}
 		}
 	}
@@ -642,7 +679,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJsfilter()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return "";								
+							} else {
+								return "<a href='' onclick='myDeleteJsfilter()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsfilter()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -923,7 +968,7 @@
 			},
 			height: 150,
 			groupable: false,
-			dataBinding: setDefaultValues,
+			//dataBinding: setDefaultValues,
 			edit: OnEdit,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -958,7 +1003,15 @@
 					{
 						name: "Delete",
 						id: "Delete",
-						template: "<a href='' onclick='myDeleteJslookup()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return "";
+							} else {
+								return "<a href='' onclick='myDeleteJslookup()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJslookup()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1407,11 +1460,59 @@
 			var process_query = "";
 			var clone_process = "";
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				if ($("#cmbgetrecon").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbfunction").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Function cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
 				get_recon_field = $("#cmbgetrecon").val();
 				set_recon_field = $("#Cmbreconfield").val();
 				process_function = $("#Cmbfunction").val();
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Dataset Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
 				lookup_dataset_code = $("#cmblookupdataset").val();
 				lookup_return_field = $("#Cmblookupdatasetfield").val();
 				set_recon_field = $("#Cmbreconfield1").val();
@@ -1465,6 +1566,9 @@
 							content: data.out_msg,
 							type: 'green',
 						});
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						preprocessfetch($("#txtpreprocesscode").val());
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -1485,7 +1589,7 @@
 		}
 	}
 	function savefilter() {
-		try {
+		try {			
 			var grid = $("#grid_filter").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
@@ -1639,7 +1743,6 @@
 			type: "POST",
 			url: '../Preprocess/Preprocessfetch',
 			dataType: 'json',
-			async: false,
 			data: JSON.stringify({ preprocess_code: cmbpreprocess_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
@@ -1676,6 +1779,7 @@
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag").val(result.header[0].hold_flag);
+					$("#txtstatus").val(result.header[0].active_status_desc);
 				}
 				else {
 					grid_filter([]);
