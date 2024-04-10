@@ -415,6 +415,61 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+
+		[HttpPost]
+		public JsonResult Recondatasetmappingdelete([FromBody] datamappingdel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			datamappingdel objList = new datamappingdel();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Recon/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					//client.BaseAddress = new Uri("https://localhost:44348/api/Recon/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("recondatamappingdelete", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					for (int i = 0; i < result.Rows.Count; i++)
+					{
+						objList.out_msg = result.Rows[i]["out_msg"].ToString();
+						objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
+					}
+					return Json(objList);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "Recondatasetmappingdelete");
+				return Json(ex.Message);
+			}
+		}
+		#region dataset mapping
+		public class datamappingdel
+		{
+			
+			public Int16? in_reconfieldmapping_gid { get; set; }			
+			public string? in_action { get; set; }
+			public String? out_msg { get; set; }
+			public Int16? out_result { get; set; }
+
+		}
+		#endregion
 		[HttpPost]
 		public JsonResult Recondatasetmappingfetch([FromBody] getReconDataMappingList context)
 		{

@@ -331,7 +331,7 @@
 					</div>
 				</nav>
 				<div class="container-xxl" style="padding-right: 20px;margin-bottom: 4px;padding-left: 20px;border-radius:20px;margin-top:4px;">
-					<div class="row" style="background: #fff;border-radius: 15px;margin-right: 8px;margin-left: 8px;margin-top:-32px;margin-bottom:15px">
+					<div class="row" style="background: #fff;border-radius: 15px;margin-right: 8px;margin-left: 8px;margin-top:-32px;margin-bottom:15px" id="contextdiv">
 						<div class="col-sm-12" style="margin-left: 10px;">
 							<div class="row" id="collapse_div">
 								<div class="col-sm-8">
@@ -618,7 +618,7 @@
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 						}
-						if ($("#navhead").text() == "Dataset" || $("#navhead").text() == "QCD Master" || $("#navhead").text() == "Custom Report Templete" || $("#navhead").text() == "Data Deletion") {
+						if ($("#navhead").text() == "Dataset" || $("#navhead").text() == "QCD Master" || $("#navhead").text() == "Custom Report Templete" || $("#navhead").text() == "Data Deletion" || $("#navhead").text() == "User Creation" || $("#navhead").text() == "Roles") {
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt");
 							$("#orglvl2valO").prop("disabled", true);
@@ -1090,24 +1090,41 @@
 				});
 			}
 		}
-		//window.setTimeout(function () {
-		//	window.location.href = '@Url.Action("session_expires", "Login")'
-		//},180000);
+		
 		var sessionTimer;
 		// Reset the timer function
-		function resetSessionTimer() {
-			// Clear the existing timer (if any)
-			clearTimeout(sessionTimer);
-			// Start a new timer
-			sessionTimer = setTimeout(function () {
-				// Redirect to the session expires page after 180000 milliseconds (3 minutes)
+		function resetSessionTimer() {		
+			clearTimeout(sessionTimer);		
+			sessionTimer = setTimeout(function () {			
 				window.location.href = '@Url.Action("session_expires", "Login")';
-			}, 300000); // 180000 milliseconds = 3 minutes
+			}, 360000); // 180000 milliseconds = 3 minutes
 		}
 		// Call resetSessionTimer() whenever there is a user interaction event
 		document.addEventListener("mousemove", resetSessionTimer);
 		document.addEventListener("keypress", resetSessionTimer);
 		resetSessionTimer();
+
+		function isNumberKey(evt) {
+			var charCode = (evt.which) ? evt.which : event.keyCode
+			if (charCode != 46 && charCode > 31
+				&& (charCode < 48 || charCode > 57))
+				return false;
+
+			return true;
+		}
+		function item_rate(container, field, maxlen, no_decimals) {
+			var formatStr = "#";
+			var dec_str = "######";
+			if (no_decimals > 0)
+				formatStr = formatStr + "." + dec_str.substr(0, no_decimals);
+			$('<input maxlength="' + maxlen + '"  name="' + field + '"/>')
+				.appendTo(container)
+				.kendoNumericTextBox({
+					min: 0,
+					format: "{:n2}",
+					spinners: false
+				});
+		}
 	</script>
 </body>
 </html>
