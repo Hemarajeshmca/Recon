@@ -1,5 +1,5 @@
 ﻿@{
-	ViewBag.title = "Report Templete";
+	ViewBag.title = "Report Template";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -103,6 +103,7 @@
 		}
 		var data = {};
 		data.in_recon_code = $("#cmbreconname").val();
+		data.in_custom_flag = false;
 		if (data.in_recon_code) {
 		$.ajax({
 				type: "POST",
@@ -127,6 +128,8 @@
 			}
 
 		});
+	} else {
+			grid_reportTemplist([]);
 	}
 	}
 
@@ -204,23 +207,6 @@
 					width: 10,
 					hidden: true,
 				},
-
-				{
-					field: "reporttemplate_code",
-					title: "Report Templete Code",
-					width: 70,
-				},
-				{
-					field: "reporttemplate_name",
-					title: "Recon Templete Name",
-					width: 90,
-				},
-				{
-					field: "report_code",
-					title: "report_code",
-					width: 10,
-					hidden: true,
-				},
 				{
 					field: "report_desc",
 					title: "Report Name",
@@ -228,10 +214,24 @@
 				},
 				{
 					field: "system_flag_desc",
-					title: "Templete Type",
+					title: "Report Type",
 					width: 60,
 				},
 				{
+					field: "reporttemplate_code",
+					title: "Custom Template Code",
+					width: 70,
+				},
+				{
+					field: "reporttemplate_name",
+					title: "Custom Template Name",
+					width: 90,
+				},	 {
+					field: "report_code",
+					title: "report_code",
+					width: 10,
+					hidden: true,
+				},{
 					field: "active_status",
 					title: "active_status",
 					width: 75,
@@ -257,6 +257,8 @@
 			var grid = $("#grid_reporttemplist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			setlocalStorage("ls_pageList", selectedItem.reporttemplate_code);
+			setlocalStorage("temp_gid", selectedItem.reporttemplate_gid);
+			setlocalStorage("selectedTemplate", selectedItem);
 		}
 		catch (err) {
 
@@ -302,26 +304,34 @@
 
 	function getSerializedSelectedRows(mode) {
 		try {
-			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
-				var items = getlocalStorage("ls_pageList");
-				if (items.length == 0) {
-					kendoAlert("Please select records");
-				}
-				else {
-					if ($(mode).attr('value') == "edit") {
-						btn_onClick("Edit");
-						document.location = '../Reports/ReportGeneration_newdetail';
-					}
-					else if (mode == "view") {
-						btn_onClick('View');
-						document.location = "../Reports/ReportGeneration_newdetail";
-					} 
-					//else {
-					//	btn_onClick('create');
-					//	document.location = "../Reports/ReportGeneration_newdetail";
-					//}
-				}
+			if ($(mode).attr('value') == "edit") {
+				btn_onClick("Edit");
+				document.location = '../Reports/ReportGeneration_newdetail';
 			}
+			else if (mode == "view") {
+				btn_onClick('View');
+				document.location = "../Reports/ReportGeneration_newdetail";
+			}
+			//if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+			//	var items = getlocalStorage("ls_pageList");
+			//	if (items.length == 0) {
+			//		kendoAlert("Please select records");
+			//	}
+			//	else {
+			//		if ($(mode).attr('value') == "edit") {
+			//			btn_onClick("Edit");
+			//			document.location = '../Reports/ReportGeneration_newdetail';
+			//		}
+			//		else if (mode == "view") {
+			//			btn_onClick('View');
+			//			document.location = "../Reports/ReportGeneration_newdetail";
+			//		} 
+			//		//else {
+			//		//	btn_onClick('create');
+			//		//	document.location = "../Reports/ReportGeneration_newdetail";
+			//		//}
+			//	}
+			//}
 		}
 		catch (err) {
 

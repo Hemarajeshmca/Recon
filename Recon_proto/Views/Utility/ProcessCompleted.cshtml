@@ -270,7 +270,8 @@
 						{
 						field: "file_type",
 						title: "File Type",
-						width:50
+						width:50,
+						hidden: true
 					},
 				],
 				editable: false,
@@ -287,7 +288,7 @@
 		var grid = $("#grid_jobinprogress").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var job_gid = model.job_gid;
-		if (model.file_type == 'csv') {
+		if (model.file_type != 'xlsx') {
 			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '';
 		} else {
 			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '';

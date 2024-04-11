@@ -287,7 +287,7 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
                     content.Headers.Add("user_code", HttpContext.Session.GetString("user_code"));
                     var response = client.PostAsync("files", content).Result;
-                    if(filetype == "csv")
+                    if(filetype != "xlsx")
                     {
 						Stream data = response.Content.ReadAsStreamAsync().Result;
 						StreamReader reader = new StreamReader(data);

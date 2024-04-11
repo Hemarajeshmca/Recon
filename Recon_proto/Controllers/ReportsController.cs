@@ -299,14 +299,14 @@ namespace Recon_proto.Controllers
         }
 
 
-        public ActionResult generateReportXLSX(string in_recon_code, string in_report_code, string in_report_param, string reportcondition, string in_ip_addr, Boolean in_outputfile_flag,string in_user_code)
+        public ActionResult generateReportXLSX(string in_recon_code, string in_report_code, string in_report_param, string reportcondition, string in_ip_addr, Boolean in_outputfile_flag, string in_user_code)
         {
 
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataSet result = new DataSet();
             DataTable Table1 = new DataTable();
             string post_data = "";
-            string filename = in_recon_code+".xlsx";
+            string filename = in_recon_code + ".xlsx";
             try
             {
                 using (var client = new HttpClient())
@@ -334,7 +334,7 @@ namespace Recon_proto.Controllers
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    Table1 = JsonConvert.DeserializeObject<DataTable>(d2);                
+                    Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
                     using (XLWorkbook wb = new XLWorkbook())
                     {
                         var worksheet = wb.Worksheets.Add(Table1, "Sheet1");
@@ -1014,29 +1014,29 @@ namespace Recon_proto.Controllers
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
             string post_data = "";
-                try
+            try
+            {
+                using (var client = new HttpClient())
                 {
-                    using (var client = new HttpClient())
-                    {
-                        string Urlcon = "Report/";
-                        client.BaseAddress = new Uri(urlstring + Urlcon);
-                        //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.Timeout = Timeout.InfiniteTimeSpan;
-                        client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
-                        client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-                        client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-                        client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                        var response = client.PostAsync("getReportTemplateList", content).Result;
-                        Stream data = response.Content.ReadAsStreamAsync().Result;
-                        StreamReader reader = new StreamReader(data);
-                        post_data = reader.ReadToEnd();
-                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                        return Json(d2);
-                    }
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getReportTemplateList", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
                 }
+            }
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
@@ -1048,6 +1048,8 @@ namespace Recon_proto.Controllers
         public class getreportlistModel
         {
             public string? in_recon_code { get; set; }
+            public Boolean? in_custom_flag { get; set; }
+
         }
 
         #endregion
@@ -1141,6 +1143,9 @@ namespace Recon_proto.Controllers
         public class reporttemplatefetchModel
         {
             public String? in_reporttemplate_code { get; set; }
+            public string? in_recon_code { get; set; }
+            public string? in_report_code { get; set; }
+
         }
         #region reportfilter
         public JsonResult reporttemplatefilter([FromBody] reporttemplatefilterModel context)
@@ -1415,9 +1420,10 @@ namespace Recon_proto.Controllers
 
         public class runPageReportModel
         {
-            public string? in_report_code { get; set; }
-            public string? in_recon_code { get; set; }
+            public string? in_reporttemplate_code { get; set; }
             public string? in_report_condition { get; set; }
+            public string? in_recon_code { get; set; }
+            public string? in_report_code { get; set; }
         }
 
 
@@ -1554,11 +1560,13 @@ namespace Recon_proto.Controllers
 
         public class getPageNoReportModel
         {
-            public string? in_recon_code { get; set; }
+            public string? in_reporttemplate_code { get; set; }
             public int? in_rptsession_gid { get; set; }
             public int in_page_no { get; set; }
             public int in_page_size { get; set; }
             public int in_tot_records { get; set; }
+            public string in_recon_code { get; set; }
+            public string? in_report_code { get; set; }
         }
 
         #endregion
@@ -1634,17 +1642,6 @@ namespace Recon_proto.Controllers
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    //result1 = JsonConvert.DeserializeObject<DataTable>(d2);
-                    //for (int i = 0; i < result1.Rows.Count; i++)
-                    //{
-                    //	getreportparamlist objcat = new getreportparamlist();
-                    //	//objcat.report_code = Convert.ToInt16(result1.Rows[i]["report_code"]);
-                    //	objcat.reportparam_code = result1.Rows[i]["reportparam_code"].ToString();
-                    //	objcat.reportparam_value = result1.Rows[i]["reportparam_value"].ToString();
-                    //	objcat.report_code = result1.Rows[i]["report_code"].ToString();
-
-                    //	objcat_lst.Add(objcat);
-                    //}
                     return Json(d2);
                 }
             }
@@ -1704,6 +1701,7 @@ namespace Recon_proto.Controllers
 
         public class clonereporttemplateModel
         {
+            public int? in_reporttemplate_gid { get; set; }
             public string? in_clone_reporttemplate_code { get; set; }
             public string? in_reporttemplate_name { get; set; }
             public string? in_report_code { get; set; }
@@ -1752,6 +1750,7 @@ namespace Recon_proto.Controllers
         public class reporttemplatefieldModel
         {
             public string? templateJSON { get; set; }
+            public string? in_reporttemplate_code { get; set; }
         }
 
         #endregion
@@ -1809,52 +1808,15 @@ namespace Recon_proto.Controllers
 
         #region uploadreporttempletefile
 
-        //public JsonResult uploadreporttempletefile([FromBody] uploadreporttempletefileModel context)
-        //{
-        //    urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-        //    DataTable result1 = new DataTable();
-        //    string post_data = "";
-        //    try
-        //    {
-        //        using (var client = new HttpClient())
-        //        {
-        //            string Urlcon = "Report/";
-        //            client.BaseAddress = new Uri(urlstring + Urlcon);
-        //            client.DefaultRequestHeaders.Accept.Clear();
-        //            client.Timeout = Timeout.InfiniteTimeSpan;
-        //            client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
-        //            client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-        //            client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-        //            client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //            HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-        //            var response = client.PostAsync("uploadreporttempletefile", content).Result;
-        //            Stream data = response.Content.ReadAsStreamAsync().Result;
-        //            StreamReader reader = new StreamReader(data);
-        //            post_data = reader.ReadToEnd();
-        //            string d2 = JsonConvert.DeserializeObject<string>(post_data);
-        //            return Json(d2);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        CommonController objcom = new CommonController(_configuration);
-        //        objcom.errorlog(ex.Message, "uploadreporttempletefile");
-        //        return Json(ex.Message);
-        //    }
-        //}
-
-        public async Task<JsonResult> uploadreporttempletefile(string in_file_path, string in_reporttemplate_code, IFormFile file, string in_action_by, string in_file_name)
+        public async Task<JsonResult> uploadreporttempletefile(string in_reporttemplate_code, IFormFile file, string in_action_by, string in_file_name)
         {
             var out_result = getuploadfolderpath();
             string folder_path = "";
             List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
-            //var folderPath = _configuration.GetConnectionString("Uploadpath");
             if (myObjects.Count > 0)
             {
                 folder_path = myObjects[0].out_config_value;
             }
-            var filePath = "";
             uploadreporttempletefileModel objcontent = new uploadreporttempletefileModel();
             objcontent.in_reporttemplate_code = in_reporttemplate_code;
             objcontent.file = file;
@@ -1864,7 +1826,6 @@ namespace Recon_proto.Controllers
 
             if (file != null && file.Length > 0)
             {
-                // Create the folder if it doesn't exist.
                 if (!Directory.Exists(folder_path))
                 {
                     Directory.CreateDirectory(folder_path);
@@ -1875,38 +1836,29 @@ namespace Recon_proto.Controllers
                 HttpContext.Session.SetString("session_folderpath", folder_path);
                 HttpContext.Session.SetString("session_filename", file.FileName);
                 HttpContext.Session.SetString("session_dummy_filename", dummy_file_name);
-
-                // Generate a unique file name to avoid overwriting existing files.
                 string uniqueFileName = Path.Combine(folder_path, dummy_file_name);
-
-                // Save the uploaded file to the specified path.
                 using (var fileStream = new FileStream(uniqueFileName, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
                 }
                 HttpContext.Session.SetString("session_uniqueFileName", uniqueFileName);
-
                 var result = setfilePath(objcontent);
-
-                if(result != null)
+                if (result != null)
                 {
-                    return Json(new { success = true, message = "File uploaded successfully!", path = uniqueFileName });
+                    return result;
                 }
                 else
                 {
-                    return Json(new { success = false, message = "Something went wrong." });
+                    return null;
                 }
-
             }
             else
             {
                 return Json(new { success = false, message = "No file selected." });
             }
-        }
+          }
 
-        
-
-            public JsonResult setfilePath([FromBody] uploadreporttempletefileModel context)
+        public JsonResult setfilePath([FromBody] uploadreporttempletefileModel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result1 = new DataTable();
@@ -2048,12 +2000,16 @@ namespace Recon_proto.Controllers
         {
 
             public String? in_reporttemplate_code { get; set; }
+            public String? in_recon_code { get; set; }
+            public String? in_report_code { get; set; }
             public String? in_report_param { get; set; }
             public String? in_report_condition { get; set; }
             public String? in_ip_addr { get; set; }
             public Boolean? in_outputfile_flag { get; set; }
             public String? in_outputfile_type { get; set; }
             public string? in_user_code { get; set; }
+            public string? file_name { get; set; }
+
         }
 
         #endregion
@@ -2073,7 +2029,7 @@ namespace Recon_proto.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                   
+
                     string Urlcon = "Report/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
@@ -2091,15 +2047,6 @@ namespace Recon_proto.Controllers
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
                     return null;
-                    //using (XLWorkbook wb = new XLWorkbook())
-                    //{
-                    //    var worksheet = wb.Worksheets.Add(Table1, "Sheet1");
-                    //    using (MemoryStream stream = new MemoryStream())
-                    //    {
-                    //        wb.SaveAs(stream);
-                    //        return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
-                    //    }
-                    //}
                 }
             }
             catch (Exception e)
@@ -2113,59 +2060,62 @@ namespace Recon_proto.Controllers
         {
 
             public String? in_reporttemplate_code { get; set; }
+            public String? in_report_code { get; set; }
+            public String? in_recon_code { get; set; }
             public String? in_report_param { get; set; }
             public String? in_report_condition { get; set; }
             public String? in_ip_addr { get; set; }
             public Boolean? in_outputfile_flag { get; set; }
             public String? in_outputfile_type { get; set; }
             public string? in_user_code { get; set; }
+            public string? file_name { get; set; }
         }
 
 
-		public JsonResult getfilepath()
-		{
-			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-			fileconfigmodel FileDownload = new fileconfigmodel();
+        public JsonResult getfilepath()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
 
-			var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
-			FileDownload.in_config_name = context;
-			DataTable result = new DataTable();
-			string post_data = "";
-			try
-			{
-				using (var client = new HttpClient())
-				{
-					string Urlcon = "Common/";
-					client.BaseAddress = new Uri(urlstring + Urlcon);
-					client.DefaultRequestHeaders.Accept.Clear();
-					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
-					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-					HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
-					var response = client.PostAsync("configvalue", content).Result;
-					Stream data = response.Content.ReadAsStreamAsync().Result;
-					StreamReader reader = new StreamReader(data);
-					post_data = reader.ReadToEnd();
-					string d2 = JsonConvert.DeserializeObject<string>(post_data);
-					result = JsonConvert.DeserializeObject<DataTable>(d2);
-					return Json(d2);
-
-
-				}
-			}
-			catch (Exception ex)
-			{
-				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "Datasetdetail");
-				return Json(ex.Message);
-			}
-		}
+            var context = _configuration.GetSection("Appsettings")["fileconfig_value"].ToString();
+            FileDownload.in_config_name = context;
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Common/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("configvalue", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    return Json(d2);
 
 
-		#endregion
-	}
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Datasetdetail");
+                return Json(ex.Message);
+            }
+        }
+
+
+        #endregion
+    }
 
 }

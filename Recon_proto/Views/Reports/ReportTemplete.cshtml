@@ -1,5 +1,5 @@
 ﻿@{
-	ViewBag.title = "Custom Report Templete";
+	ViewBag.title = "Custom Report Template";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -38,64 +38,11 @@
 			</div>
 		</div>
 	</div>
-
-
-	<div class="modal fade" id="show-popup" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-				</div>
-				<div class="modal-body" style="margin-top: -26px;">
-					<div class="row">
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Report Templete</h4>
-						</div>
-						<div class="col-sm-4">
-							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
-						</div>
-					</div>
-					<hr style="margin-top:-1px; width:100%;">
-					<div class="row">
-						<div class="col-md-6">
-							<label>Report Templete Name</label>
-							<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
-							<input class="form-control" id="reportTempleteName" type="text" />
-							<input class="form-control" id="mode" type="text" hidden />
-							<input class="form-control" id="reporttemplate_gid" type="number" hidden />
-							<input class="form-control" id="reporttemplate_code" type="text" hidden />
-						</div>
-						<div class="col-md-6">
-							<label>Report Name</label> 
-							<select id="report_name" class="form-select form-control">
-							</select>
-						</div>
-					</div>
-
-
-					<div class="row" style="margin-top: 2%;">
-						<div class="col-sm-4"></div>
-						<div class="col-sm-4" style="margin-top:20px;float: right;">
-							<center>
-								<button type="button" class="btn btn-sm save_btn me-2" onclick="saveReportTemplete()">Save</button>&nbsp;&nbsp;&nbsp;
-								<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
-							</center>
-						</div>
-						<div class="col-sm-4"></div>
-
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</div>
-
 </body>
 </html>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Custom Report Templete");
+		$("#navhead").text("Custom Report Template");
 		kendodate_format();
 		grid_reportTemplist([]);
 		//recon name
@@ -147,6 +94,8 @@
 		var selectedItem = $("#cmbreconname").val();
 		if ($("#cmbreconname").val()) {
 		setlocalStorage("ls_pageList", selectedItem);
+		setlocalStorage("temp_gid", '0');
+
 		document.location = "../Reports/ReportTempletedetail";
 		} else {
 			$.alert({
@@ -165,6 +114,7 @@
 		}
 		var data = {};
 		data.in_recon_code = $("#cmbreconname").val();
+		data.in_custom_flag = true;
 		if (data.in_recon_code) {
 		$.ajax({
 			type: "POST",
@@ -189,7 +139,9 @@
 			}
 
 		});
-	}
+	} else {
+			grid_reportTemplist([]);
+		}
 	}
 
 	function grid_reportTemplist(data){
@@ -262,12 +214,12 @@
 
 				{
 					field: "reporttemplate_code",
-					title: "Report Templete Code",
+					title: "Custom Template Code",
 					width: 70,
 				},
 				{
 					field: "reporttemplate_name",
-					title: "Recon Templete Name",
+					title: "Custom Template Name",
 					width: 100,
 				},
 				{
@@ -283,7 +235,7 @@
 				},
 				{
 					field: "system_flag_desc",
-					title: "Templete Type",
+					title: "Report Type",
 					width: 60,
 				},					
 				{
@@ -312,6 +264,8 @@
 			var grid = $("#grid_reporttemplist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			setlocalStorage("ls_pageList", selectedItem.reporttemplate_code);
+			setlocalStorage("temp_gid", selectedItem.reporttemplate_gid);
+			setlocalStorage("selectedTemplate", selectedItem);
 		}
 		catch (err) {
 
@@ -358,25 +312,36 @@
 
 	function getSerializedSelectedRows(mode){
 		try {
-			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
-				var items = getlocalStorage("ls_pageList");
-				if (items.length == 0) {
-					kendoAlert("Please select records");
-				}
-				else {
-					if ($(mode).attr('value') == "edit") {
-						btn_onClick("Edit");
-						document.location = '../Reports/ReportTempletedetail';
-					}
-					else if (mode == "view") {
-						btn_onClick('View');
-						document.location = "../Reports/ReportTempletedetail";
-					} else {
-						btn_onClick('Create');
-						document.location = "../Reports/ReportTempletedetail";
-					}
-				}
+			if ($(mode).attr('value') == "edit") {
+				btn_onClick("Edit");
+				document.location = '../Reports/ReportTempletedetail';
 			}
+			else if (mode == "view") {
+				btn_onClick('View');
+				document.location = "../Reports/ReportTempletedetail";
+			} else {
+				btn_onClick('Create');
+				document.location = "../Reports/ReportTempletedetail";
+			}
+			//if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+			//	var items = getlocalStorage("ls_pageList");
+			//	if (items.length == 0) {
+			//		kendoAlert("Please select records");
+			//	}
+			//	else {
+			//		if ($(mode).attr('value') == "edit") {
+			//			btn_onClick("Edit");
+			//			document.location = '../Reports/ReportTempletedetail';
+			//		}
+			//		else if (mode == "view") {
+			//			btn_onClick('View');
+			//			document.location = "../Reports/ReportTempletedetail";
+			//		} else {
+			//			btn_onClick('Create');
+			//			document.location = "../Reports/ReportTempletedetail";
+			//		}
+			//	}
+			//}
 		}
 		catch (err) {
 
