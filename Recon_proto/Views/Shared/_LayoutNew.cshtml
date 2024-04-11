@@ -710,6 +710,8 @@
 			sessionStorage.setItem("level3txt", "");
 			sessionStorage.setItem("reconcode", "");
 			sessionStorage.setItem("reconname", "");
+			sessionStorage.setItem("usrname", "");
+			
 			setlocalStorage("lastlogindb","");
 			$.ajax({
 				type: "POST",
@@ -734,8 +736,7 @@
 			var url = '@Url.Action("ChangePassword", "Login")'
 			window.location.href = url;
 		}
-		function lastlogin() {
-			debugger;
+		function lastlogin() {			
 			var usercode = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
@@ -754,6 +755,8 @@
 							content: 'You have been disconnected bacause another login was made. ',
 							type: 'Red',
 							onClose: function () {
+								sessionStorage.clear();
+								localStorage.clear();
 								Signout();
 							}
 						});
@@ -1095,9 +1098,11 @@
 		// Reset the timer function
 		function resetSessionTimer() {		
 			clearTimeout(sessionTimer);		
-			sessionTimer = setTimeout(function () {			
+			sessionTimer = setTimeout(function () {		
+				sessionStorage.clear();
+				localStorage.clear();				
 				window.location.href = '@Url.Action("session_expires", "Login")';
-			}, 360000); // 180000 milliseconds = 3 minutes
+			}, 60000); // 180000 milliseconds = 3 minutes
 		}
 		// Call resetSessionTimer() whenever there is a user interaction event
 		document.addEventListener("mousemove", resetSessionTimer);
