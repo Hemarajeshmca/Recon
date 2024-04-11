@@ -331,9 +331,11 @@
                         <div class="box box-orange" style="height:auto;">
                             <div class="row">
                                 <div class="col-sm-3">
-                                    <label for="" class="form-label">Report Templete Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                    <input class="form-control" id="rt_name" name="ReportTemplete" type="text" disabled>
+                                    <label for="" class="form-label">Report Template Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                                    <input class="form-control" id="rt_name" name="ReportTemplate" type="text" disabled>
                                     <input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
+                                    <input class="form-control" id="file_name" type="text" hidden>
+
                                 </div>
                                 <div class="col-sm-4">
                                     <label for="" class="form-label">Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -345,8 +347,8 @@
                                     <select id="reconname" class="form-select form-control"> </select>
                                 </div>
                                 <div class="col-sm-2" style="text-align: right; margin-left: -8px;">
-                                    <img onclick="generateReport()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 22px;" src="~/Assets/images/csv.png" title="Generate Report">&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <img onclick="generateXlsxdynamic()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 23px;" src="~/Assets/images/xlsx.png" title="Xlsx Report">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img onclick="generateReport()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 22px;" src="~/Assets/images/csv.png" title="CSV Report">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img onclick="generateXlsxdynamic()" style="cursor:pointer;margin-top: 20%;height: 24px;width: 23px;" src="~/Assets/images/xlsx.png" title="Excel Report">&nbsp;&nbsp;&nbsp;&nbsp;
                                     <img onclick="preview()" style="cursor:pointer;margin-top: 20%;height: 23px;width: 27px;" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="../Reports/ReportGeneration_newlist"><img style="cursor:pointer;margin-top: 20%;" src="~/Content/images/toplist.png" title="Back"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
@@ -387,6 +389,7 @@
                                     &nbsp;<a href="#" onclick="pagination('next')" class="next round"><span>&#x25B6;</span></a>
                                     &nbsp;<a href="#" onclick="pagination('last')" class="next round"><span>&#x25B6;|</span></a>
                                     &nbsp;<select hidden name="items" id="items" style="padding: 5px; border: 1px solid #b1a6a6; border-radius: 5px" onchange="gridpage1()">
+                                        <option value="10">10</option>
                                         <option value="100">100</option>
                                         <option value="500">500</option>
                                         <option value="1000">1000</option>
@@ -557,12 +560,17 @@
         }
         else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
             if (getlocalStorage("ls_pageList") != undefined) {
+                var getselectedTemplate = getlocalStorage("selectedTemplate");
+                var jsondata = {};
+                jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
+                jsondata.in_recon_code = getselectedTemplate.recon_code;
+                jsondata.in_report_code = getselectedTemplate.report_code;
                 //detail fetch
                 $.ajax({
                     type: "POST",
                     url: '../Reports/reporttemplatefetch',
                     dataType: 'json',
-                    data: JSON.stringify({ in_reporttemplate_code: data }),
+                    data: JSON.stringify(jsondata),
                     contentType: 'application/json; charset=utf-8',
                     success: function (response) {
                         if (response != " ") {
@@ -570,6 +578,7 @@
                             $("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
                             $("#txtmode").val(getlocalStorage('btn_clk_val'));
                             $("#txtstatus").val("Active");
+                            $("#file_name").val(res.Table[0].file_name);
                             $("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
                             $("#rt_name").val(res.Table[0].reporttemplate_name);
                             $("#cmbreporttype").val(res.Table[0].report_code);
@@ -654,7 +663,7 @@
             },
             {
                 field: "filter_seqno",
-                title: "Seq No",
+                title: "Filter Seq No",
                 width: 50,
             },
             {
@@ -700,7 +709,7 @@
             },
             {
                 field: "filter_criteria_desc",
-                title: "Filter criteria",
+                title: "Filter Criteria",
                 editor: function (container, options) {
                     combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_tempfilter", "SOURCE")
                 },
@@ -800,37 +809,6 @@
             }
         })
     })
-    //var gridRowID = -1;
-    //function sel_checkbox(data) {
-    //    gridRowID++;
-    //    var isChecked = data.open_parentheses_flag;
-    //    var con = "";
-    //    var dis = "disabled";
-    //    if (isChecked == "Y") {
-    //        con = 'checked';
-    //    }
-    //    if (data.reporttemplatefilter_gid > 0) {
-    //        return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" disabled class="checkbox" type="checkbox" ' + con + ' /> ';
-    //    }         
-    //    else {
-    //        return '<input id="chk_sel_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-    //    }
-    //}
-    //var gridRowID1 = -1;
-    //function sel_checkbox1(data) {
-    //    gridRowID1++;
-    //    var isChecked1 = data.close_parentheses_flag;
-    //    var con = "";
-    //    if (isChecked1 == "Y") {
-    //        con = 'checked';
-    //    }
-    //    if (data.reporttemplatefilter_gid > 0) {
-    //        return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" disabled class="checkbox" type="checkbox" ' + con + ' /> ';
-    //    } else {
-    //        return '<input id="chk_sel1_' + data.reporttemplatefilter_gid + '" class="checkbox" type="checkbox" ' + con + ' /> ';
-    //    }
-    //}
-
     function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 
         var arr = [];
@@ -953,7 +931,7 @@
             if (model.reporttemplatefilter_gid) {
                 $.alert({
                     title: 'Recon',
-                    content: 'Don not have Option to delete this report Templete filter',
+                    content: 'Don not have Option to delete this report Template filter',
                     type: 'red',
                 });
             }
@@ -1033,23 +1011,22 @@
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
         }
         var template_code = getlocalStorage("ls_pageList");
-        //var data = {
-        //    "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
-        //    "reportcondition": rpt_cond,
-        //    "in_ip_addr": "localhost", "in_outputfile_flag": true, "in_user_code": "Hema"
-        //};
-
+        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+        var selected_template = getlocalStorage("selectedTemplate");
         var data = {
-            "in_reporttemplate_code": template_code,
+            "in_reporttemplate_code": template_code ? template_code : '',
+            "in_report_code": selected_template.report_code,
+            "in_recon_code": selected_template.recon_code,
             "in_report_param": $("#cmbreporttype").find(":selected").text(),
             "in_report_condition": rpt_cond, 
             "in_outputfile_flag": true, 
             "in_outputfile_type": 'csv',
             "in_ip_addr": "localhost", 
-            "in_user_code": "Hema"
+            "in_user_code": txtusername.user_name,
+            "file_name": $("#file_name").val()
         };
 
-        if (data.in_reporttemplate_code && data.in_report_param && data.in_report_condition) {
+        if (data.in_report_param && data.in_report_condition) {
             $.alert({
                 title: 'Recon',
                 content: "Report Generated, Please check the Job Status in Utility",
@@ -1102,14 +1079,6 @@
                 content: "Please select Report..!",
                 type: 'red',
             });
-           // hideProgress();
-        } else if (!data.in_reporttemplate_code) {
-            $.alert({
-                title: 'Recon',
-                content: "Report Code is missing!",
-                type: 'red',
-            });
-            // hideProgress();
         }
     }
 
@@ -1183,14 +1152,15 @@
 
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
         }
-
+        var template_code = getlocalStorage("ls_pageList");
         var data = {
+            "in_reporttemplate_code": template_code,
             "in_recon_code": $("#reconname").val(),
             "in_report_code": $("#cmbreporttype").val(),
             "in_report_condition": rpt_cond,
         };
 
-        if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
+        if (rpt_cond) {
             $.ajax({
                 type: "POST",
                 url: '../Reports/Report_Runpagereport',
@@ -1215,9 +1185,13 @@
                                     content: 'No Records Found',
                                     type: 'red',
                                 });
+                               
                                 $(this).next(".accordion_body").slideDown(300);
                                 $(".plusminus").text('+');
                                 $("#Dynamic_grid").hide();
+                                $("#example").hide();
+                                $("#framevalue").hide();  
+                                $(".page_bg").hide();
                             }
                         } else {
                             $.alert({
@@ -1240,25 +1214,13 @@
                     console.log(er)
                 }
             });
-        }
-        else if (!$("#reconname").val()) {
-            $.alert({
-                title: 'Recon',
-                content: "Please Select Recon Name..!",
-                type: 'red',
-            });
-            hideProgress();
-        } else if (!$("#cmbreporttype").val()) {
-            $.alert({
-                title: 'Recon',
-                content: "Please Select Report..!",
-                type: 'red',
-            });
-            hideProgress();
-        }
+        } 
+        
     }
 
     function Runprogress() {
+        debugger;
+        var template_code = getlocalStorage("ls_pageList");
         if (result == 0) {
             $.alert({
                 title: 'Impact',
@@ -1270,15 +1232,21 @@
             return false;
         }
         $("#Dynamic_grid").show();
+        $("#framevalue").show();
+        $(".page_bg").show();
+        debugger;
         document.getElementById('total').innerHTML = result;
         var Actpageno = parseInt(parseInt(result) / parseInt(pagesize));
         document.getElementById('totalpage').innerHTML = Actpageno;
         var data = {};
+        var selected_template = getlocalStorage("selectedTemplate");
         data.in_rptsession_gid = count;
         data.in_page_no = pageno;
         data.in_page_size = pagesize;
         data.in_tot_records = result;
-        data.in_recon_code = $("#reconname").val();
+        data.in_reporttemplate_code = template_code;
+        data.in_recon_code = selected_template.recon_code;
+        data.in_report_code = selected_template.report_code;
         $.ajax({
             type: "POST",
             url: '../Reports/getPageNoReport',
@@ -1305,12 +1273,20 @@
                     for (var key in data[0]) {
 
                         var propType = typeof data[0][key];
-                        //alert(key);
-                        if (key != "") {
+                        if (propType == 'number' && key != "") {
                             columns.push({
                                 field: entryIndex,
                                 title: key,
                                 type: propType,
+                                attributes: { style: "text-align: right;" },
+                                width: 150,
+                            });
+                        } else if (propType != 'number' && key != "") {
+                            columns.push({
+                                field: entryIndex,
+                                title: key,
+                                type: propType,
+                                attributes: { style: "text-align: left;" },
                                 width: 150,
                             });
                         }
@@ -1423,10 +1399,6 @@
     }
 
     function gridpage(itemsPerPage) {
-        debugger;
-        console.log(`count`, count);
-        console.log(`pagesize`, pagesize);
-        console.log(`result`, result);
         pagesize = itemsPerPage;
         var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
         $('#totalpage').val(Actpageno);
@@ -1568,7 +1540,6 @@
 
                 });
                 if (arr == "No Records Found!" || arr == "Error in Data!") {
-                    alert("No Records found..!");
                     return false;
                 }
                 var data = JSON.parse(Data1);
@@ -1728,16 +1699,21 @@
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
         }
         var template_code = getlocalStorage("ls_pageList");
+        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+        var selected_template = getlocalStorage("selectedTemplate");
         var data = {
-            "in_reporttemplate_code": template_code,
+            "in_reporttemplate_code": template_code ? template_code : '',
+            "in_report_code": selected_template.report_code,
+            "in_recon_code": selected_template.recon_code,
             "in_report_param": $("#cmbreporttype").find(":selected").text(),
             "in_report_condition": rpt_cond,
             "in_outputfile_flag": true,
             "in_outputfile_type": 'xlsx',
-            "in_ip_addr": "localhost",
-            "in_user_code": "Hema"
+            "in_ip_addr": "",
+            "in_user_code": txtusername.user_name,
+            "file_name": $("#file_name").val()
         };
-        if (data.in_reporttemplate_code && data.in_report_param && rpt_cond) {
+        if (data.in_report_param && rpt_cond) {
             $.alert({
                 title: 'Recon',
                 content: "Report Generated, Please check the Job Status in Utility",
@@ -1777,13 +1753,7 @@
                 //}
             });
         }
-        else if (!data.in_reporttemplate_code) {
-            $.alert({
-                title: 'Recon',
-                content: "Report Template code is missing!",
-                type: 'red',
-            });
-        } else if (!data.data.in_report_param) {
+        else if (!data.data.in_report_param) {
             $.alert({
                 title: 'Recon',
                 content: "Report Param is missing!",
