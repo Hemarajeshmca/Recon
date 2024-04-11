@@ -1,7 +1,4 @@
-﻿@{
-	ViewBag.title = "Theme";
-	Layout = "~/Views/Shared/_LayoutNew.cshtml";
-}
+﻿
 <!Doctype html>
 <html>
 <head>
@@ -56,96 +53,69 @@
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-	<div class="content-wrapper">
-		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-12px;height: 82%;">
-				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
-					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
-						<div class="col-sm-6">
-							<div class="row">
-								<div class="col-sm-4">
-									<label for="lbldatasetcode" class="form-label">Theme Code</label>
-									<input class="form-control" type="text" id="txtthemecode" disabled>
-								</div>
-								<div class="col-sm-4">
-									<label for="lblmode" class="form-label">Mode</label>
-									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
-								</div>
-								<div class="col-sm-4">
-									<label for="lblstatus" class="form-label">Status</label><br>
-									<input class="form-control" type="text" id="txtstatus" value="" disabled>
-								</div>
+	<div class="container-xxl flex-grow-1 container-p-y">
+		<div class="card-body" style="margin-top:-12px;height: 82%;">
+			<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+				<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+					<div class="col-sm-6">
+						<div class="row">
+							<div class="col-sm-4">
+								<label for="lbldatasetcode" class="form-label">Theme Code</label>
+								<input class="form-control" type="text" id="txtthemecode" disabled>
+							</div>
+							<div class="col-sm-4">
+								<label for="lblmode" class="form-label">Mode</label>
+								<input class="form-control" type="text" id="txtmode1" value="Create" disabled>
+							</div>
+							<div class="col-sm-4">
+								<label for="lblstatus" class="form-label">Status</label><br>
+								<input class="form-control" type="text" id="txtstatus1" value="" disabled>
 							</div>
 						</div>
-						<div class="col-sm-5">
-						</div>
-						<div class="col-sm-1" style="margin-top:20px;">
-							<center>
-								<a href="../Theme/Themelist"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-							</center>
-						</div>
 					</div>
-					<div class="row" style="margin-top:10px;">
-						<div class="col-sm-3">
-							<label class="form-label" for="">Theme Description&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="text" id="themename">
-							<input class="form-control" type="hidden" id="themegid" value=0>
-						</div>
-						<div class="col-sm-3">
-							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()" disabled>
-							</select>
-						</div>
-						<div class="col-sm-1">
-							<label class="form-label" style="width: 84px;" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="text" id="theme_order" value="0" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
-						</div>
-						<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
-							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="holdflag" class="form-select form-control" style=" width:100%;">
-							</select>
-						</div>
-						<div class="col-sm-3">
-							<label class="form-label" for="">Clone Theme&nbsp;</label>
-							<select id="Cmbclone" class="form-select form-control">
-							</select>
-						</div>
-						<div class="col-sm-1" style="margin-top:30px;margin-left: -15px;">
-							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
-						</div>
+					<div class="col-sm-5">
 					</div>
+					<div class="col-sm-1" style="margin-top:20px;">
+					</div>
+				</div>
+				<div class="row" style="margin-top:10px;margin-bottom:20px">
+					<div class="col-sm-3">
+						<label class="form-label" for="">Theme Description&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" type="text" id="themename">
+						<input class="form-control" type="hidden" id="themegid" value=0>
+					</div>
+					<div class="col-sm-3">
+						<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbrecon" class="form-select form-control" onchange="reconchange()" disabled>
+						</select>
+					</div>
+					<div class="col-sm-2">
+						<label class="form-label" style="width: 84px;" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" type="text" id="theme_order" value="0">
+					</div>
+					<div class="col-md-2" style="padding-left:0;margin-left: 15px;">
+						<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="holdflag" class="form-select form-control" style=" width:100%;">
+						</select>
+					</div>
+				</div>
 
-					<div class="row">
-						<div class="col-xs-12">
-							<div id="gd_themefilter">
-								<div id="grid_themefilterfield">
-								</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="gd_themefilter">
+							<div id="grid_themefilterfield">
 							</div>
 						</div>
-
 					</div>
-					<div class="row" style="padding-bottom:8px;padding-left:10px;padding-right:10px">
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
-							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
-							<a href="../Theme/ThemeList" class="btn btn-sm cancel_btn me-2">Cancel</a>
-						</div>
-						<div class="col-sm-4">
-						</div>
-					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
 	</div>
 </body>
 </html>
 <script>
-	$(document).ready(function () {
-		getGridComboList();
-		$("#navhead").text("Theme");
-	});
-	function getGridComboList() {
+
+	function getGridthemeComboList() {
 		//recon name
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
@@ -232,7 +202,7 @@
 
 			}
 		});
-		load();
+		themeload();
 
 	}
 	function reconchange() {
@@ -299,58 +269,34 @@
 			}
 		});
 	};
-	function load() {
-		if (getlocalStorage('btn_clk_val') == "Create") {
-			$("#txtmode").val(getlocalStorage('btn_clk_val'));
-			$("#txtstatus").val("Draft");
-			grid_themefilter([]);
-			var data = getlocalStorage("ls_pageList");
-			$("#cmbrecon").val(data[0].recon_code);
-			jQuery('#cmbrecon').trigger("change");
-			$("#theme_order").val(data[0].theme_order);
-			$("#holdflag").val('N');
-		}
-		else if (getlocalStorage('btn_clk_val') == "Edit") {
-			if (getlocalStorage("ls_pageList") != undefined) {
-				var data = getlocalStorage("ls_pageList");
-				$("#txtmode").val(getlocalStorage('btn_clk_val'));
-				$("#themename").val(data.theme_desc);
-				$("#cmbrecon").val(data.recon_code);
-				$("#txtthemecode").val(data.theme_code);
-				$("#themegid").val(data.theme_gid);
-				$("#theme_order").val(data.theme_order);
-				$("#txtstatus").val(data.active_status_desc);
-				$("#holdflag").val(data.hold_flag);
-				detailsfetch(data.theme_code);
-			}
-		} else if (getlocalStorage('btn_clk_val') == "View") {
-			if (getlocalStorage("ls_pageList") != undefined) {
-				var data = getlocalStorage("ls_pageList");
-				var cat = data.dataset_category;
-				$("#txtmode").val(getlocalStorage('btn_clk_val'));
-				$("#themename").val(data.theme_desc);
-				$("#cmbrecon").val(data.recon_code);
-				$("#txtthemecode").val(data.theme_code);
-				$("#themegid").val(data.theme_gid);
-				$("#theme_order").val(data.theme_order);
-				$("#txtstatus").val(data.active_status_desc);
-				$("#theme_order").val(data.theme_order);
-				$("#holdflag").val(data.hold_flag);
-				detailsfetch(data.theme_code)
-				$("#Cmbclone").prop('disabled', true)
-				$("#btnclone").prop('disabled', true)
-				$("#savesubmit").hide();
-				$("#adddataset").hide();
-				$("#datasetfieldadd").hide();
-				$(".k-grid-edit").hide();
-				$("#btnsubmit").hide();
-				$("#grid_themefilterfield .k-grid-toolbar").hide();
-				$("#themename").prop('disabled', true);
-				$("#theme_order").prop('disabled', true);
-				$("#holdflag").prop('disabled', true);
-			}
+	function themeload() {
+		if (getlocalStorage("theme_details") != undefined) {
+			var data = getlocalStorage("theme_details");
+			var cat = data.dataset_category;
+			$("#txtmode1").val("View");
+			$("#themename").val(data.theme_desc);
+			$("#cmbrecon").val(data.recon_code);
+			$("#txtthemecode").val(data.theme_code);
+			$("#themegid").val(data.theme_gid);
+			$("#theme_order").val(data.theme_order);
+			$("#txtstatus1").val("Active");
+			$("#theme_order").val(data.theme_order);
+			$("#holdflag").val(data.hold_flag);
+			detailsfetch(data.theme_code)
+			$("#Cmbclone").prop('disabled', true)
+			$("#btnclone").prop('disabled', true)
+			$("#savesubmit").hide();
+			$("#adddataset").hide();
+			$("#datasetfieldadd").hide();
+			$(".k-grid-edit").hide();
+			$("#btnsubmit").hide();
+			$("#grid_themefilterfield .k-grid-toolbar").hide();
+			$("#themename").prop('disabled', true);
+			$("#theme_order").prop('disabled', true);
+			$("#holdflag").prop('disabled', true);
 		}
 	}
+
 	function grid_themefilter(data) {
 		try {
 			var join_condition_list = "";
@@ -380,7 +326,7 @@
 						}
 					}
 				},
-				height: 300,
+				height: 230,
 				groupable: false,
 				dataBinding: setDefaultValues,
 				edit: OnEdit,
@@ -390,8 +336,7 @@
 					setColor(rows, resultData);
 					if ($("#txtmode").val() == "View") {
 						$(".k-grid-save").hide();
-					};
-					
+					}
 				},
 				sortable: false,
 				selectable: "row",
@@ -405,37 +350,12 @@
 					buttonCount: 5
 				},
 				toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
-				columns: [{
-					command: [
-						{
-							name: "save",
-							id: "Save",
-							template: "<a href=''onclick='savedetail()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
-						},
-
-						{
-							name: "Delete",
-							id: "Delete",
-							template: function (dataItem) {
-								// Check your condition here to determine whether to show or hide the delete button
-								if ($("#txtmode").val() == "View")  {
-									return ""; // Return empty string to hide the delete button
-								} else {
-									return "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
-								}
-							}
-							//template: "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
-						},
-					], title: "Action&nbsp;", width: "40px",
-				},
+				columns: [					
 				{
 					field: "theme_seqno",
 					title: "Theme Seq No.",
 					width: 50,
 					attributes: { style: "text-align: right;" },
-					editor: function (container, options) {
-						item_rate(container, options.field, '9', '2');
-					},
 				},
 				{
 					field: "open_parentheses_flag",
@@ -582,8 +502,6 @@
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
 		dataSource.add({ theme_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
-		var lastRow = grid.tbody.children().last();
-		grid.content.scrollTop(lastRow.position().top);
 	}
 
 
@@ -699,122 +617,6 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
-
-	function saveheader() {
-		try {
-			var themename = $("#themename").val();
-			var cmbrecon = $("#cmbrecon").val();
-			var theme_code = $("#txtthemecode").val();
-			var clone_theme = $("#Cmbclone").val();
-			var action = "";
-			var theme_gid = $("#themegid").val();
-			var holdflag = $("#holdflag").val();
-			if (theme_gid > 0) {
-				theme_gid = $("#themegid").val();
-				addRow();
-				return;
-
-			} else {
-				theme_gid = 0;
-
-			}
-
-			if ($("#txtmode").val() == "Create") {
-				action = "INSERT"
-			} else if ($("#txtmode").val() == "Edit") {
-				action = "UPDATE"
-			}
-			var action_by = "";
-			var status = "D"
-			var theme_order = $("#theme_order").val();
-			$.ajax({
-				type: "POST",
-				url: '../theme/themeheader',
-				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var result = JSON.parse(response);
-					var data = result[0];
-					if (data.out_result == "1") {
-						$("#themegid").val(data.in_theme_gid);
-						$("#txtthemecode").val(data.in_theme_code);
-						$("#txtmode").val("Edit");
-						addRow();
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'red',
-						});
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-
-			});
-		}
-		catch (e) {
-			console.log(e)
-		}
-	}
-	function savedetail() {
-		try {
-			var grid = $("#grid_themefilterfield").data("kendoGrid");
-			var model = grid.dataItem($(event.target).closest("tr"));
-			var theme_code = $("#txtthemecode").val();
-			var recon_field = model.filter_field_code;
-			var filter_criteria = model.filter_criteria;
-			var filter_value = model.ident_value;
-			var in_open_flag = model.open_parentheses_flag;
-			var in_close_flag = model.close_parentheses_flag;
-			var in_join_condition = '';
-			if (model.join_condition != undefined) {
-				in_join_condition = model.join_condition;
-			}
-
-			var theme_seqno = model.theme_seqno
-			var action = "";
-			var action_by = ""
-			var themefilter_gid = model.themefilter_gid;
-			if (themefilter_gid == "0") {
-				themefilter_gid = 0;
-				action = "INSERT"
-			} else {
-				action = "UPDATE"
-			}
-			var active_status = "Y";
-			$.ajax({
-				type: "POST",
-				url: '../theme/themedetail',
-				dataType: 'json',
-				data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition, theme_seqno: theme_seqno }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var res = JSON.parse(response);
-					if (res[0].out_result == "1") {
-						$.alert({
-							title: 'Recon',
-							content: res[0].out_msg,
-							type: 'green',
-						});
-						detailsfetch($("#txtthemecode").val())
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: res[0].out_msg,
-							type: 'green',
-						});
-					}
-				}
-			});
-		}
-		catch (e) {
-			console.log(e)
-		}
-	}
 	function detailsfetch(theme_code) {
 		$.ajax({
 			type: "POST",
@@ -846,171 +648,6 @@
 			}
 
 		});
-	}
-	function saveclone() {
-		$.confirm({
-			icon: 'fa fa-info',
-			title: 'Recon',
-			theme: 'dark',
-			content: 'Are you sure to Clone ?',
-			type: 'orange',
-			buttons: {
-				confirm: function () {
-					try {
-						var themename = $("#themename").val();
-						var cmbrecon = $("#cmbrecon").val();
-						var theme_code = $("#txtthemecode").val();
-						var clone_theme = $("#Cmbclone").val();
-						var action = "";
-						var theme_gid = $("#themegid").val();
-
-						if (theme_gid > 0) {
-							theme_gid = $("#themegid").val();
-							return;
-						} else {
-							theme_gid = 0;
-						}
-						var holdflag = $("#holdflag").val();
-						if ($("#txtmode").val() == "Create") {
-							action = "INSERT"
-						} else if ($("#txtmode").val() == "Edit") {
-							action = "UPDATE"
-						}
-						var action_by = "";
-						var status = "D";
-						var theme_order = $("#theme_order").val();
-						$.ajax({
-							type: "POST",
-							url: '../theme/themeheader',
-							dataType: 'json',
-							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
-							contentType: 'application/json; charset=utf-8',
-							success: function (response) {
-								var result = JSON.parse(response);
-								var data = result[0];
-								if (data.out_result == "1") {
-									$("#themegid").val(data.in_theme_gid);
-									$("#txtthemecode").val(data.in_theme_code);
-									detailsfetch(data.in_theme_code);
-									var grid = $("#grid_themefilterfield").data("kendoGrid");
-									var dataSource = grid.dataSource;
-									var recordsOnCurrentView = dataSource.view().length;
-									if (recordsOnCurrentView > 0) {
-										$.alert({
-											title: 'Recon',
-											content: data.out_msg,
-											type: 'green',
-										});
-									}
-
-								} else {
-									$.alert({
-										title: 'Recon',
-										content: data.out_msg,
-										type: 'red',
-									});
-								}
-							},
-							error: function (er) {
-								alert(er)
-								console.log(er)
-							}
-
-						});
-					}
-					catch (e) {
-						console.log(e)
-					}
-				},
-				cancel: function () {
-					$.alert({
-						icon: 'fa fa-success',
-						title: 'Recon',
-						theme: 'dark',
-						content: 'clone Canceled.!',
-						type: 'blue',
-						animationSpeed: 700,
-					});
-				},
-			},
-		});
-	}
-	function saveheadersubmit() {
-		try {
-			var grid = $("#grid_themefilterfield").data("kendoGrid");
-			var dataSource = grid.dataSource;
-			var recordsOnCurrentView = dataSource.view().length;
-			
-			var themename = $("#themename").val();
-			var cmbrecon = $("#cmbrecon").val();
-			var theme_code = $("#txtthemecode").val();
-			var clone_theme = "";
-			var action = "";
-			var theme_gid = $("#themegid").val();
-			var status = "";
-			if (theme_gid > 0) {
-				theme_gid = $("#themegid").val();
-				action = "UPDATE"
-				status = "Y";
-				if (recordsOnCurrentView == 0) {
-					$.alert({
-						title: 'Recon',
-						content: "Theme Grid Atleast one Record need to Active",
-						type: 'green',
-					});
-					return;
-				}
-			} else {
-				theme_gid = 0;
-				action = "INSERT"
-				status = "D";
-			}
-			var holdflag = $("#holdflag").val();
-			var action_by = "";
-			
-			var theme_order = $("#theme_order").val();
-			$.ajax({
-				type: "POST",
-				url: '../theme/themeheader',
-				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var result = JSON.parse(response);
-					var data = result[0];
-					if (data.out_result == "1") {
-						$("#themegid").val(data.in_theme_gid);
-						$("#txtthemecode").val(data.in_theme_code);
-						detailsfetch(data.in_theme_code);
-						var grid = $("#grid_themefilterfield").data("kendoGrid");
-						var dataSource = grid.dataSource;
-						var recordsOnCurrentView = dataSource.view().length;
-						if (recordsOnCurrentView > 0) {
-							$.alert({
-								title: 'Recon',
-								content: data.out_msg,
-								type: 'green',
-							});
-						}
-
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'red',
-						});
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-
-			});
-		}
-		catch (e) {
-			console.log(e)
-		}
 	}
 	function myDeleteJstheme() {
 		if ($("#txtmode").val() != "View") {

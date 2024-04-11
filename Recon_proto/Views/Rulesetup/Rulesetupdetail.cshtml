@@ -128,8 +128,8 @@
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-													color: white !important;
-												}*/
+															color: white !important;
+														}*/
 
 		.control-label.required:after {
 			content: "*";
@@ -157,9 +157,9 @@
 			font-size: 12px;
 		}
 
-		.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
-			float: left;
-		}
+		/*.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
+					float: left;
+				}*/
 
 		.k-grid-header {
 			background-color: #FEE7D5;
@@ -212,8 +212,8 @@
 		}
 
 		/*.content-wrapper, .right-side {
-													background-color: #e7e7e7;
-												}*/
+															background-color: #e7e7e7;
+														}*/
 
 		.info-box-icon {
 			background: white;
@@ -290,7 +290,7 @@
 							</div>
 							<div class="col-md-2">
 								<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<div>
+								<div id="per">
 									<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" data-value="2022-12-21" onclick="Dateformat()" style="width:80%" />
 									<span data-for='valid' class='k-invalid-msg'></span>
 								</div>
@@ -307,7 +307,7 @@
 							</div>
 							<div class="col-md-1">
 								<label for="" class="form-label">Rule Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<input class="form-control" id="ruleorder" type="number" value="0">
+								<input class="form-control" id="ruleorder" type="text" value="0" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
 							</div>
 							<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
 								<label for="" class="form-label">Probable Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -841,12 +841,20 @@
 				});
 			}
 		}
-		if ($("#txtmode").val() == "View") {
+		if ($("#txtmode").val() == "View") {			
 			$("#ruleName").prop('disabled', true);
 			$("#cmbreconname").prop('disabled', true);
-			$("#ruleorder").prop('disabled', true);
-			$("#period_from").prop('disabled', true);
-			$("#period_to").prop('disabled', true);
+			$("#ruleorder").prop('disabled', true);		
+			var datepicker = $("#period_from").data("kendoDatePicker");
+			if (datepicker) {
+				datepicker.enable(false);
+				$('#period_from').prop('disabled', true);
+			}
+			var datepicker1 = $("#period_to").data("kendoDatePicker");
+			if (datepicker1) {
+				datepicker1.enable(false);
+				$('#period_to').prop('disabled', true);
+			}		
 			$('#untillactive').prop('disabled', true);
 			$('#RuleAppliedOn').prop('disabled', true);
 			$('#cmbgroupflag').prop('disabled', true);
@@ -854,6 +862,7 @@
 			$('#souaccmode').prop('disabled', true);
 			$('#comdataset').prop('disabled', true);
 			$('#comaccmode').prop('disabled', true);
+			$('#probableflag').prop('disabled', true);			
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
 			$("#btnsubmit").hide();
@@ -1541,7 +1550,7 @@
 					model: {
 						fields: {
 							rulecondition_gid: { type: "string", defaultValue: "0" },
-							rulecondition_seqno: { type: "NUMBER", defaultValue: 0 },
+							rulecondition_seqno: { type: "string", defaultValue: 0 },
 							rule_code: { type: "string" },
 							source_field_code: { type: "string", defaultValue: "" },
 							source_field_desc: { type: "string", defaultValue: "" },
@@ -1568,11 +1577,12 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_rulecondition').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
+
 				if ($("#txtmode").val() == "View") {
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				} 
 			},
 			sortable: false,
 			selectable: "row",
@@ -1618,6 +1628,9 @@
 				title: "Seq No.",
 				width: 50,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "open_parentheses_flag",
@@ -1842,7 +1855,9 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ rulecondition_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulecondition_gid: 0 });
+		dataSource.add({ rulecondition_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulecondition_gid: 0 });		
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	$(function () {
 		$('#grid_rulecondition').on('click', '.chkbx1', function () {
@@ -2017,7 +2032,7 @@
 					model: {
 						fields: {
 							ruleselefilter_gid: { type: "string", defaultValue: "0" },
-							ruleselefilter_seqno: { type: "number", defaultValue: "0" },
+							ruleselefilter_seqno: { type: "string", defaultValue: "0" },
 							filter_applied_on: { type: "string", defaultValue: "S" },
 							filter_field_code: { type: "string" },
 							filter_field: { type: "string" },
@@ -2045,7 +2060,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				} 
 			},
 			sortable: false,
 			selectable: true,
@@ -2091,6 +2106,9 @@
 				title: "Seq No.",
 				width: 40,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "open_parentheses_flag",
@@ -2216,6 +2234,8 @@
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
 		dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "S" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	$(function () {
 		$('#grid_sourceidentifier').on('click', '.chkbx3', function () {
@@ -2319,7 +2339,7 @@
 					model: {
 						fields: {
 							ruleselefilter_gid: { type: "string", defaultValue: "0" },
-							ruleselefilter_seqno: { type: "number", defaultValue: 0 },
+							ruleselefilter_seqno: { type: "string", defaultValue: 0 },
 							filter_applied_on: { type: "string", defaultValue: "C" },
 							filter_field: { type: "string" },
 							filter_field_code: { type: "string" },
@@ -2392,6 +2412,9 @@
 				title: "Seq No.",
 				width: 50,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "open_parentheses_flag",
@@ -2517,6 +2540,8 @@
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
 		dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "C" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	$(function () {
 		$('#grid_comparisionidentifier').on('click', '.chkbx5', function () {
@@ -2886,7 +2911,7 @@
 					model: {
 						fields: {
 							rulegrpfield_gid: { type: "string", defaultValue: "0" },
-							rulegrpfield_seqno: { type: "number", defaultValue: "0" },
+							rulegrpfield_seqno: { type: "string", defaultValue: "0" },
 							grp_field: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" }
@@ -2904,7 +2929,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				} 
 			},
 			sortable: false,
 			selectable: true,
@@ -2955,6 +2980,9 @@
 				title: "Seq No.",
 				width: 30,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 
 			{
@@ -3002,6 +3030,8 @@
 
 		// Add a new row with the incremented sequence number
 		dataSource.add({ rulegrpfield_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulegrpfield_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	function savegrouping() {
 		try {
@@ -3139,7 +3169,7 @@
 							rulerecorder_gid: { type: "string", defaultValue: "0" },
 							rule_code: { type: "string" },
 							recorder_applied_on: { type: "string" },
-							recorder_seqno: { type: "number" },
+							recorder_seqno: { type: "string" },
 							recorder_field: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" }
@@ -3158,7 +3188,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				} 
 			},
 			sortable: false,
 			selectable: true,
@@ -3233,6 +3263,9 @@
 				title: "Order Field",
 				width: 100,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "active_status",
@@ -3260,6 +3293,8 @@
 
 		// Add a new row with the incremented sequence number
 		dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	function saverulesourceorder() {
 		try {
@@ -3328,7 +3363,7 @@
 							rulerecorder_gid: { type: "string", defaultValue: "0" },
 							rule_code: { type: "string" },
 							recorder_applied_on: { type: "string" },
-							recorder_seqno: { type: "number" },
+							recorder_seqno: { type: "string" },
 							recorder_field: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" }
@@ -3347,7 +3382,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				} 
 			},
 			sortable: false,
 			selectable: true,
@@ -3422,6 +3457,9 @@
 				title: "Order Field",
 				width: 100,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "active_status",
@@ -3449,6 +3487,8 @@
 
 		// Add a new row with the incremented sequence number
 		dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	function saverulecomparisonorder() {
 		try {
@@ -3712,13 +3752,21 @@
 				success: function (response) {
 					debugger;
 					if (response != null) {
-						$.alert({
-							title: 'Recon',
-							content: response.out_msg,
-							type: 'green',
-						});
-						$("#rulegid").val(response.in_rule_gid);
-						getfetch(response.in_rule_gid, "Header");
+						if (response.out_result == '1') {
+							$.alert({
+								title: 'Recon',
+								content: response.out_msg,
+								type: 'green',
+							});
+							$("#rulegid").val(response.in_rule_gid);
+							getfetch(response.in_rule_gid, "Header");
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: response.out_msg,
+								type: 'green',
+							});
+						}
 					}
 					else {
 

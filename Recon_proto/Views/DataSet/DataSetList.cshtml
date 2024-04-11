@@ -6,7 +6,7 @@
 <html>
 <head>
 	<title></title>
-		<style>
+	<style>
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
@@ -69,10 +69,10 @@
 	$(document).ready(function () {
 		gridlist();
 		$("#navhead").text("Dataset");
-		setlocalStorage("ls_pageList", "");		
+		setlocalStorage("ls_pageList", "");
 	});
 
-	function gridlist() {		
+	function gridlist() {
 		grid_dataset_details([]);
 		var data = {};
 		data.in_user_gid = 0;
@@ -89,7 +89,7 @@
 				if (result != null) {
 					$("#gd_dataset").empty();
 					$("#gd_dataset").append("<div id='grid_dataset' style='width:100%'></div>");
-					grid_dataset_details(result);					
+					grid_dataset_details(result);
 				}
 				else {
 					grid_dataset_details([]);
@@ -222,7 +222,8 @@
 						extra: false,
 						operators: {
 							string: {
-								eq: "Is equal to"
+								eq: "Is equal to",
+								neq: "Not equal to"
 							}
 						},
 					},
@@ -233,21 +234,32 @@
 					hidden: true,
 				}],
 				editable: false,
-				
-		});
-			
-	}
-			catch (err) {
-		console.log(err)
 
-	}
+			});
+			var grid = $("#grid_dataset").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
 		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+	
+
 	function priorityFilter(element) {
 		element.kendoDropDownList({
 			dataSource: status_Priority,
 			optionLabel: "--Select Value--"
 		});
-		
 	}
 	function getSerializedRows() {
 		btn_onClick('Create');
@@ -289,94 +301,97 @@
 		}
 	}
 	function myDeleteJs() {
+
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var dataset_gid = model.dataset_gid;
-		$.confirm({
-			icon: 'fa fa-warning',
-			title: 'Recon',
-			autoClose: 'cancel|10000',
-			theme: 'dark',
-			animationSpeed: 700,
-			content: 'Are you sure do you want to delete this record!',
-			type: 'orange',
-			buttons: {
-				confirm: function () {
-					$.confirm({
-						title: 'Delete Reason',
-						content: '' +
-							'<form action="" class="formName">' +
-							'<div class="form-group">' +
-							'<label>Reason</label>' +
-							'<input type="text" placeholder="Reason" class="name form-control" required />' +
-							'</div>' +
-							'</form>',
-						buttons: {
-							formSubmit: {
-								text: 'Submit',
-								btnClass: 'btn-blue',
-								action: function () {
-									var name = this.$content.find('.name').val();
-									if (!name) {
-										$.alert('Reason cannot be empty');
-										return false;
-									}
-									var dataset_name = "";
-									var dataset_category = "";
-									var dataset_code = model.datasetCode;
-									var action = "DELETE";
-									var action_by = ""
-									var dataset_gid = model.dataset_gid;
-									var status = "";
-									$.ajax({
-										type: "POST",
-										url: '../DataSet/Datasetheader',
-										dataType: 'json',
-										data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_gid, active_status: status, inactive_reason: name }),
-										contentType: 'application/json; charset=utf-8',
-										success: function (response) {
-											var result = JSON.parse(response);
-											var data = result[0];
-											debugger;
-											if (data.out_result == "1") {
-												$.alert({
-													icon: 'fa fa-success',
-													title: 'Recon',
-													theme: 'dark',
-													content: data.out_msg,
-													type: 'green',
-													animationSpeed: 700,
-												});
-												gridlist();
-											} else {
-												$.alert({
-													title: 'Recon',
-													content: data.out_msg,
-													type: 'red',
-												});
-											}
+		if (model.active_status != "N") {
+			var dataset_gid = model.dataset_gid;
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							title: 'Delete Reason',
+							content: '' +
+								'<form action="" class="formName">' +
+								'<div class="form-group">' +
+								'<label>Reason</label>' +
+								'<input type="text" placeholder="Reason" class="name form-control" required />' +
+								'</div>' +
+								'</form>',
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var name = this.$content.find('.name').val();
+										if (!name) {
+											$.alert('Reason cannot be empty');
+											return false;
 										}
-									})
-								}
+										var dataset_name = "";
+										var dataset_category = "";
+										var dataset_code = model.datasetCode;
+										var action = "DELETE";
+										var action_by = ""
+										var dataset_gid = model.dataset_gid;
+										var status = "";
+										$.ajax({
+											type: "POST",
+											url: '../DataSet/Datasetheader',
+											dataType: 'json',
+											data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_gid, active_status: status, inactive_reason: name }),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												var result = JSON.parse(response);
+												var data = result[0];
+												debugger;
+												if (data.out_result == "1") {
+													$.alert({
+														icon: 'fa fa-success',
+														title: 'Recon',
+														theme: 'dark',
+														content: data.out_msg,
+														type: 'green',
+														animationSpeed: 700,
+													});
+													gridlist();
+												} else {
+													$.alert({
+														title: 'Recon',
+														content: data.out_msg,
+														type: 'red',
+													});
+												}
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
 							},
-							cancel: function () {
-								//close
-							},
-						},
 
-					});
-				},
-				cancel: function () {
-					$.alert({
-						icon: 'fa fa-success',
-						title: 'Recon',
-						theme: 'dark',
-						content: 'Delete Canceled.!',
-						type: 'blue',
-						animationSpeed: 700,
-					});
-				},
-			}
-		});
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
 	}
 </script>

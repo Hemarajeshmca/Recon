@@ -216,12 +216,17 @@
 															</div>
 														</div>
 														<div class="col-sm-2">
-															<label for="" class="form-label">Threshold + Value&nbsp;</label>
+															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
 															<input class="form-control" id="thersholdplus" type="text" value="0">
 														</div>
-														<div class="col-sm-2">
+														@*<div class="col-sm-2">
 															<label for="" class="form-label">Threshold - Value&nbsp;</label>
 															<input class="form-control" id="thersholdminus" type="text" value="0">
+														</div>*@
+														<div class="col-sm-2">
+															<label for="" class="form-label">Applied On&nbsp;</label>
+															<select id="cmbthersholdvalue" class="form-select form-control">
+															</select>
 														</div>
 													</div>
 													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
@@ -882,6 +887,30 @@
 		});
 	}
 	function getGridComboList() {
+		// THERSOLD type
+		var in_master_code = "QCD_TV";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbthersholdvalue").empty();
+				$("#cmbthersholdvalue").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbthersholdvalue").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
 		//recon type
 		var in_master_code = "QCD_RC_RCON_TYPE";
 		var in_user_code = "";
@@ -1105,12 +1134,13 @@
 			var in_active_reason = "";
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdminus").val()).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2078,6 +2108,9 @@
 			var status = "D";
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			if (in_recon_date_flag == undefined) {
+				in_recon_date_flag = "";
+			}
 			var in_recon_date_field = $("#cmbrecondatefield").val();
 			if (in_recon_date_field == null) {
 				in_recon_date_field = '';
@@ -2088,15 +2121,19 @@
 			}
 
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+			if (in_recon_value_flag == undefined) {
+				in_recon_value_flag = "";
+			}
 
-			var in_threshold_plus_value = $("#thersholdplus").val();
-			var in_threshold_minus_value = $("#thersholdminus").val();
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
 			var in_active_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason }),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {
@@ -2138,11 +2175,15 @@
 			$("#thersholdminus").val(0);
 			$("#thersholdminus").prop('disabled', false)
 			$("#thersholdplus").prop('disabled', false)
+			$("#cmbthersholdvalue").prop('disabled', false)
 		} else {
+
 			$("#thersholdplus").val(0);
 			$("#thersholdminus").val(0)
 			$("#thersholdminus").prop('disabled', true)
 			$("#thersholdplus").prop('disabled', true)
+			$("#cmbthersholdvalue").prop('disabled', true)
+			$("#cmbthersholdvalue").val("N");
 		}
 	}
 

@@ -107,110 +107,112 @@
 </head>
 <body>
 	<div class="row" style="background: #fff;border-radius: 15px;margin-right: 8px;margin-left: 8px;">
-		
-	<div class="row" style="height:auto;padding: 0px 18px;">
-		<div class="col-md-12">
-			<div class="content-wrapper" style="min-height:43px">
-				<div class="row" style="margin-left:0%;padding-top:1%">
-					<div class="col-md-2">
-						<label for="period_from" class="title">Date From</label>
-						<input class="cusDate" data-role='datepicker' id="period_from" onclick="Dateformat()" style="width:100%" data-bind="value:period_from" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
-						@*<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" style="width:100%" />*@
-					</div>
-					<div class="col-md-2">
-						<label for="period_from" class="title">Date To</label><br />
-						<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
-					</div>
 
-					<div class="col-md-5">
-						<label for="" class="title">Recon Name</label><br />
-						<input id="cmbreconname" style="width:65%" />
-					</div>
-					<div class="col-md-2" style="margin-top:2%">
-						<button type="button" id="btn_search" class="btn btn-sm btn-primary me-2" onclick="getdashboarddetails()">
-							&nbsp;Refresh
-						</button>
-					</div>
-				</div>
-				<div class="row" style="margin-left:0px; margin-bottom: 5px;margin-top:6px;margin-right:0px;">
-					<div class="col-sm-2">
-						<div class="card shadow-none bg-transparent border border-primary mb-3" style="border-radius: 20px;border-color: #ff6a00 !important;">
-							<div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:8px">
-								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="recon_count"></span></h5>
-								<center><p class="card-text" style="font-weight:600;color:white;">Recons</p></center>
-							</div>
+		<div class="row" style="height:auto;padding: 0px 18px;">
+			<div class="col-md-12">
+				<div class="content-wrapper" style="min-height:43px">
+					<div class="row" style="margin-left:0%;padding-top:1%">
+						<div class="col-md-2">
+							<label for="period_from" class="title">Date From</label>
+							<input class="cusDate" data-role='datepicker' id="period_from" onclick="Dateformat()" style="width:100%" data-bind="value:period_from" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+							@*<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" style="width:100%" />*@
 						</div>
-					</div>
-					<div class="col-sm-2" style="margin-left: 18px;">
-						<div class="card shadow-none bg-transparent border border-secondary mb-3" style="border-radius: 20px;border-color: #71DD37  !important;position: relative;">
-							<div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:8px">
-								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="acc_count"></span></h5>
-								<center><p class="card-text" style="font-weight:600;color:white;">Dataset</p></center>
-							</div>
+						<div class="col-md-2">
+							<label for="period_from" class="title">Date To</label><br />
+							<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
 						</div>
-					</div>
-					<div class="col-sm-2" style="margin-left: -8px;">
-						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #FFAB00 !important;position: relative;">
-							<div class="card-body" style="background:#FFAB00;border-radius: 17px;padding:8px">
-								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="tran_count"></span></h5>
-								<center><p class="card-text" style="font-weight:600;color:white;">Transactions</p></center>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #8592A3 !important;position: relative;">
-							<div class="card-body" style="background:#8592A3;border-radius: 19px;padding:8px">
-								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_count"></span></h5>
-								<center><p class="card-text" style="font-weight:600;color:white;">Matches <span id="match_percentage"></span></p></center>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-2" style="margin-left:-5px;">
-						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;position: relative;">
-							<div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
-								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
-								<center><p class="card-text" style="font-weight:600;color:white;">Partial</p></center>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-2" style="margin-left:-6px;">
-						<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#696cff  !important; position: relative;">
-							<div class="card-body" style="background:#696cff ;border-radius: 20px;padding:8px">
-								<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="excp_count"></span></h5>
-								<center><p class="card-text" style="font-weight:600;color:white;">Exceptions <span id="excp_percentage"></span></p></center>
-							</div>
-						</div>
-					</div>
 
-				</div>
-				<div class="row">
-					<div class="col-sm-3" style="margin-left:81%;">
-						<label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span></label>
+						<div class="col-md-5">
+							<label for="" class="title">Recon Name</label><br />
+							<select id="cmbreconname" class="form-select form-control" onchange="reconchangedashboard()">
+							</select>
+							@*<input id="cmbreconname" style="width:65%" />*@
+						</div>
+						<div class="col-md-2" style="margin-top:2%">
+							<button type="button" id="btn_search" class="btn btn-sm btn-primary me-2" onclick="getdashboarddetails()">
+								&nbsp;Refresh
+							</button>
+						</div>
 					</div>
-				</div>
-				<div class="row" style="display: flex; justify-content: space-evenly;">
-					<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
-						<h5>Auto Match Vs Manual Match</h5>
-						<div id="chart" class="chart" style="height:300px;"></div>
+					<div class="row" style="margin-left:0px; margin-bottom: 5px;margin-top:6px;margin-right:0px;">
+						<div class="col-sm-2">
+							<div class="card shadow-none bg-transparent border border-primary mb-3" style="border-radius: 20px;border-color: #ff6a00 !important;">
+								<div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:8px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="recon_count"></span></h5>
+									<center><p class="card-text" style="font-weight:600;color:white;">Recons</p></center>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2" style="margin-left: 18px;">
+							<div class="card shadow-none bg-transparent border border-secondary mb-3" style="border-radius: 20px;border-color: #71DD37  !important;position: relative;">
+								<div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:8px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="acc_count"></span></h5>
+									<center><p class="card-text" style="font-weight:600;color:white;">Dataset</p></center>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2" style="margin-left: -8px;">
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #FFAB00 !important;position: relative;">
+								<div class="card-body" style="background:#FFAB00;border-radius: 17px;padding:8px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="tran_count"></span></h5>
+									<center><p class="card-text" style="font-weight:600;color:white;">Transactions</p></center>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #8592A3 !important;position: relative;">
+								<div class="card-body" style="background:#8592A3;border-radius: 19px;padding:8px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_count"></span></h5>
+									<center><p class="card-text" style="font-weight:600;color:white;">Matches <span id="match_percentage"></span></p></center>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2" style="margin-left:-5px;">
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;position: relative;">
+								<div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
+									<center><p class="card-text" style="font-weight:600;color:white;">Partial</p></center>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2" style="margin-left:-6px;">
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#696cff  !important; position: relative;">
+								<div class="card-body" style="background:#696cff ;border-radius: 20px;padding:8px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="excp_count"></span></h5>
+									<center><p class="card-text" style="font-weight:600;color:white;">Exceptions <span id="excp_percentage"></span></p></center>
+								</div>
+							</div>
+						</div>
+
 					</div>
-					<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
-						<h5 style="margin-bottom:25px !important;">Ageing of Exceptions</h5>
-						<div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div>
+					<div class="row">
+						<div class="col-sm-3" style="margin-left:81%;">
+							<label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span></label>
+						</div>
 					</div>
+					<div class="row" style="display: flex; justify-content: space-evenly;">
+						<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
+							<h5>Auto Match Vs Manual Match</h5>
+							<div id="chart" class="chart" style="height:300px;"></div>
+						</div>
+						<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
+							<h5 style="margin-bottom:25px !important;">Ageing of Exceptions</h5>
+							<div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div>
+						</div>
+					</div>
+					@* <div class="row" style="margin-left:10px;padding-bottom:10px;margin-top: -25px;">
+					<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
+					<h5 style="text-align:center;font-weight:600;display:block;">Auto Match Vs Manual Match</h5>
+					<center><div id="chart" class="chart" style="height:300px;"></div></center>
+					</div>
+					<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
+					<h5 style="text-align: center;font-weight:600;">Ageing of Exceptions</h5>
+					<center><div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div></center>
+					</div>
+					</div>*@
 				</div>
-				@* <div class="row" style="margin-left:10px;padding-bottom:10px;margin-top: -25px;">
-				<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
-				<h5 style="text-align:center;font-weight:600;display:block;">Auto Match Vs Manual Match</h5>
-				<center><div id="chart" class="chart" style="height:300px;"></div></center>
-				</div>
-				<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
-				<h5 style="text-align: center;font-weight:600;">Ageing of Exceptions</h5>
-				<center><div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div></center>
-				</div>
-				</div>*@
 			</div>
 		</div>
-	</div>
 	</div>
 </body>
 </html>
@@ -219,11 +221,11 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-		
+
 		kendodate_format();
 		//getdashboarddetails();
 		//recon name
-		
+
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
@@ -239,59 +241,92 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
-				var arr = [];
-				var list2 = {};
-				list2.value = "";
-				list2.text = "ALL";
-				arr.push(list2);
-				for (i = 0; res.length > i; i++) {		
-					var list1 = {};
-					if (res[i]["active_status"] == 'Y') {
-						list1.value = res[i].recon_code;
-						list1.text = res[i].recon_name;
-						arr.push(list1);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
 					}
-				}
-				dropdown = $("#cmbreconname").kendoDropDownList({
-					dataTextField: "text",
-					dataValueField: "value",
-					template: $("#CheckboxTemplate").html(),
-					dataSource: arr,
-					placeholder: "Select...",
-					select: function (e) {
-						e.preventDefault();
-					}
-				}).data("kendoDropDownList");
-
-				dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
-					var $item = $(this);
-					var $input;
-
-					if ($item.hasClass("check-item")) {
-						// Text was clicked
-						$input = $item.children(".check-input");
-						$input.prop("checked", !$input.is(':checked'));
-					}
-					else
-						// Checkbox was clicked
-						$input = $item;
-
-					// Check all clicked?
-					if ($input.val() == "")
-						dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
-
-					updateDropDown()
-
-					e.stopImmediatePropagation();
 				});
-
-				updateDropDown();
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
+				$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+				jQuery('#cmbreconname').trigger("change");
 			}
 		});
+		//var data = {};
+		//var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		//data.in_user_gid = 0;
+		//data.in_active_status = '';
+		//data.in_user_code = txtusername.user_name;
+		//var Context = data;
+		//$.ajax({
+		//	type: "POST",
+		//	url: '../Recon/Reconlistfetch',
+		//	dataType: 'json',
+		//	async: false,
+		//	data: JSON.stringify(data),
+		//	contentType: 'application/json; charset=utf-8',
+		//	success: function (response) {
+		//		var res = JSON.parse(response);
+		//		var arr = [];
+		//		var list2 = {};
+		//		list2.value = "";
+		//		list2.text = "ALL";
+		//		arr.push(list2);
+		//		for (i = 0; res.length > i; i++) {
+		//			var list1 = {};
+		//			if (res[i]["active_status"] == 'Y') {
+		//				list1.value = res[i].recon_code;
+		//				list1.text = res[i].recon_name;
+		//				arr.push(list1);
+		//			}
+		//		}
+		//		dropdown = $("#cmbreconname").kendoDropDownList({
+		//			dataTextField: "text",
+		//			dataValueField: "value",
+		//			template: $("#CheckboxTemplate").html(),
+		//			dataSource: arr,
+		//			placeholder: "Select...",
+		//			select: function (e) {
+		//				e.preventDefault();
+		//			}
+		//		}).data("kendoDropDownList");
+
+		//		dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
+		//			var $item = $(this);
+		//			var $input;
+
+		//			if ($item.hasClass("check-item")) {
+		//				// Text was clicked
+		//				$input = $item.children(".check-input");
+		//				$input.prop("checked", !$input.is(':checked'));
+		//			}
+		//			else
+		//				// Checkbox was clicked
+		//				$input = $item;
+
+		//			// Check all clicked?
+		//			if ($input.val() == "")
+		//				dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
+
+		//			updateDropDown()
+
+		//			e.stopImmediatePropagation();
+		//		});
+
+		//		updateDropDown();
+		//	},
+		//	error: function (er) {
+		//		alert(er)
+		//		console.log(er)
+		//	}
+		//});
+
 		function updateDropDown() {
 			var items = [];
 			dropdown.list.find(".check-input").each(function () {
@@ -327,7 +362,7 @@
 			navigatable: true,
 			selectable: "row"
 		});
-		
+
 	});
 	var CustomerHelper = {
 		GenerateColumns: function () {
@@ -339,7 +374,13 @@
 			]
 		}
 	}
-
+	function reconchangedashboard() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+	}
 </script>
 <script type="text/x-kendo-template" id="CheckboxTemplate">
 	<li unselectable="on" class="k-item nowrap check-item">
@@ -450,7 +491,7 @@
 				$(this).children(".plusminus").text('-');
 			}
 		});
-		
+
 	});
 
 
@@ -589,18 +630,18 @@
 		var ts1 = period_to.split("/");
 		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
 
-		var Config_MetricType = $("#cmbreconname").data("kendoDropDownList");
-		var reconarray = Config_MetricType.dataSource.data();
-		var cbs = document.getElementsByName("cb");
-		for (var i = 0; i < cbs.length; i++) {
-			if (cbs[i].checked) {
-				var item = reconarray[i].value;
-				Attribid.push(item);
-			}
-		}
-		arrstring = Attribid.join(", ");
+		//var Config_MetricType = $("#cmbreconname").data("kendoDropDownList");
+		//var reconarray = Config_MetricType.dataSource.data();
+		//var cbs = document.getElementsByName("cb");
+		//for (var i = 0; i < cbs.length; i++) {
+		//	if (cbs[i].checked) {
+		//		var item = reconarray[i].value;
+		//		Attribid.push(item);
+		//	}
+		//}
+		//arrstring = Attribid.join(", ");
 		var data = {};
-		data.in_recon_code = arrstring;
+		data.in_recon_code = $("#cmbreconname").val();
 		data.in_period_from = pr;
 		data.in_period_to = pr1;
 		$.ajax({
@@ -668,6 +709,6 @@
 
 		});
 	}
-	
+
 </script>
 

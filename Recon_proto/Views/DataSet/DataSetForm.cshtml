@@ -152,14 +152,14 @@
 										</div>
 										<div class="col-sm-4" id="fielddataset">
 											<label for="" class="form-label">Field Length&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-											<input class="form-control" id="fieldlength" type="text" style=" width:100%;">
+											<input class="form-control" id="fieldlength" maxlength="7" onpaste="return false;" type="text" onkeypress='return isNumberKey(event)' style=" width:100%;">
 										</div>
 										<div class="col-sm-4" style="display:none" id="numeric">
 											<label for="" class="form-label">Precision&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-											<input class="form-control" id="fieldPrecision" type="text" style=" width:50%;" value="5">
+											<input class="form-control" id="fieldPrecision" type="text" style=" width:50%;" onpaste="return false;" value="5" onkeypress='return isNumberKey(event)'>
 											<div style="margin-left: 107px;margin-right: -51px;margin-top: -63px;">
 												<label for="" class="form-label">scale&nbsp;</label>
-												<input class="form-control" id="fieldscale" type="text" style=" width:50%;" value="2">
+												<input class="form-control" id="fieldscale" type="text" style=" width:50%;" onpaste="return false;" value="2" onkeypress='return isNumberKey(event)'>
 											</div>
 											<label for="" class="form-label">(Ex : 00000.00)</label>
 										</div>
@@ -556,7 +556,16 @@
 				} else {
 					$("#mandatory2").prop("checked", true);
 				}
-				fieldtype();
+				if (selectedItem.field_type == "NUMERIC") {
+					$("#fielddataset").hide();
+					$("#numeric").show();
+					$("#fieldlength").prop('disabled', false);
+					$("#fieldPrecision").prop('disabled', false);
+					$("#fieldscale").prop('disabled', false);
+					$("#fieldlength").val('');
+					$("#fieldPrecision").val('');
+					$("#fieldscale").val('');
+				}
 				$("#fieldPrecision").val(selectedItem.precision_length);
 				$("#fieldscale").val(selectedItem.scale_length);
 				$("#newdebit").modal('show');
@@ -783,6 +792,14 @@
 		}
 	}
 	function saveclone() {
+		if ($("#Cmbclone").val() == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Clone Dataset cannot be empty",
+				type: 'green',
+			});
+			return;
+		}
 		$.confirm({
 			icon: 'fa fa-info',
 			title: 'Recon',
@@ -792,6 +809,7 @@
 			buttons: {
 				confirm: function () {
 					saveheader();
+					$("#Cmbclone").val("");
 				},
 				cancel: function () {
 					$.alert({
@@ -802,6 +820,7 @@
 						type: 'blue',
 						animationSpeed: 700,
 					});
+					$("#Cmbclone").val("");
 				},
 			},
 		});

@@ -185,7 +185,7 @@
 						</div>
 						<div class="col-sm-2">
 							<label class="form-label" for="">Preprocess Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="number" id="preprocessorder">
+							<input class="form-control" type="text" id="preprocessorder" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
 						</div>
 						<div class="col-md-2" style="width: 14%;">
 							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -297,7 +297,7 @@
 		$("#headingfilter").hide();
 		getGridComboList();
 		grid_lookup([]);
-		grid_filter([]);
+		grid_filter1([]);
 	});
 	function getGridComboList() {
 		//recon type
@@ -446,6 +446,7 @@
 				var data = getlocalStorage("ls_pageList");
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
 				$("#txtpreprocesscode").val(data.preprocess_code);
+				preprocessfetch(data.preprocess_code);
 				$("#cmbrecon").val(data.recon_code);
 				jQuery('#cmbrecon').trigger("change");
 				$("#preprocessname").val(data.preprocess_desc);
@@ -458,59 +459,11 @@
 				$("#Cmbfunction").val(data.process_function);
 				$("#Cmbreconfield").val(data.set_recon_field);
 				$("#querydata").val(data.process_query);
-				preprocessfetch(data.preprocess_code);
 				$("#holdflag").val(data.hold_flag);
 				$("#txtstatus").val(data.active_status_desc);
-				$("#savesubmit").hide();				
+				$("#savesubmit").hide();
 				$("#btnsubmit").hide();
 				$("#txtstatus").val(data.active_status_desc);
-				$.ajax({
-					type: "POST",
-					url: '../Preprocess/Preprocessfetch',
-					dataType: 'json',
-					async: false,
-					data: JSON.stringify({ preprocess_code: data.preprocess_code }),
-					contentType: 'application/json; charset=utf-8',
-					success: function (response) {
-						var result = JSON.parse(response);
-						if (result != null) {
-							if (result.filter.length > 0) {
-								$("#gd_filter").empty();
-								$("#gd_filter").append("<div id='grid_filter'></div>");
-								grid_filter(result.filter);
-							}
-							else {
-								grid_filter([]);
-							}
-							if (result.condition.length > 0) {
-								grid_lookup(result.condition)
-							} else {
-								grid_lookup([]);
-							}
-							$("#txtpreprocesscode").val(result.header[0].preprocess_code);
-							$("#cmbrecon").val(result.header[0].recon_code);
-							jQuery('#cmbrecon').trigger("change");
-							$("#preprocessname").val(result.header[0].preprocess_desc);
-							$("#preprocessorder").val(result.header[0].preprocess_order);
-							$("#preprocessgid").val(result.header[0].preprocess_gid);
-							$("#Cmbprocessmethod").val(result.header[0].process_method);
-							jQuery('#Cmbprocessmethod').trigger("change");
-							$("#cmbgetrecon").val(result.header[0].get_recon_field);
-							jQuery('#cmbgetrecon').trigger("change");
-							$("#Cmbfunction").val(result.header[0].process_function);
-							$("#Cmbreconfield").val(result.header[0].set_recon_field);
-							$("#querydata").val(result.header[0].process_query);
-							$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
-							jQuery('#cmblookupdataset').trigger("change");
-							$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
-							$("#Cmbreconfield1").val(result.header[0].set_recon_field);
-							$("#holdflag").val(result.header[0].hold_flag);
-						}
-					}
-
-				});
-				$("#grid_filter .k-grid-toolbar").hide();
-				$("#grid_lookup .k-grid-toolbar").hide();
 				$("#preprocessname").prop('disabled', true);
 				$("#preprocessorder").prop('disabled', true);
 				$("#Cmbprocessmethod").prop('disabled', true);
@@ -525,6 +478,7 @@
 				$("#querydata").prop('disabled', true);
 				$("#cmblookupdataset").prop('disabled', true);
 				$("#Cmblookupdatasetfield").prop('disabled', true);
+
 			}
 		}
 	}
@@ -654,7 +608,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				};
 			},
 			sortable: false,
 			selectable: true,
@@ -682,7 +636,7 @@
 						template: function (dataItem) {
 							// Check your condition here to determine whether to show or hide the delete button
 							if ($("#txtmode").val() == "View") {
-								return "";								
+								return "";
 							} else {
 								return "<a href='' onclick='myDeleteJsfilter()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
@@ -696,6 +650,9 @@
 				title: "Seq No.",
 				width: 30,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "open_parentheses_flag",
@@ -932,6 +889,8 @@
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
 		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	//---- Look up ----------------
 	function grid_lookup(data) {
@@ -978,7 +937,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				}
+				};
 			},
 			sortable: false,
 			selectable: "row",
@@ -1020,6 +979,9 @@
 				title: "Seq No.",
 				width: 40,
 				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 			},
 			{
 				field: "open_parentheses_flag",
@@ -1180,6 +1142,8 @@
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
 		dataSource.add({ condition_seqno: newSeqNo, preprocesscondition_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
 	}
 	function color() {
 		$("#grid_lookup").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
@@ -1589,7 +1553,7 @@
 		}
 	}
 	function savefilter() {
-		try {			
+		try {
 			var grid = $("#grid_filter").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
@@ -1780,6 +1744,10 @@
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag").val(result.header[0].hold_flag);
 					$("#txtstatus").val(result.header[0].active_status_desc);
+					if ($("#txtmode").val() == "View") {
+						$("#grid_filter .k-grid-toolbar").hide();
+						$("#grid_lookup .k-grid-toolbar").hide();
+					}
 				}
 				else {
 					grid_filter([]);

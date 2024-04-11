@@ -17,8 +17,8 @@
 		}
 
 		/*.k-grid.k-widget {
-			height: 360px;
-		}*/
+											height: 360px;
+										}*/
 
 		.k-grid-header {
 			font-weight: bold;
@@ -45,9 +45,12 @@
 			left: 300px !important;
 		}
 
+		select option[value="Y"] {
+			display: none;
+		}
 		/*.k-grid-content {
-			height: 176px;
-		}*/
+											height: 176px;
+										}*/
 
 		.datepicker table tr td.active:active,
 		.datepicker table tr td.active.highlighted:active,
@@ -169,6 +172,28 @@
 												Rule
 											</button>
 										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-theme"
+													aria-controls="navs-pills-top-theme"
+													aria-selected="true">
+												Theme
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-preprocess"
+													aria-controls="navs-pills-top-preprocess"
+													aria-selected="true">
+												Preprocess
+											</button>
+										</li>
 									</ul>
 									<div class="tab-content">
 										@*Dataset*@
@@ -264,6 +289,32 @@
 													<div class="col-xs-12">
 														<div id="gd_rule">
 															<div id="grid_rule">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*theme*@
+										<div class="tab-pane fade" id="navs-pills-top-theme" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default" style="margin-top:15px;">
+												<div class="panel-body">
+													<div class="col-xs-12">
+														<div id="gd_theme">
+															<div id="grid_theme">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*Preprocess*@
+										<div class="tab-pane fade" id="navs-pills-top-preprocess" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default" style="margin-top:15px;">
+												<div class="panel-body">
+													<div class="col-xs-12">
+														<div id="gd_preprocess">
+															<div id="grid_preprocess">
 															</div>
 														</div>
 													</div>
@@ -426,6 +477,54 @@
 					<hr style="margin-top:-1px; width:100%;">
 					<div class="container" style="padding:0px !important;">
 						@await Html.PartialAsync("_Ruleviewdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="Reconthemedetail">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:500px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Theme Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_themeviewdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="Reconpreprocessdetail">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:500px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Preprocess Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_preprocessdetail")
 					</div>
 				</div>
 			</div>
@@ -598,7 +697,16 @@
 							} else {
 								gridruleMapping([]);
 							}
-
+							if (res.Recontheme.length > 0) {
+								gridthemeMapping(res.Recontheme);
+							} else {
+								gridthemeMapping([]);
+							}
+							if (res.Reconpreprocess.length > 0) {
+								gridpreprocessMapping(res.Reconpreprocess);
+							} else {
+								gridpreprocessMapping([]);
+							}
 							$("#cmbdatasetmap").empty();
 							$("#cmbdatasetmap").append($('<option>', {
 								value: "",
@@ -652,10 +760,19 @@
 					}
 
 				});
-			} 
+			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			var data = getlocalStorage("ls_pageList");
-			var cat = data.dataset_category;
+			var datepicker = $("#period_from").data("kendoDatePicker");
+			if (datepicker) {
+				datepicker.enable(false);
+				$('#period_from').prop('disabled', true);
+			}
+			var datepicker1 = $("#period_to").data("kendoDatePicker");
+			if (datepicker1) {
+				datepicker1.enable(false);
+				$('#period_to').prop('disabled', true);
+			}
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#reconcode").val(data.recon_code);
 			$("#cmbrecontype").val(data.recontype_code);
@@ -668,7 +785,7 @@
 			}
 			$("#reconcode").prop('disabled', true);
 			$("#cmbrecontype").prop('disabled', true);
-			$("#ReconName").prop('disabled', true);		
+			$("#ReconName").prop('disabled', true);
 			$('#untillactive').prop('disabled', true);
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
@@ -691,7 +808,7 @@
 						var res = JSON.parse(response);
 						$("#period_from").val(res.ReconHeader[0].period_from);
 						$("#period_to").val(res.ReconHeader[0].period_to);
-						
+
 						if (res.ReconHeader[0].recon_value_flag == "Y") {
 							$("#reconvalueflag1").prop("checked", true);
 						} else {
@@ -723,7 +840,16 @@
 						} else {
 							gridruleMapping([]);
 						}
-
+						if (res.Recontheme.length > 0) {
+							gridthemeMapping(res.Recontheme);
+						} else {
+							gridthemeMapping([]);
+						}
+						if (res.Reconpreprocess.length > 0) {
+							gridpreprocessMapping(res.Reconpreprocess);
+						} else {
+							gridpreprocessMapping([]);
+						}
 						$("#cmbdatasetmap").empty();
 						$("#cmbdatasetmap").append($('<option>', {
 							value: "",
@@ -824,10 +950,21 @@
 						$("#maingrid1").hide()
 					} else {
 						gridmap([]);
-					} if (res.ReconRule.length > 0) {
+					}
+					if (res.ReconRule.length > 0) {
 						gridruleMapping(res.ReconRule);
 					} else {
 						gridruleMapping([]);
+					}
+					if (res.Recontheme.length > 0) {
+						gridthemeMapping(res.Recontheme);
+					} else {
+						gridthemeMapping([]);
+					}
+					if (res.Reconpreprocess.length > 0) {
+						gridpreprocessMapping(res.Reconpreprocess);
+					} else {
+						gridpreprocessMapping([]);
 					}
 
 					$("#cmbdatasetmap").empty();
@@ -984,15 +1121,23 @@
 				});
 			}
 		});
-		
+
 	}
-	
+
 	function saveheader() {
-		try {
+		try {			
 			var reconcode = $("#reconcode").val();
 			var cmbrecontype = $("#cmbrecontype").val();
 			var ReconName = $("#ReconName").val();
 			var period_from = $("#period_from").val();
+			if (period_from == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Period From cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
 			var ts = period_from.split("/");
 			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
 			var in_until_active_flag = "";
@@ -1002,8 +1147,12 @@
 			} else {
 				in_until_active_flag = "N"
 				var period_to = $("#period_to").val();
-				var ts1 = period_to.split("/");
-				var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+				if (period_to != "") {
+					var ts1 = period_to.split("/");
+					var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+				} else {
+					var pr1 = "1901-01-02";
+				}
 			}
 
 			var action = "";
@@ -1018,7 +1167,6 @@
 				recon_id = $("#recon_id").val();
 				$("#Accountform").modal('show');
 				return;
-
 			} else {
 				recon_id = 0;
 			}
@@ -1026,18 +1174,24 @@
 			status = "D"
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			if (in_recon_date_flag == undefined) {
+				in_recon_date_flag = "";
+			}
 			var in_recon_date_field = $("#cmbrecondatefield").val();
 			if (in_recon_date_field == null) {
 				in_recon_date_field = '';
 			}
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+			if (in_recon_value_flag == undefined) {
+				in_recon_value_flag = "";
+			}
 			var in_recon_value_field = $("#cmbreconvaluefield").val();
 			if (in_recon_value_field == null) {
 				in_recon_value_field = '';
 			}
 			var in_active_reason = "";
-			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
-			var in_threshold_minus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
 			var in_threshold_code = $("#cmbthersholdvalue").val();
 			$.ajax({
 				type: "POST",
@@ -1048,7 +1202,7 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response != null) {
+					if (response.out_result == "1") {
 						//$.alert({
 						//	title: 'Recon',
 						//	content: response.out_msg,
@@ -1061,7 +1215,11 @@
 						$("#Accountform").modal('show');
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
 					}
 				},
 				error: function (er) {
@@ -1088,14 +1246,14 @@
 			url: '../Recon/Datasetlistfetch',
 			dataType: 'json',
 			data: "",
-			async:false,
+			async: false,
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
-				$.each(result, function (index, item) {					
+				$.each(result, function (index, item) {
 					if (item.dataset_code == dat && item.system_flag == 'Y') {
 						$("#DatasetType").val("Y");
-						$("#DatasetType").prop("disabled",true);
+						$("#DatasetType").prop("disabled", true);
 					}
 				});
 
@@ -1418,7 +1576,23 @@
 		try {
 			var reconcode = $("#reconcode").val();
 			var Reconfieldname = $("#Reconfieldname").val();
+			if (Reconfieldname == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Recon Field Name cannot be empty",
+					type: 'green',
+				});
+				return;
+			} 
 			var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
+			if (displayorder <= 0) {
+				$.alert({
+					title: 'Recon',
+					content: "Display Order Greater than Zero",
+					type: 'green',
+				});
+				return;
+			}
 			var cmbdatasetmap = $("#cmbdatasetmap").val();
 			var cmbdatasetfieldname = $("#cmbdatasetfieldname").val();
 			var action = "";
@@ -1519,11 +1693,11 @@
 		for (var key in data[0]) {
 
 			var propType = typeof data[0][key];
-				var textalign = '';
-				if(propType == 'number') {
-					textalign = 'right';
-				} else {
-					textalign = 'left';
+			var textalign = '';
+			if (propType == 'number') {
+				textalign = 'right';
+			} else {
+				textalign = 'left';
 			}
 			if (key == "display_order" || key == "display_order") {
 				columns.push({
@@ -1596,14 +1770,14 @@
 		var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
 		kendo.bind($("#grid1"), viewModel);
 
-		var grid = $("#grid1").data("kendoGrid");		
+		var grid = $("#grid1").data("kendoGrid");
 		if ($("#txtmode").val() == "View") {
 			grid.hideColumn(0);
 			grid.hideColumn(1);
 			grid.hideColumn(2);
 			grid.hideColumn(3);
 			grid.hideColumn(6);
-		}else{
+		} else {
 			grid.hideColumn(1);
 			grid.hideColumn(2);
 			grid.hideColumn(3);
@@ -1612,40 +1786,47 @@
 		}
 	}
 	function getdetailSelectedRows(mode) {
-		if ($(mode).attr('value') == "edit") {
-			var grid = $("#grid1").data("kendoGrid");
-			var selectedItem = grid.dataItem(grid.select());
-			$("#Reconfieldname").val(selectedItem.entries[4]);
-			$("#displayorder").val(selectedItem.entries[5]);
-			$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
-			$("#txtmodedatasetmapping").val("Edit");
-			$.ajax({
-				type: "POST",
-				url: '../Recon/Recondatasetmappingfetch',
-				dataType: 'json',
-				data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response != null) {
-						grid_recondatasetmapping(response)
+		var grid = $("#grid_datasetrecon").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var recordsOnCurrentView = dataSource.view().length;
+		if (recordsOnCurrentView == 0) {
+			return;
+		} else {
+			if ($(mode).attr('value') == "edit") {
+				var grid = $("#grid1").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+				$("#Reconfieldname").val(selectedItem.entries[4]);
+				$("#displayorder").val(selectedItem.entries[5]);
+				$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
+				$("#txtmodedatasetmapping").val("Edit");
+				$.ajax({
+					type: "POST",
+					url: '../Recon/Recondatasetmappingfetch',
+					dataType: 'json',
+					data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
+							grid_recondatasetmapping(response)
+						}
+						else {
+							grid_recondatasetmapping([]);
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
 					}
-					else {
-						grid_recondatasetmapping([]);
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-			});
-			$("#Datasetmappingform").modal('show');
-		} else if ($(mode).attr('value') == "create") {
-			$("#Reconfieldname").prop('disabled', false);
-			grid_recondatasetmapping([]);
-			$("#Reconfieldname").val("");
-			$("#displayorder").val(0);
-			$("#reconfield_gid").val(0);
-			$("#Datasetmappingform").modal('show');
+				});
+				$("#Datasetmappingform").modal('show');
+			} else if ($(mode).attr('value') == "create") {
+				$("#Reconfieldname").prop('disabled', false);
+				grid_recondatasetmapping([]);
+				$("#Reconfieldname").val("");
+				$("#displayorder").val(0);
+				$("#reconfield_gid").val(0);
+				$("#Datasetmappingform").modal('show');
+			}
 		}
 	}
 	function getdatasetmapping() {
@@ -1866,9 +2047,9 @@
 					var status = "";
 					$.ajax({
 						type: "POST",
-						url: '../Recon/Recondatasetmappingsave',
+						url: '../Recon/RecondatasetmappingDelete',
 						dataType: 'json',
-						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+						data: JSON.stringify({  in_reconfieldmapping_gid: in_reconfieldmapping_gid,in_action: action,  }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
 							if (response != null) {
@@ -1947,7 +2128,7 @@
 			$("#recondateflag1").prop('disabled', true);
 			$("#reconvalueflag2").prop('disabled', true);
 			$("#recondateflag2").prop('disabled', false);
-			$("#reconvalueflag1").prop('disabled', false);			
+			$("#reconvalueflag1").prop('disabled', false);
 			$("#thersholdminus").prop('disabled', true);
 		} else if (recontype == "N") {
 			$("#partialmatch1").prop('disabled', true);
@@ -1964,9 +2145,9 @@
 			$("#thersholdminus").prop('disabled', true);
 			$("#cmbthersholdvalue").prop('disabled', true);
 
-		} else if ($("#txtmode").val() == "View"){
+		} else if ($("#txtmode").val() == "View") {
 			$("#partialmatch1").prop('disabled', true);
-			$('#partialmatch2').prop('disabled', true);		
+			$('#partialmatch2').prop('disabled', true);
 			$('#reconvalueflag2').prop('disabled', true);
 			$('#recondateflag2').prop('disabled', true);
 			$("#cmbrecondatefield").prop('disabled', true);
@@ -2002,10 +2183,19 @@
 	}
 	function saveheadersubmit() {
 		try {
+			var period_to = "";
 			var reconcode = $("#reconcode").val();
 			var cmbrecontype = $("#cmbrecontype").val();
 			var ReconName = $("#ReconName").val();
 			var period_from = $("#period_from").val();
+			if (period_from == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Period From cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
 			var ts = period_from.split("/");
 			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
 			var in_until_active_flag = "";
@@ -2015,8 +2205,12 @@
 			} else {
 				in_until_active_flag = "N"
 				var period_to = $("#period_to").val();
-				var ts1 = period_to.split("/");
-				var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+				if (period_to != "") {
+					var ts1 = period_to.split("/");
+					var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+				} else {
+					var pr1 = "1901-01-02";
+				}
 			}
 
 			var action = "";
@@ -2034,9 +2228,20 @@
 				recon_id = 0;
 				action = "INSERT"
 			}
-			var status = "Y";
+			var grid = $("#grid_datasetrecon").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var recordsOnCurrentView = dataSource.view().length;
+			if (recordsOnCurrentView == 0) {
+				var status = "D";
+			}else{
+				var status = "Y";
+			}
+			
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			if (in_recon_date_flag == undefined) {
+				in_recon_date_flag = "";
+			}
 			var in_recon_date_field = $("#cmbrecondatefield").val();
 			if (in_recon_date_field == null) {
 				in_recon_date_field = '';
@@ -2047,9 +2252,12 @@
 			}
 
 			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+			if (in_recon_value_flag == undefined) {
+				in_recon_value_flag = "";
+			}
 
-			var in_threshold_plus_value = $("#thersholdplus").val();
-			var in_threshold_minus_value = $("#thersholdplus").val();
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
 			var in_threshold_code = $("#cmbthersholdvalue").val();
 			var in_active_reason = "";
 			$.ajax({
@@ -2071,7 +2279,12 @@
 						$("#recon_id").val(response.in_recon_gid)
 						$("#reconcode").val(response.in_recon_code)
 						detailfetch(response.in_recon_code);
-						window.location.href = "../Recon/ReconList";
+						var grid = $("#grid_datasetrecon").data("kendoGrid");
+						var dataSource = grid.dataSource;
+						var recordsOnCurrentView = dataSource.view().length;
+						if (recordsOnCurrentView >= 1) {
+							window.location.href = "../Recon/ReconList";
+						}
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -2079,7 +2292,6 @@
 							type: 'red',
 						});
 					}
-
 				},
 				error: function (er) {
 					alert(er)
@@ -2098,7 +2310,7 @@
 			$("#thersholdminus").val(0);
 			$("#thersholdminus").prop('disabled', false)
 			$("#thersholdplus").prop('disabled', false)
-			$("#cmbthersholdvalue").prop('disabled', false)		
+			$("#cmbthersholdvalue").prop('disabled', false)
 		} else {
 
 			$("#thersholdplus").val(0);
@@ -2216,9 +2428,251 @@
 			event.stopPropagation();
 		});
 		$("#ReconRuledetail").modal('show');
-
 	}
 
+	function gridthemeMapping(data) {
+		$("#grid_theme").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							theme_gid: { type: "string" },
+							theme_code: { type: "string" },
+							theme_desc: { type: "string" },
+							theme_order: { type: "number" },
+							recon_code: { type: "string" },
+							recon_name: { type: "string" },
+							active_status: { type: "string" },
+							hold_flag: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 225,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_theme').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			resizable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "view",
+						id: "View",
+						template: "<a href=''onclick='openthemeModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "theme_gid",
+				title: "Row id",
+				width: 50,
+				hidden: true,
+			},
+			{
+				field: "theme_order",
+				title: "Theme Order",
+				width: 40,
+				attributes: { style: "text-align: right;" },
+				filterable: {
+					ui: "numericInput",
+					extra: false,
+				},
+			},
+			{
+				field: "theme_code",
+				title: "Theme Code",
+				width: 40,
+			},
+			{
+				field: "theme_desc",
+				title: "Theme Description",
+				width: 120,
+			},
+			{
+				field: "recon_code",
+				title: "Recon Code",
+				width: 60,
+				hidden: true,
+			},
+			{
+				field: "recon_name",
+				title: "Recon Name",
+				width: 120,
+				hidden: true,
+			},
+			{
+				field: "hold_flag_desc",
+				title: "Hold Flag",
+				width: 40,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				width: 100,
+				hidden: true
+			},
+			{
+				field: "hold_flag",
+				title: "hold_flag",
+				width: 40,
+				hidden: true,
+			},
+
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 40,
+			}],
+			editable: false,
+
+		});
+	}
+
+	function openthemeModel(event) {
+		event.preventDefault();
+		var grid = $("#grid_theme").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		setlocalStorage("theme_details", selectedItem);
+		getGridthemeComboList();
+		// Prevent modal close when clicking inside it
+		$("#Reconthemedetail").on("click", function (event) {
+			event.stopPropagation();
+		});
+		$("#Reconthemedetail").modal('show');
+	}
+	function gridpreprocessMapping(data) {
+		$("#grid_preprocess").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							preprocess_gid: { type: "string" },
+							preprocess_code: { type: "string" },
+							preprocess_desc: { type: "string" },
+							recon_name: { type: "string" },
+							recon_code: { type: "string" },
+							preprocess_order: { type: "number" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 225,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_preprocess').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			resizable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "view",
+						id: "View",
+						template: "<a href=''onclick='openpreprocessModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "preprocess_gid",
+				title: "Row id",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "preprocess_order",
+				title: "Preprocess Order",
+				width: 50,
+				attributes: { style: "text-align: right;" },
+				filterable: {
+					ui: "numeric",
+					extra: false,
+				},
+			},
+			{
+				field: "preprocess_code",
+				title: "Preprocess Code",
+				width: 50,
+			},
+			{
+				field: "preprocess_desc",
+				title: "Preprocess Name",
+				width: 130,
+			},
+			{
+				field: "hold_flag_desc",
+				title: "Hold Flag",
+				width: 40,
+			},
+			{
+				field: "hold_flag",
+				title: "hold_flag",
+				width: 40,
+				hidden: true,
+			},
+			{
+				field: "recon_name",
+				title: "Recon",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				width: 100,
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 40,
+
+			}],
+			editable: false,
+		});
+	}
+	function openpreprocessModel(event) {
+		event.preventDefault();
+		var grid = $("#grid_preprocess").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		setlocalStorage("preprocess_details", selectedItem);
+		getGridCombopreprocessList();
+		// Prevent modal close when clicking inside it
+		$("#Reconpreprocessdetail").on("click", function (event) {
+			event.stopPropagation();
+		});
+		$("#Reconpreprocessdetail").modal('show');
+	}
 </script>
 
 
