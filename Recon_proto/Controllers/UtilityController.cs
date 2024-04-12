@@ -180,7 +180,8 @@ namespace Recon_proto.Controllers
                         objcat.recon_code = result.Rows[i]["recon_code"].ToString();
                         objcat.recon_name = result.Rows[i]["recon_name"].ToString();
 						objcat.file_type = result.Rows[i]["file_type"].ToString();
-						objcat_lst.Add(objcat);
+                        objcat.job_initiated_by = result.Rows[i]["job_initiated_by"].ToString();
+                        objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
                 }
@@ -205,8 +206,10 @@ namespace Recon_proto.Controllers
             public String? recon_code { get; set; }
             public String? recon_name { get; set; }
             public String? file_type { get; set; }
+            public string? job_initiated_by { get; set; }
 
-		}
+
+        }
 
         public class Jobstatusmodel
         {

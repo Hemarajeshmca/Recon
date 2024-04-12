@@ -469,7 +469,7 @@
 		var modelobj = {};
 		var modelArr = [];
 		var displayedData = $("#grid").data().kendoGrid.dataSource.view();
-
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		for (var i = 0; i < displayedData.length; i++) {
 			modelobj = {
 				in_role_gid: displayedData[i].entries[0],
@@ -484,7 +484,7 @@
 				in_deny_flag: displayedData[i].entries[9],
 				in_delete_flag: 'N',
 				in_active_status: 'Y',
-				in_action_by: 'Hema'
+				in_action_by: txtusername.user_name
 			}
 			debugger;
 			modelArr.push(modelobj);
