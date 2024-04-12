@@ -151,9 +151,9 @@
 	}
 
 	function getQCDdata() {
-		debugger;
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));;
 		var in_master_code = "QCD_RP_CONSTRAINT";
-		var in_user_code = "sundar";
+		var in_user_code = txtusername.user_name;
 		$.ajax({
 			type: "POST",
 			url: '../Reports/Qcdmaster',
@@ -322,10 +322,10 @@
 	}
 
 	function addbtn1() {
-		debugger;
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var constraintData1 = '';
 		var in_master_code = "QCD_RP_CONSTRAINT";
-		var in_user_code = "sundar";
+		var in_user_code = txtusername.user_name;
 		$.ajax({
 			type: "POST",
 			url: '../Reports/Qcdmaster',
@@ -493,7 +493,7 @@
 	}
 
 	function generateReport() {
-		debugger;
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var data = {};
 		data.in_recon_code = $("#reconname").val();
 		data.in_report_code = $("#report_name").val();
@@ -501,7 +501,7 @@
 		data.reportcondition = 'AND';
 		data.in_ip_addr = 'localhost';
 		data.in_outputfile_flag = true;
-		data.in_user_code = 'Hema';
+		data.in_user_code = txtusername.user_name;
 		for (var i = 1; i <= clicks; i++) {
 			var openpara = $("#chkval" + i).is(":checked");
 			var attributes = $("#txtorderidone" + i).val();

@@ -446,50 +446,11 @@
                 }          
             },
             blur: function () {
-                debugger;
-               // var comboBoxValue = comboBox.data("kendoComboBox").value();
                 var comboBoxValue = this.value();
                 gridpage(comboBoxValue);
             }
         }).data("kendoComboBox");
     });
-
-    //function getreconlist() {
-    //    var data = {};
-    //    var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-    //    data.in_user_gid = 0;
-    //    data.in_active_status = '';
-    //    data.in_user_code = txtusername.user_name;
-    //    var Context = data;
-    //    $.ajax({
-    //        type: "POST",
-    //        url: '../Recon/Reconlistfetch',
-    //        dataType: 'json',
-    //        data: JSON.stringify(data),
-    //        contentType: 'application/json; charset=utf-8',
-    //        success: function (response) {
-    //            var res = JSON.parse(response);
-    //            $("#reconname").empty();
-    //            $("#reconname").append($('<option>', {
-    //                value: "",
-    //                text: "  Select  "
-    //            }));
-    //            $.each(res, function (index, item) {
-    //                if (item.active_status == 'Y') {
-    //                    $("#reconname").append($('<option>', {
-    //                        value: item.recon_code,
-    //                        text: item.recon_name
-    //                    }));
-    //                }
-    //            });
-    //        },
-    //        error: function (er) {
-    //            alert(er)
-    //            console.log(er)
-    //        }
-    //    });
-    //}
-
     function detailfetch() {
         // recon list
 
@@ -769,7 +730,6 @@
         dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N" });
     }
 
-
     function OnEdit(e) {
         try {
             if (e.model.reporttemplatefilter_gid > 0) {
@@ -931,7 +891,7 @@
             if (model.reporttemplatefilter_gid) {
                 $.alert({
                     title: 'Recon',
-                    content: 'Don not have Option to delete this report Template filter',
+                    content: 'Do not have option to delete custom row filter',
                     type: 'red',
                 });
             }
@@ -995,7 +955,7 @@
             else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
                 value = " = '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-                value = " like '%'" + grid._data[i].filter_value + "%'";
+                value = " like '%" + grid._data[i].filter_value + "%'";
             } else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
                 value = " > '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
@@ -1005,7 +965,7 @@
             } else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
                 value = " >= '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-                value = " not like '%'" + grid._data[i].filter_value + "%'";
+                value = " not like '%" + grid._data[i].filter_value + "%'";
             }
 
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
@@ -1137,7 +1097,7 @@
             else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
                 value = " = '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-                value = " like '%'" + grid._data[i].filter_value + "%'";
+                value = " like '%" + grid._data[i].filter_value + "%'";
             } else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
                 value = " > '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
@@ -1147,7 +1107,7 @@
             } else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
                 value = " >= '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-                value = " not like '%'" + grid._data[i].filter_value + "%'";
+                value = " not like '%" + grid._data[i].filter_value + "%'";
             }
 
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
@@ -1406,9 +1366,9 @@
     }
 
 
-    function CloseQcdpopup() {
-        $("#processGrid").data("kendoGrid").dataSource.read();
-    }
+    //function CloseQcdpopup() {
+    //    $("#processGrid").data("kendoGrid").dataSource.read();
+    //}
 
     function additionalinfo() {
 
@@ -1435,65 +1395,65 @@
     function onRequestEnd(e) {
 
     }
-    function editDetails() {
+    //function editDetails() {
 
-        var grid = $("#processGrid").data("kendoGrid");
-        var model = grid.dataItem($(event.target).closest("tr"));
-        var tranrecon_gid = $("#tranrecon_gid").val();
-        var remark1 = $("#remark_desc").data("kendoDropDownList").value();
-        $.ajax({
-            type: "POST",
-            data: '{remark1: "' + remark1 + '",tran_gid:  "' + trangid + '" }',
-            url: '@Url.Action("RemarkReason", "SetUp")',
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (data) {
+    //    var grid = $("#processGrid").data("kendoGrid");
+    //    var model = grid.dataItem($(event.target).closest("tr"));
+    //    var tranrecon_gid = $("#tranrecon_gid").val();
+    //    var remark1 = $("#remark_desc").data("kendoDropDownList").value();
+    //    $.ajax({
+    //        type: "POST",
+    //        data: '{remark1: "' + remark1 + '",tran_gid:  "' + trangid + '" }',
+    //        url: '@Url.Action("RemarkReason", "SetUp")',
+    //        dataType: "json",
+    //        contentType: 'application/json; charset=utf-8',
+    //        success: function (data) {
 
-                if (data[1] > 0) {
-                    $.dialog({
-                        title: 'Imapct',
-                        content: data[0],
-                        type: 'green',
+    //            if (data[1] > 0) {
+    //                $.dialog({
+    //                    title: 'Imapct',
+    //                    content: data[0],
+    //                    type: 'green',
 
-                    });
-                    $("#tabs1").show();
-                    $("#applyruledtl_gid").val(data[1]).trigger("change");
-                    var wnd1 = $("#dialog1").data("kendoWindow");
-                    if (wnd1) {
-                        wnd1.close();
-                    }
-                }
-                else {
-                    $.dialog({
-                        title: 'Impact',
-                        content: data[0],
-                        type: 'green',
-                    });
-                    //event.container.data("kendoWindow").one("close", onEditorTemplateClosing);
-                }
-            },
+    //                });
+    //                $("#tabs1").show();
+    //                $("#applyruledtl_gid").val(data[1]).trigger("change");
+    //                var wnd1 = $("#dialog1").data("kendoWindow");
+    //                if (wnd1) {
+    //                    wnd1.close();
+    //                }
+    //            }
+    //            else {
+    //                $.dialog({
+    //                    title: 'Impact',
+    //                    content: data[0],
+    //                    type: 'green',
+    //                });
+    //                //event.container.data("kendoWindow").one("close", onEditorTemplateClosing);
+    //            }
+    //        },
 
-        });
-    }
+    //    });
+    //}
 
     function Reason(e) {
         window_open1();
     }
-    function window_open1() {
-        var grid = $("#processGrid").data("kendoGrid");
-        var model = grid.dataItem($(event.target).closest("tr"));
-        var tranrecon_gid = model.tranrecon_gid;
-        trangid = (model.tran_gid);
-        $("#tranrecon_gid").val(tranrecon_gid);
-        $("#dialog1").kendoWindow();
-        var dialog1 = $("#dialog1").data("kendoWindow");
-        dialog1.open().element.closest(".k-window").css({
-            top: 143,
-            left: 424, height: 144, width: 351
-        });
-        dialog1.title("Remark");
-        dialog1.bind("open", window_open);
-    }
+    //function window_open1() {
+    //    var grid = $("#processGrid").data("kendoGrid");
+    //    var model = grid.dataItem($(event.target).closest("tr"));
+    //    var tranrecon_gid = model.tranrecon_gid;
+    //    trangid = (model.tran_gid);
+    //    $("#tranrecon_gid").val(tranrecon_gid);
+    //    $("#dialog1").kendoWindow();
+    //    var dialog1 = $("#dialog1").data("kendoWindow");
+    //    dialog1.open().element.closest(".k-window").css({
+    //        top: 143,
+    //        left: 424, height: 144, width: 351
+    //    });
+    //    dialog1.title("Remark");
+    //    dialog1.bind("open", window_open);
+    //}
     function viewDetails(e) {
         var grid = this,
             selectedRow = $(e.target).closest("tr")[0];
@@ -1502,124 +1462,124 @@
         $(".k-window-title").text("View");
         // window_open();
     }
-    function window_open() {
-        debugger
-        var table_name = "recon_trn_vtranrecon"
-        var grid = $("#processGrid").data("kendoGrid");
-        var model = grid.dataItem($(event.target).closest("tr"));
+    //function window_open() {
+    //    debugger
+    //    var table_name = "recon_trn_vtranrecon"
+    //    var grid = $("#processGrid").data("kendoGrid");
+    //    var model = grid.dataItem($(event.target).closest("tr"));
 
-        var filetype = model.filetype;
-        var tranrecon_gid = model.tranrecon_gid;
-        var reportcondition = "and tranrecon_gid = " + tranrecon_gid
-        $.ajax({
-            type: "POST",
-            data: '{table_name: "' + table_name + '",condition:  "' + reportcondition + '" }',
-            // url: "/Report/ReportExpenceGrid_Read",
-            url: '@Url.Action("ReportExpenceGrid_Read", "Report")',
-            dataType: "json",
-            contentType: 'application/json; charset=utf-8',
-            success: function (Data1) {
-                $("#dialog").kendoWindow();
-                var dialog = $("#dialog").data("kendoWindow");
-                dialog.open().element.closest(".k-window").css({
-                    top: 121,
-                    left: 300, height: 400, width: 900
-                });
-                dialog.title("Manual Match - Rule Based");
-                dialog.bind("open", window_open);
-                debugger
-                $("#exportExcel1").show();
-                var columns = [];
-                var chkval = JSON.parse(Data1);
-                var arr = [];
-                $.each(chkval, function (i, e) {
+    //    var filetype = model.filetype;
+    //    var tranrecon_gid = model.tranrecon_gid;
+    //    var reportcondition = "and tranrecon_gid = " + tranrecon_gid
+    //    $.ajax({
+    //        type: "POST",
+    //        data: '{table_name: "' + table_name + '",condition:  "' + reportcondition + '" }',
+    //        // url: "/Report/ReportExpenceGrid_Read",
+    //        url: '@Url.Action("ReportExpenceGrid_Read", "Report")',
+    //        dataType: "json",
+    //        contentType: 'application/json; charset=utf-8',
+    //        success: function (Data1) {
+    //            $("#dialog").kendoWindow();
+    //            var dialog = $("#dialog").data("kendoWindow");
+    //            dialog.open().element.closest(".k-window").css({
+    //                top: 121,
+    //                left: 300, height: 400, width: 900
+    //            });
+    //            dialog.title("Manual Match - Rule Based");
+    //            dialog.bind("open", window_open);
+    //            debugger
+    //            $("#exportExcel1").show();
+    //            var columns = [];
+    //            var chkval = JSON.parse(Data1);
+    //            var arr = [];
+    //            $.each(chkval, function (i, e) {
 
-                    $.each(e, function (key, val) {
-                        arr.push(val);
-                    });
+    //                $.each(e, function (key, val) {
+    //                    arr.push(val);
+    //                });
 
-                });
-                if (arr == "No Records Found!" || arr == "Error in Data!") {
-                    return false;
-                }
-                var data = JSON.parse(Data1);
-                var i = 0;
-                var entryIndex = "entries[" + i + "]";
-                for (var val in data[0]) {
-                    if (val == "Collection Center Name") {
-                        columns.push({
-                            field: entryIndex,
-                            title: key,
-                            attributes: { style: "text-align: left;" }
-                        });
-                    }
-                    else {
-                        if (val != "Collection Center Name")
-                            columns.push({
-                                field: entryIndex,
-                                title: val,
-                            });
-                    }
-                    i = i + 1;
-                    entryIndex = "entries[" + i + "]";
-                }
-                var rows = [];
-                var data1 = JSON.parse(Data1);
+    //            });
+    //            if (arr == "No Records Found!" || arr == "Error in Data!") {
+    //                return false;
+    //            }
+    //            var data = JSON.parse(Data1);
+    //            var i = 0;
+    //            var entryIndex = "entries[" + i + "]";
+    //            for (var val in data[0]) {
+    //                if (val == "Collection Center Name") {
+    //                    columns.push({
+    //                        field: entryIndex,
+    //                        title: key,
+    //                        attributes: { style: "text-align: left;" }
+    //                    });
+    //                }
+    //                else {
+    //                    if (val != "Collection Center Name")
+    //                        columns.push({
+    //                            field: entryIndex,
+    //                            title: val,
+    //                        });
+    //                }
+    //                i = i + 1;
+    //                entryIndex = "entries[" + i + "]";
+    //            }
+    //            var rows = [];
+    //            var data1 = JSON.parse(Data1);
 
-                $.each(data1, function (i, e) {
-                    var entryArray = [];
-                    $.each(e, function (key, val) {
+    //            $.each(data1, function (i, e) {
+    //                var entryArray = [];
+    //                $.each(e, function (key, val) {
 
-                        entryArray.push(val);
-                    });
-                    rows.push(kendo.observable({
-                        entries: entryArray
-                    }));
+    //                    entryArray.push(val);
+    //                });
+    //                rows.push(kendo.observable({
+    //                    entries: entryArray
+    //                }));
 
-                });
+    //            });
 
-                var viewModel = kendo.observable({
-                    gridRows: rows
-                });
+    //            var viewModel = kendo.observable({
+    //                gridRows: rows
+    //            });
 
-                var configuration = {
-                    //dataBound: onDataBound,
-                    height: 330,
-                    navigatable: true,
-                    groupable: true,
-                    editable: false,
-                    sortable: true,
-                    Scrollable: true,
-                    filterable: false,
-                    pagable: false,
-                    resizable: false,
-                    persistSelection: true,
-                    selectable: "false",
-                    columns: columns,
-                    rows: viewModel,
-                    excel: {
-                        fileName: "Manual Match.xlsx",
-                        filterable: true,
-                        allPages: false
-                    },
-                };
-                $("#example").remove();
-                $('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
-                var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
-                kendo.bind($("#grid"), viewModel);
+    //            var configuration = {
+    //                //dataBound: onDataBound,
+    //                height: 330,
+    //                navigatable: true,
+    //                groupable: true,
+    //                editable: false,
+    //                sortable: true,
+    //                Scrollable: true,
+    //                filterable: false,
+    //                pagable: false,
+    //                resizable: false,
+    //                persistSelection: true,
+    //                selectable: "false",
+    //                columns: columns,
+    //                rows: viewModel,
+    //                excel: {
+    //                    fileName: "Manual Match.xlsx",
+    //                    filterable: true,
+    //                    allPages: false
+    //                },
+    //            };
+    //            $("#example").remove();
+    //            $('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+    //            var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
+    //            kendo.bind($("#grid"), viewModel);
 
-                var grid = $("#grid").data("kendoGrid");
-                for (var i = 0; i < grid.columns.length; i++) {
-                    if (i != grid.columns.length) {
-                        grid.autoFitColumn(i);  //autofit each column.
-                    }
-                }
-            },
-            error: function (result) {
-                console.log(result);
-            }
-        });
-    }
+    //            var grid = $("#grid").data("kendoGrid");
+    //            for (var i = 0; i < grid.columns.length; i++) {
+    //                if (i != grid.columns.length) {
+    //                    grid.autoFitColumn(i);  //autofit each column.
+    //                }
+    //            }
+    //        },
+    //        error: function (result) {
+    //            console.log(result);
+    //        }
+    //    });
+    //}
     $(".accordion_head").click(function () {
 
         if ($('.accordion_body').is(':visible')) {
@@ -1684,7 +1644,7 @@
             else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
                 value = " = '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-                value = " like '%'" + grid._data[i].filter_value + "%'";
+                value = " like '%" + grid._data[i].filter_value + "%'";
             } else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
                 value = " > '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
@@ -1694,7 +1654,7 @@
             } else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
                 value = " >= '" + grid._data[i].filter_value + "'";
             } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-                value = " not like '%'" + grid._data[i].filter_value + "%'";
+                value = " not like '%" + grid._data[i].filter_value + "%'";
             }
             rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
         }
@@ -1761,127 +1721,4 @@
             });
         }
     }
-
-
-    // XLSX Download working
-    //function generateXlsx() {
-    //    var grid = $("#grid_tempfilter").data("kendoGrid");
-    //    var objpplmapupdlist = [];
-    //    var rpt_cond = "";
-    //    var value = "";
-    //    var open_braces = "";
-    //    var close_braces = "";
-    //    var joins = "";
-    //    var joins1 = "";
-    //    for (var i = 0; i < grid._data.length; i++) {
-    //        value = "";
-    //        open_braces = "";
-    //        close_braces = "";
-    //        joins = "";
-    //        joins1 = "";
-    //        if (i == 0) {
-    //            joins1 = 'AND ';
-    //        }
-    //        if (i == grid._data.length - 1) {
-    //            joins = " ";
-    //        }
-    //        else {
-    //            if (grid._data[i].join_condition) {
-    //                joins = grid._data[i].join_condition + " ";
-    //            } else {
-    //                joins = 'AND '
-    //            }
-    //        }
-    //        // close braces assigning
-    //        if ($('#chk_sel1_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
-    //            close_braces = " ) ";
-    //        }
-    //        // open braces assigning
-    //        if ($('#chk_sel_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
-    //            open_braces = "(";
-    //        }
-    //        // Condition based value assigning
-    //        if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
-    //            value = " != '" + grid._data[i].filter_value + "'";
-    //        }
-    //        else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
-    //            value = " like '%" + grid._data[i].filter_value + "'";
-    //        }
-    //        else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
-    //            value = " like '" + grid._data[i].filter_value + "%'";
-    //        }
-    //        else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
-    //            value = " = '" + grid._data[i].filter_value + "'";
-    //        } else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-    //            value = " like '%'" + grid._data[i].filter_value + "%'";
-    //        } else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
-    //            value = " > '" + grid._data[i].filter_value + "'";
-    //        } else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
-    //            value = " < '" + grid._data[i].filter_value + "'";
-    //        } else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
-    //            value = " <= '" + grid._data[i].filter_value + "'";
-    //        } else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
-    //            value = " >= '" + grid._data[i].filter_value + "'";
-    //        } else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-    //            value = " not like '%'" + grid._data[i].filter_value + "%'";
-    //        }
-    //        rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
-    //    }
-    //    var data = {
-    //        "in_recon_code": $("#reconname").val(), "in_report_code": $("#cmbreporttype").val(), "in_report_param": $("#cmbreporttype").find(":selected").text(),
-    //        "reportcondition": rpt_cond,
-    //        "in_ip_addr": "localhost", "in_outputfile_flag": false, "in_user_code": "Hema"
-    //    };
-    //    if ($("#reconname").val() && $("#cmbreporttype").val() && rpt_cond) {
-    //        window.location.href = '@Url.Action("generateReportXLSX", "Reports")?in_recon_code=' + data.in_recon_code + '&in_report_code=' + data.in_report_code + '&in_report_param=' + data.in_report_param + '&reportcondition=' + data.reportcondition + '&in_ip_addr=' + data.in_ip_addr + '&in_outputfile_flag=' + data.in_outputfile_flag + '&in_user_code=' + data.in_user_code + '';
-    //        //$.ajax({
-    //        //    type: "POST",
-    //        //    url: '../Reports/generateReport',
-    //        //    dataType: 'json',
-    //        //    async: false,
-    //        //    data: JSON.stringify(data),
-    //        //    contentType: 'application/json; charset=utf-8',
-    //        //    success: function (response) {
-    //        //        alert("Success");
-    //        //        //var res = JSON.parse(response);
-    //        //        //if (res.length > 0) {
-    //        //        //    var data = res[0];
-    //        //        //    if (data.out_result != '0') {
-
-    //        //        //    } else {
-    //        //        //        $.alert({
-    //        //        //            title: 'Recon',
-    //        //        //            content: data.out_msg,
-    //        //        //            type: 'red',
-    //        //        //        });
-    //        //        //    }
-    //        //        //} else {
-    //        //        //    $.alert({
-    //        //        //        title: 'Recon',
-    //        //        //        content: "Something Went Wrong ..!",
-    //        //        //        type: 'red',
-    //        //        //    });
-    //        //        //}
-    //        //    },
-    //        //    error: function (er) {
-    //        //        alert(er)
-    //        //        console.log(er)
-    //        //    }
-    //        //});
-    //    }
-    //    else if (!$("#reconname").val()) {
-    //        $.alert({
-    //            title: 'Recon',
-    //            content: "Please select Recon Name ..!",
-    //            type: 'red',
-    //        });
-    //    } else if (!$("#cmbreporttype").val()) {
-    //        $.alert({
-    //            title: 'Recon',
-    //            content: "Please select Report..!",
-    //            type: 'red',
-    //        });
-    //    }
-    //}
-
 </script>

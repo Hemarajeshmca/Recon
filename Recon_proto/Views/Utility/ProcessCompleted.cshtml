@@ -177,7 +177,8 @@
 								start_date: { type: "string" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
-								file_type: {type: "string"}
+								file_type: {type: "string"},
+								job_initiated_by: {type: "string"}
 							}
 						}
 					}
@@ -209,7 +210,7 @@
 							},
 						],
 						title: "Action&nbsp;",
-						width: "40px",
+						width: "50px",
 						attributes: { style: "text-align: center;" },
 					},
 					{
@@ -246,7 +247,18 @@
 					{
 						field: "start_date",
 						title: "Start Date",
+						//format: "{0:dd-MM-yyyy HH:mm:ss}",
 						width: 120,
+						//filterable: {
+						//	ui: "datetimepicker",
+						//	extra: false,
+						//	operators: {
+						//		date: {
+						//			lt: "Before",
+						//			gt: "After"
+						//		},
+						//	},
+						//},
 					},
 					{
 						field: "end_date",
@@ -259,10 +271,15 @@
 						width: 100,
 					},
 					{
+						field: "job_initiated_by",
+						title: "Initated By",
+						width: 80,
+					},
+					{
 						field: "jobstatus_desc",
 						title: "Job Status",
 						width: 80,
-					},
+					},					
 					{
 						field: "jobtype_code",
 						title: "Job Type Code",
@@ -273,7 +290,7 @@
 						title: "File Type",
 						width:50,
 						hidden: true
-					},
+					}, 
 				],
 				editable: false,
 			});

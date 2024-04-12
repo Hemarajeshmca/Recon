@@ -596,7 +596,7 @@
 
 	// code to hit API directly
 	function start1() {
-		debugger;
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var baseurl = '@ViewBag.baseurl';
 		var fileName = '';
 		var fileType = '';
@@ -610,7 +610,7 @@
 			formData.append('file', fileInput.files[0]);
 			fileType = fileInput.files[0].type;
 		}
-		formData.append('initiated_by', 'Hema');
+		formData.append('initiated_by', txtusername.user_name);
 		$.ajax({
 			url: baseurl + 'Pipeline/NewScheduler_new',
 			type: 'POST',
@@ -623,7 +623,7 @@
 	}
 
 	function start() {
-		debugger;
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var fileName = '';
 		var fileType = '';
 		var fileInput = '';
@@ -637,7 +637,7 @@
 			formData.append('file', fileInput.files[0]);
 			fileType = fileInput.files[0].name;
 		}
-		formData.append('initiated_by', 'Hema');
+		formData.append('initiated_by', txtusername.user_name);
 		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
 
 			//$.alert({
