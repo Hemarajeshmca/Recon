@@ -254,8 +254,10 @@
 						}));
 					}
 				});
-				$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-				jQuery('#cmbreconname').trigger("change");
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
 			}
 		});
 		//var data = {};

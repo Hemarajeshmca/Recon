@@ -92,6 +92,8 @@ namespace Recon_proto.Controllers
 			public string in_recon_code { get; set; }
 			public string in_rule_code { get; set; }
 			public string in_reconrule_version { get; set; }
+			public string in_theme_code { get; set; }
+			public string in_preprocess_code { get; set; }
 			public string in_user_code { get; set; }
 			public string? out_msg { get; set; }
 			public string? out_result { get; set; }

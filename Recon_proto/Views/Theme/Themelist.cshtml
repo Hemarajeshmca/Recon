@@ -17,7 +17,8 @@
 		}
 
 		.k-grid-filter.k-state-active {
-			background-color: unset;
+			color: #ffffff;
+			background-color: #1274AC;
 		}
 
 		.k-grid.k-widget {
@@ -105,12 +106,12 @@
 							value: item.recon_code,
 							text: item.recon_name
 						}));
-					}
-					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					if ($("#cmbreconname").val() != '') {
-						jQuery('#cmbreconname').trigger("change");
-					}
+					}					
 				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
 			},
 			error: function (er) {
 				alert(er)
@@ -294,12 +295,21 @@
 					width: 40,
 					hidden: true,
 				},
-
 				{
 					field: "active_status_desc",
 					title: "Status",
 					width: 40,
-
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
 				},
 
 				{
@@ -311,7 +321,17 @@
 				editable: false,
 
 			});
-
+			var grid = $("#grid_theme").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
 		}
 		catch (err) {
 			console.log(err)

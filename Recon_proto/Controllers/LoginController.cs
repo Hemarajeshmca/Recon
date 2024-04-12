@@ -10,6 +10,7 @@ using Recon_proto.Models;
 using static Recon_proto.Controllers.LoginController;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace Recon_proto.Controllers
 {
@@ -264,6 +265,11 @@ namespace Recon_proto.Controllers
 		{
 			try
 			{
+				_configuration.GetSection("AppSettings")["user_code"] = "";
+				_configuration.GetSection("AppSettings")["lang_code"] = "";
+				_configuration.GetSection("AppSettings")["role_code"] = "";
+				_configuration.GetSection("AppSettings")["lastlogin"] = "";
+				_configuration.GetSection("AppSettings")["ipAddress"] = "";
 				return this.RedirectToAction("Login", "Login");
 			}
 			catch (Exception ex)
