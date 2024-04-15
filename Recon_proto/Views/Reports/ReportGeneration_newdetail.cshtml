@@ -468,18 +468,27 @@
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                var res = JSON.parse(response);
-                $("#reconname").empty();
-                $("#reconname").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(res, function (index, item) {
+                if (response != " " && response != null && response != "{}" && response != "[]"){
+                    var res = JSON.parse(response);
+                    $("#reconname").empty();
                     $("#reconname").append($('<option>', {
-                        value: item.recon_code,
-                        text: item.recon_name
+                        value: "",
+                        text: "  Select  "
                     }));
-                });
+                    $.each(res, function (index, item) {
+                        $("#reconname").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    });
+                } else {
+                    $.alert({
+                        title: 'Recon',
+                        content: 'Something went wrong .!',
+                        type: 'red',
+                    });
+                }
+                
             },
             error: function (er) {
                 alert(er)
@@ -534,7 +543,7 @@
                     data: JSON.stringify(jsondata),
                     contentType: 'application/json; charset=utf-8',
                     success: function (response) {
-                        if (response != " ") {
+                        if (response != " " && response != null && response != "{}" && response != "[]") {
                             var res = JSON.parse(response);
                             $("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
                             $("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -840,15 +849,24 @@
             data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                var res = JSON.parse(response);
-                if (res.length > 0) {
-                    for (i = 0; res.length > i; i++) {
-                        var list = {};
-                        list.code = res[i].reportparam_code;
-                        list.desc = res[i].reportparam_desc;
-                        arr1.push(list);
+                if (response != " " && response != null && response != "{}" && response != "[]") {
+                    var res = JSON.parse(response);
+                    if (res.length > 0) {
+                        for (i = 0; res.length > i; i++) {
+                            var list = {};
+                            list.code = res[i].reportparam_code;
+                            list.desc = res[i].reportparam_desc;
+                            arr1.push(list);
+                        }
                     }
+                } else {
+                    $.alert({
+                        title: 'Recon',
+                        content: 'Something went wrong .!',
+                        type: 'red',
+                    });
                 }
+                
             },
             error: function (er) {
                 alert(er)
@@ -1129,44 +1147,46 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    var res = JSON.parse(response);
-                    if (res.length > 0) {
-                        var data = res[0];
-                        if (data.out_result != '0') {
-                            result = res[0].out_rec_count;
-                            count = res[0].out_result;
-                            if (res[0].out_rec_count > 0) {
-                                $('#framevalue').text(rpt_cond.slice(3));
-                                $("#framevalue").show();
-                                Runprogress();
+                    if (response != " " && response != null && response != "{}" && response != "[]") {
+                        var res = JSON.parse(response);
+                        if (res.length > 0) {
+                            var data = res[0];
+                            if (data.out_result != '0') {
+                                result = res[0].out_rec_count;
+                                count = res[0].out_result;
+                                if (res[0].out_rec_count > 0) {
+                                    $('#framevalue').text(rpt_cond.slice(3));
+                                    $("#framevalue").show();
+                                    Runprogress();
+                                } else {
+                                    $.alert({
+                                        title: 'Recon',
+                                        content: 'No Records Found',
+                                        type: 'red',
+                                    });
+
+                                    $(this).next(".accordion_body").slideDown(300);
+                                    $(".plusminus").text('+');
+                                    $("#Dynamic_grid").hide();
+                                    $("#example").hide();
+                                    $("#framevalue").hide();
+                                    $(".page_bg").hide();
+                                }
                             } else {
                                 $.alert({
                                     title: 'Recon',
-                                    content: 'No Records Found',
+                                    content: data.out_msg,
                                     type: 'red',
                                 });
-                               
-                                $(this).next(".accordion_body").slideDown(300);
-                                $(".plusminus").text('+');
-                                $("#Dynamic_grid").hide();
-                                $("#example").hide();
-                                $("#framevalue").hide();  
-                                $(".page_bg").hide();
                             }
                         } else {
                             $.alert({
                                 title: 'Recon',
-                                content: data.out_msg,
+                                content: "Something Went Wrong ..!",
                                 type: 'red',
                             });
                         }
-                    } else {
-                        $.alert({
-                            title: 'Recon',
-                            content: "Something Went Wrong ..!",
-                            type: 'red',
-                        });
-                    }
+                    }              
                 },
                 error: function (er) {
                     hideProgress();
@@ -1215,7 +1235,7 @@
             contentType: 'application/json; charset=utf-8',
             success: function (Data1) {
 
-                if (Data1 != '') {
+                if (Data1 != '' && Data1 != null && Data1 != "{}" && Data1 != "[]") {
                     var columns = [];
                     var chkval = JSON.parse(Data1);
                     var arr = [];
@@ -1292,6 +1312,12 @@
                     $("#grid").kendoGrid(configuration).data("kendoGrid");
                     kendo.bind($("#grid"), viewModel);
                     $(".page_bg").show();
+                } else {
+                    $.alert({
+                        title: 'Recon',
+                        content: 'Something went wrong .!',
+                        type: 'red',
+                    });
                 }
             }
         });
