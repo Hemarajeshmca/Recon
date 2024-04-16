@@ -415,7 +415,6 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
-
 		[HttpPost]
 		public JsonResult Recondatasetmappingdelete([FromBody] datamappingdel context)
 		{
@@ -537,7 +536,6 @@ namespace Recon_proto.Controllers
 			public String? active_status_desc { get; set; }
 		}
         #endregion
-
 
         #region Reconlistknockoff
         [HttpPost]
@@ -858,7 +856,6 @@ namespace Recon_proto.Controllers
 			}
 		}
 		#endregion
-
 
 		#region Datasetlistfetch
 

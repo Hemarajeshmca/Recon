@@ -403,7 +403,7 @@
 		$("#Cmbfunction").val(data.process_function);
 		$("#Cmbreconfield").val(data.set_recon_field);
 		$("#querydata").val(data.process_query);
-		preprocessfetch(data.preprocess_code);
+		
 		$("#holdflag1").val(data.hold_flag);
 		$("#txtstatus2").val("Active");
 		$("#savesubmit").hide();
@@ -421,16 +421,20 @@
 					if (result.filter.length > 0) {
 						$("#gd_filter").empty();
 						$("#gd_filter").append("<div id='grid_filter'></div>");
-						grid_filter(result.filter);
+						grid_filter(result.filter);						
 					}
 					else {
 						grid_filter([]);
 					}
 					if (result.condition.length > 0) {
-						grid_lookup(result.condition)
+						grid_lookup(result.condition);
+						if ($("#txtmode2").val() == "View") {
+							$("#grid_filter .k-grid-toolbar").hide();
+							$("#grid_lookup .k-grid-toolbar").hide();
+						}
 					} else {
 						grid_lookup([]);
-					}
+					}					
 					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
 					$("#cmbrecon1").val(result.header[0].recon_code);
 					jQuery('#cmbrecon1').trigger("change");
@@ -451,9 +455,7 @@
 					$("#holdflag1").val(result.header[0].hold_flag);
 				}
 			}
-		});
-		$("#grid_filter .k-grid-toolbar").hide();
-		$("#grid_lookup .k-grid-toolbar").hide();
+		});		
 		$("#preprocessname").prop('disabled', true);
 		$("#preprocessorder").prop('disabled', true);
 		$("#Cmbprocessmethod").prop('disabled', true);
@@ -467,9 +469,13 @@
 		$("#cmbrecon1").prop('disabled', true);
 		$("#querydata").prop('disabled', true);
 		$("#cmblookupdataset").prop('disabled', true);
-		$("#Cmblookupdatasetfield").prop('disabled', true);
-
+		$("#Cmblookupdatasetfield").prop('disabled', true);		
+		if ($("#txtmode2").val() == "View") {
+			$("#grid_filter .k-grid-toolbar").hide();
+			$("#grid_lookup .k-grid-toolbar").hide();
+		}
 	}
+
 	function reconcode() {
 		var reconcode = $("#cmbrecon1").val();
 		$.ajax({
