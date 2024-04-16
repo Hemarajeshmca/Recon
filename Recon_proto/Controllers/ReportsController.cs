@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using static Recon_proto.Controllers.ReconController;
 using System.Data;
+using System;
+using System.IO;
 using System.Net.Http.Headers;
 using System.Text;
 using static Recon_proto.Controllers.CommonController;
@@ -22,6 +24,7 @@ using Recon_proto.Controllers;
 using System.Data.SqlTypes;
 using static Recon_proto.Controllers.UtilityController;
 using System.Net.Mime;
+using DocumentFormat.OpenXml.ExtendedProperties;
 
 namespace Recon_proto.Controllers
 {
@@ -2116,6 +2119,96 @@ namespace Recon_proto.Controllers
 
 
         #endregion
+
+        #region clone files
+
+        public string clonefiles([FromBody] filepaths context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
+            var getfolderpath = roleconfig_db();
+            try
+            {
+                var source_file = getfolderpath + context.source_code + ".xlsx";
+                var destination_file = getfolderpath + context.destination_code + ".xlsx";
+                System.IO.File.Copy(source_file, destination_file, true);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Datasetdetail");
+                return "Error";
+            }
+        }
+
+        public class filepaths
+        {
+            public String? source_code { get; set; }
+            public String? destination_code { get; set; }
+
+        }
+
+        #endregion
+
+        public string roleconfig_db()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
+
+            var context = _configuration.GetSection("Appsettings")["Uploadpath"].ToString();
+            FileDownload.in_config_name = context;
+            DataTable result = new DataTable();
+            string post_data = "";
+            List<configmodel> objcat_lst = new List<configmodel>();
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Common/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("configvalue", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    configmodel objcat = new configmodel();
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        objcat.out_config_value = result.Rows[i]["out_config_value"].ToString();
+                        objcat.out_msg = result.Rows[i]["out_msg"].ToString();
+                        objcat.out_result = result.Rows[i]["out_result"].ToString();
+                        objcat_lst.Add(objcat);
+                    }
+                    return objcat.out_config_value;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "configvalue");
+                return "Error";
+            }
+        }
+
+        public class configmodel
+        {
+            public string? out_config_value { get; set; }
+            public string? out_msg { get; set; }
+            public string? out_result { get; set; }
+        }
+
     }
 
 }

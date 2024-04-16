@@ -1,5 +1,5 @@
 ﻿@{
-	ViewBag.title = "Custom Report Template";
+	ViewBag.title = "Custom Report";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -42,7 +42,7 @@
 </html>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Custom Report Template");
+		$("#navhead").text("Custom Report");
 		kendodate_format();
 		grid_reportTemplist([]);
 		//recon name
@@ -89,7 +89,6 @@
 	}
 
 	function getSerializedRows(){
-		debugger;
 		btn_onClick('Create');
 		var selectedItem = $("#cmbreconname").val();
 		if ($("#cmbreconname").val()) {
@@ -144,8 +143,21 @@
 		}
 	}
 
+	var status_Priority = [];
+
 	function grid_reportTemplist(data){
 		try {
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
 			$("#grid_reporttemplist").kendoGrid({
 				dataSource: {
 					data: data,
@@ -172,6 +184,19 @@
 					resultData = e.sender._data;
 					var rows = $('#grid_reporttemplist').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('ds_setup')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
 				},
 				pageable: {
 					refresh: false,
@@ -230,7 +255,7 @@
 				},
 				{
 					field: "report_desc",
-					title: "Report Name",
+					title: "Standard Report Name",
 					width: 90,
 				},
 				{
@@ -248,15 +273,44 @@
 					field: "active_status_desc",
 					title: "Status",
 					width: 50,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
 				}],
 				editable: false,
 
 			});
+			var grid = $("#grid_reporttemplist").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
 		}
 		catch (err) {
 			console.log(err)
 
 		}
+	}
+
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
 	}
 
 	function selectRow() {
@@ -386,7 +440,6 @@
 		data.in_report_code = selectedItem.report_code;
 		data.in_action = 'DELETE';
 		data.in_active_status = 'N';
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reporttemplate',

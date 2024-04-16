@@ -178,7 +178,8 @@
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
 								file_type: {type: "string"},
-								job_initiated_by: {type: "string"}
+								job_initiated_by: {type: "string"},
+								file_name : {type: "string"}
 							}
 						}
 					}
@@ -291,6 +292,12 @@
 						width:50,
 						hidden: true
 					}, 
+					{
+						filed: "file_name",
+						title: "file_name",
+						width:10,
+						hidden: true
+					}
 				],
 				editable: false,
 			});
@@ -300,7 +307,6 @@
 	}
 
 	function downloadJob(val) {	
-		debugger;
 		var data = $(val).attr('value');
 		var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
 		var grid = $("#grid_jobinprogress").data("kendoGrid");
@@ -311,21 +317,5 @@
 		} else {
 			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '';
 		}
-
-		//window.location.href = '@Url.Action("DownloadFile", "KnockOff")?Subfolder=' + 'foldername' + '&Excelfiles=' + 'excelfile' + '';
-
-		//$.ajax({
-		//	type: "POST",
-		//	url: '/KnockOff/DownloadFile',
-		//	dataType: 'json',
-		//	data: JSON.stringify({
-		//		Subfolder: '',
-		//		Excelfiles: ''
-		//	}),
-		//	contentType: 'application/json; charset=utf-8',
-		//	success: function (response) {
-		//		debugger;
-		//	}
-		//});
 	}
 </script>
