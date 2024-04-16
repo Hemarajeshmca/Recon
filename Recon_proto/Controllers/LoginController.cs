@@ -71,7 +71,8 @@ namespace Recon_proto.Controllers
                     {
                         user_model objcat = new user_model();
                         objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
-                        objcat.user_name = result.Rows[i]["user_name"].ToString();
+						objcat.user_code = result.Rows[i]["user_code"].ToString();
+						objcat.user_name = result.Rows[i]["user_name"].ToString();
                         objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
                         objcat.usergroup_code =result.Rows[i]["usergroup_code"].ToString();
 						objcat.usergroup_desc = result.Rows[i]["usergroup_desc"].ToString();

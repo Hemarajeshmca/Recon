@@ -878,7 +878,7 @@
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 				var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-				var user_code = txtusername.user_name;
+				var user_code = txtusername.user_code;
 				var level_mapping = $("#orglvl1valO").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO").val() + "#" + "QCD_L3";
 				$.ajax({
 					type: "POST",
@@ -1033,7 +1033,7 @@
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		document.getElementById("userdata").textContent = txtusername.user_name;
 		document.getElementById("userdata1").innerHTML = "Welcome " + txtusername.user_name + "<br>" + "Please Select Context"
-		sessionStorage.setItem("usrname", txtusername.user_name);
+		sessionStorage.setItem("usrname", txtusername.user_code);
 		sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
 		document.getElementById("roledata").textContent = txtusername.usergroup_desc;
 		function storeheadernew() {
@@ -1054,7 +1054,7 @@
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 				var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-				var user_code = txtusername.user_name;
+				var user_code = txtusername.user_code;
 				var level_mapping = $("#orglvl1valO1").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO1").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO1").val() + "#" + "QCD_L3";
 				$.ajax({
 					type: "POST",

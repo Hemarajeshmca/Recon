@@ -172,7 +172,7 @@
 												Rule
 											</button>
 										</li>
-										<li class="nav-item">
+										<li class="nav-item" style="display:none">
 											<button type="button"
 													class="nav-link"
 													role="tab"
@@ -192,6 +192,17 @@
 													aria-controls="navs-pills-top-preprocess"
 													aria-selected="true">
 												Preprocess
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-RptTemplate"
+													aria-controls="navs-pills-top-RptTemplate"
+													aria-selected="true">
+												Report Template
 											</button>
 										</li>
 									</ul>
@@ -315,6 +326,19 @@
 													<div class="col-xs-12">
 														<div id="gd_preprocess">
 															<div id="grid_preprocess">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*Report Template*@
+										<div class="tab-pane fade" id="navs-pills-top-RptTemplate" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default" style="margin-top:15px;">
+												<div class="panel-body">
+													<div class="col-xs-12">
+														<div id="gd_rpttemplate">
+															<div id="grid_rpttemplate">
 															</div>
 														</div>
 													</div>
@@ -530,6 +554,30 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal" id="Reconrpttemplatedetail">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:500px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Report Template</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_reporttemplate")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
@@ -707,6 +755,11 @@
 							} else {
 								gridpreprocessMapping([]);
 							}
+							if (res.Rpttemplate.length > 0) {
+								grid_reportTemplist(res.Rpttemplate);
+							} else {
+								grid_reportTemplist([]);
+							}
 							$("#cmbdatasetmap").empty();
 							$("#cmbdatasetmap").append($('<option>', {
 								value: "",
@@ -850,6 +903,11 @@
 						} else {
 							gridpreprocessMapping([]);
 						}
+						if (res.Rpttemplate.length > 0) {
+							grid_reportTemplist(res.Rpttemplate);
+						} else {
+							grid_reportTemplist([]);
+						}
 						$("#cmbdatasetmap").empty();
 						$("#cmbdatasetmap").append($('<option>', {
 							value: "",
@@ -966,7 +1024,11 @@
 					} else {
 						gridpreprocessMapping([]);
 					}
-
+					if (res.Rpttemplate.length > 0) {
+						grid_reportTemplist(res.Rpttemplate);
+					} else {
+						grid_reportTemplist([]);
+					}
 					$("#cmbdatasetmap").empty();
 					$("#cmbdatasetmap").append($('<option>', {
 						value: "",
@@ -2672,6 +2734,121 @@
 			event.stopPropagation();
 		});
 		$("#Reconpreprocessdetail").modal('show');
+	}
+	function grid_reportTemplist(data) {
+		try {
+			$("#grid_rpttemplate").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								reporttemplate_gid: { type: "string" },
+								reporttemplate_code: { type: "string" },
+								reporttemplate_name: { type: "string" },
+								report_code: { type: "string" },
+								report_desc: { type: "string" },
+								system_flag: { type: "string" },
+								system_flag_desc: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 225,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_rpttemplate').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				sortable: false,
+				selectable: true,
+				filterable: false,
+				navigatable: true,
+				pageable: true,
+				resizable: true,
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				columns: [{
+					command: [
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='openrpttempModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					], title: "Action&nbsp;", width: "40px",
+				},
+				{
+					field: "reporttemplate_gid",
+					title: "reporttemplate_gid",
+					width: 10,
+					hidden: true,
+				},
+
+				{
+					field: "reporttemplate_code",
+					title: "Custom Template Code",
+					width: 70,
+				},
+				{
+					field: "reporttemplate_name",
+					title: "Custom Template Name",
+					width: 100,
+				},
+				{
+					field: "report_code",
+					title: "report_code",
+					width: 10,
+					hidden: true,
+				},
+				{
+					field: "report_desc",
+					title: "Report Name",
+					width: 90,
+				},
+				{
+					field: "system_flag_desc",
+					title: "Report Type",
+					width: 60,
+				},
+				{
+					field: "active_status",
+					title: "active_status",
+					width: 75,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+		}
+	}
+
+	function openrpttempModel(event) {
+		event.preventDefault();
+		var grid = $("#grid_rpttemplate").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());	
+		setlocalStorage("temp_gid", '0');
+		setlocalStorage("rpttemplatedetails", selectedItem);
+		rpttempdetailfetch();
+		// Prevent modal close when clicking inside it
+		$("#Reconrpttemplatedetail").on("click", function (event) {
+			event.stopPropagation();
+		});
+		$("#Reconrpttemplatedetail").modal('show');
 	}
 </script>
 
