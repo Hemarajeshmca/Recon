@@ -181,6 +181,7 @@ namespace Recon_proto.Controllers
                         objcat.recon_name = result.Rows[i]["recon_name"].ToString();
 						objcat.file_type = result.Rows[i]["file_type"].ToString();
                         objcat.job_initiated_by = result.Rows[i]["job_initiated_by"].ToString();
+                        objcat.file_name = result.Rows[i]["file_name"].ToString();
                         objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
@@ -207,7 +208,7 @@ namespace Recon_proto.Controllers
             public String? recon_name { get; set; }
             public String? file_type { get; set; }
             public string? job_initiated_by { get; set; }
-
+            public string? file_name { get; set; }
 
         }
 

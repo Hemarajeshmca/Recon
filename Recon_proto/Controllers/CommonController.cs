@@ -82,10 +82,10 @@ namespace Recon_proto.Controllers
         {
             errormodel model = new errormodel();
             model.in_errorlog_text = message;
-            model.in_ip_addr = "localhost";
-            model.in_source_name = "API";
+            model.in_ip_addr = "";
+            model.in_source_name = "";
             model.in_proc_name = proc_name;
-            model.user_code = "Hema";
+            model.user_code = "";
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
             List<mainQCDMaster> objcat_lst = new List<mainQCDMaster>();
