@@ -58,6 +58,11 @@
 			overflow: hidden !important;
 		}
 
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
 		.error_show {
 			color: red;
 			margin-left: 10px;
@@ -73,10 +78,6 @@
 
 		.k-grid-header {
 			font-weight: bold;
-		}
-
-		.k-state-active {
-			display: none;
 		}
 
 		.k-content {
@@ -309,10 +310,21 @@
 			}
 		});
 	}
-
+	var status_Priority = [];
 	function grid_dataset_details(data, QcdName) {
 		try {
-			var name = $('#qcdcode').children('option:selected').text()
+			var name = $('#qcdcode').children('option:selected').text();
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
 			$("#grid").kendoGrid({
 				dataSource: {
 					type: "odata",
@@ -431,17 +443,45 @@
 					field: "active_status_desc",
 					title: "Status",
 					width: 100,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
 				}],
 				editable: false,
 				resizable: false
 			});
+			var grid = $("#grid").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
+			function priorityFilter(element) {
+				element.kendoDropDownList({
+					dataSource: status_Priority,
+					optionLabel: "--Select Value--"
+				});
+			}
 		}
 		catch (err) {
 			console.log(err)
 
 		}
 	}
-
+	
 	function closeModal() {
 		clearModal();
 		$("#newQcd").hide();

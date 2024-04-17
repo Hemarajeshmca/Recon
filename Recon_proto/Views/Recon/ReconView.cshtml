@@ -17,8 +17,8 @@
 		}
 
 		/*.k-grid.k-widget {
-											height: 360px;
-										}*/
+															height: 360px;
+														}*/
 
 		.k-grid-header {
 			font-weight: bold;
@@ -49,8 +49,8 @@
 			display: none;
 		}
 		/*.k-grid-content {
-											height: 176px;
-										}*/
+															height: 176px;
+														}*/
 
 		.datepicker table tr td.active:active,
 		.datepicker table tr td.active.highlighted:active,
@@ -571,7 +571,7 @@
 						</div>
 					</div>
 					<hr style="margin-top:-1px; width:100%;">
-					<div  style="padding:0px !important;">
+					<div style="padding:0px !important;">
 						@await Html.PartialAsync("_reporttemplate")
 					</div>
 				</div>
@@ -1093,12 +1093,7 @@
 			async: false,
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				$("#cmbthersholdvalue").empty();
-				$("#cmbthersholdvalue").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
+			success: function (response) {				
 				$.each(response, function (index, item) {
 					$("#cmbthersholdvalue").append($('<option>', {
 						value: item.masterSyscode,
@@ -1187,7 +1182,7 @@
 	}
 
 	function saveheader() {
-		try {			
+		try {
 			var reconcode = $("#reconcode").val();
 			var cmbrecontype = $("#cmbrecontype").val();
 			var ReconName = $("#ReconName").val();
@@ -1645,7 +1640,7 @@
 					type: 'green',
 				});
 				return;
-			} 
+			}
 			var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
 			if (displayorder <= 0) {
 				$.alert({
@@ -2111,7 +2106,7 @@
 						type: "POST",
 						url: '../Recon/RecondatasetmappingDelete',
 						dataType: 'json',
-						data: JSON.stringify({  in_reconfieldmapping_gid: in_reconfieldmapping_gid,in_action: action,  }),
+						data: JSON.stringify({ in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_action: action, }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
 							if (response != null) {
@@ -2295,10 +2290,10 @@
 			var recordsOnCurrentView = dataSource.view().length;
 			if (recordsOnCurrentView == 0) {
 				var status = "D";
-			}else{
+			} else {
 				var status = "Y";
 			}
-			
+
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
 			if (in_recon_date_flag == undefined) {
@@ -2372,7 +2367,19 @@
 			$("#thersholdminus").val(0);
 			$("#thersholdminus").prop('disabled', false)
 			$("#thersholdplus").prop('disabled', false)
-			$("#cmbthersholdvalue").prop('disabled', false)
+			$("#cmbthersholdvalue").prop('disabled', false);
+			if ($("#cmbthersholdvalue").val() != "") {
+				$("#cmbthersholdvalue").val("B")
+			}
+			var select = document.getElementById("cmbthersholdvalue");
+			var condition = true; // Change this condition as needed
+			// Remove the "N/A" option if the condition is met
+			if (condition) {
+				var optionToRemove = select.querySelector("option[value='N']");
+				if (optionToRemove) {
+					optionToRemove.remove();
+				}
+			}
 		} else {
 
 			$("#thersholdplus").val(0);
@@ -2840,7 +2847,7 @@
 	function openrpttempModel(event) {
 		event.preventDefault();
 		var grid = $("#grid_rpttemplate").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());	
+		var selectedItem = grid.dataItem(grid.select());
 		setlocalStorage("temp_gid", '0');
 		setlocalStorage("rpttemplatedetails", selectedItem);
 		rpttempdetailfetch();
