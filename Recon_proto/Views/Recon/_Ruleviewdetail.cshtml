@@ -104,7 +104,7 @@
 			div#spinner img {
 				position: absolute;
 				/*width: 100px;
-																		height: 100px;*/
+																						height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -165,284 +165,279 @@
 	</style>
 
 </head>
-<body class="hold-transition skin-blue sidebar-mini fixed">
-
-	<div class="content-wrapper">
-		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-12px;height: 84%;padding: 19px 0px;">
-				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
-					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
-						<div class="col-sm-6">
-							<div class="row">
-								<div class="col-sm-4">
-									<label for="organization" class="form-label">Rule Code</label>
-									<input class="form-control" type="text" id="txtrulecode" value="" disabled>
-								</div>
-								<div class="col-sm-4">
-									<label for="organization" class="form-label">Mode</label>
-									<input class="form-control" type="text" id="Ruletxtmode" value="View" disabled>
-								</div>
-								<div class="col-sm-4">
-									<label for="organization" class="form-label">Status</label><br>
-									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-5">
-						</div>
-						<div class="col-sm-1" style="margin-top:20px;">
-							@*<center>
-							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right; cursor:pointer;"></i>
-							</center>*@
-						</div>
+<body>
+	<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+		<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="organization" class="form-label">Rule Code</label>
+						<input class="form-control" type="text" id="txtrulecode" value="" disabled>
 					</div>
-					<div class="box box-orange" style="height:auto">
-						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
-							<div class="col-sm-3">
-								<label for="" class="form-label">Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<input class="form-control" id="ruleName" type="text" disabled>
-								<input class="form-control" type="hidden" id="rulegid">
-								<input class="form-control" type="hidden" id="recontype">
-							</div>
-							<div class="col-sm-3">
-								<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;									
-								<select id="cmbreconname" class="form-select form-control" disabled>
-								</select>
-							</div>
-							<div class="col-md-2">
-								<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<div>
-									<input class="cusDate" data-role='datepicker' disabled id="period_from1" name="period_from1" data-value="2022-12-21" onclick="Dateformat()" style="width:80%" />
-									<span data-for='valid' class='k-invalid-msg'></span>
-								</div>
-							</div>
-							<div class="col-sm-2" style="margin-left:-39px;">
-								<label for="organization" class="form-label">
-									<span>Period To</span>&nbsp;&nbsp;&nbsp;&nbsp;
-									<input class="form-check-input" style="margin:-1px;" type="checkbox" value="false" name="untillactive" onclick="checkactive()" id="untillactive" />&nbsp;&nbsp;
-									<span style="font-size:12px;">Until Active</span>
-								</label>
-								<div>
-									<input class="cusDate" data-role='datepicker' disabled id="period_to1" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
-								</div>
-							</div>
-							<div class="col-md-1">
-								<label for="" class="form-label" style="margin-top:-17px;margin-right: -6px;">Rule Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<input class="form-control" id="ruleorder" type="number" value="0" disabled>
-							</div>
-							<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
-								<label for="" class="form-label" style="margin-top:-17px;margin-right: -25px;">Probable Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="probableflag" class="form-select form-control" style=" width:120%;" disabled>
-								</select>
-							</div>
-						</div>
-						<div class="row" style="margin-top:5px;padding-right:5px">
-							<div class="col-sm-2">
-								<label for="" class="form-label">Rule Applied On&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="RuleAppliedOn" class="form-select form-control" disabled style=" width: 80%;" onchange="RuleApplied()">
-								</select>
-							</div>
-							<div class="col-sm-1" style="margin-left: -42px;">
-								<label for="" class="form-label" style="margin-top:-17px;margin-right:-7px">Group Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="cmbgroupflag" class="form-select form-control" disabled style=" width: 177%;" onchange="groupflagchange()">
-								</select>
-							</div>
-							<div class="col-sm-3" style="margin-left: 54px;margin-right: 28px;">
-								<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="sourcedataset" class="form-select form-control" disabled style=" width: 100%;" onchange="sourcefieldchange()">
-								</select>
-							</div>
-							<div class="col-sm-2" style="margin-left:-27px;">
-								<label id="" class="form-label">Source Account Mode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="souaccmode" class="form-select form-control" disabled style=" width: 80%;" onchange="Sourcemodechange()">
-								</select>
-							</div>
-							<div class="col-sm-2" style="margin-left:-39px;">
-								<label id=comsupdataset class="form-label">Target Dataset</label>
-								<select id="comdataset" class="form-select form-control" disabled style=" width: 100%;">
-								</select>
-							</div>
-							<div class="col-sm-2" style="margin-right: -38px;">
-								<label id="lblcomaccmode" class="form-label">Target Account Mode</label>
-								<select id="comaccmode" class="form-select form-control" disabled style=" width: 120%;">
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="nav-align-top mb-3 mt-3">
-								<ul class="nav nav-pills mb-2" role="tablist">
-									<li class="nav-item">
-										<button type="button" id="ruleCondition"
-												class="nav-link active"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-FiedConfig"
-												aria-controls="navs-pills-FiedConfig"
-												aria-selected="true">
-											Rule Condition
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="sourceidentifier"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-sourceidentifier"
-												aria-controls="navs-pills-top-sourceidentifier"
-												aria-selected="true">
-											Source Identifier
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="comparisionidentifier"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-comparisionidentifier"
-												aria-controls="navs-pills-top-comparisionidentifier"
-												aria-selected="true">
-											Target Identifier
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="grouping"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-grouping"
-												aria-controls="navs-pills-top-grouping"
-												aria-selected="false">
-											Additional Grouping
-											@*Grouping*@
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="sourceorder"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-sourceorder"
-												aria-controls="navs-pills-top-sourceorder"
-												aria-selected="true">
-											Source Processing Order
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="Comparisonorder"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-comparisonorder"
-												aria-controls="navs-pills-top-comparisonorder"
-												aria-selected="true">
-											Target Processing Order
-										</button>
-									</li>
-								</ul>
-								<div class="tab-content">
-									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_rulecondition">
-															<div id="grid_rulecondition">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_sourceidentifier">
-															<div id="grid_sourceidentifier">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_comparisionidentifier">
-															<div id="grid_comparisionidentifier">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-												<div class="col-xs-12">
-													<div id="gd_grouping">
-														<div id="grid_grouping">
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_sourceorder">
-															<div id="grid_sourceorder">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_comparisonorder">
-															<div id="grid_comparisonorder">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+					<div class="col-sm-4">
+						<label for="organization" class="form-label">Mode</label>
+						<input class="form-control" type="text" id="Ruletxtmode" value="View" disabled>
 					</div>
-				</form>
+					<div class="col-sm-4">
+						<label for="organization" class="form-label">Status</label><br>
+						<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-5">
+			</div>
+			<div class="col-sm-1" style="margin-top:20px;">
+				@*<center>
+				<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right; cursor:pointer;"></i>
+				</center>*@
 			</div>
 		</div>
-	</div>
+		<div class="box box-orange" style="height:auto">
+			<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+				<div class="col-sm-3">
+					<label for="" class="form-label">Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<input class="form-control" id="ruleName" type="text" disabled>
+					<input class="form-control" type="hidden" id="rulegid">
+					<input class="form-control" type="hidden" id="recontype">
+				</div>
+				<div class="col-sm-3">
+					<label for="" class="form-label">
+						Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;
+						<select id="cmbreconname" class="form-select form-control" disabled>
+						</select>
+				</div>
+				<div class="col-md-2">
+					<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<div>
+						<input class="cusDate" data-role='datepicker' disabled id="period_from1" name="period_from1" data-value="2022-12-21" onclick="Dateformat()" style="width:80%" />
+						<span data-for='valid' class='k-invalid-msg'></span>
+					</div>
+				</div>
+				<div class="col-sm-2" style="margin-left:-39px;">
+					<label for="organization" class="form-label">
+						<span>Period To</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						<input class="form-check-input" style="margin:-1px;" type="checkbox" value="false" name="untillactive" onclick="checkactive()" id="untillactive" />&nbsp;&nbsp;
+						<span style="font-size:12px;">Until Active</span>
+					</label>
+					<div>
+						<input class="cusDate" data-role='datepicker' disabled id="period_to1" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+					</div>
+				</div>
+				<div class="col-md-1">
+					<label for="" class="form-label" style="margin-top:-17px;margin-right: -6px;">Rule Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<input class="form-control" id="ruleorder" type="number" value="0" disabled>
+				</div>
+				<div class="col-md-1" style="padding-left:0;margin-left: 15px;">
+					<label for="" class="form-label" style="margin-top:-17px;margin-right: -25px;">Probable Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<select id="probableflag" class="form-select form-control" style=" width:120%;" disabled>
+					</select>
+				</div>
+			</div>
+			<div class="row" style="margin-top:5px;padding-right:5px">
+				<div class="col-sm-2">
+					<label for="" class="form-label">Rule Applied On&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<select id="RuleAppliedOn" class="form-select form-control" disabled style=" width: 80%;" onchange="RuleApplied()">
+					</select>
+				</div>
+				<div class="col-sm-1" style="margin-left: -42px;">
+					<label for="" class="form-label" style="margin-top:-17px;margin-right:-7px">Group Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<select id="cmbgroupflag" class="form-select form-control" disabled style=" width: 177%;" onchange="groupflagchange()">
+					</select>
+				</div>
+				<div class="col-sm-3" style="margin-left: 54px;margin-right: 28px;">
+					<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<select id="sourcedataset" class="form-select form-control" disabled style=" width: 100%;" onchange="sourcefieldchange()">
+					</select>
+				</div>
+				<div class="col-sm-2" style="margin-left:-27px;">
+					<label id="" class="form-label">Source Account Mode&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<select id="souaccmode" class="form-select form-control" disabled style=" width: 80%;" onchange="Sourcemodechange()">
+					</select>
+				</div>
+				<div class="col-sm-2" style="margin-left:-39px;">
+					<label id=comsupdataset class="form-label">Target Dataset</label>
+					<select id="comdataset" class="form-select form-control" disabled style=" width: 100%;">
+					</select>
+				</div>
+				<div class="col-sm-2" style="margin-right: -38px;">
+					<label id="lblcomaccmode" class="form-label">Target Account Mode</label>
+					<select id="comaccmode" class="form-select form-control" disabled style=" width: 120%;">
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="nav-align-top mb-3 mt-3">
+					<ul class="nav nav-pills mb-2" role="tablist">
+						<li class="nav-item">
+							<button type="button" id="ruleCondition"
+									class="nav-link active"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-FiedConfig"
+									aria-controls="navs-pills-FiedConfig"
+									aria-selected="true">
+								Rule Condition
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="sourceidentifier"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-sourceidentifier"
+									aria-controls="navs-pills-top-sourceidentifier"
+									aria-selected="true">
+								Source Identifier
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="comparisionidentifier"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-comparisionidentifier"
+									aria-controls="navs-pills-top-comparisionidentifier"
+									aria-selected="true">
+								Target Identifier
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="grouping"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-grouping"
+									aria-controls="navs-pills-top-grouping"
+									aria-selected="false">
+								Additional Grouping
+								@*Grouping*@
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="sourceorder"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-sourceorder"
+									aria-controls="navs-pills-top-sourceorder"
+									aria-selected="true">
+								Source Processing Order
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="Comparisonorder"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-comparisonorder"
+									aria-controls="navs-pills-top-comparisonorder"
+									aria-selected="true">
+								Target Processing Order
+							</button>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+										@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+										<div class="col-xs-12">
+											<div id="gd_rulecondition">
+												<div id="grid_rulecondition">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+										@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+										<div class="col-xs-12">
+											<div id="gd_sourceidentifier">
+												<div id="grid_sourceidentifier">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+										@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+										<div class="col-xs-12">
+											<div id="gd_comparisionidentifier">
+												<div id="grid_comparisionidentifier">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+									<div class="col-xs-12">
+										<div id="gd_grouping">
+											<div id="grid_grouping">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+										@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+										<div class="col-xs-12">
+											<div id="gd_sourceorder">
+												<div id="grid_sourceorder">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+										@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+										<div class="col-xs-12">
+											<div id="gd_comparisonorder">
+												<div id="grid_comparisonorder">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
 </body>
 </html>
 <script type="text/javascript">
 
-	function Reconload() {		
+	function Reconload() {
 		if (getlocalStorage("rule_details") != undefined) {
-			var data = getlocalStorage("rule_details");			
+			var data = getlocalStorage("rule_details");
 			//var cat = data.dataset_category;
 			$("#Ruletxtmode").val('View');
 			$("#txtrulecode").val(data.rule_code);
@@ -458,7 +453,7 @@
 				data: JSON.stringify({ in_recon_code: reconcode }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					var res = JSON.parse(response);					
+					var res = JSON.parse(response);
 					$("#recontype").val(res[0].recontype_code);
 					recontypecondition();
 				}
@@ -1738,7 +1733,7 @@
 		});
 		recorder_field_list = cmbsourcefield();
 	}
-		//-----------------------------------------------------     Source order    ----------------------------------------------------------------
+	//-----------------------------------------------------     Source order    ----------------------------------------------------------------
 	function RuleApplied() {
 		if ($("#RuleAppliedOn").val() == 'T') {
 			$("#lblcomaccmode").text("Target Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");

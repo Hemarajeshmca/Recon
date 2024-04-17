@@ -133,206 +133,144 @@
 
 	</style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini fixed">
-	<div class="content-wrapper">
-		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-12px;height: 82%;">
-				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
-					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
-						<div class="col-sm-6">
-							<div class="row">
-								<div class="col-sm-4">
-									<label for="organization" class="form-label">Custom Template code</label>
-									<input class="form-control" type="text" id="reporttemplate_code" value="" disabled>
-								</div>
-								<div class="col-sm-4">
-									<label for="organization" class="form-label">Mode</label>
-									<input class="form-control" type="text" id="txtmode" disabled>
-								</div>
-								<div class="col-sm-4">
-									<label for="organization" class="form-label">Status</label><br>
-									<input class="form-control" type="text" id="txtstatus" disabled>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-5"></div>
-						<div class="col-sm-1" style="margin-top: 3%;">
-							<center>
-								<a href="../Reports/ReportTemplete"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-							</center>
-						</div>
+<body>
+	<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+		<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="organization" class="form-label">Custom Template code</label>
+						<input class="form-control" type="text" id="reporttemplate_code" value="" disabled>
 					</div>
-					<div class="col-md-12">
-						<div class="box box-orange" style="height:auto;">
-							<div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
-								<div class="col-sm-3">
-									<label for="" class="form-label">Custom Template Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-									<input class="form-control" id="rt_name" name="ReportTemplate" type="text">
-									<input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
-								</div>
-								<div class="col-sm-3">
-									<label for="" class="form-label">Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-									<select id="cmbreporttype" class="form-select form-control">
-									</select>
-								</div>
-								<div class="col-sm-3">
-									<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-									<input hidden class="form-control" id="cmbreconname_desc" name="reconName" type="text">
-									<select id="cmbreconname" class="form-select form-control" disabled>
-									</select>
-								</div>
-								<div class="col-sm-2">
-									<label for="" class="form-label">Clone Report Template&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-									<select id="clonereport" class="form-select form-control">
-									</select>
-								</div>
-								<div class="col-sm-1" style="margin-top: 2.5%;">
-									<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
-								</div>
-							</div>
+					<div class="col-sm-4">
+						<label for="organization" class="form-label">Mode</label>
+						<input class="form-control" type="text" id="txtmode5" disabled>
+					</div>
+					<div class="col-sm-4">
+						<label for="organization" class="form-label">Status</label><br>
+						<input class="form-control" type="text" id="txtstatus5" disabled>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-5"></div>
+		</div>
+		<div class="col-md-12">
+			<div class="box box-orange" style="height:auto;">
+				<div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
+					<div class="col-sm-3">
+						<label for="" class="form-label">Custom Template Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" id="rt_name" name="ReportTemplate" type="text">
+						<input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
+					</div>
+					<div class="col-sm-3">
+						<label for="" class="form-label">Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreporttype" class="form-select form-control">
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input hidden class="form-control" id="cmbreconname_desc" name="reconName" type="text">
+						<select id="cmbreconname1" class="form-select form-control" disabled>
+						</select>
+					</div>
+					
+				</div>
 
-							<div class="row">
-								<div class="nav-align-top mb-3">
-									<ul class="nav nav-pills mb-2" role="tablist" style="margin-right: 13px;margin-left: 10px;">
-										<li class="nav-item">
-											<button type="button"
-													class="nav-link active"
-													role="tab"
-													data-bs-toggle="tab"
-													data-bs-target="#navs-pills-top-ReportFilter"
-													aria-controls="navs-pills-top-ReportFilter"
-													aria-selected="true">
-												Row Filter
-											</button>
-										</li>
+				<div class="row">
+					<div class="nav-align-top mb-3">
+						<ul class="nav nav-pills mb-2" role="tablist" style="margin-right: 13px;margin-left: 10px;">
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link active"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-ReportFilter"
+										aria-controls="navs-pills-top-ReportFilter"
+										aria-selected="true">
+									Row Filter
+								</button>
+							</li>
 
-										<li class="nav-item">
-											<button type="button"
-													class="nav-link"
-													role="tab"
-													data-bs-toggle="tab"
-													data-bs-target="#navs-pills-top-ColumnFilter"
-													aria-controls="navs-pills-top-ColumnFilter"
-													aria-selected="true">
-												Column Filter
-											</button>
-										</li>
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-ColumnFilter"
+										aria-controls="navs-pills-top-ColumnFilter"
+										aria-selected="true">
+									Column Filter
+								</button>
+							</li>
 
-										<li class="nav-item">
-											<button type="button"
-													class="nav-link"
-													role="tab"
-													data-bs-toggle="tab"
-													data-bs-target="#navs-pills-top-sorting"
-													aria-controls="navs-pills-top-sorting"
-													aria-selected="true">
-												Sorting
-											</button>
-										</li>
-
-										<li class="nav-item">
-											<button type="button"
-													class="nav-link"
-													role="tab"
-													data-bs-toggle="tab"
-													data-bs-target="#navs-pills-top-attachment"
-													aria-controls="navs-pills-top-attachment"
-													aria-selected="true">
-												Report Excel Template
-											</button>
-										</li>
-
-									</ul>
-									<div class="tab-content">
-										@*Report Filter*@
-										<div class="tab-pane fade show active" id="navs-pills-top-ReportFilter" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
-												<div class="panel-body">
-													<div class="col-xs-12">
-														<div id="gd_tempfilter">
-															<div id="grid_tempfilter">
-															</div>
-														</div>
-													</div>
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-sorting"
+										aria-controls="navs-pills-top-sorting"
+										aria-selected="true">
+									Sorting
+								</button>
+							</li>
+						</ul>
+						<div class="tab-content">
+							@*Report Filter*@
+							<div class="tab-pane fade show active" id="navs-pills-top-ReportFilter" role="tabpanel" style="margin-top:-14px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<div id="gd_tempfilter">
+												<div id="grid_tempfilter">
 												</div>
 											</div>
 										</div>
-
-										@*Column Filter*@
-										<div class="tab-pane fade" id="navs-pills-top-ColumnFilter" role="tabpanel" style="margin-top:-31px;">
-											<div class="panel panel-default">
-												<div class="panel-body">
-													<div class="row" style="margin-bottom: 9px;">
-														<div class="col-md-11"> </div>
-														<div class="col-md-1">
-															<button type="button" class="btn btn-sm me-2 save_btn" id="btncolgrid" onclick="savecolfilter()" style="float: right;">Save</button>
-														</div>
-													</div>
-													<div class="col-xs-12">
-														<div id="gd_colfilter">
-															<div id="grid_colfilter">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										@*Sorting*@
-										<div class="tab-pane fade" id="navs-pills-top-sorting" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
-												<div class="panel-body">
-													<div class="col-xs-12">
-														<label for="" class="form-label">Sorting Order&nbsp;</label>
-														<span style="margin-left:2px;margin-top:5px">
-															<input type="radio" id="sort1" name="sortOrder" value="asc" onclick="onpartial()" checked>&nbsp;Ascending &nbsp;
-															<input type="radio" id="sort2" name="sortOrder" value="desc" onclick="onpartial()" style="margin-left: 10px;">&nbsp;Descending&nbsp;
-														</span>
-													</div>
-													<div class="col-xs-12">
-														<div id="gd_sorting">
-															<div id="grid_sorting">
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
-										@*Attachment*@
-										<div class="tab-pane fade" id="navs-pills-top-attachment" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
-												<div class="panel-body">
-													<div class="row" style="padding-bottom:15%;margin-top:5px;padding-left:30px;padding-right:5px">
-														<div class="col-sm-4">
-															<div class="form-group">
-																<label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-																<input type="file" onchange="filechange(this)" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx, .csv" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
-																<label class="col-md-6 control-label" id="FileName" hidden></label>
-															</div>
-															<div>
-																<label id="fetch_filename"> </label>
-															</div>
-														</div>
-														<div class="col-sm-2" style="margin-top:29px">
-															<label class="form-label"></label>
-															<input id="btn_upload" type="button" onclick="upload()" style="background: #175650;border-color: #175650;width:40%; color:#fff;" name="Start" class="btn btn-sm btn-success me-2" value="Upload" />
-
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-
 									</div>
 								</div>
 							</div>
+
+							@*Column Filter*@
+							<div class="tab-pane fade" id="navs-pills-top-ColumnFilter" role="tabpanel" style="margin-top:-14px;">
+								<div class="panel panel-default">
+									<div class="panel-body">										
+										<div class="col-xs-12">
+											<div id="gd_colfilter">
+												<div id="grid_colfilter">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							@*Sorting*@
+							<div class="tab-pane fade" id="navs-pills-top-sorting" role="tabpanel" style="margin-top:-16px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<label for="" class="form-label">Sorting Order&nbsp;</label>
+											<span style="margin-left:2px;margin-top:5px">
+												<input type="radio" id="sort1" name="sortOrder" value="asc" onclick="onpartial()" checked>&nbsp;Ascending &nbsp;
+												<input type="radio" id="sort2" name="sortOrder" value="desc" onclick="onpartial()" style="margin-left: 10px;">&nbsp;Descending&nbsp;
+											</span>
+										</div>
+										<div class="col-xs-12">
+											<div id="gd_sorting">
+												<div id="grid_sorting">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 </body>
 </html>
 
@@ -352,9 +290,9 @@
 		$("#reporttemplate_gid").val(getTemp_gid);
 		var data = {};
 		var reconcode = getlocalStorage("rpttemplatedetails");
-		$("#cmbreconname").val(reconcode);
+		$("#cmbreconname1").val(reconcode.recon_code);
 		$("#cmbreporttype").prop("disabled", true);
-		data.in_recon_code = reconcode;
+		data.in_recon_code = reconcode.recon_code;
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reportTempletelist',
@@ -477,7 +415,7 @@
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = txtusername.user_code;
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -489,13 +427,13 @@
 			success: function (response) {
 				if (response != " " && response != null && response != "{}" && response != "[]") {
 					var res = JSON.parse(response);
-					$("#cmbreconname").empty();
-					$("#cmbreconname").append($('<option>', {
+					$("#cmbreconname1").empty();
+					$("#cmbreconname1").append($('<option>', {
 						value: "",
 						text: "  Select  "
 					}));
 					$.each(res, function (index, item) {
-						$("#cmbreconname").append($('<option>', {
+						$("#cmbreconname1").append($('<option>', {
 							value: item.recon_code,
 							text: item.recon_name
 						}));
@@ -514,12 +452,12 @@
 			}
 		});
 		var data = getlocalStorage("rpttemplatedetails");
-		$("#cmbreconname").val(data);
+		$("#cmbreconname1").val(data.recon_code);
 		debugger;
-		var gettext = $("#cmbreconname").find(":selected").text();
+		var gettext = $("#cmbreconname1").find(":selected").text();
 		$("#cmbreconname_desc").val(gettext);
 		$("#cmbreporttype").prop("disabled", true);
-		var reconcode = $("#cmbreconname").val();
+		var reconcode = $("#cmbreconname1").val();
 
 		var getselectedTemplate = getlocalStorage("rpttemplatedetails");
 		var jsondata = {};
@@ -538,16 +476,17 @@
 					var res = JSON.parse(response);
 					$("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
 					// $("#txtmode").val(getlocalStorage('btn_clk_val'));
-					$("#txtstatus").val("Active");
+					$("#txtstatus5").val("Active");
+					$("#txtmode5").val("View");
 					$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
 					$("#rt_name").val(res.Table[0].reporttemplate_name);
 					$("#cmbreporttype").val(res.Table[0].report_code);
 					$("#sys_flag").val(res.Table[0].system_flag);
-					$("#cmbreconname").val(res.Table[0].recon_code);
-					document.getElementById("fetch_filename").textContent = res.Table[0].file_name ? res.Table[0].file_name : '';
+					$("#cmbreconname1").val(res.Table[0].recon_code);
+					$("#rt_name").prop("disabled", true);
 					$("#cmbreporttype").prop("disabled", true);
 					$("#clonereport").prop('disabled', true);
-					$("#cmbreconname").prop('disabled', true);
+					$("#cmbreconname1").prop('disabled', true);
 					$("#btnclone").prop('disabled', true);
 					$("#btncolgrid").prop('disabled', false);
 					$("#btn_upload").prop('disabled', false);
@@ -623,21 +562,8 @@
 				pageSizes: true,
 				buttonCount: 5
 			},
-			toolbar: "<a href='javascript:void(0)' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
-			columns: [{
-				command: [
-					{
-						name: "save",
-						id: "Save",
-						template: "<a href=''onclick='savereportFilter()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
-					},
-					{
-						name: "Delete",
-						id: "Delete",
-						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
-					},
-				], title: "Action&nbsp;", width: "40px",
-			},
+			
+			columns: [
 			{
 				field: "filter_seqno",
 				title: "Filter Seq No",
@@ -826,7 +752,7 @@
 		var data = {};
 		data.in_reportparam_gid = 0;
 		data.in_report_code = $("#cmbreporttype").val();
-		data.in_recon_code = $("#cmbreconname").val();
+		data.in_recon_code = $("#cmbreconname1").val();
 		data.in_action = '';
 		$.ajax({
 			type: "POST",
@@ -897,6 +823,7 @@
 					}
 				}
 			},
+			height: 220,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -998,26 +925,8 @@
 				refresh: false,
 				pageSizes: true,
 				buttonCount: 5
-			},			
-			columns: [{
-				command: [
-					{
-						name: "save",
-						id: "Save",
-						template: "<a href=''onclick='saveSorting()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:6.5%;'></a>&nbsp;&nbsp;&nbsp;",
-					},
-					//{
-					//    name: "edit",
-					//    id: "Edit",
-					//    template: "<a href=''class='k-grid-edit'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
-					{
-						name: "Delete",
-						id: "Delete",
-						template: "<a href='' onclick='deleteSort()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
-					},
-				], title: "Action&nbsp;", width: "40px",
 			},
+			columns: [
 			{
 				field: "reporttemplatesorting_gid",
 				title: "reporttemplatesorting_gid",
@@ -1052,7 +961,7 @@
 		var data = {};
 		data.in_reportparam_gid = 0;
 		data.in_report_code = $("#cmbreporttype").val();
-		data.in_recon_code = $("#cmbreconname").val();
+		data.in_recon_code = $("#cmbreconname1").val();
 		data.in_action = '';
 		$.ajax({
 			type: "POST",
