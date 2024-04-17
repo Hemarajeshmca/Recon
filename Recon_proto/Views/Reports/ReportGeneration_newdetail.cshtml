@@ -388,15 +388,15 @@
                                     &nbsp; <input type="text" onkeydown="pageChange(event)" onfocusout="pageChange(event)" id="gotoPage" style="text-align:center; border: 1px solid #b1a6a6; border-radius: 5px; width:36px;padding: 2px 5px 5px 2px;">
                                     &nbsp;<a href="#" onclick="pagination('next')" class="next round"><span>&#x25B6;</span></a>
                                     &nbsp;<a href="#" onclick="pagination('last')" class="next round"><span>&#x25B6;|</span></a>
-                                    &nbsp;<select hidden name="items" id="items" style="padding: 5px; border: 1px solid #b1a6a6; border-radius: 5px" onchange="gridpage1()">
-                                        <option value="10">10</option>
+                                    &nbsp;<select hidden name="items" id="items" autocomplete="off" style="padding: 5px; border: 1px solid #b1a6a6; border-radius: 5px" onchange="gridpage1()">
                                         <option value="100">100</option>
                                         <option value="500">500</option>
                                         <option value="1000">1000</option>
                                         <option value="2000">2000</option>
+                                        <option value="2000">5000</option>
                                     </select>
                                     &nbsp;
-                                        <input id="comboBox" style="width:90px !important;" />                                   
+                                    <input id="comboBox" autoBind: false style="width:90px !important;" />
                                     &nbsp;<label style="color: #fff">items per page </label>
                                     &nbsp; &nbsp; &nbsp; &nbsp;<label style="margin-left:109px;color: #fff;">Total No Of Records : </label>
                                     <span id="total" style="width:20%;border:none;margin-left:0px;color:#fff"></span>
@@ -422,6 +422,9 @@
     var Rec_id;
     var getreconid = [];
     $(document).ready(function () {
+        document.getElementById('items').addEventListener('focus', function () {
+            this.setAttribute('autocomplete', 'off');
+        });
         var gridcopy = [];
         $("#navhead").text("Report Generation");
         kendodate_format();
@@ -431,7 +434,8 @@
         $("#framevalue").hide();
         $("#gotoPage").val(1);
         $("#comboBox").kendoComboBox({
-            dataSource: ["100", "200", "300"],
+            dataSource: ["100", "200", "300", "1000", "5000", "10000"],
+            autoBind: false,
             filter: "contains",
             value: "100",
             suggest: true,
@@ -440,9 +444,12 @@
                 debugger;
                 var inputValue = this.value();
                 if (inputValue != "") {
+                    var comboBox = $("#comboBox").data("kendoComboBox");
+                    // Assuming dataSource is your predefined data source
+                    comboBox.dataSource.read();
                     gridpage(inputValue);
                 } else {
-                    $("#comboBox").data("kendoComboBox").value("100")
+                   
                 }          
             },
             blur: function () {
@@ -991,6 +998,8 @@
         var template_code = getlocalStorage("ls_pageList");
         var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
         var selected_template = getlocalStorage("selectedTemplate");
+        var str = $("#rt_name").val();
+        var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
         var data = {
             "in_reporttemplate_code": template_code ? template_code : '',
             "in_report_code": selected_template.report_code,
@@ -1001,7 +1010,8 @@
             "in_outputfile_type": 'csv',
             "in_ip_addr": "localhost", 
             "in_user_code": txtusername.user_name,
-            "file_name": $("#file_name").val()
+            "file_name": $("#file_name").val(),
+            "in_report_name": concatName
         };
 
         if (data.in_report_param && data.in_report_condition) {
@@ -1200,6 +1210,8 @@
 
     function Runprogress() {
         debugger;
+        console.log("pageNo", pageno);
+        console.log("pagesize", pagesize);
         var template_code = getlocalStorage("ls_pageList");
         if (result == 0) {
             $.alert({
@@ -1216,7 +1228,7 @@
         $(".page_bg").show();
         debugger;
         document.getElementById('total').innerHTML = result;
-        var Actpageno = parseInt(parseInt(result) / parseInt(pagesize));
+        var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
         document.getElementById('totalpage').innerHTML = Actpageno;
         var data = {};
         var selected_template = getlocalStorage("selectedTemplate");
@@ -1231,6 +1243,7 @@
             type: "POST",
             url: '../Reports/getPageNoReport',
             dataType: "json",
+            async: false,
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             success: function (Data1) {
@@ -1318,7 +1331,17 @@
                         content: 'Something went wrong .!',
                         type: 'red',
                     });
+                    var currentpage = 0;
+                    var pageno = 1;
+                    var pagesize = $("#items").val() ? $("#items").val() : 100;
                 }
+            },
+            error: function (er) {
+                $.alert({
+                    title: 'Recon',
+                    content: er.statusText,
+                    type: 'red',
+                });
             }
         });
 
@@ -1330,77 +1353,99 @@
     }
     var currentpage = 0;
     var pageno = 1;
-    var pagesize = 100;
+    var pagesize = $("#items").val() ? $("#items").val() : 5000;
 
     function pageChange(event) {
-        if (event.keyCode === 13) {
+        if (event.keyCode === 13) {            
             pageno = $("#gotoPage").val();
-            pagesize = $("#items").val();
-            $("#gotoPage").val(pageno);
-            Runprogress();
-        } else if (event.type === 'focusout') {
-            pageno = $("#gotoPage").val();
-            pagesize = $("#items").val();
-            $("#gotoPage").val(pageno);
-            Runprogress();
-        }
+            pagesize = pagesize;
+            if (pageno >= $('#totalpage').val())
+            {
+                $.alert({
+                    title: 'Recon',
+                    content: "Page number is greate than total number of page",
+                    type: 'red',
+                });
+                pageno = 1;
+                $("#gotoPage").val(pageno);
+            } else {
+                $("#gotoPage").val(pageno);
+                Runprogress();
+            }
+            
+        } 
+        //else if (event.type === 'focusout') {
+        //    pageno = $("#gotoPage").val();
+        //    pagesize = $("#items").val();
+        //    $("#gotoPage").val(pageno);
+        //    Runprogress();
+        //}
     }
 
     function pagination(data) {
+        if (pageno >= $('#totalpage').val()) {
+            $.alert({
+                title: 'Recon',
+                content: "Page number is greate than total number of page",
+                type: 'red',
+            });
+            pageno = 1;
+            $("#gotoPage").val(pageno);
+        } else {
         if (data == "next") {
             currentpage = $("#gotoPage").val();
             pageno = parseInt(currentpage) + 1;
-            pagesize = $("#items").val();
+            //pagesize = $("#items").val(); 
+            pagesize = pagesize;
             $("#gotoPage").val(pageno);
             Runprogress();
 
         } else if (data == "last") {
-            pageno = parseInt(parseInt(result) / parseInt(pagesize));
-            pagesize = $("#items").val();
+            pageno = Math.round(parseInt(result) / parseInt(pagesize));
+            //pagesize = $("#items").val();
+            pagesize = pagesize;
             $("#gotoPage").val(pageno);
             Runprogress();
         } else if (data == "first") {
             pageno = 1;
-            pagesize = $("#items").val();
+            //pagesize = $("#items").val();
+            pagesize = pagesize;
             $("#gotoPage").val(pageno);
             Runprogress();
         }
         else {
             currentpage = $("#gotoPage").val();
             pageno = currentpage - 1;
-            pagesize = $("#items").val();
+            pagesize = pagesize;
+            //pagesize = $("#items").val();
             $("#gotoPage").val(pageno);
             Runprogress();
+        }
         }
 
     }
 
 
     function gridpage1() {
-        debugger;
         pagesize = $('#items').val();
-        var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
+        var Actpageno = Math.round(parseInt(count) / parseInt(pagesize));
         $('#totalpage').val(Actpageno);
     }
 
     function gridpage(itemsPerPage) {
         pagesize = itemsPerPage;
-        var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
+        $('#items').val(itemsPerPage);
+        var Actpageno = Math.round(parseInt(count) / parseInt(pagesize));
         $('#totalpage').val(Actpageno);
         Runprogress();
     }
-
-
-    //function CloseQcdpopup() {
-    //    $("#processGrid").data("kendoGrid").dataSource.read();
-    //}
 
     function additionalinfo() {
 
         var r = Table_Name;
         //$("#total").val(count);
         document.getElementById('total').innerHTML = result;
-        var Actpageno = parseInt(parseInt(count) / parseInt(pagesize));
+        var Actpageno = Math.round(parseInt(count) / parseInt(pagesize));
         // $('#totalpage').val(Actpageno);
         document.getElementById('totalpage').innerHTML = Actpageno;
         debugger;
@@ -1686,6 +1731,8 @@
         var template_code = getlocalStorage("ls_pageList");
         var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
         var selected_template = getlocalStorage("selectedTemplate");
+        var str = $("#rt_name").val();
+         var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
         var data = {
             "in_reporttemplate_code": template_code ? template_code : '',
             "in_report_code": selected_template.report_code,
@@ -1696,7 +1743,8 @@
             "in_outputfile_type": 'xlsx',
             "in_ip_addr": "",
             "in_user_code": txtusername.user_name,
-            "file_name": $("#file_name").val()
+            "file_name": $("#file_name").val(),
+            "in_report_name": concatName,
         };
         if (data.in_report_param && rpt_cond) {
             $.alert({
