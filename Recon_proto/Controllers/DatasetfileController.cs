@@ -72,13 +72,14 @@ namespace Recon_proto.Controllers
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
                         post_data = reader.ReadToEnd();
-                        var res = "";
-                        if (post_data != "")
-                        {
-                            res = setProcessdataset(post_data);
-                        }
-                        // return post_data;
-                        return res;
+                        return post_data;
+
+                        //var res = "";
+                        //if (post_data != "")
+                        //{
+                        //    res = setProcessdataset(post_data);
+                        //}
+                        //return res;
                     }
                 }
                 catch (Exception ex)

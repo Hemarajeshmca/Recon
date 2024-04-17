@@ -265,7 +265,7 @@ namespace Recon_proto.Controllers
             }
         }
 
-        public IActionResult Downloads(string jobid, string filetype)
+        public IActionResult Downloads(string jobid, string filetype, string file_name)
         {
             var out_result = getfilepath("fileconfig_value");
             List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
@@ -318,7 +318,7 @@ namespace Recon_proto.Controllers
 						{
 							out_filepath = obj_outresult[0].out_config_value;
 						}
-                        string fileName = jobid + ".xlsx";
+                        string fileName = file_name + ".xlsx";
 						string filePath = Path.Combine(out_filepath, fileName);
 
 						if (!System.IO.File.Exists(filePath))

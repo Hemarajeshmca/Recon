@@ -317,10 +317,11 @@
 		var grid = $("#grid_jobinprogress").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var job_gid = model.job_gid;
+		var file_name = model.file_name;
 		if (model.file_type != 'xlsx') {
-			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '';
+			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '&file_name=' + file_name + '';
 		} else {
-			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '';
+			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '&file_name=' + file_name + '';
 		}
 	}
 </script>

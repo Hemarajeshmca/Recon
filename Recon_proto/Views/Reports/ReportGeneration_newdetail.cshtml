@@ -1196,7 +1196,19 @@
                                 type: 'red',
                             });
                         }
-                    }              
+                    } else if (response == "[]") {
+                        $.alert({
+                            title: 'Recon',
+                            content: "No Records Found",
+                            type: 'red',
+                        });
+                        $(this).next(".accordion_body").slideDown(300);
+                        $(".plusminus").text('+');
+                        $("#Dynamic_grid").hide();
+                        $("#example").hide();
+                        $("#framevalue").hide();
+                        $(".page_bg").hide();
+                    }
                 },
                 error: function (er) {
                     hideProgress();
