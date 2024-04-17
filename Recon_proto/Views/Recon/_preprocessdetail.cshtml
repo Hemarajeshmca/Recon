@@ -132,141 +132,137 @@
 
 	</style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini fixed">
-	<div class="container-xxl flex-grow-1 container-p-y">
-		<div class="card-body" style="margin-top:-12px;height: 82%;">
-			<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
-				<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
-					<div class="col-sm-6">
-						<div class="row">
-							<div class="col-sm-4">
-								<label for="lblpreprocesscode" class="form-label">Preprocess Code</label>
-								<input class="form-control" type="text" id="txtpreprocesscode" disabled value="">
-							</div>
-							<div class="col-sm-4">
-								<label for="lblmode" class="form-label">Mode</label>
-								<input class="form-control" type="text" id="txtmode2" value="" disabled>
-							</div>
-							<div class="col-sm-4">
-								<label for="lblstatus" class="form-label">Status</label><br>
-								<input class="form-control" type="text" id="txtstatus2" value="Active" disabled>
-							</div>
-						</div>
+<body>
+	<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+		<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-4">
+						<label for="lblpreprocesscode" class="form-label">Preprocess Code</label>
+						<input class="form-control" type="text" id="txtpreprocesscode" disabled value="">
 					</div>
-					<div class="col-sm-5">
+					<div class="col-sm-4">
+						<label for="lblmode" class="form-label">Mode</label>
+						<input class="form-control" type="text" id="txtmode2" value="" disabled>
 					</div>
-					<div class="col-sm-1" style="margin-top:20px;">
-						
+					<div class="col-sm-4">
+						<label for="lblstatus" class="form-label">Status</label><br>
+						<input class="form-control" type="text" id="txtstatus2" value="Active" disabled>
 					</div>
 				</div>
-				<div class="row" style="margin-top:10px;">
-					<div class="col-sm-3">
-						<label class="form-label" for="">Preprocess Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<input class="form-control" type="text" id="preprocessname">
-						<input class="form-control" type="hidden" id="preprocessgid" value=0;>
-						<input class="form-control" type="hidden" id="validquery" />
-					</div>
-					<div class="col-sm-2">
-						<label class="form-label" for="">Process Method&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<select id="Cmbprocessmethod" class="form-select form-control" onchange="processmethod()">
-						</select>
-					</div>
-					<div class="col-sm-3">
-						<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<select id="cmbrecon1" class="form-select form-control" onchange="reconcode()" disabled>
-						</select>
-					</div>
-					<div class="col-sm-2">
-						<label class="form-label" for="">Preprocess Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<input class="form-control" type="number" id="preprocessorder">
-					</div>
-					<div class="col-md-2" style="width: 14%;">
-						<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<select id="holdflag1" class="form-select form-control" style=" width:100%;">
-						</select>
-					</div>
-				</div>
-				<div style="height:245px;overflow-x:auto;padding-top:10px;margin-top:10px">
-					<div class="accordion-wrapper">
-						<div class="accordion" id="headingfunction">
-							<input type="checkbox" name="radio-a" id="check2" style="display:none">
-							<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Function</label>
-							<div id="headingfunction" class="accordion-content" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
-								<div class="accordion-body" style="padding-left:15px;">
-									<div class="row">
-										<div class="col-sm-3">
-											<label class="form-label" for="">Lookup Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-											<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
-											</select>
-										</div>
-										<div class="col-sm-3">
-											<label class="form-label" for="">Lookup Function&nbsp;</label>
-											<input class="form-control" id="Cmbfunction" name="Cmbfunction" type="text" value="" data-bind="value:Cmbfunction">
-											@*<select id="Cmbfunction" class="form-select form-control">
-											</select>*@
-										</div>
-										<div class="col-sm-3">
-											<label class="form-label" for="">Update Recon Field&nbsp;</label>
-											<select id="Cmbreconfield" class="form-select form-control">
-											</select>
-										</div>
-
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="accordion" id="headinglookup">
-							<input type="checkbox" name="radio-a" id="check3" style="display:none">
-							<label class="accordion-label" for="check3">&nbsp;&nbsp;&nbsp;Look Up</label>
-							<div id="headinglookup" class="accordion-content">
-								<div class="row" style="margin-bottom:5px;">
-									<div class="col-sm-3">
-										<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-										<select id="cmblookupdataset" class="form-select form-control" onchange="lookupchange()">
-										</select>
-									</div>
-									<div class="col-sm-3">
-										<label class="form-label" for="">Lookup Return Field&nbsp;</label>
-										<select id="Cmblookupdatasetfield" class="form-select form-control">
-										</select>
-									</div>
-									<div class="col-sm-3">
-										<label class="form-label" for="">Update Recon Field&nbsp;</label>
-										<select id="Cmbreconfield1" class="form-select form-control">
-										</select>
-									</div>
-								</div>
-								<div class="col-xs-12" style="margin-top:5px;">
-									<div id="grid_lookup">
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="accordion" id="headingfilter">
-							<input type="checkbox" name="radio-a" id="check1" style="display:none">
-							<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
-							<div class="accordion-content" id="headingfilter">
-								<div class="col-xs-12" style="margin-top:5px;">
-									<div id="gd_filter">
-										<div id="grid_filter">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="accordion" id="headingquery">
-							<input type="checkbox" name="radio-a" id="check4" style="display:none">
-							<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Query</label>
-							<div id="collapsequery" class="accordion-content" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
-								<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 115px;width: 1155px;border-radius: 0.375rem;"></textarea>
-								@*<button type="button" id="validatequery" class="btn btn-sm btn btn-primary" onclick="validatequery1()">Validate</button>&nbsp;&nbsp;&nbsp;*@
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
+			</div>
+			<div class="col-sm-5">
+			</div>
+			<div class="col-sm-1" style="margin-top:20px;">
+			</div>
 		</div>
-	</div>
+		<div class="row" style="margin-top:10px;">
+			<div class="col-sm-3">
+				<label class="form-label" for="">Preprocess Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+				<input class="form-control" type="text" id="preprocessname">
+				<input class="form-control" type="hidden" id="preprocessgid" value=0;>
+				<input class="form-control" type="hidden" id="validquery" />
+			</div>
+			<div class="col-sm-2">
+				<label class="form-label" for="">Process Method&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+				<select id="Cmbprocessmethod" class="form-select form-control" onchange="processmethod()">
+				</select>
+			</div>
+			<div class="col-sm-3">
+				<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+				<select id="cmbrecon1" class="form-select form-control" onchange="reconcode()" disabled>
+				</select>
+			</div>
+			<div class="col-sm-2">
+				<label class="form-label" for="">Preprocess Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+				<input class="form-control" type="number" id="preprocessorder">
+			</div>
+			<div class="col-md-2" style="width: 14%;">
+				<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+				<select id="holdflag1" class="form-select form-control" style=" width:100%;">
+				</select>
+			</div>
+		</div>
+		<div style="height:245px;overflow-x:auto;padding-top:10px;margin-top:10px">
+			<div class="accordion-wrapper">
+				<div class="accordion" id="headingfunction">
+					<input type="checkbox" name="radio-a" id="check2" style="display:none">
+					<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Function</label>
+					<div id="headingfunction" class="accordion-content" aria-labelledby="headingfunction" data-bs-parent="#accordionfunction">
+						<div class="accordion-body" style="padding-left:15px;">
+							<div class="row">
+								<div class="col-sm-3">
+									<label class="form-label" for="">Lookup Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
+									</select>
+								</div>
+								<div class="col-sm-3">
+									<label class="form-label" for="">Lookup Function&nbsp;</label>
+									<input class="form-control" id="Cmbfunction" name="Cmbfunction" type="text" value="" data-bind="value:Cmbfunction">
+									@*<select id="Cmbfunction" class="form-select form-control">
+									</select>*@
+								</div>
+								<div class="col-sm-3">
+									<label class="form-label" for="">Update Recon Field&nbsp;</label>
+									<select id="Cmbreconfield" class="form-select form-control">
+									</select>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="accordion" id="headinglookup">
+					<input type="checkbox" name="radio-a" id="check3" style="display:none">
+					<label class="accordion-label" for="check3">&nbsp;&nbsp;&nbsp;Look Up</label>
+					<div id="headinglookup" class="accordion-content">
+						<div class="row" style="margin-bottom:5px;">
+							<div class="col-sm-3">
+								<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="cmblookupdataset" class="form-select form-control" onchange="lookupchange()">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label class="form-label" for="">Lookup Return Field&nbsp;</label>
+								<select id="Cmblookupdatasetfield" class="form-select form-control">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label class="form-label" for="">Update Recon Field&nbsp;</label>
+								<select id="Cmbreconfield1" class="form-select form-control">
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-12" style="margin-top:5px;">
+							<div id="grid_lookup">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="accordion" id="headingfilter">
+					<input type="checkbox" name="radio-a" id="check1" style="display:none">
+					<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
+					<div class="accordion-content" id="headingfilter">
+						<div class="col-xs-12" style="margin-top:5px;">
+							<div id="gd_filter">
+								<div id="grid_filter">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="accordion" id="headingquery">
+					<input type="checkbox" name="radio-a" id="check4" style="display:none">
+					<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Query</label>
+					<div id="collapsequery" class="accordion-content" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
+						<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 115px;width: 1155px;border-radius: 0.375rem;"></textarea>
+						@*<button type="button" id="validatequery" class="btn btn-sm btn btn-primary" onclick="validatequery1()">Validate</button>&nbsp;&nbsp;&nbsp;*@
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
 </body>
 </html>
 <script type="text/javascript">
@@ -403,11 +399,11 @@
 		$("#Cmbfunction").val(data.process_function);
 		$("#Cmbreconfield").val(data.set_recon_field);
 		$("#querydata").val(data.process_query);
-		
+
 		$("#holdflag1").val(data.hold_flag);
 		$("#txtstatus2").val("Active");
 		$("#savesubmit").hide();
-		$("#btnsubmit").hide();		
+		$("#btnsubmit").hide();
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/Preprocessfetch',
@@ -421,7 +417,7 @@
 					if (result.filter.length > 0) {
 						$("#gd_filter").empty();
 						$("#gd_filter").append("<div id='grid_filter'></div>");
-						grid_filter(result.filter);						
+						grid_filter(result.filter);
 					}
 					else {
 						grid_filter([]);
@@ -434,7 +430,7 @@
 						}
 					} else {
 						grid_lookup([]);
-					}					
+					}
 					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
 					$("#cmbrecon1").val(result.header[0].recon_code);
 					jQuery('#cmbrecon1').trigger("change");
@@ -455,7 +451,7 @@
 					$("#holdflag1").val(result.header[0].hold_flag);
 				}
 			}
-		});		
+		});
 		$("#preprocessname").prop('disabled', true);
 		$("#preprocessorder").prop('disabled', true);
 		$("#Cmbprocessmethod").prop('disabled', true);
@@ -469,7 +465,7 @@
 		$("#cmbrecon1").prop('disabled', true);
 		$("#querydata").prop('disabled', true);
 		$("#cmblookupdataset").prop('disabled', true);
-		$("#Cmblookupdatasetfield").prop('disabled', true);		
+		$("#Cmblookupdatasetfield").prop('disabled', true);
 		if ($("#txtmode2").val() == "View") {
 			$("#grid_filter .k-grid-toolbar").hide();
 			$("#grid_lookup .k-grid-toolbar").hide();
@@ -616,87 +612,87 @@
 				buttonCount: 5
 			},
 			toolbar: "<a onclick=savefilterheader()  href='javascript:void(0)'><span class='fa fa-plus' style='color:white'></span></a>",
-			columns: [			
-			{
-				field: "filter_seqno",
-				title: "Seq No.",
-				width: 30,
-				attributes: { style: "text-align: right;" },
-			},
-			{
-				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				//template: '#=sel_checkbox(data)#'
-				template: function (dataItem) {
-					if (dataItem.preprocessfilter_gid > 0) {
-						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
-					} else {
-						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
-					}
-				}
-			},
-			{
-				field: "preprocessfilter_gid",
-				title: "preprocessfilter_gid",
-				hidden: true,
-			},
-			{
-				field: "filter_field_code",
-				title: "filter_field_code",
-				hidden: true,
-			},
-			{
-				field: "filter_field",
-				title: "Filter Field",
-				width: 100,
-				editor: function (container, options) {
-					combo_editor_man_process(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_filter")
+			columns: [
+				{
+					field: "filter_seqno",
+					title: "Seq No.",
+					width: 30,
+					attributes: { style: "text-align: right;" },
 				},
-			},
-			{
-				field: "filter_criteria",
-				title: "Filter Criteria",
-				width: 100,
-				editor: function (container, options) {
-					combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_filter", "COMPARISON")
-				},
-			},
-			{
-				field: "ident_value",
-				title: "Filter Value",
-				width: 100,
-			},
-			{
-				field: "active_status",
-				title: "Status",
-				hidden: true
-			},
-			{
-				field: "active_status_desc",
-				title: "Status",
-				width: 80,
-				hidden: true,
-			},
-			{
-				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				//template: '#=sel_checkbox1(data)#'
-				template: function (dataItem) {
-					if (dataItem.preprocessfilter_gid > 0) {
-						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
-					} else {
-						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+				{
+					field: "open_parentheses_flag",
+					title: "(", width: 20,
+					//template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						if (dataItem.preprocessfilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						}
 					}
 				},
-			},
-			{
-				field: "join_condition",
-				title: "Joins",
-				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_filter")
+				{
+					field: "preprocessfilter_gid",
+					title: "preprocessfilter_gid",
+					hidden: true,
 				},
-				width: 50,
-			}],
+				{
+					field: "filter_field_code",
+					title: "filter_field_code",
+					hidden: true,
+				},
+				{
+					field: "filter_field",
+					title: "Filter Field",
+					width: 100,
+					editor: function (container, options) {
+						combo_editor_man_process(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_filter")
+					},
+				},
+				{
+					field: "filter_criteria",
+					title: "Filter Criteria",
+					width: 100,
+					editor: function (container, options) {
+						combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_filter", "COMPARISON")
+					},
+				},
+				{
+					field: "ident_value",
+					title: "Filter Value",
+					width: 100,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true,
+				},
+				{
+					field: "close_parentheses_flag",
+					title: ")", width: 20,
+					//template: '#=sel_checkbox1(data)#'
+					template: function (dataItem) {
+						if (dataItem.preprocessfilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						}
+					},
+				},
+				{
+					field: "join_condition",
+					title: "Joins",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_filter")
+					},
+					width: 50,
+				}],
 			editable: true,
 		});
 
@@ -919,116 +915,116 @@
 			},
 			toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 			columns: [
-			
-			{
-				field: "condition_seqno",
-				title: "Seq No.",
-				width: 40,
-				attributes: { style: "text-align: right;" },
-			},
-			{
-				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				//template: '#=sel_checkbox(data)#'
-				template: function (dataItem) {
-					if (dataItem.preprocesscondition_gid > 0) {
-						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
-					} else {
-						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
-					}
-				}
-			},
-			{
-				field: "preprocesscondition_gid",
-				title: "preprocesscondition_gid",
-				hidden: true,
-			},
-			{
-				field: "source_field_code",
-				title: "Recon Field",
-				width: 100,
-				hidden: true,
-			},
-			{
-				field: "source_field_desc",
-				title: "Recon Field",
-				editor: function (container, options) {
-					combo_editor_man_lookup(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_lookup")
+
+				{
+					field: "condition_seqno",
+					title: "Seq No.",
+					width: 40,
+					attributes: { style: "text-align: right;" },
 				},
-				width: 120,
-			},
-			{
-				field: "extraction_criteria_code",
-				title: "Extraction criteria",
-				hidden: true,
-			},
-			{
-				field: "extraction_criteria",
-				title: "Extraction criteria",
-				editor: function (container, options) {
-					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookup", "SOURCE")
-				},
-				editable: true,
-				width: 120,
-			},
-			{
-				field: "comparison_field",
-				title: "comparison_field",
-				width: 100,
-				hidden: true,
-			},
-			{
-				field: "comparison_field_desc",
-				title: "Lookup Field",
-				editor: function (container, options) {
-					combo_editor_man_lookup1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_lookup")
-				},
-				width: 120,
-			},
-			{
-				field: "comparison_criteria_code",
-				title: "comparison_criteria_code",
-				hidden: true,
-			},
-			{
-				field: "comparison_criteria",
-				title: "Comparison criteria",
-				editor: function (container, options) {
-					combo_editor_man2(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_lookup", "COMPARISON")
-				},
-				width: 120,
-			},
-			{
-				field: "active_status",
-				title: "Status",
-				hidden: true
-			},
-			{
-				field: "active_status_desc",
-				title: "Status",
-				width: 80,
-				hidden: true
-			},
-			{
-				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				//template: '#=sel_checkbox1(data)#'
-				template: function (dataItem) {
-					if (dataItem.preprocesscondition_gid > 0) {
-						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
-					} else {
-						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+				{
+					field: "open_parentheses_flag",
+					title: "(", width: 20,
+					//template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						if (dataItem.preprocesscondition_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						}
 					}
 				},
-			},
-			{
-				field: "join_condition",
-				title: "Joins",
-				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_lookup")
+				{
+					field: "preprocesscondition_gid",
+					title: "preprocesscondition_gid",
+					hidden: true,
 				},
-				width: 40,
-			}],
+				{
+					field: "source_field_code",
+					title: "Recon Field",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "source_field_desc",
+					title: "Recon Field",
+					editor: function (container, options) {
+						combo_editor_man_lookup(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_lookup")
+					},
+					width: 120,
+				},
+				{
+					field: "extraction_criteria_code",
+					title: "Extraction criteria",
+					hidden: true,
+				},
+				{
+					field: "extraction_criteria",
+					title: "Extraction criteria",
+					editor: function (container, options) {
+						combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookup", "SOURCE")
+					},
+					editable: true,
+					width: 120,
+				},
+				{
+					field: "comparison_field",
+					title: "comparison_field",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_field_desc",
+					title: "Lookup Field",
+					editor: function (container, options) {
+						combo_editor_man_lookup1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_lookup")
+					},
+					width: 120,
+				},
+				{
+					field: "comparison_criteria_code",
+					title: "comparison_criteria_code",
+					hidden: true,
+				},
+				{
+					field: "comparison_criteria",
+					title: "Comparison criteria",
+					editor: function (container, options) {
+						combo_editor_man2(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_lookup", "COMPARISON")
+					},
+					width: 120,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true
+				},
+				{
+					field: "close_parentheses_flag",
+					title: ")", width: 20,
+					//template: '#=sel_checkbox1(data)#'
+					template: function (dataItem) {
+						if (dataItem.preprocesscondition_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						}
+					},
+				},
+				{
+					field: "join_condition",
+					title: "Joins",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_lookup")
+					},
+					width: 40,
+				}],
 			editable: true,
 		});
 		source_field_desc_list = "";
@@ -1336,21 +1332,7 @@
 			$("#validquery").val("false");
 		}
 	}
-	const button = document.getElementById('validatequery');
-	function validateAndChangeColor() {
-		// Perform validation here
-		if ($("#validquery").val() == "true") {
-			button.classList.remove('validated');
-			button.classList.add('validated1');
-		} else {
-			// If validation fails, remove 'validateds' class
-			button.classList.remove('btn-primary');
-			button.classList.add('validated');
-
-		}
-	}
-	button.addEventListener('click', validateAndChangeColor);
-
+	
 	function preprocessfetch(preprocess_code) {
 		var cmbpreprocess_code = preprocess_code;
 		var data = {};
@@ -1397,7 +1379,7 @@
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag1").val(result.header[0].hold_flag);
-					
+
 				}
 				else {
 					grid_filter([]);

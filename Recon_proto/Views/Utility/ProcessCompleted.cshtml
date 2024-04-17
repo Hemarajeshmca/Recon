@@ -174,7 +174,7 @@
 								jobstatus_desc: { type: "string" },
 								jobtype_code: { type: "string" },
 								jobtype_desc: { type: "string" },
-								start_date: { type: "string" },
+								start_date: { type: "datetime" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
 								file_type: {type: "string"},
@@ -248,18 +248,23 @@
 					{
 						field: "start_date",
 						title: "Start Date",
+						format: "{0:dd-MM-yyyy hh:mm tt}",
 						//format: "{0:dd-MM-yyyy HH:mm:ss}",
 						width: 120,
-						//filterable: {
-						//	ui: "datetimepicker",
-						//	extra: false,
-						//	operators: {
-						//		date: {
-						//			lt: "Before",
-						//			gt: "After"
-						//		},
-						//	},
-						//},
+						filterable: {
+							ui: "datetimepicker",
+							format: "{0:dd-MM-yyyy hh:mm tt}",
+							operators: {
+								datetime: {
+									eq: "Is equal to",
+									neq: "Is not equal to",
+									gte: "Is after or equal to",
+									gt: "Is after",
+									lte: "Is before or equal to",
+									lt: "Is before",
+								}
+							},
+						},
 					},
 					{
 						field: "end_date",
