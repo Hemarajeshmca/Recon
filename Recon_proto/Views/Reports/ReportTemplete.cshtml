@@ -76,9 +76,11 @@
 							text: item.recon_name
 						}));						
 					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
 					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
 					jQuery('#cmbreconname').trigger("change");
-				});
+				}
 			},
 			error: function (er) {
 				alert(er)
@@ -239,12 +241,12 @@
 
 				{
 					field: "reporttemplate_code",
-					title: "Custom Template Code",
+					title: "Custom Report Code",
 					width: 70,
 				},
 				{
 					field: "reporttemplate_name",
-					title: "Custom Template Name",
+					title: "Custom Report Name",
 					width: 100,
 				},
 				{

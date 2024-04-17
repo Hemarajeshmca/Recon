@@ -105,7 +105,9 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(""), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("getreportlist", content).Result;
+                    try
+                    {
+                        var response = client.PostAsync("getreportlist", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -120,6 +122,11 @@ namespace Recon_proto.Controllers
                         objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -161,7 +168,9 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("getreportparamlist", content).Result;
+                    try
+                    {
+                     var response = client.PostAsync("getreportparamlist", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -178,6 +187,11 @@ namespace Recon_proto.Controllers
                         objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -223,7 +237,9 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("QcdMasterGridRead", content).Result;
+                    try
+                    {
+                        var response = client.PostAsync("QcdMasterGridRead", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -248,6 +264,11 @@ namespace Recon_proto.Controllers
 
                     }
                     return Json(ViewBag.constraints);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -280,13 +301,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("generatereport", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
-
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                     //DataTable newdt = new DataTable();
                     //DownloadExcel();
                     //return Json("");
@@ -332,6 +358,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("generatereport", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -347,6 +374,11 @@ namespace Recon_proto.Controllers
                             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
                         }
                     }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception e)
@@ -355,64 +387,7 @@ namespace Recon_proto.Controllers
             }
         }
 
-
-
-
-
-        public static void DataTableToExcel(DataTable dataTable1, string filePath)
-        {
-            // Create a sample DataTable.
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Age", typeof(int));
-            dataTable.Columns.Add("City", typeof(string));
-
-            // Add some rows to the DataTable.
-            dataTable.Rows.Add("Alice", 25, "New York");
-            dataTable.Rows.Add("Bob", 30, "Paris");
-            dataTable.Rows.Add("Charlie", 35, "London");
-            using (var workbook = new XLWorkbook())
-            {
-                var worksheet = workbook.Worksheets.Add(dataTable, "Sheet1");
-                workbook.SaveAs(filePath);
-
-            }
-
-        }
-
-        public IActionResult DownloadExcel()
-        {
-            // Create a sample DataTable.
-            DataTable dataTable = new DataTable();
-            dataTable.Columns.Add("Name", typeof(string));
-            dataTable.Columns.Add("Age", typeof(int));
-            dataTable.Columns.Add("City", typeof(string));
-
-            // Add some rows to the DataTable.
-            dataTable.Rows.Add("Alice", 25, "New York");
-            dataTable.Rows.Add("Bob", 30, "Paris");
-            dataTable.Rows.Add("Charlie", 35, "London");
-
-            // Convert DataTable to Excel and save to MemoryStream
-            using (var stream = new MemoryStream())
-            {
-                using (var workbook = new XLWorkbook())
-                {
-                    var worksheet = workbook.Worksheets.Add(dataTable, "Sheet1");
-                    workbook.SaveAs(stream);
-                }
-
-                // Reset the position of the stream to ensure it's read from the beginning
-                stream.Seek(0, SeekOrigin.Begin);
-
-                // Return the Excel file as a downloadable response
-                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "output.xlsx");
-            }
-        }
-
-
-
-        public class generateReportmodel
+         public class generateReportmodel
         {
             public String? in_recon_code { get; set; }
             public String? in_report_code { get; set; }
@@ -446,12 +421,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reconwithinacc", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -483,7 +464,6 @@ namespace Recon_proto.Controllers
                 {
                     string Urlcon = "Report/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
-                    //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
                     client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
@@ -492,12 +472,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reconbetweenacc", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -533,12 +519,18 @@ namespace Recon_proto.Controllers
                 client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                try { 
                 var response = client.PostAsync("ReconVersionhistory", content).Result;
                 Stream data = response.Content.ReadAsStreamAsync().Result;
                 StreamReader reader = new StreamReader(data);
                 post_data = reader.ReadToEnd();
                 string d2 = JsonConvert.DeserializeObject<string>(post_data);
                 return Json(d2);
+                }
+                catch (HttpRequestException ex)
+                {
+                    return Json(ex);
+                }
             }
         }
         public class ReconversionListfetchmodel
@@ -575,6 +567,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reconbetweenacc", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -586,9 +579,6 @@ namespace Recon_proto.Controllers
                     Table1.Columns[1].ColumnName = "Amount";
                     Table1.Columns[2].ColumnName = "Account Mode";
                     Table1.Columns[3].ColumnName = "Balance Amount";
-
-
-
                     using (XLWorkbook wb = new XLWorkbook())
                     {
 
@@ -619,6 +609,11 @@ namespace Recon_proto.Controllers
                             wb.SaveAs(stream);
                             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
                         }
+                    }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
                     }
                 }
             }
@@ -673,6 +668,7 @@ namespace Recon_proto.Controllers
                         client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         HttpContent content = new StringContent(JsonConvert.SerializeObject(contect), UTF8Encoding.UTF8, "application/json");
+                        try { 
                         var response = client.PostAsync("MonthendReport", content).Result;
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
@@ -990,6 +986,11 @@ namespace Recon_proto.Controllers
                             }
 
                         }
+                        }
+                        catch (HttpRequestException ex)
+                        {
+                            return Json(ex);
+                        }
                     }
                 }
             }
@@ -1032,12 +1033,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("getReportTemplateList", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1077,12 +1084,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reportTemplate", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1128,12 +1141,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("fetchReportTemplate", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1170,13 +1189,22 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("reporttemplatefilter", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    return Json(d2);
-                }
+                    try
+                    {
+                        var response = client.PostAsync("reporttemplatefilter", content).Result;
+                        response.EnsureSuccessStatusCode();
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        post_data = reader.ReadToEnd();
+                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                        return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
+
+                    }
             }
             catch (Exception ex)
             {
@@ -1189,13 +1217,13 @@ namespace Recon_proto.Controllers
         {
             public Int32? in_reporttemplatefilter_gid { get; set; }
             public String? in_reporttemplate_code { get; set; }
-            public Int32? in_filter_seqno { get; set; }
+            public Decimal? in_filter_seqno { get; set; }
             public string? in_report_field { get; set; }
             public string? in_filter_criteria { get; set; }
             public string? in_filter_value { get; set; }
             public string? in_open_parentheses_flag { get; set; }
             public string? in_close_parentheses_flag { get; set; }
-            public string? in_join_condition { get; set; }
+            public string in_join_condition { get; set; }
             public string? in_action { get; set; }
             public String? in_active_status { get; set; }
         }
@@ -1229,6 +1257,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reconwithinacc", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -1274,6 +1303,11 @@ namespace Recon_proto.Controllers
                             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
                         }
                     }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception e)
@@ -1309,12 +1343,19 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("Manualmatchoffgridload", content).Result;
+                    
+                    try{
+                        var response = client.PostAsync("Manualmatchoffgridload", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1323,42 +1364,6 @@ namespace Recon_proto.Controllers
                 objcom.errorlog(ex.Message, "Manualmatchoffgridload");
                 return Json(ex.Message);
             }
-
-            //First grid load
-            // List<ManualMatchoff_model> objcat_lst = new List<ManualMatchoff_model>();
-            //DataTable result = new DataTable();
-            //string Data1 = "";
-            // ManualMatchoff_model ReportgridRead = new ManualMatchoff_model();
-            //ReportgridRead.outresult = outresult;
-            //ReportgridRead.count = _count;
-            //ReportgridRead.pageno = _pageno;
-            //ReportgridRead.pagesize = _pagesize;
-            //ReportgridRead.table_name = table_name;
-            //ReportgridRead.Report_condition = condition;
-            //ReportgridRead.in_outfile_flag = radio_checked;
-            //ReportgridRead.report_gid = recon_id;
-            //ReportgridRead.user_code = user_codes;
-            //ReportgridRead.ip_address = ipAddress;
-            //string post_data = objcommon.getApiResult(JsonConvert.SerializeObject(ReportgridRead), "Manualmatchoffgridload");
-            // result = (DataTable)JsonConvert.DeserializeObject(post_data, result.GetType());
-            //List<dynamic> dynamicDt = new List<dynamic>();
-            //int i = result.Rows.Count;
-            //foreach (DataRow row in result.Rows)
-            //{
-            //    dynamic dyn = new ExpandoObject();
-            //    dynamicDt.Add(dyn);
-            //    foreach (DataColumn column in result.Columns)
-            //    {
-            //        var dic = (IDictionary<string, object>)dyn;
-            //        dic[column.ColumnName] = row[column];
-            //    }
-            // }
-
-            //Data1 = JsonConvert.SerializeObject(dynamicDt);
-            //return Json(Data1, JsonRequestBehavior.AllowGet);
-            //return Json(objcat_lst.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
-            //return Json(objcat_lst, JsonRequestBehavior.AllowGet);
-
         }
 
 
@@ -1399,12 +1404,18 @@ namespace Recon_proto.Controllers
                         client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                         HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                        try { 
                         var response = client.PostAsync("runPageReport", content).Result;
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
                         post_data = reader.ReadToEnd();
                         string d2 = JsonConvert.DeserializeObject<string>(post_data);
                         return Json(d2);
+                        }
+                        catch (HttpRequestException ex)
+                        {
+                            return Json(ex);
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -1454,12 +1465,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("RemarkReason", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1498,12 +1515,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("ExectionReport", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1545,12 +1568,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("getPageNoReport", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1596,12 +1625,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("fetchReportTemplate", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1640,12 +1675,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("getreportparamlistrecon", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1686,12 +1727,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("cloneReportTemplate", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1734,12 +1781,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reporttemplatefield", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1778,12 +1831,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("reporttemplatesorting", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1880,12 +1939,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("uploadreporttempletefile", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1931,6 +1996,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("configvalue", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -1939,7 +2005,11 @@ namespace Recon_proto.Controllers
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
                     return Json(d2);
 
-
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1983,12 +2053,18 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("generatedynamicreport", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception ex)
@@ -2012,6 +2088,7 @@ namespace Recon_proto.Controllers
             public String? in_outputfile_type { get; set; }
             public string? in_user_code { get; set; }
             public string? file_name { get; set; }
+            public string? in_report_name { get; set; }
 
         }
 
@@ -2027,7 +2104,6 @@ namespace Recon_proto.Controllers
             DataSet result = new DataSet();
             DataTable Table1 = new DataTable();
             string post_data = "";
-            string filename = "test" + ".xlsx";
             try
             {
                 using (var client = new HttpClient())
@@ -2043,13 +2119,19 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("generatedynamicreport", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
-                    return null;
+                    return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
                 }
             }
             catch (Exception e)
@@ -2072,6 +2154,7 @@ namespace Recon_proto.Controllers
             public String? in_outputfile_type { get; set; }
             public string? in_user_code { get; set; }
             public string? file_name { get; set; }
+            public string? in_report_name { get; set; }
         }
 
 
@@ -2098,6 +2181,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("configvalue", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -2105,7 +2189,11 @@ namespace Recon_proto.Controllers
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
                     return Json(d2);
-
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
 
                 }
             }
@@ -2175,6 +2263,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    try { 
                     var response = client.PostAsync("configvalue", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
@@ -2191,7 +2280,11 @@ namespace Recon_proto.Controllers
                     }
                     return objcat.out_config_value;
 
-
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return "";
+                    }
                 }
             }
             catch (Exception ex)
