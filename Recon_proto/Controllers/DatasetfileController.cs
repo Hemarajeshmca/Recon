@@ -68,18 +68,27 @@ namespace Recon_proto.Controllers
                         content1.Add(new StringContent(initiated_by), "initiated_by");
                         HttpContent content = new StringContent(JsonConvert.SerializeObject(objcontent));
                         //var response = await client.PostAsync(filepath, content1).Result;
-                        HttpResponseMessage response = await client.PostAsync(filepath, content1);
-                        Stream data = response.Content.ReadAsStreamAsync().Result;
-                        StreamReader reader = new StreamReader(data);
-                        post_data = reader.ReadToEnd();
-                        return post_data;
+                        try
+                        {
+                            HttpResponseMessage response = await client.PostAsync(filepath, content1);
+                            Stream data = response.Content.ReadAsStreamAsync().Result;
+                            StreamReader reader = new StreamReader(data);
+                            post_data = reader.ReadToEnd();
+                            return post_data;
+							//var res = "";
+							//if (post_data != "")
+							//{
+							//    res = setProcessdataset(post_data);
+							//}
+							//return res;
+						}
+						catch (HttpRequestException ex)
+                        {
+                            return "Error";
+                        }
 
-                        //var res = "";
-                        //if (post_data != "")
-                        //{
-                        //    res = setProcessdataset(post_data);
-                        //}
-                        //return res;
+
+                      
                     }
                 }
                 catch (Exception ex)
