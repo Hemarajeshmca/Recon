@@ -682,7 +682,7 @@
         $("#cmbreporttype").prop("disabled", true);
         var reconcode = $("#cmbreconname").val();
         if (getlocalStorage('btn_clk_val') == "Create" && ($("#reporttemplate_gid").val() == '0' || $("#reporttemplate_gid").val() == 0)) {
-            $("#txtstatus").val("Active");
+            $("#txtstatus").val("Draft");
             $("#reporttemplate_gid").val("0");
             $("#reporttemplate_code").val("");
             // $("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -711,7 +711,7 @@
                             var res = JSON.parse(response);
                             $("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
                             // $("#txtmode").val(getlocalStorage('btn_clk_val'));
-                            $("#txtstatus").val("Active");
+                            $("#txtstatus").val(res.Table[0].active_status_desc);
                             $("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
                             $("#rt_name").val(res.Table[0].reporttemplate_name);
                             $("#cmbreporttype").val(res.Table[0].report_code);
@@ -1740,7 +1740,7 @@
                                     btn_onClick("Edit");
                                     $("#reporttemplate_code").val(result[0].in_reporttemplate_code);
                                     $("#txtmode").val("Create");
-                                    $("#txtstatus").val("Active");
+                                    //$("#txtstatus").val("Active");
                                     $("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
                                     $("#cmbreporttype").prop("disabled", true);
                                     $("#clonereport").prop('disabled', true);
@@ -1837,7 +1837,7 @@
                                 btn_onClick("Edit");
                                 $("#reporttemplate_code").val(result[0].in_reporttemplate_code);
                                 $("#txtmode").val("Create");
-                                $("#txtstatus").val("Active");
+                                //$("#txtstatus").val("Active");
                                 $("#reporttemplate_gid").val(result[0].in_reporttemplate_gid);
                                 $("#cmbreporttype").prop("disabled", true);
                                 $("#clonereport").prop('disabled', true);
@@ -1847,7 +1847,7 @@
                             } else {
                                 btn_onClick("Edit");
                                 $("#txtmode").val("Edit");
-                                $("#txtstatus").val("Active");
+                                //$("#txtstatus").val("Active");
                             }
                         } else {
                             $.alert({
@@ -1942,7 +1942,7 @@
                                             $("#txtmode").val("Create");
                                             detailfetch("Clone", obj);
                                         } else {
-                                            $("#txtstatus").val("Active");
+                                            $("#txtstatus").val("Draft");
                                             $.alert({
                                                 title: 'Recon',
                                                 content: result[0].out_msg,
