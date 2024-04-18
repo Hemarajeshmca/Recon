@@ -41,10 +41,10 @@
 			z-index: 1;
 		}
 
-		#dropdown-list li {
+			#dropdown-list li {
 				padding: 5px;
 				cursor: pointer;
-		}
+			}
 
 		#editable-input {
 			width: 100%;
@@ -269,7 +269,7 @@
 
 		.next {
 			/*            background-color: #367fa9;
-												*/
+														*/
 			border: 1px solid #fff;
 			color: white;
 			text-decoration: none;
@@ -398,7 +398,7 @@
 	var Rec_id;
 	var getreconid = [];
 	$(document).ready(function () {
-		
+
 		var gridcopy = [];
 		$("#navhead").text("Report Generation");
 		kendodate_format();
@@ -409,25 +409,29 @@
 		$("#gotoPage").val(1);
 		$("#comboBox").kendoComboBox({
 			autoBind: false,
-			dataSource: ["100", "200", "300", "1000", "5000", "10000"],				
+			dataSource: ["100", "200", "300", "1000", "5000", "10000"],
 			value: 5000,
-			editable: false, 
+			editable: false,
 			change: function (e) {
 				var inputValue = this.value();
 				if (inputValue != "") {
 					var comboBox1 = $("#comboBox").data("kendoComboBox");
 					comboBox1.dataSource.read();
-					gridpage(inputValue);					
+					pageno = 1;
+					$("#gotoPage").val(pageno);
+					gridpage(inputValue);
+					
 				} else {
 					var comboBox1 = $("#comboBox").data("kendoComboBox");
 					comboBox1.dataSource.read();
+					gridpage(inputValue);
 				}
 			},
 			blur: function () {
 				var comboBoxValue = this.value();
 				gridpage(comboBoxValue);
 			}
-		}).data("kendoComboBox");		
+		}).data("kendoComboBox");
 	});
 	function detailfetch() {
 		// recon list
@@ -1200,8 +1204,6 @@
 				title: 'Impact',
 				content: "Please Generate the report",
 				type: 'blue',
-
-
 			});
 			return false;
 		}
@@ -1364,59 +1366,69 @@
 	}
 
 	function pagination(data) {
-		if (pageno >= $('#totalpage').val()) {
-			$.alert({
-				title: 'Recon',
-				content: "Page number is greate than total number of page",
-				type: 'red',
-			});
-			pageno = 1;
-			$("#gotoPage").val(pageno);
-		} else {
-			if (data == "next") {
-				currentpage = $("#gotoPage").val();
-				pageno = parseInt(currentpage) + 1;
-				//pagesize = $("#items").val();
-				pagesize = pagesize;
-				$("#gotoPage").val(pageno);
-				Runprogress();
-
-			} else if (data == "last") {
-				pageno = Math.round(parseInt(result) / parseInt(pagesize));
-				//pagesize = $("#items").val();
-				pagesize = pagesize;
-				$("#gotoPage").val(pageno);
-				Runprogress();
-			} else if (data == "first") {
-				pageno = 1;
-				//pagesize = $("#items").val();
-				pagesize = pagesize;
-				$("#gotoPage").val(pageno);
-				Runprogress();
+		if (data == "next") {
+			if (pageno >= $('#totalpage').val()) {
+				$.alert({
+					title: 'Recon',
+					content: "Page number is greate than total number of page",
+					type: 'red',
+				});
+				return;
 			}
-			else {
-				currentpage = $("#gotoPage").val();
+			currentpage = $("#gotoPage").val();
+			pageno = parseInt(currentpage) + 1;
+			//pagesize = $("#items").val();
+			pagesize = pagesize;
+			$("#gotoPage").val(pageno);
+			Runprogress();
+
+		} else if (data == "last") {
+			
+			pageno = Math.round(parseInt(result) / parseInt(pagesize));
+			//pagesize = $("#items").val();
+			pagesize = pagesize;
+			$("#gotoPage").val(pageno);
+			Runprogress();
+		} else if (data == "first") {
+			if (pageno >= $('#totalpage').val()) {
+				$.alert({
+					title: 'Recon',
+					content: "Page number is greate than total number of page",
+					type: 'red',
+				});
+				pageno = 1;
+				$("#gotoPage").val(pageno);
+				return;
+			}
+			pageno = 1;
+			//pagesize = $("#items").val();
+			pagesize = pagesize;
+			$("#gotoPage").val(pageno);
+			Runprogress();
+		}
+		else {
+			currentpage = $("#gotoPage").val();
+			if (currentpage > 1){
 				pageno = currentpage - 1;
 				pagesize = pagesize;
 				//pagesize = $("#items").val();
 				$("#gotoPage").val(pageno);
 				Runprogress();
-			}
+			}				
 		}
-
 	}
 
 
 	function gridpage1() {
 		pagesize = $('#items').val();
-		var Actpageno = Math.round(parseInt(count) / parseInt(pagesize));
+		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
 		$('#totalpage').val(Actpageno);
 	}
 
 	function gridpage(itemsPerPage) {
 		pagesize = itemsPerPage;
 		$('#items').val(itemsPerPage);
-		var Actpageno = Math.round(parseInt(count) / parseInt(pagesize));
+		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
 		$('#totalpage').val(Actpageno);
 		Runprogress();
 	}
@@ -1426,7 +1438,7 @@
 		var r = Table_Name;
 		//$("#total").val(count);
 		document.getElementById('total').innerHTML = result;
-		var Actpageno = Math.round(parseInt(count) / parseInt(pagesize));
+		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
 		// $('#totalpage').val(Actpageno);
 		document.getElementById('totalpage').innerHTML = Actpageno;
 		debugger;
