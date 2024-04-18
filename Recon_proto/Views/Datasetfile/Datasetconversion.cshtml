@@ -667,7 +667,13 @@
 							content: 'Something went wrong',
 							type: 'red',
 						});
-					} else {
+					} else if (response) {
+						$.alert({
+							title: 'Recon',
+							content: response,
+							type: 'red',
+						});
+					}else {
 						debugger;
 						var res = JSON.parse(response)
 						if(res.length > 0){
