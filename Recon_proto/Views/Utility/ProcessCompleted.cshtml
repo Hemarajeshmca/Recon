@@ -24,18 +24,19 @@
 		.k-grid-content {
 			overflow-x: hidden;
 		}
+
 		.k-grid.k-widget {
 			height: 360px;
 		}
 
-	/*	.k-grid-header th.k-header > .k-link {
-			width: 100px;
-		}*/
+		/*	.k-grid-header th.k-header > .k-link {
+					width: 100px;
+				}*/
 
 		.k-grid-header {
 			font-weight: bold;
 		}
-		
+
 		.k-grid-filter.k-state-active {
 			color: #ffffff;
 			background-color: #1274AC;
@@ -90,7 +91,7 @@
 				</div>
 				<div id="gd_jobinprogress">
 					<div id="grid_jobinprogress"> </div>
-				</div>				
+				</div>
 			</div>
 		</div>
 	</div>
@@ -174,20 +175,27 @@
 					schema: {
 						model: {
 							fields: {
-								end_date: { type: "string" },
+								end_date: { type: "date" },
 								job_gid: { type: "number" },
 								job_name: { type: "string" },
 								job_remark: { type: "string" },
 								jobstatus_desc: { type: "string" },
 								jobtype_code: { type: "string" },
 								jobtype_desc: { type: "string" },
-								start_date: { type: "datetime" },
+								start_date: { type: "date" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
-								file_type: {type: "string"},
-								job_initiated_by: {type: "string"},
-								file_name : {type: "string"}
+								file_type: { type: "string" },
+								job_initiated_by: { type: "string" },
+								file_name: { type: "string" }
 							}
+						},
+						parse: function (data) {
+							$.each(data, function (i, item) {
+								item.start_date = kendo.parseDate(item.start_date, "dd-MM-yyyy hh:mm tt");
+								item.end_date = kendo.parseDate(item.end_date, "dd-MM-yyyy hh:mm tt");
+							});
+							return data;
 						}
 					}
 				},
@@ -256,7 +264,6 @@
 						field: "start_date",
 						title: "Start Date",
 						format: "{0:dd-MM-yyyy hh:mm tt}",
-						//format: "{0:dd-MM-yyyy HH:mm:ss}",
 						width: 120,
 						filterable: {
 							ui: "datetimepicker",
@@ -276,7 +283,22 @@
 					{
 						field: "end_date",
 						title: "End Date",
+						format: "{0:dd-MM-yyyy hh:mm tt}",
 						width: 120,
+						filterable: {
+							ui: "datetimepicker",
+							format: "{0:dd-MM-yyyy hh:mm tt}",
+							operators: {
+								datetime: {
+									eq: "Is equal to",
+									neq: "Is not equal to",
+									gte: "Is after or equal to",
+									gt: "Is after",
+									lte: "Is before or equal to",
+									lt: "Is before",
+								}
+							},
+						},
 					},
 					{
 						field: "job_remark",
@@ -292,22 +314,22 @@
 						field: "jobstatus_desc",
 						title: "Job Status",
 						width: 80,
-					},					
+					},
 					{
 						field: "jobtype_code",
 						title: "Job Type Code",
 						hidden: true
-					}, 
-						{
+					},
+					{
 						field: "file_type",
 						title: "File Type",
-						width:50,
+						width: 50,
 						hidden: true
-					}, 
+					},
 					{
 						filed: "file_name",
 						title: "file_name",
-						width:10,
+						width: 10,
 						hidden: true
 					}
 				],
@@ -318,7 +340,7 @@
 		}
 	}
 
-	function downloadJob(val) {	
+	function downloadJob(val) {
 		var data = $(val).attr('value');
 		var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
 		var grid = $("#grid_jobinprogress").data("kendoGrid");
