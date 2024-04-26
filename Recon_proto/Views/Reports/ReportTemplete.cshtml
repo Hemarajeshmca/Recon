@@ -27,7 +27,7 @@
 					</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal'>
+						<a href='' onclick='getSerializedRows()' id="btn_new" data-bs-toggle='modal'>
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
 						<div id="gd_reporttemplist">
@@ -186,7 +186,7 @@
 					resultData = e.sender._data;
 					var rows = $('#grid_reporttemplist').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					var screen_code = rolevalidatescreen('ds_setup')
+					var screen_code = rolevalidatescreen('rpt_temp')
 					if (screen_code[0].add == "N") {
 						$("#btn_new").hide();
 					}
@@ -202,7 +202,7 @@
 				},
 				pageable: {
 					refresh: false,
-					pageSizes: true,
+					pageSizes: [10, 15, 20, 25, 50],
 					buttonCount: 5
 				},
 				sortable: true,
@@ -216,17 +216,17 @@
 						{
 							name: "edit",
 							id: "btn_Edit",
-							template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-edit' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 						{
 							name: "view",
 							id: "View",
-							template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 						{
 							name: "Delete",
 							id: "Delete",
-							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 					],
 					title: "Action&nbsp;",
@@ -341,7 +341,6 @@
 			url: '../Reports/reporttemplate',
 			dataType: 'json',
 			data: JSON.stringify(data),
-			//data: JSON.stringify({ in_reporttemplate_gid: data.in_reporttemplate_gid, in_reporttemplate_code: data.in_reporttemplate_code, in_reporttemplate_name: data.in_reporttemplate_name, in_report_code: data.in_report_code, in_action: data.in_action, in_active_status: data.in_active_status }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -372,32 +371,13 @@
 				btn_onClick("Edit");
 				document.location = '../Reports/ReportTempletedetail';
 			}
-			else if (mode == "view") {
+			else if ($(mode).attr('value') == "view") {
 				btn_onClick('View');
 				document.location = "../Reports/ReportTempletedetail";
 			} else {
 				btn_onClick('Create');
 				document.location = "../Reports/ReportTempletedetail";
 			}
-			//if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
-			//	var items = getlocalStorage("ls_pageList");
-			//	if (items.length == 0) {
-			//		kendoAlert("Please select records");
-			//	}
-			//	else {
-			//		if ($(mode).attr('value') == "edit") {
-			//			btn_onClick("Edit");
-			//			document.location = '../Reports/ReportTempletedetail';
-			//		}
-			//		else if (mode == "view") {
-			//			btn_onClick('View');
-			//			document.location = "../Reports/ReportTempletedetail";
-			//		} else {
-			//			btn_onClick('Create');
-			//			document.location = "../Reports/ReportTempletedetail";
-			//		}
-			//	}
-			//}
 		}
 		catch (err) {
 
@@ -405,7 +385,6 @@
 	}
 
 	function myDeleteJs(){
-
 		$.confirm({
 			icon: 'fa fa-warning',
 			title: 'Recon',

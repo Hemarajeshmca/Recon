@@ -48,12 +48,10 @@
 	$(document).ready(function () {
 		$("#navhead").text("Undo Posting & Knockoff");
 		$('#proceed_btn').prop('disabled', true);
-		//document.getElementById("proceed_btn").disabled = true;
 		gridlist();
 	});
 
 	function gridlist() {
-		debugger;
 		//recon name
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
@@ -82,8 +80,10 @@
 							text: item.recon_name
 						}));
 					}
-					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#cmbreconname').trigger("change");
+					if (sessionStorage.getItem("reconcode") != null) {
+						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#cmbreconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
@@ -100,7 +100,6 @@
 		}
 	}
 	function reconsubmit() {
-		debugger;
 		var in_recon_code = $("#cmbreconname").val();
 		var Ko_id = $("#Ko_id").val();
 		if (in_recon_code && Ko_id) {
@@ -111,14 +110,19 @@
 				data: JSON.stringify({ in_recon_code: in_recon_code, in_report_code: "RPT_KO", in_report_param: "", in_report_condition: "and a.ko_gid =" + Ko_id, in_ip_addr: "", in_outputfile_flag: false, in_user_code: "" }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
-					if (response != null) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
 						var res = JSON.parse(response);
 						grid_reconverion(res);
 						//if(res.length > 0){
 						//	grid_reconverion(res);
 						//}
 
+					} else if (response == "[]") {
+						$.alert({
+							title: 'Recon',
+							content: 'No Records found',
+							type: 'red',
+						});
 					}
 					else {
 						grid_reconverion([]);
@@ -373,21 +377,6 @@
 					});
 				},
 			}
-			//buttons: {
-			//	confirm: function () {
-			//		KOusingGid();
-			//	},
-			//	cancel: function () {
-			//		$.alert({
-			//			icon: 'fa fa-success',
-			//			title: 'Recon',
-			//			theme: 'dark',
-			//			content: 'Delete Canceled.!',
-			//			type: 'blue',
-			//			animationSpeed: 700,
-			//		});
-			//	},
-			//}
 		});
 	}
 
@@ -406,7 +395,6 @@
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					if (response) {
 						var res = JSON.parse(response);
 						$.alert({

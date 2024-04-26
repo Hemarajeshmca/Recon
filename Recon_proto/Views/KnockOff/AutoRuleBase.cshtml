@@ -413,8 +413,10 @@
 							text: item.recon_name
 						}));
 					}
-					$("#reconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#reconname').trigger("change");
+					if (sessionStorage.getItem("reconcode") != null) {
+						$("#reconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#reconname').trigger("change");
+					}					
 				});
 			},
 			error: function (er) {
@@ -441,7 +443,6 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					var result = JSON.parse(response);
 					if (result.ReconRule.length > 0) {
 						$("#gd_preview").empty();

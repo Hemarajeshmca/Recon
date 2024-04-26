@@ -4,9 +4,18 @@ namespace Recon_proto.Controllers
 {
 	public class PipelineController : Controller
 	{
-		public IActionResult Pipeline()
+
+        private readonly IConfiguration _configuration;
+
+        public PipelineController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public IActionResult Pipeline()
 		{
-			return View();
+            var pipe = _configuration.GetValue<string>("AppSettings:pipeline");
+            ViewBag.pipe = pipe;
+            return View();
 		}
 	}
 }

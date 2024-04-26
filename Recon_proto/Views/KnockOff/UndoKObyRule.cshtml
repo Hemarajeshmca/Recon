@@ -264,8 +264,10 @@
 							text: item.recon_name
 						}));
 					}
-					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#cmbreconname').trigger("change");
+					if (sessionStorage.getItem("reconcode") != null) {
+						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#cmbreconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
@@ -282,7 +284,6 @@
 		}
 	}
 	function showjob() {
-		debugger;
 		//$("#RuleList").removeClass('nav-link active');
 		//$("#RuleList").toggleClass('nav-link');
 		//$("#navs-pills-Joblist").toggleClass('tab-pane fade active in');
@@ -313,7 +314,6 @@
 					// undorule_grid(result.Table1);
 				}
 				else {
-					debugger;
 					undojob_grid([]);
 				}
 			},
@@ -609,10 +609,8 @@
 			contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify({ in_job_gid: selected_job.job_gid }),
 			success: function (response) {
-				debugger;
 				var result = JSON.parse(response);
 				if (result.length > 0) {
-					debugger;
 					undorule_grid(result);
 				} else {
 					undorule_grid([]);
@@ -646,7 +644,6 @@
 	}
 
 	function undoRule() {
-		debugger;
 		var selected_jobid = '';
 		var reconcode = $("#cmbreconname").val();
 		var grid_job = $("#grid_job").data("kendoGrid");
@@ -667,7 +664,6 @@
 				dataType: 'json',
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					if (response != null) {
 						var res = JSON.parse(response)
 						$.alert({

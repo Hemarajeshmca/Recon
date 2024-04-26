@@ -47,7 +47,9 @@ namespace Recon_proto.Controllers
             objcontent.initiated_by = initiated_by;
             urlstring = _configuration.GetSection("Appsettings")["connectorUrl"].ToString();
             string post_data = "";
-            var filepath = "Pipeline/NewScheduler";
+			DataTable dat_tab = new DataTable();
+
+			var filepath = "Pipeline/NewScheduler";
             using (var client = new HttpClient())
 
             using (var content1 = new MultipartFormDataContent())
@@ -67,7 +69,6 @@ namespace Recon_proto.Controllers
                         content1.Add(new StringContent(pipeline_code), "pipeline_code");
                         content1.Add(new StringContent(initiated_by), "initiated_by");
                         HttpContent content = new StringContent(JsonConvert.SerializeObject(objcontent));
-                        //var response = await client.PostAsync(filepath, content1).Result;
                         try
                         {
                             HttpResponseMessage response = await client.PostAsync(filepath, content1);
@@ -75,20 +76,20 @@ namespace Recon_proto.Controllers
                             StreamReader reader = new StreamReader(data);
                             post_data = reader.ReadToEnd();
                             return post_data;
-							//var res = "";
-							//if (post_data != "")
-							//{
-							//    res = setProcessdataset(post_data);
-							//}
-							//return res;
-						}
+							//dynamic jsonObject = JsonConvert.DeserializeObject(post_data);
+							//string message = jsonObject.message;
+							//int result1 = jsonObject.result;
+							//var res = message.ToString();
+       //                     if (result1 == 1)
+       //                     {
+       //                         res = setProcessdataset(message);
+       //                     }
+       //                     return res;
+                        }
 						catch (HttpRequestException ex)
                         {
                             return "Error";
-                        }
-
-
-                      
+                        }                      
                     }
                 }
                 catch (Exception ex)

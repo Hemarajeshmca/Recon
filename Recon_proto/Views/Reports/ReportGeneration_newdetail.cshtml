@@ -405,7 +405,6 @@
 	var Rec_id;
 	var getreconid = [];
 	$(document).ready(function () {
-
 		var gridcopy = [];
 		$("#navhead").text("Report Generation");
 		kendodate_format();
@@ -894,7 +893,6 @@
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var rep_reporttemplatefilter_gid = parseInt(model.reporttemplatefilter_gid);
 		if (rep_reporttemplatefilter_gid > 0) {
-			debugger
 			if (model.reporttemplatefilter_gid) {
 				$.alert({
 					title: 'Recon',
@@ -908,6 +906,7 @@
 	}
 
 	function generateReport() {
+		hideProgress();
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var objpplmapupdlist = [];
 		var rpt_cond = "";
@@ -1006,7 +1005,6 @@
 				type: "POST",
 				url: '../Reports/generatedynamicreport',
 				dataType: 'json',
-				async: false,
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				//success: function (response) {
@@ -1042,6 +1040,7 @@
 				//    console.log(er)
 				//}
 			});
+						hideProgress();
 		}
 		else if (!data.in_report_param) {
 			$.alert({
@@ -1049,10 +1048,12 @@
 				content: "Please select Report..!",
 				type: 'red',
 			});
+						hideProgress();
 		}
 	}
 
 	function preview() {
+		showProgress();
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var objpplmapupdlist = [];
 		var rpt_cond = "";
@@ -1135,10 +1136,10 @@
 				type: "POST",
 				url: '../Reports/Report_Runpagereport',
 				dataType: 'json',
-				async: false,
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
+					hideProgress();
 					if (response != " " && response != null && response != "{}" && response != "[]") {
 						var res = JSON.parse(response);
 						if (res.length > 0) {
@@ -1177,6 +1178,7 @@
 								content: "Something Went Wrong ..!",
 								type: 'red',
 							});
+							hideProgress();
 						}
 					} else if (response == "[]") {
 						$.alert({
@@ -1184,6 +1186,7 @@
 							content: "No Records Found",
 							type: 'red',
 						});
+						hideProgress();
 						$(this).next(".accordion_body").slideDown(300);
 						$(".plusminus").text('+');
 						$("#Dynamic_grid").hide();
@@ -1193,7 +1196,6 @@
 					}
 				},
 				error: function (er) {
-					hideProgress();
 					alert(er)
 					console.log(er)
 				}
@@ -1203,9 +1205,6 @@
 	}
 
 	function Runprogress() {
-		debugger;
-		console.log("pageNo", pageno);
-		console.log("pagesize", pagesize);
 		var template_code = getlocalStorage("ls_pageList");
 		if (result == 0) {
 			$.alert({
@@ -1218,7 +1217,6 @@
 		$("#Dynamic_grid").show();
 		$("#framevalue").show();
 		$(".page_bg").show();
-		debugger;
 		document.getElementById('total').innerHTML = result;
 		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
 		document.getElementById('totalpage').innerHTML = Actpageno;
@@ -1317,6 +1315,15 @@
 					$("#grid").kendoGrid(configuration).data("kendoGrid");
 					kendo.bind($("#grid"), viewModel);
 					$(".page_bg").show();
+				} else if(Data1 == "[]"){
+					$.alert({
+						title: 'Recon',
+						content: 'No Records found .!',
+						type: 'red',
+					});
+					var currentpage = 0;
+					var pageno = 1;
+					var pagesize = $("#items").val() ? $("#items").val() : 100;
 				} else {
 					$.alert({
 						title: 'Recon',
@@ -1442,14 +1449,12 @@
 	}
 
 	function additionalinfo() {
-
 		var r = Table_Name;
 		//$("#total").val(count);
 		document.getElementById('total').innerHTML = result;
 		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
 		// $('#totalpage').val(Actpageno);
 		document.getElementById('totalpage').innerHTML = Actpageno;
-		debugger;
 		return {
 			outresult: result,
 			_count: count,
@@ -1670,6 +1675,7 @@
 	});
 
 	function generateXlsxdynamic() {
+		hideProgress();
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var objpplmapupdlist = [];
 		var rpt_cond = "";
@@ -1757,7 +1763,6 @@
 				type: "POST",
 				url: '../Reports/generateReportXLSXdynamic',
 				dataType: 'json',
-				async: false,
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				//success: function (response) {
@@ -1786,6 +1791,7 @@
 				//    console.log(er)
 				//}
 			});
+			hideProgress();
 		}
 		else if (!data.data.in_report_param) {
 			$.alert({
@@ -1793,6 +1799,7 @@
 				content: "Report Param is missing!",
 				type: 'red',
 			});
+			hideProgress();
 		}
 	}
 </script>
