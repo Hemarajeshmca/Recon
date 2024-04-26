@@ -162,6 +162,11 @@
 					resultData = e.sender._data;
 					var rows = $('#grid_reporttemplist').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('rpt_generation_w')
+					if (screen_code[0].process == "N") {
+						$(".k-grid-process").hide();
+					}
+					
 				},
 				pageable: {
 					refresh: false,
@@ -179,24 +184,8 @@
 						{
 							name: "edit",
 							id: "btn_Edit",
-							template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img style='height: 22px;width: 22px;' src = '../Assets/images/arrow.png'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-process' value='edit' data-bs-toggle='modal'><img style='height: 22px;width: 22px;' src = '../Assets/images/arrow.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
-
-						//{
-						//	name: "edit",
-						//	id: "btn_Edit",
-						//	template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-						//},
-						//{
-						//	name: "view",
-						//	id: "View",
-						//	template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
-						//},
-						//{
-						//	name: "Delete",
-						//	id: "Delete",
-						//	template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
-						//},
 					],
 					title: "Action&nbsp;",
 					width: "30px",

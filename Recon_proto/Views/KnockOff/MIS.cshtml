@@ -185,7 +185,6 @@
 	});
 
 	function getreconlist() {
-		debugger;
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
@@ -200,7 +199,6 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				var res = JSON.parse(response);
 				$("#reconname").empty();
 				$("#reconname").append($('<option>', {
@@ -231,7 +229,6 @@
 		}
 	}
 	function run() {
-		debugger;
 		var in_recon_code = $("#reconname").val();
 		var period_from = $("#period_from").val();
 		var ts = period_from.split("/");
@@ -246,7 +243,6 @@
 			data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: '' }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				if (response) {
 					var res = JSON.parse(response)
 					if (res.Table.length > 0) {
@@ -256,7 +252,7 @@
 						loadGrid([]);
 						$.alert({
 							title: 'Recon',
-							content: response,
+							content: "No Records found",
 							type: 'red',
 						});
 					}
@@ -270,7 +266,6 @@
 
 			},
 			error: function (er) {
-				debugger;
 				alert(er)
 				console.log(er)
 			}
@@ -278,8 +273,6 @@
 	}
 
 	function loadGrid(data) {
-
-		debugger;
 		var columns = [];
 		var rows = [];
 		if (data) {
@@ -420,7 +413,6 @@
 	}
 
 	function exportexcel() {
-		debugger;
 		var in_recon_code = $("#reconname").val();
 		var in_tran_date = $("#period_from").val();
 		var ts = in_tran_date.split("/");

@@ -4,9 +4,18 @@ namespace Recon_proto.Controllers
 {
 	public class ConnnectorController : Controller
 	{
-		public IActionResult connectors()
+
+        private readonly IConfiguration _configuration;
+
+        public ConnnectorController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public IActionResult connectors()
 		{
-			return View();
+            var conn = _configuration.GetValue<string>("AppSettings:connector");
+            ViewBag.conn = conn;
+            return View();
 		}
 	}
 }

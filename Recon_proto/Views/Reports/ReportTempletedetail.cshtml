@@ -460,7 +460,7 @@
                             <div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4" style="text-align:center">
-                                    <button type="button" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
                                     <a href="../Reports/ReportTemplete" class="btn btn-sm cancel_btn me-2">Cancel</a>
                                 </div>
                                 <div class="col-sm-4"></div>
@@ -736,6 +736,15 @@
                             grid_tempfilter(res.Table1);
                             grid_columfilter(res.Table2);
                             grid_sorting(res.Table3);
+
+                            if ((getlocalStorage('btn_clk_val') == "View")) {
+                                $("#btnsubmit").hide();
+                                $("#btncolgrid").hide(); 
+                                $("#btn_upload").hide(); 
+                                $("#btnclone").hide();
+                                $("#grid_tempfilter .k-grid-toolbar").hide();
+                                $("#grid_sorting .k-grid-toolbar").hide();
+                            }
                         }
                         else {
                             grid_tempfilter([]);
@@ -753,6 +762,9 @@
                 });
             }
         }
+    
+    
+    
     }
 
 
@@ -793,6 +805,11 @@
                 resultData = e.sender._data;
                 var rows = $('#grid_tempfilter').data('kendoGrid').tbody.children();
                 setColor(rows, resultData);
+                if ($("#txtmode").val() == "View") {
+                    $(".k-grid-save").hide();
+                    $(".k-grid-delete").hide();
+                    $(".k-grid-add").hide();
+                }
             },
             sortable: false,
             selectable: "row",
@@ -811,12 +828,19 @@
                     {
                         name: "save",
                         id: "Save",
-                        template: "<a href=''onclick='savereportFilter()' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
+                        template: "<a href=''onclick='savereportFilter()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
                     },
                     {
                         name: "Delete",
                         id: "Delete",
-                        template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+                        template: function (dataItem) {
+                            if ($("#txtmode").val() == "View") {
+                                return ""; 
+                            } else {
+                                return "<a href='' onclick='myDeleteJs()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+                            }
+                        }
+                        //template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
                     },
                 ], title: "Action&nbsp;", width: "40px",
             },
@@ -1180,6 +1204,11 @@
                 resultData = e.sender._data;
                 var rows = $('#grid_sorting').data('kendoGrid').tbody.children();
                 setColor(rows, resultData);
+                if ($("#txtmode").val() == "View") {
+                    $(".k-grid-save").hide();
+                    $(".k-grid-delete").hide();
+                    $(".k-grid-add").hide();
+                }
             },
             sortable: false,
             selectable: "row",
@@ -1203,7 +1232,13 @@
                     {
                         name: "Delete",
                         id: "Delete",
-                        template: "<a href='' onclick='deleteSort()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+                        template: function (dataItem) {
+                            if ($("#txtmode").val() == "View") {
+                                return ""; 
+                            } else {
+                                return "<a href='' onclick='deleteSort()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+                            }
+                        }
                     },
                 ], title: "Action&nbsp;", width: "40px",
             },
@@ -1437,8 +1472,9 @@
                                 });
                                 if (res.out_result == 1) {
                                     $("#txtmode").val("Edit");
-                                    detailfetch();
-                                }                                
+                                    
+                                }   
+                                detailfetch();
                             }
                         }
                         else {
@@ -2014,38 +2050,55 @@
         data.in_active_status = 'Y';
         data.in_action = model.reporttemplatesorting_gid ? 'UPDATE' : 'INSERT';
         data.in_action_by = txtusername.user_name;
-        data.in_delete_flag = 'N'
-        $.ajax({
-            url: '@Url.Action("reporttemplatesorting", "Reports")',
-            type: "post",
-            data: JSON.stringify(data),
-            contentType: "application/json",
-            success: function (data) {
-                var result = JSON.parse(data);
-                if (result[0].out_result == 1 || result[0].out_result == "1") {
+        data.in_delete_flag = 'N';
+        if(data.in_report_field && data.in_sorting_order) {
+            $.ajax({
+                url: '@Url.Action("reporttemplatesorting", "Reports")',
+                type: "post",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (data) {
+                    var result = JSON.parse(data);
+                    if (result[0].out_result == 1 || result[0].out_result == "1") {
+                        $.alert({
+                            title: 'Recon',
+                            content: result[0].out_msg,
+                            type: 'green',
+                        });
+                        $("#txtmode").val("Edit");
+                        detailfetch();
+                    } else {
+                        $.alert({
+                            title: 'Recon',
+                            content: 'Something went wrong..! Please try after sometime..!',
+                            type: 'red',
+                        });
+                    }
+                },
+                error: function (er) {
                     $.alert({
                         title: 'Recon',
-                        content: result[0].out_msg,
+                        content: er.statusText,
                         type: 'green',
                     });
-                    $("#txtmode").val("Edit");
-                    detailfetch();
-                } else {
-                    $.alert({
-                        title: 'Recon',
-                        content: 'Something went wrong..! Please try after sometime..!',
-                        type: 'red',
-                    });
                 }
-            },
-            error: function (er) {
-                $.alert({
-                    title: 'Recon',
-                    content: er.statusText,
-                    type: 'green',
-                });
-            }
-        });
+            });
+
+        } else if (!data.in_report_field) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Filter Filed .!',
+                type: 'green',
+            });
+        } else if (!data.in_sorting_order) {
+            $.alert({
+                title: 'Recon',
+                content: 'Sorting Order is missing .!',
+                type: 'green',
+            });
+        }
+
+      
     }
 
     function upload() {
@@ -2059,9 +2112,6 @@
         fileInput = document.getElementById('File_Import');
         if (fileInput.files.length > 0) {
             formData.append('file', fileInput.files[0]);
-            //var str = $("#rt_name").val();
-            // var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
-            //data.in_file_name = data.in_reporttemplate_code + "_" + concatName;
              data.in_file_name = fileInput.files[0].name;
             getFirstSheetNameFromFile(fileInput.files[0])
                 .then(firstSheetName => {
@@ -2086,7 +2136,7 @@
                                                 content: response[0].out_msg,
                                                 type: 'green',
                                             });
-                                            $("#txtmode").val("Edit");
+                                           // $("#txtmode").val("Edit");
                                             detailfetch();
                                         } else {
                                             $.alert({

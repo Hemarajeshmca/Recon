@@ -322,8 +322,10 @@
 							text: item.recon_name
 						}));
 					}
-					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));					
-					jQuery('#cmbreconname').trigger("change");
+					if (sessionStorage.getItem("reconcode") != null) {
+						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#cmbreconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
@@ -350,9 +352,7 @@
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					if (response.length > 0) {
-						debugger;
 						$("#gd_dataset").empty();
 						$("#gd_dataset").append("<div id='grid_dataset'></div>");
 					const activeData = response.filter(item => item.active_status == "Y");
@@ -506,7 +506,6 @@
 	}
 
 	function validateNextdataset() {
-		debugger;
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var checkedrows = $("#dataset_selected:checked", grid.tbody).closest("tr");
 		var objpplmapupdlist = [];
@@ -536,7 +535,6 @@
 	}
 
 	function rowselected(val) {
-		debugger;
 		console.log(`val`, $("#dataset_selected").val());
 	}
 
@@ -561,7 +559,6 @@
 	}
 
 	function getpipelinelist(dataset_code) {
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../DataSet/getPipelinelist',
@@ -569,7 +566,6 @@
 			data: JSON.stringify({ in_target_dataset_code: dataset_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				if (response.length == 1) {
 					$.each(response, function (index, item) {
 						$("#Pipeline").empty();
@@ -631,6 +627,7 @@
 	}
 
 	function start() {
+		hideProgress();
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var fileName = '';
 		var fileType = '';
@@ -647,12 +644,11 @@
 		}
 		formData.append('initiated_by', txtusername.user_name);
 		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
-
-			//$.alert({
-			//	title: 'Recon',
-			//	content: "Job Initiated Kindly check the Job Status in Utility",
-			//	type: 'green',
-			//});
+			$.alert({
+				title: 'Recon',
+				content: "Job Initiated Kindly check the Job Status in Utility",
+				type: 'green',
+			});
 			//window.location.href = "../Datasetfile/Datasetconversion";
 
 			$.ajax({
@@ -662,47 +658,40 @@
 				processData: false,
 				contentType: false,
 				async: true,
-				success: function (response) {
-					debugger;
-					//$.alert({
-					//	title: 'Recon',
-					//	content: "Completed",
-					//	type: 'Green',
-					//});
-					if(!response) {
-						$.alert({
-							title: 'Recon',
-							content: 'Something went wrong',
-							type: 'red',
-						});
-					} else if (response) {
-						$.alert({
-							title: 'Recon',
-							content: response,
-							type: 'red',
-						});
-					}else {
-						debugger;
-						var res = JSON.parse(response)
-						if(res.length > 0){
-							$.alert({
-								title: 'Recon',
-								content: res[0].out_msg,
-								type: 'green',
-							});
-						} else {
-							$.alert({
-								title: 'Recon',
-								content: 'Something went wrong',
-								type: 'red',
-							});
-						}
+				//success: function (response) {
+				//	if(!response) {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: 'Something went wrong',
+				//			type: 'red',
+				//		});
+				//	} else if (response) {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: response,
+				//			type: 'red',
+				//		});
+				//	}else {
+				//		var res = JSON.parse(response)
+				//		if(res.length > 0){
+				//			$.alert({
+				//				title: 'Recon',
+				//				content: res[0].out_msg,
+				//				type: 'green',
+				//			});
+				//		} else {
+				//			$.alert({
+				//				title: 'Recon',
+				//				content: 'Something went wrong',
+				//				type: 'red',
+				//			});
+				//		}
 						
-						$("#FileName").val("");
-						$("#File_Import").val("");
-						$("#Pipeline").val("");
-					}
-				}
+				//		$("#FileName").val("");
+				//		$("#File_Import").val("");
+				//		$("#Pipeline").val("");
+				//	}
+				//}
 			});
 		}
 		else if (!pipeline_code) {
@@ -734,11 +723,10 @@
 			$("#File_Import").val("");
 			$("#FileName").val("");
 		}
-		//hideProgress();
+		hideProgress();
 	}
 
 	function openInfoModel() {
-		debugger;
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('job_desc').innerHTML = selectedItem.dataset_name;

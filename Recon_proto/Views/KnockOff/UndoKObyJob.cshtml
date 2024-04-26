@@ -131,8 +131,10 @@
 							text: item.recon_name
 						}));
 					}
-					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#cmbreconname').trigger("change");
+					if (sessionStorage.getItem("reconcode") != null) {
+						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#cmbreconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
