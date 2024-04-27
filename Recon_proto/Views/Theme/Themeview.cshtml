@@ -58,9 +58,9 @@
 <body class="hold-transition skin-blue sidebar-mini fixed">
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-12px;height: 82%;">
+			<div class="card-body" style="margin-top:-12px;height: 84%;">
 				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
-					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+					<div class="row" style="margin-top: -22px;">
 						<div class="col-sm-6">
 							<div class="row">
 								<div class="col-sm-4">
@@ -85,9 +85,9 @@
 							</center>
 						</div>
 					</div>
-					<div class="row" style="margin-top:10px;">
+					<div class="row" style="margin-bottom:5px;">
 						<div class="col-sm-3">
-							<label class="form-label" for="">Theme Description&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<label class="form-label" for="">Theme Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="themename">
 							<input class="form-control" type="hidden" id="themegid" value=0>
 						</div>
@@ -96,42 +96,188 @@
 							<select id="cmbrecon" class="form-select form-control" onchange="reconchange()" disabled>
 							</select>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-3">
 							<label class="form-label" style="width: 84px;" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="theme_order" value="0" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
 						</div>
-						<div class="col-md-1" style="padding-left:0;margin-left: 15px;display:none" >
-							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="holdflag" class="form-select form-control" style=" width:100%;">
+						<div class="col-md-3">
+							<label for="" class="form-label">Theme Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="themetype" class="form-select form-control" style=" width:100%;" onchange="fthemetype()">
+							</select>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom:5px;">
+						<div class="col-sm-3">
+							<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;" onchange="sourcefieldchange()">
 							</select>
 						</div>
 						<div class="col-sm-3">
-							<label class="form-label" for="">Clone Theme&nbsp;</label>
-							<select id="Cmbclone" class="form-select form-control">
+							<label id=comsupdataset class="form-label">Comparison Dataset</label>
+							<select id="comdataset" class="form-select form-control" style=" width: 100%;">
 							</select>
 						</div>
-						<div class="col-sm-1" style="margin-top:30px;margin-left: -15px;">
-							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
-						</div>
 					</div>
-
 					<div class="row">
-						<div class="col-xs-12">
-							<div id="gd_themefilter">
-								<div id="grid_themefilterfield">
+						<div class="nav-align-top mb-3 mt-3">
+							<ul class="nav nav-pills mb-2" role="tablist">
+								<li class="nav-item">
+									<button type="button" id="themeCondition"
+											class="nav-link active"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-themecondition"
+											aria-controls="navs-pills-themecondition"
+											aria-selected="true">
+										Theme Condition
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" id="sourcefilter"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-sourcefilter"
+											aria-controls="navs-pills-top-sourcefilter"
+											aria-selected="true">
+										Source Filter
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" id="comparisionfilter"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-comparisionfilter"
+											aria-controls="navs-pills-top-comparisionfilter"
+											aria-selected="true">
+										Comparison Filter
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" id="grouping"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-grouping"
+											aria-controls="navs-pills-top-grouping"
+											aria-selected="false">
+										Additional Grouping Field
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" id="aggregatefunction"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-aggregatefunction"
+											aria-controls="navs-pills-top-aggregatefunction"
+											aria-selected="true">
+										Aggregate Function
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button" id="aggregatecondition"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-aggregatecondition"
+											aria-controls="navs-pills-top-aggregatecondition"
+											aria-selected="true">
+										Aggregate Condition
+									</button>
+								</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="navs-pills-themecondition" role="tabpanel" style="margin-top:-13px;">
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<div class="row" style="padding-bottom:3px;padding-right:5px;">
+												<div class="col-xs-12">
+													<div id="gd_themecondition">
+														<div id="grid_themecondition">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-sourcefilter" role="tabpanel" style="margin-top:-19px;">
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<div class="row" style="margin-top:5px;">
+												<div class="col-xs-12">
+													<div id="gd_themefilter">
+														<div id="grid_themefilterfield">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-comparisionfilter" role="tabpanel" style="margin-top:-19px;">
+									<div class="panel panel-default">
+										<div class="panel-body">
+											<div class="row" style="margin-top:5px;">
+												<div class="col-xs-12">
+													<div id="gd_comparisionfilter">
+														<div id="grid_comparisionfilter">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-19px;">
+									<div class="panel panel-default">
+										<div class="row" style="padding-bottom:3px;padding-right:5px;">
+											<div class="col-xs-12">
+												<div id="gd_grouping">
+													<div id="grid_themegrouping">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-aggregatefunction" role="tabpanel" style="margin-top:-19px;">
+									<div class="panel panel-default">
+										<div class="row" style="padding-bottom:3px;padding-right:5px;">
+											<div class="col-xs-12">
+												<div id="gd_aggfunction">
+													<div id="grid_aggfunction">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-aggregatecondition" role="tabpanel" style="margin-top:-19px;">
+									<div class="panel panel-default">
+										<div class="row" style="padding-bottom:3px;padding-right:5px;">
+											<div class="col-xs-12">
+												<div id="gd_aggcondition">
+													<div id="grid_aggcondition">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
-
-					</div>
-					<div class="row" style="padding-bottom:8px;padding-left:10px;padding-right:10px">
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
-							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
-							<a href="../Theme/ThemeList" class="btn btn-sm cancel_btn me-2">Cancel</a>
-						</div>
-						<div class="col-sm-4">
+						<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+							<div class="col-sm-4">
+							</div>
+							<div class="col-sm-4" style="text-align:center">
+								<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+								<a href="../Theme/ThemeList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+							</div>
+							<div class="col-sm-4">
+							</div>
 						</div>
 					</div>
 				</form>
@@ -207,8 +353,8 @@
 				});
 			}
 		});
-		// holdflag flag
-		var in_master_code = "QCD_YN";
+		// theme_type flag
+		var in_master_code = "QCD_THEME_TYPE";
 		var in_user_code = "";
 		$.ajax({
 			type: "POST",
@@ -218,13 +364,13 @@
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				$("#holdflag").empty();
-				$("#holdflag").append($('<option>', {
+				$("#themetype").empty();
+				$("#themetype").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
-					$("#holdflag").append($('<option>', {
+					$("#themetype").append($('<option>', {
 						value: item.masterSyscode,
 						text: item.masterName
 					}));
@@ -233,7 +379,34 @@
 			}
 		});
 		load();
-
+	}
+	function fthemetype() {
+		var themetype = $("#themetype").val();
+		if (themetype == "QCD_THEME_DIRECT") {
+			$("#sourcedataset").prop('disabled', true);
+			$("#comdataset").prop('disabled', true);
+			$("#themeCondition").hide();
+			$("#comparisionfilter").hide();
+			$("#grouping").hide();
+			$("#aggregatefunction").hide();
+			$("#aggregatecondition").hide();
+		} else if (themetype == "QCD_THEME_COMPARE") {
+			$("#sourcedataset").prop('disabled', false);
+			$("#comdataset").prop('disabled', false);
+			$("#themeCondition").show();
+			$("#comparisionfilter").show();
+			$("#grouping").show();
+			$("#aggregatefunction").hide();
+			$("#aggregatecondition").hide();
+		} else {
+			$("#sourcedataset").prop('disabled', false);
+			$("#comdataset").prop('disabled', false);
+			$("#themeCondition").show();
+			$("#comparisionfilter").show();
+			$("#grouping").show();
+			$("#aggregatefunction").show();
+			$("#aggregatecondition").show();
+		}
 	}
 	function reconchange() {
 		//sorce dataset
@@ -268,34 +441,43 @@
 				console.log(er)
 			}
 		});
+		//dataset combo
 		var reconcode = $("#cmbrecon").val();
 		$.ajax({
 			type: "POST",
-			url: '../Theme/Themeclonefetch',
+			url: '../Rulesetup/rulerecondatasetfetch',
 			dataType: 'json',
-			data: "",
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				var result = JSON.parse(response);
-				if (result != null) {
-					$("#Cmbclone").empty();
-					$("#Cmbclone").append($('<option>', {
-						value: "",
-						text: "  Select  "
-					}));
-					$.each(result, function (index, item) {
-						$("#Cmbclone").append($('<option>', {
-							value: item.theme_code,
-							text: item.theme_desc
+				var res = JSON.parse(response);
+				$("#sourcedataset").empty();
+				$("#sourcedataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#sourcedataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
 						}));
-					});
-				}
-				else {
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
+					}
+				});
+				$("#comdataset").empty();
+				$("#comdataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#comdataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
 			}
 		});
 	};
@@ -303,12 +485,17 @@
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Draft");
-			grid_themefilter([]);
 			var data = getlocalStorage("ls_pageList");
 			$("#cmbrecon").val(data[0].recon_code);
 			jQuery('#cmbrecon').trigger("change");
 			$("#theme_order").val(data[0].theme_order);
 			$("#holdflag").val('N');
+			grid_themecondition([]);
+			grid_themefilter([]);
+			grid_comparisionfilter([]);
+			grid_themegrouping([]);
+			grid_aggfunction([]);
+			grid_aggcondition([]);
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -316,6 +503,7 @@
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
 				$("#themename").val(data.theme_desc);
 				$("#cmbrecon").val(data.recon_code);
+				jQuery('#cmbrecon').trigger("change");
 				$("#txtthemecode").val(data.theme_code);
 				$("#themegid").val(data.theme_gid);
 				$("#theme_order").val(data.theme_order);
@@ -330,6 +518,7 @@
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
 				$("#themename").val(data.theme_desc);
 				$("#cmbrecon").val(data.recon_code);
+				jQuery('#cmbrecon').trigger("change");
 				$("#txtthemecode").val(data.theme_code);
 				$("#themegid").val(data.theme_gid);
 				$("#theme_order").val(data.theme_order);
@@ -351,6 +540,552 @@
 			}
 		}
 	}
+	function detailsfetch(theme_code) {
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themedetailfetch',
+			dataType: 'json',
+			data: JSON.stringify({ theme_code: theme_code }),
+			async: false,
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					$("#txtthemecode").val(res.themeHeader[0].theme_code);
+					$("#cmbrecon").val(res.themeHeader[0].recon_code);
+					$("#themename").val(res.themeHeader[0].theme_name);
+					$("#theme_order").val(res.themeHeader[0].theme_order);
+					$("#sourcedataset").val(res.themeHeader[0].source_dataset_code);
+					$("#comdataset").val(res.themeHeader[0].comparison_dataset_code);
+					$("#themetype").val(res.themeHeader[0].theme_type_code);
+					$("#txtstatus").val(res.themeHeader[0].active_status_desc);
+					grid_themefilter(res.sourceidentifier);
+					grid_themecondition(res.themeCondition);
+					grid_comparisionfilter(res.comparisionidentifier);
+					grid_themegrouping(res.themeGrouping);
+					if (res.Aggfunction.length > 0) {
+						$("#gd_aggfunction").empty();
+						$("#gd_aggfunction").append("<div id='grid_aggfunction'></div>");
+						grid_aggfunction(res.Aggfunction);
+					}
+					else {
+						grid_aggfunction([]);
+					}
+					if (res.AggCondition.length > 0) {
+						$("#gd_aggcondition").empty();
+						$("#gd_aggcondition").append("<div id='grid_aggcondition'></div>");
+						grid_aggcondition(res.AggCondition);
+					}
+					else {
+						grid_aggcondition([]);
+					}
+
+
+					
+					if (response.length > 0) {
+						$("#Cmbclone").val();
+						$("#Cmbclone").prop('disabled', true)
+						$("#btnclone").prop('disabled', true)
+					}
+				}
+				else {
+					grid_themefilter([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	//-----------------------------------------------------   theme condition  ----------------------------------------------------------------
+	function grid_themecondition(data) {
+		var source_field_desc_list = "";
+		var extraction_criteria_list = "";
+		var comparison_criteria_list = "";
+		$("#grid_themecondition").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "themecondition_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							themecondition_gid: { type: "string", defaultValue: "0" },
+							themecondition_seqno: { type: "string", defaultValue: 0 },
+							rule_code: { type: "string" },
+							source_field_code: { type: "string", defaultValue: "" },
+							source_field_desc: { type: "string", defaultValue: "" },
+							comparison_field: { type: "string", defaultValue: "" },
+							comparison_field_desc: { type: "string" },
+							extraction_criteria: { type: "string" },
+							extraction_criteria_code: { type: "string" },
+							comparison_criteria: { type: "string" },
+							comparison_criteria_code: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
+							join_condition: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			//dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_themecondition').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: "row",
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saverulecondition()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:28%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					//{
+					//	name: "edit",
+					//	id: "Edit",
+					//	template: "<a href=''class='k-grid-edit'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					//},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "themecondition_seqno",
+				title: "Seq No.",
+				width: 50,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "open_parentheses_flag",
+				title: "(", width: 20,
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.themecondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					}
+				}
+			},
+			{
+				field: "themecondition_gid",
+				title: "themecondition_gid",
+				hidden: true,
+			},
+			{
+				field: "source_field_code",
+				title: "Source Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "source_field_desc",
+				title: "Source Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_themecondition")
+				},
+				width: 120,
+			},
+			{
+				field: "extraction_criteria_code",
+				title: "Extraction criteria",
+				hidden: true,
+			},
+			{
+				field: "extraction_criteria",
+				title: "Extraction criteria",
+				editor: function (container, options) {
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_themecondition", "SOURCE")
+				},
+				editable: true,
+				width: 170,
+			},
+			{
+				field: "comparison_field",
+				title: "comparison_field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "comparison_field_desc",
+				title: "Comparison Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_themecondition")
+				},
+				width: 120,
+			},
+			{
+				field: "comparison_criteria_code",
+				title: "comparison_criteria_code",
+				hidden: true,
+			},
+			{
+				field: "comparison_criteria",
+				title: "Comparison criteria",
+				editor: function (container, options) {
+					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_themecondition", "COMPARISON")
+				},
+				width: 170,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			},
+			{
+				field: "close_parentheses_flag",
+				title: ")", width: 20,
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.themecondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					}
+				},
+			},
+
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_themecondition")
+				},
+				width: 40,
+			}],
+			editable: true,
+		});
+		source_field_desc_list = cmbsourcefield();
+		comparison_field_desc_list = cmbsourcefield();
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+	}
+	function OnEdit(e) {
+		try {
+			setDefaultValues(e);
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+	}
+	function color() {
+		$("#grid_themecondition").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
+	}
+	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		debugger;
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.source_field_desc;
+		} else {
+			var codeValue = selectedItem.comparison_field_desc;
+		}
+		var in_recon_code = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "extraction_criteria") {
+					if (datafield == "extraction_criteria" && selectedItem.extraction_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.extraction_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.extraction_criteria_input = undefined;
+				}
+				if (datafield == "comparison_criteria") {
+					if (datafield == "comparison_criteria" && selectedItem.comparison_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.comparison_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.comparison_criteria_input = undefined;
+				}
+			},
+		});
+	}
+	function cmbsourcefield() {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;
+	}
+	function addRowcondition() {
+		var grid = $("#grid_themecondition").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var rowIndex = 2; // Change this to the index of the row you want to focus on
+		grid.select("tr:eq(" + rowIndex + ")");
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].themecondition_seqno > max) {
+				max = grid.dataSource._data[i].themecondition_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ themecondition_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themecondition_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	$(function () {
+		$('#grid_themecondition').on('click', '.chkbx1', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_themecondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_themecondition').on('click', '.chkbx2', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_themecondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	});
+	function saverulecondition() {
+		debugger;
+		try {
+			var grid = $("#grid_themecondition").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+
+			var in_theme_code = $("#txtthemecode").val();
+			var in_source_field = model.source_field_code;
+			var in_comparison_field = model.comparison_field;
+			var in_extraction_criteria = model.extraction_criteria;
+			var in_comparison_criteria = model.comparison_criteria;
+			var themecondition_seqno = model.themecondition_seqno;
+			var action = "";
+			var action_by = ""
+			var themecondition_gid = model.themecondition_gid;
+			if (themecondition_gid == "0") {
+				themecondition_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
+
+			var in_join_condition = model.join_condition;
+			$.ajax({
+				type: "POST",
+				url: '../Theme/themeconditionsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_themecondition_gid: themecondition_gid, in_theme_code: in_theme_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_themecondition_seqno: themecondition_seqno,
+					in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status, in_join_condition: in_join_condition
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						//getfetch($("#txtthemecode").val(), "themecond");
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJsrulecondition() {
+		var grid = $("#grid_themecondition").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var themecondition_gid = parseInt(model.themecondition_gid);
+		if (themecondition_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var themecondition_gid = model.themecondition_gid;
+						var in_theme_code = $("#txtthemecode").val();
+						var in_source_field = "";
+						var in_comparison_field = "";
+						var in_extraction_criteria = "";
+						var in_comparison_criteria = "";
+						var action = "Delete";
+						var action_by = "";
+						var status = "";
+						var themecondition_seqno = 0;
+						var in_open_flag = "";
+						var in_close_flag = "";
+						var in_join_condition = "";
+						$.ajax({
+							type: "POST",
+							url: '../Theme/themeconditionsave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_themecondition_gid: themecondition_gid, in_theme_code: in_theme_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_themecondition_seqno: themecondition_seqno,
+								in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status, in_join_condition: in_join_condition
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									//getfetch($("#txtthemecode").val(), "themecond");
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	//-----------------------------------------------------   theme condition  ----------------------------------------------------------------
+
+	//-----------------------------------------------------  sourcefilter ----------------------------------------------------------------
 	function grid_themefilter(data) {
 		try {
 			var join_condition_list = "";
@@ -369,8 +1104,8 @@
 								filter_field_code: { type: "string", defaultValue: "" },
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
-								theme_seqno: { type: "NUMBER" },
-								ident_value: { type: "string" },
+								themefilter_seqno: { type: "string", defaultValue: 0 },
+								filter_value: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
 								join_condition: { type: "string", defaultValue: "" },
@@ -380,7 +1115,7 @@
 						}
 					}
 				},
-				height: 300,
+				height: 185,
 				groupable: false,
 				dataBinding: setDefaultValues,
 				edit: OnEdit,
@@ -391,7 +1126,7 @@
 					if ($("#txtmode").val() == "View") {
 						$(".k-grid-save").hide();
 					};
-					
+
 				},
 				sortable: false,
 				selectable: "row",
@@ -404,7 +1139,7 @@
 					pageSizes: true,
 					buttonCount: 5
 				},
-				toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+				toolbar: "<a onclick=addRowsource()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 				columns: [{
 					command: [
 						{
@@ -418,7 +1153,7 @@
 							id: "Delete",
 							template: function (dataItem) {
 								// Check your condition here to determine whether to show or hide the delete button
-								if ($("#txtmode").val() == "View")  {
+								if ($("#txtmode").val() == "View") {
 									return ""; // Return empty string to hide the delete button
 								} else {
 									return "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
@@ -429,8 +1164,8 @@
 					], title: "Action&nbsp;", width: "40px",
 				},
 				{
-					field: "theme_seqno",
-					title: "Theme Seq No.",
+					field: "themefilter_seqno",
+					title: "Seq No.",
 					width: 50,
 					attributes: { style: "text-align: right;" },
 					editor: function (container, options) {
@@ -443,9 +1178,9 @@
 					//template: '#=sel_checkbox(data)#'
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 						}
 					}
 				},
@@ -484,7 +1219,7 @@
 					},
 				},
 				{
-					field: "ident_value",
+					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
 				},
@@ -505,9 +1240,9 @@
 					//template: '#=sel_checkbox1(data)#'
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
 						}
 					},
 				},
@@ -541,7 +1276,7 @@
 
 	}
 	$(function () {
-		$('#grid_themefilterfield').on('click', '.chkbx1', function () {
+		$('#grid_themefilterfield').on('click', '.chkbx3', function () {
 			var checked = $(this).is(':checked');
 			var grid = $('#grid_themefilterfield').data().kendoGrid;
 			var dataItem = grid.dataItem($(this).closest('tr'));
@@ -555,7 +1290,7 @@
 		})
 	})
 	$(function () {
-		$('#grid_themefilterfield').on('click', '.chkbx2', function () {
+		$('#grid_themefilterfield').on('click', '.chkbx4', function () {
 			var checked = $(this).is(':checked');
 			var grid = $('#grid_themefilterfield').data().kendoGrid;
 			var dataItem = grid.dataItem($(this).closest('tr'));
@@ -568,25 +1303,23 @@
 			}
 		})
 	})
-	function addRow() {
+	function addRowsource() {
 		var grid = $("#grid_themefilterfield").data("kendoGrid");
 		var dataSource = grid.dataSource;
 		var max = 0;
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].theme_seqno > max) {
-				max = grid.dataSource._data[i].theme_seqno;
+			if (grid.dataSource._data[i].themefilter_seqno > max) {
+				max = grid.dataSource._data[i].themefilter_seqno;
 			}
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ theme_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
+		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-
-
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -699,24 +1432,1407 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
+	function savedetail() {
+		try {
+			var grid = $("#grid_themefilterfield").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var theme_code = $("#txtthemecode").val();
+			var filter_field = model.filter_field_code;
+			var filter_criteria = model.filter_criteria;
+			var filter_value = model.filter_value;
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
+			var filter_applied_on = "S"
+			var in_join_condition = model.join_condition;
+			if (in_join_condition == undefined) {
+				in_join_condition = "";
+			}
+			var themefilter_seqno = model.themefilter_seqno;
+			var action = "";
+			var action_by = ""
+			var themefilter_gid = model.themefilter_gid;
+			if (themefilter_gid == "0") {
+				themefilter_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var active_status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../theme/themedetail',
+				dataType: 'json',
+				data: JSON.stringify({
+					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+					themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
+					action: action, active_status: active_status,
+					open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					if (res[0].out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					}
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	//-----------------------------------------------------  sourcefilter ----------------------------------------------------------------
 
+	//-----------------------------------------------------  comparisionfilter ----------------------------------------------------------------
+	function grid_comparisionfilter(data) {
+		try {
+			var join_condition_list = "";
+			var filter_field_list = "";
+			var filter_criteria_list = "";
+			$("#grid_comparisionfilter").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 5,
+					sort: [{ field: "themefilter_seqno", dir: "asc" }],
+					schema: {
+						model: {
+							fields: {
+								themefilter_gid: { type: "string", defaultValue: "0" },
+								theme_code: { type: "string" },
+								filter_field_code: { type: "string", defaultValue: "" },
+								filter_field: { type: "string" },
+								filter_criteria: { type: "string", defaultValue: "" },
+								themefilter_seqno: { type: "string", defaultValue: 0 },
+								filter_value: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" },
+								join_condition: { type: "string", defaultValue: "" },
+								open_parentheses_flag: { type: "string", editable: false },
+								close_parentheses_flag: { type: "string", editable: false },
+							}
+						}
+					}
+				},
+				height: 185,
+				groupable: false,
+				dataBinding: setDefaultValues,
+				edit: OnEdit,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_comparisionfilter').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					if ($("#txtmode").val() == "View") {
+						$(".k-grid-save").hide();
+					};
+
+				},
+				sortable: false,
+				selectable: "row",
+				filterable: false,
+				navigatable: true,
+				pageable: true,
+				resizable: true,
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				toolbar: "<a onclick=addRowcomparision()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+				columns: [{
+					command: [
+						{
+							name: "save",
+							id: "Save",
+							template: "<a href=''onclick='savedetailc()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
+						},
+
+						{
+							name: "Delete",
+							id: "Delete",
+							template: function (dataItem) {
+								// Check your condition here to determine whether to show or hide the delete button
+								if ($("#txtmode").val() == "View") {
+									return ""; // Return empty string to hide the delete button
+								} else {
+									return "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
+								}
+							}
+							//template: "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+						},
+					], title: "Action&nbsp;", width: "40px",
+				},
+				{
+					field: "themefilter_seqno",
+					title: "Seq No.",
+					width: 50,
+					attributes: { style: "text-align: right;" },
+					editor: function (container, options) {
+						item_rate(container, options.field, '9', '2');
+					},
+				},
+				{
+					field: "open_parentheses_flag",
+					title: "(", width: 20,
+					//template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						if (dataItem.themefilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
+						}
+					}
+				},
+				{
+					field: "themefilter_gid",
+					title: "themefilter_gid",
+					hidden: true,
+				},
+				{
+					field: "theme_code",
+					title: "theme_code",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "filter_field_code",
+					title: "filter_field_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "filter_field",
+					title: "Filter Field",
+					width: 100,
+					editor: function (container, options) {
+						combo_editor_man_comparision(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionfilter")
+					},
+				},
+				{
+					field: "filter_criteria",
+					title: "Filter Criteria",
+					width: 100,
+					editor: function (container, options) {
+						combo_filter_field2(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_comparisionfilter", "COMPARISON")
+					},
+				},
+				{
+					field: "filter_value",
+					title: "Filter Value",
+					width: 100,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true
+				},
+				{
+					field: "close_parentheses_flag",
+					title: ")", width: 20,
+					//template: '#=sel_checkbox1(data)#'
+					template: function (dataItem) {
+						if (dataItem.themefilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
+						}
+					},
+				},
+
+				{
+					field: "join_condition",
+					title: "Joins",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_comparisionfilter")
+					},
+					width: 40,
+				}],
+				editable: true,
+			});
+			join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+
+		function OnEdit(e) {
+			try {
+				setDefaultValues(e);
+
+			}
+			catch (err) {
+				javascript_log4j_root(arguments.callee.name, err);
+			}
+		}
+
+	}
+	$(function () {
+		$('#grid_comparisionfilter').on('click', '.chkbx5', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_comparisionfilter').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_comparisionfilter').on('click', '.chkbx6', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_comparisionfilter').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
+	function addRowcomparision() {
+		var grid = $("#grid_comparisionfilter").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].themefilter_seqno > max) {
+				max = grid.dataSource._data[i].themefilter_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function combo_filter_field2(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "COMPARISON") {
+			var codeValue = selectedItem.filter_field;
+		} else {
+			var codeValue = selectedItem.filter_field;
+		}
+		var in_recon_code = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_criteria") {
+					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.filter_criteria_input = undefined;
+				}
+				if (datafield == "ident_criteria") {
+					if (datafield == "ident_criteria" && selectedItem.ident_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.ident_criteria_input = undefined;
+				}
+			}
+		});
+	}
+	function combo_editor_man_comparision(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+
+		debugger;
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function savedetailc() {
+		try {
+			var grid = $("#grid_comparisionfilter").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var theme_code = $("#txtthemecode").val();
+			var filter_field = model.filter_field_code;
+			var filter_criteria = model.filter_criteria;
+			var filter_value = model.filter_value;
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
+			var filter_applied_on = "C"
+			var in_join_condition = model.join_condition;
+			if (in_join_condition == undefined) {
+				in_join_condition = "";
+			}
+			var themefilter_seqno = model.themefilter_seqno;
+			var action = "";
+			var action_by = ""
+			var themefilter_gid = model.themefilter_gid;
+			if (themefilter_gid == "0") {
+				themefilter_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var active_status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../theme/themedetail',
+				dataType: 'json',
+				data: JSON.stringify({
+					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+					themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
+					action: action, active_status: active_status,
+					open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					if (res[0].out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					}
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	//-----------------------------------------------------  comparisionfilter ----------------------------------------------------------------
+
+	//-----------------------------------------------------     grouping    ----------------------------------------------------------------
+	function grid_themegrouping(data) {
+		$("#grid_themegrouping").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "grpfield_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							themegrpfield_gid: { type: "string", defaultValue: "0" },
+							grpfield_seqno: { type: "string", defaultValue: "0" },
+							grp_field: { type: "string" },
+							grpfield_applied_on: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_themegrouping').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowgroup()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='savegrouping()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:12%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "20px",
+			},
+			{
+				field: "themegrpfield_gid",
+				title: "themegrpfield_gid",
+				hidden: true,
+			},
+			{
+				field: "grpfield_seqno",
+				title: "Seq No.",
+				width: 30,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "grpfield_applied_on_code",
+				title: "grpfield_applied_on_code",
+				hidden: true,
+			},
+			{
+				field: "grpfield_applied_on",
+				title: "Apllied On",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "grpfield_applied_on_code", "grid_themegrouping")
+				},
+				width: 120,
+			},
+			{
+				field: "grp_field_code",
+				title: "recon_field_code",
+				hidden: true,
+			},
+			{
+				field: "grp_field",
+				title: "Comparison Group Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "grp_field_code", "grid_themegrouping")
+				},
+				width: 120,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			}],
+			editable: true,
+
+		});
+		grp_field_list = cmbsourcefield();
+		grpfield_applied_on_list = grpfield_applied_on();
+	}
+	function addRowgroup() {
+		var grid = $("#grid_themegrouping").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ grpfield_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themegrpfield_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function grpfield_applied_on() {
+		var arr1 = [];
+		var in_master_code = "QCD_Appiled_on";
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				var response = data;
+				if (response != null) {
+					for (i = 0; response.length > i; i++) {
+						var list1 = {};
+						list1.code = response[i].masterSyscode;
+						list1.desc = response[i].masterName;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;
+	}
+	function savegrouping() {
+		try {
+			var grid = $("#grid_themegrouping").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_theme_code = $("#txtthemecode").val();
+			var grp_field = model.grp_field_code;
+			var themegrpfield_seqno = model.grpfield_seqno;
+			var grpfield_applied_on_code = model.grpfield_applied_on_code
+			var action = "";
+			var action_by = ""
+			var themegrpfield_gid = model.themegrpfield_gid;
+			if (themegrpfield_gid == "0") {
+				themegrpfield_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../theme/themegroupingsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_themegrpfield_gid: themegrpfield_gid, in_theme_code: in_theme_code, themegrpfield_seqno: themegrpfield_seqno,
+					in_grp_field: grp_field, in_action: action, in_action_by: action_by, in_active_status: status, grpfield_applied_on_code: grpfield_applied_on_code
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJsgrouping() {
+		var grid = $("#grid_themegrouping").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var rulegrpfield_gid = parseInt(model.rulegrpfield_gid);
+		if (rulegrpfield_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_theme_code = "";
+						var rulegid = 0;
+						var cmbcomgrpfield = "";
+						var in_group_method_flag = "";
+						var in_manytomany_match_flag = "";
+						var action = "DELETE";
+						var action_by = ""
+						var rulegrpfield_seqno = 0;
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../Rulesetup/rulegroupsave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_rulegrpfield_gid: rulegrpfield_gid, in_theme_code: in_theme_code, rulegrpfield_seqno: rulegrpfield_seqno,
+								in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									//getfetch($("#rulegid").val(), "group");
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	//-----------------------------------------------------     grouping    ----------------------------------------------------------------
+
+	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
+	function grid_aggfunction(data) {
+		$("#grid_aggfunction").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "grpfield_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							themeaggfield_gid: { type: "string", defaultValue: "0" },
+							themeaggfield_seqno: { type: "string", defaultValue: "0" },
+							themeaggfield_applied_on: { type: "string" },
+							themeaggfield_name: { type: "string" },
+							recon_field: { type: "string" },
+							themeagg_function: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggfunction').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowagg()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveaggfun()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:12%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "themeaggfield_gid",
+				title: "themeaggfield_gid",
+				hidden: true,
+			},
+			{
+				field: "themeaggfield_seqno",
+				title: "Seq No.",
+				width: 40,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "themeaggfield_name",
+				title: "Aggregate Function Desc",
+				width: 100,
+			},
+			{
+				field: "themeaggfield_applied_on_code",
+				title: "themeaggfield_applied_on_code",
+				hidden: true,
+			},
+			{
+				field: "themeaggfield_applied_on",
+				title: "Apllied On",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeaggfield_applied_on_code", "grid_aggfunction")
+				},
+				width: 100,
+			},
+			{
+				field: "recon_field_code",
+				title: "recon_field_code",
+				hidden: true,
+			},
+			{
+				field: "recon_field",
+				title: "Recon Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recon_field_code", "grid_aggfunction")
+				},
+				width: 100,
+			},
+			{
+				field: "themeagg_function",
+				title: "Aggregate Function",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			}],
+			editable: true,
+
+		});
+		recon_field_list = cmbsourcefield();
+		themeaggfield_applied_on_list = grpfield_applied_on();
+	}
+	function addRowagg() {
+		var grid = $("#grid_aggfunction").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ themeaggfield_seqno: newSeqNo, themeaggfield_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function saveaggfun() {
+		try {
+			var grid = $("#grid_aggfunction").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_theme_code = $("#txtthemecode").val();
+			var recon_field = model.recon_field_code;
+			var themeaggfield_name = model.themeaggfield_name;
+			var themeaggfield_seqno = model.themeaggfield_seqno;
+			var themeaggfield_applied_on = model.themeaggfield_applied_on_code;
+			var themeagg_function = model.themeagg_function;
+			var action = "";
+			var action_by = ""
+			var themeaggfield_gid = model.themeaggfield_gid;
+			if (themeaggfield_gid == "0") {
+				themeaggfield_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../theme/Aggfunctionsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					themeaggfield_gid: themeaggfield_gid, in_theme_code: in_theme_code, themeaggfield_seqno: themeaggfield_seqno,
+					recon_field: recon_field, in_action: action, in_action_by: action_by, in_active_status: status,
+					themeaggfield_applied_on: themeaggfield_applied_on, themeaggfield_name: themeaggfield_name, themeagg_function: themeagg_function
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
+	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
+	var join_condition_list = "";
+	var themeagg_field_list = "";
+	var themeagg_value_list = "";
+	var themeagg_criteria_list = "";
+	function grid_aggcondition(data) {
+		$("#grid_aggcondition").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "themeaggcondition_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							themeaggcondition_gid: { type: "string", defaultValue: "0" },
+							themeaggcondition_seqno: { type: "string", defaultValue: "0" },
+							themeaggfield_applied_on: { type: "string" },
+							themeagg_value: { type: "string" },
+							themeagg_field: { type: "string" },
+							themeagg_criteria: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggfunction').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowaggcon()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveaggcon()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:12%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "themeaggcondition_gid",
+				title: "themeaggcondition_gid",
+				hidden: true,
+			},
+			{
+				field: "themeaggcondition_seqno",
+				title: "Seq No.",
+				width: 40,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "open_parentheses_flag",
+				title: "(", width: 20,
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.themeaggcondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+					}
+				}
+			},
+			{
+				field: "themeagg_field_code",
+				title: "themeagg_field_code",
+				hidden: true,
+			},
+			{
+				field: "themeagg_field",
+				title: "Condition Field",
+				editor: function (container, options) {
+					combo_editor_condition(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeagg_field_code", "grid_aggcondition")
+				},
+				width: 100,
+			},
+			{
+				field: "themeagg_criteria",
+				title: "Condition Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_conditionCriteria(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeagg_criteria", "grid_aggcondition")
+				},
+			},
+			{
+				field: "themeagg_value",
+				title: "Comparison Field/Value",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_conditionvalue(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeagg_value", "grid_aggcondition")
+				},
+			},
+			{
+				field: "close_parentheses_flag",
+				title: ")", width: 20,
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.themeaggcondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+					}
+				},
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_comparisionfilter")
+				},
+				width: 40,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			}],
+			editable: true,
+
+		});
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+	}
+	function addRowaggcon() {
+		var grid = $("#grid_aggcondition").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ themeaggcondition_seqno: newSeqNo, themeaggcondition_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	$(function () {
+		$('#grid_aggcondition').on('click', '.chkbx7', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_aggcondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_aggcondition').on('click', '.chkbx8', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_aggcondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
+	function combo_editor_condition(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var theme_code = $("#txtthemecode").val();
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themedetailfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ theme_code: theme_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					if (result.Aggfunction.length > 0) {
+						for (i = 0; result.Aggfunction.length > i; i++) {
+							var list1 = {};
+							list1.code = result.Aggfunction[i].themeaggfield_name;
+							list1.desc = result.Aggfunction[i].themeaggfield_name;
+							arr1.push(list1);
+						}
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_conditionvalue(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var theme_code = $("#txtthemecode").val();
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themedetailfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ theme_code: theme_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					if (result.Aggfunction.length > 0) {
+						for (i = 0; result.Aggfunction.length > i; i++) {
+							var list1 = {};
+							list1.code = result.Aggfunction[i].themeaggfield_name;
+							list1.desc = result.Aggfunction[i].themeaggfield_name;
+							arr1.push(list1);
+						}
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "themeagg_value") {
+					if (datafield == "themeagg_value" && selectedItem.themeagg_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.themeagg_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.themeagg_value_input = undefined;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_conditionCriteria(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var themeagg_code = selectedItem.themeagg_field_code;
+		var sourcedata = "COMPARISON";
+		$.ajax({
+			type: "POST",
+			url: '../Theme/getconditionfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: themeagg_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr1.push(list);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "themeagg_criteria") {
+					if (datafield == "themeagg_criteria" && selectedItem.themeagg_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.themeagg_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.themeagg_criteria_input = undefined;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function saveaggcon() {
+		try {
+			var grid = $("#grid_aggcondition").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_theme_code = $("#txtthemecode").val();
+			var themeagg_field = model.themeagg_field;
+			var themeaggcondition_seqno = model.themeaggcondition_seqno;
+			var themeagg_applied_on = model.themeagg_applied_on_code;
+			var themeagg_criteria = model.themeagg_criteria;
+			
+			if (model.themeagg_value != model.themeagg_field) {
+				var themeagg_value_flag = 'N';
+				var themeagg_value = model.themeagg_value;
+			}else {
+				var themeagg_value_flag = 'Y';
+				var themeagg_value = model.themeagg_value;
+			}
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
+			var in_join_condition = model.join_condition;
+			if (in_join_condition == undefined) {
+				in_join_condition = "";
+			}
+			var action = "";
+			var action_by = ""
+			var themeaggcondition_gid = model.themeaggcondition_gid;
+			if (themeaggcondition_gid == "0") {
+				themeaggcondition_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../Theme/Aggconditionsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					themeaggcondition_gid: themeaggcondition_gid, in_theme_code: in_theme_code, themeaggcondition_seqno: themeaggcondition_seqno,
+					in_action: action, in_action_by: action_by, in_active_status: status, 
+					themeagg_field: themeagg_field,
+					themeagg_applied_on: themeagg_applied_on, themeagg_criteria: themeagg_criteria,
+					themeagg_value: themeagg_value, themeagg_value_flag: themeagg_value_flag, in_open_flag: in_open_flag,
+					in_close_flag: in_close_flag, in_join_condition: in_join_condition
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
 	function saveheader() {
 		try {
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
 			var theme_code = $("#txtthemecode").val();
-			var clone_theme = $("#Cmbclone").val();
+			var themetype = $("#themetype").val();
+			var sourcedataset = $("#sourcedataset").val();
+			var comparedataset = $("#comdataset").val();
+			if (themetype == "QCD_THEME_DIRECT") {
+				sourcedataset = "";
+				comparedataset = "";
+			}
 			var action = "";
 			var theme_gid = $("#themegid").val();
-			var holdflag = $("#holdflag").val();
 			if (theme_gid > 0) {
 				theme_gid = $("#themegid").val();
-				addRow();
+				addRowcondition();
 				return;
-
 			} else {
 				theme_gid = 0;
-
 			}
 
 			if ($("#txtmode").val() == "Create") {
@@ -731,7 +2847,7 @@
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -740,7 +2856,7 @@
 						$("#themegid").val(data.in_theme_gid);
 						$("#txtthemecode").val(data.in_theme_code);
 						$("#txtmode").val("Edit");
-						addRow();
+						addRowcondition();
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -760,206 +2876,25 @@
 			console.log(e)
 		}
 	}
-	function savedetail() {
-		try {
-			var grid = $("#grid_themefilterfield").data("kendoGrid");
-			var model = grid.dataItem($(event.target).closest("tr"));
-			var theme_code = $("#txtthemecode").val();
-			var recon_field = model.filter_field_code;
-			var filter_criteria = model.filter_criteria;
-			var filter_value = model.ident_value;
-			var in_open_flag = model.open_parentheses_flag;
-			var in_close_flag = model.close_parentheses_flag;
-			var in_join_condition = '';
-			if (model.join_condition != undefined) {
-				in_join_condition = model.join_condition;
-			}
-
-			var theme_seqno = model.theme_seqno
-			var action = "";
-			var action_by = ""
-			var themefilter_gid = model.themefilter_gid;
-			if (themefilter_gid == "0") {
-				themefilter_gid = 0;
-				action = "INSERT"
-			} else {
-				action = "UPDATE"
-			}
-			var active_status = "Y";
-			$.ajax({
-				type: "POST",
-				url: '../theme/themedetail',
-				dataType: 'json',
-				data: JSON.stringify({ themefilter_gid: themefilter_gid, theme_code: theme_code, recon_field: recon_field, action: action, active_status: active_status, filter_criteria: filter_criteria, filter_value: filter_value, open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition, theme_seqno: theme_seqno }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var res = JSON.parse(response);
-					if (res[0].out_result == "1") {
-						$.alert({
-							title: 'Recon',
-							content: res[0].out_msg,
-							type: 'green',
-						});
-						detailsfetch($("#txtthemecode").val())
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: res[0].out_msg,
-							type: 'green',
-						});
-					}
-				}
-			});
-		}
-		catch (e) {
-			console.log(e)
-		}
-	}
-	function detailsfetch(theme_code) {
-		$.ajax({
-			type: "POST",
-			url: '../Theme/Themedetailfetch',
-			dataType: 'json',
-			data: JSON.stringify({ theme_code: theme_code }),
-			async: false,
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				debugger;
-				if (response != null) {
-					var res = JSON.parse(response);
-					//$("#gd_themefilter").empty();
-					//$("#gd_themefilter").append("<div id='gd_themefilter'></div>");
-					grid_themefilter(res.themedetail);
-					if (response.length > 0) {
-						$("#Cmbclone").val();
-						$("#Cmbclone").prop('disabled', true)
-						$("#btnclone").prop('disabled', true)
-					}
-				}
-				else {
-					grid_themefilter([]);
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-
-		});
-	}
-	function saveclone() {
-		$.confirm({
-			icon: 'fa fa-info',
-			title: 'Recon',
-			theme: 'dark',
-			content: 'Are you sure to Clone ?',
-			type: 'orange',
-			buttons: {
-				confirm: function () {
-					try {
-						var themename = $("#themename").val();
-						var cmbrecon = $("#cmbrecon").val();
-						var theme_code = $("#txtthemecode").val();
-						var clone_theme = $("#Cmbclone").val();
-						var action = "";
-						var theme_gid = $("#themegid").val();
-
-						if (theme_gid > 0) {
-							theme_gid = $("#themegid").val();
-							return;
-						} else {
-							theme_gid = 0;
-						}
-						var holdflag = $("#holdflag").val();
-						if ($("#txtmode").val() == "Create") {
-							action = "INSERT"
-						} else if ($("#txtmode").val() == "Edit") {
-							action = "UPDATE"
-						}
-						var action_by = "";
-						var status = "D";
-						var theme_order = $("#theme_order").val();
-						$.ajax({
-							type: "POST",
-							url: '../theme/themeheader',
-							dataType: 'json',
-							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
-							contentType: 'application/json; charset=utf-8',
-							success: function (response) {
-								var result = JSON.parse(response);
-								var data = result[0];
-								if (data.out_result == "1") {
-									$("#themegid").val(data.in_theme_gid);
-									$("#txtthemecode").val(data.in_theme_code);
-									detailsfetch(data.in_theme_code);
-									var grid = $("#grid_themefilterfield").data("kendoGrid");
-									var dataSource = grid.dataSource;
-									var recordsOnCurrentView = dataSource.view().length;
-									if (recordsOnCurrentView > 0) {
-										$.alert({
-											title: 'Recon',
-											content: data.out_msg,
-											type: 'green',
-										});
-									}
-
-								} else {
-									$.alert({
-										title: 'Recon',
-										content: data.out_msg,
-										type: 'red',
-									});
-								}
-							},
-							error: function (er) {
-								alert(er)
-								console.log(er)
-							}
-
-						});
-					}
-					catch (e) {
-						console.log(e)
-					}
-				},
-				cancel: function () {
-					$.alert({
-						icon: 'fa fa-success',
-						title: 'Recon',
-						theme: 'dark',
-						content: 'clone Canceled.!',
-						type: 'blue',
-						animationSpeed: 700,
-					});
-				},
-			},
-		});
-	}
 	function saveheadersubmit() {
 		try {
-			var grid = $("#grid_themefilterfield").data("kendoGrid");
-			var dataSource = grid.dataSource;
-			var recordsOnCurrentView = dataSource.view().length;
 			
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
 			var theme_code = $("#txtthemecode").val();
-			var clone_theme = "";
+			var themetype = $("#themetype").val();
+			var sourcedataset = $("#sourcedataset").val();
+			var comparedataset = $("#comdataset").val();
+			if (themetype == "QCD_THEME_DIRECT") {
+				sourcedataset = "";
+				comparedataset = "";
+			}
 			var action = "";
 			var theme_gid = $("#themegid").val();
-			var status = "";
 			if (theme_gid > 0) {
 				theme_gid = $("#themegid").val();
 				action = "UPDATE"
-				status = "Y";
-				if (recordsOnCurrentView == 0) {
-					$.alert({
-						title: 'Recon',
-						content: "Theme Grid Atleast one Record need to Active",
-						type: 'green',
-					});
-					return;
-				}
+				status = "Y";				
 			} else {
 				theme_gid = 0;
 				action = "INSERT"
@@ -967,13 +2902,13 @@
 			}
 			var holdflag = $("#holdflag").val();
 			var action_by = "";
-			
+
 			var theme_order = $("#theme_order").val();
 			$.ajax({
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -981,18 +2916,12 @@
 					if (data.out_result == "1") {
 						$("#themegid").val(data.in_theme_gid);
 						$("#txtthemecode").val(data.in_theme_code);
-						detailsfetch(data.in_theme_code);
-						var grid = $("#grid_themefilterfield").data("kendoGrid");
-						var dataSource = grid.dataSource;
-						var recordsOnCurrentView = dataSource.view().length;
-						if (recordsOnCurrentView > 0) {
+						detailsfetch(data.in_theme_code);						
 							$.alert({
 								title: 'Recon',
 								content: data.out_msg,
 								type: 'green',
 							});
-						}
-
 					} else {
 						$.alert({
 							title: 'Recon',
