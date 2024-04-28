@@ -559,6 +559,7 @@
 					$("#comdataset").val(res.themeHeader[0].comparison_dataset_code);
 					$("#themetype").val(res.themeHeader[0].theme_type_code);
 					$("#txtstatus").val(res.themeHeader[0].active_status_desc);
+					fthemetype();
 					grid_themefilter(res.sourceidentifier);
 					grid_themecondition(res.themeCondition);
 					grid_comparisionfilter(res.comparisionidentifier);
@@ -579,18 +580,73 @@
 					else {
 						grid_aggcondition([]);
 					}
-
-
-					
-					if (response.length > 0) {
-						$("#Cmbclone").val();
-						$("#Cmbclone").prop('disabled', true)
-						$("#btnclone").prop('disabled', true)
+					if ($("#txtmode").val() == "View") {
+						$("#sourcedataset").prop('disabled', true);
+						$("#comdataset").prop('disabled', true);
+						$("#themetype").prop('disabled', true);
+						$("#grid_themecondition .k-grid-toolbar").hide();
+						$("#grid_themefilterfield .k-grid-toolbar").hide();
+						$("#grid_comparisionfilter .k-grid-toolbar").hide();
+						$("#grid_themegrouping .k-grid-toolbar").hide();
+						$("#grid_aggfunction .k-grid-toolbar").hide();
+						$("#grid_aggcondition .k-grid-toolbar").hide();
 					}
 				}
 				else {
 					grid_themefilter([]);
 				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	function getfetch(theme_code, screen) {
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themedetailfetch',
+			dataType: 'json',
+			data: JSON.stringify({ theme_code: theme_code }),
+			async: false,
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					if (screen == "themecond") {
+						grid_themecondition(res.themeCondition);
+					}
+					if (screen == "source") {
+						grid_themefilter(res.sourceidentifier);
+					}
+					if (screen == "compare") {
+						grid_comparisionfilter(res.comparisionidentifier);
+					}
+					if (screen == "group") {
+						grid_themegrouping(res.themeGrouping);
+					}	
+					if (screen == "aggfun") {
+						if (res.Aggfunction.length > 0) {
+							$("#gd_aggfunction").empty();
+							$("#gd_aggfunction").append("<div id='grid_aggfunction'></div>");
+							grid_aggfunction(res.Aggfunction);
+						}
+						else {
+							grid_aggfunction([]);
+						}
+					}
+					if (screen == "aggcon") {
+						if (res.AggCondition.length > 0) {
+							$("#gd_aggcondition").empty();
+							$("#gd_aggcondition").append("<div id='grid_aggcondition'></div>");
+							grid_aggcondition(res.AggCondition);
+						}
+						else {
+							grid_aggcondition([]);
+						}
+					}						
+				}				
 			},
 			error: function (er) {
 				alert(er)
@@ -684,7 +740,7 @@
 						}
 						//template: "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
-				], title: "Action&nbsp;", width: "40px",
+				], title: "Action&nbsp;", width: "50px",
 			},
 			{
 				field: "themecondition_seqno",
@@ -992,7 +1048,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
-						//getfetch($("#txtthemecode").val(), "themecond");
+						getfetch($("#txtthemecode").val(), "themecond");
 					}
 					else {
 
@@ -1058,7 +1114,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									//getfetch($("#txtthemecode").val(), "themecond");
+									getfetch($("#txtthemecode").val(), "themecond");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -1156,10 +1212,10 @@
 								if ($("#txtmode").val() == "View") {
 									return ""; // Return empty string to hide the delete button
 								} else {
-									return "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
+									return "<a href='' onclick='myDeleteJssource()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
 								}
 							}
-							//template: "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							//template: "<a href='' onclick='myDeleteJssource()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 						},
 					], title: "Action&nbsp;", width: "40px",
 				},
@@ -1477,6 +1533,7 @@
 							content: res[0].out_msg,
 							type: 'green',
 						});
+						getfetch($("#txtthemecode").val(), "source");
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -1489,6 +1546,83 @@
 		}
 		catch (e) {
 			console.log(e)
+		}
+	}
+	function myDeleteJssource() {
+		var grid = $("#grid_themefilterfield").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var themefilter_gid = parseInt(model.themefilter_gid);
+		if (themefilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var theme_code = $("#txtthemecode").val();
+						var filter_field = "";
+						var filter_criteria = "";
+						var filter_value = "";
+						var in_open_flag = "";
+						var in_close_flag = "";
+						var filter_applied_on = "";
+						var in_join_condition = "";
+						var themefilter_seqno = 0;
+						var themefilter_gid = model.themefilter_gid;
+						var action = "Delete";
+						var action_by = "";
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../theme/themedetail',
+							dataType: 'json',
+							data: JSON.stringify({
+								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+								themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
+								action: action, active_status: status,
+								open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var res = JSON.parse(response);
+								if (res[0].out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: res[0].out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									getfetch($("#txtthemecode").val(), "source");
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
 		}
 	}
 	//-----------------------------------------------------  sourcefilter ----------------------------------------------------------------
@@ -1564,7 +1698,7 @@
 								if ($("#txtmode").val() == "View") {
 									return ""; // Return empty string to hide the delete button
 								} else {
-									return "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
+									return "<a href='' onclick='myDeleteJscompare()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
 								}
 							}
 							//template: "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
@@ -1885,6 +2019,7 @@
 							content: res[0].out_msg,
 							type: 'green',
 						});
+						getfetch($("#txtthemecode").val(), "compare");
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -1897,6 +2032,83 @@
 		}
 		catch (e) {
 			console.log(e)
+		}
+	}
+	function myDeleteJscompare() {
+		var grid = $("#grid_comparisionfilter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var themefilter_gid = parseInt(model.themefilter_gid);
+		if (themefilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var theme_code = $("#txtthemecode").val();
+						var filter_field = "";
+						var filter_criteria = "";
+						var filter_value = "";
+						var in_open_flag = "";
+						var in_close_flag = "";
+						var filter_applied_on = "";
+						var in_join_condition = "";
+						var themefilter_seqno = 0;
+						var themefilter_gid = model.themefilter_gid;
+						var action = "Delete";
+						var action_by = "";
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../theme/themedetail',
+							dataType: 'json',
+							data: JSON.stringify({
+								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+								themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
+								action: action, active_status: status,
+								open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var res = JSON.parse(response);
+								if (res[0].out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: res[0].out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									getfetch($("#txtthemecode").val(), "compare");
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
 		}
 	}
 	//-----------------------------------------------------  comparisionfilter ----------------------------------------------------------------
@@ -2097,6 +2309,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#txtthemecode").val(), "group");
 					}
 					else {
 
@@ -2116,8 +2329,8 @@
 	function myDeleteJsgrouping() {
 		var grid = $("#grid_themegrouping").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var rulegrpfield_gid = parseInt(model.rulegrpfield_gid);
-		if (rulegrpfield_gid == 0) {
+		var themegrpfield_gid = parseInt(model.themegrpfield_gid);
+		if (themegrpfield_gid == 0) {
 			grid.dataSource.remove(model);
 		} else {
 			$.confirm({
@@ -2129,23 +2342,22 @@
 				content: 'Are you sure do you want to delete this record!',
 				type: 'orange',
 				buttons: {
-					confirm: function () {
-						var in_theme_code = "";
-						var rulegid = 0;
-						var cmbcomgrpfield = "";
-						var in_group_method_flag = "";
-						var in_manytomany_match_flag = "";
+					confirm: function () {	
+						var in_theme_code = $("#txtthemecode").val();
 						var action = "DELETE";
+						var grp_field ="";
+						var themegrpfield_seqno= 0;
+						var grpfield_applied_on_code = "";						
 						var action_by = ""
-						var rulegrpfield_seqno = 0;
+						var themegrpfield_gid = model.themegrpfield_gid;						
 						var status = "";
 						$.ajax({
 							type: "POST",
-							url: '../Rulesetup/rulegroupsave',
+							url: '../theme/themegroupingsave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_rulegrpfield_gid: rulegrpfield_gid, in_theme_code: in_theme_code, rulegrpfield_seqno: rulegrpfield_seqno,
-								in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
+								in_themegrpfield_gid: themegrpfield_gid, in_theme_code: in_theme_code, themegrpfield_seqno: themegrpfield_seqno,
+								in_grp_field: grp_field, in_action: action, in_action_by: action_by, in_active_status: status, grpfield_applied_on_code: grpfield_applied_on_code
 							}),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
@@ -2158,7 +2370,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
-									//getfetch($("#rulegid").val(), "group");
+									getfetch($("#txtthemecode").val(), "group");
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -2246,7 +2458,7 @@
 							if ($("#txtmode").val() == "View") {
 								return ""; // Return empty string to hide the delete button
 							} else {
-								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+								return "<a href='' onclick='myDeleteJsaggfun()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
 						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
@@ -2279,7 +2491,7 @@
 			},
 			{
 				field: "themeaggfield_applied_on",
-				title: "Apllied On",
+				title: "Applied On",
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeaggfield_applied_on_code", "grid_aggfunction")
 				},
@@ -2371,6 +2583,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#txtthemecode").val(), "aggfun");
 					}
 					else {
 
@@ -2385,6 +2598,78 @@
 		}
 		catch (e) {
 			console.log(e)
+		}
+	}
+	function myDeleteJsaggfun() {
+		var grid = $("#grid_aggfunction").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var themeaggfield_gid = parseInt(model.themeaggfield_gid);
+		if (themeaggfield_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_theme_code = $("#txtthemecode").val();
+						var action = "DELETE";						
+						var recon_field = "";
+						var themeaggfield_name = "";
+						var themeaggfield_seqno = 0;
+						var themeaggfield_applied_on = "";
+						var themeagg_function = "";						
+						var action_by = ""
+						var themeaggfield_gid = model.themeaggfield_gid;						
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../theme/Aggfunctionsave',
+							dataType: 'json',
+							data: JSON.stringify({
+								themeaggfield_gid: themeaggfield_gid, in_theme_code: in_theme_code, themeaggfield_seqno: themeaggfield_seqno,
+								recon_field: recon_field, in_action: action, in_action_by: action_by, in_active_status: status,
+								themeaggfield_applied_on: themeaggfield_applied_on, themeaggfield_name: themeaggfield_name, themeagg_function: themeagg_function
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									getfetch($("#txtthemecode").val(), "aggfun");
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
 		}
 	}
 	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
@@ -2455,7 +2740,7 @@
 							if ($("#txtmode").val() == "View") {
 								return ""; // Return empty string to hide the delete button
 							} else {
-								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+								return "<a href='' onclick='myDeleteJsaggcon()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
 						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
@@ -2751,11 +3036,11 @@
 			var themeaggcondition_seqno = model.themeaggcondition_seqno;
 			var themeagg_applied_on = model.themeagg_applied_on_code;
 			var themeagg_criteria = model.themeagg_criteria;
-			
+
 			if (model.themeagg_value != model.themeagg_field) {
 				var themeagg_value_flag = 'N';
 				var themeagg_value = model.themeagg_value;
-			}else {
+			} else {
 				var themeagg_value_flag = 'Y';
 				var themeagg_value = model.themeagg_value;
 			}
@@ -2781,7 +3066,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					themeaggcondition_gid: themeaggcondition_gid, in_theme_code: in_theme_code, themeaggcondition_seqno: themeaggcondition_seqno,
-					in_action: action, in_action_by: action_by, in_active_status: status, 
+					in_action: action, in_action_by: action_by, in_active_status: status,
 					themeagg_field: themeagg_field,
 					themeagg_applied_on: themeagg_applied_on, themeagg_criteria: themeagg_criteria,
 					themeagg_value: themeagg_value, themeagg_value_flag: themeagg_value_flag, in_open_flag: in_open_flag,
@@ -2796,6 +3081,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#txtthemecode").val(), "aggcon");
 					}
 					else {
 
@@ -2810,6 +3096,85 @@
 		}
 		catch (e) {
 			console.log(e)
+		}
+	}
+	function myDeleteJsaggcon() {
+		var grid = $("#grid_aggcondition").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var themeaggcondition_gid = parseInt(model.themeaggcondition_gid);
+		if (themeaggcondition_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_theme_code = $("#txtthemecode").val();
+						var action = "DELETE";
+						var themeagg_field ="";
+						var themeaggcondition_seqno = 0;
+						var themeagg_applied_on = "";
+						var themeagg_criteria = "";
+						var themeagg_value_flag = "";
+						var themeagg_value = "";
+						var in_open_flag = "";
+						var in_close_flag = "";
+						var in_join_condition = "";	
+						var action_by = ""
+						var themeaggcondition_gid = model.themeaggcondition_gid;						
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../Theme/Aggconditionsave',
+							dataType: 'json',
+							data: JSON.stringify({
+								themeaggcondition_gid: themeaggcondition_gid, in_theme_code: in_theme_code, themeaggcondition_seqno: themeaggcondition_seqno,
+								in_action: action, in_action_by: action_by, in_active_status: status,
+								themeagg_field: themeagg_field,
+								themeagg_applied_on: themeagg_applied_on, themeagg_criteria: themeagg_criteria,
+								themeagg_value: themeagg_value, themeagg_value_flag: themeagg_value_flag, in_open_flag: in_open_flag,
+								in_close_flag: in_close_flag, in_join_condition: in_join_condition
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									getfetch($("#txtthemecode").val(), "aggcon");
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
 		}
 	}
 	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
@@ -2841,13 +3206,14 @@
 				action = "UPDATE"
 			}
 			var action_by = "";
-			var status = "D"
+			var status = "D";
+			var inactive_reason = "";
 			var theme_order = $("#theme_order").val();
 			$.ajax({
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: inactive_reason }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -2878,7 +3244,7 @@
 	}
 	function saveheadersubmit() {
 		try {
-			
+
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
 			var theme_code = $("#txtthemecode").val();
@@ -2894,7 +3260,7 @@
 			if (theme_gid > 0) {
 				theme_gid = $("#themegid").val();
 				action = "UPDATE"
-				status = "Y";				
+				status = "Y";
 			} else {
 				theme_gid = 0;
 				action = "INSERT"
@@ -2902,13 +3268,13 @@
 			}
 			var holdflag = $("#holdflag").val();
 			var action_by = "";
-
+			var inactive_reason = "";
 			var theme_order = $("#theme_order").val();
 			$.ajax({
 				type: "POST",
 				url: '../theme/themeheader',
 				dataType: 'json',
-				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset }),
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: inactive_reason }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -2916,12 +3282,12 @@
 					if (data.out_result == "1") {
 						$("#themegid").val(data.in_theme_gid);
 						$("#txtthemecode").val(data.in_theme_code);
-						detailsfetch(data.in_theme_code);						
-							$.alert({
-								title: 'Recon',
-								content: data.out_msg,
-								type: 'green',
-							});
+						detailsfetch(data.in_theme_code);
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
 					} else {
 						$.alert({
 							title: 'Recon',

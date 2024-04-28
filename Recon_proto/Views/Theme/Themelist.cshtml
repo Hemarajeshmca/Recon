@@ -279,6 +279,17 @@
 					hidden: true,
 				},
 				{
+					field: "theme_type_code",
+					title: "Recon Name",
+					width: 120,
+					hidden: true,
+				},
+				{
+					field: "theme_type_desc",
+					title: "Theme Type",
+					width: 40,
+				},
+				{
 					field: "hold_flag_desc",
 					title: "Hold Flag",
 					width: 40,
@@ -456,12 +467,15 @@
 										var action_by = "";
 										var status = "Y"
 										var theme_order = "";
+										var themetype = "";
+										var sourcedataset = "";
+										var comparedataset = "";
 										$.ajax({
 											type: "POST",
 											url: '../theme/themeheader',
 											dataType: 'json',
-											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
-											contentType: 'application/json; charset=utf-8',
+											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name }),
+											contentType: 'application/json; charset=utf-8',											
 											success: function (response) {
 												var result = JSON.parse(response);
 												var data = result[0];
