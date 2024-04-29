@@ -79,9 +79,10 @@
 			height: 360px;
 		}
 
-		/*      .k-grid-header th.k-header > .k-link {
-											width: 100px;
-										}*/
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
 
 		.k-grid-header {
 			font-weight: bold;
@@ -91,7 +92,6 @@
 			font-weight: normal;
 			font-size: 13px;
 		}
-
 		.k-widget.k-window {
 			padding-top: 35px;
 			min-width: 90px;
@@ -565,29 +565,43 @@
 			dataType: "json",
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				var result = JSON.parse(response);
-				var data = result[0];
-				if (data.out_result == "1") {
-					master_code = $("#MasterCode").val()
-					closeModal();
+				if (response != " " && response != null && response != "{}" && response != "[]") {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						master_code = $("#MasterCode").val()
+						closeModal();
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						var data = {};
+						data.in_user_code = '';
+						data.in_master_code = master_code;
+						//grid_dataset_details(data);
+						window.location.reload(1);
+						master_code = "";
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				} else if (response == "[]") {
 					$.alert({
 						title: 'Recon',
-						content: data.out_msg,
-						type: 'green',
-					});
-					var data = {};
-					data.in_user_code = '';
-					data.in_master_code = master_code;
-					//grid_dataset_details(data);
-					window.location.reload(1);
-					master_code = "";
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: data.out_msg,
+						content: 'Something went wrong .!',
 						type: 'red',
 					});
-				}
+				}else {
+					$.alert({
+						title: 'Recon',
+						content: 'Something went wrong .!',
+						type: 'red',
+					});
+				}				
 			},
 			error: function (er) {
 				console.log(er)

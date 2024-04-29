@@ -116,14 +116,21 @@ namespace Recon_proto.Controllers
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("QcdMaster", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    // result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    return Json(d2);
-                }
+                    try
+                    {
+                        var response = client.PostAsync("QcdMaster", content).Result;
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        post_data = reader.ReadToEnd();
+                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                        // result = JsonConvert.DeserializeObject<DataTable>(d2);
+                        return Json(d2);
+                    }
+					catch (HttpRequestException ex)
+					{
+						return Json(ex);
+					}
+				}
             } catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
