@@ -129,8 +129,11 @@
 					}
 				},
 				error: function (er) {
-					alert(er)
-					console.log(er)
+					$.alert({
+						title: 'Recon',
+						content: er.statusText,
+						type: 'red',
+					});
 				}
 			});
 		} else if (!in_recon_code) {

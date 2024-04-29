@@ -424,8 +424,10 @@
 							text: item.recon_name
 						}));
 					}
-					$("#reconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#reconname').trigger("change");
+					if (sessionStorage.getItem("reconcode") != null) {
+						$("#reconname").val(sessionStorage.getItem("reconcode"));
+						jQuery('#reconname').trigger("change");
+					}
 				});
 			},
 			error: function (er) {
@@ -889,14 +891,14 @@
 		document.getElementById('dataset_type').innerHTML = selectedItem.dataset_type_desc;
 		document.getElementById('last_sync_date').innerHTML = selectedItem.last_sync_date;
 		document.getElementById('last_sync_status').innerHTML = selectedItem.last_sync_status;
-		document.getElementById('debit_before_count').innerHTML = data[0]["Dr Count Before"];
-		document.getElementById('debit_before_value').innerHTML = data[0]["Dr Value Before"];
-		document.getElementById('credit_before_count').innerHTML = data[0]["Cr Count Before"];
-		document.getElementById('credit_before_value').innerHTML = data[0]["Cr Value Before"];
-		document.getElementById('debit_after_count').innerHTML = data[0]["Dr Count After"];
-		document.getElementById('debit_after_value').innerHTML = data[0]["Dr Value After"];
-		document.getElementById('credit_after_count').innerHTML = data[0]["Cr Count After"];
-		document.getElementById('credit_after_value').innerHTML = data[0]["Cr Value After"];
+		document.getElementById('debit_before_count').innerHTML = data.length >0 ? data[0]["Dr Count Before"] : 0;
+		document.getElementById('debit_before_value').innerHTML = data.length > 0 ? data[0]["Dr Value Before"] : 0;
+		document.getElementById('credit_before_count').innerHTML = data.length > 0 ? data[0]["Cr Count Before"] : 0;
+		document.getElementById('credit_before_value').innerHTML = data.length >0 ? data[0]["Cr Value Before"] : 0;
+		document.getElementById('debit_after_count').innerHTML = data.length >0 ?  data[0]["Dr Count After"] : 0;
+		document.getElementById('debit_after_value').innerHTML = data.length > 0 ? data[0]["Dr Value After"] : 0;
+		document.getElementById('credit_after_count').innerHTML = data.length > 0 ? data[0]["Cr Count After"] : 0;
+		document.getElementById('credit_after_value').innerHTML = data.length > 0 ? data[0]["Cr Value After"] : 0;
 		$("#infoDatamodal").modal("show");
 		//var columns = [];
 		//var rows = [];
