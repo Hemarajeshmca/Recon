@@ -1,17 +1,13 @@
-﻿using CsvHelper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
-using System.Data.OleDb;
-using System.Formats.Asn1;
-using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 
 namespace Recon_proto.Controllers
 {
-    public class UtilityController : Controller
+	public class UtilityController : Controller
     {
         Fileservice _fileservice = new Fileservice();
         private IConfiguration _configuration;
