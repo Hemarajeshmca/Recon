@@ -106,7 +106,7 @@
 							value: item.recon_code,
 							text: item.recon_name
 						}));
-					}					
+					}
 				});
 				if (sessionStorage.getItem("reconcode") != null) {
 					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
@@ -277,6 +277,17 @@
 					title: "Recon Name",
 					width: 120,
 					hidden: true,
+				},
+				{
+					field: "theme_type_code",
+					title: "Recon Name",
+					width: 120,
+					hidden: true,
+				},
+				{
+					field: "theme_type_desc",
+					title: "Theme Type",
+					width: 40,
 				},
 				{
 					field: "hold_flag_desc",
@@ -456,11 +467,14 @@
 										var action_by = "";
 										var status = "Y"
 										var theme_order = "";
+										var themetype = "";
+										var sourcedataset = "";
+										var comparedataset = "";
 										$.ajax({
 											type: "POST",
 											url: '../theme/themeheader',
 											dataType: 'json',
-											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, clone_theme: clone_theme, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, holdflag: holdflag }),
+											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name }),
 											contentType: 'application/json; charset=utf-8',
 											success: function (response) {
 												var result = JSON.parse(response);

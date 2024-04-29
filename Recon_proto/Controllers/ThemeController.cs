@@ -426,6 +426,7 @@ namespace Recon_proto.Controllers
 		{
 			public String? in_condition_type { get; set; }
 			public String? in_field_type { get; set; }
+			public String? in_theme_code { get; set; }
 		}
 		[HttpPost]
 		public JsonResult getconditionfetch([FromBody] getConditiontheme context)
