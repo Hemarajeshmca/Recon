@@ -382,15 +382,32 @@
 	}
 	function fthemetype() {
 		var themetype = $("#themetype").val();
-		if (themetype == "QCD_THEME_DIRECT") {
+		if (themetype == "QCD_THEME_DIRECT") {						
+			$("#themeCondition").removeClass('nav-link active');
+			$("#themeCondition").toggleClass('nav-link');
+			$("#sourcefilter").removeClass('nav-link');
+			$("#sourcefilter").toggleClass('nav-link active');
+			$("div#navs-pills-themecondition").removeClass('tab-pane fade active show');
+			$("div#navs-pills-themecondition").toggleClass('tab-pane fade');	
+			$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade');
+			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade active show');
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			$("#themeCondition").hide();
+			$("#sourcefilter").show();
 			$("#comparisionfilter").hide();
 			$("#grouping").hide();
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
 		} else if (themetype == "QCD_THEME_COMPARE") {
+			$("#sourcefilter").removeClass('nav-link active');
+			$("#sourcefilter").toggleClass('nav-link');
+			$("#themeCondition").removeClass('nav-link');
+			$("#themeCondition").toggleClass('nav-link active');
+			$("div#navs-pills-themecondition").removeClass('tab-pane fade');
+			$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');			
+			$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade active show');
+			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade');			
 			$("#sourcedataset").prop('disabled', false);
 			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
@@ -399,6 +416,7 @@
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
 		} else {
+			
 			$("#sourcedataset").prop('disabled', false);
 			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
@@ -1190,7 +1208,7 @@
 					pageSizes: true,
 					buttonCount: 5
 				},
-				toolbar: "<a onclick=addRowsource()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+				toolbar: "<a onclick=saveheadersource()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 				columns: [{
 					command: [
 						{
@@ -3236,6 +3254,70 @@
 						$("#txtthemecode").val(data.in_theme_code);
 						$("#txtmode").val("Edit");
 						addRowcondition();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function saveheadersource() {
+		try {
+			var themename = $("#themename").val();
+			var cmbrecon = $("#cmbrecon").val();
+			var theme_code = $("#txtthemecode").val();
+			var themetype = $("#themetype").val();
+			var sourcedataset = $("#sourcedataset").val();
+			var comparedataset = $("#comdataset").val();
+			if (themetype == "QCD_THEME_DIRECT") {
+				sourcedataset = "";
+				comparedataset = "";
+			}
+			var action = "";
+			var theme_gid = $("#themegid").val();
+			if (theme_gid > 0) {
+				theme_gid = $("#themegid").val();
+				addRowsource();
+				return;
+			} else {
+				theme_gid = 0;
+			}
+
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "";
+			var status = "D";
+			var inactive_reason = "";
+			var theme_order = $("#theme_order").val();
+			$.ajax({
+				type: "POST",
+				url: '../theme/themeheader',
+				dataType: 'json',
+				data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: inactive_reason }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$("#themegid").val(data.in_theme_gid);
+						$("#txtthemecode").val(data.in_theme_code);
+						$("#txtmode").val("Edit");
+						addRowsource();
 					} else {
 						$.alert({
 							title: 'Recon',
