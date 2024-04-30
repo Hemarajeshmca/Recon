@@ -800,7 +800,7 @@ namespace Recon_proto.Controllers
 
                             //Inserting calculation
                             calcCellTxt = "I7";
-                            formulaTxt = "=+(" + calcCellTxt + "*1)-" + cellTxt;
+                            formulaTxt = "=+(" + calcCellTxt + "*-1)-" + cellTxt;
 
                             row = row + 1;
                             cellTxt = "I" + row.ToString() + "";
@@ -1004,7 +1004,6 @@ namespace Recon_proto.Controllers
         public class monthendreportModel
         {
             public string in_recon_code { get; set; }
-
             public string in_tran_date { get; set; }
 
         }

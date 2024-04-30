@@ -1218,7 +1218,7 @@
 		$("#framevalue").show();
 		$(".page_bg").show();
 		document.getElementById('total').innerHTML = result;
-		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
+		var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 		document.getElementById('totalpage').innerHTML = Actpageno;
 		var data = {};
 		var selected_template = getlocalStorage("selectedTemplate");
@@ -1358,7 +1358,8 @@
 		if (event.keyCode === 13) {
 			pageno = $("#gotoPage").val();
 			pagesize = pagesize;
-			if (pageno >= $('#totalpage').val()) {
+			var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
+			if (pageno > Actpageno) {
 				$.alert({
 					title: 'Recon',
 					content: "Page number is greate than total number of page",
@@ -1382,30 +1383,38 @@
 
 	function pagination(data) {
 		if (data == "next") {
-			if (pageno >= $('#totalpage').val()) {
+			var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
+			if (pageno > Actpageno) {
 				$.alert({
 					title: 'Recon',
 					content: "Page number is greate than total number of page",
 					type: 'red',
 				});
 				return;
-			}
-			currentpage = $("#gotoPage").val();
-			pageno = parseInt(currentpage) + 1;
-			//pagesize = $("#items").val();
-			pagesize = pagesize;
-			$("#gotoPage").val(pageno);
-			Runprogress();
+			} else if (pageno == Actpageno) {
+				currentpage = $("#gotoPage").val();
+				pageno = currentpage;
+				pagesize = pagesize;
+				$("#gotoPage").val(pageno);
+				Runprogress();
+			} else {
+				currentpage = $("#gotoPage").val();
+				pageno = parseInt(currentpage) + 1;
+				//pagesize = $("#items").val();
+				pagesize = pagesize;
+				$("#gotoPage").val(pageno);
+				Runprogress();
+			}		
 
-		} else if (data == "last") {
-			
-			pageno = Math.round(parseInt(result) / parseInt(pagesize));
+		} else if (data == "last") {			
+			pageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 			//pagesize = $("#items").val();
 			pagesize = pagesize;
 			$("#gotoPage").val(pageno);
 			Runprogress();
 		} else if (data == "first") {
-			if (pageno >= $('#totalpage').val()) {
+			var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
+			if (pageno > Actpageno) {
 				$.alert({
 					title: 'Recon',
 					content: "Page number is greate than total number of page",
@@ -1436,14 +1445,14 @@
 
 	function gridpage1() {
 		pagesize = $('#items').val();
-		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
+		var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 		$('#totalpage').val(Actpageno);
 	}
 
 	function gridpage(itemsPerPage) {
 		pagesize = itemsPerPage;
 		$('#items').val(itemsPerPage);
-		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
+		var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 		$('#totalpage').val(Actpageno);
 		Runprogress();
 	}
@@ -1452,7 +1461,7 @@
 		var r = Table_Name;
 		//$("#total").val(count);
 		document.getElementById('total').innerHTML = result;
-		var Actpageno = Math.round(parseInt(result) / parseInt(pagesize));
+		var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 		// $('#totalpage').val(Actpageno);
 		document.getElementById('totalpage').innerHTML = Actpageno;
 		return {
@@ -1468,9 +1477,9 @@
 
 	}
 
-	function onRequestEnd(e) {
+	//function onRequestEnd(e) {
 
-	}
+	//}
 	//function editDetails() {
 
 	//    var grid = $("#processGrid").data("kendoGrid");
@@ -1512,9 +1521,10 @@
 	//    });
 	//}
 
-	function Reason(e) {
-		window_open1();
-	}
+	//function Reason(e) {
+	//	window_open1();
+	//}
+
 	//function window_open1() {
 	//    var grid = $("#processGrid").data("kendoGrid");
 	//    var model = grid.dataItem($(event.target).closest("tr"));
