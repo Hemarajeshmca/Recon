@@ -28,6 +28,7 @@
 		.k-grid-content {
 			overflow-x: hidden;
 		}
+
 		.k-grid.k-widget {
 			height: 360px;
 		}
@@ -366,19 +367,15 @@
 		list.preprocess_order = newSeqNo;
 		selectedItem.push(list);
 
-		if (selectedItem.recon_code != "") {
-
-			if (selectedItem != "") {
-				setlocalStorage("ls_pageList", selectedItem);
-				document.location = "../Preprocess/PreprocessForm";
-			} else {
-				$.alert({
-					title: 'Recon',
-					content: "Please Select Recon ",
-					type: 'red',
-				});
-			}
-
+		if (selectedItem[0].recon_code != "") {
+			setlocalStorage("ls_pageList", selectedItem);
+			document.location = "../Preprocess/PreprocessForm";
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ",
+				type: 'red',
+			});
 		}
 	}
 	function getSerializedSelectedRows(mode) {

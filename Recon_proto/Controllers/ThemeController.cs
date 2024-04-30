@@ -120,6 +120,7 @@ namespace Recon_proto.Controllers
 			public string theme_type { get; set; }
 			public string source_dataset { get; set; }
 			public string comparison_dataset { get; set; }
+			public string inactive_reason { get; set; }
 		}
 		#endregion
 
