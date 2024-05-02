@@ -382,13 +382,15 @@
 	}
 	function fthemetype() {
 		var themetype = $("#themetype").val();
-		if (themetype == "QCD_THEME_DIRECT") {						
+		if (themetype == "QCD_THEME_DIRECT") {
+			var className = $('#sourcefilter').attr('class');
+			if (className != 'nav-link active'){
 			$("#themeCondition").removeClass('nav-link active');
 			$("#themeCondition").toggleClass('nav-link');
 			$("#sourcefilter").removeClass('nav-link');
 			$("#sourcefilter").toggleClass('nav-link active');
 			$("div#navs-pills-themecondition").removeClass('tab-pane fade active show');
-			$("div#navs-pills-themecondition").toggleClass('tab-pane fade');	
+			$("div#navs-pills-themecondition").toggleClass('tab-pane fade');
 			$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade');
 			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade active show');
 			$("#sourcedataset").prop('disabled', true);
@@ -399,15 +401,19 @@
 			$("#grouping").hide();
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
+			}
 		} else if (themetype == "QCD_THEME_COMPARE") {
+			var className = $('#sourcefilter').attr('class');
+			if (className == 'nav-link active') {
 			$("#sourcefilter").removeClass('nav-link active');
 			$("#sourcefilter").toggleClass('nav-link');
 			$("#themeCondition").removeClass('nav-link');
 			$("#themeCondition").toggleClass('nav-link active');
 			$("div#navs-pills-themecondition").removeClass('tab-pane fade');
-			$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');			
+			$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');
 			$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade active show');
-			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade');			
+			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade');
+			}
 			$("#sourcedataset").prop('disabled', false);
 			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
@@ -415,8 +421,9 @@
 			$("#grouping").show();
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
+		
 		} else {
-			
+
 			$("#sourcedataset").prop('disabled', false);
 			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
@@ -578,10 +585,26 @@
 					$("#themetype").val(res.themeHeader[0].theme_type_code);
 					$("#txtstatus").val(res.themeHeader[0].active_status_desc);
 					fthemetype();
-					grid_themefilter(res.sourceidentifier);
-					grid_themecondition(res.themeCondition);
-					grid_comparisionfilter(res.comparisionidentifier);
-					grid_themegrouping(res.themeGrouping);
+					if (res.sourceidentifier.length > 0) {
+						grid_themefilter(res.sourceidentifier);
+					} else {
+						grid_themefilter([]);
+					}
+					if (res.themeCondition.length > 0) {
+						grid_themecondition(res.themeCondition);
+					} else {
+						grid_themecondition([]);
+					}
+					if (res.comparisionidentifier.length > 0) {
+						grid_comparisionfilter(res.comparisionidentifier);
+					} else {
+						grid_comparisionfilter([]);
+					}
+					if (res.themeGrouping.length > 0) {
+						grid_themegrouping(res.themeGrouping);
+					} else {
+						grid_themegrouping([]);
+					}					
 					if (res.Aggfunction.length > 0) {
 						$("#gd_aggfunction").empty();
 						$("#gd_aggfunction").append("<div id='grid_aggfunction'></div>");
@@ -598,6 +621,7 @@
 					else {
 						grid_aggcondition([]);
 					}
+					
 					if ($("#txtmode").val() == "View") {
 						$("#sourcedataset").prop('disabled', true);
 						$("#comdataset").prop('disabled', true);
