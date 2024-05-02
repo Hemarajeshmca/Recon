@@ -470,7 +470,7 @@
 		var reconcode = $("#cmbrecon").val();
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/rulerecondatasetfetch',
+			url: '../Theme/themerecondatasetfetch',
 			dataType: 'json',
 			async: false,
 			data: JSON.stringify({ in_recon_code: reconcode }),
@@ -483,25 +483,21 @@
 					text: "  Select  "
 				}));
 				$.each(res, function (index, item) {
-					if (item.dataset_type != "S") {
 						$("#sourcedataset").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
 						}));
-					}
 				});
 				$("#comdataset").empty();
 				$("#comdataset").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(res, function (index, item) {
-					if (item.dataset_type != "S") {
+				$.each(res, function (index, item) {					
 						$("#comdataset").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
-						}));
-					}
+						}));					
 				});
 			}
 		});
