@@ -695,9 +695,12 @@
 			}
 		}
 		function kendodate_format() {
+			var kendate= getconfigvalue("kendo_date_format");
+			var kendatetime = getconfigvalue("kendo_datetime_format");
+			sessionStorage.setItem("kendatetime", kendatetime);
 			$(".cusDate").kendoDatePicker({
 				value: new Date(),
-				format: "dd/MM/yyyy"
+				format: kendate
 			});
 			$(".cusDate1").kendoDatePicker({
 				value: new Date(),
@@ -862,7 +865,23 @@
 				return JSON.parse(guid);
 			}
 		}
-
+		function getconfigvalue(selectElement) {
+			var result="";
+			var selectElement = selectElement;
+			$.ajax({
+				type: "POST",
+				url: '../Common/getconfigvalue',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_config_name: selectElement }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+					result=res[0].out_config_value
+				}
+			});
+			return result;
+		}
 		function storeheader() {
 			if ($("#orglvl1valO").val() != "" || $("#orglvl2valO").val() != "" || $("#orglvl3valO").val() != "") {
 				sessionStorage.setItem("level1", "");

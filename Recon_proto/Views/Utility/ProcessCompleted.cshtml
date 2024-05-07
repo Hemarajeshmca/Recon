@@ -168,6 +168,8 @@
 
 	function fetchGrid(data) {
 		try {
+			var formatdatetime = sessionStorage.getItem("kendatetime");
+			var formatdatetime1 = "{0:" + formatdatetime + "}";
 			$("#grid_jobinprogress").kendoGrid({
 				dataSource: {
 					data: data,
@@ -190,10 +192,10 @@
 								file_name: { type: "string" }
 							}
 						},
-						parse: function (data) {
+						parse: function (data) {							
 							$.each(data, function (i, item) {
-								item.start_date = kendo.parseDate(item.start_date, "dd-MM-yyyy hh:mm tt");
-								item.end_date = kendo.parseDate(item.end_date, "dd-MM-yyyy hh:mm tt");
+								item.start_date = kendo.parseDate(item.start_date, formatdatetime);
+								item.end_date = kendo.parseDate(item.end_date, formatdatetime);
 							});
 							return data;
 						}
@@ -263,41 +265,19 @@
 					{
 						field: "start_date",
 						title: "Start Date",
-						format: "{0:dd-MM-yyyy hh:mm tt}",
+						format: formatdatetime1,
 						width: 120,
 						filterable: {
-							ui: "datetimepicker",
-							format: "{0:dd-MM-yyyy hh:mm tt}",
-							operators: {
-								datetime: {
-									eq: "Is equal to",
-									neq: "Is not equal to",
-									gte: "Is after or equal to",
-									gt: "Is after",
-									lte: "Is before or equal to",
-									lt: "Is before",
-								}
-							},
+							ui: "datetimepicker",													
 						},
 					},
 					{
 						field: "end_date",
-						title: "End Date",
-						format: "{0:dd-MM-yyyy hh:mm tt}",
+						title: "End Date",	
+						format: formatdatetime1,
 						width: 120,
 						filterable: {
-							ui: "datetimepicker",
-							format: "{0:dd-MM-yyyy hh:mm tt}",
-							operators: {
-								datetime: {
-									eq: "Is equal to",
-									neq: "Is not equal to",
-									gte: "Is after or equal to",
-									gt: "Is after",
-									lte: "Is before or equal to",
-									lt: "Is before",
-								}
-							},
+							ui: "datetimepicker",							
 						},
 					},
 					{

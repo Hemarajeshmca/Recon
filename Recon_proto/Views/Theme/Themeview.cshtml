@@ -106,7 +106,7 @@
 							</select>
 						</div>
 					</div>
-					<div class="row" style="margin-bottom:5px;">
+					<div class="row" style="margin-bottom:2px;">
 						<div class="col-sm-3">
 							<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;" onchange="sourcefieldchange()">
@@ -117,9 +117,17 @@
 							<select id="comdataset" class="form-select form-control" style=" width: 100%;">
 							</select>
 						</div>
+						<div class="col-sm-3">
+							<label class="form-label" for="">Clone Theme&nbsp;</label>
+							<select id="Cmbclone" class="form-select form-control">
+							</select>
+						</div>
+						<div class="col-sm-1" style="margin-top:30px">
+							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
+						</div>
 					</div>
 					<div class="row">
-						<div class="nav-align-top mb-3 mt-3">
+						<div class="nav-align-top">
 							<ul class="nav nav-pills mb-2" role="tablist">
 								<li class="nav-item">
 									<button type="button" id="themeCondition"
@@ -269,7 +277,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+						<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px;padding-top:9px">
 							<div class="col-sm-4">
 							</div>
 							<div class="col-sm-4" style="text-align:center">
@@ -384,35 +392,72 @@
 		var themetype = $("#themetype").val();
 		if (themetype == "QCD_THEME_DIRECT") {
 			var className = $('#sourcefilter').attr('class');
-			if (className != 'nav-link active'){
-			$("#themeCondition").removeClass('nav-link active');
-			$("#themeCondition").toggleClass('nav-link');
-			$("#sourcefilter").removeClass('nav-link');
-			$("#sourcefilter").toggleClass('nav-link active');
-			$("div#navs-pills-themecondition").removeClass('tab-pane fade active show');
-			$("div#navs-pills-themecondition").toggleClass('tab-pane fade');
-			$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade');
-			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade active show');
-			$("#sourcedataset").prop('disabled', true);
-			$("#comdataset").prop('disabled', true);
-			$("#themeCondition").hide();
-			$("#sourcefilter").show();
-			$("#comparisionfilter").hide();
-			$("#grouping").hide();
-			$("#aggregatefunction").hide();
-			$("#aggregatecondition").hide();
+			if (className != 'nav-link active') {
+				$("#themeCondition").removeClass('nav-link active');
+				$("#themeCondition").toggleClass('nav-link');
+				$("#sourcefilter").removeClass('nav-link');
+				$("#sourcefilter").toggleClass('nav-link active');
+				$("div#navs-pills-themecondition").removeClass('tab-pane fade active show');
+				$("div#navs-pills-themecondition").toggleClass('tab-pane fade');
+				$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade');
+				$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatefunction").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatefunction").toggleClass('tab-pane fade');
+				$("div#navs-pills-top-aggregatecondition").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatecondition").toggleClass('tab-pane fade');
+				$("div#navs-pills-top-comparisionfilter").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-comparisionfilter").toggleClass('tab-pane fade');
+				$("div#navs-pills-top-grouping").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-grouping").toggleClass('tab-pane fade');
+				$("#sourcedataset").prop('disabled', true);
+				$("#comdataset").prop('disabled', true);
+				$("#themeCondition").hide();
+				$("#sourcefilter").show();
+				$("#comparisionfilter").hide();
+				$("#grouping").hide();
+				$("#aggregatefunction").hide();
+				$("#aggregatecondition").hide();
 			}
 		} else if (themetype == "QCD_THEME_COMPARE") {
-			var className = $('#sourcefilter').attr('class');
-			if (className == 'nav-link active') {
-			$("#sourcefilter").removeClass('nav-link active');
-			$("#sourcefilter").toggleClass('nav-link');
-			$("#themeCondition").removeClass('nav-link');
-			$("#themeCondition").toggleClass('nav-link active');
-			$("div#navs-pills-themecondition").removeClass('tab-pane fade');
-			$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');
-			$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade active show');
-			$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade');
+			if ($('#sourcefilter').attr('class') == 'nav-link active') {
+				$("#sourcefilter").removeClass('nav-link active');
+				$("#sourcefilter").toggleClass('nav-link');
+				$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade');
+			}
+			if ($('#comparisionfilter').attr('class') == 'nav-link active') {
+				$("#comparisionfilter").removeClass('nav-link active');
+				$("#comparisionfilter").toggleClass('nav-link');
+				$("div#navs-pills-top-comparisionfilter").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-comparisionfilter").toggleClass('tab-pane fade');
+			}
+			if ($('#grouping').attr('class') == 'nav-link active') {
+				$("#grouping").removeClass('nav-link active');
+				$("#grouping").toggleClass('nav-link');
+				$("div#navs-pills-top-grouping").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-grouping").toggleClass('tab-pane fade');
+			}
+			if ($('#grouping').attr('class') == 'nav-link active') {
+				$("#grouping").removeClass('nav-link active');
+				$("#grouping").toggleClass('nav-link');
+			}
+			if ($('#aggregatefunction').attr('class') == 'nav-link active') {
+				$("#aggregatefunction").removeClass('nav-link active');
+				$("#aggregatefunction").toggleClass('nav-link');
+				$("div#navs-pills-top-aggregatefunction").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatefunction").toggleClass('tab-pane fade');
+			}
+			if ($('#aggregatecondition').attr('class') == 'nav-link active') {
+				$("#aggregatecondition").removeClass('nav-link active');
+				$("#aggregatecondition").toggleClass('nav-link');
+				$("div#navs-pills-top-aggregatecondition").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatecondition").toggleClass('tab-pane fade');
+			}
+			if ($('#themeCondition').attr('class') != 'nav-link active') {
+				$("#themeCondition").removeClass('nav-link');
+				$("#themeCondition").toggleClass('nav-link active');
+				$("div#navs-pills-themecondition").removeClass('tab-pane fade');
+				$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');
 			}
 			$("#sourcedataset").prop('disabled', false);
 			$("#comdataset").prop('disabled', false);
@@ -421,9 +466,48 @@
 			$("#grouping").show();
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
-		
-		} else {
 
+		} else {
+			if ($('#sourcefilter').attr('class') == 'nav-link active') {
+				$("#sourcefilter").removeClass('nav-link active');
+				$("#sourcefilter").toggleClass('nav-link');
+				$("div#navs-pills-top-sourcefilter").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-sourcefilter").toggleClass('tab-pane fade');
+			}
+			if ($('#comparisionfilter').attr('class') == 'nav-link active') {
+				$("#comparisionfilter").removeClass('nav-link active');
+				$("#comparisionfilter").toggleClass('nav-link');
+				$("div#navs-pills-top-comparisionfilter").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-comparisionfilter").toggleClass('tab-pane fade');
+			}
+			if ($('#grouping').attr('class') == 'nav-link active') {
+				$("#grouping").removeClass('nav-link active');
+				$("#grouping").toggleClass('nav-link');
+				$("div#navs-pills-top-grouping").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-grouping").toggleClass('tab-pane fade');
+			}
+			if ($('#grouping').attr('class') == 'nav-link active') {
+				$("#grouping").removeClass('nav-link active');
+				$("#grouping").toggleClass('nav-link');
+			}
+			if ($('#aggregatefunction').attr('class') == 'nav-link active') {
+				$("#aggregatefunction").removeClass('nav-link active');
+				$("#aggregatefunction").toggleClass('nav-link');
+				$("div#navs-pills-top-aggregatefunction").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatefunction").toggleClass('tab-pane fade');
+			}
+			if ($('#aggregatecondition').attr('class') == 'nav-link active') {
+				$("#aggregatecondition").removeClass('nav-link active');
+				$("#aggregatecondition").toggleClass('nav-link');
+				$("div#navs-pills-top-aggregatecondition").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-aggregatecondition").toggleClass('tab-pane fade');
+			}
+			if ($('#themeCondition').attr('class') != 'nav-link active') {
+				$("#themeCondition").removeClass('nav-link');
+				$("#themeCondition").toggleClass('nav-link active');
+				$("div#navs-pills-themecondition").removeClass('tab-pane fade');
+				$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');
+			}
 			$("#sourcedataset").prop('disabled', false);
 			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
@@ -483,22 +567,52 @@
 					text: "  Select  "
 				}));
 				$.each(res, function (index, item) {
-						$("#sourcedataset").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
-						}));
+					$("#sourcedataset").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
 				});
 				$("#comdataset").empty();
 				$("#comdataset").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$.each(res, function (index, item) {					
-						$("#comdataset").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
-						}));					
+				$.each(res, function (index, item) {
+					$("#comdataset").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
 				});
+			}
+		});
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Theme/Themelistfetchclone',
+			dataType: 'json',
+			data: JSON.stringify({ recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					$("#Cmbclone").empty();
+					$("#Cmbclone").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result, function (index, item) {
+						$("#Cmbclone").append($('<option>', {
+							value: item.theme_code,
+							text: item.theme_name
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
 			}
 		});
 	};
@@ -600,7 +714,7 @@
 						grid_themegrouping(res.themeGrouping);
 					} else {
 						grid_themegrouping([]);
-					}					
+					}
 					if (res.Aggfunction.length > 0) {
 						$("#gd_aggfunction").empty();
 						$("#gd_aggfunction").append("<div id='grid_aggfunction'></div>");
@@ -617,7 +731,10 @@
 					else {
 						grid_aggcondition([]);
 					}
-					
+					if ($("#txtthemecode").val() != "") {
+						$("#Cmbclone").prop('disabled', true)
+						$("#btnclone").prop('disabled', true)
+					}
 					if ($("#txtmode").val() == "View") {
 						$("#sourcedataset").prop('disabled', true);
 						$("#comdataset").prop('disabled', true);
@@ -817,12 +934,12 @@
 			},
 			{
 				field: "extraction_criteria_code",
-				title: "Extraction criteria",
+				title: "Extraction Criteria",
 				hidden: true,
 			},
 			{
 				field: "extraction_criteria",
-				title: "Extraction criteria",
+				title: "Extraction Criteria",
 				editor: function (container, options) {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_themecondition", "SOURCE")
 				},
@@ -850,7 +967,7 @@
 			},
 			{
 				field: "comparison_criteria",
-				title: "Comparison criteria",
+				title: "Comparison Criteria",
 				editor: function (container, options) {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_themecondition", "COMPARISON")
 				},
@@ -1526,9 +1643,21 @@
 			var grid = $("#grid_themefilterfield").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
 			var theme_code = $("#txtthemecode").val();
-			var filter_field = model.filter_field_code;
-			var filter_criteria = model.filter_criteria;
-			var filter_value = model.filter_value;
+			if (model.filter_field_code != undefined) {
+				var filter_field = model.filter_field_code;
+			} else {
+				var filter_field = "";
+			}
+			if (model.filter_criteria != undefined) {
+				var filter_criteria = model.filter_criteria;
+			} else {
+				var filter_criteria = "";
+			}
+			if (model.filter_value != undefined) {
+				var filter_value = model.filter_value;
+			} else {
+				var filter_value = "";
+			}
 			var in_open_flag = model.open_parentheses_flag
 			var in_close_flag = model.close_parentheses_flag;
 			var filter_applied_on = "S"
@@ -2233,7 +2362,7 @@
 			},
 			{
 				field: "grpfield_applied_on",
-				title: "Apllied On",
+				title: "Applied On",
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "grpfield_applied_on_code", "grid_themegrouping")
 				},
@@ -3230,6 +3359,14 @@
 	}
 	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
 	function saveheader() {
+		var theme_clone = $("#Cmbclone").val();
+		if (theme_clone == '') {
+			saveheadernew()
+		} else {
+			saveclone();
+		}
+	}
+	function saveheadernew() {
 		try {
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
@@ -3294,6 +3431,14 @@
 		}
 	}
 	function saveheadersource() {
+		var theme_clone = $("#Cmbclone").val();
+		if (theme_clone == '') {
+			saveheadersourcenew()
+		} else {
+			saveclone();
+		}
+	}
+	function saveheadersourcenew() {
 		try {
 			var themename = $("#themename").val();
 			var cmbrecon = $("#cmbrecon").val();
@@ -3358,6 +3503,14 @@
 		}
 	}
 	function saveheadersubmit() {
+		var theme_clone = $("#Cmbclone").val();
+		if (theme_clone == '') {
+			saveheadersubmitnew()
+		} else {
+			saveclone();
+		}
+	}
+	function saveheadersubmitnew() {
 		try {
 
 			var themename = $("#themename").val();
@@ -3421,5 +3574,66 @@
 		catch (e) {
 			console.log(e)
 		}
+	}
+	function saveclone() {
+		if ($("#Cmbclone").val() == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Clone Theme cannot be empty",
+				type: 'green',
+			});
+			return;
+		}
+		$.confirm({
+			icon: 'fa fa-info',
+			title: 'Recon',
+			theme: 'dark',
+			content: 'Are you sure to Clone ?',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var newthemeName = $("#themename").val();
+					var selectedthemeCode = $("#Cmbclone").val();
+					$.ajax({
+						type: "POST",
+						url: '../theme/Themeclone',
+						dataType: 'json',
+						data: JSON.stringify({ in_theme_name: newthemeName, in_clone_theme_code: selectedthemeCode }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var result = JSON.parse(response);
+							if (result.length > 0) {
+								if (result[0].out_result == '1') {
+									$.alert({
+										title: 'Recon',
+										content: result[0].out_msg,
+										type: 'green',
+									});
+									detailsfetch(result[0].out_theme_code);
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: result[0].out_msg,
+										type: 'red',
+									});
+								}
+							}
+						}
+					});
+					$("#Cmbclone").val("");
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'clone Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+					$("#Cmbclone").val("");
+				},
+			},
+		});
 	}
 </script>
