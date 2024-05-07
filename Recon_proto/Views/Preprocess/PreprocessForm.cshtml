@@ -180,12 +180,21 @@
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="cmbrecon" class="form-select form-control" onchange="reconcode()" disabled>
-							</select>
+							<input disabled class="form-control" id="cmbreconname_desc" name="reconName" type="text">
+							<selec hidden id="cmbrecon" class="form-select form-control" onchange="reconcode()" disabled>
+							</selec>
+						</div>
+						<div class="col-sm-1">
+							<label class="form-label" for="">Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" id="preprocessorder" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
 						</div>
 						<div class="col-sm-2">
-							<label class="form-label" for="">Preprocess Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="text" id="preprocessorder" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
+							<label class="form-label" for="">Clone Preprocess&nbsp;</label>
+							<select id="Cmbclone" class="form-select form-control">
+							</select>
+						</div>
+						<div class="col-sm-1" style="margin-top:30px">
+							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
 						</div>
 						<div class="col-md-2" style="width: 14%;display:none">
 							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -409,14 +418,46 @@
 				});
 			}
 		});
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/Preprocesslistfetchclone',
+			dataType: 'json',
+			data: JSON.stringify({ recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					$("#Cmbclone").empty();
+					$("#Cmbclone").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result, function (index, item) {
+						$("#Cmbclone").append($('<option>', {
+							value: item.preprocess_code,
+							text: item.preprocess_desc
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
 	}
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Draft");
 			var data = getlocalStorage("ls_pageList");
-			$("#cmbrecon").val(data[0].recon_code);
+			$("#cmbrecon").val(data[0].recon_code);			
 			jQuery('#cmbrecon').trigger("change");
+			var gettext = $("#cmbrecon").find(":selected").text();
+			$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
 			$("#holdflag").val('N');
 			$("#preprocessorder").val(data[0].preprocess_order);
 		}
@@ -427,6 +468,7 @@
 				$("#txtpreprocesscode").val(data.preprocess_code);
 				$("#cmbrecon").val(data.recon_code);
 				jQuery('#cmbrecon').trigger("change");
+				$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
 				$("#preprocessname").val(data.preprocess_desc);
 				$("#preprocessorder").val(data.preprocess_order);
 				$("#preprocessgid").val(data.preprocess_gid);
@@ -440,6 +482,8 @@
 				preprocessfetch(data.preprocess_code);
 				$("#holdflag").val(data.hold_flag);
 				$("#txtstatus").val(data.active_status_desc);
+				$("#Cmbclone").prop('disabled', true)
+				$("#btnclone").prop('disabled', true)
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -449,6 +493,7 @@
 				preprocessfetch(data.preprocess_code);
 				$("#cmbrecon").val(data.recon_code);
 				jQuery('#cmbrecon').trigger("change");
+				$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
 				$("#preprocessname").val(data.preprocess_desc);
 				$("#preprocessorder").val(data.preprocess_order);
 				$("#preprocessgid").val(data.preprocess_gid);
@@ -478,6 +523,8 @@
 				$("#querydata").prop('disabled', true);
 				$("#cmblookupdataset").prop('disabled', true);
 				$("#Cmblookupdatasetfield").prop('disabled', true);
+				$("#Cmbclone").prop('disabled', true)
+				$("#btnclone").prop('disabled', true)
 
 			}
 		}
@@ -1016,12 +1063,12 @@
 			},
 			{
 				field: "extraction_criteria_code",
-				title: "Extraction criteria",
+				title: "Extraction Criteria",
 				hidden: true,
 			},
 			{
 				field: "extraction_criteria",
-				title: "Extraction criteria",
+				title: "Extraction Criteria",
 				editor: function (container, options) {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookup", "SOURCE")
 				},
@@ -1049,7 +1096,7 @@
 			},
 			{
 				field: "comparison_criteria",
-				title: "Comparison criteria",
+				title: "Comparison Criteria",
 				editor: function (container, options) {
 					combo_editor_man2(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_lookup", "COMPARISON")
 				},
@@ -1170,8 +1217,6 @@
 				}
 			}
 		});
-
-
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
@@ -1220,8 +1265,6 @@
 				}
 			}
 		});
-
-
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
@@ -1409,149 +1452,6 @@
 		}
 	}
 	button.addEventListener('click', validateAndChangeColor);
-
-	function saveheadersubmit() {
-		try {
-			var preprocess_name = $("#preprocessname").val();
-			var preprocess_Code = $("#txtpreprocesscode").val();
-			var recon_code = $("#cmbrecon").val();
-			var process_method = $("#Cmbprocessmethod").val();
-			var get_recon_field = "";
-			var set_recon_field = "";
-			var process_function = "";
-			var lookup_dataset_code = "";
-			var lookup_return_field = "";
-			var process_query = "";
-			var clone_process = "";
-			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
-				if ($("#cmbgetrecon").val() == "") {
-					$.alert({
-						title: 'Recon',
-						content: "Lookup Recon Field  cannot be empty",
-						type: 'green',
-					});
-					return;
-				}
-				if ($("#Cmbreconfield").val() == "") {
-					$.alert({
-						title: 'Recon',
-						content: "Update Recon Field  cannot be empty",
-						type: 'green',
-					});
-					return;
-				}
-				if ($("#Cmbfunction").val() == "") {
-					$.alert({
-						title: 'Recon',
-						content: "Lookup Function cannot be empty",
-						type: 'green',
-					});
-					return;
-				}
-				get_recon_field = $("#cmbgetrecon").val();
-				set_recon_field = $("#Cmbreconfield").val();
-				process_function = $("#Cmbfunction").val();
-
-			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
-				if ($("#cmblookupdataset").val() == "") {
-					$.alert({
-						title: 'Recon',
-						content: "Look up cannot be empty",
-						type: 'green',
-					});
-					return;
-				}
-				if ($("#Cmblookupdatasetfield").val() == "") {
-					$.alert({
-						title: 'Recon',
-						content: "Dataset Field cannot be empty",
-						type: 'green',
-					});
-					return;
-				}
-				if ($("#Cmbreconfield1").val() == "") {
-					$.alert({
-						title: 'Recon',
-						content: "Update Recon Field cannot be empty",
-						type: 'green',
-					});
-					return;
-				}
-				lookup_dataset_code = $("#cmblookupdataset").val();
-				lookup_return_field = $("#Cmblookupdatasetfield").val();
-				set_recon_field = $("#Cmbreconfield1").val();
-
-			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
-				process_query = $("#querydata").val();
-				if ($("#validquery").val() == "false") {
-					$.alert({
-						title: 'Recon',
-						content: "Kindly Validate the Query",
-						type: 'green',
-					});
-					return;
-				}
-			}
-
-			var preprocess_order = $("#preprocessorder").val();
-			var action = "";
-			var preprocess_gid = $("#preprocessgid").val();
-
-			if (preprocess_gid > 0) {
-				preprocess_gid = $("#preprocessgid").val();
-			} else {
-				preprocess_gid = 0;
-			}
-
-			if ($("#txtmode").val() == "Create") {
-				action = "INSERT"
-			} else if ($("#txtmode").val() == "Edit") {
-				action = "UPDATE"
-			}
-			var action_by = "";
-			var status = "Y";
-			var holdflag = $("#holdflag").val();
-			$.ajax({
-				type: "POST",
-				url: '../Preprocess/preprocessheader',
-				dataType: 'json',
-				data: JSON.stringify({
-					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
-					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
-					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
-				}),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var result = JSON.parse(response);
-					var data = result[0];
-					if (data.out_result == "1") {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'green',
-						});
-						$("#preprocessgid").val(data.in_preprocess_gid);
-						$("#txtpreprocesscode").val(data.in_preprocess_code);
-						preprocessfetch($("#txtpreprocesscode").val());
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'red',
-						});
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-
-			});
-		}
-		catch (e) {
-			console.log(e)
-		}
-	}
 	function savefilter() {
 		try {
 			var grid = $("#grid_filter").data("kendoGrid");
@@ -1728,6 +1628,7 @@
 					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
 					$("#cmbrecon").val(result.header[0].recon_code);
 					jQuery('#cmbrecon').trigger("change");
+					$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
 					$("#preprocessname").val(result.header[0].preprocess_desc);
 					$("#preprocessorder").val(result.header[0].preprocess_order);
 					$("#preprocessgid").val(result.header[0].preprocess_gid);
@@ -1744,6 +1645,8 @@
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag").val(result.header[0].hold_flag);
 					$("#txtstatus").val(result.header[0].active_status_desc);
+					$("#Cmbclone").prop('disabled', true)
+					$("#btnclone").prop('disabled', true)
 					if ($("#txtmode").val() == "View") {
 						$("#grid_filter .k-grid-toolbar").hide();
 						$("#grid_lookup .k-grid-toolbar").hide();
@@ -1979,7 +1882,65 @@
 			});
 		}
 	}
+
+	function validatequery1() {
+		var in_sql = $("#querydata").val();
+		var index = in_sql.indexOf("Where");
+		if (index !== -1) {
+			in_sql = in_sql + "  and 1=2"
+		} else {
+			in_sql = in_sql + "  where 1=2"
+		}
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/validatequery',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_sql: in_sql }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != "[]") {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+						$("#validquery").val("true");
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: "failed",
+						type: 'red',
+					});
+					$("#querydata").val("");
+					$("#validquery").val("false");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
 	function saveheader() {
+		var preprocess_clone = $("#Cmbclone").val();
+		if (preprocess_clone == '') {
+			saveheadernew()
+		} else {
+			saveclone();
+		}
+	}
+	function saveheadernew() {
 		try {
 			if ($("#preprocessname").val() == "") {
 				$.alert({
@@ -2108,56 +2069,15 @@
 			console.log(e)
 		}
 	}
-	function validatequery1() {
-		var in_sql = $("#querydata").val();
-		var index = in_sql.indexOf("Where");
-		if (index !== -1) {
-			in_sql = in_sql + "  and 1=2"
-		} else {
-			in_sql = in_sql + "  where 1=2"
-		}
-		$.ajax({
-			type: "POST",
-			url: '../Preprocess/validatequery',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_sql: in_sql }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				if (response != "[]") {
-					var result = JSON.parse(response);
-					var data = result[0];
-					if (data.out_result == "1") {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'red',
-						});
-						$("#validquery").val("true");
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: data.out_msg,
-							type: 'red',
-						});
-					}
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: "failed",
-						type: 'red',
-					});
-					$("#querydata").val("");
-					$("#validquery").val("false");
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-		});
-	}
 	function savefilterheader() {
+		var preprocess_clone = $("#Cmbclone").val();
+		if (preprocess_clone == '') {
+			savefilterheadernew()
+		} else {
+			saveclone();
+		}
+	}
+	function savefilterheadernew() {
 		try {
 			if ($("#preprocessname").val() == "") {
 				$.alert({
@@ -2285,6 +2205,217 @@
 		catch (e) {
 			console.log(e)
 		}
+	}
+	function saveheadersubmit() {
+		var preprocess_clone = $("#Cmbclone").val();
+		if (preprocess_clone == '') {
+			saveheadersubmitnew()
+		} else {
+			saveclone();
+		}
+	}
+	function saveheadersubmitnew() {
+		try {
+			var preprocess_name = $("#preprocessname").val();
+			var preprocess_Code = $("#txtpreprocesscode").val();
+			var recon_code = $("#cmbrecon").val();
+			var process_method = $("#Cmbprocessmethod").val();
+			var get_recon_field = "";
+			var set_recon_field = "";
+			var process_function = "";
+			var lookup_dataset_code = "";
+			var lookup_return_field = "";
+			var process_query = "";
+			var clone_process = "";
+			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				if ($("#cmbgetrecon").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbfunction").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Function cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Dataset Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				lookup_dataset_code = $("#cmblookupdataset").val();
+				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+				process_query = $("#querydata").val();
+				if ($("#validquery").val() == "false") {
+					$.alert({
+						title: 'Recon',
+						content: "Kindly Validate the Query",
+						type: 'green',
+					});
+					return;
+				}
+			}
+
+			var preprocess_order = $("#preprocessorder").val();
+			var action = "";
+			var preprocess_gid = $("#preprocessgid").val();
+
+			if (preprocess_gid > 0) {
+				preprocess_gid = $("#preprocessgid").val();
+			} else {
+				preprocess_gid = 0;
+			}
+
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = "";
+			var status = "Y";
+			var holdflag = $("#holdflag").val();
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						preprocessfetch($("#txtpreprocesscode").val());
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function saveclone() {
+		if ($("#Cmbclone").val() == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Clone Preprocess cannot be empty",
+				type: 'green',
+			});
+			return;
+		}
+		$.confirm({
+			icon: 'fa fa-info',
+			title: 'Recon',
+			theme: 'dark',
+			content: 'Are you sure to Clone ?',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var newproprecssName = $("#preprocessname").val();
+					var selectedpreprocessCode = $("#Cmbclone").val();
+					$.ajax({
+						type: "POST",
+						url: '../Preprocess/preprocessclone',
+						dataType: 'json',
+						data: JSON.stringify({ in_preprocess_name: newproprecssName, in_clone_preprocess_code: selectedpreprocessCode }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var result = JSON.parse(response);
+							if (result.length > 0) {
+								if (result[0].out_result == '1') {
+									$.alert({
+										title: 'Recon',
+										content: result[0].out_msg,
+										type: 'green',
+									});
+									preprocessfetch(result[0].out_preprocess_code);
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: result[0].out_msg,
+										type: 'red',
+									});
+								}
+							}
+						}
+					});
+					$("#Cmbclone").val("");
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'clone Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+					$("#Cmbclone").val("");
+				},
+			},
+		});
 	}
 </script>
 

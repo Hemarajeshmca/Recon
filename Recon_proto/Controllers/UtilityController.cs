@@ -249,8 +249,6 @@ namespace Recon_proto.Controllers
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
                     return Json(d2);
-
-
                 }
             }
             catch (Exception ex)
