@@ -193,7 +193,7 @@
 		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '../QCDmaster/QcdMasterGridRead',
+			url: '../QCDmaster/getallQcdmaster',
 			dataType: 'json',
 			data: JSON.stringify({ in_user_code: Context.in_user_code, in_master_code: Context.in_master_code }),
 			contentType: 'application/json; charset=utf-8',
@@ -242,7 +242,7 @@
 		$("#parentCode").val(cur_value);
 		$.ajax({
 			type: "POST",
-			url: "../QCDmaster/QcdMasterGridRead",
+			url: "../QCDmaster/getallQcdmaster",
 			dataType: "json",
 			data: JSON.stringify({ in_user_code: data.in_user_code, in_master_code: data.in_master_code }),
 			contentType: 'application/json; charset=utf-8',
@@ -299,10 +299,10 @@
 					resultData = e.sender._data;
 					var rows = $('#grid').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					if ($("#depend_flag").val() == "Y") {
-						$(".k-grid-edit").hide();
-						$(".k-grid-delete").hide();
-					}
+					//if ($("#depend_flag").val() == "Y") {
+					//	$(".k-grid-edit").hide();
+					//	$(".k-grid-delete").hide();
+					//}
 				},
 				pageable: {
 					refresh: false,
@@ -507,7 +507,7 @@
 					var result = JSON.parse(response);
 					var data = result[0];
 					if (data.out_result == "1") {
-						master_code = $("#MasterCode").val()
+						master_code = $("#MasterCode").val();
 						closeModal();
 						$.alert({
 							title: 'Recon',
@@ -580,7 +580,6 @@
 	function myDeleteQCD() {
 		var grid = $("#grid").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
-		console.log("selectedItem", selectedItem);
 		$("#master_gid").val(selectedItem.master_gid);
 		$("#mode").val("Delete");
 		$("#MasterSysCode").val(selectedItem.master_syscode);

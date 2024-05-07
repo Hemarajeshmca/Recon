@@ -686,11 +686,129 @@
 	function load() {
 		debugger;
 		if (getlocalStorage('btn_clk_val') == "Create") {
-			$("#txtmode").val(getlocalStorage('btn_clk_val'));
-			$("#txtstatus").val("Draft");
-			gridmap([]);
-			$('#partialmatch2').attr('checked', true);
-			onpartial();
+			if ($("#reconcode").val() == "") {
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#txtstatus").val("Draft");
+				gridmap([]);
+				$('#partialmatch2').attr('checked', true);
+				onpartial();
+			} else {
+				var data = {};
+				data.recon_code = $("#reconcode").val();
+				$.ajax({
+					type: "POST",
+					url: '../Recon/Reconheaderfetch',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ in_recon_code: data.recon_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+
+						if (response != " ") {
+							var res = JSON.parse(response);
+							$("#period_from").val(res.ReconHeader[0].period_from);
+							$("#period_to").val(res.ReconHeader[0].period_to);
+							if (res.ReconHeader[0].recon_value_flag == "Y") {
+								$("#reconvalueflag1").prop("checked", true);
+							} else {
+								$("#reconvalueflag2").prop("checked", true);
+							}
+							if (res.ReconHeader[0].recon_date_flag == "Y") {
+								$("#recondateflag1").prop("checked", true);
+							} else {
+								$("#recondateflag2").prop("checked", true);
+							}
+							if (res.ReconHeader[0].recon_automatch_partial == "Y") {
+								$("#partialmatch1").prop("checked", true);
+							} else {
+								$("#partialmatch2").prop("checked", true);
+							}
+
+							$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
+							$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
+							$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
+							$("#gd_datasetrecon").empty();
+							$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
+							grid_datasetrecon(res.ReconDataSet);
+							if (res.ReconDataSetmapping.length > 0) {
+								griddatamapping(res.ReconDataSetmapping);
+							} else {
+								gridmap([]);
+							} if (res.ReconRule.length > 0) {
+								gridruleMapping(res.ReconRule);
+							} else {
+								gridruleMapping([]);
+							}
+							if (res.Recontheme.length > 0) {
+								gridthemeMapping(res.Recontheme);
+							} else {
+								gridthemeMapping([]);
+							}
+							if (res.Reconpreprocess.length > 0) {
+								gridpreprocessMapping(res.Reconpreprocess);
+							} else {
+								gridpreprocessMapping([]);
+							}
+							if (res.Rpttemplate.length > 0) {
+								grid_reportTemplist(res.Rpttemplate);
+							} else {
+								grid_reportTemplist([]);
+							}
+							$("#cmbdatasetmap").empty();
+							$("#cmbdatasetmap").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res.ReconDataSet, function (index, item) {
+								$("#cmbdatasetmap").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							});
+							$("#cmbrecondatefield").empty();
+							$("#cmbrecondatefield").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res.Reconfield, function (index, item) {
+								if (item.recon_field_type == "DATE") {
+									$("#cmbrecondatefield").append($('<option>', {
+										value: item.recon_field_name,
+										text: item.recon_field_desc
+									}));
+								}
+							});
+							$("#cmbreconvaluefield").empty();
+							$("#cmbreconvaluefield").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res.Reconfield, function (index, item) {
+								if (item.recon_field_type == "NUMERIC") {
+									$("#cmbreconvaluefield").append($('<option>', {
+										value: item.recon_field_name,
+										text: item.recon_field_desc
+									}));
+								}
+							});
+							recontypeconfig();
+							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
+							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+
+						}
+						else {
+							grid_datasetrecon([]);
+							gridmap([]);
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
+			
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {

@@ -791,6 +791,7 @@
                             open_parentheses_flag: { type: "string", editable: false },
                             close_parentheses_flag: { type: "string", editable: false },
                             join_condition: { type: "string" },
+                            last_system_flag: {type: "string"},
                             active_status: { type: "string" },
                             active_status_desc: { type: "string" },
                             system_flag: { type: "string" }
@@ -874,8 +875,12 @@
                 field: "reportparam_value",
                 title: "Filter Field",
                 editor: function (container, options) {
-                    combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
-                },
+                    if (options.model.last_system_flag == 'Y' && options.model.system_flag == 'Y') {
+                        container.html(options.model.reportparam_value);
+                    } else {
+                         combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
+                    }
+                    },
                 width: 120,
             },
             {
@@ -888,8 +893,12 @@
                 field: "filter_criteria_desc",
                 title: "Filter Criteria",
                 editor: function (container, options) {
+                    if (options.model.last_system_flag == 'Y' && options.model.system_flag == 'Y') {
+                        container.html(options.model.filter_criteria_desc);
+                    } else {
                     combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_tempfilter", "SOURCE")
-                },
+                    }
+                    },
                 editable: true,
                 width: 120
             },
@@ -913,6 +922,11 @@
                 width: 60
             },
             {
+                field: "last_system_flag",
+                title: "last_system_flag",
+                hidden: true
+            },
+            {
                 field: "active_status",
                 title: "Status",
                 hidden: true
@@ -930,11 +944,18 @@
 
     function OnEdit(e) {
         try {
-            if (e.model.system_flag == 'Y') {
+            if (e.model.system_flag == 'Y' && e.model.last_system_flag == 'N') {
                 e.sender.closeCell();
+            } else if (e.model.system_flag == 'Y' && e.model.last_system_flag == 'Y') {
+                e.container.find("input[name='filter_value']").prop('readonly', true);
+                e.container.find("input[name='filter_seqno']").prop('readonly', true);
+            } else {
+                e.container.find("input[name='filter_value']").prop('readonly', false);
+                e.container.find("input[name='filter_seqno']").prop('readonly', false);
             }
-            //setDefaultValues(e);
+
         }
+
         catch (err) {
             javascript_log4j_root(arguments.callee.name, err);
         }
@@ -1427,7 +1448,7 @@
             var grid = $("#grid_tempfilter").data("kendoGrid");
             var model = grid.dataItem($(event.target).closest("tr"));
             var data = {};
-            if (model.system_flag != 'Y') {
+            if (model.system_flag != 'Y' || model.last_system_flag != 'N') {
                 data.in_reporttemplatefilter_gid = model.reporttemplatefilter_gid;
                 data.in_reporttemplate_code = $("#reporttemplate_code").val();
                 data.in_filter_seqno = parseFloat(model.filter_seqno);
@@ -1435,6 +1456,7 @@
                 data.in_filter_criteria = model.filter_criteria;
                 data.in_filter_value = model.filter_value;
                 data.in_join_condition = model.join_condition ? model.join_condition : "";
+                data.in_last_system_flag = model.last_system_flag;
                 data.in_action = ''
                 data.in_active_status = 'Y';
                 data.in_open_parentheses_flag = "";
@@ -1608,6 +1630,7 @@
                             data.in_filter_criteria = model.filter_criteria;
                             data.in_filter_value = model.filter_value;
                             data.in_join_condition = model.join_condition;
+                            data.in_last_system_flag = model.last_system_flag;
                             data.in_action = 'DELETE'
                             data.in_active_status = 'Y';
                             data.in_open_parentheses_flag = "";

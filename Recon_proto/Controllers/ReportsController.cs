@@ -953,7 +953,7 @@ namespace Recon_proto.Controllers
 
                             //Insert Transaction
                             ws = wb.AddWorksheet("Transaction");
-                            ws.Cell("A1").InsertTable(Table6).Theme = XLTableTheme.None;
+                            //ws.Cell("A1").InsertTable(Table6).Theme = XLTableTheme.None;
                             // ws.Tables.ForEach(x => x.ShowAutoFilter = false);
                             foreach (var table in ws.Tables)
                             {
@@ -1223,6 +1223,7 @@ namespace Recon_proto.Controllers
             public string? in_open_parentheses_flag { get; set; }
             public string? in_close_parentheses_flag { get; set; }
             public string in_join_condition { get; set; }
+            public string? in_last_system_flag { get; set; }
             public string? in_action { get; set; }
             public String? in_active_status { get; set; }
         }
