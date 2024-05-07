@@ -543,6 +543,13 @@
 							$("#cmbreporttype").prop("disabled", true);
 							$("#reconname").prop("disabled", true);
 							gridcopy = res.Table1;
+							res.Table1.forEach(function (item, index) {
+								if (index !== res.Table1.length - 1) {
+									item.isLastRow = false;
+								} else {
+									item.isLastRow = true;
+								}
+							});
 							grid_tempfilter(gridcopy);
 						}
 						else {
@@ -573,7 +580,7 @@
 						fields: {
 							reporttemplatefilter_gid: { type: "number", defaultValue: 0 },
 							reporttemplate_code: { type: "string" },
-							filter_seqno: { type: "number", defaultValue: "0" },
+							filter_seqno: { type: "string", defaultValue: "0" },
 							report_field: { type: "string" },
 							reportparam_value: { type: "string" },
 							filter_criteria: { type: "string" },
@@ -582,8 +589,10 @@
 							open_parentheses_flag: { type: "string", editable: false },
 							close_parentheses_flag: { type: "string", editable: false },
 							join_condition: { type: "string" },
+							last_system_flag: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
+							isLastRow:{type: "boolean"}
 						}
 					}
 				}
@@ -622,6 +631,9 @@
 				field: "filter_seqno",
 				title: "Filter Seq No",
 				width: 50,
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
 				attributes: { style: "text-align: right;" },
 			},
 			{
@@ -655,8 +667,12 @@
 				field: "reportparam_value",
 				title: "Filter Field",
 				editor: function (container, options) {
+					if (options.model.reporttemplatefilter_gid > 0) {
+						container.html(options.model.reportparam_value);
+					} else {
 					combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
-				},
+					}
+					},
 				width: 120,
 			},
 			{
@@ -669,8 +685,12 @@
 				field: "filter_criteria_desc",
 				title: "Filter Criteria",
 				editor: function (container, options) {
+					if (options.model.reporttemplatefilter_gid > 0) {
+						container.html(options.model.filter_criteria_desc);
+					} else {
 					combo_editor_man1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_tempfilter", "SOURCE")
-				},
+					}
+					},
 				editable: true,
 				width: 120
 			},
@@ -700,8 +720,18 @@
 				width: 60
 			},
 			{
+				field: "last_system_flag",
+				title: "last_system_flag",
+				hidden: true
+			},
+			{
 				field: "active_status",
 				title: "Status",
+				hidden: true
+			},
+			{
+				field: "isLastRow",
+				title: "isLastRow",
 				hidden: true
 			},
 			{
@@ -722,17 +752,29 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		var newSeqNo = parseInt(lastSeqNo) + 1;
-
+	
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N" });
+		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", reporttemplatefilter_gid: 0, isLastRow : false});
 	}
 
 	function OnEdit(e) {
 		try {
-			if (e.model.reporttemplatefilter_gid > 0) {
+			var grid = $("#grid_tempfilter").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var max = 0;
+			var max_gid = 0;
+			// Get the last sequence number and increment it
+			var lastSeqNo = grid.dataSource._data.length;
+
+			if (e.model.isLastRow == true && e.model.reporttemplatefilter_gid > 0) {
+				e.container.find("input[name='filter_value']").prop('readonly', true);
+				e.container.find("input[name='filter_seqno']").prop('readonly', true);
+			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid > 0) {
 				e.sender.closeCell();
+			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid == 0) {
+				e.container.find("input[name='filter_value']").prop('readonly', false);
+				e.container.find("input[name='filter_seqno']").prop('readonly', false);
 			}
-			//setDefaultValues(e);
 		}
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
@@ -989,7 +1031,7 @@
 			"in_report_condition": rpt_cond,
 			"in_outputfile_flag": true,
 			"in_outputfile_type": 'csv',
-			"in_ip_addr": "localhost",
+			"in_ip_addr": "",
 			"in_user_code": txtusername.user_name,
 			"file_name": $("#file_name").val(),
 			"in_report_name": concatName
@@ -1780,7 +1822,11 @@
 				//    if (res.length > 0) {
 				//        var data = res[0];
 				//        if (data.out_result != '0') {
-
+				//			$.alert({
+				//				title: 'Recon',
+				//				content: data.out_msg,
+				//				type: 'green',
+				//			});
 				//        } else {
 				//            $.alert({
 				//                title: 'Recon',

@@ -127,7 +127,6 @@
                 type: "POST",
                 url: '../Reports/reconwithinacc',
                 dataType: 'json',
-                async: false,
                 data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
@@ -139,8 +138,6 @@
                     } else {
                         loadGrid([]);
                     }
-
-                    debugger;
                 },
                 error: function (er) {
                     debugger;
@@ -163,7 +160,6 @@
     }
 
     function loadGrid(data) {
-        debugger;
         try {
             $("#grid_withinaccount").kendoGrid({
                 dataSource: {
@@ -186,7 +182,6 @@
                 dataBound: function (e) {
                     var grid = this; // "this" refers to the Kendo Grid
                     var rows = grid.tbody.children();
-
                     rows.each(function () {
                         var rowDataItem = grid.dataItem(this);
                         if (rowDataItem.particulars === "Add" || rowDataItem.particulars === "Subtotal" || rowDataItem.particulars === "Less" || rowDataItem.particulars === "Arrived Balance") {

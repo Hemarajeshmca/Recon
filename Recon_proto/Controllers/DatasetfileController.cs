@@ -147,7 +147,7 @@ namespace Recon_proto.Controllers
         public class setProcessdatasetModel
         {
             public int in_scheduler_gid { get; set; }
-            public string in_ip_addr { get; set; } = "localhost";
+            public string in_ip_addr { get; set; }
 
         }
 
