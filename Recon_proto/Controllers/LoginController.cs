@@ -271,7 +271,7 @@ namespace Recon_proto.Controllers
 				_configuration.GetSection("AppSettings")["role_code"] = "";
 				_configuration.GetSection("AppSettings")["lastlogin"] = "";
 				_configuration.GetSection("AppSettings")["ipAddress"] = "";
-				return this.RedirectToAction("Login", "Login");
+				return Redirect("~/Login/Login");
 			}
 			catch (Exception ex)
 			{

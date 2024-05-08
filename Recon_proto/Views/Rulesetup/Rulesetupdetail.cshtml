@@ -1740,8 +1740,36 @@
 		source_field_desc_list = cmbsourcefield();
 		comparison_field_desc_list = cmbsourcefield();
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+		$(function () {
+			$('#grid_rulecondition').on('click', '.chkbx1', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_rulecondition').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			})
+		});
+		$(function () {
+			$('#grid_rulecondition').on('click', '.chkbx2', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_rulecondition').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			})
+		});
 	}
-
+	
 	function OnEdit(e) {
 		try {
 			setDefaultValues(e);
@@ -1750,9 +1778,7 @@
 			javascript_log4j_root(arguments.callee.name, err);
 		}
 	}
-	function color() {
-		$("#grid_rulecondition").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
-	}
+	
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		debugger;
 		var arr = [];
@@ -1858,34 +1884,7 @@
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-	$(function () {
-		$('#grid_rulecondition').on('click', '.chkbx1', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_rulecondition').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	})
-	$(function () {
-		$('#grid_rulecondition').on('click', '.chkbx2', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_rulecondition').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('close_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('close_parentheses_flag', 'N');
-			}
-		})
-	})
+	
 	function saverulecondition() {
 		debugger;
 		try {
@@ -2208,7 +2207,34 @@
 			editable: true,
 		});
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
-
+		$(function () {
+			$('#grid_sourceidentifier').on('click', '.chkbx3', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_sourceidentifier').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			})
+		});
+		$(function () {
+			$('#grid_sourceidentifier').on('click', '.chkbx4', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_sourceidentifier').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			})
+		});
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
@@ -2236,34 +2262,7 @@
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-	$(function () {
-		$('#grid_sourceidentifier').on('click', '.chkbx3', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_sourceidentifier').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	})
-	$(function () {
-		$('#grid_sourceidentifier').on('click', '.chkbx4', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_sourceidentifier').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('close_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('close_parentheses_flag', 'N');
-			}
-		})
-	})
+	
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -2516,6 +2515,34 @@
 		filter_field_list = cmbsourcefield();
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 
+		$(function () {
+			$('#grid_comparisionidentifier').on('click', '.chkbx5', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_comparisionidentifier').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			})
+		});
+		$(function () {
+			$('#grid_comparisionidentifier').on('click', '.chkbx6', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_comparisionidentifier').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			})
+		});
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
@@ -2542,34 +2569,7 @@
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-	$(function () {
-		$('#grid_comparisionidentifier').on('click', '.chkbx5', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_comparisionidentifier').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	})
-	$(function () {
-		$('#grid_comparisionidentifier').on('click', '.chkbx6', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_comparisionidentifier').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('close_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('close_parentheses_flag', 'N');
-			}
-		})
-	})
+	
 	function combo_filter_field1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
