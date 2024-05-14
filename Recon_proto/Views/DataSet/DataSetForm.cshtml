@@ -10,13 +10,16 @@
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
 		}
+
 		.error_show {
 			color: red;
 			margin-left: 10px;
 		}
+
 		.k-grid-filter.k-state-active {
 			background-color: initial !important;
 		}
+
 		.k-grid.k-widget {
 			height: 360px;
 		}
@@ -28,6 +31,7 @@
 		.k-grid-content {
 			overflow-x: hidden;
 		}
+
 		.k-grid-header th.k-header > .k-link {
 			width: 100px;
 		}
@@ -221,7 +225,7 @@
 			$("#fieldlength").prop('disabled', true);
 			$("#fieldPrecision").prop('disabled', true);
 			$("#fieldscale").prop('disabled', true);
-		}else {
+		} else {
 			$("#fielddataset").show();
 			$("#numeric").hide();
 			$("#fieldlength").prop('disabled', false);
@@ -386,6 +390,7 @@
 							precision_length: { type: "string" },
 							scale_length: { type: "string" },
 							field_mandatory: { type: "string" },
+							dataset_table_field: { type: "string" },
 							In_mode_flag: { type: "string", defaultValue: "I" }
 						}
 					}
@@ -398,7 +403,7 @@
 				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
 				if ($("#txtmode").val() == "View") {
-				$(".k-grid-edit").hide();
+					$(".k-grid-edit").hide();
 					$(".k-grid-delete").hide();
 				}
 			},
@@ -477,7 +482,12 @@
 				title: "Mandatory",
 				width: 100,
 			},
-
+			{
+				field: "dataset_table_field",
+				title: "dataset_table_field",
+				width: 100,
+				hidden: true,
+			},
 			{
 				field: "In_mode_flag",
 				title: "Mode",
@@ -494,7 +504,7 @@
 			var FieldType = $("#cmbFieldType").val();
 			var fieldlength = '0';
 			if (FieldType != "NUMERIC") {
-			fieldlength = $("#fieldlength").val() ? $("#fieldlength").val() : '0';
+				fieldlength = $("#fieldlength").val() ? $("#fieldlength").val() : '0';
 			}
 			var dataset_code = $("#txtdatasetcode").val();
 			var datasetdetail_id = $("#datasetdetail_id").val();
@@ -511,7 +521,7 @@
 			}
 			var status = "Y";
 			var mandatory = $("input[name='mandatory']:checked").val();
-			console.log(`data`,{ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory });
+			console.log(`data`, { datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory });
 			$.ajax({
 				type: "POST",
 				url: '../DataSet/Datasetdetail',
@@ -582,7 +592,7 @@
 					saveclone();
 					setTimeout(() => {
 						$("#newdebit").modal('show');
-					}, 500);					
+					}, 500);
 				} else {
 					var dataset_id = $("#datasetgid").val();
 					if (dataset_id > 0) {
@@ -651,7 +661,7 @@
 						}
 					});
 				}
-				
+
 			}
 		}
 	}
@@ -745,10 +755,10 @@
 				type: 'orange',
 				buttons: {
 					confirm: function () {
-						var datasetfield = model.field_name;
+						var datasetfield = model.dataset_table_field;
 						var FieldType = model.field_type;
 						var fieldlength = model.field_length;
-						var dataset_code = model.datasetCode;
+						var dataset_code = $("#txtdatasetcode").val();
 						var action = "DELETE";
 						var action_by = ""
 						var datasetdetail_id = model.datasetfield_gid;
