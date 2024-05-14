@@ -118,7 +118,6 @@
 	});
 
 	function fetchroleaccess() {
-		debugger;
 		var getls_pageList = getlocalStorage("ls_pageList");
 		if ((getls_pageList != "" && getlocalStorage('btn_clk_val') == "Edit" || getlocalStorage('btn_clk_val') == "View")) {
 				var data = getlocalStorage("ls_pageList");
@@ -163,7 +162,6 @@
 	}
 
 	function grid_datasetfield(data) {
-		debugger;
 		var columns = [];
 		var chkval = data;
 		var arr = [];
@@ -326,7 +324,6 @@
 		var view = this.dataSource.view();
 		for (var i = 0; i < view.length; i++) {
 			if (view[i].entries[3] == "Y") {
-				debugger;
 				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Add")
 					.attr("checked", "checked");
 			}
@@ -419,7 +416,6 @@
 		}
 
 		try {
-			debugger;
 			var rolecode = ($("#txtrolecode").val() == '0' || $("#txtrolecode").val() == 0) ? '0' : $("#txtrolecode").val();
 			var rolename = $("#txtrolename").val();
 			var status = 'Y';
@@ -433,7 +429,6 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (res) {
 					if (res) {
-						debugger;
 						var response = JSON.parse(res);
 						if (response[0].out_result == "1") {
 							$("#txtrolecode").val(response[0].in_role_code);
@@ -486,7 +481,6 @@
 				in_active_status: 'Y',
 				in_action_by: txtusername.user_name
 			}
-			debugger;
 			modelArr.push(modelobj);
 		}
 		var displayedDataAsJSON = JSON.stringify(modelArr);

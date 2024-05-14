@@ -51,6 +51,10 @@
 			left:-4px !important;
 		}
 
+		#pie-chart > div > div {
+			height: 128px !important;
+		}
+
 		.amcharts-chart-div > a {
 			display: none !important;
 		}
@@ -104,9 +108,15 @@
 			width: 700px !important;
 			height: 300px !important;
 			top: 180.766px !important;
-			/*left: 120px !important;*/
 			z-index: 10003;
 			left: 300px !important;
+		}
+
+		.char_lab {
+			margin-top: 40px;
+			color: #000;
+			font-size: 16px;
+			font-weight:bold;
 		}
 	</style>
 </head>
@@ -195,26 +205,16 @@
 							<label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span></label>
 						</div>
 					</div>
-					<div class="row" style="display: flex; justify-content: space-evenly;">
-						<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
-							<h5>Auto Match Vs Manual Match</h5>
+					<div class="row" style="display: flex; justify-content: space-evenly; height: 400px;">
+						<div class="col-sm-6 col-xl-5 border" style="text-align:center; height: 321px !important;">
+							<div class="char_lab">Auto Match Vs Manual Match</div>
 							<div id="chart" class="chart" style="height:300px;"></div>
 						</div>
-						<div class="col-sm-6 col-xl-5 border" style="margin-left: 30px !important;margin-bottom: 43px !important;">
-							<h5 style="margin-bottom:25px !important;">Ageing of Exceptions</h5>
+						<div class="col-sm-6 col-xl-5 border" style="text-align:center;  height: 321px !important;">
+							<div class="char_lab" style="margin-bottom:25px !important;">Ageing of Exceptions</div>
 							<div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div>
 						</div>
 					</div>
-					@* <div class="row" style="margin-left:10px;padding-bottom:10px;margin-top: -25px;">
-					<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
-					<h5 style="text-align:center;font-weight:600;display:block;">Auto Match Vs Manual Match</h5>
-					<center><div id="chart" class="chart" style="height:300px;"></div></center>
-					</div>
-					<div class="col-md-6 border" style="width: 534px;margin: 44px 0px;">
-					<h5 style="text-align: center;font-weight:600;">Ageing of Exceptions</h5>
-					<center><div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div></center>
-					</div>
-					</div>*@
 				</div>
 			</div>
 		</div>
@@ -226,11 +226,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
-
 		kendodate_format();
-		//getdashboarddetails();
-		//recon name
-
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
@@ -409,8 +405,6 @@
 	})(jQuery);
 
 	function onSelect(e) {
-		debugger;
-
 		var cbs = document.getElementsByName("cb");
 		var checkboxes = document.getElementsByTagName('input');
 		var ddl = $("#ReconName_id").data("kendoDropDownList");
@@ -444,8 +438,6 @@
 	}
 
 	function multiselect() {
-		debugger;
-		// var dataItem = this.dataItem(e.item);
 		var ddl = $("#ReconName_id").data("kendoDropDownList");
 		var isAllChecked = $('#cb').prop("checked");
 		var cbs = document.getElementsByName("cb");
@@ -462,34 +454,25 @@
 
 		if (list.length == 0) {
 			display = "-- SelectAll --";
-
 			$("#ReconAttr").html("Recon - All");
 		}
 		else {
-
 			display = list.join(", ");
 			$("#ReconAttr").html("Recon - " + display + "");
 		}
-
 		ddl.text(display);
 
 	}
 
 
 	function subtractMonths(date, months) {
-		debugger;
 		date.setMonth(date.getMonth() - months);
 		return date;
 	}
 	$(document).ready(function () {
 		call();
-		debugger;
 		$("#navhead").text("Dashboard");
-		//drawVisualization();
-		//drawChart1([]);
 		$(".accordion_head").click(function () {
-			debugger;
-
 			if ($(this).next(".accordion_body").is(':visible')) {
 				$(this).next(".accordion_body").slideUp(300);
 				$(this).children(".plusminus").text('+');
@@ -503,7 +486,6 @@
 
 
 	function call() {
-		debugger;
 		$(".accordion_body").slideUp(300)
 		$(".plusminus").text('+');
 	}
@@ -514,15 +496,10 @@
 	}
 
 	function drawVisualization(system, manual) {
-
-		debugger;
-
 		google.charts.load('current', {
 			callback: function () {
 				var manual_ko_count;
 				var system_ko_count;
-
-				//  var tags = dataone.objcat_lst;
 				var tags = dataone.objlist;
 				var opt1 = [];
 				var opt2 = [];
@@ -539,30 +516,21 @@
 						['System', { v: system_ko_count }]
 					]),
 					{
-						height: 240,
-						// legend: { 'position': 'right', 'alignment': 'end' },
+						fontSize: 13,
+						fontWeight: 'bold',
+						height: 230,
 						legend: { position: 'bottom' },
 
 						pieSliceText: 'value',
-						//sliceVisibilityThreshold: 0.0000000000000001,
 						sliceVisibilityThreshold: 0,
-						//   title: 'Auto Match Vs Manual Match',
 
-						//titlePosition: center,
 						titleTextStyle: {
 							bold: true,
-							//  italic: true,
-							fontSize: 14,
-
-
 						},
 
 						tooltip: {
-							//showColorCode: true,
-							//text: 'value',
 							trigger: 'selection'
 						},
-						//width: 525
 					}
 				);
 			},
@@ -572,12 +540,8 @@
 	}
 
 	function drawChart1(arraytags) {
-		debugger;
 		google.charts.load('current', {
 			callback: function () {
-
-				// var tags = [{ aging_desc: "0 - 5 Days", excp_count: 0 }, { aging_desc: "6 - 15 Days", excp_count: 0 },
-				// { aging_desc: "16 - 30 Days", excp_count: 43745 }, { aging_desc: "31 - 60 Days", excp_count: 1212 }, { aging_desc: "> 60 Days", excp_count: 1300 }];
 				var tags = arraytags;
 				var opt1 = [];
 				var opt2 = [];
@@ -599,27 +563,19 @@
 					google.visualization.arrayToDataTable(opt2),
 
 					{
-						height: 240,
-						//legend: { 'position': 'right', 'alignment': 'end' },
+						fontSize: 13,
+						fontWeight: 'bold',
+						height: 230,
 						legend: { position: 'bottom' },
 						floating: true,
 						pieSliceText: 'value',
-						//sliceVisibilityThreshold: 0.0000000000000001,
 						sliceVisibilityThreshold: 0,
-						//  title: 'Ageing of Exceptions',
 						titleTextStyle: {
 							bold: true,
-							//  italic: true,
-							fontSize: 14,
-
-
 						},
 						tooltip: {
-							//showColorCode: true,
-							//text: 'value',
 							trigger: 'selection'
 						},
-						//width: 525
 					}
 				);
 			},
@@ -636,17 +592,6 @@
 		var period_to = $("#period_to").val();
 		var ts1 = period_to.split("/");
 		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-
-		//var Config_MetricType = $("#cmbreconname").data("kendoDropDownList");
-		//var reconarray = Config_MetricType.dataSource.data();
-		//var cbs = document.getElementsByName("cb");
-		//for (var i = 0; i < cbs.length; i++) {
-		//	if (cbs[i].checked) {
-		//		var item = reconarray[i].value;
-		//		Attribid.push(item);
-		//	}
-		//}
-		//arrstring = Attribid.join(", ");
 		var data = {};
 		data.in_recon_code = $("#cmbreconname").val();
 		data.in_period_from = pr;
@@ -658,8 +603,6 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
-
 				var ko_count = 0;
 				var excp_count = 0;
 				var ko_percentage = 0.00;
@@ -670,18 +613,15 @@
 
 				if (response != null) {
 					var data = JSON.parse(response);
-
 					tran_count = data.DataSet1[0]["tran_count"];
 					ko_count = data.DataSet1[0]["ko_count"];
 					excp_count = data.DataSet1[0]["excp_count"];
 					ko_percentage = (ko_count / tran_count) * 100.00;
 					excp_percentage = (excp_count / tran_count) * 100.00;
-
 					if (tran_count > 0) {
 						ko_txt = " (" + ko_percentage.toFixed(2) + " %)";
 						excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
 					}
-
 					$("#recon_count").text(data.DataSet1[0]["recon_count"]);
 					$("#acc_count").text(data.DataSet1[0]["dataset_count"]);
 					$("#tran_count").text(data.DataSet1[0]["tran_count"]);
@@ -696,17 +636,13 @@
 					var man_ko_count = data.DataSet2[0]["manual_ko_count"];
 					drawVisualization(sys_ko_count, man_ko_count);
 					var tags = [];
-
-					// Assuming DataSet3 is an array
 					for (var i = 0; i < data.DataSet3.length; i++) {
 						tags.push({
 							aging_desc: data.DataSet3[i]["aging_desc"],
 							excp_count: data.DataSet3[i]["excp_count"]
 						});
 					}
-
 					drawChart1(tags);
-
 				}
 			},
 			error: function (er) {

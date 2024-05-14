@@ -684,7 +684,6 @@
 		});
 	}
 	function load() {
-		debugger;
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			if ($("#reconcode").val() == "") {
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -1089,7 +1088,6 @@
 		}
 	}
 	function detailfetch(reconcode) {
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Reconheaderfetch',
@@ -1097,7 +1095,6 @@
 			data: JSON.stringify({ in_recon_code: reconcode }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				if (response != " ") {
 					var res = JSON.parse(response);
 					$("#reconcode").val(res.ReconHeader[0].recon_code);
@@ -2138,7 +2135,6 @@
 		});
 	}
 	function myDeletedatamapping() {
-		debugger;
 		var grid = $("#grid1").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		$.confirm({
@@ -2151,7 +2147,6 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					debugger;
 					var reconcode = model.entries[2];
 					var Reconfieldname = model.entries[6];
 					var displayorder = parseInt(model.entries[5]);
@@ -2202,7 +2197,6 @@
 		});
 	}
 	function myDeleteJsdatasetmapping() {
-		debugger;
 		$("#Datasetmappingform").modal('show');
 		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
@@ -2518,7 +2512,6 @@
 	}
 
 	function gridruleMapping(data) {
-		debugger;
 		$("#grid_rule").kendoGrid({
 			dataSource: {
 				data: data,

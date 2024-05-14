@@ -101,7 +101,6 @@
 		localStorage.setItem(key, JSON.stringify(value));
 	}
 	function validation() {
-		debugger;
 		var msg = "";
 		if ($("#txtusername").val() != "") {
 
@@ -123,7 +122,6 @@
 	}
 
 	function loginvalidation() {
-		debugger;
 		var UserName = $("#txtusername").val();
 		var Password = $("#txtpwd").val();
 
@@ -152,7 +150,6 @@
 			}),
 			contentType: 'application/json; charset=utf-8',
 			success: function (data) {
-				debugger;
 				var response = JSON.parse(data);
 				if (response[0].user_status == 'N' && response[0].msg !== "Login success !") {
 					var id = response[0].user_gid;

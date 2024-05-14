@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
+using System.IO;
+using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
@@ -293,10 +295,10 @@ namespace Recon_proto.Controllers
 						var bytes = new byte[data.Length];
 						data.Read(bytes, 0, bytes.Length);
 						var responses = new FileContentResult(bytes, "application/octet-stream");
-						var fileName = jobid.ToString() + ".zip";
+						var fileName = file_name.ToString() + ".zip";
 						var contentDisposition = new ContentDisposition
 						{
-							FileName = jobid,
+							FileName = file_name,
 							Inline = true,
 						};
 						Response.Clear();
@@ -319,9 +321,24 @@ namespace Recon_proto.Controllers
 						{
 							return NotFound(); 
 						}
-                        var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-						string mimeType = "application/octet-stream"; 
-						return File(fileStream, mimeType, fileName);
+						var zipName = $"{file_name}.zip";
+						using (var memoryStream = new MemoryStream())
+						{
+							using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+							{
+								var fileName1 = Path.GetFileName(filePath);
+								var entry = archive.CreateEntry(fileName1, CompressionLevel.Optimal);
+
+								using (var entryStream = entry.Open())
+								using (var fileStream = System.IO.File.OpenRead(filePath))
+								{
+									fileStream.CopyTo(entryStream);
+								}
+							}
+
+							memoryStream.Seek(0, SeekOrigin.Begin);
+							return File(memoryStream.ToArray(), "application/zip", zipName);
+						}
 					}
 				}
             }
@@ -346,8 +363,49 @@ namespace Recon_proto.Controllers
             public string? out_result { get; set; }
         }
 
-        #endregion
+		#endregion
 
-    }
+
+		public (string fileType, byte[] archiveData, string archiveName) DownloadFiles(string subDirectory, string y)
+		{
+			string jobid = y;
+			int filelength = jobid.Length;
+			var zipName = $"archive-{DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss")}.zip";
+			var files = Directory.GetFiles(subDirectory).ToList();
+			string supportedExtensions = String.Concat(jobid.ToString(), ".csv,", jobid.ToString(), "_*.*");
+
+			List<string> myList = new List<string>();
+
+			foreach (string file in Directory.GetFiles(subDirectory, String.Concat(jobid, ".*"), SearchOption.AllDirectories).Union(
+									Directory.GetFiles(subDirectory, String.Concat(jobid, "_*.*"), SearchOption.AllDirectories)))
+			{
+
+				var fil = Path.GetFileName(file);
+				string filess = file;
+				myList.Add(filess);
+
+			}
+
+
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    myList.ForEach(file =>
+                    {
+                        var filename = Path.GetFileName(file);
+                        var theFile = archive.CreateEntry(filename);
+                        using (var streamWriter = new StreamWriter(theFile.Open()))
+                        {
+                            streamWriter.Write(System.IO.File.ReadAllText(file));
+                        }
+                    });
+                }
+                return ("application/zip", memoryStream.ToArray(), zipName);
+            }
+
+		}
+
+	}
 }
 

@@ -10,6 +10,33 @@
 	<title>@ViewBag.title</title>
 	<link rel="icon" href="~/Content/images/title.png" type="image/x-icon">
 	<style type="text/css">
+
+		.form-select {
+			color: #000 !important;
+		}
+
+		.form-control {
+			color: #000 !important;
+		}
+
+		.k-grid table {
+			color: #000 !important;
+		}
+
+		.k-input {
+			color: #000 !important;
+		}
+
+		.nav-pills .nav-link:not(.active, .disabled) {
+			color: #000 !important;
+		}
+
+		.k-textbox > input, .k-autocomplete .k-input, .k-picker-wrap .k-input, .k-numeric-wrap .k-input, .k-dropdown-wrap .k-input, .k-selectbox .k-input{
+			height: 2em !important;
+			font-size: 13px !important;
+			line-height: 17px !important;
+		}
+
 		.k-grid-filter.k-state-active {
 			background-color: #574edf !important;
 		}
@@ -572,7 +599,6 @@
 			hideProgress();
 		})
 		$("#collapse_div").click(function () {
-			debugger;
 			if ($('#collapse_org').css('display') == 'none') {
 				$('#collapse_org').show();
 				$('#collapse_img2').css('display', 'block');
@@ -791,8 +817,6 @@
 
 		//mandatory for grid combo
 		function combo_editor_man(container, cmbid, datasource, datafield, code_datafield, grid_id) {
-
-			debugger;
 			$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 				autoBind: false,
 				filter: "contains",

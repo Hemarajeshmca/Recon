@@ -129,7 +129,6 @@
 			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (data) {
-				debugger;
 				var res = JSON.parse(data);
 				$("#report_param").empty();
 				$("#report_param").append($('<option>', {
@@ -161,7 +160,6 @@
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				constraintData = response;
 				//var categoriesData = @Html.Raw(Json.Serialize(ViewBag.Categories));
 
@@ -179,7 +177,6 @@
 		$("#report_param").val("");
 	}
 	function getreportlist() {
-		debugger;
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -191,7 +188,6 @@
 			data: JSON.stringify({}),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				$("#report_name").empty();
 				$("#report_name").append($('<option>', {
 					value: "",
@@ -252,7 +248,6 @@
 
 
 	function griddata(griddata) {
-		debugger;
 		var dataSource = new kendo.data.DataSource({
 			schema: {
 				model: {
@@ -314,8 +309,6 @@
 		//var grid = $("#grid").data("kendoGrid");
 		//grid.addRow();
 		$("#addRowBtn").on("click", function () {
-			debugger;
-
 			var grid = $("#grid").data("kendoGrid");
 			grid.addRow();
 		});
@@ -333,7 +326,6 @@
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				constraintData1 = response;
 				initializeKendoGrid(constraintData1);
 
@@ -409,11 +401,8 @@
 
 	function addbtn() {
 
-		debugger;
 		clicks += 1;
 		// document.getElementById("add").innerHTML = clicks;
-		debugger;
-
 		$("#submissionTable").show();
 		$('<tr id="tablerow' + counter + '" style="margin-left:90px" ><td>' +
 			'<input type="checkbox"  id="chkval' + counter + '" style="margin-left:8px;width:22px;  name="checkvalof[' + counter + ']"  value="Y">' +
@@ -454,7 +443,6 @@
 			'</tr>').appendTo('#submissionTable');
 
 
-		debugger;
 
 		var indexval = counter;
 		$('#contselect' + indexval).append('<option value="' + "Is equal to" + '">' + "Is equal to" + '</option>');
@@ -483,7 +471,6 @@
 	}
 
 	function removeTr(index) {
-		debugger;
 		if (counter > 1) {
 			$('#tablerow' + index).remove();
 			counter -= 1;
@@ -786,7 +773,6 @@
 				//    }
 				//},
 				//error: function (er) {
-				//    debugger;
 				//    alert(er)
 				//    console.log(er)
 				//}
@@ -826,7 +812,6 @@
 	}
 
 	function downloadJob(val) {
-		debugger;
 		// window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + val + '';
 		var data = {};
 		data.jobid = val;
@@ -838,7 +823,6 @@
 			data: JSON.stringify(val),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				var res = JSON.parse(response);
 			}
 		});

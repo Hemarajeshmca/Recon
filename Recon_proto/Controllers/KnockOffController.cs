@@ -97,7 +97,6 @@ namespace Recon_proto.Controllers
 				{
 					string Urlcon = "Process/";
 					client.BaseAddress = new Uri(urlstring + Urlcon);
-					//client.BaseAddress = new Uri("https://localhost:44348/api/Process/");
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
@@ -112,7 +111,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "previewRulebase");
+				objcom.errorlog(ex.Message, "runreconrule");
 				return Json(ex.Message);
 			}
 		}

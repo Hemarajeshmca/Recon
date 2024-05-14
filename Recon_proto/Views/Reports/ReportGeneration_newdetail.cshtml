@@ -1038,49 +1038,49 @@
 		};
 
 		if (data.in_report_param && data.in_report_condition) {
-			$.alert({
-				title: 'Recon',
-				content: "Report Generated, Please check the Job Status in Utility",
-				type: 'green',
-			});
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Report Generated, Please check the Job Status in Utility",
+			//	type: 'green',
+			//});
 			$.ajax({
 				type: "POST",
 				url: '../Reports/generatedynamicreport',
 				dataType: 'json',
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
-				//success: function (response) {
-				//    var res = JSON.parse(response);
+				success: function (response) {
+				    var res = JSON.parse(response);
 
-				//    if (res.length > 0) {
-				//        var data = res[0];
-				//        if (data.out_result != '0') {
-				//            $.alert({
-				//                title: 'Recon',
-				//                content: data.out_msg,
-				//                type: 'green',
-				//            });
+				    if (res.length > 0) {
+				        var data = res[0];
+				        if (data.out_result != '0') {
+				            $.alert({
+				                title: 'Recon',
+				                content: data.out_msg,
+				                type: 'green',
+				            });
 
-				//        } else {
-				//            $.alert({
-				//                title: 'Recon',
-				//                content: data.out_msg,
-				//                type: 'red',
-				//            });
-				//        }
-				//    } else {
-				//        $.alert({
-				//            title: 'Recon',
-				//            content: "Something Went Wrong ..!",
-				//            type: 'red',
-				//        });
-				//    }
-				//},
-				//error: function (er) {
+				        } else {
+				            $.alert({
+				                title: 'Recon',
+				                content: data.out_msg,
+				                type: 'red',
+				            });
+				        }
+				    } else {
+				        $.alert({
+				            title: 'Recon',
+				            content: "Something Went Wrong ..!",
+				            type: 'red',
+				        });
+				    }
+				},
+				error: function (er) {
 
-				//    alert(er)
-				//    console.log(er)
-				//}
+				    alert(er)
+				    console.log(er)
+				}
 			});
 						hideProgress();
 		}
@@ -1256,6 +1256,77 @@
 			});
 			return false;
 		}
+
+		var grid = $("#grid_tempfilter").data("kendoGrid");
+		var objpplmapupdlist = [];
+		var rpt_cond = "";
+		var value = "";
+		var open_braces = "";
+		var close_braces = "";
+		var joins = "";
+		var joins1 = "";
+
+		for (var i = 0; i < grid._data.length; i++) {
+			value = "";
+			open_braces = "";
+			close_braces = "";
+			joins = "";
+			joins1 = "";
+
+			if (i == 0) {
+				joins1 = 'AND ';
+			}
+
+			if (i == grid._data.length - 1) {
+				joins = " ";
+			}
+			else {
+				if (grid._data[i].join_condition) {
+					joins = grid._data[i].join_condition + " ";
+				} else {
+					joins = 'AND '
+				}
+			}
+
+			// close braces assigning
+			if (grid._data[i].close_parentheses_flag == 'Y') {
+				close_braces = " ) ";
+			}
+
+			// open braces assigning
+			if (grid._data[i].open_parentheses_flag == 'Y') {
+				open_braces = "(";
+			}
+
+			// Condition based value assigning
+			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+				value = " != '" + grid._data[i].filter_value + "'";
+			}
+			else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
+				value = " like '%" + grid._data[i].filter_value + "'";
+			}
+			else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
+				value = " like '" + grid._data[i].filter_value + "%'";
+			}
+			else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
+				value = " = '" + grid._data[i].filter_value + "'";
+			} else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
+				value = " like '%" + grid._data[i].filter_value + "%'";
+			} else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
+				value = " > '" + grid._data[i].filter_value + "'";
+			} else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
+				value = " < '" + grid._data[i].filter_value + "'";
+			} else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
+				value = " <= '" + grid._data[i].filter_value + "'";
+			} else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
+				value = " >= '" + grid._data[i].filter_value + "'";
+			} else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
+				value = " not like '%" + grid._data[i].filter_value + "%'";
+			}
+
+			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
+		}
+
 		$("#Dynamic_grid").show();
 		$("#framevalue").show();
 		$(".page_bg").show();
@@ -1268,6 +1339,7 @@
 		data.in_page_no = pageno;
 		data.in_page_size = pagesize;
 		data.in_tot_records = result;
+		data.in_condition = rpt_cond;
 		data.in_reporttemplate_code = template_code;
 		data.in_recon_code = selected_template.recon_code;
 		data.in_report_code = selected_template.report_code;
@@ -1275,11 +1347,9 @@
 			type: "POST",
 			url: '../Reports/getPageNoReport',
 			dataType: "json",
-			async: false,
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (Data1) {
-
 				if (Data1 != '' && Data1 != null && Data1 != "{}" && Data1 != "[]") {
 					var columns = [];
 					var chkval = JSON.parse(Data1);
@@ -1591,7 +1661,6 @@
 		// window_open();
 	}
 	//function window_open() {
-	//    debugger
 	//    var table_name = "recon_trn_vtranrecon"
 	//    var grid = $("#processGrid").data("kendoGrid");
 	//    var model = grid.dataItem($(event.target).closest("tr"));
@@ -1615,7 +1684,6 @@
 	//            });
 	//            dialog.title("Manual Match - Rule Based");
 	//            dialog.bind("open", window_open);
-	//            debugger
 	//            $("#exportExcel1").show();
 	//            var columns = [];
 	//            var chkval = JSON.parse(Data1);
@@ -1806,46 +1874,46 @@
 			"in_report_name": concatName,
 		};
 		if (data.in_report_param && rpt_cond) {
-			$.alert({
-				title: 'Recon',
-				content: "Report Generated, Please check the Job Status in Utility",
-				type: 'green',
-			});
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Report Generated, Please check the Job Status in Utility",
+			//	type: 'green',
+			//});
 			$.ajax({
 				type: "POST",
 				url: '../Reports/generateReportXLSXdynamic',
 				dataType: 'json',
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
-				//success: function (response) {
-				//    var res = JSON.parse(response);
-				//    if (res.length > 0) {
-				//        var data = res[0];
-				//        if (data.out_result != '0') {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: data.out_msg,
-				//				type: 'green',
-				//			});
-				//        } else {
-				//            $.alert({
-				//                title: 'Recon',
-				//                content: data.out_msg,
-				//                type: 'red',
-				//            });
-				//        }
-				//    } else {
-				//        $.alert({
-				//            title: 'Recon',
-				//            content: "Something Went Wrong ..!",
-				//            type: 'red',
-				//        });
-				//    }
-				//},
-				//error: function (er) {
-				//    alert(er)
-				//    console.log(er)
-				//}
+				success: function (response) {
+				    var res = JSON.parse(response);
+				    if (res.length > 0) {
+				        var data = res[0];
+				        if (data.out_result != '0') {
+							$.alert({
+								title: 'Recon',
+								content: data.out_msg,
+								type: 'green',
+							});
+				        } else {
+				            $.alert({
+				                title: 'Recon',
+				                content: data.out_msg,
+				                type: 'red',
+				            });
+				        }
+				    } else {
+				        $.alert({
+				            title: 'Recon',
+				            content: "Something Went Wrong ..!",
+				            type: 'red',
+				        });
+				    }
+				},
+				error: function (er) {
+				    alert(er)
+				    console.log(er)
+				}
 			});
 			hideProgress();
 		}
