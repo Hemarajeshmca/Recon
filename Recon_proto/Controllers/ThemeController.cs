@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
+using static Recon_proto.Controllers.KnockOffController;
 
 namespace Recon_proto.Controllers
 {
@@ -630,5 +631,50 @@ namespace Recon_proto.Controllers
 
 		}
 		#endregion
+
+		#region runtheme
+		[HttpPost]
+		public JsonResult runtheme([FromBody] runthemeModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			DataTable result1 = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "theme/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("runrecontheme", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "runrecontheme");
+				return Json(ex.Message);
+			}
+		}
+
+		public class runthemeModel
+		{
+			public String? in_recon_code { get; set; }
+			public String? in_period_from { get; set; }
+			public String? in_period_to { get; set; }
+			public String? in_automatch_flag { get; set; }
+		}
+
+		#endregion
+
 	}
 }

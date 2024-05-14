@@ -133,6 +133,9 @@
 						<button type="button" onclick="showPreview()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
 							Run Auto Match
 						</button> &nbsp;&nbsp;&nbsp;
+						<button type="button" onclick="runTheme()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
+							Run Theme
+						</button> &nbsp;&nbsp;&nbsp;
 					</div>
 				</div>
 
@@ -360,10 +363,10 @@
 				</div>
 				<div class="row" style="margin-top: -27px;margin-bottom: -12px;">
 					<div class="col-sm-4"> </div>
-					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
+					<div class="col-sm-6" style="margin-bottom:30px;float: right;">
 						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%; cursor:pointer;" onclick="rr1()">Close</button></center>
 					</div>
-					<div class="col-sm-4"> </div>
+					<div class="col-sm-2"> </div>
 				</div>
 			</div>
 		</div>
@@ -385,7 +388,6 @@
 	});
 
 	function getreconlist() {
-		debugger;
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
@@ -399,7 +401,6 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				var res = JSON.parse(response);
 				$("#reconname").empty();
 				$("#reconname").append($('<option>', {
@@ -470,7 +471,6 @@
 	}
 
 	function grid_dataset(data) {
-		debugger;
 		$("#dataset_grid").kendoGrid({
 			dataSource: {
 				data: data,
@@ -700,7 +700,6 @@
 		var in_recon_code = $("#reconname").val();
 		var rulepreview = $("#prviewon").val();
 		var period_from = $("#initiated_from").val();
-		//var period_from = "1999/01/01";
 		var ts = period_from.split("/");
 		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
 		var period_to = $("#initiated_to").val();
@@ -780,7 +779,7 @@
 				type: 'red',
 			});
 		}
-		hideProgress();
+		//hideProgress();
 	}
 
 	function rr1() {
@@ -789,7 +788,6 @@
 	}
 
 	function openInfoModel() {
-		debugger;
 		var grid = $("#grid_preview").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('rule_code').innerHTML = selectedItem.rule_code;
@@ -805,14 +803,12 @@
 	}
 
 	function openDataModel() {
-		debugger;
 		var grid = $("#dataset_grid").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		showDatacountGrid(selectedItem.dataset_code);
 	}
 
 	function showDatacountGrid(dataset_code) {
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../KnockOff/recondatasetinfo',
@@ -821,7 +817,6 @@
 			data: JSON.stringify({ in_recon_code: $("#reconname").val(), in_dataset_code: dataset_code, in_automatch_flag: 'Y' }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				if (response) {
 					var res = JSON.parse(response)
 					if (res.Table.length > 0) {
@@ -839,7 +834,6 @@
 
 			},
 			error: function (er) {
-				debugger;
 				alert(er)
 				console.log(er)
 			}
@@ -847,7 +841,6 @@
 	}
 
 	function loadGrid(data) {
-		debugger;
 		var grid = $("#dataset_grid").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('dataset_code').innerHTML = selectedItem.dataset_code;
@@ -866,74 +859,83 @@
 			document.getElementById('credit_after_value').innerHTML = data[0]["Cr Value After"];
 		}
 		$("#infoDatamodal").modal("show");
-		//var columns = [];
-		//var rows = [];
-		//for (var key in data[0]) {
-		//    var field = key.replace(/\s+/g, '_');
-		//    var propType = typeof data[0][key];
-		//    var bool = false;
-		//    var txtalign = "right";
-		//    var widthval = "";
-		//    if (field == "forecolor" || field == "backcolor") {
-		//        bool = true;
-		//    } if (field == "Row_Labels") {
-		//        txtalign = "left";
-		//        widthval = 250;
-		//    } else {
-		//        txtalign = "right"
-		//        widthval: 100;
-		//    }
-		//    columns.push({
-		//        field: field,
-		//        title: key,
-		//        type: propType,
-		//        attributes: { style: "text-align:" + txtalign },
-		//        filterable: false,
-		//        hidden: bool,
-		//        width: 150
-		//    });
-		//}
-		//$.each(data, function (i, e) {
-		//    var entryObject = {};
-		//    for (var key in e) {
-		//        var field = key.replace(/\s+/g, '_');
-		//        entryObject[field] = e[key];
-		//    }
-		//    rows.push(entryObject);
-		//});
-
-		//var configuration = {
-		//    dataSource: {
-		//        data: rows,
-		//    },
-		//    height: 80,
-		//    navigatable: false,
-		//    groupable: false,
-		//    editable: false,
-		//    sortable: false,
-		//    scrollable: true,
-		//    attributes: { style: "text-align: center;" },
-		//    filterable: false,
-		//    pageable: false,
-		//    resizable: true,
-		//    persistSelection: true,
-		//    selectable: true,
-		//    columns: columns,
-		//    dataBound: function (e) {
-		//        var grid = this; // "this" refers to the Kendo Grid
-
-		//        grid.tbody.find("tr").each(function (index) {
-		//            var rowData = grid.dataItem(this); // Get the data item for the current row
-		//            $(this).css("background-color", rowData.backcolor);
-		//            $(this).css("color", rowData.forecolor);
-		//            //}
-		//        });
-		//    }
-		//};
-
-		//$("#example").remove();
-		//$('#dataset_grid_model').append('<div id="example" style="position:relative;" class="k-content"><table id="dataset_grid_model" style="position:relative;overflow:scroll;width:100%"></table></div>');
-		//var timeEditGrid = $("#dataset_grid_model").kendoGrid(configuration).data("kendoGrid");
 	}
 
+	function runTheme() {
+		var in_recon_code = $("#reconname").val();
+		var rulepreview = $("#prviewon").val();
+		var period_from = $("#initiated_from").val();
+		var ts = period_from.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		var period_to = $("#initiated_to").val();
+		var ts1 = period_to.split("/");
+		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+		var grid = $("#grid_preview").data("kendoGrid");
+		var dataItems = grid.dataSource.data();
+		var firstColumnValues = "";
+		for (var i = 0; i < dataItems.length; i++) {
+			var firstColumnValue = dataItems[i].rule_code + "#";
+			firstColumnValues = firstColumnValues + firstColumnValue;
+		}
+		if (firstColumnValues != "") {
+			firstColumnValues = firstColumnValues.slice(0, -1);
+		}
+		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+
+		if (in_recon_code && period_from && period_to && firstColumnValues) {
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Job Initated, Please check the Job Status in Utility",
+			//	type: 'green',
+			//});
+			$.ajax({
+				type: "POST",
+				url: '../theme/runtheme',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_recon_code: in_recon_code,
+					in_period_from: pr,
+					in_period_to: pr1,
+					in_automatch_flag: 'Y',
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
+						var res = JSON.parse(response);
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+				    } else {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong',
+							type: 'red',
+						});
+				    }
+				}
+
+			});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Recon Name',
+				type: 'red',
+			});
+		} else if (!period_to) {
+			$.alert({
+				title: 'Recon',
+				content: 'Date is missing',
+				type: 'red',
+			});
+		} else if (!firstColumnValues) {
+			$.alert({
+				title: 'Recon',
+				content: 'No Rules to Run Theme',
+				type: 'red',
+			});
+		}
+		hideProgress();
+	}
 </script>

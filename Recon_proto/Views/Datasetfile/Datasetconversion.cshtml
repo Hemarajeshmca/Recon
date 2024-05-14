@@ -8,7 +8,11 @@
 	<title></title>
 	<style>
 
-		#grid_dataset .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+		.highlighted-column {
+			color: #000 !important;
+		}
+
+		#grid_dataset .k-grid-header th.k-header > a {
 			color: #fff !important;
 		}
 
@@ -345,10 +349,8 @@
 						$("#gd_dataset").empty();
 						$("#gd_dataset").append("<div id='grid_dataset'></div>");
 					const activeData = response.filter(item => item.active_status == "Y");
-
 						grid_dataset_details(activeData);
-					}
-					else {
+					} else {
 						grid_dataset_details([]);
 					}
 				},
@@ -356,12 +358,13 @@
 					alert(er)
 					console.log(er)
 				}
-
 			});
 	}
 
 	var status_Priority = [];
 	function grid_dataset_details(data) {
+		var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		try {
 			$.each(data, function (index, value) {
 				var flag = false;
@@ -390,18 +393,20 @@
 								last_sync_date: { type: "date" },
 								last_sync_status: { type: "string" },
 								completed_date: { type: "string" },
-								job_remark: { type: "string" }
+								job_remark: { type: "string" },
+								in_user_code: {type: "string"}
 							}
 						},
 						parse: function (data) {
 							$.each(data, function (i, item) {
-								item.last_sync_date = kendo.parseDate(item.last_sync_date, "dd-MM-yyyy hh:mm tt");
+								item.last_sync_date = kendo.parseDate(item.last_sync_date, formatdatetime);
 							});
 							return data;
 						}
 					}
 				},
 				height: 300,
+				edit: OnEdit,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -466,24 +471,34 @@
 						width: 80,
 					},
 					{
+						field: "in_user_code",
+						title: "in_user_code",
+						hidden: true,
+					},
+					{
 						field: "last_sync_date",
 						title: "Last sync Date",
-						format: "{0:dd-MM-yyyy hh:mm tt}",
+						format: formatdatetime1,
 						width: 120,
 						filterable: {
 							ui: "datetimepicker",
-							format: "{0:dd-MM-yyyy hh:mm tt}",
-							operators: {
-								datetime: {
-									eq: "Is equal to",
-									neq: "Is not equal to",
-									gte: "Is after or equal to",
-									gt: "Is after",
-									lte: "Is before or equal to",
-									lt: "Is before",
-								}
-							},
 						},
+						//format: "{0:dd-MM-yyyy hh:mm tt}",
+						//width: 120,
+						//filterable: {
+						//	ui: "datetimepicker",
+						//	format: "{0:dd-MM-yyyy hh:mm tt}",
+						//	operators: {
+						//		datetime: {
+						//			eq: "Is equal to",
+						//			neq: "Is not equal to",
+						//			gte: "Is after or equal to",
+						//			gt: "Is after",
+						//			lte: "Is before or equal to",
+						//			lt: "Is before",
+						//		}
+						//	},
+						//},
 					},
 					{
 						field: "last_sync_status",
@@ -515,6 +530,14 @@
 		}
 	}
 
+	function OnEdit(e) {
+		try {
+			var grid = $("#grid_dataset").data("kendoGrid");
+			grid.table.find("td:last_sync_date").addClass("highlighted-column");
+		} catch {
+		}
+	}
+
 	function validateNextdataset() {
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var checkedrows = $("#dataset_selected:checked", grid.tbody).closest("tr");
@@ -542,10 +565,6 @@
 			});
 		}
 
-	}
-
-	function rowselected(val) {
-		console.log(`val`, $("#dataset_selected").val());
 	}
 
 	function validatePrevdp() {

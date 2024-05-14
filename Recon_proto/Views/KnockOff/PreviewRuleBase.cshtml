@@ -396,7 +396,6 @@
 	});
 
 	function getreconlist() {
-		debugger;
 		var data = {};
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
@@ -411,7 +410,6 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
-				debugger;
 				$("#reconname").empty();
 				$("#reconname").append($('<option>', {
 					value: "",
@@ -443,7 +441,6 @@
 			sessionStorage.setItem("reconname", $("#reconname :selected").text());
 			setcon();
 		}
-		debugger;
 		try {
 			var in_recon_code = $("#reconname").val();
 			//var rulepreview = $("#prviewon").val();
@@ -456,7 +453,6 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
 					var result = JSON.parse(response);
 					if (result.ReconRule.length > 0 && result.ReconDataSet.length > 0) {
 						$("#gd_preview").empty();
@@ -820,7 +816,6 @@
 	}
 
 	function openInfoModel() {
-		debugger;
 		var grid = $("#grid_preview").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('rule_code').innerHTML = selectedItem.rule_code;
@@ -836,14 +831,12 @@
 	}
 
 	function openDataModel() {
-		debugger;
 		var grid = $("#dataset_grid").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		showDatacountGrid(selectedItem.dataset_code);
 	}
 
 	function showDatacountGrid(dataset_code) {
-		debugger;
 		$.ajax({
 			type: "POST",
 			url: '../KnockOff/recondatasetinfo',
@@ -852,7 +845,6 @@
 			data: JSON.stringify({ in_recon_code: $("#reconname").val(), in_dataset_code: dataset_code, in_automatch_flag: 'N' }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				if (response) {
 					var res = JSON.parse(response)
 					if (res.Table.length > 0) {
@@ -875,7 +867,6 @@
 
 			},
 			error: function (er) {
-				debugger;
 				alert(er)
 				console.log(er)
 			}
@@ -883,7 +874,6 @@
 	}
 
 	function loadGrid(data) {
-		debugger;
 		var grid = $("#dataset_grid").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('dataset_code').innerHTML = selectedItem.dataset_code;

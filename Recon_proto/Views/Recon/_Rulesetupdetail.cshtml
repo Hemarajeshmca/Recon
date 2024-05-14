@@ -497,7 +497,6 @@
 <script type="text/javascript">
 
 	function Reconload() {
-		debugger;
 		if (getlocalStorage("rule_details") != undefined) {
 			var data = getlocalStorage("rule_details");
 				//var cat = data.dataset_category;
@@ -964,10 +963,8 @@
 		}
 	}
 	function checkactive() {
-		//debugger;
 		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
 			$("#period_to").val('');
-			//$("#period_to").removeAttr('disabled', true);
 			$("#period_to").prop("disabled", true);
 			$('#period_to').unbind('click');
 		}
@@ -1373,7 +1370,6 @@
 		$("#grid_rulecondition").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
 	}
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-		//debugger;
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
 		var selectedItem = cmb_var.dataItem(cmb_var.select());
@@ -1435,7 +1431,6 @@
 		});
 	}
 	function cmbsourcefield() {
-		//debugger;
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
 		$.ajax({
@@ -1949,7 +1944,6 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					//debugger;
 					if (response != null) {
 						$.alert({
 							title: 'Recon',

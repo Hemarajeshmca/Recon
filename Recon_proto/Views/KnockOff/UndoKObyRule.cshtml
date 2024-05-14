@@ -306,12 +306,9 @@
 			contentType: 'application/json; charset=utf-8',
 			data: JSON.stringify({ in_recon_code: reconcode, in_start_date: pr, in_end_date: pr1 }),
 			success: function (response) {
-				debugger;
 				var result = JSON.parse(response);
 				if (result.Table.length > 0) {
-					debugger;
 					undojob_grid(result.Table);
-					// undorule_grid(result.Table1);
 				}
 				else {
 					undojob_grid([]);

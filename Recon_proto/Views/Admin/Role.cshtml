@@ -146,7 +146,6 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
 				var result = JSON.parse(response);
 				if (result != null) {
 					$("#grid_role").empty();
@@ -257,60 +256,15 @@
 			editable: false,
 
 		});
-		//$("#grid_role").kendoTooltip({
-		//	filter: "td",
-		//	content: function (e) {
-		//		debugger;
-		//		var target = e.target;
-		//		if (target.id === "rolemapping") {
-		//			return target.querySelector('img').getAttribute('alt');
-		//		} else {
-		//			var target = e.target;
-		//			return $(innerHTMLValue).text(); 
-		//		}
-		//	},
-		//});
 	}
 
 	function getSerializedRows() {
 		btn_onClick('Create');
-		//$("#Roleform").modal('show');
 		$("#role_code").val('');
 		$("#role_gid").val(0);
 	}
-	//function getSerializedSelectedRows(mode) {
-	//	try {
-	//		if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
-	//			var items = getlocalStorage("ls_pageList");
-	//			if (items.length == 0) {
-	//				kendoAlert("Please select records");
-	//			}
-	//			else {
-	//				if ($(mode).attr('value') == "edit") {
-	//					if (items.active_status != "N") {
-	//						btn_onClick("Edit");
-	//						//document.location = '../DataSet/DataSetForm';
-	//					}
-	//				}
-	//				else if ($(mode).attr('value') == "view") {
-	//					btn_onClick('View');
-	//					//document.location = "../DataSet/DataSetForm";
-	//				}
-	//				else if ($(mode).attr('value') == "role") {
-	//					btn_onClick('role');
-	//					document.location = "../Admin/Rolemapping";
-	//					//document.location = "../DataSet/DataSetForm";
-	//				}
-
-	//			}
-	//		}
-	//	}
-	//	catch (err) {
-
-	//	}
-	//}
+	
 	function selectRow() {
-		debugger;
 		try {
 			var grid = $("#grid_role").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
@@ -323,7 +277,6 @@
 		}
 	}
 	function saveRole(){
-		debugger;
 		try {
 			var rolecode = $("#role_code").val() ? $("#role_code").val() : '';
 			var rolename = $("#role_name").val();
@@ -338,7 +291,6 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (res) {
 					if(res) {
-						debugger;
 					var response = JSON.parse(res);
 					if (response[0].out_result == "1") {
 						$.alert({
@@ -373,7 +325,6 @@
 	}
 
 	function detailfetch(role_gid){
-		debugger;
 		try {
 			$.ajax({
 				type: "POST",
@@ -385,11 +336,9 @@
 					if (res) {
 						var response = JSON.parse(res);
 						if(response.length > 0) {
-							debugger;
 							$("#role_code").val(response[0].role_code);
 							$("#role_name").val(response[0].role_name);
 							$("#role_gid").val(response[0].role_gid);
-							//$("#Roleform").modal('show');
 						}
 
 						
@@ -493,7 +442,6 @@
 										success: function (response) {
 											var result = JSON.parse(response);
 											var data = result[0];
-											debugger;
 											if (data.out_result == "1") {
 												$.alert({
 													icon: 'fa fa-success',

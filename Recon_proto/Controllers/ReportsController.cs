@@ -696,7 +696,6 @@ namespace Recon_proto.Controllers
                             recon_name1 = recon_name;
                         }
                         var acc_no1 = Table.Rows[0]["source_dataset_name"].ToString();
-                        //  string s2 = Regex.Replace(recon_name, @"[^A-Z]+", String.Empty);
                         var acc_no2 = Table.Rows[0]["target_dataset_name"].ToString();
                         string Acc1date = Table.Rows[0]["source_bal_date"].ToString();
                         string Acc2date = Table.Rows[0]["target_bal_date"].ToString();
@@ -706,8 +705,10 @@ namespace Recon_proto.Controllers
                         Decimal accno2_drtotal = Convert.ToDecimal(Table.Rows[0]["target_dr_total"].ToString());
                         Decimal accno1_crtotal = Convert.ToDecimal(Table.Rows[0]["source_cr_total"].ToString());
                         Decimal accno2_crtotal = Convert.ToDecimal(Table.Rows[0]["target_cr_total"].ToString());
+						Decimal roundoff_count = Convert.ToDecimal(Table.Rows[0]["roundoff_count"].ToString());
+						Decimal roundoff_total = Convert.ToDecimal(Table.Rows[0]["roundoff_count"].ToString());
 
-                        dt = result2.Copy();
+						dt = result2.Copy();
                         dt.Tables.Remove("Table");
 
                         string fileName = acc_no1 + ".xlsx";
@@ -763,6 +764,13 @@ namespace Recon_proto.Controllers
                             ws.Cell("A15").SetValue("Add: Amount credited in bank but not accounted").SetActive();
                             ws.Range("A15:E15").Row(1).Merge();
                             ws.Cell("I15").SetValue(accno1_crtotal).SetActive(); ws.Cell("I15").Style.NumberFormat.Format = "###0.00";
+
+                                if (roundoff_count > 0)
+                                {
+                                    ws.Cell("A16").SetValue("Roundoff Difference (" + roundoff_count + ")").SetActive();
+								ws.Range("A16:E16").Row(1).Merge(); 
+                                ws.Cell("I16").SetValue(roundoff_total).SetActive(); ws.Cell("I16").Style.NumberFormat.Format = "###0.00";
+                                }
 
                             ws.Cell("A17").SetValue("Closing balance as per bank passbook").SetActive();
                             ws.Cell("A17").Style.Font.Bold = true;
@@ -1596,7 +1604,8 @@ namespace Recon_proto.Controllers
             public int? in_rptsession_gid { get; set; }
             public int in_page_no { get; set; }
             public int in_page_size { get; set; }
-            public int in_tot_records { get; set; }
+            public string in_condition { get; set; }
+			public int in_tot_records { get; set; }
             public string in_recon_code { get; set; }
             public string? in_report_code { get; set; }
         }

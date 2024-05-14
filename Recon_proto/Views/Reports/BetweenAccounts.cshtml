@@ -94,7 +94,6 @@
     });
    
     function getreconlist() {
-        debugger;
         var data = {};
         data.in_recontype_code = 'B';
         var Context = data;
@@ -105,7 +104,6 @@
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                debugger;
                 $("#reconname").empty();
                 $("#reconname").append($('<option>', {
                     value: "",
@@ -233,7 +231,6 @@
         }
         catch (err) {
             console.log(err)
-
         }
     }
 
@@ -252,7 +249,6 @@
         var in_tran_date = $("#tran_date").val();
         var ts = in_tran_date.split("/");
         var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        //var date = new Date(pr);
         window.location.href = '@Url.Action("monthendreport", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
 
     }
