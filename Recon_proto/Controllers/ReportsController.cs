@@ -643,8 +643,9 @@ namespace Recon_proto.Controllers
                 DataTable Table4 = new DataTable();
                 DataTable Table6 = new DataTable();
                 DataTable Table7 = new DataTable();
+                DataTable Table8 = new DataTable();
 
-                long row = 0;
+				long row = 0;
                 long col = 0;
                 string cellTxt = "";
                 string cellTxt1 = "";
@@ -682,6 +683,7 @@ namespace Recon_proto.Controllers
                         Table4 = result2.Tables[4].Copy();
                         Table6 = result2.Tables[6].Copy();
                         Table7 = result2.Tables[7].Copy();
+                        Table8 = result2.Tables[8].Copy();
 
                         var entity_name = Table.Rows[0]["entity"].ToString();
                         // var recon_name = Table.Rows[0]["recon_name"].ToString();
@@ -706,7 +708,7 @@ namespace Recon_proto.Controllers
                         Decimal accno1_crtotal = Convert.ToDecimal(Table.Rows[0]["source_cr_total"].ToString());
                         Decimal accno2_crtotal = Convert.ToDecimal(Table.Rows[0]["target_cr_total"].ToString());
 						Decimal roundoff_count = Convert.ToDecimal(Table.Rows[0]["roundoff_count"].ToString());
-						Decimal roundoff_total = Convert.ToDecimal(Table.Rows[0]["roundoff_count"].ToString());
+						Decimal roundoff_total = Convert.ToDecimal(Table.Rows[0]["roundoff_total"].ToString());
 
 						dt = result2.Copy();
                         dt.Tables.Remove("Table");
@@ -765,12 +767,12 @@ namespace Recon_proto.Controllers
                             ws.Range("A15:E15").Row(1).Merge();
                             ws.Cell("I15").SetValue(accno1_crtotal).SetActive(); ws.Cell("I15").Style.NumberFormat.Format = "###0.00";
 
-                                if (roundoff_count > 0)
-                                {
-                                    ws.Cell("A16").SetValue("Roundoff Difference (" + roundoff_count + ")").SetActive();
+                            if (roundoff_count > 0)
+                             {
+                                ws.Cell("A16").SetValue("Roundoff Difference (" + roundoff_count + ")").SetActive();
 								ws.Range("A16:E16").Row(1).Merge(); 
                                 ws.Cell("I16").SetValue(roundoff_total).SetActive(); ws.Cell("I16").Style.NumberFormat.Format = "###0.00";
-                                }
+                             }
 
                             ws.Cell("A17").SetValue("Closing balance as per bank passbook").SetActive();
                             ws.Cell("A17").Style.Font.Bold = true;
@@ -901,7 +903,8 @@ namespace Recon_proto.Controllers
                             cellTxt = "A" + row.ToString() + ":F" + row.ToString();
                             ws.Range(cellTxt).Row(1).Merge();
 
-                            row = row + 1;
+							//Inserting  Table4 Data
+							row = row + 1;
                             cellTxt = "A" + row.ToString() + "";
 
                             wb.Worksheet(1).Cell(cellTxt).InsertTable(Table4);
@@ -929,15 +932,50 @@ namespace Recon_proto.Controllers
                             cellFormulaCalc = ws.Cell(cellTxt);
                             cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
                             cellFormulaCalc.Style.Font.Bold = true;
-                            // cellFormulaCalc.Style.Border.TopBorder = XLBorderStyleValues.Thin;
-                            // cellFormulaCalc.Style.Border.TopBorderColor = XLColor.Black;
-                            //cellFormulaCalc.Style.Border.BottomBorder = XLBorderStyleValues.Thin;
-                            //cellFormulaCalc.Style.Border.BottomBorderColor = XLColor.Black;
-                            //cellFormulaCalc.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
 
-                            //Total Balance & Difference
-                            cellTxt = "B" + row.ToString() + "";
-                            ws.Cell(cellTxt).SetValue("Balance as per bank pass book").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+                                // Heading for Table5
+								row = row + 2;
+								cellTxt = "A" + row.ToString() + "";
+
+								ws.Cell(cellTxt).SetValue("Sum: Round Off Exception Value").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
+								ws.Cell(cellTxt).Style.Font.Underline = XLFontUnderlineValues.Single;
+								cellTxt = "A" + row.ToString() + ":F" + row.ToString();
+								ws.Range(cellTxt).Row(1).Merge();
+
+								//Inserting  Table5 Data for round off value
+								row = row + 1;
+								cellTxt = "A" + row.ToString() + "";
+
+								wb.Worksheet(1).Cell(cellTxt).InsertTable(Table8);
+								ws.Table(4).ShowAutoFilter = false;// Disable AutoFilter.
+								ws.Table(4).Theme = XLTableTheme.None;
+								cellTxt1 = "A" + row.ToString() + ":U" + row.ToString();
+								ws.Range(cellTxt1).Style.Font.Bold = true;
+								ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+
+								//Inserting  Table5 Total
+								formulaTxt = "=sum(D" + (row + 1).ToString() + ":D" + (row + Table8.Rows.Count).ToString() + ")";
+								row = row + Table8.Rows.Count + 1;
+								cellTxt = "I" + row.ToString() + "";
+								ws.Cell(cellTxt).Style.Border.BottomBorder = XLBorderStyleValues.Thin;
+								ws.Cell(cellTxt).Style.Border.BottomBorderColor = XLColor.Black;
+								cellFormulaTableSum = ws.Cell(cellTxt);
+								cellFormulaTableSum.FormulaA1 = formulaTxt; cellFormulaTableSum.Style.NumberFormat.Format = "###0.00";
+
+								formulaTxt = "=+" + calcCellTxt + "+" + cellTxt;
+
+								row = row + 1;
+								cellTxt = "I" + row.ToString() + "";
+								calcCellTxt = cellTxt;
+
+								cellFormulaCalc = ws.Cell(cellTxt);
+								cellFormulaCalc.FormulaA1 = formulaTxt; cellFormulaCalc.Style.NumberFormat.Format = "###0.00";
+								cellFormulaCalc.Style.Font.Bold = true;
+
+
+								//Total Balance & Difference calculation begin
+								cellTxt = "B" + row.ToString() + "";
+                                ws.Cell(cellTxt).SetValue("Balance as per bank pass book").SetActive(); ws.Cell(cellTxt).Style.Font.Bold = true;
 
                             row = row + 2;
                             cellTxt = "B" + row.ToString() + "";
@@ -959,19 +997,21 @@ namespace Recon_proto.Controllers
                             ws.Columns("A").AdjustToContents();
                             ws.Columns("F").AdjustToContents();
 
-                            //Insert Transaction
-                            ws = wb.AddWorksheet("Transaction");
-                            //ws.Cell("A1").InsertTable(Table6).Theme = XLTableTheme.None;
-                            // ws.Tables.ForEach(x => x.ShowAutoFilter = false);
-                            foreach (var table in ws.Tables)
-                            {
-                                table.ShowAutoFilter = false;
-                            }
-                            ws.Cell("A1").Style.Font.Bold = true;
-                            ws.Range("A1:Z1").Style.Font.Bold = true;
-                            ws.Range("A1:Z1").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
-                            // ws.Table(6).Theme = XLTableTheme.None;
-
+                                //Insert Transaction
+                                if (Table6.Rows.Count > 0)
+                                {
+                                    ws = wb.AddWorksheet("Transaction");
+                                    ws.Cell("A1").InsertTable(Table6).Theme = XLTableTheme.None;
+                                    //ws.Tables.ForEach(x => x.ShowAutoFilter = false);
+                                    foreach (var table in ws.Tables)
+                                    {
+                                        table.ShowAutoFilter = false;
+                                    }
+                                    ws.Cell("A1").Style.Font.Bold = true;
+                                    ws.Range("A1:Z1").Style.Font.Bold = true;
+                                    ws.Range("A1:Z1").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+                                    // ws.Table(6).Theme = XLTableTheme.None;
+                                }
                             if (Table7.Rows.Count > 0)
                             {
                                 //Insert Supporting File
@@ -986,14 +1026,12 @@ namespace Recon_proto.Controllers
                                 ws.Range("A1:Z1").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
                                 // ws.Table(7).Theme = XLTableTheme.None;
                             }
-
                             using (MemoryStream stream = new MemoryStream())
                             {
                                 wb.SaveAs(stream);
                                 return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
                             }
-
-                        }
+                          }
                         }
                         catch (HttpRequestException ex)
                         {
@@ -1118,7 +1156,6 @@ namespace Recon_proto.Controllers
             public String? in_reporttemplate_code { get; set; }
             public String? in_reporttemplate_name { get; set; }
             public String? in_report_code { get; set; }
-
             public String? in_sortby_code { get; set; }
             public String? in_recon_code { get; set; }
             public String? in_action { get; set; }
