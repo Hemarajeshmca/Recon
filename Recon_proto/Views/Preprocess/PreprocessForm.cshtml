@@ -1334,22 +1334,15 @@
 				var cmb_var = $("#" + grid_id).data("kendoGrid");
 				var selectedItem = cmb_var.dataItem(cmb_var.select());
 				var combobox_data = $("#" + cmbid).data("kendoComboBox");
-				if (datafield == "filter_criteria") {
-					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
-						selectedItem[datafield] = selectedItem.filter_criteria_input;
+				if (datafield == "extraction_criteria") {
+					if (datafield == "extraction_criteria" && selectedItem.extraction_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.extraction_criteria_input;
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 					}
-					selectedItem.filter_criteria_input = undefined;
+					selectedItem.extraction_criteria_input = undefined;
 				}
-				if (datafield == "ident_criteria") {
-					if (datafield == "ident_criteria" && selectedItem.ident_criteria_input != undefined) {
-						selectedItem[datafield] = selectedItem.ident_criteria_input;
-					} else {
-						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
-					}
-					selectedItem.ident_criteria_input = undefined;
-				}
+				
 			}
 		});
 	}
@@ -1625,6 +1618,7 @@
 						grid_lookup([]);
 					}
 					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
+					$("#preprocessgid").val(result.header[0].preprocess_gid)
 					$("#cmbrecon").val(result.header[0].recon_code);
 					jQuery('#cmbrecon').trigger("change");
 					$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
@@ -1636,12 +1630,16 @@
 					$("#cmbgetrecon").val(result.header[0].get_recon_field);
 					jQuery('#cmbgetrecon').trigger("change");
 					$("#Cmbfunction").val(result.header[0].process_function);
+					if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 					$("#Cmbreconfield").val(result.header[0].set_recon_field);
+					}else{
+						$("#Cmbreconfield1").val(result.header[0].set_recon_field);
+					}
 					$("#querydata").val(result.header[0].process_query);
 					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
 					jQuery('#cmblookupdataset').trigger("change");
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
-					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
+					
 					$("#holdflag").val(result.header[0].hold_flag);
 					$("#txtstatus").val(result.header[0].active_status_desc);
 					$("#Cmbclone").prop('disabled', true)
@@ -2298,20 +2296,21 @@
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
 			var preprocess_gid = $("#preprocessgid").val();
+			var status = "";
 
 			if (preprocess_gid > 0) {
 				preprocess_gid = $("#preprocessgid").val();
+				action = "UPDATE"
+				status = "Y";
 			} else {
 				preprocess_gid = 0;
+				action = "INSERT"
+				status = "D";
 			}
 
-			if ($("#txtmode").val() == "Create") {
-				action = "INSERT"
-			} else if ($("#txtmode").val() == "Edit") {
-				action = "UPDATE"
-			}
+			
 			var action_by = "";
-			var status = "Y";
+			
 			var holdflag = $("#holdflag").val();
 			$.ajax({
 				type: "POST",
