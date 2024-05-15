@@ -284,7 +284,7 @@ namespace Recon_proto.Controllers
 
         #region lastlogin
         [HttpPost]
-        public JsonResult lastlogin([FromBody] lastloginmodel context)
+        public JsonResult lastloginsession([FromBody] lastloginmodel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
@@ -304,7 +304,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("lastlogin", content).Result;
+                    var response = client.PostAsync("lastsession", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -323,7 +323,8 @@ namespace Recon_proto.Controllers
         public class lastloginmodel
         {            
             public String user_code { get; set; }
-        }
+			public string status { get; set; }
+		}
         #endregion
     }
 }

@@ -509,7 +509,7 @@
 						}
 					});
 					setcon();
-					//lastlogin();
+					lastloginsession("session");
 				}
 			});
 
@@ -736,6 +736,7 @@
 		}
 
 		function Signout() {
+			lastloginsession("logout");
 			sessionStorage.setItem("level1", "");
 			sessionStorage.setItem("level2", "");
 			sessionStorage.setItem("level3", "");
@@ -748,6 +749,7 @@
 			setlocalStorage("recon_userdetail","");
 			
 			setlocalStorage("lastlogindb","");
+			
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
@@ -771,32 +773,18 @@
 			var url = '@Url.Action("ChangePassword", "Login")'
 			window.location.href = url;
 		}
-		function lastlogin() {			
+		function lastloginsession(data) {
 			var usercode = sessionStorage.getItem("usrname");
+			var status = data;
 			$.ajax({
 				type: "POST",
-				url: '../Login/lastlogin',
+				url: '../Login/lastloginsession',
 				dataType: 'json',
-				async: false,
-				data: JSON.stringify({ user_code: usercode }),
+				async: true,
+				data: JSON.stringify({ user_code: usercode, status: status }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					var result = JSON.parse(response);
-					var lastlog = JSON.parse(localStorage.getItem("lastlogindb"));
-					var dbdate = result[0].date;
-					if (lastlog != dbdate) {
-						$.alert({
-							title: 'Recon',
-							content: 'You have been disconnected bacause another login was made. ',
-							type: 'Red',
-							onClose: function () {
-								sessionStorage.clear();
-								localStorage.clear();
-								Signout();
-							}
-						});
-						
-					}
+					
 				}
 			})
 
@@ -1148,17 +1136,21 @@
 		function resetSessionTimer() {		
 			clearTimeout(sessionTimer);		
 			sessionTimer = setTimeout(function () {		
+				lastloginsession("logout")
 				sessionStorage.clear();
 				localStorage.clear();				
 				window.location.href = '@Url.Action("session_expires", "Login")';
-			//}, 60000); 
-			}, 1000*30*60); // 300000 milliseconds = 30 minutes
+			}, 1000*30*60); // 300000 milliseconds = 30 minutes			
 		}
 		// Call resetSessionTimer() whenever there is a user interaction event
 		document.addEventListener("mousemove", resetSessionTimer);
 		document.addEventListener("keypress", resetSessionTimer);
 		resetSessionTimer();
-
+		window.addEventListener('beforeunload', function (e) {
+			lastloginsession("logout");
+			 localStorage.clear();
+             sessionStorage.clear();
+		});
 		function isNumberKey(evt) {
 			var charCode = (evt.which) ? evt.which : event.keyCode
 			if (charCode != 46 && charCode > 31
