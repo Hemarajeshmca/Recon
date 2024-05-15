@@ -133,7 +133,7 @@
 						<button type="button" onclick="showPreview()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
 							Run Auto Match
 						</button> &nbsp;&nbsp;&nbsp;
-						<button type="button" onclick="runTheme()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
+						<button type="button" onclick="runTheme()" class="btn btn-sm save_btn me-2" id="run_theme" style="width:40%;margin-top: 7px">
 							Run Theme
 						</button> &nbsp;&nbsp;&nbsp;
 					</div>
@@ -697,6 +697,16 @@
 
 
 	function showPreview() {
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () { 
 		var in_recon_code = $("#reconname").val();
 		var rulepreview = $("#prviewon").val();
 		var period_from = $("#initiated_from").val();
@@ -716,7 +726,6 @@
 			firstColumnValues = firstColumnValues.slice(0, -1);
 		}
 		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-
 		if (in_recon_code && period_from && period_to && firstColumnValues) {
 			$.alert({
 				title: 'Recon',
@@ -779,7 +788,20 @@
 				type: 'red',
 			});
 		}
-		//hideProgress();
+		hideProgress();
+		},
+		cancel: function () {
+			$.alert({
+				icon: 'fa fa-success',
+				title: 'Recon',
+				theme: 'dark',
+				content: 'Canceled.!',
+				type: 'blue',
+				animationSpeed: 700,
+				});
+			}
+			}
+		})
 	}
 
 	function rr1() {
@@ -862,80 +884,105 @@
 	}
 
 	function runTheme() {
-		var in_recon_code = $("#reconname").val();
-		var rulepreview = $("#prviewon").val();
-		var period_from = $("#initiated_from").val();
-		var ts = period_from.split("/");
-		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-		var period_to = $("#initiated_to").val();
-		var ts1 = period_to.split("/");
-		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-		var grid = $("#grid_preview").data("kendoGrid");
-		var dataItems = grid.dataSource.data();
-		var firstColumnValues = "";
-		for (var i = 0; i < dataItems.length; i++) {
-			var firstColumnValue = dataItems[i].rule_code + "#";
-			firstColumnValues = firstColumnValues + firstColumnValue;
-		}
-		if (firstColumnValues != "") {
-			firstColumnValues = firstColumnValues.slice(0, -1);
-		}
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to run theme!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					$("#run_theme").prop("disabled", true);
+					var in_recon_code = $("#reconname").val();
+					var rulepreview = $("#prviewon").val();
+					var period_from = $("#initiated_from").val();
+					var ts = period_from.split("/");
+					var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+					var period_to = $("#initiated_to").val();
+					var ts1 = period_to.split("/");
+					var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+					var grid = $("#grid_preview").data("kendoGrid");
+					var dataItems = grid.dataSource.data();
+					var firstColumnValues = "";
+					for (var i = 0; i < dataItems.length; i++) {
+						var firstColumnValue = dataItems[i].rule_code + "#";
+						firstColumnValues = firstColumnValues + firstColumnValue;
+					}
+					if (firstColumnValues != "") {
+						firstColumnValues = firstColumnValues.slice(0, -1);
+					}
+					var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 
-		if (in_recon_code && period_from && period_to && firstColumnValues) {
-			//$.alert({
-			//	title: 'Recon',
-			//	content: "Job Initated, Please check the Job Status in Utility",
-			//	type: 'green',
-			//});
-			$.ajax({
-				type: "POST",
-				url: '../theme/runtheme',
-				dataType: 'json',
-				data: JSON.stringify({
-					in_recon_code: in_recon_code,
-					in_period_from: pr,
-					in_period_to: pr1,
-					in_automatch_flag: 'Y',
-				}),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response != " " && response != null && response != "{}" && response != "[]") {
-						var res = JSON.parse(response);
-						$.alert({
-							title: 'Recon',
-							content: res[0].out_msg,
-							type: 'green',
+					if (in_recon_code && period_from && period_to && firstColumnValues) {
+						$.ajax({
+							type: "POST",
+							url: '../theme/runtheme',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_recon_code: in_recon_code,
+								in_period_from: pr,
+								in_period_to: pr1,
+								in_automatch_flag: 'Y',
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								$("#run_theme").prop("disabled", false);
+								if (response != " " && response != null && response != "{}" && response != "[]") {
+									var res = JSON.parse(response);
+									$.alert({
+										title: 'Recon',
+										content: res[0].out_msg,
+										type: 'green',
+									});
+								} else {
+									$("#run_theme").prop("disabled", false);
+									$.alert({
+										title: 'Recon',
+										content: 'Something went wrong',
+										type: 'red',
+									});
+								}
+							}
+
 						});
-				    } else {
+					} else if (!in_recon_code) {
+						$("#run_theme").prop("disabled", false);
 						$.alert({
 							title: 'Recon',
-							content: 'Something went wrong',
+							content: 'Please select Recon Name',
 							type: 'red',
 						});
-				    }
+					} else if (!period_to) {
+						$("#run_theme").prop("disabled", false);
+						$.alert({
+							title: 'Recon',
+							content: 'Date is missing',
+							type: 'red',
+						});
+					} else if (!firstColumnValues) {
+						$("#run_theme").prop("disabled", false);
+						$.alert({
+							title: 'Recon',
+							content: 'No Rules to Run Theme',
+							type: 'red',
+						});
+					}
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
 				}
+			}
+		})
 
-			});
-		} else if (!in_recon_code) {
-			$.alert({
-				title: 'Recon',
-				content: 'Please select Recon Name',
-				type: 'red',
-			});
-		} else if (!period_to) {
-			$.alert({
-				title: 'Recon',
-				content: 'Date is missing',
-				type: 'red',
-			});
-		} else if (!firstColumnValues) {
-			$.alert({
-				title: 'Recon',
-				content: 'No Rules to Run Theme',
-				type: 'red',
-			});
-		}
-		hideProgress();
+
 	}
 </script>
