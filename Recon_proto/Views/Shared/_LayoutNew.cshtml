@@ -1146,11 +1146,32 @@
 		document.addEventListener("mousemove", resetSessionTimer);
 		document.addEventListener("keypress", resetSessionTimer);
 		resetSessionTimer();
-		window.addEventListener('beforeunload', function (e) {
-			lastloginsession("logout");
-			 localStorage.clear();
-             sessionStorage.clear();
-		});
+
+
+		//window.addEventListener('load', function () {
+		//	// Set a flag in sessionStorage indicating the page has loaded
+		//	sessionStorage.setItem('isPageLoaded', 'true');
+
+		//	// Check if the window was reloaded (optional, for more precise control)
+		//	if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+		//		// Page was reloaded, clear the flag
+		//		sessionStorage.removeItem('isPageLoaded');
+		//	}
+		//});
+
+		//// Handle beforeunload event
+		//window.addEventListener('beforeunload', function (e) {
+		//	if (sessionStorage.getItem('isPageLoaded')) {
+		//		// Page is being closed, not just navigated away or reloaded
+		//		lastloginsession("logout");
+		//		// Clear the flag to prevent multiple calls
+		//		sessionStorage.removeItem('isPageLoaded');
+		//	} else {
+		//		// Page is being reloaded or navigated away from
+		//		sessionStorage.removeItem('isPageLoaded');
+		//	}
+		//});
+	
 		function isNumberKey(evt) {
 			var charCode = (evt.which) ? evt.which : event.keyCode
 			if (charCode != 46 && charCode > 31
