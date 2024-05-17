@@ -306,7 +306,7 @@
 		$("#headingfilter").hide();
 		getGridComboList();
 		grid_lookup([]);
-		grid_filter([]);
+		grid_filterdata([]);
 	});
 	function getGridComboList() {
 		//recon type
@@ -615,7 +615,7 @@
 		});
 	}
 	//---- Function ----------------
-	function grid_filter(data) {
+	function grid_filterdata(data) {
 		var join_condition_list = "";
 		var filter_criteria_list = "";
 		var filter_field_list = "";
@@ -707,9 +707,9 @@
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
-						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 					} else {
-						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 					}
 				}
 			},
@@ -761,9 +761,9 @@
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
-						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
 					} else {
-						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
 					}
 				},
 			},
@@ -779,7 +779,34 @@
 		});
 
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
-
+		$(function () {
+			$('#grid_filter').on('click', '.chkbx3', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_filter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			})
+		})
+		$(function () {
+			$('#grid_filter').on('click', '.chkbx4', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_filter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			})
+		})
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
@@ -789,34 +816,7 @@
 			}
 		}
 	}
-	$(function () {
-		$('#grid_filter').on('click', '.chkbx1', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_filter').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	})
-	$(function () {
-		$('#grid_filter').on('click', '.chkbx2', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_filter').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('close_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('close_parentheses_flag', 'N');
-			}
-		})
-	})
+	
 	function combo_editor_man_process(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
@@ -1170,6 +1170,11 @@
 	function OnEdit(e) {
 		try {
 			setDefaultValues(e);
+			//e.container.find("input[name='source_field_desc']").change(function () {
+			//	e.model.extraction_criteria = "";
+			//	$("#extraction_criteria_list").val("");
+			// });
+		
 		}
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
@@ -1237,6 +1242,7 @@
 				else {
 					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					
 				}
 			}
 		});
@@ -1607,10 +1613,10 @@
 					if (result.filter.length > 0) {
 						$("#gd_filter").empty();
 						$("#gd_filter").append("<div id='grid_filter'></div>");
-						grid_filter(result.filter);
+						grid_filterdata(result.filter);
 					}
 					else {
-						grid_filter([]);
+						grid_filterdata([]);
 					}
 					if (result.condition.length > 0) {
 						grid_lookup(result.condition)
@@ -1650,7 +1656,7 @@
 					}
 				}
 				else {
-					grid_filter([]);
+					grid_filterdata([]);
 					grid_lookup([]);
 				}
 			},
