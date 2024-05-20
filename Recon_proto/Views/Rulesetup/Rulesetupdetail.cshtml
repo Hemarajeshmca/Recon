@@ -128,8 +128,8 @@
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-															color: white !important;
-														}*/
+																	color: white !important;
+																}*/
 
 		.control-label.required:after {
 			content: "*";
@@ -158,8 +158,8 @@
 		}
 
 		/*.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
-					float: left;
-				}*/
+							float: left;
+						}*/
 
 		.k-grid-header {
 			background-color: #FEE7D5;
@@ -212,8 +212,8 @@
 		}
 
 		/*.content-wrapper, .right-side {
-															background-color: #e7e7e7;
-														}*/
+																	background-color: #e7e7e7;
+																}*/
 
 		.info-box-icon {
 			background: white;
@@ -555,12 +555,12 @@
 														<label class="form-label">Partial Match&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="partial_match"></span>
 													</div>
 													<div class="col-sm-4">
-														<label class="form-label">Threshold + Value&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdplus"></span>
+														<label class="form-label">Knockoff Threshold Value &nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdplus"></span>
 													</div>
 
 												</div>
 												<div class="row">
-													<div class="col-sm-4">
+													<div class="col-sm-4" style="display:none">
 														<label class="form-label">Threshold - Value&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdminus"></span>
 													</div>
 													<div class="col-sm-4">
@@ -569,12 +569,11 @@
 													<div class="col-sm-4">
 														<label class="form-label">Recon Date Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbrecondatefield"></span>
 													</div>
-
-												</div>
-												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Recon Value Flag&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="reconvalueflag"></span>
 													</div>
+												</div>
+												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Recon Value Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbreconvaluefield"></span>
 													</div>
@@ -608,7 +607,8 @@
 			$("#GM1").prop("checked", true);
 			$("#GMM2").prop("checked", true);
 			var data = getlocalStorage("ls_pageList");
-			$("#cmbreconname").val(data);
+			$("#cmbreconname").val(data[0].recon_code);
+			$("#ruleorder").val(data[0].rule_order);
 			var reconcode = $("#cmbreconname").val();
 			$.ajax({
 				type: "POST",
@@ -652,12 +652,10 @@
 						text: "  Select  "
 					}));
 					$.each(res, function (index, item) {
-						if (item.dataset_type != "S") {
-							$("#sourcedataset").append($('<option>', {
-								value: item.dataset_code,
-								text: item.dataset_name
-							}));
-						}
+						$("#sourcedataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
 					});
 					$("#comdataset").empty();
 					$("#comdataset").append($('<option>', {
@@ -840,10 +838,10 @@
 				});
 			}
 		}
-		if ($("#txtmode").val() == "View") {			
+		if ($("#txtmode").val() == "View") {
 			$("#ruleName").prop('disabled', true);
 			$("#cmbreconname").prop('disabled', true);
-			$("#ruleorder").prop('disabled', true);		
+			$("#ruleorder").prop('disabled', true);
 			var datepicker = $("#period_from").data("kendoDatePicker");
 			if (datepicker) {
 				datepicker.enable(false);
@@ -853,7 +851,7 @@
 			if (datepicker1) {
 				datepicker1.enable(false);
 				$('#period_to').prop('disabled', true);
-			}		
+			}
 			$('#untillactive').prop('disabled', true);
 			$('#RuleAppliedOn').prop('disabled', true);
 			$('#cmbgroupflag').prop('disabled', true);
@@ -861,7 +859,7 @@
 			$('#souaccmode').prop('disabled', true);
 			$('#comdataset').prop('disabled', true);
 			$('#comaccmode').prop('disabled', true);
-			$('#probableflag').prop('disabled', true);			
+			$('#probableflag').prop('disabled', true);
 			$("#btn_new_dataset").hide();
 			$("#btn_new_datasetmap").hide();
 			$("#btnsubmit").hide();
@@ -1581,7 +1579,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				} 
+				}
 			},
 			sortable: false,
 			selectable: "row",
@@ -1769,7 +1767,7 @@
 			})
 		});
 	}
-	
+
 	function OnEdit(e) {
 		try {
 			setDefaultValues(e);
@@ -1778,7 +1776,7 @@
 			javascript_log4j_root(arguments.callee.name, err);
 		}
 	}
-	
+
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		debugger;
 		var arr = [];
@@ -1880,11 +1878,11 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ rulecondition_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulecondition_gid: 0 });		
+		dataSource.add({ rulecondition_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", rulecondition_gid: 0 });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-	
+
 	function saverulecondition() {
 		debugger;
 		try {
@@ -2058,7 +2056,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				} 
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -2262,7 +2260,7 @@
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-	
+
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -2569,7 +2567,7 @@
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-	
+
 	function combo_filter_field1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -2928,7 +2926,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				} 
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -3187,7 +3185,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				} 
+				}
 			},
 			sortable: false,
 			selectable: true,
@@ -3381,7 +3379,7 @@
 					$(".k-grid-save").hide();
 					$(".k-grid-delete").hide();
 					$(".k-grid-add").hide();
-				} 
+				}
 			},
 			sortable: false,
 			selectable: true,
