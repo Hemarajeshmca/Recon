@@ -15,7 +15,7 @@
 			color: red;
 			margin-left: 10px;
 		}
-		
+
 		.k-grid-header {
 			font-weight: bold;
 		}
@@ -31,6 +31,7 @@
 		.k-grid-content {
 			overflow-x: hidden;
 		}
+
 		.k-content {
 			font-weight: normal;
 			font-size: 13px;
@@ -51,7 +52,7 @@
 		select option[value="Y"] {
 			display: none;
 		}
-	
+
 		.datepicker table tr td.active:active,
 		.datepicker table tr td.active.highlighted:active,
 		.datepicker table tr td.active.active,
@@ -250,7 +251,7 @@
 														</div>
 														<div class="col-sm-2">
 															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
-															<input class="form-control" id="thersholdplus" type="text" value="0">
+															<input class="form-control" id="thersholdplus" type="text" value="0" onkeypress='return isNumberKey(event)'>
 														</div>
 														@*<div class="col-sm-2">
 														<label for="" class="form-label">Threshold - Value&nbsp;</label>
@@ -508,7 +509,7 @@
 	</div>
 	<div class="modal" id="Reconthemedetail">
 		<div class="modal-dialog modal-xl">
-			<div class="modal-content" style="height:500px;">
+			<div class="modal-content" style="height:549px;">
 				<div class="modal-header">
 				</div>
 				<div class="modal-body" style="margin-top: -26px;">
@@ -591,6 +592,11 @@
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
+			$("#cmbParentDataset").empty();
+			$("#cmbParentDataset").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
 			$("#cmbParentDataset").attr('disabled', false);
 			var reconcode = $("#reconcode").val();
 			var recongid = $("#recon_id").val();
@@ -611,10 +617,12 @@
 						}));
 						console.log(`result.ReconDataSet`, result.ReconDataSet);
 						$.each(result.ReconDataSet, function (index, item) {
-							$("#cmbParentDataset").append($('<option>', {
-								value: item.dataset_code,
-								text: item.dataset_name
-							}));
+							if (item.dataset_type != "S") {
+								$("#cmbParentDataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							}
 						});
 					}
 					else {
@@ -628,6 +636,11 @@
 
 			});
 		} else {
+			$("#cmbParentDataset").empty();
+			$("#cmbParentDataset").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
 			$("#cmbParentDataset").attr('disabled', true);
 		}
 	}
@@ -800,7 +813,7 @@
 
 				});
 			}
-			
+
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -1208,7 +1221,7 @@
 			async: false,
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
-			success: function (response) {				
+			success: function (response) {
 				$.each(response, function (index, item) {
 					$("#cmbthersholdvalue").append($('<option>', {
 						value: item.masterSyscode,
@@ -2493,7 +2506,6 @@
 				}
 			}
 		} else {
-
 			$("#thersholdplus").val(0);
 			$("#thersholdminus").val(0)
 			$("#thersholdminus").prop('disabled', true)
@@ -2501,7 +2513,6 @@
 			$("#cmbthersholdvalue").prop('disabled', true)
 			$("#cmbthersholdvalue").val("N");
 		}
-
 	}
 
 	function gridruleMapping(data) {

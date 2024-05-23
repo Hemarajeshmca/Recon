@@ -454,8 +454,24 @@
 	}
 	function getSerializedRows() {
 		btn_onClick('Create');
-		var selectedItem = $("#cmbreconname").val();
-		if (selectedItem != "") {
+		var grid = $("#grid_rulesetup").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].rule_order > max && grid.dataSource._data[i].active_status != "N") {
+				max = grid.dataSource._data[i].rule_order;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+
+		var selectedItem = [];
+		var list = {};
+		list.recon_code = $("#cmbreconname").val();
+		list.rule_order = newSeqNo;
+		selectedItem.push(list);
+		if (selectedItem[0].recon_code != "") {
 			setlocalStorage("ls_pageList", selectedItem);
 			document.location = "../Rulesetup/Rulesetupdetail";
 		} else {

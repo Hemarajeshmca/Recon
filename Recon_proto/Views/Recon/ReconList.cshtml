@@ -40,6 +40,7 @@
 		.k-grid-content {
 			overflow-x: hidden;
 		}
+
 		.k-content {
 			font-weight: normal;
 			font-size: 13px;
@@ -171,6 +172,7 @@
 	}
 	var status_Priority = [];
 	function grid_reconlist_details(data) {
+
 		try {
 			$.each(data, function (index, value) {
 				var flag = false;
@@ -183,9 +185,12 @@
 					status_Priority.push(value.active_status_desc);
 				}
 			});
+			var formatdate = sessionStorage.getItem("kendate");
+			var formatdate1 = "{0:" + formatdate + "}";
 			$("#grid_reconlist").kendoGrid({
 				dataSource: {
 					data: data,
+					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
@@ -200,9 +205,15 @@
 								active_status_desc: { type: "string" },
 								status: { type: "string" },
 							}
+						},
+						parse: function (data) {
+							$.each(data, function (i, item) {
+								item.period_from = kendo.parseDate(item.period_from, "yyyy-MM-dd");
+								item.period_to = kendo.parseDate(item.period_to, "yyyy-MM-dd");
+							});
+							return data;
 						}
-					},
-					pageSize: 15
+					}
 				},
 				height: 450,
 				groupable: false,
@@ -292,28 +303,27 @@
 				{
 					field: "period_from",
 					title: "Period From",
-					format: "{0:dd-MM-yyyy}",
 					width: 50,
+					format: formatdate1,
 					filterable: {
-						ui: "datepicker", // Use a datepicker for date filtering						
-					   //extra: false,
-						//operators: {
-						//	date: {
-						//		eq: "Is equal to",
-						//		gte: "",
-						//		lte: "End Date"
-						//	},
-						//}
+						ui: function (element) {
+							element.kendoDatePicker({
+								format: formatdate
+							});
+						},
 					},
 				},
 				{
 					field: "period_to",
 					title: "Period To",
 					width: 50,
-					format: "{0:dd-MM-yyyy}",
+					format: formatdate1,
 					filterable: {
-						ui: "datepicker", // Use a datepicker for date filtering
-						//extra: false,
+						ui: function (element) {
+							element.kendoDatePicker({
+								format: formatdate
+							});
+						},
 					},
 				},
 				{
@@ -543,7 +553,7 @@
 			btn_onClick("Edit");
 			setlocalStorage("cloned_reconCode", selectedItem.recon_code);
 			document.location = "../Recon/ReconViewClone";
-		} else if (selectedItem.active_status == 'N'){
+		} else if (selectedItem.active_status == 'N') {
 			return;
 		}
 

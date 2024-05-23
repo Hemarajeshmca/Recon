@@ -51,15 +51,15 @@
 		}
 
 		/*		.datepicker table tr td.active:active,
-				.datepicker table tr td.active.highlighted:active,
-				.datepicker table tr td.active.active,
-				.datepicker table tr td.active.highlighted.active {
-					background-color: green;
-				}
+								.datepicker table tr td.active.highlighted:active,
+								.datepicker table tr td.active.active,
+								.datepicker table tr td.active.highlighted.active {
+									background-color: green;
+								}
 
-					.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
-						background-color: red;
-					}*/
+									.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+										background-color: red;
+									}*/
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -177,10 +177,10 @@
 									<div class="tab-content">
 										@*Dataset*@
 										<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
+											<div class="panel panel-default" style="margin-top:5px;">
 												<div class="panel-body">
 													@*													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-													*@													<div class="col-xs-12" style="margin-top:25px;">
+													*@													<div class="col-xs-12">
 														<div id="gd_datasetrecon">
 															<div id="grid_datasetrecon">
 															</div>
@@ -191,10 +191,10 @@
 										</div>
 										@*Datasetmapping*@
 										<div class="tab-pane fade" id="navs-pills-top-Datasetmapping" role="tabpanel" style="margin-top:-25px;">
-											<div class="panel panel-default">
+											<div class="panel panel-default" style="margin-top:5px;">
 												<div class="panel-body">
 													@*													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
-													*@													<div class="col-xs-12" style="margin-top:25px;">
+													*@													<div class="col-xs-12">
 														<div id="maingrid">
 														</div>
 														<div id="maingrid1">
@@ -217,7 +217,7 @@
 														</div>
 														<div class="col-sm-2">
 															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
-															<input class="form-control" id="thersholdplus" type="text" value="0">
+															<input class="form-control" id="thersholdplus" type="text" value="0" onkeypress='return isNumberKey(event)'>
 														</div>
 														@*<div class="col-sm-2">
 														<label for="" class="form-label">Threshold - Value&nbsp;</label>
@@ -544,7 +544,13 @@
 
 	});
 	function DatasetTypefield() {
-		if ($("#DatasetType").val() == "S") {
+		
+		if ($("#DatasetType_new").val() == "S") {
+			$("#cmbParentDataset_new").empty();
+			$("#cmbParentDataset_new").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
 			$("#cmbParentDataset").attr('disabled', true);
 			$("#cmbParentDataset_new").attr('disabled', false);
 			var reconcode = $("#reconcode").val();
@@ -587,8 +593,14 @@
 
 			});
 		} else {
+			$("#cmbParentDataset_new").empty();
+			$("#cmbParentDataset_new").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
 			$("#cmbParentDataset").attr('disabled', true);
 			$("#cmbParentDataset_new").attr('disabled', true);
+			
 		}
 	}
 	function checkactive() {
@@ -651,6 +663,7 @@
 				$("#txtmode").val(getlocalStorage('btn_clk_val'));
 				$("#reconcode").val(data.recon_code);
 				$("#cmbrecontype").val(data.recontype_code);
+				jQuery('#cmbrecontype').trigger("change");
 				$("#ReconName").val(data.recon_name);
 				$("#period_from").val(data.period_from);
 				$("#period_to").val(data.period_to);
@@ -772,6 +785,7 @@
 					if (res.ReconHeader.length > 0) {
 						$("#reconcode").val(res.ReconHeader[0].recon_code);
 						$("#cmbrecontype").val(res.ReconHeader[0].recontype_code);
+						jQuery('#cmbrecontype').trigger("change");
 						$("#ReconName").val(res.ReconHeader[0].recon_name);
 						$("#period_from").val(res.ReconHeader[0].period_from);
 						$("#period_to").val(res.ReconHeader[0].period_to);
@@ -985,14 +999,16 @@
 					text: "  Select  "
 				}));
 				$.each(response, function (index, item) {
-					$("#DatasetType").append($('<option>', {
-						value: item.masterSyscode,
-						text: item.masterName
-					}));
-					$("#DatasetType_new").append($('<option>', {
-						value: item.masterSyscode,
-						text: item.masterName
-					}));
+					if (item.masterSyscode != "Y") {
+						$("#DatasetType").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+						$("#DatasetType_new").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					}
 				});
 			}
 		});
@@ -1176,7 +1192,7 @@
 			dataSource: {
 				data: data,
 				pageSize: 10,
-        
+
 				schema: {
 					model: {
 						fields: {
@@ -1196,7 +1212,7 @@
 					}
 				}
 			},
-			height: 250,
+			height: 225,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1466,7 +1482,7 @@
 					}
 				}
 			},
-			height: 250,
+			height: 225,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -1681,7 +1697,7 @@
 		});
 		var configuration = {
 			pageSize: 10,
-			height: 250,
+			height: 225,
 			navigatable: true,
 			groupable: false,
 			editable: false,
@@ -2035,8 +2051,16 @@
 	function recontypeconfig() {
 		var recontype = $("#cmbrecontype").val();
 		if (recontype == "V") {
-			$("#partialmatch1").prop('disabled', true);
-			$('#partialmatch2').prop('checked', true);
+			if ($("#thersholdplus").val() > 0) {
+				$('#partialmatch1').prop('checked', true);
+				$("#thersholdplus").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', false);
+			} else {
+				$('#partialmatch2').prop('checked', true);
+				$("#thersholdplus").prop('disabled', true);
+				$("#partialmatch1").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', true);
+			}
 			$('#reconvalueflag1').prop('checked', true);
 			$('#recondateflag2').prop('checked', true);
 			$("#cmbrecondatefield").prop('disabled', true);
@@ -2045,8 +2069,8 @@
 			$("#reconvalueflag2").prop('disabled', true);
 			$("#recondateflag2").prop('disabled', false);
 			$("#reconvalueflag1").prop('disabled', false);
-			$("#thersholdplus").prop('disabled', true);
 			$("#thersholdminus").prop('disabled', true);
+			onpartial();
 		} else if (recontype == "N") {
 			$("#partialmatch1").prop('disabled', true);
 			$('#partialmatch2').prop('checked', true);
@@ -2060,9 +2084,18 @@
 			$("#reconvalueflag1").prop('disabled', true);
 			$("#thersholdplus").prop('disabled', true);
 			$("#thersholdminus").prop('disabled', true);
-
+			onpartial();
 		} else {
-			$('#partialmatch2').prop('checked', true);
+			if ($("#thersholdplus").val() > 0) {
+				$('#partialmatch1').prop('checked', true);
+				$("#thersholdplus").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', false);
+			} else {
+				$('#partialmatch2').prop('checked', true);
+				$("#thersholdplus").prop('disabled', true);
+				$("#partialmatch1").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', true);
+			}
 			$('#recondateflag1').prop('checked', true);
 			$('#reconvalueflag2').prop('checked', true);
 			$("#cmbreconvaluefield").prop('disabled', true);
@@ -2071,6 +2104,7 @@
 			$('#reconvalueflag1').prop('disabled', true);
 			$('#recondateflag1').prop('disabled', false);
 			$('#reconvalueflag2').prop('disabled', false);
+			onpartial();
 		}
 	}
 	function saveheadersubmit() {
@@ -2177,9 +2211,20 @@
 			$("#thersholdminus").val(0);
 			$("#thersholdminus").prop('disabled', false)
 			$("#thersholdplus").prop('disabled', false)
-			$("#cmbthersholdvalue").prop('disabled', false)
+			$("#cmbthersholdvalue").prop('disabled', false);
+			if ($("#cmbthersholdvalue").val() != "") {
+				$("#cmbthersholdvalue").val("B")
+			}
+			var select = document.getElementById("cmbthersholdvalue");
+			var condition = true; // Change this condition as needed
+			// Remove the "N/A" option if the condition is met
+			if (condition) {
+				var optionToRemove = select.querySelector("option[value='N']");
+				if (optionToRemove) {
+					optionToRemove.remove();
+				}
+			}
 		} else {
-
 			$("#thersholdplus").val(0);
 			$("#thersholdminus").val(0)
 			$("#thersholdminus").prop('disabled', true)
@@ -2431,7 +2476,7 @@
 							title: 'Recon',
 							content: res[0].out_msg,
 							type: 'green',
-						});						
+						});
 						detailfetch($("#reconcode").val());
 						cancelRule();
 					} else {
@@ -2448,7 +2493,7 @@
 				console.log(er)
 			}
 		});
-		
+
 	}
 
 	function cancelRule() {

@@ -69,6 +69,7 @@ namespace Recon_proto.Controllers
 						objcat.depend_flag = result.Rows[i]["depend_flag"].ToString();
 						objcat.depend_parent_master_syscode_desc = result.Rows[i]["depend_parent_master_syscode_desc"].ToString();
 						objcat.depend_parent_master_syscode = result.Rows[i]["depend_parent_master_syscode"].ToString();
+                        objcat.depend_master_syscode = result.Rows[i]["depend_master_syscode"].ToString();
 						objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
@@ -94,8 +95,6 @@ namespace Recon_proto.Controllers
         [HttpPost]
         public JsonResult QcdCrud([FromBody] QcdCrudModal context)
         {
-
-
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             QcdCrudModal objList = new QcdCrudModal();
             DataTable result = new DataTable();
@@ -151,10 +150,9 @@ namespace Recon_proto.Controllers
             public string? parentMasterSyscode { get; set; }
 			public string? depend_parent_master_syscode { get; set; }
 			public string? depend_master_syscode { get; set; }
-
+			public string? depend_flag { get; set; }
 		}
 		#endregion
-
 
 		#region allQcdmaster
 		[HttpPost]
@@ -201,6 +199,7 @@ namespace Recon_proto.Controllers
 						objcat.depend_flag = result.Rows[i]["depend_flag"].ToString();
 						objcat.depend_parent_master_syscode_desc = result.Rows[i]["depend_parent_master_syscode_desc"].ToString();
 						objcat.depend_parent_master_syscode = result.Rows[i]["depend_parent_master_syscode"].ToString();
+						objcat.depend_master_syscode = result.Rows[i]["depend_master_syscode"].ToString();
 						objcat_lst.Add(objcat);
 					}
 					return Json(objcat_lst);
@@ -221,8 +220,6 @@ namespace Recon_proto.Controllers
 			public string in_master_code { get; set; }
 		}
 		#endregion
-
-
 
 	}
 }

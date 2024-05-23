@@ -219,7 +219,7 @@
 						<div class="row" style="margin-bottom:5px;">
 							<div class="col-sm-3">
 								<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="cmblookupdataset" class="form-select form-control" onchange="lookupchange()">
+								<select id="cmblookupdataset1" class="form-select form-control" onchange="lookupchange()">
 								</select>
 							</div>
 							<div class="col-sm-3">
@@ -355,33 +355,9 @@
 
 			}
 		});
+	
 		preprocessload();
-		//dataset combo
-		var reconcode = $("#cmbrecon1").val();
-		$.ajax({
-			type: "POST",
-			url: '../Rulesetup/rulerecondatasetfetch',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var res = JSON.parse(response);
-				$("#cmblookupdataset").empty();
-				$("#cmblookupdataset").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
-				$.each(res, function (index, item) {
-					if (item.dataset_type == "L") {
-						$("#cmblookupdataset").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
-						}));
-					}
-				});
-			}
-		});
+		
 	}
 	function preprocessload() {
 		var data = getlocalStorage("preprocess_details");
@@ -401,9 +377,7 @@
 		$("#querydata").val(data.process_query);
 
 		$("#holdflag1").val(data.hold_flag);
-		$("#txtstatus2").val("Active");
-		$("#savesubmit").hide();
-		$("#btnsubmit").hide();
+		$("#txtstatus2").val("Active");		
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/Preprocessfetch',
@@ -444,8 +418,8 @@
 					$("#Cmbfunction").val(result.header[0].process_function);
 					$("#Cmbreconfield").val(result.header[0].set_recon_field);
 					$("#querydata").val(result.header[0].process_query);
-					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
-					jQuery('#cmblookupdataset').trigger("change");
+					$("#cmblookupdataset1").val(result.header[0].lookup_dataset_code);
+					jQuery('#cmblookupdataset1').trigger("change");
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag1").val(result.header[0].hold_flag);
@@ -464,7 +438,7 @@
 		$("#txtpreprocesscode").prop('disabled', true);
 		$("#cmbrecon1").prop('disabled', true);
 		$("#querydata").prop('disabled', true);
-		$("#cmblookupdataset").prop('disabled', true);
+		$("#cmblookupdataset1").prop('disabled', true);
 		$("#Cmblookupdatasetfield").prop('disabled', true);
 		if ($("#txtmode2").val() == "View") {
 			$("#grid_filter .k-grid-toolbar").hide();
@@ -473,6 +447,32 @@
 	}
 
 	function reconcode() {
+		//dataset combo
+		var reconcode = $("#cmbrecon1").val();
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/Preprocessdatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmblookupdataset1").empty();
+				$("#cmblookupdataset1").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type == "L") {
+						$("#cmblookupdataset1").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
 		var reconcode = $("#cmbrecon1").val();
 		$.ajax({
 			type: "POST",
@@ -1137,7 +1137,7 @@
 	}
 	function combo_editor_man_lookup1(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
-		var datasetcode = $("#cmblookupdataset").val();
+		var datasetcode = $("#cmblookupdataset1").val();
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Datasetfieldlist',
@@ -1257,7 +1257,7 @@
 		} else {
 			var codeValue = selectedItem.comparison_field_desc;
 		}
-		var in_dataset_code = $("#cmblookupdataset").val();
+		var in_dataset_code = $("#cmblookupdataset1").val();
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/lookupfilterfetch',
@@ -1374,8 +1374,8 @@
 					$("#Cmbfunction").val(result.header[0].process_function);
 					$("#Cmbreconfield").val(result.header[0].set_recon_field);
 					$("#querydata").val(result.header[0].process_query);
-					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
-					jQuery('#cmblookupdataset').trigger("change");
+					$("#cmblookupdataset1").val(result.header[0].lookup_dataset_code);
+					jQuery('#cmblookupdataset1').trigger("change");
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag1").val(result.header[0].hold_flag);
@@ -1394,7 +1394,7 @@
 		});
 	}
 	function lookupchange() {
-		var datasetcode = $("#cmblookupdataset").val();
+		var datasetcode = $("#cmblookupdataset1").val();
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Datasetfieldlist',
