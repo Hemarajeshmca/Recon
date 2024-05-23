@@ -15,6 +15,7 @@
 		public string depend_flag { get; set; }
 		public string depend_parent_master_syscode_desc { get; set; }
 		public string depend_parent_master_syscode { get; set; }
+		public string depend_master_syscode { get; set; }
 
 	}
 }

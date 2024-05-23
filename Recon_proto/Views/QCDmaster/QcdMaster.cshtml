@@ -123,7 +123,7 @@
 								<input class="form-control" id="MasterName" type="text" value="">
 							</div>
 						</div>
-						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px;display:none" id="depend">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px;display:none" id="depend">
 							<div class="col-sm-4">
 								<label for="" class="form-label">Depend Parent code<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 								<input class="form-control" id="depparentdesc" type="text" value="" disabled>
@@ -288,6 +288,7 @@
 								active_status_desc: { type: "string" },
 								parent_master_syscode_desc: { type: "string" },
 								master_short_code: { type: "string" },
+								depend_master_syscode: { type: "string" },
 							}
 						}
 					}
@@ -378,6 +379,12 @@
 					hidden: true
 				},
 				{
+					field: "depend_master_syscode",
+					title: "depend_master_syscode",
+					width: 10,
+					hidden: true
+				},
+				{
 					field: "active_status",
 					title: "Active stauts",
 					width: 10,
@@ -446,6 +453,8 @@
 		$("#depend_flag").val(codeValue);
 		if ($("#depend_flag").val() == 'Y') {
 			$("#depend").show();
+		} else {
+			$("#depend").hide();
 		}
 		var items = getlocalStorage("master");
 		$.each(items, function (index, item) {
@@ -494,6 +503,7 @@
 		objdata.parentMasterSyscode = $("#qcdcode").val();
 		objdata.depend_parent_master_syscode = $("#depparentCode").val() ? $("#depparentCode").val() : '';
 		objdata.depend_master_syscode = $("#dependMasterCode").val() ? $("#dependMasterCode").val() : '';
+		objdata.depend_flag = $("#depend_flag").val();
 		var objdata = objdata;
 		$.ajax({
 			type: "POST",
@@ -564,7 +574,44 @@
 		} else {
 			$("#inactive").prop("checked", true);
 		}
-
+		$("#depend_flag").val(selectedItem.depend_flag);
+		if ($("#depend_flag").val() == 'Y') {
+			$("#depend").show();
+		}else{
+			$("#depend").hide();
+		}
+		var items = getlocalStorage("master");
+		$.each(items, function (index, item) {
+			if ($("#qcdcode").val() == item.master_syscode) {
+				$("#depparentdesc").val(item.depend_parent_master_syscode_desc);
+				$("#depparentCode").val(item.depend_parent_master_syscode);
+			}
+		});
+		// dependMasterCode
+		var in_master_code = $("#depparentCode").val();
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#dependMasterCode").empty();
+				$("#dependMasterCode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#dependMasterCode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		$("#dependMasterCode").val(selectedItem.depend_master_syscode)
 	}
 
 	function clearModal() {

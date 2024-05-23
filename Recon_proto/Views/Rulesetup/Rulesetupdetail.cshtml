@@ -128,8 +128,8 @@
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-																	color: white !important;
-																}*/
+																									color: white !important;
+																								}*/
 
 		.control-label.required:after {
 			content: "*";
@@ -158,8 +158,8 @@
 		}
 
 		/*.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
-							float: left;
-						}*/
+															float: left;
+														}*/
 
 		.k-grid-header {
 			background-color: #FEE7D5;
@@ -212,8 +212,8 @@
 		}
 
 		/*.content-wrapper, .right-side {
-																	background-color: #e7e7e7;
-																}*/
+																									background-color: #e7e7e7;
+																								}*/
 
 		.info-box-icon {
 			background: white;
@@ -536,44 +536,45 @@
 											<hr style="margin-top:-1px; width:100%;">
 											<div class="container">
 												<div class="row">
-													<div class="col-sm-4">
+													<div class="col-sm-8">
 														<label class="form-label">Recon Name&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recon_name"></span>
 													</div>
 													<div class="col-sm-4">
 														<label class="form-label">Recon Type&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recon_type"></span>
-													</div>
+													</div>	
+												</div>
+												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Period From&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="rperiod_from"></span>
 													</div>
-
-												</div>
-												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Period To&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="rperiod_to"></span>
 													</div>
 													<div class="col-sm-4">
 														<label class="form-label">Partial Match&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="partial_match"></span>
 													</div>
+												</div>
+												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Knockoff Threshold Value &nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdplus"></span>
 													</div>
-
-												</div>
-												<div class="row">
 													<div class="col-sm-4" style="display:none">
 														<label class="form-label">Threshold - Value&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="thersholdminus"></span>
 													</div>
 													<div class="col-sm-4">
+														<label class="form-label">Applied On &nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="reconappliedon"></span>
+													</div>
+													<div class="col-sm-4">
 														<label class="form-label">Recon Date Flag&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recondateflag"></span>
 													</div>
+												</div>
+												<div class="row">	
 													<div class="col-sm-4">
 														<label class="form-label">Recon Date Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbrecondatefield"></span>
 													</div>
 													<div class="col-sm-4">
 														<label class="form-label">Recon Value Flag&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="reconvalueflag"></span>
 													</div>
-												</div>
-												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Recon Value Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbreconvaluefield"></span>
 													</div>
@@ -630,7 +631,7 @@
 					document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
 					document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
 					document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
-
+					document.getElementById('reconappliedon').innerHTML = res[0].threshold_desc;
 					$("#recontype").val(res[0].recontype_code);
 					recontypecondition();
 				}
@@ -663,12 +664,10 @@
 						text: "  Select  "
 					}));
 					$.each(res, function (index, item) {
-						if (item.dataset_type != "S") {
-							$("#comdataset").append($('<option>', {
-								value: item.dataset_code,
-								text: item.dataset_name
-							}));
-						}
+						$("#comdataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
 					});
 				}
 			});
@@ -710,7 +709,7 @@
 						document.getElementById('reconvalueflag').innerHTML = res[0].recon_value_flag;
 						document.getElementById('cmbreconvaluefield').innerHTML = res[0].recon_value_field;
 						document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
-
+						document.getElementById('reconappliedon').innerHTML = res[0].threshold_desc;
 						$("#recontype").val(res[0].recontype_code);
 						recontypecondition();
 					}
@@ -732,12 +731,10 @@
 							text: "  Select  "
 						}));
 						$.each(res, function (index, item) {
-							if (item.dataset_type != "S") {
-								$("#sourcedataset").append($('<option>', {
-									value: item.dataset_code,
-									text: item.dataset_name
-								}));
-							}
+							$("#sourcedataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
 						});
 						$("#comdataset").empty();
 						$("#comdataset").append($('<option>', {
@@ -745,12 +742,10 @@
 							text: "  Select  "
 						}));
 						$.each(res, function (index, item) {
-							if (item.dataset_type != "S") {
-								$("#comdataset").append($('<option>', {
-									value: item.dataset_code,
-									text: item.dataset_name
-								}));
-							}
+							$("#comdataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
 						});
 					}
 				});
@@ -766,9 +761,9 @@
 					success: function (response) {
 						if (response != null) {
 							var res = JSON.parse(response);
-							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
-							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
+							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);							
 							RuleApplied();
+							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
 							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
 							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
@@ -891,6 +886,19 @@
 				success: function (response) {
 					var res = JSON.parse(response);
 					var sodata = $("#sourcedataset").val();
+					$("#sourcedataset").empty();
+					$("#sourcedataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res, function (index, item) {
+						if (item.dataset_type != "S") {
+							$("#sourcedataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					});
 					$("#comdataset").empty();
 					$("#comdataset").append($('<option>', {
 						value: "",
