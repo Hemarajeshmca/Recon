@@ -114,7 +114,7 @@
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">Mobile No&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="text" id="mobileno" maxlength="10" onblur="validateMobileNumber()" onkeypress="return isNumberKey(event)">
+							<input class="form-control" type="text" id="mobileno" maxlength="10" onblur="validateMobileNumber()" onpaste="return false;" onkeypress="return isNumberKey(event)">
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">User ID&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -386,6 +386,7 @@
 				action="INSERT"
 			}else{
 				action = "UPDATE"
+				
 			}
 			var in_active_reason="";
 			$.ajax({
@@ -438,8 +439,8 @@
 		$("#user_name").val(selectedItem.user_name);
 		$("#mobileno").val(selectedItem.user_contactno);
 		$("#userid").val(selectedItem.user_code);
+		$("#userid").attr('disabled', true);
 		$("#emailid").val(selectedItem.user_emailid);
-		$("#passworduser").val(selectedItem.user_password);
 		$("#usergid").val(selectedItem.user_gid);
 		$("#Cmbrole").val(selectedItem.role_code);
 		$("#txtmode").val("edit");
@@ -565,6 +566,7 @@
 	}
 	function modechange() {
 		location.reload();
+		$("#userid").attr('disabled', false);
 	}
 	function myDeleteJs() {
 		var grid = $("#grid_user").data("kendoGrid");

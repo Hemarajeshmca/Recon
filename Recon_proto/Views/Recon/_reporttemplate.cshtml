@@ -411,11 +411,10 @@
 
 		// recon list
 
-		var data = {};
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var data = {};		
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_code;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -695,10 +694,10 @@
 	}
 
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		
 		var arr = [];
 		var in_master_code = "QCD_RP_CONSTRAINT";
-		var in_user_code = txtusername.user_name;
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1021,13 +1020,11 @@
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
 
-	function upload() {
-
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+	function upload() {		
 		var data = {};
 		var formData = new FormData();
 		data.in_reporttemplate_code = $("#reporttemplate_code").val();
-		data.in_action_by = txtusername.user_name;
+		data.in_action_by = sessionStorage.getItem("usrname");
 		var fileInput = '';
 		var filepath = $("#File_Import").val();
 		fileInput = document.getElementById('File_Import');

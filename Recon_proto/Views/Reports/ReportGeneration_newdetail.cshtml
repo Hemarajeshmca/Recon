@@ -441,11 +441,10 @@
 	});
 	function detailfetch() {
 		// recon list
-		var data = {};
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var data = {};		
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -1018,8 +1017,7 @@
 
 			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 		}
-		var template_code = getlocalStorage("ls_pageList");
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var template_code = getlocalStorage("ls_pageList");		
 		var selected_template = getlocalStorage("selectedTemplate");
 		var str = $("#rt_name").val();
 		var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
@@ -1032,7 +1030,7 @@
 			"in_outputfile_flag": true,
 			"in_outputfile_type": 'csv',
 			"in_ip_addr": "",
-			"in_user_code": txtusername.user_name,
+			"in_user_code": sessionStorage.getItem("usrname"),
 			"file_name": $("#file_name").val(),
 			"in_report_name": concatName
 		};
@@ -1856,7 +1854,6 @@
 			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 		}
 		var template_code = getlocalStorage("ls_pageList");
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var selected_template = getlocalStorage("selectedTemplate");
 		var str = $("#rt_name").val();
 		var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
@@ -1869,7 +1866,7 @@
 			"in_outputfile_flag": true,
 			"in_outputfile_type": 'xlsx',
 			"in_ip_addr": "",
-			"in_user_code": txtusername.user_name,
+			"in_user_code": sessionStorage.getItem("usrname"),
 			"file_name": $("#file_name").val(),
 			"in_report_name": concatName,
 		};

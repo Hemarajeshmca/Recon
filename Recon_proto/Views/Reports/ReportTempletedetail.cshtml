@@ -632,11 +632,10 @@
 
         // recon list
 
-        var data = {};
-        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+        var data = {};      
         data.in_user_gid = 0;
         data.in_active_status = '';
-        data.in_user_code = txtusername.user_name;
+        data.in_user_code = sessionStorage.getItem("usrname");
         var Context = data;
         $.ajax({
             type: "POST",
@@ -1008,10 +1007,10 @@
     }
 
     function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+      
         var arr = [];
         var in_master_code = "QCD_RP_CONSTRAINT";
-        var in_user_code = txtusername.user_name;
+        var in_user_code = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
             url: '../Common/Qcdmaster',
@@ -1528,8 +1527,7 @@
         }
     }
 
-    function savecolfilter() {
-        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+    function savecolfilter() {       
         var modelArr = [];
         var grid = $("#grid_colfilter").data("kendoGrid");
         var colfilterData = $("#grid_colfilter").data().kendoGrid.dataSource.view();
@@ -1549,7 +1547,7 @@
                 in_display_desc: dataItem.display_desc,
                 in_display_order: dataItem.display_order,
                 in_active_status: 'Y',
-                in_action_by: txtusername.user_name,
+                in_action_by: sessionStorage.getItem("usrname"),
             });
         }
         data.templateJSON = JSON.stringify(modelArr);
@@ -1685,8 +1683,7 @@
 
     }
 
-    function deleteSort() {
-        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+    function deleteSort() {       
         var grid = $("#grid_sorting").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
         var reporttemplatesorting_gid = parseInt(model.reporttemplatesorting_gid);
@@ -1710,7 +1707,7 @@
                         data.in_sorting_order = model.sorting_order;
                         data.in_active_status = 'Y';
                         data.in_action = 'DELETE';
-                        data.in_action_by = txtusername.user_name,
+                        data.in_action_by = sessionStorage.getItem("usrname"),
                             data.in_delete_flag = 'N'
                         $.ajax({
                             url: '@Url.Action("reporttemplatesorting", "Reports")',
@@ -2060,8 +2057,7 @@
         });
     }
 
-    function saveSorting() {
-        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+    function saveSorting() {      
         var grid = $("#grid_sorting").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
         var data = {};
@@ -2071,7 +2067,7 @@
         data.in_sorting_order = model.sorting_order;
         data.in_active_status = 'Y';
         data.in_action = model.reporttemplatesorting_gid ? 'UPDATE' : 'INSERT';
-        data.in_action_by = txtusername.user_name;
+        data.in_action_by = sessionStorage.getItem("usrname");
         data.in_delete_flag = 'N';
         if(data.in_report_field && data.in_sorting_order) {
             $.ajax({
@@ -2123,12 +2119,11 @@
       
     }
 
-    function upload() {
-        var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+    function upload() {       
         var data = {};
         var formData = new FormData();
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
-        data.in_action_by = txtusername.user_name;
+        data.in_action_by = sessionStorage.getItem("usrname");
         var fileInput = '';
         var filepath = $("#File_Import").val();
         fileInput = document.getElementById('File_Import');

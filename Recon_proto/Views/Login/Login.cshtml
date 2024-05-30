@@ -75,13 +75,13 @@
 					</div>
 					<div class="row" style="margin-bottom: -37px;">
 						<div class="col-sm-6">
-							<a href="~/Login/ForgetPassword" style="color:#000;margin-left: -11px;" onclick="ForgotPassword()">Forgot Password ?</a><br>
+							<a href="~/Login/ForgetPassword" style="color:#000;margin-left: -11px;display:none" onclick="ForgotPassword()">Forgot Password ?</a><br>
 							<div class="form-group text-center">
 								<span class="Success_show" style="color: white"></span>
 							</div>
 						</div>
 						<div class="col-sm-6">
-							<button type="button" id="btnsubmit" style="width:100%" onclick=" validation()" class="btn btn-primary btn-block btn-flat">&nbsp;Sign In</button>
+							<button type="button" id="btnsubmit" style="width:100%" onclick="validation()" class="btn btn-primary btn-block btn-flat">&nbsp;Sign In</button>
 						</div>
 					</div>
 				</form>
@@ -124,24 +124,8 @@
 	function loginvalidation() {
 		var UserName = $("#txtusername").val();
 		var Password = $("#txtpwd").val();
-
-		//if (UserName == "" || Password == "" || UserName == undefined || UserName == undefined) {
-		//     //UserName = "sundar";
-		//    //Password = "vino@123";
-		//    $.alert({
-		//        icon: 'fa fa-warning',
-		//        title: 'Impact',
-		//        content:"Invalid credentials",
-		//        type: 'red',
-		//        animationSpeed: 700,
-		//    });
-		//    return;
-		//}
-
-
 		$.ajax({
-			type: "POST",
-			//data: '{UserName: "' + UserName + '",Password: "' + Password + '"}',
+			type: "POST",			
 			url: '@Url.Action("Login_validation", "Login")',
 			async: false,
 			data: JSON.stringify({
@@ -151,15 +135,25 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (data) {
 				var response = JSON.parse(data);
-				if (response[0].user_status == 'N' && response[0].msg !== "Login success !") {
-					var id = response[0].user_gid;
-					location.href = "@Url.Action("", "Login/ChangePassword")?Id=" + id
+				if (response[0].passwordreset == 'Y') {
+					var rs = JSON.stringify(response[0]);
+					sessionStorage.setItem("recon_userdetail", rs);
+					var txtusrname = sessionStorage.getItem("recon_userdetail");
+					var txtusername = JSON.parse(txtusrname);
+					sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
+					sessionStorage.setItem("usrname", txtusername.user_code);
+					sessionStorage.setItem("passflag", txtusername.passwordreset);
+					location.href = "@Url.Action("ChangePassword", "Login")";
 				}
 				else {
 					if (response[0].msg == "Login success !") {
-						setlocalStorage("recon_userdetail", response[0]);
-						var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-						setlocalStorage("lastlogindb", txtusername.lastlogin);
+						var rs = JSON.stringify(response[0]);
+						sessionStorage.setItem("recon_userdetail", rs);
+						var txtusrname = sessionStorage.getItem("recon_userdetail");
+						var txtusername = JSON.parse(txtusrname);
+						sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
+						sessionStorage.setItem("usrname", txtusername.user_code);
+						sessionStorage.setItem("passflag", txtusername.passwordreset);
 						window.location.href = '@Url.Action("Index", "Home")';
 					}
 					else {

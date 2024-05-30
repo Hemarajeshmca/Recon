@@ -396,11 +396,10 @@
 	});
 
 	function getreconlist() {
-		var data = {};
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var data = {};		
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -745,7 +744,7 @@
 		if (firstColumnValues != "") {
 			firstColumnValues = firstColumnValues.slice(0, -1);
 		}
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		
 		if (in_recon_code && period_from && period_to && firstColumnValues) {
 			$.alert({
 				title: 'Recon',
@@ -762,7 +761,7 @@
 					in_period_to: pr1,
 					in_automatch_flag: 'N',
 					in_ip_addr: '',
-					in_user_code: txtusername.user_name
+					in_user_code: sessionStorage.getItem("usrname")
 				}),
 				contentType: 'application/json; charset=utf-8',
 				//success: function (response) {
