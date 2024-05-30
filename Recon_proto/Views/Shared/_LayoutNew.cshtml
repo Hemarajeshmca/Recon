@@ -37,7 +37,7 @@
 		.k-textbox > input, .k-autocomplete .k-input, .k-picker-wrap .k-input, .k-numeric-wrap .k-input, .k-dropdown-wrap .k-input, .k-selectbox .k-input{
 			height: 2em !important;
 			font-size: 13px !important;
-			line-height: 17px !important;
+			line-height: 25px !important;
 		}
 
 		.k-grid-filter.k-state-active {
@@ -652,7 +652,7 @@
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
 						}
-						if ($("#navhead").text() == "Dataset" || $("#navhead").text() == "QCD Master" || $("#navhead").text() == "Custom Report Templete" || $("#navhead").text() == "Data Deletion" || $("#navhead").text() == "User Creation" || $("#navhead").text() == "Roles") {
+						if ($("#navhead").text() == "Dataset" || $("#navhead").text() == "QCD Master" || $("#navhead").text() == "Custom Report Templete" || $("#navhead").text() == "Data Deletion" || $("#navhead").text() == "User Creation" || $("#navhead").text() == "Roles" || $("#navhead").text() == "Change Password") {
 							var myLabel = document.getElementById("orglvlNavigate");
 							myLabel.innerHTML = sessionStorage.getItem("level1txt");
 							$("#orglvl2valO").prop("disabled", true);
@@ -750,10 +750,8 @@
 			sessionStorage.setItem("reconcode", "");
 			sessionStorage.setItem("reconname", "");
 			sessionStorage.setItem("usrname", "");
-			setlocalStorage("recon_userdetail","");
-			
-			setlocalStorage("lastlogindb","");
-			
+			setlocalStorage("recon_userdetail", "");
+			setlocalStorage("lastlogindb", "");			
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
@@ -918,8 +916,8 @@
 				location.reload();
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-				var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-				var user_code = txtusername.user_code;
+			
+				var user_code = sessionStorage.getItem("usrname");
 				var level_mapping = $("#orglvl1valO").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO").val() + "#" + "QCD_L3";
 				$.ajax({
 					type: "POST",
@@ -1071,10 +1069,11 @@
 			var child_copy = $('.k-grid-Copy').children('span:first');
 			$('.k-grid-Copy').html(child_copy);
 		}
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var txtusrname = sessionStorage.getItem("recon_userdetail");
+		var txtusername = JSON.parse(txtusrname);
 		document.getElementById("userdata").textContent = txtusername.user_name;
 		document.getElementById("userdata1").innerHTML = "Welcome " + txtusername.user_name + "<br>" + "Please Select Context"
-		sessionStorage.setItem("usrname", txtusername.user_code);
+		sessionStorage.setItem("usrname", txtusername.user_name);
 		sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
 		document.getElementById("roledata").textContent = txtusername.usergroup_desc;
 		function storeheadernew() {
@@ -1094,8 +1093,7 @@
 				location.reload();
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-				var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
-				var user_code = txtusername.user_code;
+				var user_code = sessionStorage.getItem("usrname");
 				var level_mapping = $("#orglvl1valO1").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO1").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO1").val() + "#" + "QCD_L3";
 				$.ajax({
 					type: "POST",

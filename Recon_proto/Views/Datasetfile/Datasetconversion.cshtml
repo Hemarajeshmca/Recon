@@ -289,11 +289,10 @@
 	});
 
 	function gridlist() {
-		var data = {};
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var data = {};		
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -629,7 +628,6 @@
 
 	// code to hit API directly
 	function start1() {
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var baseurl = '@ViewBag.baseurl';
 		var fileName = '';
 		var fileType = '';
@@ -643,7 +641,7 @@
 			formData.append('file', fileInput.files[0]);
 			fileType = fileInput.files[0].type;
 		}
-		formData.append('initiated_by', txtusername.user_name);
+		formData.append('initiated_by', sessionStorage.getItem("usrname"));
 		$.ajax({
 			url: baseurl + 'Pipeline/NewScheduler_new',
 			type: 'POST',
@@ -656,8 +654,7 @@
 	}
 
 	function start() {
-		hideProgress();
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		hideProgress();		
 		var fileName = '';
 		var fileType = '';
 		var fileInput = '';
@@ -671,7 +668,7 @@
 			formData.append('file', fileInput.files[0]);
 			fileType = fileInput.files[0].name;
 		}
-		formData.append('initiated_by', txtusername.user_name);
+		formData.append('initiated_by', sessionStorage.getItem("usrname"));
 		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
 			$.alert({
 				title: 'Recon',

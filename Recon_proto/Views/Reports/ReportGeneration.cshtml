@@ -149,10 +149,9 @@
 		});
 	}
 
-	function getQCDdata() {
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));;
+	function getQCDdata() {		
 		var in_master_code = "QCD_RP_CONSTRAINT";
-		var in_user_code = txtusername.user_name;
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/Qcdmaster',
@@ -209,11 +208,10 @@
 
 
 	function getreconlist() {
-		var data = {};
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var data = {};		
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -314,11 +312,10 @@
 		});
 	}
 
-	function addbtn1() {
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+	function addbtn1() {		
 		var constraintData1 = '';
 		var in_master_code = "QCD_RP_CONSTRAINT";
-		var in_user_code = txtusername.user_name;
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/Qcdmaster',
@@ -479,8 +476,7 @@
 		return false;
 	}
 
-	function generateReport() {
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+	function generateReport() {		
 		var data = {};
 		data.in_recon_code = $("#reconname").val();
 		data.in_report_code = $("#report_name").val();
@@ -488,7 +484,7 @@
 		data.reportcondition = 'AND';
 		data.in_ip_addr = 'localhost';
 		data.in_outputfile_flag = true;
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		for (var i = 1; i <= clicks; i++) {
 			var openpara = $("#chkval" + i).is(":checked");
 			var attributes = $("#txtorderidone" + i).val();
