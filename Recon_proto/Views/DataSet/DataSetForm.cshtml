@@ -293,6 +293,13 @@
 					$("#txtdatasetcode").val(result.Header[0].dataset_code);
 					$("#txtstatus").val(result.Header[0].active_status_desc);
 					$("#datasetgid").val(result.Header[0].dataset_gid);
+					if (result.Header[0].active_status == 'N') {
+						$("#savesubmit").hide();
+						$("#adddataset").hide();
+						$("#datasetfieldadd").hide();
+						$(".k-grid-edit").hide();
+						$("#btnsubmit").hide();
+					}
 					$("#gd_datasetfield").empty();
 					$("#gd_datasetfield").append("<div id='grid_datasetfield'></div>");
 					grid_datasetfield(result.DataSet);

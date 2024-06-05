@@ -128,8 +128,8 @@
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-																									color: white !important;
-																								}*/
+																											color: white !important;
+																										}*/
 
 		.control-label.required:after {
 			content: "*";
@@ -158,8 +158,8 @@
 		}
 
 		/*.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
-															float: left;
-														}*/
+																	float: left;
+																}*/
 
 		.k-grid-header {
 			background-color: #FEE7D5;
@@ -212,8 +212,8 @@
 		}
 
 		/*.content-wrapper, .right-side {
-																									background-color: #e7e7e7;
-																								}*/
+																											background-color: #e7e7e7;
+																										}*/
 
 		.info-box-icon {
 			background: white;
@@ -541,7 +541,7 @@
 													</div>
 													<div class="col-sm-4">
 														<label class="form-label">Recon Type&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recon_type"></span>
-													</div>	
+													</div>
 												</div>
 												<div class="row">
 													<div class="col-sm-4">
@@ -568,7 +568,7 @@
 														<label class="form-label">Recon Date Flag&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="recondateflag"></span>
 													</div>
 												</div>
-												<div class="row">	
+												<div class="row">
 													<div class="col-sm-4">
 														<label class="form-label">Recon Date Field&nbsp;&nbsp;:&nbsp;&nbsp</label><span style="font-size:13px" id="cmbrecondatefield"></span>
 													</div>
@@ -761,7 +761,7 @@
 					success: function (response) {
 						if (response != null) {
 							var res = JSON.parse(response);
-							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);							
+							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
 							RuleApplied();
 							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
@@ -1367,7 +1367,7 @@
 		});
 
 		//recon name
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -1774,7 +1774,6 @@
 			})
 		});
 	}
-
 	function OnEdit(e) {
 		try {
 			setDefaultValues(e);
@@ -1783,7 +1782,6 @@
 			javascript_log4j_root(arguments.callee.name, err);
 		}
 	}
-
 	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		debugger;
 		var arr = [];
@@ -1889,7 +1887,6 @@
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
-
 	function saverulecondition() {
 		debugger;
 		try {
@@ -2068,7 +2065,7 @@
 			sortable: false,
 			selectable: true,
 			filterable: false,
-			navigatable: true,
+			navigatable: false,
 			resizable: true,
 			pageable: true,
 			pageable: {
@@ -2082,7 +2079,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href=''onclick='saveIdentifier()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href=''onclick='saveIdentifier()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -2151,7 +2148,7 @@
 			},
 			{
 				field: "filter_field",
-				title: "Filter Field",
+				title: "Source Field",
 				width: 100,
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourceidentifier")
@@ -2164,6 +2161,7 @@
 				editor: function (container, options) {
 					combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_sourceidentifier", "SOURCE")
 				},
+				hidden: true,
 			},
 			{
 				field: "ident_criteria",
@@ -2388,7 +2386,7 @@
 					{
 						name: "save",
 						id: "Save",
-						template: "<a href='' onclick='saveIdentifierC()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:22%;'></a>&nbsp;&nbsp;&nbsp;",
+						template: "<a href='' onclick='saveIdentifierC()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
 					//{
 					//	name: "edit",
@@ -2457,11 +2455,12 @@
 			},
 			{
 				field: "filter_field",
-				title: "Filter Field",
+				title: "Target Field",
 				width: 100,
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionidentifier")
 				},
+
 			},
 			{
 				field: "filter_criteria",
@@ -2470,6 +2469,7 @@
 				editor: function (container, options) {
 					combo_filter_field1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_comparisionidentifier", "SOURCE")
 				},
+				hidden: true,
 			},
 			{
 				field: "ident_criteria",
@@ -2645,7 +2645,7 @@
 			var in_rule_code = $("#txtrulecode").val();
 			var filterapplyon = model.filter_applied_on;
 			var cmbfiltername = model.filter_field_code;
-			var extractcriteria = model.filter_criteria;
+			var extractcriteria = "EXACT";
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
@@ -2705,7 +2705,7 @@
 			var in_rule_code = $("#txtrulecode").val();
 			var filterapplyon = model.filter_applied_on;
 			var cmbfiltername = model.filter_field_code;
-			var extractcriteria = model.filter_criteria;
+			var extractcriteria = "EXACT";
 			var identifiercriteria = model.ident_criteria;
 			var identifiervalue = model.ident_value;
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;

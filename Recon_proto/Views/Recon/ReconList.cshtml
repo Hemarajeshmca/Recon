@@ -140,7 +140,7 @@
 		gridlist();
 	});
 	function gridlist() {
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -203,6 +203,7 @@
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
 								status: { type: "string" },
+								clone_recon_code: { type: "string" },
 							}
 						},
 						parse: function (data) {
@@ -353,6 +354,13 @@
 					width: 10,
 					hidden: true
 				},
+				{
+					field: "clone_recon_code",
+					title: "clone_recon_code",
+					width: 10,
+					hidden: true
+				},
+
 				{
 					field: "active_status",
 					title: "Status",
@@ -551,7 +559,9 @@
 			$("#clone_recon").modal('hide');
 			btn_onClick("Edit");
 			setlocalStorage("cloned_reconCode", selectedItem.recon_code);
-			document.location = "../Recon/ReconViewClone";
+			if (selectedItem.clone_recon_code != '') {
+				document.location = "../Recon/ReconViewClone";
+			}
 		} else if (selectedItem.active_status == 'N') {
 			return;
 		}

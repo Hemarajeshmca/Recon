@@ -397,7 +397,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "userlistfetch");
+				objcom.errorlog(ex.Message, "treeviewread");
 				return Json(ex.Message);
 			}
 		}
@@ -547,7 +547,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "userlistfetch");
+				objcom.errorlog(ex.Message, "getcheckednode");
 				return Json(ex.Message);
 			}
 		}
@@ -592,7 +592,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "userlistfetch");
+				objcom.errorlog(ex.Message, "setcontextread");
 				return Json(ex.Message);
 			}
 		}
@@ -632,7 +632,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "userlistfetch");
+				objcom.errorlog(ex.Message, "applycontextsave");
 				return Json(ex.Message);
 			}
 		}
@@ -679,7 +679,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "userlistfetch");
+				objcom.errorlog(ex.Message, "getcontext");
 				return Json(ex.Message);
 			}
 		}
@@ -723,7 +723,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "userlistfetch");
+				objcom.errorlog(ex.Message, "getmenu");
 				return Json(ex.Message);
 			}
 		}
