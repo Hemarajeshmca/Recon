@@ -1036,51 +1036,49 @@
 		};
 
 		if (data.in_report_param && data.in_report_condition) {
-			//$.alert({
-			//	title: 'Recon',
-			//	content: "Report Generated, Please check the Job Status in Utility",
-			//	type: 'green',
-			//});
+			$.alert({
+				title: 'Recon',
+				content: "Report Generated, Please check the Job Status in Utility",
+				type: 'green',
+			});
 			$.ajax({
 				type: "POST",
 				url: '../Reports/generatedynamicreport',
 				dataType: 'json',
 				data: JSON.stringify(data),
 				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-				    var res = JSON.parse(response);
+				//success: function (response) {
+				//    var res = JSON.parse(response);
+				//    if (res.length > 0) {
+				//        var data = res[0];
+				//        if (data.out_result != '0') {
+				//            $.alert({
+				//                title: 'Recon',
+				//                content: data.out_msg,
+				//                type: 'green',
+				//            });
 
-				    if (res.length > 0) {
-				        var data = res[0];
-				        if (data.out_result != '0') {
-				            $.alert({
-				                title: 'Recon',
-				                content: data.out_msg,
-				                type: 'green',
-				            });
-
-				        } else {
-				            $.alert({
-				                title: 'Recon',
-				                content: data.out_msg,
-				                type: 'red',
-				            });
-				        }
-				    } else {
-				        $.alert({
-				            title: 'Recon',
-				            content: "Something Went Wrong ..!",
-				            type: 'red',
-				        });
-				    }
-				},
-				error: function (er) {
-
-				    alert(er)
-				    console.log(er)
-				}
+				//        } else {
+				//            $.alert({
+				//                title: 'Recon',
+				//                content: data.out_msg,
+				//                type: 'red',
+				//            });
+				//        }
+				//    } else {
+				//        $.alert({
+				//            title: 'Recon',
+				//            content: "Something Went Wrong ..!",
+				//            type: 'red',
+				//        });
+				//    }
+				//},
+				//error: function (er) {
+				//    alert(er)
+				//    console.log(er)
+				//}
 			});
-						hideProgress();
+			hideProgress();
 		}
 		else if (!data.in_report_param) {
 			$.alert({
@@ -1088,7 +1086,7 @@
 				content: "Please select Report..!",
 				type: 'red',
 			});
-						hideProgress();
+			hideProgress();
 		}
 	}
 
@@ -1483,12 +1481,6 @@
 			}
 
 		}
-		//else if (event.type === 'focusout') {
-		//    pageno = $("#gotoPage").val();
-		//    pagesize = $("#items").val();
-		//    $("#gotoPage").val(pageno);
-		//    Runprogress();
-		//}
 	}
 
 	function pagination(data) {
@@ -1497,7 +1489,7 @@
 			if (pageno > Actpageno) {
 				$.alert({
 					title: 'Recon',
-					content: "Page number is greate than total number of page",
+					content: "Page number is greater than total number of page",
 					type: 'red',
 				});
 				return;
@@ -1519,7 +1511,7 @@
 		} else if (data == "last") {			
 			pageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 			//pagesize = $("#items").val();
-			pagesize = pagesize;
+			pagesize = pagesize ? pagesize: 5000;
 			$("#gotoPage").val(pageno);
 			Runprogress();
 		} else if (data == "first") {
@@ -1587,193 +1579,15 @@
 
 	}
 
-	//function onRequestEnd(e) {
-
-	//}
-	//function editDetails() {
-
-	//    var grid = $("#processGrid").data("kendoGrid");
-	//    var model = grid.dataItem($(event.target).closest("tr"));
-	//    var tranrecon_gid = $("#tranrecon_gid").val();
-	//    var remark1 = $("#remark_desc").data("kendoDropDownList").value();
-	//    $.ajax({
-	//        type: "POST",
-	//        data: '{remark1: "' + remark1 + '",tran_gid:  "' + trangid + '" }',
-	//        url: '@Url.Action("RemarkReason", "SetUp")',
-	//        dataType: "json",
-	//        contentType: 'application/json; charset=utf-8',
-	//        success: function (data) {
-
-	//            if (data[1] > 0) {
-	//                $.dialog({
-	//                    title: 'Imapct',
-	//                    content: data[0],
-	//                    type: 'green',
-
-	//                });
-	//                $("#tabs1").show();
-	//                $("#applyruledtl_gid").val(data[1]).trigger("change");
-	//                var wnd1 = $("#dialog1").data("kendoWindow");
-	//                if (wnd1) {
-	//                    wnd1.close();
-	//                }
-	//            }
-	//            else {
-	//                $.dialog({
-	//                    title: 'Impact',
-	//                    content: data[0],
-	//                    type: 'green',
-	//                });
-	//                //event.container.data("kendoWindow").one("close", onEditorTemplateClosing);
-	//            }
-	//        },
-
-	//    });
-	//}
-
-	//function Reason(e) {
-	//	window_open1();
-	//}
-
-	//function window_open1() {
-	//    var grid = $("#processGrid").data("kendoGrid");
-	//    var model = grid.dataItem($(event.target).closest("tr"));
-	//    var tranrecon_gid = model.tranrecon_gid;
-	//    trangid = (model.tran_gid);
-	//    $("#tranrecon_gid").val(tranrecon_gid);
-	//    $("#dialog1").kendoWindow();
-	//    var dialog1 = $("#dialog1").data("kendoWindow");
-	//    dialog1.open().element.closest(".k-window").css({
-	//        top: 143,
-	//        left: 424, height: 144, width: 351
-	//    });
-	//    dialog1.title("Remark");
-	//    dialog1.bind("open", window_open);
-	//}
+	
 	function viewDetails(e) {
 		var grid = this,
 			selectedRow = $(e.target).closest("tr")[0];
 		grid.editRow(selectedRow);
 		$(".k-grid-update").hide();
 		$(".k-window-title").text("View");
-		// window_open();
 	}
-	//function window_open() {
-	//    var table_name = "recon_trn_vtranrecon"
-	//    var grid = $("#processGrid").data("kendoGrid");
-	//    var model = grid.dataItem($(event.target).closest("tr"));
-
-	//    var filetype = model.filetype;
-	//    var tranrecon_gid = model.tranrecon_gid;
-	//    var reportcondition = "and tranrecon_gid = " + tranrecon_gid
-	//    $.ajax({
-	//        type: "POST",
-	//        data: '{table_name: "' + table_name + '",condition:  "' + reportcondition + '" }',
-	//        // url: "/Report/ReportExpenceGrid_Read",
-	//        url: '@Url.Action("ReportExpenceGrid_Read", "Report")',
-	//        dataType: "json",
-	//        contentType: 'application/json; charset=utf-8',
-	//        success: function (Data1) {
-	//            $("#dialog").kendoWindow();
-	//            var dialog = $("#dialog").data("kendoWindow");
-	//            dialog.open().element.closest(".k-window").css({
-	//                top: 121,
-	//                left: 300, height: 400, width: 900
-	//            });
-	//            dialog.title("Manual Match - Rule Based");
-	//            dialog.bind("open", window_open);
-	//            $("#exportExcel1").show();
-	//            var columns = [];
-	//            var chkval = JSON.parse(Data1);
-	//            var arr = [];
-	//            $.each(chkval, function (i, e) {
-
-	//                $.each(e, function (key, val) {
-	//                    arr.push(val);
-	//                });
-
-	//            });
-	//            if (arr == "No Records Found!" || arr == "Error in Data!") {
-	//                return false;
-	//            }
-	//            var data = JSON.parse(Data1);
-	//            var i = 0;
-	//            var entryIndex = "entries[" + i + "]";
-	//            for (var val in data[0]) {
-	//                if (val == "Collection Center Name") {
-	//                    columns.push({
-	//                        field: entryIndex,
-	//                        title: key,
-	//                        attributes: { style: "text-align: left;" }
-	//                    });
-	//                }
-	//                else {
-	//                    if (val != "Collection Center Name")
-	//                        columns.push({
-	//                            field: entryIndex,
-	//                            title: val,
-	//                        });
-	//                }
-	//                i = i + 1;
-	//                entryIndex = "entries[" + i + "]";
-	//            }
-	//            var rows = [];
-	//            var data1 = JSON.parse(Data1);
-
-	//            $.each(data1, function (i, e) {
-	//                var entryArray = [];
-	//                $.each(e, function (key, val) {
-
-	//                    entryArray.push(val);
-	//                });
-	//                rows.push(kendo.observable({
-	//                    entries: entryArray
-	//                }));
-
-	//            });
-
-	//            var viewModel = kendo.observable({
-	//                gridRows: rows
-	//            });
-
-	//            var configuration = {
-	//                //dataBound: onDataBound,
-	//                height: 330,
-	//                navigatable: true,
-	//                groupable: true,
-	//                editable: false,
-	//                sortable: true,
-	//                Scrollable: true,
-	//                filterable: false,
-	//                pagable: false,
-	//                resizable: false,
-	//                persistSelection: true,
-	//                selectable: "false",
-	//                columns: columns,
-	//                rows: viewModel,
-	//                excel: {
-	//                    fileName: "Manual Match.xlsx",
-	//                    filterable: true,
-	//                    allPages: false
-	//                },
-	//            };
-	//            $("#example").remove();
-	//            $('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
-	//            var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
-	//            kendo.bind($("#grid"), viewModel);
-
-	//            var grid = $("#grid").data("kendoGrid");
-	//            for (var i = 0; i < grid.columns.length; i++) {
-	//                if (i != grid.columns.length) {
-	//                    grid.autoFitColumn(i);  //autofit each column.
-	//                }
-	//            }
-	//        },
-	//        error: function (result) {
-	//            console.log(result);
-	//        }
-	//    });
-	//}
+	
 	$(".accordion_head").click(function () {
 
 		if ($('.accordion_body').is(':visible')) {
@@ -1802,12 +1616,15 @@
 		var close_braces = "";
 		var joins = "";
 		var joins1 = "";
+		var dataset2 = [];
+		var dataArray = [];
 		for (var i = 0; i < grid._data.length; i++) {
 			value = "";
 			open_braces = "";
 			close_braces = "";
 			joins = "";
 			joins1 = "";
+			dataset2.push(grid._data[i]);
 			if (i == 0) {
 				joins1 = 'AND ';
 			}
@@ -1854,10 +1671,12 @@
 			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 		}
 		var template_code = getlocalStorage("ls_pageList");
+		//var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
+		var txtusername = sessionStorage.getItem("usrname");
 		var selected_template = getlocalStorage("selectedTemplate");
 		var str = $("#rt_name").val();
 		var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
-		var data = {
+		var dataset1 = {
 			"in_reporttemplate_code": template_code ? template_code : '',
 			"in_report_code": selected_template.report_code,
 			"in_recon_code": selected_template.recon_code,
@@ -1866,11 +1685,16 @@
 			"in_outputfile_flag": true,
 			"in_outputfile_type": 'xlsx',
 			"in_ip_addr": "",
-			"in_user_code": sessionStorage.getItem("usrname"),
+			"in_user_code": txtusername,
 			"file_name": $("#file_name").val(),
 			"in_report_name": concatName,
 		};
-		if (data.in_report_param && rpt_cond) {
+		dataArray.push(dataset1);
+		var dataset = {
+			dataset1: JSON.stringify(dataArray),
+			dataset2: JSON.stringify(dataset2)
+		};
+		if (dataset1.in_report_param && rpt_cond) {
 			$.alert({
 				title: 'Recon',
 				content: "Report Generated, Please check the Job Status in Utility",
@@ -1878,43 +1702,43 @@
 			});
 			$.ajax({
 				type: "POST",
-				url: '../Reports/generateReportXLSXdynamic',
+				url: '../Reports/generateReportXLSXdynamic_new',
 				dataType: 'json',
-				data: JSON.stringify(data),
+				data: JSON.stringify(dataset),
 				contentType: 'application/json; charset=utf-8',
 				//success: function (response) {
-				//    var res = JSON.parse(response);
-				//    if (res.length > 0) {
-				//        var data = res[0];
-				//        if (data.out_result != '0') {
+				//	var res = JSON.parse(response);
+				//	if (res.length > 0) {
+				//		var data = res[0];
+				//		if (data.out_result != '0') {
 				//			$.alert({
 				//				title: 'Recon',
 				//				content: data.msg,
 				//				type: 'green',
 				//			});
-				//        } else {
-				//            $.alert({
-				//                title: 'Recon',
-				//                content: data.msg,
-				//                type: 'red',
-				//            });
-				//        }
-				//    } else {
-				//        $.alert({
-				//            title: 'Recon',
-				//            content: "Something Went Wrong ..!",
-				//            type: 'red',
-				//        });
-				//    }
+				//		} else {
+				//			$.alert({
+				//				title: 'Recon',
+				//				content: data.msg,
+				//				type: 'red',
+				//			});
+				//		}
+				//	} else {
+				//		$.alert({
+				//			title: 'Recon',
+				//			content: "Something Went Wrong ..!",
+				//			type: 'red',
+				//		});
+				//	}
 				//},
 				//error: function (er) {
-				//    alert(er)
-				//    console.log(er)
+				//	alert(er)
+				//	console.log(er)
 				//}
 			});
 			hideProgress();
 		}
-		else if (!data.data.in_report_param) {
+		else if (!dataset1.data.in_report_param) {
 			$.alert({
 				title: 'Recon',
 				content: "Report Param is missing!",

@@ -72,14 +72,14 @@
 					<div class="col-md-3">
 						<label for="" class="form-label">Initiated From Date<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 						<div>
-							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<label class="form-label"> Initiated To Date <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 						<div>
-							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
@@ -129,6 +129,9 @@
 
 
 	function searchJob() {
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		var toDate = validateDateFormat($("#initialed_to").val());
+		if (fromDate && toDate) {
 		try {
 			var job_type = $("#jobtype").val();
 			var period_from = $("#initiated_from").val();
@@ -163,7 +166,13 @@
 		catch (e) {
 			console.log(e)
 		}
-
+		} else if (!fromDate || !toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		}
 	}
 
 	function fetchGrid(data) {
@@ -341,4 +350,11 @@
 			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '&file_name=' + file_name + '';
 		}
 	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		const dateInput1 = document.getElementById('initialed_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
 </script>

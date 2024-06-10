@@ -793,8 +793,8 @@ namespace Recon_proto.Controllers
                             wb.Worksheet(1).Cell("A20").InsertTable(Table1);
                             ws.Table(0).ShowAutoFilter = false;// Disable AutoFilter.
                             ws.Table(0).Theme = XLTableTheme.None;
-                            ws.Range("A20:H20").Style.Font.Bold = true;
-                            ws.Range("A20:H20").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+                            ws.Range("A20:O20").Style.Font.Bold = true;
+                            ws.Range("A20:O20").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
 
                             //Inserting Table1 Total
@@ -834,7 +834,7 @@ namespace Recon_proto.Controllers
                             wb.Worksheet(1).Cell(cellTxt).InsertTable(Table2);
                             ws.Table(1).ShowAutoFilter = false;// Disable AutoFilter.
                             ws.Table(1).Theme = XLTableTheme.None;
-                            cellTxt1 = "A" + row.ToString() + ":H" + row.ToString();
+                            cellTxt1 = "A" + row.ToString() + ":O" + row.ToString();
                             ws.Range(cellTxt1).Style.Font.Bold = true;
                             ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
@@ -872,7 +872,7 @@ namespace Recon_proto.Controllers
                             wb.Worksheet(1).Cell(cellTxt).InsertTable(Table3);
                             ws.Table(2).ShowAutoFilter = false;// Disable AutoFilter.
                             ws.Table(2).Theme = XLTableTheme.None;
-                            cellTxt1 = "A" + row.ToString() + ":H" + row.ToString();
+                            cellTxt1 = "A" + row.ToString() + ":O" + row.ToString();
                             ws.Range(cellTxt1).Style.Font.Bold = true;
                             ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
@@ -910,7 +910,7 @@ namespace Recon_proto.Controllers
                             wb.Worksheet(1).Cell(cellTxt).InsertTable(Table4);
                             ws.Table(3).ShowAutoFilter = false;// Disable AutoFilter.
                             ws.Table(3).Theme = XLTableTheme.None;
-                            cellTxt1 = "A" + row.ToString() + ":H" + row.ToString();
+                            cellTxt1 = "A" + row.ToString() + ":O" + row.ToString();
                             ws.Range(cellTxt1).Style.Font.Bold = true;
                             ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
@@ -949,7 +949,7 @@ namespace Recon_proto.Controllers
 								wb.Worksheet(1).Cell(cellTxt).InsertTable(Table8);
 								ws.Table(4).ShowAutoFilter = false;// Disable AutoFilter.
 								ws.Table(4).Theme = XLTableTheme.None;
-								cellTxt1 = "A" + row.ToString() + ":U" + row.ToString();
+								cellTxt1 = "A" + row.ToString() + ":O" + row.ToString();
 								ws.Range(cellTxt1).Style.Font.Bold = true;
 								ws.Range(cellTxt1).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
@@ -2143,67 +2143,6 @@ namespace Recon_proto.Controllers
 
 
         #region generatedynamicXLSX
-        public ActionResult generateReportXLSXdynamic([FromBody] generatexlsxdynamicReportmodel context)
-        {
-
-            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            DataSet result = new DataSet();
-            DataTable Table1 = new DataTable();
-            string post_data = "";
-            try
-            {
-                using (var client = new HttpClient())
-                {
-
-                    string Urlcon = "Report/";
-                    client.BaseAddress = new Uri(urlstring + Urlcon);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
-                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    try { 
-                    var response = client.PostAsync("generatedynamicreport", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
-                    return Json(d2);
-                    }
-                    catch (HttpRequestException ex)
-                    {
-                        return Json(ex);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(e.Message);
-            }
-        }
-
-
-        public class generatexlsxdynamicReportmodel
-        {
-
-            public String? in_reporttemplate_code { get; set; }
-            public String? in_report_code { get; set; }
-            public String? in_recon_code { get; set; }
-            public String? in_report_param { get; set; }
-            public String? in_report_condition { get; set; }
-            public String? in_ip_addr { get; set; }
-            public Boolean? in_outputfile_flag { get; set; }
-            public String? in_outputfile_type { get; set; }
-            public string? in_user_code { get; set; }
-            public string? file_name { get; set; }
-            public string? in_report_name { get; set; }
-        }
-
-
         public JsonResult getfilepath()
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -2347,6 +2286,121 @@ namespace Recon_proto.Controllers
             public string? out_msg { get; set; }
             public string? out_result { get; set; }
         }
+
+
+		public ActionResult generateReportXLSXdynamic_new([FromBody] DataModel objdata)
+		{
+
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			DataTable Table1 = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Report/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(objdata), UTF8Encoding.UTF8, "application/json");
+					try
+					{
+						var response = client.PostAsync("generatedynamicreport_new", content).Result;
+						Stream data = response.Content.ReadAsStreamAsync().Result;
+						StreamReader reader = new StreamReader(data);
+						post_data = reader.ReadToEnd();
+						string d2 = JsonConvert.DeserializeObject<string>(post_data);
+						Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
+						return Json(d2);
+					}
+					catch (HttpRequestException ex)
+					{
+						return Json(ex);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				return Json(e.Message);
+			}
+		}
+		public class DataModel
+		{
+           public string Dataset1 { get; set; }
+			public string Dataset2 { get; set; }
+		}
+
+        //customReport
+        public ActionResult customReport_brsSummary(string in_tran_date, string in_recon_code, string in_recon_name)
+        {
+
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            DataTable Table1 = new DataTable();
+            DataTable Table2 = new DataTable();
+            string post_data = "";
+            string filename = "Custom Report.xlsx";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    reconbetweenaccmodel report = new reconbetweenaccmodel();
+                    report.in_tran_date = in_tran_date;
+                    report.in_recon_code = in_recon_code;
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
+                    try
+                    {
+                        var response = client.PostAsync("customReport_brsSummary", content).Result;
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        post_data = reader.ReadToEnd();
+                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                        result = JsonConvert.DeserializeObject<DataSet>(d2);
+                        Table1 = result.Tables[0];
+                        Table2 = result.Tables[1];
+
+                        using (XLWorkbook wb = new XLWorkbook())
+                        {
+                            var ws = wb.AddWorksheet("Sheet1");
+                            ws.Cell("A1").InsertTable(Table1);
+
+                            var ws2 = wb.AddWorksheet("Sheet2");
+                            ws2.Cell("A1").InsertTable(Table2);
+
+                            using (MemoryStream stream = new MemoryStream())
+                            {
+                                wb.SaveAs(stream);
+                                return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
+                            }
+                        }
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
 
     }
 

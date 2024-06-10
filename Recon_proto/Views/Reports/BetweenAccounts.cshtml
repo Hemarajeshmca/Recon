@@ -53,7 +53,7 @@
                             Tran Date
                         </label>
                         <div>
-                            <input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" onclick="Dateformat()" style="width:100%" />
+                            <input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" style="width:100%" />
                             <span data-for='valid' class='k-invalid-msg'></span>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                         <label for="organization" class="form-label">Recon Name</label><br>
                         <select id="reconname" class="form-select form-control"> </select>
                     </div>
-                    <div class="col-md-3" style="margin-top: 2.5%;">
+                    <div class="col-md-5" style="margin-top: 2.5%;">
                         <button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%">
                             View
                         </button>
@@ -71,8 +71,8 @@
                         <button type="button" aria-hidden="true" onclick="monthendbrs()" id="monthendexcel" class="btn btn-sm save_btn me-2" style="">
                             Monthend Brs
                         </button>
-                        <button type="submit" class="btn btn-sm save_btn me-2" style="" hidden>
-                            Daily Brs
+                        <button type="button" class="btn btn-sm save_btn me-2" onclick="customReport()" style="">
+                            Custom Report
                         </button>
 
                     </div>
@@ -115,10 +115,8 @@
                         value: item.recon_code,
                         text: item.recon_name
                     }));
-                    }
-                    
+                    }                    
                 });
-
             },
             error: function (er) {
                 alert(er)
@@ -128,30 +126,45 @@
     }
 
     function run() {
+        var tranDate = validateDateFormat($("#tran_date").val());
         var in_recon_code = $("#reconname").val();
-        var in_tran_date = $("#tran_date").val();
-        var ts = in_tran_date.split("/");
-        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        $.ajax({
-            type: "POST",
-            url: '../Reports/reconbetweenacc',
-            dataType: 'json',
-            data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var res = JSON.parse(response)
-                if (res.length > 0) {
-                    loadGrid(res);
-                    $("#exportExcel").show();
-                    $("#monthendexcel").show();
-                } else {
-                    loadGrid([]);
+        if (tranDate && in_recon_code) {
+            var in_tran_date = $("#tran_date").val();
+            var ts = in_tran_date.split("/");
+            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+            $.ajax({
+                type: "POST",
+                url: '../Reports/reconbetweenacc',
+                dataType: 'json',
+                data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    var res = JSON.parse(response)
+                    if (res.length > 0) {
+                        loadGrid(res);
+                        $("#exportExcel").show();
+                        $("#monthendexcel").show();
+                    } else {
+                        loadGrid([]);
+                    }
+                },
+                error: function (er) {
+                    console.log(er)
                 }
-            },
-            error: function (er) {
-                console.log(er)
-            }
-        });
+            });
+        } else if (!in_recon_code) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please select Recon ..!',
+                type: 'red',
+            });
+        } else if (!tranDate) {
+            $.alert({
+                title: 'Recon',
+                content: 'Invalid Tran Date ..!',
+                type: 'red',
+            });
+        }      
     }
 
     function loadGrid(data) {
@@ -235,22 +248,82 @@
     }
 
      function monthbrs() {
+        var tranDate = validateDateFormat($("#tran_date").val());
         var in_recon_code = $("#reconname").val();
-        var in_recon_name = $("#reconname").find(":selected").text();
-        var in_tran_date = $("#tran_date").val();
-        var ts = in_tran_date.split("/");
-        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        window.location.href = '@Url.Action("kendogrid_download", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
-    }
+        if (tranDate && in_recon_code) {
+            var in_recon_name = $("#reconname").find(":selected").text();
+            var in_tran_date = $("#tran_date").val();
+            var ts = in_tran_date.split("/");
+            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+            window.location.href = '@Url.Action("kendogrid_download", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+        } else if (!tranDate) {
+            $.alert({
+            title: 'Recon',
+                content: 'Invalid Tran Date ..!',
+                    type: 'red',
+            });
+        } else if (!in_recon_code) {
+            $.alert({
+            title: 'Recon',
+                content: 'Please Select Recon ..!',
+                    type: 'red',
+            });
+        }
+     }
 
     function monthendbrs() {
         var in_recon_code = $("#reconname").val();
-        var in_recon_name = $("#reconname").find(":selected").text();
-        var in_tran_date = $("#tran_date").val();
-        var ts = in_tran_date.split("/");
-        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        window.location.href = '@Url.Action("monthendreport", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
-
+        var tranDate = validateDateFormat($("#tran_date").val());
+        if (tranDate && in_recon_code) {
+            var in_recon_name = $("#reconname").find(":selected").text();
+            var in_tran_date = $("#tran_date").val();
+            var ts = in_tran_date.split("/");
+            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+            window.location.href = '@Url.Action("monthendreport", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+        } else if (!tranDate) {
+            $.alert({
+            title: 'Recon',
+            content: 'Invalid Tran Date ..!',
+            type: 'red',
+            });
+        } else if (!in_recon_code) {
+            $.alert({
+            title: 'Recon',
+            content: 'Please Select Recon ..!',
+            type: 'red',
+            });
+        }
     }
+    
+    function customReport(){
+        var tranDate = validateDateFormat($("#tran_date").val());
+        var in_recon_code = $("#reconname").val();
+        if (tranDate && in_recon_code) {
+            var in_recon_name = $("#reconname").find(":selected").text();
+            var in_tran_date = $("#tran_date").val();
+            var ts = in_tran_date.split("/");
+            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+            window.location.href = '@Url.Action("customReport_brsSummary", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+        } else if (!tranDate) {
+            $.alert({
+                title: 'Recon',
+                content: 'Invalid Tran Date ..!',
+                type: 'red',
+            });
+            } else if (!in_recon_code) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please Select Recon ..!',
+                type: 'red',
+            });
+          }
+        }
+
+    //Date Validation
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.getElementById('tran_date');
+        dateInput.addEventListener('focusout', onFocusOut);
+    });
 
 </script>
