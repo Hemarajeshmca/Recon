@@ -263,11 +263,11 @@
 							text: item.recon_name
 						}));
 					}
-					if (sessionStorage.getItem("reconcode") != null) {
-						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-						jQuery('#cmbreconname').trigger("change");
-					}
 				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
 			},
 			error: function (er) {
 				alert(er)
@@ -283,42 +283,53 @@
 		}
 	}
 	function showjob() {
-		//$("#RuleList").removeClass('nav-link active');
-		//$("#RuleList").toggleClass('nav-link');
-		//$("#navs-pills-Joblist").toggleClass('tab-pane fade active in');
-		//$("#navs-pills-RuleList").toggleClass('tab-pane fade');
-		//$("#Joblist").removeClass('nav-link');
-		//$("#Joblist").toggleClass('nav-link active');
-		//$("#navs-pills-RuleList").hide();
-		//$("#navs-pills-Joblist").show();
-		var reconcode = $("#cmbreconname").val();
-		var period_from = $("#initiated_from").val();
-		var ts = period_from.split("/");
-		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-		var period_to = $("#initiated_to").val();
-		var ts1 = period_to.split("/");
-		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-		$.ajax({
-			type: "POST",
-			url: '../KnockOff/getundoKOjobrule',
-			dataType: 'json',
-			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify({ in_recon_code: reconcode, in_start_date: pr, in_end_date: pr1 }),
-			success: function (response) {
-				var result = JSON.parse(response);
-				if (result.Table.length > 0) {
-					undojob_grid(result.Table);
-				}
-				else {
-					undojob_grid([]);
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
 
-		});
+		var reconcode = $("#cmbreconname").val();
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		var toDate = validateDateFormat($("#initiated_to").val());
+		if (reconcode && fromDate && toDate) {
+			var period_from = $("#initiated_from").val();
+			var ts = period_from.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var period_to = $("#initiated_to").val();
+			var ts1 = period_to.split("/");
+			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			$.ajax({
+				type: "POST",
+				url: '../KnockOff/getundoKOjobrule',
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify({ in_recon_code: reconcode, in_start_date: pr, in_end_date: pr1 }),
+				success: function (response) {
+					var result = JSON.parse(response);
+					if (result.Table.length > 0) {
+						undojob_grid(result.Table);
+					}
+					else {
+						undojob_grid([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		} else if (!reconcode) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ..!",
+				type: 'red',
+			});
+
+		} else if (!fromDate || !toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		}
+
 	}
 
 	function undojob_grid(data) {
@@ -698,5 +709,11 @@
 		}
 	}
 
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		const dateInput1 = document.getElementById('initiated_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
 
 </script>

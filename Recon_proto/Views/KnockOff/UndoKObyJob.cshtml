@@ -130,11 +130,11 @@
 							text: item.recon_name
 						}));
 					}
-					if (sessionStorage.getItem("reconcode") != null) {
-						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-						jQuery('#cmbreconname').trigger("change");
-					}
 				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
 			},
 			error: function (er) {
 				alert(er)
@@ -271,6 +271,9 @@
 	}
 	function showjob() {
 		var reconcode = $("#cmbreconname").val();
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		var toDate = validateDateFormat($("#initiated_to").val());
+		if (reconcode && fromDate && toDate) {
 		var jobtype = "A";
 		var jobstatus = "C";
 		var period_from = $("#initiated_from").val();
@@ -300,6 +303,19 @@
 			}
 
 		});
+		} else if (!reconcode) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ..!",
+				type: 'red',
+			});
+		} else if (!fromDate || !toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		}
 	}
 	function downloadFile() {
 		var reconcode = $("#cmbreconname").val();
@@ -369,4 +385,13 @@
 		var grid = $("#grid_rule").data("kendoGrid");
 		var dropdownid = "";
 	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		const dateInput1 = document.getElementById('initiated_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
+
+
 </script>

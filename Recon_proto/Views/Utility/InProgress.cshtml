@@ -73,14 +73,14 @@
 					<div class="col-md-3">
 						<label for="" class="form-label">Initiated From Date <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 						<div>
-							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
 					<div class="col-md-3">
 						<label class="form-label"> Initiated To Date <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 						<div>
-							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
@@ -141,40 +141,51 @@
 
 
 	function searchJob() {
-		try {
-			var job_type = $("#jobtype").val();
-			var period_from = $("#initiated_from").val();
-			var ts = period_from.split("/");
-			var start_date = ts[2] + "-" + ts[1] + "-" + ts[0];
-			var period_end = $("#initialed_to").val();
-			var te = period_end.split("/");
-			var end_date = te[2] + "-" + te[1] + "-" + te[0];
-			$.ajax({
-				type: "POST",
-				url: '../Utility/getjobinprogresslist',
-				dataType: 'json',
-				data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'P' }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response != null) {
-						$("#gd_jobinprogress").empty();
-						$("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
-						fetchGrid(response);
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		var toDate = validateDateFormat($("#initialed_to").val());
+		if (fromDate && toDate) {
+			try {
+				var job_type = $("#jobtype").val();
+				var period_from = $("#initiated_from").val();
+				var ts = period_from.split("/");
+				var start_date = ts[2] + "-" + ts[1] + "-" + ts[0];
+				var period_end = $("#initialed_to").val();
+				var te = period_end.split("/");
+				var end_date = te[2] + "-" + te[1] + "-" + te[0];
+				$.ajax({
+					type: "POST",
+					url: '../Utility/getjobinprogresslist',
+					dataType: 'json',
+					data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'P' }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
+							$("#gd_jobinprogress").empty();
+							$("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
+							fetchGrid(response);
+						}
+						else {
+							fetchGrid();
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
 					}
-					else {
-						fetchGrid();
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
 
+				});
+			}
+			catch (e) {
+				console.log(e)
+			}
+		} else if (!fromDate || !toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
 			});
 		}
-		catch (e) {
-			console.log(e)
-		}
+
 
 	}
 
@@ -263,4 +274,12 @@
 
 		}
 	}
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		const dateInput1 = document.getElementById('initialed_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
 </script>

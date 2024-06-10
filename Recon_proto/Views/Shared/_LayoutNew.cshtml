@@ -1195,6 +1195,27 @@
 					spinners: false
 				});
 		}
+
+
+		//Date Validation
+
+		function validateDateFormat(date) {
+			// Define the date format you want to validate (e.g., 'DD/MM/YYYY')
+			const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+			return regex.test(date);
+		}
+
+		function onFocusOut(event) {
+			var format = getconfigvalue("kendo_date_format");
+			if (!validateDateFormat(event.target.value)) {
+				$.alert({
+					title: 'Recon',
+					content: "Invalid date format. Please use"+ " " + format,
+					type: 'red',
+				});
+			}
+		}
+
 	</script>
 </body>
 </html>

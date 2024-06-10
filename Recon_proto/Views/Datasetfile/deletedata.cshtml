@@ -36,7 +36,7 @@
 						<div class="col-md-3">
 							<label for="" class="form-label">Scheduled Date<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<div>
-								<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" onclick="Dateformat()" style="width:100%" />
+								<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
 								<span data-for='valid' class='k-invalid-msg'></span>
 							</div>
 						</div>
@@ -66,29 +66,39 @@
 	});
 
 	function run() {
-		var period_from = $("#initiated_from").val();
-		var ts = period_from.split("/");
-		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-		$.ajax({
-			type: "POST",
-			url: '../Datasetfile/getschedulerlist',
-			dataType: 'json',
-			data: JSON.stringify({ in_processed_date: pr, in_scheduler_status :"C"}),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				if (response.length > 0) {
-					gridlistload(response);
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		if (fromDate) {
+			var period_from = $("#initiated_from").val();
+			var ts = period_from.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			$.ajax({
+				type: "POST",
+				url: '../Datasetfile/getschedulerlist',
+				dataType: 'json',
+				data: JSON.stringify({ in_processed_date: pr, in_scheduler_status: "C" }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.length > 0) {
+						gridlistload(response);
+					}
+					else {
+						gridlistload([])
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
 				}
-				else {
-					gridlistload([])
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
 
-		});
+			});
+		} else if (!fromDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		}
+
 	}
 
 	function gridlistload(data) {
@@ -265,4 +275,10 @@
 			}
 		});
 	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		dateInput.addEventListener('focusout', onFocusOut);
+	});
+
 </script>

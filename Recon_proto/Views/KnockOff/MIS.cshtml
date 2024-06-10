@@ -141,7 +141,7 @@
 					<div class="col-sm-2">
 						<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 						<div>
-							<input class="cusDate" #datepicker data-role='datepicker' id="period_from" name="period_from" onclick="Dateformat()" style="width:100%" />
+							<input class="cusDate" #datepicker data-role='datepicker' id="period_from" name="period_from" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
@@ -149,7 +149,7 @@
 						<label for="" class="form-label">Period To&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 
 						<div>
-							<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+							<input class="cusDate" data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" /><span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -186,10 +186,9 @@
 
 	function getreconlist() {
 		var data = {};
-		var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		data.in_user_gid = 0;
 		data.in_active_status = '';
-		data.in_user_code = txtusername.user_name;
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -229,47 +228,70 @@
 		}
 	}
 	function run() {
-		var in_recon_code = $("#reconname").val();
-		var period_from = $("#period_from").val();
-		var ts = period_from.split("/");
-		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-		var period_to = $("#period_to").val();
-		var ts1 = period_to.split("/");
-		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-		$.ajax({
-			type: "POST",
-			url: '../KnockOff/runkosum',
-			dataType: 'json',
-			data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: '' }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				if (response) {
-					var res = JSON.parse(response)
-					if (res.Table.length > 0) {
-						loadGrid(res.Table);
-						$("#exportExcel").show();
+		var fromDate = validateDateFormat($("#period_from").val());
+		var toDate = validateDateFormat($("#period_to").val());
+		if (fromDate && toDate && $("#reconname").val()) {
+			var in_recon_code = $("#reconname").val();
+			var period_from = $("#period_from").val();
+			var ts = period_from.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var period_to = $("#period_to").val();
+			var ts1 = period_to.split("/");
+			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			$.ajax({
+				type: "POST",
+				url: '../KnockOff/runkosum',
+				dataType: 'json',
+				data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: '' }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response) {
+						var res = JSON.parse(response)
+						if (res.Table.length > 0) {
+							loadGrid(res.Table);
+							$("#exportExcel").show();
+						} else {
+							loadGrid();
+							$.alert({
+								title: 'Recon',
+								content: "No Records found",
+								type: 'red',
+							});
+						}
 					} else {
-						loadGrid();
 						$.alert({
 							title: 'Recon',
-							content: "No Records found",
+							content: "Something Went Wrong..!",
 							type: 'red',
 						});
 					}
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: "Something Went Wrong..!",
-						type: 'red',
-					});
-				}
 
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-		});
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if (!fromDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		} else if (!toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		} else if (!$("#reconname").val()) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ..!",
+				type: 'red',
+			});
+		}
+
 	}
 
 	function loadGrid(data) {
@@ -423,4 +445,17 @@
 		window.location.href = '@Url.Action("KOMISreport", "KnockOff")?in_period_from=' + pr + '&in_period_to=' + pr1 + '&in_recon_code=' + in_recon_code + '';
 
 	}
+
+	//Date Validation
+
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('period_from');
+		const dateInput1 = document.getElementById('period_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
+
+
 </script>

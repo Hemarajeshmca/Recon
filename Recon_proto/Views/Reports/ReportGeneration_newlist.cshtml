@@ -46,7 +46,6 @@
 		$("#navhead").text("Report Generation");
 		kendodate_format();
 		grid_reportTemplist([]);
-		//gridlist();
 		gridreconlist();
 	});
 
@@ -76,11 +75,11 @@
 							text: item.recon_name
 						}));
 					}
-					if (sessionStorage.getItem("reconcode") != null) {
-						$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-						jQuery('#cmbreconname').trigger("change");
-					}
 				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
 			},
 			error: function (er) {
 				alert(er)
@@ -254,43 +253,6 @@
 
 		}
 	}
-
-	//function saveReportTemplete() {
-	//	var data = {};
-	//	data.in_reporttemplate_gid = $("#reporttemplate_gid").val();
-	//	data.in_reporttemplate_code = $("#reporttemplate_code").val();
-	//	data.in_reporttemplate_name = $("#reportTempleteName").val();
-	//	data.in_report_code = $("#report_name").val();
-	//	data.in_action = $("#mode").val();
-	//	data.in_active_status = 'Y';
-	//	$.ajax({
-	//		type: "POST",
-	//		url: '../Reports/reporttemplate',
-	//		dataType: 'json',
-	//		data: JSON.stringify(data),
-	//		contentType: 'application/json; charset=utf-8',
-	//		success: function (response) {
-	//			var result = JSON.parse(response);
-	//			if (result.length > 0) {
-	//				if (result[0].out_result == '1') {
-	//					$.alert({
-	//						title: 'Recon',
-	//						content: result[0].out_msg,
-	//						type: 'green',
-	//					});
-	//					$("#show-popup").modal('hide');
-	//					gridlist();
-	//				} else {
-	//					$.alert({
-	//						title: 'Recon',
-	//						content: result[0].out_msg,
-	//						type: 'red',
-	//					});
-	//				}
-	//			}
-	//		}
-	//	});
-	//}
 
 	function getSerializedSelectedRows(mode) {
 		try {
