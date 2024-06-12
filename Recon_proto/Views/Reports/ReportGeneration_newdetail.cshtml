@@ -958,6 +958,7 @@
 		var joins1 = "";
 
 		for (var i = 0; i < grid._data.length; i++) {
+			if (grid._data[i].filter_criteria && grid._data[i].report_field) {
 			value = "";
 			open_braces = "";
 			close_braces = "";
@@ -1017,6 +1018,13 @@
 
 			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 		}
+		}
+		var condition;
+		if (rpt_cond.endsWith('AND ')) {
+			condition = rpt_cond.slice(0, -4);
+		} else {
+			condition = rpt_cond;
+		}
 		var template_code = getlocalStorage("ls_pageList");		
 		var selected_template = getlocalStorage("selectedTemplate");
 		var str = $("#rt_name").val();
@@ -1026,7 +1034,7 @@
 			"in_report_code": selected_template.report_code,
 			"in_recon_code": selected_template.recon_code,
 			"in_report_param": $("#cmbreporttype").find(":selected").text(),
-			"in_report_condition": rpt_cond,
+			"in_report_condition": condition,
 			"in_outputfile_flag": true,
 			"in_outputfile_type": 'csv',
 			"in_ip_addr": "",
@@ -1102,144 +1110,149 @@
 		var joins1 = "";
 
 		for (var i = 0; i < grid._data.length; i++) {
-			value = "";
-			open_braces = "";
-			close_braces = "";
-			joins = "";
-			joins1 = "";
+			if (grid._data[i].filter_criteria && grid._data[i].report_field) {
 
-			if (i == 0) {
-				joins1 = 'AND ';
-			}
+				value = "";
+				open_braces = "";
+				close_braces = "";
+				joins = "";
+				joins1 = "";
 
-			if (i == grid._data.length - 1) {
-				joins = " ";
-			}
-			else {
-				if (grid._data[i].join_condition) {
-					joins = grid._data[i].join_condition + " ";
-				} else {
-					joins = 'AND '
+				if (i == 0) {
+					joins1 = 'AND ';
 				}
-			}
 
-			// close braces assigning
-			if (grid._data[i].close_parentheses_flag == 'Y') {
-				close_braces = " ) ";
-			}
+				if (i == grid._data.length - 1) {
+					joins = " ";
+				}
+				else {
+					if (grid._data[i].join_condition) {
+						joins = grid._data[i].join_condition + " ";
+					} else {
+						joins = 'AND '
+					}
+				}
 
-			// open braces assigning
-			if (grid._data[i].open_parentheses_flag == 'Y') {
-				open_braces = "(";
-			}
+				// close braces assigning
+				if (grid._data[i].close_parentheses_flag == 'Y') {
+					close_braces = " ) ";
+				}
 
-			// Condition based value assigning
-			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
-				value = " != '" + grid._data[i].filter_value + "'";
-			}
-			else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
-				value = " like '%" + grid._data[i].filter_value + "'";
-			}
-			else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
-				value = " like '" + grid._data[i].filter_value + "%'";
-			}
-			else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
-				value = " = '" + grid._data[i].filter_value + "'";
-			} else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-				value = " like '%" + grid._data[i].filter_value + "%'";
-			} else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
-				value = " > '" + grid._data[i].filter_value + "'";
-			} else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
-				value = " < '" + grid._data[i].filter_value + "'";
-			} else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
-				value = " <= '" + grid._data[i].filter_value + "'";
-			} else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
-				value = " >= '" + grid._data[i].filter_value + "'";
-			} else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-				value = " not like '%" + grid._data[i].filter_value + "%'";
-			}
+				// open braces assigning
+				if (grid._data[i].open_parentheses_flag == 'Y') {
+					open_braces = "(";
+				}
 
-			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
+				// Condition based value assigning
+				if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+					value = " != '" + grid._data[i].filter_value + "'";
+				}
+				else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
+					value = " like '%" + grid._data[i].filter_value + "'";
+				}
+				else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
+					value = " like '" + grid._data[i].filter_value + "%'";
+				}
+				else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
+					value = " = '" + grid._data[i].filter_value + "'";
+				} else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
+					value = " like '%" + grid._data[i].filter_value + "%'";
+				} else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
+					value = " > '" + grid._data[i].filter_value + "'";
+				} else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
+					value = " < '" + grid._data[i].filter_value + "'";
+				} else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
+					value = " <= '" + grid._data[i].filter_value + "'";
+				} else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
+					value = " >= '" + grid._data[i].filter_value + "'";
+				} else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
+					value = " not like '%" + grid._data[i].filter_value + "%'";
+				}
+
+				rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
+			}
 		}
-		var template_code = getlocalStorage("ls_pageList");
-		var data = {
-			"in_reporttemplate_code": template_code,
-			"in_recon_code": $("#reconname").val(),
-			"in_report_code": $("#cmbreporttype").val(),
-			"in_report_condition": rpt_cond,
-		};
+			var condition;
+		if (rpt_cond.endsWith('AND ')) {
+			condition = rpt_cond.slice(0, -4);
+		} else {
+			condition = rpt_cond;
+		}
+			var template_code = getlocalStorage("ls_pageList");
+			var data = {
+				"in_reporttemplate_code": template_code,
+				"in_recon_code": $("#reconname").val(),
+				"in_report_code": $("#cmbreporttype").val(),
+				"in_report_condition": condition,
+			};
+			if (rpt_cond) {
+				$.ajax({
+					type: "POST",
+					url: '../Reports/Report_Runpagereport',
+					dataType: 'json',
+					data: JSON.stringify(data),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != " " && response != null && response != "{}" && response != "[]") {
+							var res = JSON.parse(response);
+							if (res.length > 0) {
+								var data = res[0];
+								if (data.out_result != '0') {
+									result = res[0].out_rec_count;
+									count = res[0].out_result;
+									if (res[0].out_rec_count > 0) {
+										$('#framevalue').text(rpt_cond.slice(3));
+										$("#framevalue").show();
+										Runprogress();
+									} else {
+										$.alert({
+											title: 'Recon',
+											content: 'No Records Found',
+											type: 'red',
+										});
 
-		if (rpt_cond) {
-			$.ajax({
-				type: "POST",
-				url: '../Reports/Report_Runpagereport',
-				dataType: 'json',
-				data: JSON.stringify(data),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					hideProgress();
-					if (response != " " && response != null && response != "{}" && response != "[]") {
-						var res = JSON.parse(response);
-						if (res.length > 0) {
-							var data = res[0];
-							if (data.out_result != '0') {
-								result = res[0].out_rec_count;
-								count = res[0].out_result;
-								if (res[0].out_rec_count > 0) {
-									$('#framevalue').text(rpt_cond.slice(3));
-									$("#framevalue").show();
-									Runprogress();
+										$(this).next(".accordion_body").slideDown(300);
+										$(".plusminus").text('+');
+										$("#Dynamic_grid").hide();
+										$("#example").hide();
+										$("#framevalue").hide();
+										$(".page_bg").hide();
+									}
 								} else {
 									$.alert({
 										title: 'Recon',
-										content: 'No Records Found',
+										content: data.out_msg,
 										type: 'red',
 									});
-
-									$(this).next(".accordion_body").slideDown(300);
-									$(".plusminus").text('+');
-									$("#Dynamic_grid").hide();
-									$("#example").hide();
-									$("#framevalue").hide();
-									$(".page_bg").hide();
 								}
 							} else {
 								$.alert({
 									title: 'Recon',
-									content: data.out_msg,
+									content: "Something Went Wrong ..!",
 									type: 'red',
 								});
 							}
-						} else {
+						} else if (response == "[]") {
 							$.alert({
 								title: 'Recon',
-								content: "Something Went Wrong ..!",
+								content: "No Records Found",
 								type: 'red',
 							});
-							hideProgress();
+							$(this).next(".accordion_body").slideDown(300);
+							$(".plusminus").text('+');
+							$("#Dynamic_grid").hide();
+							$("#example").hide();
+							$("#framevalue").hide();
+							$(".page_bg").hide();
 						}
-					} else if (response == "[]") {
-						$.alert({
-							title: 'Recon',
-							content: "No Records Found",
-							type: 'red',
-						});
-						hideProgress();
-						$(this).next(".accordion_body").slideDown(300);
-						$(".plusminus").text('+');
-						$("#Dynamic_grid").hide();
-						$("#example").hide();
-						$("#framevalue").hide();
-						$(".page_bg").hide();
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
 					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-			});
-		}
+				});
 
+		}
 	}
 
 	function Runprogress() {
@@ -1263,6 +1276,7 @@
 		var joins1 = "";
 
 		for (var i = 0; i < grid._data.length; i++) {
+			if (grid._data[i].filter_criteria && grid._data[i].report_field) {
 			value = "";
 			open_braces = "";
 			close_braces = "";
@@ -1322,164 +1336,179 @@
 
 			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 		}
+		}
+		var condition;
+		if (rpt_cond.endsWith('AND ')) {
+			condition = rpt_cond.slice(0, -4);
+		} else {
+			condition = rpt_cond;
+		}
 
 		$("#Dynamic_grid").show();
 		$("#framevalue").show();
 		$(".page_bg").show();
 		document.getElementById('total').innerHTML = result;
-		var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
-		document.getElementById('totalpage').innerHTML = Actpageno;
-		var data = {};
-		var selected_template = getlocalStorage("selectedTemplate");
-		data.in_rptsession_gid = count;
-		data.in_page_no = pageno;
-		data.in_page_size = pagesize;
-		data.in_tot_records = result;
-		data.in_condition = rpt_cond;
-		data.in_reporttemplate_code = template_code;
-		data.in_recon_code = selected_template.recon_code;
-		data.in_report_code = selected_template.report_code;
-		$.ajax({
-			type: "POST",
-			url: '../Reports/getPageNoReport',
-			dataType: "json",
-			data: JSON.stringify(data),
-			contentType: 'application/json; charset=utf-8',
-			success: function (Data1) {
-				if (Data1 != '' && Data1 != null && Data1 != "{}" && Data1 != "[]") {
-					var columns = [];
-					var chkval = JSON.parse(Data1);
-					var arr = [];
-					$.each(chkval, function (i, e) {
-						$.each(e, function (key, val) {
-							arr.push(val);
+		if (pagesize && result && pageno) {
+			var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
+			document.getElementById('totalpage').innerHTML = Actpageno;
+			var data = {};
+			var selected_template = getlocalStorage("selectedTemplate");
+			data.in_rptsession_gid = count;
+			data.in_page_no = pageno;
+			data.in_page_size = pagesize;
+			data.in_tot_records = result;
+			data.in_condition = condition;
+			data.in_reporttemplate_code = template_code;
+			data.in_recon_code = selected_template.recon_code;
+			data.in_report_code = selected_template.report_code;
+			$.ajax({
+				type: "POST",
+				url: '../Reports/getPageNoReport',
+				dataType: "json",
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (Data1) {
+					if (Data1 != '' && Data1 != null && Data1 != "{}" && Data1 != "[]") {
+						var columns = [];
+						var chkval = JSON.parse(Data1);
+						var arr = [];
+						$.each(chkval, function (i, e) {
+							$.each(e, function (key, val) {
+								arr.push(val);
+							});
 						});
-					});
 
-					var data = JSON.parse(Data1);
-					var i = 0;
+						var data = JSON.parse(Data1);
+						var i = 0;
 
-					var entryIndex = "entries[" + i + "]";
+						var entryIndex = "entries[" + i + "]";
 
-					for (var key in data[0]) {
+						for (var key in data[0]) {
 
-						var propType = typeof data[0][key];
-						if (propType == 'number' && key != "") {
-							columns.push({
-								field: entryIndex,
-								title: key,
-								type: propType,
-								attributes: { style: "text-align: right;" },
-								width: 150,
-							});
-						} else if (propType != 'number' && key != "") {
-							columns.push({
-								field: entryIndex,
-								title: key,
-								type: propType,
-								attributes: { style: "text-align: left;" },
-								width: 150,
-							});
+							var propType = typeof data[0][key];
+							if (propType == 'number' && key != "") {
+								columns.push({
+									field: entryIndex,
+									title: key,
+									type: propType,
+									attributes: { style: "text-align: right;" },
+									width: 150,
+								});
+							} else if (propType != 'number' && key != "") {
+								columns.push({
+									field: entryIndex,
+									title: key,
+									type: propType,
+									attributes: { style: "text-align: left;" },
+									width: 150,
+								});
+							}
+							i = i + 1;
+							entryIndex = "entries[" + i + "]";
 						}
-						i = i + 1;
-						entryIndex = "entries[" + i + "]";
-					}
-					var rows = [];
-					var data1 = JSON.parse(Data1);
+						var rows = [];
+						var data1 = JSON.parse(Data1);
 
-					$.each(data1, function (i, e) {
-						var entryArray = [];
-						$.each(e, function (key, val) {
+						$.each(data1, function (i, e) {
+							var entryArray = [];
+							$.each(e, function (key, val) {
 
-							entryArray.push(val);
+								entryArray.push(val);
+							});
+
+							rows.push(kendo.observable({
+								entries: entryArray
+							}));
 						});
 
-						rows.push(kendo.observable({
-							entries: entryArray
-						}));
-					});
+						var viewModel = kendo.observable({
+							gridRows: rows
+						});
 
-					var viewModel = kendo.observable({
-						gridRows: rows
-					});
-
-					var configuration = {
-						height: 300,
-						navigatable: true,
-						groupable: true,
-						editable: false,
-						sortable: true,
-						Scrollable: true,
-						filterable: true,
-						pagable: false,
-						resizable: true,
-						persistSelection: true,
-						selectable: "false",
-						columns: columns,
-						rows: viewModel,
-					};
-					$("#example").remove();
-					$('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
-					$("#grid").kendoGrid(configuration).data("kendoGrid");
-					kendo.bind($("#grid"), viewModel);
-					$(".page_bg").show();
-				} else if(Data1 == "[]"){
+						var configuration = {
+							height: 300,
+							navigatable: true,
+							groupable: true,
+							editable: false,
+							sortable: true,
+							Scrollable: true,
+							filterable: true,
+							pagable: false,
+							resizable: true,
+							persistSelection: true,
+							selectable: "false",
+							columns: columns,
+							rows: viewModel,
+						};
+						$("#example").remove();
+						$('#Maingrid').append('<div id="example" style="position:relative" class="k-content"><table id="grid" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+						$("#grid").kendoGrid(configuration).data("kendoGrid");
+						kendo.bind($("#grid"), viewModel);
+						$(".page_bg").show();
+					} else if (Data1 == "[]") {
+						$.alert({
+							title: 'Recon',
+							content: 'No Records found .!',
+							type: 'red',
+						});
+						var currentpage = 0;
+						var pageno = 1;
+						var pagesize = $("#items").val() ? $("#items").val() : 100;
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong .!',
+							type: 'red',
+						});
+						var currentpage = 0;
+						var pageno = 1;
+						var pagesize = $("#items").val() ? $("#items").val() : 100;
+					}
+				},
+				error: function (er) {
 					$.alert({
 						title: 'Recon',
-						content: 'No Records found .!',
+						content: er.statusText,
 						type: 'red',
 					});
-					var currentpage = 0;
-					var pageno = 1;
-					var pagesize = $("#items").val() ? $("#items").val() : 100;
-				} else {
-					$.alert({
-						title: 'Recon',
-						content: 'Something went wrong .!',
-						type: 'red',
-					});
-					var currentpage = 0;
-					var pageno = 1;
-					var pagesize = $("#items").val() ? $("#items").val() : 100;
 				}
-			},
-			error: function (er) {
-				$.alert({
-					title: 'Recon',
-					content: er.statusText,
-					type: 'red',
-				});
-			}
-		});
+			});
 
-		$("#exportExcel").show();
-		if ($('.accordion_body').is(':visible')) {
-			$(".accordion_body").slideUp(300);
-			$(".plusminus").text('+');
+			$("#exportExcel").show();
+			if ($('.accordion_body').is(':visible')) {
+				$(".accordion_body").slideUp(300);
+				$(".plusminus").text('+');
+			}
+		} else if (!pageno || !pagesize) {
+			$.alert({
+				title: 'Recon',
+				content: "Page number or PageSize is missing",
+				type: 'red',
+			});
 		}
 	}
+	
 	var currentpage = 0;
 	var pageno = 1;
 	var pagesize = $("#items").val() ? $("#items").val() : 5000;
 
 	function pageChange(event) {
 		if (event.keyCode === 13) {
-			pageno = $("#gotoPage").val();
-			pagesize = pagesize;
-			var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
-			if (pageno > Actpageno) {
-				$.alert({
-					title: 'Recon',
-					content: "Page number is greate than total number of page",
-					type: 'red',
-				});
-				pageno = 1;
-				$("#gotoPage").val(pageno);
-			} else {
-				$("#gotoPage").val(pageno);
-				Runprogress();
-			}
-
+				pageno = $("#gotoPage").val() ? $("#gotoPage").val() : 1;
+				pagesize = pagesize ? pagesize : 5000;
+				var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
+				if (pageno > Actpageno) {
+					$.alert({
+						title: 'Recon',
+						content: "Page number is greate than total number of page",
+						type: 'red',
+					});
+					pageno = 1;
+					$("#gotoPage").val(pageno);
+				} else {
+					$("#gotoPage").val(pageno);
+					Runprogress();
+				}			
 		}
 	}
 
@@ -1576,20 +1605,18 @@
 			radio_checked: radiochecked,
 			recon_id: Rec_id
 		}
-
 	}
 
 	
 	function viewDetails(e) {
 		var grid = this,
-			selectedRow = $(e.target).closest("tr")[0];
+		selectedRow = $(e.target).closest("tr")[0];
 		grid.editRow(selectedRow);
 		$(".k-grid-update").hide();
 		$(".k-window-title").text("View");
 	}
 	
 	$(".accordion_head").click(function () {
-
 		if ($('.accordion_body').is(':visible')) {
 			$(".accordion_body").slideUp(300);
 			$(".plusminus").text('+');
@@ -1603,7 +1630,6 @@
 			$(this).children(".plusminus").text('-');
 			$("#Dynamic_grid").hide();
 		}
-
 	});
 
 	function generateXlsxdynamic() {
@@ -1619,6 +1645,7 @@
 		var dataset2 = [];
 		var dataArray = [];
 		for (var i = 0; i < grid._data.length; i++) {
+			if (grid._data[i].filter_criteria && grid._data[i].report_field) {
 			value = "";
 			open_braces = "";
 			close_braces = "";
@@ -1670,6 +1697,13 @@
 			}
 			rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 		}
+		}
+		var condition;
+		if (rpt_cond.endsWith('AND ')) {
+			condition = rpt_cond.slice(0, -4);
+		} else {
+			condition = rpt_cond;
+		}
 		var template_code = getlocalStorage("ls_pageList");
 		//var txtusername = JSON.parse(localStorage.getItem("recon_userdetail"));
 		var txtusername = sessionStorage.getItem("usrname");
@@ -1681,7 +1715,7 @@
 			"in_report_code": selected_template.report_code,
 			"in_recon_code": selected_template.recon_code,
 			"in_report_param": $("#cmbreporttype").find(":selected").text(),
-			"in_report_condition": rpt_cond,
+			"in_report_condition": condition,
 			"in_outputfile_flag": true,
 			"in_outputfile_type": 'xlsx',
 			"in_ip_addr": "",
