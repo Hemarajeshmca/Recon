@@ -11,6 +11,14 @@
 			margin-right: 33rem !important;
 		}
 
+		#emailError {
+			color: red;
+		}
+
+		#mobileError {
+			color: red;
+		}
+
 		.error_show {
 			color: red;
 			margin-left: 10px;
@@ -113,15 +121,15 @@
 							<input class="form-control" type="hidden" id="checkn">
 						</div>
 						<div class="col-sm-3">
-							<label class="form-label" for="">Mobile No&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" type="text" id="mobileno" maxlength="10" onblur="validateMobileNumber()" onpaste="return false;" onkeypress="return isNumberKey(event)">
+							<label class="form-label" for="mobileno">Mobile No&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" name="mobileno" id="mobileno" maxlength="10" onpaste="return false;" onkeypress="return isNumberKey(event)"><span id="mobileError" style="color:red"></span>
 						</div>
 						<div class="col-sm-3">
 							<label class="form-label" for="">User ID&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="userid">
 						</div>
 						<div class="col-sm-3">
-							<label class="form-label" for="">Email ID&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<label class="form-label" for="emailid">Email ID&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 							<input class="form-control" type="text" id="emailid">
 						</div>
 					</div>
@@ -139,8 +147,8 @@
 							<button type="button" class="btn btn-sm btn-primary me-2" id="btnreconstatus" onclick="Addroleuser()">Recon Access</button>&nbsp;&nbsp;&nbsp;
 						</div>
 						<div class="col-sm-1" style="margin-top:30px">
-							<button type="button" class="btn btn-sm btn-primary me-2" id="btnsave" onclick="saveUser()" style="width:100%;float:right;">Save</button>
-						</div>	
+							<button type="button" class="btn btn-sm btn-primary me-2" id="btnsave" onclick="validation()" style="width:100%;float:right;">Save</button>
+						</div>
 					</div>
 					<div id="treeviewpop">
 						<div id="treeview"></div>
@@ -364,6 +372,29 @@
 
 		}
 	}
+	function validation() {	
+		var msg = "";
+		var mobileNumber = document.getElementById("mobileno").value;
+		var regex = /^[0-9]{10}$/; // Assumes a 10-digit mobile number
+		var mobileError = document.getElementById('mobileError');
+
+		if (regex.test(mobileNumber)) {
+			
+		} else {
+			msg +=  "Invalid mobile number. Please enter a 10-digit number.";
+		}
+		
+		if (msg == "") {
+			saveUser()
+		} else {
+			$.dialog({
+				title: 'Recon',
+				content: msg,
+				type: 'green',
+			});
+		}
+		return msg;
+	}
 	function saveUser() {
 		try {
 			var user_name = $("#user_name").val();
@@ -382,13 +413,13 @@
 			var action = "";
 			var Cmbrole = $("#Cmbrole").val();
 			var mode = $("#txtmode :selected").val();
-			if (mode == "create"){
-				action="INSERT"
-			}else{
+			if (mode == "create") {
+				action = "INSERT"
+			} else {
 				action = "UPDATE"
-				
+
 			}
-			var in_active_reason="";
+			var in_active_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../Admin/usersave',
@@ -413,7 +444,7 @@
 									}
 								}
 							}
-						});	
+						});
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -606,12 +637,12 @@
 									var userid = "";
 									var emailid = "";
 									var passworduser = "123";
-									var usergid =parseInt(user_gid);
+									var usergid = parseInt(user_gid);
 									var action_by = "";
 									var action = "DELETE";
 									var Cmbrole = "0";
 									var in_active_reason = name;
-									var role_code="";
+									var role_code = "";
 									$.ajax({
 										type: "POST",
 										url: '../Admin/usersave',
@@ -662,15 +693,5 @@
 				},
 			}
 		});
-	}
-	function validateMobileNumber() {
-		var mobileNumber = document.getElementById("mobileno").value;
-		var regex = /^[0-9]{10}$/; // Assumes a 10-digit mobile number
-
-		if (regex.test(mobileNumber)) {
-			document.getElementById("validationMessage").innerText = "Valid mobile number!";
-		} else {
-			document.getElementById("validationMessage").innerText = "Invalid mobile number. Please enter a 10-digit number.";
-		}
 	}
 </script>
