@@ -301,7 +301,7 @@
 				},
 				sortable: true,
 				selectable: true,
-				filterable: false,
+				filterable: true,
 				navigatable: true,
 				resizable: true,
 				columns: [
@@ -316,26 +316,78 @@
 						field: "user_code",
 						title: "User ID",
 						width: 100,
+						filterable: {							
+							extra: false,
+							operators: {
+								string: {
+									eq: "Is equal to",
+									neq: "Not equal to"
+								}
+							},
+						},
 					},
 					{
 						field: "user_name",
 						title: "User Name",
 						width: 100,
+						filterable: {							
+							extra: false,
+							operators: {
+								string: {
+									eq: "Is equal to",
+									neq: "Not equal to",
+									contains: "Contains",
+								}
+							},
+						},
 					},
 					{
 						field: "user_contactno",
 						title: "Contact No",
 						width: 100,
+						filterable: {							
+							extra: false,
+							operators: {
+								number: {
+									eq: "Is equal to",
+									neq: "Not equal to",
+									lt: "Less than",
+									lte: "Less than or equal to",
+									gt: "Greater than",
+									gte: "Greater than or equal to"
+								},
+							},
+						},
 					},
 					{
 						field: "user_emailid",
 						title: "Email ID",
 						width: 100,
+						filterable: {
+							extra: false,
+							operators: {
+								string: {
+									eq: "Is equal to",
+									neq: "Not equal to",
+									contains: "Contains",
+								}
+							},
+						},
 					},
 					{
 						field: "role_name",
 						title: "Role",
 						width: 100,
+						filterable: {						
+							extra: false,
+							operators: {
+								string: {
+									eq: "Is equal to",
+									neq: "Not equal to",
+									contains: "Contains",
+								}
+							},
+						},
 					},
 					{
 						field: "role_code",
