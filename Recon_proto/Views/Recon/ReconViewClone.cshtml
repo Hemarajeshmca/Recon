@@ -1910,9 +1910,9 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var reconcode = model.recon_code;
-					var Reconfieldname = model.recon_field_name;
-					var displayorder = model.display_order;
+					var reconcode = model.entries[2];
+					var Reconfieldname = model.entries[6];
+					var displayorder = parseInt(model.entries[5]);
 					var cmbdatasetmap = "";
 					var cmbdatasetfieldname = "";
 					var action = "DELETE";
@@ -1934,7 +1934,7 @@
 									content: response.out_msg,
 									type: 'green',
 								});
-								//	load();
+								detailfetch(getlocalStorage('cloned_reconCode'));
 							}
 							else {
 
@@ -1973,9 +1973,9 @@
 			type: 'orange',
 			buttons: {
 				confirm: function () {
-					var reconcode = model.recon_code;
-					var Reconfieldname = model.recon_field_name;
-					var displayorder = model.display_order;
+					var reconcode = $("#reconcode").val();
+					var Reconfieldname = $("#Reconfieldname").val();
+					var displayorder = $("#displayorder").val();
 					var cmbdatasetmap = "";
 					var cmbdatasetfieldname = "";
 					var action = "DELETE";
@@ -1986,7 +1986,7 @@
 					var status = "";
 					$.ajax({
 						type: "POST",
-						url: '../Recon/Recondatasetmappingsave',
+						url: '../Recon/RecondatasetmappingDelete',
 						dataType: 'json',
 						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',

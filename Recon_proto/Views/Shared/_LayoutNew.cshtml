@@ -759,6 +759,8 @@
 				dataType: "html",
 				url: '@Url.Action("Signout", "Login")',
 				success: function (data) {
+					sessionStorage.clear();
+					localStorage.clear();
 					var url = '@Url.Action("Login", "Login")'
 					window.location.href = url;
 				},
@@ -1201,7 +1203,7 @@
 
 		function validateDateFormat(date) {
 			// Define the date format you want to validate (e.g., 'DD/MM/YYYY')
-			const regex = /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/;
+			const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 			return regex.test(date);
 		}
 
