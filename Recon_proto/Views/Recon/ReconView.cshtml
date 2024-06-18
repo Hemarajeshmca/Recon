@@ -440,7 +440,7 @@
 											</div>
 											<div class="col-sm-4">
 												<label for="" class="form-label">Display Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-												<input class="form-control" id="displayorder" name="" type="number" value=0>
+												<input class="form-control" id="displayorder" name="" onpaste="return false;" type="text" maxlength="16" onkeypress='return isNumberKey(event)' value=0>
 												<input type="hidden" id="reconfield_gid" value="0" />
 												<input type="hidden" id="txtmodedatasetmapping" value="Create" />
 												<input type="hidden" id="reconfieldmapping_gid" value="0" />
@@ -1835,7 +1835,7 @@
 							success: function (response) {
 								if (response != null) {
 									grid_recondatasetmapping(response);
-									//$("#Reconfieldname").prop('disabled', true);
+									$("#Reconfieldname").prop('disabled', true);
 								}
 								else {
 									grid_recondatasetmapping([]);
@@ -1985,6 +1985,7 @@
 				var grid = $("#grid1").data("kendoGrid");
 				var selectedItem = grid.dataItem(grid.select());
 				$("#Reconfieldname").val(selectedItem.entries[4]);
+				$("#Reconfieldname").prop('disabled', true);
 				$("#displayorder").val(selectedItem.entries[5]);
 				$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
 				$("#txtmodedatasetmapping").val("Edit");
