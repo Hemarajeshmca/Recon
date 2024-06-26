@@ -669,6 +669,7 @@ namespace Recon_proto.Controllers
 		public class runthemeModel
 		{
 			public String? in_recon_code { get; set; }
+			public int in_job_gid { get; set; }
 			public String? in_period_from { get; set; }
 			public String? in_period_to { get; set; }
 			public String? in_automatch_flag { get; set; }
