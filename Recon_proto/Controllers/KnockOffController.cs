@@ -71,9 +71,14 @@ namespace Recon_proto.Controllers
 			return View();
 		}
 
-		#region previewRulebase
+		public IActionResult AutoThemeBase()
+		{
+			return View();
+		}
 
-		public class getpreviewRulebase
+        #region previewRulebase
+
+        public class getpreviewRulebase
 		{
 			public String? in_recon_code { get; set; }
 			public String? in_period_from { get; set; }
@@ -933,5 +938,54 @@ namespace Recon_proto.Controllers
 		}
 
 		#endregion
+
+
+		#region ThemeAgainstRecon
+		[HttpPost]
+		public JsonResult ThemeAgainstRecon([FromBody] Themeagainstrecon context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataSet result = new DataSet();
+			string post_data = "";
+			string d2 = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "knockoff/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					//client.BaseAddress = new Uri("http://localhost:44348/api/Recon/");
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getthemeagainstRecon", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "RuleAgainstRecon");
+				return Json(ex.Message);
+			}
+		}
+
+		public class Themeagainstrecon
+		{
+			public string? in_recon_code { get; set; }
+		}
+
+
+		#endregion
+
 	}
 }

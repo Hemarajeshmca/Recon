@@ -31,7 +31,12 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
-        public IActionResult Datasetconversion()
+
+		public IActionResult OpeningBalance()
+		{
+			return View();
+		}
+		public IActionResult Datasetconversion()
         {
             ViewBag.baseurl = _configuration.GetSection("Appsettings")["connectorUrl"].ToString();
             return View();
@@ -296,6 +301,102 @@ namespace Recon_proto.Controllers
 		public class datasetAgainstReconModel
 		{
 			public string? in_recon_code { get; set; }
+		}
+		#endregion
+
+
+		#region getaccbaldataset
+
+		public JsonResult getaccbaldataset([FromBody] getaccbaldatasetModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Dataset/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("getaccbaldataset", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "datasetAgainstRecon");
+				return Json(ex.Message);
+			}
+
+
+		}
+
+		public class getaccbaldatasetModel
+		{
+			public string? in_dataset_code { get; set; }
+		}
+
+		#endregion
+
+		#region setAccountbalance
+		public JsonResult setAccountbalance([FromBody] setAccountbalanceModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Dataset/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("setAccountbalance", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "setAccountbalance");
+				return Json(ex.Message);
+			}
+
+
+		}
+
+		public class setAccountbalanceModel
+		{
+			public int in_accbal_gid { get; set; }
+			public String? in_dataset_code { get; set; }
+			public String? in_tran_date { get; set; }
+			public Double? in_bal_value { get; set; }
+			public String? in_action { get; set; }
+
 		}
 		#endregion
 	}
