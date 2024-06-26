@@ -851,11 +851,11 @@
 								$("#thersholdflag").prop("checked", false);
 								$("#addconfig").hide();
 							}
+							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
-							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
-							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
-							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
+							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);							
+							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);							
 							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 							$("#period_from").val(res.RuleHeader[0].period_from);
 							$("#period_to").val(res.RuleHeader[0].period_to);
@@ -865,7 +865,7 @@
 							} else {
 								$("#partialmatch2").prop("checked", true);
 							}
-							
+							jQuery('#souaccmode').trigger("change");
 							$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
 							$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
@@ -1348,7 +1348,7 @@
 						$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
 						$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
 						$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
-						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
+						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);						
 						$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 						$("#txtrulecode").val(res.RuleHeader[0].rule_code);
 						$("#ruleName").val(res.RuleHeader[0].rule_name);
@@ -1370,6 +1370,7 @@
 							$("#thersholdflag").prop("checked", false);
 							$("#addconfig").hide();
 						}
+						jQuery('#souaccmode').trigger("change");
 						$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
 						$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
 						$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);

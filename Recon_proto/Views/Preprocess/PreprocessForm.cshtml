@@ -1887,7 +1887,7 @@
 
 	function validatequery1() {
 		var in_sql = $("#querydata").val();
-		var index = in_sql.indexOf("Where");
+		var index = in_sql.toLowerCase().indexOf("where");
 		if (index !== -1) {
 			in_sql = in_sql + "  and 1=2"
 		} else {
@@ -1908,7 +1908,7 @@
 						$.alert({
 							title: 'Recon',
 							content: data.out_msg,
-							type: 'red',
+							type: 'green',
 						});
 						$("#validquery").val("true");
 					} else {
@@ -1923,8 +1923,7 @@
 						title: 'Recon',
 						content: "failed",
 						type: 'red',
-					});
-					$("#querydata").val("");
+					});					
 					$("#validquery").val("false");
 				}
 			},
