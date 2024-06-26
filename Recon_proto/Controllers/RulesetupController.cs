@@ -85,6 +85,11 @@ namespace Recon_proto.Controllers
 			public string? out_msg { get; set; }
 			public string? out_result { get; set; }
 			public string probableflag { get; set; }
+			public Double in_threshold_plus_value { get; set; }
+			public Double in_threshold_minus_value { get; set; }
+			public String threshold_code { get; set; }
+			public String thresholdflag { get; set; }
+			public String in_rule_automatch_partial { get; set; }
 		}
         [HttpPost]
         public JsonResult Ruleheader([FromBody] Rulesetupheader context)

@@ -10,7 +10,7 @@
 	<title>@ViewBag.title</title>
 	<link rel="icon" href="~/Content/images/title.png" type="image/x-icon">
 	<style type="text/css">
-		.form-label{
+		.form-label {
 			color: #000 !important;
 		}
 
@@ -34,7 +34,7 @@
 			color: #000 !important;
 		}
 
-		.k-textbox > input, .k-autocomplete .k-input, .k-picker-wrap .k-input, .k-numeric-wrap .k-input, .k-dropdown-wrap .k-input, .k-selectbox .k-input{
+		.k-textbox > input, .k-autocomplete .k-input, .k-picker-wrap .k-input, .k-numeric-wrap .k-input, .k-dropdown-wrap .k-input, .k-selectbox .k-input {
 			height: 2em !important;
 			font-size: 13px !important;
 			line-height: 25px !important;
@@ -152,7 +152,7 @@
 			div#spinner img {
 				position: absolute;
 				/*width: 100px;
-																																																height: 100px;*/
+																																																				height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -183,9 +183,9 @@
 
 
 		/*.k-grid.k-widget {
-															height: 360px;
-															overflow-y: auto;
-														}*/
+																			height: 360px;
+																			overflow-y: auto;
+																		}*/
 
 		.k-i-arrow-s {
 			background-position: -161px -209px !important;
@@ -329,11 +329,12 @@
 													<center>
 														<div class="avatar avatar-online">
 															<img src="~/Assets/images/profile.jpg" class="w-px-40 h-auto rounded-circle"
-																 style="width: 50px !important; height: 50px !important;" /><span class="align-middle" id="userdata"></span>
+																 style="width: 50px !important; height: 50px !important;" />
 														</div>
-
 													</center>
 												</div>
+												<i class="class=" dropdown-item""></i>
+												<span class="dropdown-item align-middle" id="userdata"></span>
 											</div>
 										</a>
 									</li>
@@ -724,7 +725,7 @@
 			}
 		}
 		function kendodate_format() {
-			var kendate= getconfigvalue("kendo_date_format");
+			var kendate = getconfigvalue("kendo_date_format");
 			var kendatetime = getconfigvalue("kendo_datetime_format");
 			sessionStorage.setItem("kendatetime", kendatetime);
 			sessionStorage.setItem("kendate", kendate);
@@ -751,7 +752,7 @@
 			sessionStorage.setItem("reconname", "");
 			sessionStorage.setItem("usrname", "");
 			setlocalStorage("recon_userdetail", "");
-			setlocalStorage("lastlogindb", "");			
+			setlocalStorage("lastlogindb", "");
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
@@ -788,7 +789,7 @@
 				data: JSON.stringify({ user_code: usercode, status: status }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					
+
 				}
 			})
 
@@ -883,7 +884,7 @@
 			}
 		}
 		function getconfigvalue(selectElement) {
-			var result="";
+			var result = "";
 			var selectElement = selectElement;
 			$.ajax({
 				type: "POST",
@@ -894,7 +895,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
-					result=res[0].out_config_value
+					result = res[0].out_config_value
 				}
 			});
 			return result;
@@ -918,7 +919,7 @@
 				location.reload();
 				var myLabel = document.getElementById("orglvlNavigate");
 				myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-			
+
 				var user_code = sessionStorage.getItem("usrname");
 				var level_mapping = $("#orglvl1valO").val() + "#" + "QCD_L1" + "$" + $("#orglvl2valO").val() + "#" + "QCD_L2" + "$" + $("#orglvl3valO").val() + "#" + "QCD_L3";
 				$.ajax({
@@ -1134,17 +1135,17 @@
 				});
 			}
 		}
-		
+
 		var sessionTimer;
 		// Reset the timer function
-		function resetSessionTimer() {		
-			clearTimeout(sessionTimer);		
-			sessionTimer = setTimeout(function () {		
+		function resetSessionTimer() {
+			clearTimeout(sessionTimer);
+			sessionTimer = setTimeout(function () {
 				lastloginsession("logout")
 				sessionStorage.clear();
-				localStorage.clear();				
+				localStorage.clear();
 				window.location.href = '@Url.Action("session_expires", "Login")';
-			}, 1000*30*60); // 300000 milliseconds = 30 minutes			
+			}, 1000 * 30 * 60); // 300000 milliseconds = 30 minutes
 		}
 		// Call resetSessionTimer() whenever there is a user interaction event
 		document.addEventListener("mousemove", resetSessionTimer);
@@ -1175,7 +1176,7 @@
 		//		sessionStorage.removeItem('isPageLoaded');
 		//	}
 		//});
-	
+
 		function isNumberKey(evt) {
 			var charCode = (evt.which) ? evt.which : event.keyCode
 			if (charCode != 46 && charCode > 31
@@ -1212,7 +1213,7 @@
 			if (!validateDateFormat(event.target.value)) {
 				$.alert({
 					title: 'Recon',
-					content: "Invalid date format. Please use"+ " " + format,
+					content: "Invalid date format. Please use" + " " + format,
 					type: 'red',
 				});
 			}
