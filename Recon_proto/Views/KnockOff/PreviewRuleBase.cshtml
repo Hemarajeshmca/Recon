@@ -487,7 +487,7 @@
 		}
 	}
 
-	function grid_dataset(data) {
+	function grid_dataset(data) {		
 		$("#dataset_grid").kendoGrid({
 			dataSource: {
 				data: data,
@@ -499,11 +499,11 @@
 							dataset_name: { type: "string" },
 							dataset_type_desc: { type: "string" },
 							parent_dataset_name: { type: "string" },
-							last_sync_date: { type: "date" },
+							last_sync_date: { type: "string" },
 							last_sync_status: { type: "string" },
 							active_status_desc: { type: "string" },
 						}
-					}
+					},					
 				}
 			},
 			height: 250,
@@ -543,18 +543,7 @@
 				{
 					field: "last_sync_date",
 					title: "Last Sync Date",
-					width: 100,
-					format: "{0:dd-MM-yyyy HH:mm:ss}",
-					filterable: {
-						ui: "datetimepicker",
-						extra: false,
-						operators: {
-							date: {
-								lt: "Before",
-								gt: "After"
-							},
-						},
-					},
+					width: 100,						
 				},
 				{
 					field: "last_sync_status",
@@ -883,12 +872,13 @@
 	}
 
 	function loadGrid(data) {
+		var formatdatetime = sessionStorage.getItem("kendatetime");
 		var grid = $("#dataset_grid").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		document.getElementById('dataset_code').innerHTML = selectedItem.dataset_code;
 		document.getElementById('dataset_name').innerHTML = selectedItem.dataset_name;
 		document.getElementById('dataset_type').innerHTML = selectedItem.dataset_type_desc;
-		document.getElementById('last_sync_date').innerHTML = selectedItem.last_sync_date;
+		document.getElementById('last_sync_date').innerHTML =selectedItem.last_sync_date;
 		document.getElementById('last_sync_status').innerHTML = selectedItem.last_sync_status;
 		document.getElementById('debit_before_count').innerHTML = data.length >0 ? data[0]["Dr Count Before"] : 0;
 		document.getElementById('debit_before_value').innerHTML = data.length > 0 ? data[0]["Dr Value Before"] : 0;

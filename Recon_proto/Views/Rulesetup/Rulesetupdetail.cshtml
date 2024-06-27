@@ -145,6 +145,7 @@
 		.tab-content {
 			padding: 0.9rem;
 			border-radius: 0.375rem;
+			box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 9.12);
 		}
 
 		.k-grid .k-grouping-header {
@@ -513,11 +514,11 @@
 										@*AddtionalConfiguration*@
 										<div class="tab-pane fade" id="navs-pills-top-AddtionalConfiguration" role="tabpanel" style="margin-top:-13px;">
 											<div class="panel panel-default">
-												<div class="panel-body" style="height:175px;padding:10px">
+												<div class="panel-body" style="height:175px;padding:31px">
 													<div class="col-sm-2">
 														<input type="checkbox" id="thersholdflag" onclick="thersflag()">
 														<label for="vehicle1">
-															Threshold Flag
+															Enable Rule level Threshold
 														</label>
 													</div>
 													<div class="row" id="addconfig" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px">
@@ -545,7 +546,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px;margin-top:-6px">
+							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px;margin-top:-1px">
 								<div class="col-sm-4"></div>
 								<div class="col-sm-4" style="text-align:center">
 									<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
@@ -634,7 +635,6 @@
 		kendodate_format();
 		getGridComboList();
 		cmbsourcefield();
-		
 		onpartialrule();
 	});
 	function thersflag() {
@@ -642,7 +642,6 @@
 		if (checkbox.checked) {
 			$("#partialmatch2").prop("checked", true);
 			$("#addconfig").show();
-			
 		} else {
 			$("#addconfig").hide();
 			$("#thersholdplus").val(0);
@@ -655,22 +654,29 @@
 	}
 	function onpartialrule() {
 		if ($("input[name='partialmatch']:checked").val() == "Y") {
-			$("#thersholdplus").val(0);
-			$("#thersholdminus").val(0);
-			$("#thersholdminus").prop('disabled', false)
-			$("#thersholdplus").prop('disabled', false)
-			$("#cmbthersholdvalue").prop('disabled', false);
-			$("#cmbthersholdvalue").val("B")
+			if ($("#thersholdplus").val() == 0) {
+				$("#thersholdplus").val(0);
+				$("#thersholdminus").val(0);
+				$("#thersholdminus").prop('disabled', false)
+				$("#thersholdplus").prop('disabled', false)
+				$("#cmbthersholdvalue").prop('disabled', false);
+				$("#cmbthersholdvalue").val("B")
 
-			var select = document.getElementById("cmbthersholdvalue");
-			var condition = true; // Change this condition as needed
-			// Remove the "N/A" option if the condition is met
-			if (condition) {
-				var optionToRemove = select.querySelector("option[value='N']");
-				if (optionToRemove) {
-					optionToRemove.remove();
+				var select = document.getElementById("cmbthersholdvalue");
+				var condition = true; // Change this condition as needed
+				// Remove the "N/A" option if the condition is met
+				if (condition) {
+					var optionToRemove = select.querySelector("option[value='N']");
+					if (optionToRemove) {
+						optionToRemove.remove();
+					}
 				}
+			} else {
+				$("#thersholdminus").prop('disabled', false)
+				$("#thersholdplus").prop('disabled', false)
+				$("#cmbthersholdvalue").prop('disabled', false);
 			}
+
 		} else {
 			$("#thersholdplus").val(0);
 			$("#thersholdminus").val(0)
@@ -688,6 +694,7 @@
 			$("#Reversal3").prop("checked", true);
 			$("#GM1").prop("checked", true);
 			$("#GMM2").prop("checked", true);
+			$('#partialmatch2').attr('checked', true);
 			var data = getlocalStorage("ls_pageList");
 			$("#cmbreconname").val(data[0].recon_code);
 			$("#ruleorder").val(data[0].rule_order);
@@ -854,8 +861,9 @@
 							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
-							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);							
-							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);							
+							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+							jQuery('#souaccmode').trigger("change");
+							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
 							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 							$("#period_from").val(res.RuleHeader[0].period_from);
 							$("#period_to").val(res.RuleHeader[0].period_to);
@@ -865,7 +873,6 @@
 							} else {
 								$("#partialmatch2").prop("checked", true);
 							}
-							jQuery('#souaccmode').trigger("change");
 							$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
 							$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
@@ -1347,8 +1354,9 @@
 						$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 						$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
 						$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+						jQuery('#souaccmode').trigger("change");
 						$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
-						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);						
+						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 						$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 						$("#txtrulecode").val(res.RuleHeader[0].rule_code);
 						$("#ruleName").val(res.RuleHeader[0].rule_name);
@@ -1370,7 +1378,7 @@
 							$("#thersholdflag").prop("checked", false);
 							$("#addconfig").hide();
 						}
-						jQuery('#souaccmode').trigger("change");
+
 						$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
 						$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
 						$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
@@ -2436,7 +2444,6 @@
 			}
 		}
 	}
-
 	function addRowsourceidentifier() {
 		if ($("#txtrulecode").val() != '') {
 			var grid = $("#grid_sourceidentifier").data("kendoGrid");
@@ -2458,7 +2465,6 @@
 			saveheader();
 		}
 	}
-
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -3492,10 +3498,14 @@
 		if ($("#txtrulecode").val() != '') {
 			var grid = $("#grid_sourceorder").data("kendoGrid");
 			var dataSource = grid.dataSource;
-
-			// Get the last sequence number and increment it
+			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
-			var newSeqNo = parseInt(lastSeqNo) + 1;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].recorder_seqno > max) {
+					max = grid.dataSource._data[i].recorder_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;			
 
 			// Add a new row with the incremented sequence number
 			dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
@@ -3685,10 +3695,14 @@
 		if ($("#txtrulecode").val() != '') {
 			var grid = $("#grid_comparisonorder").data("kendoGrid");
 			var dataSource = grid.dataSource;
-
-			// Get the last sequence number and increment it
+			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
-			var newSeqNo = parseInt(lastSeqNo) + 1;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].recorder_seqno > max) {
+					max = grid.dataSource._data[i].recorder_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
 
 			// Add a new row with the incremented sequence number
 			dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
