@@ -459,7 +459,7 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].rule_order > max ) {
+			if (grid.dataSource._data[i].rule_order > max) {
 				max = grid.dataSource._data[i].rule_order;
 			}
 		}
@@ -608,6 +608,12 @@
 										var in_rule_order = 0;
 										var in_user_code = "";
 										var probableflag = "";
+										var in_rule_automatch_partial = "";
+										var in_threshold_plus_value = 0;
+										var in_threshold_minus_value = 0;
+										var in_threshold_code = "";
+										var thersholdflag = "";
+
 										$.ajax({
 											type: "POST",
 											url: '../Rulesetup/Ruleheader',
@@ -617,7 +623,9 @@
 												in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 												in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
 												in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode, in_user_code: in_user_code, probableflag: probableflag,
-												in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: name
+												in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
+												in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
+													in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: name
 											}),
 											contentType: 'application/json; charset=utf-8',
 											success: function (response) {

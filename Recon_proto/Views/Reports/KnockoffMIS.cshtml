@@ -11,8 +11,6 @@
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 28rem !important;
 		}
-
-
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -20,7 +18,11 @@
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-1%;">
 				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
-
+					<div class="col-md-3">
+						<label for="organization" class="form-label">Recon Name</label><br>
+						<select id="reconname" class="form-select form-control">
+						</select>
+					</div>
 					<div class="col-md-3">
 						<label for="" class="form-label">
 							Date From
@@ -39,21 +41,15 @@
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
-					<div class="col-md-3">
-						<label for="organization" class="form-label">Recon Name</label><br>
-						<select id="reconname" class="form-select form-control">
-							
-						</select>
 
-					</div>
 					<div class="col-md-3" style="margin-top: 2%;">
 						<button type="button" onclick="run()" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
 							View
 						</button> &nbsp;&nbsp;
-						<button type="button" onclick="exportexcel()" id="exportExcel" aria-hidden="true"  class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+						<button type="button" onclick="exportexcel()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
 							<i class="fa-solid fa-file-excel"></i>
 						</button>
-					</div>		
+					</div>
 				</div>
 
 				<div class="row">
@@ -106,7 +102,7 @@
 	});
 
 	function getreconlist() {
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");

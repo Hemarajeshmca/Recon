@@ -72,7 +72,6 @@
 			height: 360px;
 		}
 
-
 		.k-grid-header {
 			font-weight: bold;
 		}
@@ -127,10 +126,6 @@
 			color: white;
 		}
 
-		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-																																	color: white !important;
-																																}*/
-
 		.control-label.required:after {
 			content: "*";
 			color: red;
@@ -150,16 +145,13 @@
 		.tab-content {
 			padding: 0.9rem;
 			border-radius: 0.375rem;
+			box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 9.12);
 		}
 
 		.k-grid .k-grouping-header {
 			height: 20px;
 			font-size: 12px;
 		}
-
-		/*.k-grid .k-i-arrow-n, .k-grid .k-i-arrow-s {
-																							float: left;
-																						}*/
 
 		.k-grid-header {
 			background-color: #FEE7D5;
@@ -211,9 +203,9 @@
 			height: 18px;
 		}
 
-		/*.content-wrapper, .right-side {
-																																	background-color: #e7e7e7;
-																																}*/
+		.nav-align-top > .nav, .nav-align-top > div > .nav, .nav-align-right > .nav, .nav-align-right > div > .nav, .nav-align-bottom > .nav, .nav-align-bottom > div > .nav, .nav-align-left > .nav, .nav-align-left > div > .nav {
+			font-size: 14px;
+		}
 
 		.info-box-icon {
 			background: white;
@@ -349,158 +341,203 @@
 						</div>
 						<div class="row">
 							<div class="nav-align-top mb-3 mt-3">
-								<ul class="nav nav-pills mb-2" role="tablist">
-									<li class="nav-item">
-										<button type="button" id="ruleCondition"
-												class="nav-link active"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-FiedConfig"
-												aria-controls="navs-pills-FiedConfig"
-												aria-selected="true">
-											Rule Condition
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="sourceidentifier"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-sourceidentifier"
-												aria-controls="navs-pills-top-sourceidentifier"
-												aria-selected="true">
-											Source Identifier
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="comparisionidentifier"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-comparisionidentifier"
-												aria-controls="navs-pills-top-comparisionidentifier"
-												aria-selected="true">
-											Target Identifier
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="grouping"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-grouping"
-												aria-controls="navs-pills-top-grouping"
-												aria-selected="false">
-											Additional Grouping
-											@*Grouping*@
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="sourceorder"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-sourceorder"
-												aria-controls="navs-pills-top-sourceorder"
-												aria-selected="true">
-											Source Processing Order
-										</button>
-									</li>
-									<li class="nav-item">
-										<button type="button" id="Comparisonorder"
-												class="nav-link"
-												role="tab"
-												data-bs-toggle="tab"
-												data-bs-target="#navs-pills-top-comparisonorder"
-												aria-controls="navs-pills-top-comparisonorder"
-												aria-selected="true">
-											Target Processing Order
-										</button>
-									</li>
-								</ul>
-								<div class="tab-content">
-									<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_rulecondition">
-															<div id="grid_rulecondition">
+								<div class="row">
+									<ul class="nav nav-pills mb-2" role="tablist">
+										<li class="nav-item">
+											<button type="button" id="ruleCondition"
+													class="nav-link active"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-FiedConfig"
+													aria-controls="navs-pills-FiedConfig"
+													aria-selected="true">
+												Rule Condition
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button" id="sourceidentifier"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-sourceidentifier"
+													aria-controls="navs-pills-top-sourceidentifier"
+													aria-selected="true">
+												Source Identifier
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button" id="comparisionidentifier"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-comparisionidentifier"
+													aria-controls="navs-pills-top-comparisionidentifier"
+													aria-selected="true">
+												Target Identifier
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button" id="grouping"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-grouping"
+													aria-controls="navs-pills-top-grouping"
+													aria-selected="false">
+												Additional Grouping
+												@*Grouping*@
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button" id="sourceorder"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-sourceorder"
+													aria-controls="navs-pills-top-sourceorder"
+													aria-selected="true">
+												Source Processing Order
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button" id="Comparisonorder"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-comparisonorder"
+													aria-controls="navs-pills-top-comparisonorder"
+													aria-selected="true">
+												Target Processing Order
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-AddtionalConfiguration"
+													aria-controls="navs-pills-top-AddtionalConfiguration"
+													aria-selected="true">
+												Addtional Configuration
+											</button>
+										</li>
+									</ul>
+									<div class="tab-content">
+										<div class="tab-pane fade show active" id="navs-pills-FiedConfig" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+														@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+														<div class="col-xs-12">
+															<div id="gd_rulecondition">
+																<div id="grid_rulecondition">
+																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_sourceidentifier">
-															<div id="grid_sourceidentifier">
+										<div class="tab-pane fade" id="navs-pills-top-sourceidentifier" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+														<div class="col-xs-12">
+															<div id="gd_sourceidentifier">
+																<div id="grid_sourceidentifier">
+																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_comparisionidentifier">
-															<div id="grid_comparisionidentifier">
+										<div class="tab-pane fade" id="navs-pills-top-comparisionidentifier" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+														<div class="col-xs-12">
+															<div id="gd_comparisionidentifier">
+																<div id="grid_comparisionidentifier">
+																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-												<div class="col-xs-12">
-													<div id="gd_grouping">
-														<div id="grid_grouping">
+										<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+													<div class="col-xs-12">
+														<div id="gd_grouping">
+															<div id="grid_grouping">
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
-										</div>
 
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_sourceorder">
-															<div id="grid_sourceorder">
+										</div>
+										<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+														<div class="col-xs-12">
+															<div id="gd_sourceorder">
+																<div id="grid_sourceorder">
+																</div>
 															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
-									<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-13px;">
-										<div class="panel panel-default">
-											<div class="panel-body">
-												<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-													@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-													<div class="col-xs-12">
-														<div id="gd_comparisonorder">
-															<div id="grid_comparisonorder">
+										<div class="tab-pane fade" id="navs-pills-top-comparisonorder" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+														<div class="col-xs-12">
+															<div id="gd_comparisonorder">
+																<div id="grid_comparisonorder">
+																</div>
 															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*AddtionalConfiguration*@
+										<div class="tab-pane fade" id="navs-pills-top-AddtionalConfiguration" role="tabpanel" style="margin-top:-13px;">
+											<div class="panel panel-default">
+												<div class="panel-body" style="height:175px;padding:31px">
+													<div class="col-sm-2">
+														<input type="checkbox" id="thersholdflag" onclick="thersflag()">
+														<label for="vehicle1">
+															Enable Rule level Threshold
+														</label>
+													</div>
+													<div class="row" id="addconfig" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Partial Match&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="partialmatch1" name="partialmatch" value="Y" onclick="onpartialrule()">&nbsp;Yes &nbsp;
+																<input type="radio" id="partialmatch2" name="partialmatch" value="N" onclick="onpartialrule()" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
+															<input class="form-control" id="thersholdplus" onpaste="return false;" type="text" maxlength="16" value="0" onkeypress='return isNumberKey(event)'>
+															<input class="form-control" id="thersholdminus" type="hidden" value="0">
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Applied On&nbsp;</label>
+															<select id="cmbthersholdvalue" class="form-select form-control">
+															</select>
 														</div>
 													</div>
 												</div>
@@ -509,7 +546,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px;margin-top:-1px">
 								<div class="col-sm-4"></div>
 								<div class="col-sm-4" style="text-align:center">
 									<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
@@ -598,7 +635,57 @@
 		kendodate_format();
 		getGridComboList();
 		cmbsourcefield();
+		onpartialrule();
 	});
+	function thersflag() {
+		var checkbox = document.getElementById("thersholdflag");
+		if (checkbox.checked) {
+			$("#partialmatch2").prop("checked", true);
+			$("#addconfig").show();
+		} else {
+			$("#addconfig").hide();
+			$("#thersholdplus").val(0);
+			$("#thersholdminus").val(0)
+			$("#thersholdminus").prop('disabled', true)
+			$("#thersholdplus").prop('disabled', true)
+			$("#cmbthersholdvalue").prop('disabled', true)
+			$("#cmbthersholdvalue").val("");
+		}
+	}
+	function onpartialrule() {
+		if ($("input[name='partialmatch']:checked").val() == "Y") {
+			if ($("#thersholdplus").val() == 0) {
+				$("#thersholdplus").val(0);
+				$("#thersholdminus").val(0);
+				$("#thersholdminus").prop('disabled', false)
+				$("#thersholdplus").prop('disabled', false)
+				$("#cmbthersholdvalue").prop('disabled', false);
+				$("#cmbthersholdvalue").val("B")
+
+				var select = document.getElementById("cmbthersholdvalue");
+				var condition = true; // Change this condition as needed
+				// Remove the "N/A" option if the condition is met
+				if (condition) {
+					var optionToRemove = select.querySelector("option[value='N']");
+					if (optionToRemove) {
+						optionToRemove.remove();
+					}
+				}
+			} else {
+				$("#thersholdminus").prop('disabled', false)
+				$("#thersholdplus").prop('disabled', false)
+				$("#cmbthersholdvalue").prop('disabled', false);
+			}
+
+		} else {
+			$("#thersholdplus").val(0);
+			$("#thersholdminus").val(0)
+			$("#thersholdminus").prop('disabled', true)
+			$("#thersholdplus").prop('disabled', true)
+			$("#cmbthersholdvalue").prop('disabled', true)
+			$("#cmbthersholdvalue").val("");
+		}
+	}
 	function load() {
 		if (getlocalStorage('btn_clk_val') == "Create") {
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
@@ -607,6 +694,7 @@
 			$("#Reversal3").prop("checked", true);
 			$("#GM1").prop("checked", true);
 			$("#GMM2").prop("checked", true);
+			$('#partialmatch2').attr('checked', true);
 			var data = getlocalStorage("ls_pageList");
 			$("#cmbreconname").val(data[0].recon_code);
 			$("#ruleorder").val(data[0].rule_order);
@@ -763,15 +851,31 @@
 							var res = JSON.parse(response);
 							$("#RuleAppliedOn").val(res.RuleHeader[0].rule_apply_on);
 							RuleApplied();
+							if (res.RuleHeader[0].threshold_flag == "Y") {
+								$("#thersholdflag").prop("checked", true);
+								$("#addconfig").show();
+							} else {
+								$("#thersholdflag").prop("checked", false);
+								$("#addconfig").hide();
+							}
+							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 							$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 							$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
 							$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+							jQuery('#souaccmode').trigger("change");
 							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
-							$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 							$("#ruleorder").val(res.RuleHeader[0].ruleorder);
 							$("#period_from").val(res.RuleHeader[0].period_from);
 							$("#period_to").val(res.RuleHeader[0].period_to);
 							$("#probableflag").val(res.RuleHeader[0].probable_match_flag);
+							if (res.RuleHeader[0].rule_automatch_partial == "Y") {
+								$("#partialmatch1").prop("checked", true);
+							} else {
+								$("#partialmatch2").prop("checked", true);
+							}
+							$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
+							$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
+							$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
 							if (res.RuleHeader[0].until_active_flag == "Y") {
 								$('#untillactive').attr('checked', true);
 							}
@@ -1250,6 +1354,7 @@
 						$("#sourcedataset").val(res.RuleHeader[0].source_dataset_code);
 						$("#comdataset").val(res.RuleHeader[0].comparison_dataset_code);
 						$("#souaccmode").val(res.RuleHeader[0].source_acc_mode);
+						jQuery('#souaccmode').trigger("change");
 						$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
 						$("#cmbgroupflag").val(res.RuleHeader[0].group_flag);
 						$("#ruleorder").val(res.RuleHeader[0].ruleorder);
@@ -1261,6 +1366,22 @@
 						$("#rulegid").val(res.RuleHeader[0].rule_gid);
 						$("#period_from").val(res.RuleHeader[0].period_from);
 						$("#period_to").val(res.RuleHeader[0].period_to);
+						if (res.RuleHeader[0].rule_automatch_partial == "Y") {
+							$("#partialmatch1").prop("checked", true);
+						} else {
+							$("#partialmatch2").prop("checked", true);
+						}
+						if (res.RuleHeader[0].threshold_flag == "Y") {
+							$("#thersholdflag").prop("checked", true);
+							$("#addconfig").show();
+						} else {
+							$("#thersholdflag").prop("checked", false);
+							$("#addconfig").hide();
+						}
+
+						$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
+						$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
+						$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
 						if (res.RuleHeader[0].until_active_flag == "Y") {
 							$('#untillactive').attr('checked', true);
 						}
@@ -1374,7 +1495,30 @@
 
 			}
 		});
-
+		// THERSOLD type
+		var in_master_code = "QCD_TV";
+		var in_user_code = "";
+		$("#cmbthersholdvalue").empty();
+		$("#cmbthersholdvalue").append($('<option>', {
+			value: "",
+			text: "  Select  "
+		}));
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$.each(response, function (index, item) {
+					$("#cmbthersholdvalue").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
 		// group flag
 		var in_master_code = "QCD_RULE_GRP";
 		var in_user_code = "";
@@ -1532,6 +1676,18 @@
 				addRowrule();
 				return
 			}
+
+			var in_rule_automatch_partial = $("input[name='partialmatch']:checked").val();
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
+			var checkbox = document.getElementById("thersholdflag");
+			if (checkbox.checked) {
+				var thersholdflag = 'Y'
+			} else {
+				var thersholdflag = 'N'
+			}
+
 			var in_rule_order = parseFloat($("#ruleorder").val()).toFixed(2);
 			var status = "D";
 			var Groupflag = $("#cmbgroupflag").val();
@@ -1546,7 +1702,10 @@
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
-					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: in_inactive_reason
+					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status,
+					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
+					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
+					in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2285,7 +2444,6 @@
 			}
 		}
 	}
-
 	function addRowsourceidentifier() {
 		if ($("#txtrulecode").val() != '') {
 			var grid = $("#grid_sourceidentifier").data("kendoGrid");
@@ -2307,7 +2465,6 @@
 			saveheader();
 		}
 	}
-
 	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr = [];
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -3341,10 +3498,14 @@
 		if ($("#txtrulecode").val() != '') {
 			var grid = $("#grid_sourceorder").data("kendoGrid");
 			var dataSource = grid.dataSource;
-
-			// Get the last sequence number and increment it
+			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
-			var newSeqNo = parseInt(lastSeqNo) + 1;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].recorder_seqno > max) {
+					max = grid.dataSource._data[i].recorder_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;			
 
 			// Add a new row with the incremented sequence number
 			dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
@@ -3534,10 +3695,14 @@
 		if ($("#txtrulecode").val() != '') {
 			var grid = $("#grid_comparisonorder").data("kendoGrid");
 			var dataSource = grid.dataSource;
-
-			// Get the last sequence number and increment it
+			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
-			var newSeqNo = parseInt(lastSeqNo) + 1;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].recorder_seqno > max) {
+					max = grid.dataSource._data[i].recorder_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
 
 			// Add a new row with the incremented sequence number
 			dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
@@ -3789,6 +3954,17 @@
 				action = "UPDATE"
 			}
 
+			var in_rule_automatch_partial = $("input[name='partialmatch']:checked").val();
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
+			var checkbox = document.getElementById("thersholdflag");
+			if (checkbox.checked) {
+				var thersholdflag = 'Y'
+			} else {
+				var thersholdflag = 'N'
+			}
+
 			var in_rule_order = parseFloat($("#ruleorder").val()).toFixed(2);
 			var status = "Y";
 			var Groupflag = $("#cmbgroupflag").val();
@@ -3803,7 +3979,10 @@
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
-					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: in_inactive_reason
+					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status,
+					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
+					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
+					in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {

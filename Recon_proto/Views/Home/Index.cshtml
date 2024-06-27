@@ -140,6 +140,12 @@
 			<div class="col-md-12">
 				<div class="content-wrapper" style="min-height:43px">
 					<div class="row" style="margin-left:0%;padding-top:1%">
+						<div class="col-md-5">
+							<label for="" class="title">Recon Name</label><br />
+							<select id="cmbreconname" class="form-select form-control" onchange="reconchangedashboard()">
+							</select>
+							@*<input id="cmbreconname" style="width:65%" />*@
+						</div>
 						<div class="col-md-2">
 							<label for="period_from" class="title">Date From</label>
 							<input class="cusDate" data-role='datepicker' id="period_from" style="width:100%" data-bind="value:period_from" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
@@ -148,13 +154,7 @@
 							<label for="period_from" class="title">Date To</label><br />
 							<input class="cusDate" data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
 						</div>
-
-						<div class="col-md-5">
-							<label for="" class="title">Recon Name</label><br />
-							<select id="cmbreconname" class="form-select form-control" onchange="reconchangedashboard()">
-							</select>
-							@*<input id="cmbreconname" style="width:65%" />*@
-						</div>
+						
 						<div class="col-md-2" style="margin-top:2%">
 							<button type="button" id="btn_search" class="btn btn-sm btn-primary me-2" onclick="getdashboarddetails()">
 								&nbsp;Refresh
@@ -394,6 +394,19 @@
 			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
 			setcon();
 		}
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Common/reconmindate',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#period_from").val(res[0].min_tran_date);
+			}
+		});
 	}
 </script>
 <script type="text/x-kendo-template" id="CheckboxTemplate">

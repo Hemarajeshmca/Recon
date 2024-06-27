@@ -167,7 +167,7 @@
 					</div>
 					<div class="col-sm-4" style="margin-top:10px;float: right;">
 						<center>
-							<button type="submit" class="btn btn-sm save_btn me-2" onclick="saveQcd()">Save</button>&nbsp;&nbsp;&nbsp;
+							<button type="submit" id="saveid" class="btn btn-sm save_btn me-2" onclick="saveQcd()">Save</button>&nbsp;&nbsp;&nbsp;
 							<button type="submit" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="closeModal()">Cancel</button>
 						</center>
 					</div>
@@ -299,10 +299,10 @@
 					resultData = e.sender._data;
 					var rows = $('#grid').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					//if ($("#depend_flag").val() == "Y") {
-					//	$(".k-grid-edit").hide();
-					//	$(".k-grid-delete").hide();
-					//}
+					if ($("#depend_flag").val() == "Y") {
+						$(".k-grid-edit").hide();
+						$(".k-grid-delete").hide();
+					}
 				},
 				pageable: {
 					refresh: false,
@@ -320,6 +320,11 @@
 							name: "edit",
 							id: "Edit",
 							template: "<a href='' onclick='openQCDModel()' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a> &nbsp;&nbsp;  ",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='openQCDModelview()' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
 						{
 							name: "Delete",
@@ -611,7 +616,75 @@
 				});
 			}
 		});
-		$("#dependMasterCode").val(selectedItem.depend_master_syscode)
+		$("#dependMasterCode").val(selectedItem.depend_master_syscode);	
+		$("#MasterCode").prop("disabled", false);
+		$("#MasterName").prop("disabled", false);
+		$("#dependMasterCode").prop("disabled", false);
+		$("#saveid").show();
+	}
+
+	function openQCDModelview() {
+		$("#newQcd").modal('show');
+		var grid = $("#grid").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		console.log("selectedItem", selectedItem);
+		$("#master_gid").val(selectedItem.master_gid);
+		$("#mode").val("UPDATE");
+		$("#MasterSysCode").val(selectedItem.master_syscode);
+		$("#MasterShortCode").val(selectedItem.master_short_code);
+		$("#MasterCode").val(selectedItem.master_code);
+		$("#MasterName").val(selectedItem.master_name);
+		$("#MasterMultipleName").val(selectedItem.master_multiple_name);
+		if (selectedItem.active_status == "Y") {
+			$("#active").prop("checked", true);
+		} else {
+			$("#inactive").prop("checked", true);
+		}
+		$("#depend_flag").val(selectedItem.depend_flag);
+		if ($("#depend_flag").val() == 'Y') {
+			$("#depend").show();
+		} else {
+			$("#depend").hide();
+		}
+		var items = getlocalStorage("master");
+		$.each(items, function (index, item) {
+			if ($("#qcdcode").val() == item.master_syscode) {
+				$("#depparentdesc").val(item.depend_parent_master_syscode_desc);
+				$("#depparentCode").val(item.depend_parent_master_syscode);
+			}
+		});
+		// dependMasterCode
+		var in_master_code = $("#depparentCode").val();
+		var in_user_code = "";
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#dependMasterCode").empty();
+				$("#dependMasterCode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#dependMasterCode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		$("#dependMasterCode").val(selectedItem.depend_master_syscode);
+		$("#MasterSysCode").prop("disabled", true);
+		$("#MasterShortCode").prop("disabled", true);
+		$("#MasterCode").prop("disabled", true);
+		$("#MasterName").prop("disabled", true);
+		$("#MasterMultipleName").prop("disabled", true);
+		$("#dependMasterCode").prop("disabled", true);
+		$("#saveid").hide();
 	}
 
 	function clearModal() {

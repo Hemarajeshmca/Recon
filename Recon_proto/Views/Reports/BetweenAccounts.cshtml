@@ -1,329 +1,327 @@
 ﻿@{
-    ViewBag.title = "Recon-Between A/cs";
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+	ViewBag.title = "Recon-Between A/cs";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
 <html>
 <head>
-    <title></title>
-    <style>
-       /* .k-grid td {
-            background-color: unset !important;
-        }*/
+	<title></title>
+	<style>
+		/* .k-grid td {
+					background-color: unset !important;
+				}*/
 
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 28rem !important;
-        }
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
 
 
-        .k-grid-header th.k-header, .k-filter-row th {
-            font-weight: 700 !important;
-        }
+		.k-grid-header th.k-header, .k-filter-row th {
+			font-weight: 700 !important;
+		}
 
-        .k-grid td {
-            border: unset !important;
-            font-weight: 800;
-            line-height: 1em;
-            border-left: 1px solid #c5c5c5 !important;
-        }
+		.k-grid td {
+			border: unset !important;
+			font-weight: 800;
+			line-height: 1em;
+			border-left: 1px solid #c5c5c5 !important;
+		}
 
-        /*		a {
-                            color: #fff !important;
-                        }*/
-        /*
-                        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-                            color: #fff !important;
-                        }*/
+		/*		a {
+									color: #fff !important;
+								}*/
+		/*
+								.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+									color: #fff !important;
+								}*/
 
-        .k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
-            color: #fff !important;
-        }
-
-    </style>
+		.k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+			color: #fff !important;
+		}
+	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-    <div class="content-wrapper">
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;height:84%">
-                <div class="row" style="margin-top:10px;margin-bottom: 2%;">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height:84%">
+				<div class="row" style="margin-bottom: 2%;">
+					<div class="col-md-3">
+						<label for="organization" class="form-label">Recon Name</label><br>
+						<select id="reconname" class="form-select form-control"> </select>
+					</div>
+					<div class="col-md-2">
+						<label for="" class="form-label">
+							Tran Date
+						</label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
 
-                    <div class="col-md-2">
-                        <label for="" class="form-label">
-                            Tran Date
-                        </label>
-                        <div>
-                            <input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" style="width:100%" />
-                            <span data-for='valid' class='k-invalid-msg'></span>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="organization" class="form-label">Recon Name</label><br>
-                        <select id="reconname" class="form-select form-control"> </select>
-                    </div>
-                    <div class="col-md-5" style="margin-top: 2.5%;">
-                        <button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%">
-                            View
-                        </button>
-                        <button type="button" onclick="monthbrs()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:23%;">
-                            <i class="fa-solid fa-file-excel"></i>
-                        </button>
-                        <button type="button" aria-hidden="true" onclick="monthendbrs()" id="monthendexcel" class="btn btn-sm save_btn me-2" style="">
-                            Monthend Brs
-                        </button>
-                        <button type="button" class="btn btn-sm save_btn me-2" onclick="customReport()" style="">
-                            Custom Report
-                        </button>
+					<div class="col-md-7" style="margin-top: 2.5%;">
+						<button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:19%">
+							View
+						</button>
+						<button type="button" onclick="monthbrs()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:19%;">
+							<i class="fa-solid fa-file-excel"></i>
+						</button>
+						<button type="button" aria-hidden="true" onclick="monthendbrs()" id="monthendexcel" class="btn btn-sm save_btn me-2" style="">
+							Monthend Brs
+						</button>
+						<button type="button" class="btn btn-sm save_btn me-2" onclick="customReport()" style="">
+							Custom Report
+						</button>
+					</div>
+				</div>
 
-                    </div>
-                </div>
-
-                <div id="grid_dataset"></div>
-            </div>
-        </div>
-    </div>
+				<div id="grid_dataset"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#navhead").text("Recon-Between A/cs");
-        kendodate_format();
-        getreconlist();
-        $("#exportExcel").hide();
-        $("#monthendexcel").hide();
-    });
-   
-    function getreconlist() {
-        var data = {};
-        data.in_recontype_code = 'B';
-        var Context = data;
-        $.ajax({
-            type: "POST",
-            url: '../Recon/getReconAgainstTypeCode',
-            dataType: 'json',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                $("#reconname").empty();
-                $("#reconname").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(response, function (index, item) {
-                    if (item.active_status == 'Y') {
-                    $("#reconname").append($('<option>', {
-                        value: item.recon_code,
-                        text: item.recon_name
-                    }));
-                    }                    
-                });
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
-        });
-    }
+	$(document).ready(function () {
+		$("#navhead").text("Recon-Between A/cs");
+		kendodate_format();
+		getreconlist();
+		$("#exportExcel").hide();
+		$("#monthendexcel").hide();
+	});
 
-    function run() {
-        var tranDate = validateDateFormat($("#tran_date").val());
-        var in_recon_code = $("#reconname").val();
-        if (tranDate && in_recon_code) {
-            var in_tran_date = $("#tran_date").val();
-            var ts = in_tran_date.split("/");
-            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-            $.ajax({
-                type: "POST",
-                url: '../Reports/reconbetweenacc',
-                dataType: 'json',
-                data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
-                contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    var res = JSON.parse(response)
-                    if (res.length > 0) {
-                        loadGrid(res);
-                        $("#exportExcel").show();
-                        $("#monthendexcel").show();
-                    } else {
-                        loadGrid([]);
-                    }
-                },
-                error: function (er) {
-                    console.log(er)
-                }
-            });
-        } else if (!in_recon_code) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please select Recon ..!',
-                type: 'red',
-            });
-        } else if (!tranDate) {
-            $.alert({
-                title: 'Recon',
-                content: 'Invalid Tran Date ..!',
-                type: 'red',
-            });
-        }      
-    }
+	function getreconlist() {
+		var data = {};
+		data.in_recontype_code = 'B';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/getReconAgainstTypeCode',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#reconname").empty();
+				$("#reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#reconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
 
-    function loadGrid(data) {
-        try {
-            $("#grid_dataset").kendoGrid({
-                dataSource: {
-                    data: data,
-                    pageSize: 20,
-                    schema: {
-                        model: {
-                            fields: {
-                                brs_gid: { type: "string" },
-                                particulars: { type: "string" },
-                                tran_value: { type: "string" },
-                                tran_acc_mode: { type: "string" },
-                                bal_value: { type: "string" },
-                            }
-                        }
-                    }
-                },
-                height: 380,
-                groupable: false,
-                dataBound: function (e) {
-                    var grid = this; // "this" refers to the Kendo Grid
-                    var rows = grid.tbody.children();
+	function run() {
+		var tranDate = validateDateFormat($("#tran_date").val());
+		var in_recon_code = $("#reconname").val();
+		if (tranDate && in_recon_code) {
+			var in_tran_date = $("#tran_date").val();
+			var ts = in_tran_date.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			$.ajax({
+				type: "POST",
+				url: '../Reports/reconbetweenacc',
+				dataType: 'json',
+				data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response)
+					if (res.length > 0) {
+						loadGrid(res);
+						$("#exportExcel").show();
+						$("#monthendexcel").show();
+					} else {
+						loadGrid([]);
+					}
+				},
+				error: function (er) {
+					console.log(er)
+				}
+			});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please select Recon ..!',
+				type: 'red',
+			});
+		} else if (!tranDate) {
+			$.alert({
+				title: 'Recon',
+				content: 'Invalid Tran Date ..!',
+				type: 'red',
+			});
+		}
+	}
 
-                    rows.each(function () {
-                        var rowDataItem = grid.dataItem(this);
-                        if (rowDataItem.particulars === "Add" || rowDataItem.particulars === "Subtotal" || rowDataItem.particulars === "Less" || rowDataItem.particulars === "Arrived Balance") {
-                            $(this).css("color", "red");
-                        }
-                        if (rowDataItem.tran_acc_mode === "CR" || rowDataItem.tran_acc_mode === "DR") {
-                            $(this).css("color", "blue");
-                        }
-                    });
-                },
-                pageable: false,
-                sortable: false,
-                selectable: false,
-                filterable: false,
-                navigatable: true,
-                columns: [
-                    {
-                        field: "brs_gid",
-                        title: "brs_gid",
-                        width: 100,
-                        hidden: true,
-                        attributes: { style: "text-align: right;" },
-                    },
+	function loadGrid(data) {
+		try {
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 20,
+					schema: {
+						model: {
+							fields: {
+								brs_gid: { type: "string" },
+								particulars: { type: "string" },
+								tran_value: { type: "string" },
+								tran_acc_mode: { type: "string" },
+								bal_value: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 380,
+				groupable: false,
+				dataBound: function (e) {
+					var grid = this; // "this" refers to the Kendo Grid
+					var rows = grid.tbody.children();
 
-                    {
-                        field: "particulars",
-                        title: "Particular",
-                        width: 200,
-                    },
-                    {
-                        field: "tran_value",
-                        title: "Amount",
-                        width: 100,
-                        attributes: { style: "text-align: right;" },
-                    },
-                    {
-                        field: "tran_acc_mode",
-                        title: "Account Mode",
-                        width: 50,
-                    },
-                    {
-                        field: "bal_value",
-                        title: "Balance Amount",
-                        width: 100,
-                        attributes: { style: "text-align: right;" },
-                    }],
+					rows.each(function () {
+						var rowDataItem = grid.dataItem(this);
+						if (rowDataItem.particulars === "Add" || rowDataItem.particulars === "Subtotal" || rowDataItem.particulars === "Less" || rowDataItem.particulars === "Arrived Balance") {
+							$(this).css("color", "red");
+						}
+						if (rowDataItem.tran_acc_mode === "CR" || rowDataItem.tran_acc_mode === "DR") {
+							$(this).css("color", "blue");
+						}
+					});
+				},
+				pageable: false,
+				sortable: false,
+				selectable: false,
+				filterable: false,
+				navigatable: true,
+				columns: [
+					{
+						field: "brs_gid",
+						title: "brs_gid",
+						width: 100,
+						hidden: true,
+						attributes: { style: "text-align: right;" },
+					},
 
-                editable: false,
+					{
+						field: "particulars",
+						title: "Particular",
+						width: 200,
+					},
+					{
+						field: "tran_value",
+						title: "Amount",
+						width: 100,
+						attributes: { style: "text-align: right;" },
+					},
+					{
+						field: "tran_acc_mode",
+						title: "Account Mode",
+						width: 50,
+					},
+					{
+						field: "bal_value",
+						title: "Balance Amount",
+						width: 100,
+						attributes: { style: "text-align: right;" },
+					}],
 
-            });
-        }
-        catch (err) {
-            console.log(err)
-        }
-    }
+				editable: false,
 
-     function monthbrs() {
-        var tranDate = validateDateFormat($("#tran_date").val());
-        var in_recon_code = $("#reconname").val();
-        if (tranDate && in_recon_code) {
-            var in_recon_name = $("#reconname").find(":selected").text();
-            var in_tran_date = $("#tran_date").val();
-            var ts = in_tran_date.split("/");
-            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-            window.location.href = '@Url.Action("kendogrid_download", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
-        } else if (!tranDate) {
-            $.alert({
-            title: 'Recon',
-                content: 'Invalid Tran Date ..!',
-                    type: 'red',
-            });
-        } else if (!in_recon_code) {
-            $.alert({
-            title: 'Recon',
-                content: 'Please Select Recon ..!',
-                    type: 'red',
-            });
-        }
-     }
+			});
+		}
+		catch (err) {
+			console.log(err)
+		}
+	}
 
-    function monthendbrs() {
-        var in_recon_code = $("#reconname").val();
-        var tranDate = validateDateFormat($("#tran_date").val());
-        if (tranDate && in_recon_code) {
-            var in_recon_name = $("#reconname").find(":selected").text();
-            var in_tran_date = $("#tran_date").val();
-            var ts = in_tran_date.split("/");
-            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-            window.location.href = '@Url.Action("monthendreport", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
-        } else if (!tranDate) {
-            $.alert({
-            title: 'Recon',
-            content: 'Invalid Tran Date ..!',
-            type: 'red',
-            });
-        } else if (!in_recon_code) {
-            $.alert({
-            title: 'Recon',
-            content: 'Please Select Recon ..!',
-            type: 'red',
-            });
-        }
-    }
-    
-    function customReport(){
-        var tranDate = validateDateFormat($("#tran_date").val());
-        var in_recon_code = $("#reconname").val();
-        if (tranDate && in_recon_code) {
-            var in_recon_name = $("#reconname").find(":selected").text();
-            var in_tran_date = $("#tran_date").val();
-            var ts = in_tran_date.split("/");
-            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-            window.location.href = '@Url.Action("customReport_brsSummary", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
-        } else if (!tranDate) {
-            $.alert({
-                title: 'Recon',
-                content: 'Invalid Tran Date ..!',
-                type: 'red',
-            });
-            } else if (!in_recon_code) {
-            $.alert({
-                title: 'Recon',
-                content: 'Please Select Recon ..!',
-                type: 'red',
-            });
-          }
-        }
+	function monthbrs() {
+		var tranDate = validateDateFormat($("#tran_date").val());
+		var in_recon_code = $("#reconname").val();
+		if (tranDate && in_recon_code) {
+			var in_recon_name = $("#reconname").find(":selected").text();
+			var in_tran_date = $("#tran_date").val();
+			var ts = in_tran_date.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			window.location.href = '@Url.Action("kendogrid_download", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+		} else if (!tranDate) {
+			$.alert({
+				title: 'Recon',
+				content: 'Invalid Tran Date ..!',
+				type: 'red',
+			});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please Select Recon ..!',
+				type: 'red',
+			});
+		}
+	}
 
-    //Date Validation
+	function monthendbrs() {
+		var in_recon_code = $("#reconname").val();
+		var tranDate = validateDateFormat($("#tran_date").val());
+		if (tranDate && in_recon_code) {
+			var in_recon_name = $("#reconname").find(":selected").text();
+			var in_tran_date = $("#tran_date").val();
+			var ts = in_tran_date.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			window.location.href = '@Url.Action("monthendreport", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+		} else if (!tranDate) {
+			$.alert({
+				title: 'Recon',
+				content: 'Invalid Tran Date ..!',
+				type: 'red',
+			});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please Select Recon ..!',
+				type: 'red',
+			});
+		}
+	}
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const dateInput = document.getElementById('tran_date');
-        dateInput.addEventListener('focusout', onFocusOut);
-    });
+	function customReport() {
+		var tranDate = validateDateFormat($("#tran_date").val());
+		var in_recon_code = $("#reconname").val();
+		if (tranDate && in_recon_code) {
+			var in_recon_name = $("#reconname").find(":selected").text();
+			var in_tran_date = $("#tran_date").val();
+			var ts = in_tran_date.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			window.location.href = '@Url.Action("customReport_brsSummary", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + in_recon_name + '';
+		} else if (!tranDate) {
+			$.alert({
+				title: 'Recon',
+				content: 'Invalid Tran Date ..!',
+				type: 'red',
+			});
+		} else if (!in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please Select Recon ..!',
+				type: 'red',
+			});
+		}
+	}
+
+	//Date Validation
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('tran_date');
+		dateInput.addEventListener('focusout', onFocusOut);
+	});
 
 </script>

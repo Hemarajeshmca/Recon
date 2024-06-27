@@ -483,6 +483,7 @@
 				$("#txtstatus").val(data.active_status_desc);
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
+				//$("#Cmbprocessmethod").prop('disabled', true);
 			}
 		} else if (getlocalStorage('btn_clk_val') == "View") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -1886,7 +1887,7 @@
 
 	function validatequery1() {
 		var in_sql = $("#querydata").val();
-		var index = in_sql.indexOf("Where");
+		var index = in_sql.toLowerCase().indexOf("where");
 		if (index !== -1) {
 			in_sql = in_sql + "  and 1=2"
 		} else {
@@ -1907,7 +1908,7 @@
 						$.alert({
 							title: 'Recon',
 							content: data.out_msg,
-							type: 'red',
+							type: 'green',
 						});
 						$("#validquery").val("true");
 					} else {
@@ -1922,8 +1923,7 @@
 						title: 'Recon',
 						content: "failed",
 						type: 'red',
-					});
-					$("#querydata").val("");
+					});					
 					$("#validquery").val("false");
 				}
 			},
@@ -2052,6 +2052,7 @@
 						$("#preprocessgid").val(data.in_preprocess_gid);
 						$("#txtpreprocesscode").val(data.in_preprocess_code);
 						addRow();
+						//$("#Cmbprocessmethod").prop('disabled', true);
 					} else {
 						$.alert({
 							title: 'Recon',

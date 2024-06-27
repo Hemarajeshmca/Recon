@@ -111,6 +111,13 @@
 			transform: translateX(-50%);
 		}
 
+		#grid_jobhistory {
+			flex: 1 1 auto;
+		}
+
+		.k-grid-pager {
+			flex-shrink: 0;
+		}
 		.tooltip-container:hover .tooltip1 {
 			display: block;
 		}
@@ -126,9 +133,9 @@
 						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
 						</select>
 					</div>
-					
+
 				</div>
-				
+
 				<div class="row">
 					<div class="nav-align-top mb-3 mt-3">
 						<ul class="nav nav-pills mb-2" role="tablist">
@@ -223,7 +230,7 @@
 						</div>
 					</div>
 					<hr style="margin-top:-1px; width:100%;">
-					<div class="container">
+					<div class="container" style="display:none">
 						<div class="row">
 							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Description </strong></p></div>
 							<div class="col-md-1">  <strong>:</strong> </div>
@@ -235,9 +242,9 @@
 							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="initated_datetime"></span></p></div>
 						</div>
 						@*<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Completed Date-Time </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="completed_datetime"></span></p></div>
+						<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Completed Date-Time </strong></p></div>
+						<div class="col-md-1">  <strong>:</strong> </div>
+						<div class="col-md-7" style="white-space: nowrap;"> <p><span id="completed_datetime"></span></p></div>
 						</div>*@
 						<div class="row">
 							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Initiated By </strong></p></div>
@@ -253,6 +260,12 @@
 							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Remark </strong></p></div>
 							<div class="col-md-1">  <strong>:</strong> </div>
 							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="remarks"></span></p></div>
+						</div>						
+					</div>
+					<div class="col-xs-12">
+						<div id="gd_jobhistory">
+							<div id="grid_jobhistory">
+							</div>
 						</div>
 					</div>
 					@*  <div class="container">
@@ -286,10 +299,11 @@
 		$("#navhead").text("Dataset Import");
 		gridlist();
 		grid_dataset_details([]);
+		grid_jobhistory([]);
 	});
 
 	function gridlist() {
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -334,30 +348,30 @@
 			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
 			setcon();
 		}
-			grid_dataset_details([]);
-			var data = {};
-			data.in_recon_code = $("#cmbreconname").val();
-			$.ajax({
-				type: "POST",
-				url: '../Datasetfile/datasetAgainstRecon',
-				dataType: 'json',
-				data: JSON.stringify(data),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response.length > 0) {
-						$("#gd_dataset").empty();
-						$("#gd_dataset").append("<div id='grid_dataset'></div>");
+		grid_dataset_details([]);
+		var data = {};
+		data.in_recon_code = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Datasetfile/datasetAgainstRecon',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response.length > 0) {
+					$("#gd_dataset").empty();
+					$("#gd_dataset").append("<div id='grid_dataset'></div>");
 					const activeData = response.filter(item => item.active_status == "Y");
-						grid_dataset_details(activeData);
-					} else {
-						grid_dataset_details([]);
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
+					grid_dataset_details(activeData);
+				} else {
+					grid_dataset_details([]);
 				}
-			});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
 	}
 
 	var status_Priority = [];
@@ -393,7 +407,7 @@
 								last_sync_status: { type: "string" },
 								completed_date: { type: "string" },
 								job_remark: { type: "string" },
-								in_user_code: {type: "string"}
+								in_user_code: { type: "string" }
 							}
 						},
 						parse: function (data) {
@@ -654,7 +668,7 @@
 	}
 
 	function start() {
-		hideProgress();		
+		hideProgress();
 		var fileName = '';
 		var fileType = '';
 		var fileInput = '';
@@ -712,7 +726,7 @@
 				//				type: 'red',
 				//			});
 				//		}
-						
+
 				//		$("#FileName").val("");
 				//		$("#File_Import").val("");
 				//		$("#Pipeline").val("");
@@ -755,17 +769,101 @@
 	function openInfoModel() {
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
-		document.getElementById('job_desc').innerHTML = selectedItem.dataset_name;
-		document.getElementById('initated_datetime').innerHTML = selectedItem.last_sync_date;
-		//document.getElementById('completed_datetime').innerHTML = selectedItem.completed_date;
-		document.getElementById('initatedby').innerHTML = selectedItem.in_user_code ? selectedItem.in_user_code : '';
-		document.getElementById('status').innerHTML = selectedItem.last_sync_status;
-		document.getElementById('remarks').innerHTML = selectedItem.job_remark;
+		var data = {};
+		data.in_dataset_code = selectedItem.dataset_code;
+		$.ajax({
+			type: "POST",
+			url: '../Datasetfile/datasethistory',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != "[]") {					
+					grid_jobhistory(response);
+				} else {
+					grid_jobhistory([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
 		$("#infomodal").modal("show");
 	}
 
 	function rowselected(val) {
 		$("#infomodal").modal("hide");
+	}
+
+
+	function grid_jobhistory(data) {
+		$("#grid_jobhistory").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							dataset_name: { type: "string" },
+							start_date: { type: "string"},
+							job_initiated_by: { type: "string" },
+							job_status: { type: "string" },
+							job_remark: { type: "string" },
+							job_name: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 250,			
+			pageable: true,
+			selectable: "row",
+			dataBound: function (e) {
+				var grid = this;
+				var gridContent = grid.element.find(".k-grid-content");
+				// Set the height of the grid content
+				gridContent.height(177); // Set this to your desired height
+			},
+			pageable: {
+				refresh: false,
+				pageSizes: [10,20],
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "dataset_name",
+					title: "Job Description",
+					width: 100,
+				},
+
+				{
+					field: "start_date",
+					title: "Job Initiated Date-Time",
+					width: 110,
+				},
+				{
+					field: "job_initiated_by",
+					title: "Job Initiated By",
+					width: 100,
+				},
+				{
+					field: "job_status",
+					title: "Job Status",
+					width: 80,
+				},
+				{
+					field: "job_name",
+					title: "job_name",
+					hidden: true,
+				},
+				{
+					field: "job_remark",
+					title: "Job Remark",
+					width: 120,
+				}],
+			editable: false,
+
+		});
 	}
 
 </script>
