@@ -102,7 +102,7 @@
 						</div>
 						<div class="col-md-3">
 							<label for="" class="form-label">Theme Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="themetype" class="form-select form-control" style=" width:100%;" onchange="fthemetype()">
+							<select id="themetype" class="form-select form-control" style=" width:100%;" onchange="fthemetypecon()">
 							</select>
 						</div>
 					</div>
@@ -301,7 +301,7 @@
 	});
 	function getGridComboList() {
 		//recon name
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -386,6 +386,86 @@
 			}
 		});
 		load();
+	}
+	function fthemetypecon() {
+		var themetype = $("#themetype").val();
+		var themecode = $("#txtthemecode").val();
+		if (themecode != '') {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to change Theme Type Existing records will be clear!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {										
+										var holdflag = "";
+										var themename = "";
+										var cmbrecon = "";
+										var theme_code = themecode;
+										var clone_theme = "";
+										var action = "DELETETHEME";
+										var theme_gid = model.theme_gid;
+										var action_by = "";
+										var status = "Y"
+										var theme_order = "";
+										var themetype = themetype;
+										var sourcedataset = "";
+										var comparedataset = "";
+										$.ajax({
+											type: "POST",
+											url: '../theme/themeheader',
+											dataType: 'json',
+											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name }),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												var result = JSON.parse(response);
+												var data = result[0];
+												debugger;
+												if (data.out_result == "1") {
+													fthemetype();
+												} else {
+													$.alert({
+														title: 'Recon',
+														content: data.out_msg,
+														type: 'red',
+													});
+												}
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
+							},
+
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+						load();
+					},
+				}
+			});
+		} else {
+			fthemetype()
+		}
 	}
 	function fthemetype() {
 		var themetype = $("#themetype").val();
@@ -694,7 +774,7 @@
 					$("#themetype").val(res.themeHeader[0].theme_type_code);
 					$("#txtstatus").val(res.themeHeader[0].active_status_desc);
 					$("#themegid").val(res.themeHeader[0].theme_gid);
-					
+
 					fthemetype();
 					if (res.sourceidentifier.length > 0) {
 						grid_themefilter(res.sourceidentifier);
@@ -749,7 +829,7 @@
 						$("#grid_themegrouping .k-grid-toolbar").hide();
 						$("#grid_aggfunction .k-grid-toolbar").hide();
 						$("#grid_aggcondition .k-grid-toolbar").hide();
-					}else{
+					} else {
 						$("#txtmode").val("Edit");
 					}
 				}

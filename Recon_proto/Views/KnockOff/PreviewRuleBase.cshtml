@@ -559,8 +559,9 @@
 				{
 					field: "active_status_desc",
 					title: "Status",
-					width: 50,
-				}, {
+					width: 50,					
+				}, 				
+				{
 					field: "Info",
 					title: "Info",
 					template: "<a href='' style='cursor:pointer;' onclick='openDataModel(this)' value='edit' data-bs-toggle='modal'><img style='height: 17px;width:17px;' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
@@ -574,7 +575,7 @@
 			editable: false,
 		});
 	}
-
+	
 	function grid_rule(data) {
 		$("#grid_preview").kendoGrid({
 			dataSource: {
@@ -634,7 +635,7 @@
 				{
 					field: "rule_code",
 					title: "Rule Code",
-					width: 80,
+					width: 50,
 				},
 
 				{
@@ -666,12 +667,13 @@
 				{
 					field: "group_flag_desc",
 					title: "Group Flag",
-					width: 50,
+					width: 60,
 				},
 				{
 					field: "active_status_desc",
 					title: "Status",
 					width: 50,
+					hidden: true
 				},
 				{
 					field: "source_dataset_desc",
@@ -697,7 +699,24 @@
 					width: 100,
 					hidden: true
 
-				}, {
+				},
+				{
+					field: "probable_match_desc",
+					title: "Probable Matchoff",
+					width: 70,
+					attributes: { style: "text-align: center" },
+					filterable: false,
+					template: '#=sel_checkbox2(data)#'
+				},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 50,
+					filterable: false,
+					attributes: { style: "text-align: center" },				
+					template: '#=sel_checkbox1(data)#'
+				},
+				{
 					field: "Info",
 					title: "Info",
 					template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img style='height:17px;width:17px' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
@@ -711,7 +730,28 @@
 			editable: false,
 		});
 	}
+	function sel_checkbox1(data) {
+		var isChecked1 = data.hold_flag_desc;
+		var con1 = "";
+		if (isChecked1 == "YES") {
+			con1 = 'checked=checked';
+			return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox" disabled/> ';
+		} else {
+			return '<input id="chk_sel1_' + data.rule_gid + '"  name = "hold_flag_desc" type="checkbox" disabled/> ';
 
+		}
+	}
+	function sel_checkbox2(data) {
+		var isChecked2 = data.probable_match_desc;
+		var con1 = "";
+		if (isChecked2 == "YES") {
+			con1 = 'checked=checked';
+			return '<input id="chk_sel2_' + data.rule_gid + '" checked  name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
+		} else {
+			return '<input id="chk_sel2_' + data.rule_gid + '" disabled name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
+
+		}
+	}
 
 	function showPreview() {
 		var in_recon_code = $("#reconname").val();

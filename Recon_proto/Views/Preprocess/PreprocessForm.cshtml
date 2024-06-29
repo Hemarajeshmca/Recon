@@ -175,7 +175,7 @@
 						</div>
 						<div class="col-sm-2">
 							<label class="form-label" for="">Process Method&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="Cmbprocessmethod" class="form-select form-control" onchange="processmethod()">
+							<select id="Cmbprocessmethod" class="form-select form-control" onchange="processmethodcon()">
 							</select>
 						</div>
 						<div class="col-sm-3">
@@ -334,7 +334,7 @@
 			}
 		});
 		//recon name
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -453,7 +453,7 @@
 			$("#txtmode").val(getlocalStorage('btn_clk_val'));
 			$("#txtstatus").val("Draft");
 			var data = getlocalStorage("ls_pageList");
-			$("#cmbrecon").val(data[0].recon_code);			
+			$("#cmbrecon").val(data[0].recon_code);
 			jQuery('#cmbrecon').trigger("change");
 			var gettext = $("#cmbrecon").find(":selected").text();
 			$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
@@ -816,7 +816,7 @@
 			}
 		}
 	}
-	
+
 	function combo_editor_man_process(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
@@ -1174,7 +1174,7 @@
 			//	e.model.extraction_criteria = "";
 			//	$("#extraction_criteria_list").val("");
 			// });
-		
+
 		}
 		catch (err) {
 			javascript_log4j_root(arguments.callee.name, err);
@@ -1242,7 +1242,7 @@
 				else {
 					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
-					
+
 				}
 			}
 		});
@@ -1348,7 +1348,7 @@
 					}
 					selectedItem.extraction_criteria_input = undefined;
 				}
-				
+
 			}
 		});
 	}
@@ -1412,6 +1412,94 @@
 				}
 			},
 		});
+	}
+	function processmethodcon() {
+		var processmethod = $("#Cmbprocessmethod").val();
+		var preprocesscode = $("#txtpreprocesscode").val();
+		if (preprocesscode != '') {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to change Process Method Existing records will be clear!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var preprocess_name = "";
+										var preprocess_Code = preprocesscode;
+										var recon_code = "";
+										var process_method = processmethod;
+										var get_recon_field = "";
+										var set_recon_field = "";
+										var process_function = "";
+										var lookup_dataset_code = "";
+										var lookup_return_field = "";
+										var process_query = "";
+										var clone_process = "";
+										var preprocess_order = "";
+										var action = "DELETEPREPROCESS";
+										var preprocess_gid = model.preprocess_gid;
+										var holdflag = "";
+										var action_by = "";
+										var status = "";
+										$.ajax({
+											type: "POST",
+											url: '../Preprocess/preprocessheader',
+											dataType: 'json',
+											data: JSON.stringify({
+												preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+												lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+												set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+											}),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												var result = JSON.parse(response);
+												var data = result[0];
+												debugger;
+												if (data.out_result == "1") {
+													processmethod();
+												} else {
+													$.alert({
+														title: 'Recon',
+														content: data.out_msg,
+														type: 'red',
+													});
+												}
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
+							},
+
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+						load();
+					},
+				}
+			});
+		} else {
+			processmethod()
+		}
 	}
 	function processmethod() {
 		if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
@@ -1637,15 +1725,15 @@
 					jQuery('#cmbgetrecon').trigger("change");
 					$("#Cmbfunction").val(result.header[0].process_function);
 					if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
-					$("#Cmbreconfield").val(result.header[0].set_recon_field);
-					}else{
+						$("#Cmbreconfield").val(result.header[0].set_recon_field);
+					} else {
 						$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					}
 					$("#querydata").val(result.header[0].process_query);
 					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
 					jQuery('#cmblookupdataset').trigger("change");
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
-					
+
 					$("#holdflag").val(result.header[0].hold_flag);
 					$("#txtstatus").val(result.header[0].active_status_desc);
 					$("#Cmbclone").prop('disabled', true)
@@ -1923,7 +2011,7 @@
 						title: 'Recon',
 						content: "failed",
 						type: 'red',
-					});					
+					});
 					$("#validquery").val("false");
 				}
 			},
@@ -2314,9 +2402,9 @@
 				status = "D";
 			}
 
-			
+
 			var action_by = "";
-			
+
 			var holdflag = $("#holdflag").val();
 			$.ajax({
 				type: "POST",
