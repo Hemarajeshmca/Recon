@@ -107,7 +107,7 @@
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="margin-top:20px;float: right;">
 							<center>
-								<button type="button" class="btn btn-sm save_btn me-2" onclick="save()">Save</button>&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-sm save_btn me-2" id="save_btn" onclick="save()">Save</button>&nbsp;&nbsp;&nbsp;
 								<button type="button" class="btn btn-sm cancel_btn me-2" onclick="cancel()">Cancel</button>
 							</center>
 						</div>
@@ -155,6 +155,7 @@
 					$("#reconname").val(sessionStorage.getItem("reconcode"));
 					jQuery('#reconname').trigger("change");
 				}
+			
 			},
 			error: function (er) {
 				alert(er)
@@ -164,6 +165,12 @@
 	}
 
 	function showDataset() {
+		if ($("#reconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#reconname").val());
+			sessionStorage.setItem("reconname", $("#reconname :selected").text());
+			setcon();
+		}
+		loadGrid([]);
 		var data = {};
 		data.in_recon_code = $("#reconname").val();
 		$.ajax({
@@ -199,28 +206,37 @@
 	function run(){
 		var data = {};
 		data.in_dataset_code = $("#datasetname").val();
-		$.ajax({
-			type: "POST",
-			url: '../Datasetfile/getaccbaldataset',
-			dataType: 'json',
-			data: JSON.stringify(data),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				debugger;
-				if(response && response != '[]'){
-					var res = JSON.parse(response)
-					if (res.length > 0) {
-						loadGrid(res);
-					} 
-				} else {
-					loadGrid([]);
-				}				
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-		});
+		if(data.in_dataset_code) {
+			$.ajax({
+				type: "POST",
+				url: '../Datasetfile/getaccbaldataset',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response && response != '[]') {
+						var res = JSON.parse(response)
+						if (res.length > 0) {
+							loadGrid(res);
+						}
+					} else {
+						loadGrid([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if (!data.in_dataset_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Please select Dataset Name",
+				type: 'red',
+			});
+		}
+	
 	}
 
 	function loadGrid(data) {
@@ -256,7 +272,19 @@
 					resultData = e.sender._data;
 					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-
+					var screen_code = rolevalidatescreen('opening_bal')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
 				},
 				pageable: false,
 				sortable: false,
@@ -334,6 +362,11 @@
 
 	function getSerializedSelectedRows(mode) {
 		try {
+			if(mode == 'view') {
+				$("#save_btn").hide();
+			} else {
+				$("#save_btn").show();
+			}
 			var grid = $("#grid_dataset").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			$("#dataset_code").val(selectedItem.dataset_code); 
@@ -341,7 +374,8 @@
 			$("#dataset_name").val(selectedItem.dataset_name);
 			$("#tran_date").val(selectedItem.tran_date_fetch);
 			$("#bal_value").val(selectedItem.bal_value);
-			$("#accbal_popup").modal('show');
+			$("#accbal_popup").modal('show');			
+
 		} catch (err) {
 
 		}
@@ -426,7 +460,15 @@
 	}
 
 	function cancel() {
+		//var now = new Date();
+		//var formattedDate = now.toISOString();
+		//$("#tran_date").val(formattedDate);
+		kendodate_format();
 		$("#accbal_popup").modal('hide');
+		$("#dataset_code").val("");
+		$("#accbal_gid").val(0);
+		$("#dataset_name").val("");
+		$("#bal_value").val(0);
 		run();
 	}
 

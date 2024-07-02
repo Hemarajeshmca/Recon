@@ -126,11 +126,10 @@
 				alert(er)
 				console.log(er)
 			}
-
 		});
 	} else {
 			grid_reportTemplist([]);
-	}
+		}
 	}
 
 	function grid_reportTemplist(data) {
@@ -255,7 +254,13 @@
 	}
 
 	function getSerializedSelectedRows(mode) {
+		
 		try {
+			var grid = $("#grid_reporttemplist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			if (selectedItem.report_exec_type == 'C') {
+				reportgeneration();
+			} else {			
 			if ($(mode).attr('value') == "edit") {
 				btn_onClick("Edit");
 				document.location = '../Reports/ReportGeneration_newdetail';
@@ -263,6 +268,7 @@
 			else if (mode == "view") {
 				btn_onClick('View');
 				document.location = "../Reports/ReportGeneration_newdetail";
+			}
 			}
 		}
 		catch (err) {
@@ -334,4 +340,75 @@
 			}
 		});
 	}
+
+
+	function reportgeneration(){
+		try{
+			var grid = $("#grid_reporttemplist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+
+			var template_code = "";
+			var str = selectedItem.reporttemplate_name;
+			var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
+			var data = {
+				"in_reporttemplate_code": template_code ? template_code : '',
+				"in_report_code": selectedItem.report_code,
+				"in_recon_code": selectedItem.recon_code,
+				"in_report_param": "",
+				"in_report_condition": "",
+				"in_outputfile_flag": true,
+				"in_outputfile_type": 'csv',
+				"in_ip_addr": "",
+				"in_user_code": sessionStorage.getItem("usrname"),
+				"file_name": selectedItem.reporttemplate_name,
+				"in_report_name": concatName
+			};
+				$.alert({
+					title: 'Recon',
+					content: "Report Generated, Please check the Job Status in Utility",
+					type: 'green',
+				});
+				$.ajax({
+					type: "POST",
+					url: '../Reports/generatedynamicreport_typeC',
+					dataType: 'json',
+					data: JSON.stringify(data),
+					contentType: 'application/json; charset=utf-8',
+					//success: function (response) {
+					//	var res = JSON.parse(response);
+					//	if (res.length > 0) {
+					//		var data = res[0];
+					//		if (data.out_result != '0') {
+					//			$.alert({
+					//				title: 'Recon',
+					//				content: data.out_msg,
+					//				type: 'green',
+					//			});
+
+					//		} else {
+					//			$.alert({
+					//				title: 'Recon',
+					//				content: data.out_msg,
+					//				type: 'red',
+					//			});
+					//		}
+					//	} else {
+					//		$.alert({
+					//			title: 'Recon',
+					//			content: "Something Went Wrong ..!",
+					//			type: 'red',
+					//		});
+					//	}
+					//},
+					//error: function (er) {
+					//	alert(er)
+					//	console.log(er)
+					//}
+				});
+		} catch{
+
+		}
+
+	}
+
 </script>
