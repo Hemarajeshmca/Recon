@@ -372,11 +372,6 @@
 									&nbsp;<a href="#" onclick="pagination('next')" class="next round"><span>&#x25B6;</span></a>
 									&nbsp;<a href="#" onclick="pagination('last')" class="next round"><span>&#x25B6;|</span></a>
 									&nbsp;<select hidden name="items" id="items" autocomplete="off" style="padding: 5px; border: 1px solid #b1a6a6; border-radius: 5px" onchange="gridpage1()">
-										@*<option value="100">100</option>
-										<option value="500">500</option>
-										<option value="1000">1000</option>
-										<option value="2000">2000</option>
-										<option value="2000">5000</option>*@
 									</select>
 									&nbsp;
 									<input id="comboBox" autocomplete="off" type="text" style="width:90px !important;" data-role="combobox" aria-disabled="false" aria-readonly="false" />
@@ -584,7 +579,7 @@
 							reportparam_value: { type: "string" },
 							filter_criteria: { type: "string" },
 							filter_criteria_desc: { type: "string" },
-							filter_value: { type: "string" },
+							filter_value: { type: "string", editable: true },
 							open_parentheses_flag: { type: "string", editable: false },
 							close_parentheses_flag: { type: "string", editable: false },
 							join_condition: { type: "string" },
@@ -670,7 +665,7 @@
 						container.html(options.model.reportparam_value);
 					} else {
 					combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
-					}
+						}
 					},
 				width: 120,
 			},
@@ -696,7 +691,8 @@
 			{
 				field: "filter_value",
 				title: "Filter Value",
-				width: 120
+				width: 120,
+				editable: true,
 			},
 			{
 				field: "close_parentheses_flag",
@@ -766,12 +762,12 @@
 			var lastSeqNo = grid.dataSource._data.length;
 
 			if (e.model.isLastRow == true && e.model.reporttemplatefilter_gid > 0) {
-				e.container.find("input[name='filter_value']").prop('readonly', true);
+				//e.container.find("input[name='filter_value']").prop('readonly', true);
 				e.container.find("input[name='filter_seqno']").prop('readonly', true);
 			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid > 0) {
 				e.sender.closeCell();
 			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid == 0) {
-				e.container.find("input[name='filter_value']").prop('readonly', false);
+				//e.container.find("input[name='filter_value']").prop('readonly', false);
 				e.container.find("input[name='filter_seqno']").prop('readonly', false);
 			}
 		}
