@@ -302,7 +302,7 @@
 							{
 								name: "view",
 								id: "View",
-								template: "<a href=''onclick='getSerializedSelectedRows(this)' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+								template: "<a href='' onclick='getSerializedSelectedRows(this)' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 							},		
 							{
 								name: "Delete",
@@ -362,19 +362,17 @@
 
 	function getSerializedSelectedRows(mode) {
 		try {
-			if(mode == 'view') {
+			if ($(mode).attr('value') == "view") {
 				$("#save_btn").hide();
-			} else {
-				$("#save_btn").show();
-			}
+			} 
 			var grid = $("#grid_dataset").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
-			$("#dataset_code").val(selectedItem.dataset_code); 
+			$("#dataset_code").val(selectedItem.dataset_code);
 			$("#accbal_gid").val(selectedItem.accbal_gid ? selectedItem.accbal_gid : 0);
 			$("#dataset_name").val(selectedItem.dataset_name);
 			$("#tran_date").val(selectedItem.tran_date_fetch);
 			$("#bal_value").val(selectedItem.bal_value);
-			$("#accbal_popup").modal('show');			
+			$("#accbal_popup").modal('show');
 
 		} catch (err) {
 
@@ -443,6 +441,12 @@
 			var gettext = $("#datasetname").find(":selected").text();
 			$("#dataset_name").val(gettext);
 			$("#accbal_popup").modal('show');
+			var now = new Date();
+			var year = now.getFullYear();
+			var month = String(now.getMonth() + 1).padStart(2, '0');
+			var day = String(now.getDate()).padStart(2, '0');
+			var formattedDate = day + '/' + month + '/' + year;
+			$("#tran_date").val(formattedDate);
 		} else if (!$("#datasetname").val()) {
 			$.alert({
 				title: 'Recon',
@@ -463,7 +467,6 @@
 		//var now = new Date();
 		//var formattedDate = now.toISOString();
 		//$("#tran_date").val(formattedDate);
-		kendodate_format();
 		$("#accbal_popup").modal('hide');
 		$("#dataset_code").val("");
 		$("#accbal_gid").val(0);
@@ -503,12 +506,17 @@
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		var data = {};
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = String(now.getMonth() + 1).padStart(2, '0');
+		var day = String(now.getDate()).padStart(2, '0');
+		var formattedDate = year + '-' + month + '-' + day;
 		var in_tran_date = $("#tran_date").val();
 		var ts = in_tran_date.split("/");
 		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
 		data.in_accbal_gid = selectedItem.accbal_gid;
 		data.in_dataset_code = selectedItem.dataset_code;
-		data.in_tran_date = pr;
+		data.in_tran_date = formattedDate;
 		data.in_bal_value = selectedItem.bal_value;
 		data.in_action = 'DELETE';
 		$.ajax({
