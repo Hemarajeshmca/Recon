@@ -288,6 +288,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		#region headerfetch
 		[HttpPost]
 		public JsonResult Reconheaderfetch([FromBody] fetchRecon context)
 		{
@@ -333,6 +334,8 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
+		#endregion
+
 		#region reconfetch
 		public class fetchRecon
 		{
@@ -353,6 +356,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		#region dataset mapping
 		[HttpPost]
 		public JsonResult Recondatasetmappingsave([FromBody] datamapping context)
 		{
@@ -396,7 +400,7 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-		#region dataset mapping
+	
 		public class datamapping
 		{
 			public Int16? in_reconfield_gid { get; set; }
@@ -415,6 +419,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		# region Recondatasetmappingdelete
 		[HttpPost]
 		public JsonResult Recondatasetmappingdelete([FromBody] datamappingdel context)
 		{
@@ -458,7 +463,7 @@ namespace Recon_proto.Controllers
 				return Json(ex.Message);
 			}
 		}
-		#region dataset mapping
+		
 		public class datamappingdel
 		{
 			
@@ -469,6 +474,8 @@ namespace Recon_proto.Controllers
 
 		}
 		#endregion
+
+		#region dataset mapping fetch
 		[HttpPost]
 		public JsonResult Recondatasetmappingfetch([FromBody] getReconDataMappingList context)
 		{
@@ -518,6 +525,8 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
+		#endregion
+
 		#region reconfetch
 		public class getReconDataMappingList
 		{
@@ -897,7 +906,6 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
-
 		#region getReconforOpeningBalance
 		[HttpGet]
 		public JsonResult getReconforOpeningBalance()
@@ -938,8 +946,7 @@ namespace Recon_proto.Controllers
 
 		#endregion
 
-
-
+		#region datasetagainstRecon
 		[HttpPost]
 		public JsonResult getdatasetagainstRecon([FromBody] getdatasetagainstReconModel context)
 		{
@@ -982,6 +989,65 @@ namespace Recon_proto.Controllers
 		{
 			public string in_recon_code { get; set; }
 		}
+		#endregion
 
+		#region dataset field
+		[HttpPost]
+		public JsonResult Recondatasetfieldsave([FromBody] datafieldmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			datafieldmodel objList = new datafieldmodel();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Recon/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("recondatafield", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					for (int i = 0; i < result.Rows.Count; i++)
+					{
+						objList.in_reconfield_gid = Convert.ToInt16(result.Rows[i]["in_reconfield_gid"]);
+						objList.out_msg = result.Rows[i]["out_msg"].ToString();
+						objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
+					}
+					return Json(objList);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "Recondatasetfieldsave");
+				return Json(ex.Message);
+			}
+		}
+
+		public class datafieldmodel
+		{
+			public Int16? in_reconfield_gid { get; set; }
+			public string? in_recon_code { get; set; }
+			public string? in_recon_field_name { get; set; }
+			public Decimal? in_display_order { get; set; }			
+			public string? in_active_status { get; set; }
+			public string? in_action { get; set; }
+			public string? in_user_code { get; set; }
+			public String? out_msg { get; set; }
+			public Int16? out_result { get; set; }
+		}
+		#endregion
 	}
 }

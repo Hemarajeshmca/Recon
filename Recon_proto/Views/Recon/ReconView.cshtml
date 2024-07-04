@@ -110,7 +110,7 @@
 								<div class="col-sm-2">
 									<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 									<div>
-										<input class="cusDate" #datepicker data-role='datepicker' id="period_from" name="period_from"  style="width:100%" />
+										<input class="cusDate" #datepicker data-role='datepicker' id="period_from" name="period_from" style="width:100%" />
 										<span data-for='valid' class='k-invalid-msg'></span>
 									</div>
 								</div>
@@ -123,7 +123,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="row">
 								<div class="nav-align-top mb-3 mt-3">
 									<ul class="nav nav-pills mb-2" role="tablist">
@@ -150,7 +150,7 @@
 												Dataset Mapping
 											</button>
 										</li>
-										
+
 										<li class="nav-item">
 											<button type="button"
 													class="nav-link"
@@ -230,7 +230,7 @@
 											<div class="panel panel-default" style="margin-top:5px;">
 												<div class="panel panel-default" style="margin-top:5px;">
 													<div class="panel-body">
-													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="btn_new_datasetmap" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+														<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="btn_new_datasetmap" value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
 														<div class="col-xs-12">
 															<div id="maingrid">
 															</div>
@@ -449,7 +449,9 @@
 												<input type="hidden" id="txtmodedatasetmapping" value="Create" />
 												<input type="hidden" id="reconfieldmapping_gid" value="0" />
 											</div>
-
+											<div class="col-sm-4" style="margin-top:29px;float: right;margin-bottom:10px">
+												<button type="button" class="btn btn-sm save_btn me-2" id="btnreconfield" onclick="saveDatasetfield()">Add</button>&nbsp;&nbsp;&nbsp;
+											</div>
 										</div>
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
 											<div class="col-sm-8">
@@ -468,7 +470,7 @@
 											<div class="col-sm-4"></div>
 											<div class="col-sm-4" style="margin-top:13px;float: right;margin-bottom:10px">
 												<center>
-													<button type="button" class="btn btn-sm save_btn me-2" onclick="saveDatasetmapping()">Add</button>&nbsp;&nbsp;&nbsp;
+													<button type="button" class="btn btn-sm save_btn me-2" id="btnreconmap" onclick="saveDatasetmapping()">Map</button>&nbsp;&nbsp;&nbsp;
 													<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr3()">Cancel</button>
 												</center>
 											</div>
@@ -1755,6 +1757,7 @@
 				field: "active_status_desc",
 				title: "Status",
 				width: 80,
+				hidden: true
 			},
 			{
 				field: "mode_flag",
@@ -1763,6 +1766,70 @@
 			}],
 			editable: false,
 
+		});
+	}
+	function saveDatasetfield() {
+		var reconcode = $("#reconcode").val();
+		var Reconfieldname = $("#Reconfieldname").val();
+		if (Reconfieldname == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Recon Field Name cannot be empty",
+				type: 'green',
+			});
+			return;
+		}
+		var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
+		if (displayorder <= 0) {
+			$.alert({
+				title: 'Recon',
+				content: "Display Order Greater than Zero",
+				type: 'green',
+			});
+			return;
+		}
+		var reconfield_gid = $("#reconfield_gid").val();
+		if (reconfield_gid > 0) {
+			reconfield_gid = $("#reconfield_gid").val();
+		} else {
+			reconfield_gid = 0;
+		}
+		var action = "INSERT";
+		var action_by = "";
+		var in_user_code = "";
+		var status = "Y";
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Recondatasetfieldsave',
+			dataType: 'json',
+			data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname,
+				in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response.out_result == "1") {
+					$.alert({
+						title: 'Recon',
+						content: response.out_msg,
+						type: 'green',
+					});
+					$("#reconfield_gid").val(response.in_reconfield_gid);
+					$("#btnreconfield").hide();
+					$("#cmbdatasetmap").prop('disabled', false);
+					$("#cmbdatasetfieldname").prop('disabled', false);
+					$("#btnreconmap").prop('disabled', false);
+				}
+				else {
+					$.alert({
+						title: 'Recon',
+						content: response.out_msg,
+						type: 'red',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
 		});
 	}
 	function saveDatasetmapping() {
@@ -1777,6 +1844,14 @@
 				});
 				return;
 			}
+			if ($("#displayorder").val() == ''){
+				$.alert({
+					title: 'Recon',
+					content: "Display Order cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
 			var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
 			if (displayorder <= 0) {
 				$.alert({
@@ -1786,15 +1861,11 @@
 				});
 				return;
 			}
+			
 			var cmbdatasetmap = $("#cmbdatasetmap").val();
 			var cmbdatasetfieldname = $("#cmbdatasetfieldname").val();
 			var action = "";
-			if ($("#txtmodedatasetmapping").val() == "Create" && cmbdatasetmap != "") {
-				action = "INSERT"
-			} else if ($("#txtmodedatasetmapping").val() == "Edit") {
-				action = "UPDATE"
-			}
-
+			
 			var action_by = "";
 			var in_user_code = "";
 			var reconfield_gid = $("#reconfield_gid").val();
@@ -1806,8 +1877,10 @@
 			var reconfieldmapping_gid = $("#reconfieldmapping_gid").val();
 			if (reconfieldmapping_gid > 0) {
 				reconfieldmapping_gid = $("#reconfieldmapping_gid").val();
+				action = "UPDATE"
 			} else {
 				reconfieldmapping_gid = 0;
+				action = "INSERT"
 			}
 			var status = "Y";
 
@@ -1993,6 +2066,10 @@
 				$("#displayorder").val(selectedItem.entries[5]);
 				$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
 				$("#txtmodedatasetmapping").val("Edit");
+				$("#btnreconfield").hide();
+				$("#cmbdatasetmap").prop('disabled', false);
+				$("#cmbdatasetfieldname").prop('disabled', false);
+				$("#btnreconmap").prop('disabled', false);
 				$.ajax({
 					type: "POST",
 					url: '../Recon/Recondatasetmappingfetch',
@@ -2020,6 +2097,10 @@
 				$("#displayorder").val(0);
 				$("#reconfield_gid").val(0);
 				$("#Datasetmappingform").modal('show');
+				$("#cmbdatasetmap").prop('disabled', true);
+				$("#cmbdatasetfieldname").prop('disabled', true);
+				$("#btnreconmap").prop('disabled', true);
+				$("#btnreconfield").show();
 			}
 		}
 	}
@@ -2175,9 +2256,12 @@
 					var status = "";
 					$.ajax({
 						type: "POST",
-						url: '../Recon/Recondatasetmappingsave',
+						url: '../Recon/Recondatasetfieldsave',
 						dataType: 'json',
-						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+						data: JSON.stringify({
+							in_reconfield_gid: reconfield_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname,
+							in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code
+						}),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
 							if (response != null) {
@@ -3000,7 +3084,7 @@
 			dateInput1.addEventListener('focusout', onFocusOut);
 		}
 		const dateInput = document.getElementById('period_from');
-		dateInput.addEventListener('focusout', onFocusOut);		
+		dateInput.addEventListener('focusout', onFocusOut);
 	});
 </script>
 
