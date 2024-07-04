@@ -373,7 +373,6 @@
 			$("#tran_date").val(selectedItem.tran_date_fetch);
 			$("#bal_value").val(selectedItem.bal_value);
 			$("#accbal_popup").modal('show');
-
 		} catch (err) {
 
 		}
@@ -391,7 +390,7 @@
 		data.in_tran_date = pr;
 		data.in_bal_value = $("#bal_value").val() ? $("#bal_value").val() : 0;
 		data.in_action = $("#accbal_gid").val() == 0 ? 'INSERT' : 'UPDATE';
-		if (data.in_dataset_code) {
+		if (data.in_dataset_code && in_tran_date) {
 			$.ajax({
 				type: "POST",
 				url: '../Datasetfile/setAccountbalance',
@@ -410,6 +409,7 @@
 								type: 'green',
 								animationSpeed: 700,
 							});
+							cancel();
 						} else {
 							$.alert({
 								title: 'Recon',
@@ -428,6 +428,12 @@
 			$.alert({
 				title: 'Recon',
 				content: "Please select Dataset Code",
+				type: 'red',
+			});
+		} else if (!in_tran_date) {
+			$.alert({
+				title: 'Recon',
+				content: "Please select Tran Date",
 				type: 'red',
 			});
 		}
