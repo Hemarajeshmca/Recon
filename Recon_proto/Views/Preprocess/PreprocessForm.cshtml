@@ -472,7 +472,6 @@
 				$("#preprocessorder").val(data.preprocess_order);
 				$("#preprocessgid").val(data.preprocess_gid);
 				$("#Cmbprocessmethod").val(data.process_method);
-				jQuery('#Cmbprocessmethod').trigger("change");
 				$("#cmbgetrecon").val(data.get_recon_field);
 				jQuery('#cmbgetrecon').trigger("change");
 				$("#Cmbfunction").val(data.process_function);
@@ -1427,63 +1426,50 @@
 				type: 'orange',
 				buttons: {
 					confirm: function () {
-						$.confirm({
-							buttons: {
-								formSubmit: {
-									text: 'Submit',
-									btnClass: 'btn-blue',
-									action: function () {
-										var preprocess_name = "";
-										var preprocess_Code = preprocesscode;
-										var recon_code = "";
-										var process_method = processmethod;
-										var get_recon_field = "";
-										var set_recon_field = "";
-										var process_function = "";
-										var lookup_dataset_code = "";
-										var lookup_return_field = "";
-										var process_query = "";
-										var clone_process = "";
-										var preprocess_order = "";
-										var action = "DELETEPREPROCESS";
-										var preprocess_gid = $("#preprocessgid").val();
-										var holdflag = "";
-										var action_by = "";
-										var status = "";
-										$.ajax({
-											type: "POST",
-											url: '../Preprocess/preprocessheader',
-											dataType: 'json',
-											data: JSON.stringify({
-												preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
-												lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
-												set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
-											}),
-											contentType: 'application/json; charset=utf-8',
-											success: function (response) {
-												var result = JSON.parse(response);
-												var data = result[0];
-												debugger;
-												if (data.out_result == "1") {
-													processmethod();
-												} else {
-													$.alert({
-														title: 'Recon',
-														content: data.out_msg,
-														type: 'red',
-													});
-												}
-											}
-										})
-									}
-								},
-								cancel: function () {
-									//close
-								},
-							},
-
+						var preprocess_name = "";
+						var preprocess_Code = preprocesscode;
+						var recon_code = "";
+						var process_method = processmethod;
+						var get_recon_field = "";
+						var set_recon_field = "";
+						var process_function = "";
+						var lookup_dataset_code = "";
+						var lookup_return_field = "";
+						var process_query = "";
+						var clone_process = "";
+						var preprocess_order = "";
+						var action = "DELETEPREPROCESS";
+						var preprocess_gid = $("#preprocessgid").val();
+						var holdflag = "";
+						var action_by = "";
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/preprocessheader',
+							dataType: 'json',
+							data: JSON.stringify({
+								preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+								lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+								set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var result = JSON.parse(response);
+								var data = result[0];
+								debugger;
+								if (data.out_result == "1") {
+									processmethod1();
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: data.out_msg,
+										type: 'red',
+									});
+								}
+							}
 						});
 					},
+
 					cancel: function () {
 						$.alert({
 							icon: 'fa fa-success',
@@ -1495,36 +1481,14 @@
 						});
 						load();
 					},
-				}
+				},
 			});
+
 		} else {
-			processmethod()
+			processmethod1();
 		}
 	}
-	function processmethod() {
-		if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
-			$("#headingquery").hide();
-			$("#headinglookup").hide();
-			$("#headingfunction").show();
-			$("#headingfilter").show();
-			$("#check2").prop('checked', true);
 
-		} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
-			$("#headingquery").hide();
-			$("#headinglookup").show();
-			$("#headingfunction").hide();
-			$("#headingfilter").show();
-			$("#check3").prop('checked', true);
-
-		} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
-			$("#headingquery").show();
-			$("#headinglookup").hide();
-			$("#headingfunction").hide();
-			$("#headingfilter").hide();
-			$("#check4").prop('checked', true);
-			$("#validquery").val("false");
-		}
-	}
 	const button = document.getElementById('validatequery');
 	function validateAndChangeColor() {
 		// Perform validation here
@@ -1720,7 +1684,7 @@
 					$("#preprocessorder").val(result.header[0].preprocess_order);
 					$("#preprocessgid").val(result.header[0].preprocess_gid);
 					$("#Cmbprocessmethod").val(result.header[0].process_method);
-					jQuery('#Cmbprocessmethod').trigger("change");
+					processmethod1();
 					$("#cmbgetrecon").val(result.header[0].get_recon_field);
 					jQuery('#cmbgetrecon').trigger("change");
 					$("#Cmbfunction").val(result.header[0].process_function);
@@ -2507,6 +2471,47 @@
 				},
 			},
 		});
+	}
+	function processmethod1() {
+		if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+			$("#cmblookupdataset").val('');
+			$("#Cmblookupdatasetfield").val('');
+			$("#Cmbreconfield1").val('');
+			$("#querydata").val('');
+			$("#headingquery").hide();
+			$("#headinglookup").hide();
+			$("#headingfunction").show();
+			$("#headingfilter").show();
+			$("#check2").prop('checked', true);
+
+		} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+			$("#Cmbreconfield").val('');
+			$("#Cmbfunction").val('');
+			$("#cmbgetrecon").val('');
+			$("#cmblookupdataset").val('');
+			$("#Cmblookupdatasetfield").val('');
+			$("#Cmbreconfield1").val('');
+			$("#querydata").val('');
+			$("#headingquery").hide();
+			$("#headinglookup").show();
+			$("#headingfunction").hide();
+			$("#headingfilter").show();
+			$("#check3").prop('checked', true);
+
+		} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+			$("#Cmbreconfield").val('');
+			$("#Cmbfunction").val('');
+			$("#cmbgetrecon").val('');
+			$("#cmblookupdataset").val('');
+			$("#Cmblookupdatasetfield").val('');
+			$("#Cmbreconfield1").val('');
+			$("#headingquery").show();
+			$("#headinglookup").hide();
+			$("#headingfunction").hide();
+			$("#headingfilter").hide();
+			$("#check4").prop('checked', true);
+			$("#validquery").val("false");
+		}
 	}
 </script>
 
