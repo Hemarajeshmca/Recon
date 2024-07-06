@@ -1788,13 +1788,16 @@
 			});
 			return;
 		}
+		var action = "";
 		var reconfield_gid = $("#reconfield_gid").val();
 		if (reconfield_gid > 0) {
 			reconfield_gid = $("#reconfield_gid").val();
+			action = "UPDATE";
 		} else {
 			reconfield_gid = 0;
+			action = "INSERT";
 		}
-		var action = "INSERT";
+		
 		var action_by = "";
 		var in_user_code = "";
 		var status = "Y";
@@ -1813,7 +1816,7 @@
 						type: 'green',
 					});
 					$("#reconfield_gid").val(response.in_reconfield_gid);
-					$("#btnreconfield").hide();
+					$("#btnreconfield").text("Update");
 					$("#cmbdatasetmap").prop('disabled', false);
 					$("#cmbdatasetfieldname").prop('disabled', false);
 					$("#btnreconmap").prop('disabled', false);
@@ -1912,7 +1915,8 @@
 							success: function (response) {
 								if (response != null) {
 									grid_recondatasetmapping(response);
-									$("#Reconfieldname").prop('disabled', true);
+									@*$("#Reconfieldname").prop('disabled', true);*@
+									$("#cmbdatasetmap").prop('disabled', false);
 								}
 								else {
 									grid_recondatasetmapping([]);
@@ -2062,11 +2066,14 @@
 				var grid = $("#grid1").data("kendoGrid");
 				var selectedItem = grid.dataItem(grid.select());
 				$("#Reconfieldname").val(selectedItem.entries[4]);
-				$("#Reconfieldname").prop('disabled', true);
+				//$("#Reconfieldname").prop('disabled', true);
 				$("#displayorder").val(selectedItem.entries[5]);
 				$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
 				$("#txtmodedatasetmapping").val("Edit");
-				$("#btnreconfield").hide();
+				$("#btnreconfield").text("Update");
+				$("#reconfieldmapping_gid").val(0);
+				$("#cmbdatasetfieldname").val("");
+				$("#cmbdatasetmap").val("");
 				$("#cmbdatasetmap").prop('disabled', false);
 				$("#cmbdatasetfieldname").prop('disabled', false);
 				$("#btnreconmap").prop('disabled', false);
@@ -2108,6 +2115,7 @@
 		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		$("#cmbdatasetmap").val(selectedItem.in_dataset_code);
+		$("#cmbdatasetmap").prop('disabled', true);
 		jQuery('#cmbdatasetmap').trigger("change");
 		$("#Datasetmappingform").modal('show');
 		$("#cmbdatasetfieldname").val(selectedItem.dataset_table_field);
@@ -2230,6 +2238,7 @@
 			editable: false,
 		});
 	}
+
 	function myDeletedatamapping() {
 		var grid = $("#grid1").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
