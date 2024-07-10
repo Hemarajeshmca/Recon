@@ -61,6 +61,7 @@ namespace Recon_proto.Models
 
         public string ip_address { get; set; }
 		public DateTime lastlogin { get; set; }
+		public string valid_date { get; set; }
 
 		public DateOnly password_expiry_date { get; set; }
 

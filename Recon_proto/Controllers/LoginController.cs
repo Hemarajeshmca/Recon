@@ -11,6 +11,7 @@ using static Recon_proto.Controllers.LoginController;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using DocumentFormat.OpenXml.EMMA;
+using System.Globalization;
 
 namespace Recon_proto.Controllers
 {
@@ -69,37 +70,85 @@ namespace Recon_proto.Controllers
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
                     for (int i = 0; i < result.Rows.Count; i++)
                     {
-                        user_model objcat = new user_model();
-                        objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
-                        objcat.user_code = result.Rows[i]["user_code"].ToString();
-                        objcat.user_name = result.Rows[i]["user_name"].ToString();
-                        objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
-                        objcat.usergroup_code = result.Rows[i]["usergroup_code"].ToString();
-                        objcat.usergroup_desc = result.Rows[i]["usergroup_desc"].ToString();
-                        objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
-                        objcat.passwordreset= result.Rows[i]["password_flag"].ToString();
-						objcat.msg = result.Rows[i]["out_msg"].ToString();
-                        objcat.oldpassworrd = Decrypt(pass);
-                        objcat.user_status = result.Rows[i]["user_status"].ToString();
-                        objcat.lastlogin = Convert.ToDateTime(result.Rows[i]["lastlogin"].ToString());
-                        objcat_lst.Add(objcat);
-                        ViewBag.user_gid = objcat.user_gid;
-                        ViewBag.user_name = objcat.user_name;
-                        _configuration.GetSection("AppSettings")["user_code"] = model.UserName;
-                        _configuration.GetSection("AppSettings")["lang_code"] = "en_US";
-                        _configuration.GetSection("AppSettings")["role_code"] = result.Rows[i]["usergroup_code"].ToString();
-                        _configuration.GetSection("AppSettings")["lastlogin"] = result.Rows[i]["lastlogin"].ToString();
-                        _configuration.GetSection("AppSettings")["ipAddress"] = ipAddress;
-                        HttpContext.Session.SetString("user_code", model.UserName);
-                        HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
-                        //HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
-                        //HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
-                        HttpContext.Session.SetString("user_gid", result.Rows[i]["user_gid"].ToString());
-                        HttpContext.Session.SetString("role_code", result.Rows[i]["usergroup_code"].ToString());
-                        HttpContext.Session.SetString("lang_code", "en_US");
-                        HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
-                        HttpContext.Session.SetString("userrole", "ADMIN");
-                        HttpContext.Session.SetString("ipAddress", ipAddress);
+                        int success = Convert.ToInt32(result.Rows[i]["out_result"]);
+                        if (success == 1)
+                        {
+							var date = DateTime.Now.ToString("yyyy-MM-dd");
+                            var licencedate = Decrypt(result.Rows[i]["valid_date"].ToString());
+                            if (DateTime.TryParseExact(date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedCurrentDate) &&
+                                 DateTime.TryParseExact(licencedate, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedlicencedate))
+                            {
+                                if (parsedCurrentDate > parsedlicencedate)
+                                {
+                                    user_model objcat = new user_model();
+                                    objcat.user_gid = 0;
+                                    objcat.user_code = result.Rows[i]["user_code"].ToString();
+									objcat.user_name = "";
+									objcat.passwordexpdate = "";
+									objcat.usergroup_code = "";
+									objcat.usergroup_desc = "";
+									objcat.result = 2;
+                                    objcat.passwordreset = "";
+                                    objcat.msg = "Licence Expired ! Please Contact Support Team";
+                                    objcat.oldpassworrd = "";
+                                    objcat.user_status = "";
+									objcat.lastlogin = Convert.ToDateTime("1900-01-01");
+                                    objcat_lst.Add(objcat);
+                                }
+                                else
+                                {
+                                    user_model objcat = new user_model();
+                                    objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
+                                    objcat.user_code = result.Rows[i]["user_code"].ToString();
+                                    objcat.user_name = result.Rows[i]["user_name"].ToString();
+                                    objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
+                                    objcat.usergroup_code = result.Rows[i]["usergroup_code"].ToString();
+                                    objcat.usergroup_desc = result.Rows[i]["usergroup_desc"].ToString();
+                                    objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
+                                    objcat.passwordreset = result.Rows[i]["password_flag"].ToString();
+                                    objcat.msg = result.Rows[i]["out_msg"].ToString();
+                                    objcat.oldpassworrd = Decrypt(pass);
+                                    objcat.user_status = result.Rows[i]["user_status"].ToString();
+                                    objcat.lastlogin = Convert.ToDateTime(result.Rows[i]["lastlogin"].ToString());
+                                    objcat_lst.Add(objcat);
+                                    ViewBag.user_gid = objcat.user_gid;
+                                    ViewBag.user_name = objcat.user_name;
+                                    _configuration.GetSection("AppSettings")["user_code"] = model.UserName;
+                                    _configuration.GetSection("AppSettings")["lang_code"] = "en_US";
+                                    _configuration.GetSection("AppSettings")["role_code"] = result.Rows[i]["usergroup_code"].ToString();
+                                    _configuration.GetSection("AppSettings")["lastlogin"] = result.Rows[i]["lastlogin"].ToString();
+                                    _configuration.GetSection("AppSettings")["ipAddress"] = ipAddress;
+                                    HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
+                                    HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
+                                    HttpContext.Session.SetString("user_code", model.UserName);
+                                    HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
+                                    HttpContext.Session.SetString("user_gid", result.Rows[i]["user_gid"].ToString());
+                                    HttpContext.Session.SetString("role_code", result.Rows[i]["usergroup_code"].ToString());
+                                    HttpContext.Session.SetString("lang_code", "en_US");
+                                    HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
+                                    HttpContext.Session.SetString("userrole", "ADMIN");
+                                    HttpContext.Session.SetString("ipAddress", ipAddress);
+                                }
+                            }
+                        }
+                        else
+                        {
+							user_model objcat = new user_model();
+							objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
+							objcat.user_code = result.Rows[i]["user_code"].ToString();
+							objcat.user_name = result.Rows[i]["user_name"].ToString();
+							objcat.passwordexpdate = result.Rows[i]["password_expiry_date"].ToString();
+							objcat.usergroup_code = result.Rows[i]["usergroup_code"].ToString();
+							objcat.usergroup_desc = result.Rows[i]["usergroup_desc"].ToString();
+							objcat.result = Convert.ToInt32(result.Rows[i]["out_result"]);
+							objcat.passwordreset = result.Rows[i]["password_flag"].ToString();
+							objcat.msg = result.Rows[i]["out_msg"].ToString();
+							objcat.oldpassworrd = Decrypt(pass);
+							objcat.user_status = result.Rows[i]["user_status"].ToString();
+							objcat.lastlogin = Convert.ToDateTime(result.Rows[i]["lastlogin"].ToString());
+							objcat_lst.Add(objcat);
+						}
+						
                     }
                     return JsonConvert.SerializeObject(objcat_lst);
                 }
@@ -284,7 +333,7 @@ namespace Recon_proto.Controllers
 
         #region lastlogin
         [HttpPost]
-        public JsonResult lastloginsession([FromBody] lastloginmodel context)
+        public JsonResult lastlogin([FromBody] lastloginmodel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
@@ -303,7 +352,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("lastsession", content).Result;
+                    var response = client.PostAsync("lastlogin", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -322,8 +371,50 @@ namespace Recon_proto.Controllers
         public class lastloginmodel
         {
             public String user_code { get; set; }
-            public string status { get; set; }
         }
-        #endregion
-    }
+		#endregion
+		#region lastloginsession
+		[HttpPost]
+		public JsonResult lastloginsession([FromBody] lastloginsessionmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "UserManagement/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("lastsession", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "lastloginsession");
+				return Json(ex.Message);
+			}
+		}
+
+		public class lastloginsessionmodel
+		{
+			public String user_code { get; set; }
+			public string status { get; set; }
+		}
+		#endregion
+	}
 }
