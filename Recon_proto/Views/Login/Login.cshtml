@@ -155,13 +155,36 @@
 						sessionStorage.setItem("usrname", txtusername.user_code);
 						sessionStorage.setItem("passflag", txtusername.passwordreset);
 						window.location.href = '@Url.Action("Index", "Home")';
+					} else if (response[0].result == 2) {
+						var rs = JSON.stringify(response[0]);
+						sessionStorage.setItem("recon_userdetail", rs);
+						var txtusrname = sessionStorage.getItem("recon_userdetail");
+						var txtusername = JSON.parse(txtusrname);
+						var usercode = txtusername.user_code;
+						var status = "logout";
+						$.ajax({
+							type: "POST",
+							url: '../Login/lastloginsession',
+							dataType: 'json',
+							async: true,
+							data: JSON.stringify({ user_code: usercode, status: status }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+
+							}
+						})
+						$.alert({
+							title: 'Recon',
+							content: response[0].msg,
+							type: 'green',
+						});
 					}
 					else {
 						$.alert({
 							title: 'Recon',
 							content: response[0].msg,
 							type: 'green',
-						});
+						});						
 					}
 				}
 			},

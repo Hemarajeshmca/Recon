@@ -513,6 +513,7 @@
 						}
 					});
 					setcon();
+					//lastlogin();
 					lastloginsession("session");
 				}
 			});
@@ -789,12 +790,38 @@
 				data: JSON.stringify({ user_code: usercode, status: status }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-
+					
+				}				
+			})
+		}
+		function lastlogin() {
+			var usercode = sessionStorage.getItem("usrname");			
+			$.ajax({
+				type: "POST",
+				url: '../Login/lastlogin',
+				dataType: 'json',
+				async: true,
+				data: JSON.stringify({ user_code: usercode }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var lastlog = sessionStorage.getItem("lastlogindb");
+					var dbdate = result[0].date;
+					if (lastlog != dbdate) {
+						$.alert({
+							title: 'Recon',
+							content: 'You have been disconnected bacause another login was made. ',
+							type: 'Red',
+							onClose: function () {
+								sessionStorage.clear();
+								localStorage.clear();
+								Signout();
+							}
+						});
+					}
 				}
 			})
-
 		}
-
 
 		function bindmultiselectvalues(arr, _id) {
 			if (arr != null) {
@@ -1146,6 +1173,7 @@
 				localStorage.clear();
 				window.location.href = '@Url.Action("session_expires", "Login")';
 			}, 1000 * 30 * 60); // 300000 milliseconds = 30 minutes
+			//}, 1000 * 60 * 2); // 2 minutes
 		}
 		// Call resetSessionTimer() whenever there is a user interaction event
 		document.addEventListener("mousemove", resetSessionTimer);
