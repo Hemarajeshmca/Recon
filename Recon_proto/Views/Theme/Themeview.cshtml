@@ -109,7 +109,7 @@
 					<div class="row" style="margin-bottom:2px;">
 						<div class="col-sm-3">
 							<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;" onchange="sourcefieldchange()">
+							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;">
 							</select>
 						</div>
 						<div class="col-sm-3">
@@ -401,54 +401,40 @@
 				type: 'orange',
 				buttons: {
 					confirm: function () {
-						$.confirm({
-							buttons: {
-								formSubmit: {
-									text: 'Submit',
-									btnClass: 'btn-blue',
-									action: function () {										
-										var holdflag = "";
-										var themename = "";
-										var cmbrecon = "";
-										var theme_code = themecode;
-										var clone_theme = "";
-										var action = "DELETETHEME";
-										var theme_gid = $("#themegid").val();
-										var action_by = "";
-										var status = "Y"
-										var theme_order = "";
-										var themetype = themetype;
-										var sourcedataset = "";
-										var comparedataset = "";
-										$.ajax({
-											type: "POST",
-											url: '../theme/themeheader',
-											dataType: 'json',
-											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name }),
-											contentType: 'application/json; charset=utf-8',
-											success: function (response) {
-												var result = JSON.parse(response);
-												var data = result[0];
-												debugger;
-												if (data.out_result == "1") {
-													fthemetype();
-												} else {
-													$.alert({
-														title: 'Recon',
-														content: data.out_msg,
-														type: 'red',
-													});
-												}
-											}
-										})
-									}
-								},
-								cancel: function () {
-									//close
-								},
-							},
-
-						});
+						var holdflag = "";
+						var themename = "";
+						var cmbrecon = "";
+						var theme_code = themecode;
+						var clone_theme = "";
+						var action = "DELETETHEME";
+						var theme_gid = $("#themegid").val();
+						var action_by = "";
+						var status = "Y"
+						var theme_order = "";
+						var themetype = $("#themetype").val();
+						var sourcedataset = "";
+						var comparedataset = "";
+						$.ajax({
+							type: "POST",
+							url: '../theme/themeheader',
+							dataType: 'json',
+							data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var result = JSON.parse(response);
+								var data = result[0];
+								debugger;
+								if (data.out_result == "1") {
+									fthemetype();
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: data.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
 					},
 					cancel: function () {
 						$.alert({
@@ -461,7 +447,7 @@
 						});
 						load();
 					},
-				}
+				},
 			});
 		} else {
 			fthemetype()
