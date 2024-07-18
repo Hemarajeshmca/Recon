@@ -186,7 +186,6 @@ namespace Recon_proto.Controllers
                 objcom.errorlog(ex.Message, "Datasetdetail");
                 return Json(ex.Message);
             }
-
         }
 		public class Datasetdetailrmodel
 		{
