@@ -99,5 +99,6 @@ namespace Recon_proto.Controllers
 			public string? out_result { get; set; }
 		}
 		#endregion
+
 	}
 }

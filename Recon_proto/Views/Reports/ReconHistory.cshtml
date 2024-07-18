@@ -90,6 +90,11 @@
                                 View History
                             </button>
                         </div>
+                        <div class="col-md-2" style="margin-top: 2%;" hidden>
+                            <button type="button" onclick="pdfFiledownload()" class="btn btn-sm me-2" id="pdf_gen" style="margin-top: 7px">
+                                PDF Generation
+                            </button>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="nav-align-top mt-3">
@@ -518,6 +523,47 @@
             editable: false,
 
         });
+    }
+
+    $('#pdf_gen').click(function () {
+        
+        var in_recon_name = $("#cmbreconname").find(":selected").text();
+        var in_recon_code = $("#cmbreconname").val();
+        var in_version_code = $("#comreconversion").val();
+        var slice_recon_name = in_recon_name.slice(0, 20);
+        if (in_recon_code && in_version_code) {
+            window.location.href = '@Url.Action("GeneratePdf", "Reports")?in_recon_code=' + in_recon_code + '&in_version_code=' + in_version_code + '';
+        } else if (!in_recon_code) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please Select Recon Name .!',
+                type: 'red',
+            });
+        } else if (!in_version_code) {
+            $.alert({
+                title: 'Recon',
+                content: 'Please Select Version .!',
+                type: 'red',
+            });
+        }
+
+        //var exportURL = getRootUrl() + "Reports/GeneratePdf";
+        //window.location.href = exportURL;
+    });
+
+    function getRootUrl() {
+        debugger;
+
+       return window.location.origin ? window.location.origin + '/' : window.location.protocol + '/' + window.location.host + '/';
+    }
+
+    function pdfFiledownload(){
+        var in_recon_name = $("#cmbreconname").find(":selected").text();
+        var in_recon_code = $("#cmbreconname").val();
+        var in_version_code = $("#comreconversion").val();
+        var slice_recon_name = in_recon_name.slice(0, 20);
+        var data = {};
+        
     }
 </script>
 

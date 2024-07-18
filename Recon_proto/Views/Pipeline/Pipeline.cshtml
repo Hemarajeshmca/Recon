@@ -8,7 +8,8 @@
 
 <body>
 	<div>
-		<embed src=@ViewBag.pipe title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
+@*		<embed src=@ViewBag.pipe title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
+*@		<embed id="embedPipeline" title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
 
 		</div>
 </body>
@@ -16,6 +17,15 @@
 	$(document).ready(function () {
 		$("#navhead").text("Pipeline");
 		$("#contextdiv").hide();
+		debugger;
+		var userCode = sessionStorage.getItem("usrname");
+		var conn = '@ViewBag.pipe';
+		if (userCode) {
+			var embedSrc = conn + "?user_code=" + encodeURIComponent(userCode);
+			document.getElementById('embedPipeline').setAttribute('src', embedSrc);
+		} else {
+			console.error("User code not found in sessionStorage.");
+		}
 	});
 </script>
 
