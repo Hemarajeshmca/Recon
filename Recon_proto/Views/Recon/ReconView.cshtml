@@ -769,17 +769,7 @@
 							} else {
 								grid_reportTemplist([]);
 							}
-							$("#cmbdatasetmap").empty();
-							$("#cmbdatasetmap").append($('<option>', {
-								value: "",
-								text: "  Select  "
-							}));
-							$.each(res.ReconDataSet, function (index, item) {
-								$("#cmbdatasetmap").append($('<option>', {
-									value: item.dataset_code,
-									text: item.dataset_name
-								}));
-							});
+							getGriddatasetmapList(res.ReconHeader[0].recon_code);
 							$("#cmbrecondatefield").empty();
 							$("#cmbrecondatefield").append($('<option>', {
 								value: "",
@@ -900,17 +890,7 @@
 							} else {
 								grid_reportTemplist([]);
 							}
-							$("#cmbdatasetmap").empty();
-							$("#cmbdatasetmap").append($('<option>', {
-								value: "",
-								text: "  Select  "
-							}));
-							$.each(res.ReconDataSet, function (index, item) {
-								$("#cmbdatasetmap").append($('<option>', {
-									value: item.dataset_code,
-									text: item.dataset_name
-								}));
-							});
+							getGriddatasetmapList(res.ReconHeader[0].recon_code);
 							$("#cmbrecondatefield").empty();
 							$("#cmbrecondatefield").append($('<option>', {
 								value: "",
@@ -1048,17 +1028,7 @@
 						} else {
 							grid_reportTemplist([]);
 						}
-						$("#cmbdatasetmap").empty();
-						$("#cmbdatasetmap").append($('<option>', {
-							value: "",
-							text: "  Select  "
-						}));
-						$.each(res.ReconDataSet, function (index, item) {
-							$("#cmbdatasetmap").append($('<option>', {
-								value: item.dataset_code,
-								text: item.dataset_name
-							}));
-						});
+						getGriddatasetmapList(res.ReconHeader[0].recon_code);
 						$("#cmbrecondatefield").empty();
 						$("#cmbrecondatefield").append($('<option>', {
 							value: "",
@@ -1102,6 +1072,32 @@
 
 			});
 		}
+	}
+	function getGriddatasetmapList(data) {
+		var in_recon_code = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetlistmapfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbdatasetmap").empty();
+				$("#cmbdatasetmap").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					$("#cmbdatasetmap").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
+				});
+
+			}
+		});
 	}
 	function detailfetch(reconcode) {
 		$.ajax({
@@ -1167,17 +1163,7 @@
 					} else {
 						grid_reportTemplist([]);
 					}
-					$("#cmbdatasetmap").empty();
-					$("#cmbdatasetmap").append($('<option>', {
-						value: "",
-						text: "  Select  "
-					}));
-					$.each(res.ReconDataSet, function (index, item) {
-						$("#cmbdatasetmap").append($('<option>', {
-							value: item.dataset_code,
-							text: item.dataset_name
-						}));
-					});
+					getGriddatasetmapList(res.ReconHeader[0].recon_code);
 					$("#cmbrecondatefield").empty();
 					$("#cmbrecondatefield").append($('<option>', {
 						value: "",
@@ -1779,11 +1765,21 @@
 			});
 			return;
 		}
-		var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
-		if (displayorder <= 0) {
+		var disorder = $("#displayorder").val();
+		if (disorder != '') {
+			var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
+			if (displayorder <= 0) {
+				$.alert({
+					title: 'Recon',
+					content: "Display Order Greater than Zero",
+					type: 'green',
+				});
+				return;
+			}
+		}else{
 			$.alert({
 				title: 'Recon',
-				content: "Display Order Greater than Zero",
+				content: "Display Order cannot be empty",
 				type: 'green',
 			});
 			return;
@@ -1797,7 +1793,7 @@
 			reconfield_gid = 0;
 			action = "INSERT";
 		}
-		
+
 		var action_by = "";
 		var in_user_code = "";
 		var status = "Y";
@@ -1805,8 +1801,10 @@
 			type: "POST",
 			url: '../Recon/Recondatasetfieldsave',
 			dataType: 'json',
-			data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname,
-				in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code }),
+			data: JSON.stringify({
+				in_reconfield_gid: reconfield_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname,
+				in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code
+			}),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response.out_result == "1") {
@@ -1847,7 +1845,7 @@
 				});
 				return;
 			}
-			if ($("#displayorder").val() == ''){
+			if ($("#displayorder").val() == '') {
 				$.alert({
 					title: 'Recon',
 					content: "Display Order cannot be empty",
@@ -1864,11 +1862,11 @@
 				});
 				return;
 			}
-			
+
 			var cmbdatasetmap = $("#cmbdatasetmap").val();
 			var cmbdatasetfieldname = $("#cmbdatasetfieldname").val();
 			var action = "";
-			
+
 			var action_by = "";
 			var in_user_code = "";
 			var reconfield_gid = $("#reconfield_gid").val();
@@ -1915,8 +1913,8 @@
 							success: function (response) {
 								if (response != null) {
 									grid_recondatasetmapping(response);
-									@*$("#Reconfieldname").prop('disabled', true);*@
-									$("#cmbdatasetmap").prop('disabled', false);
+	@*$("#Reconfieldname").prop('disabled', true);*@
+										$("#cmbdatasetmap").prop('disabled', false);
 								}
 								else {
 									grid_recondatasetmapping([]);

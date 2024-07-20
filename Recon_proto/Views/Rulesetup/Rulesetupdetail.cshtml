@@ -1582,49 +1582,49 @@
 		});
 		load();
 
-		//sorce dataset
-		var reconcode = $("#cmbreconname").val();
-		$.ajax({
-			type: "POST",
-			url: '../Rulesetup/FieldAgainstRecon',
-			dataType: 'json',
-			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				if (response != null) {
-					var res = JSON.parse(response);
-					$("#cmbsourcefield").empty();
-					$("#cmbsourcefield").append($('<option>', {
-						value: "",
-						text: "  Select  "
-					}));
-					$.each(res, function (index, item) {
-						$("#cmbsourcefield").append($('<option>', {
-							value: item.recon_field_desc,
-							text: item.recon_field_name
-						}).data('code', item.recon_field_type));
-					});
-					$("#cmbcomparisionfield").empty();
-					$("#cmbcomparisionfield").append($('<option>', {
-						value: "",
-						text: "  Select  "
-					}));
-					$.each(res, function (index, item) {
-						$("#cmbcomparisionfield").append($('<option>', {
-							value: item.recon_field_desc,
-							text: item.recon_field_name
-						}).data('code', item.recon_field_type));
-					});
-				}
-				else {
-				}
-			},
-			error: function (er) {
-				alert(er)
-				console.log(er)
-			}
-		});
+		////sorce dataset
+		//var reconcode = $("#cmbreconname").val();
+		//$.ajax({
+		//	type: "POST",
+		//	url: '../Rulesetup/FieldAgainstRecon',
+		//	dataType: 'json',
+		//	async: false,
+		//	data: JSON.stringify({ in_recon_code: reconcode }),
+		//	contentType: 'application/json; charset=utf-8',
+		//	success: function (response) {
+		//		if (response != null) {
+		//			var res = JSON.parse(response);
+		//			$("#cmbsourcefield").empty();
+		//			$("#cmbsourcefield").append($('<option>', {
+		//				value: "",
+		//				text: "  Select  "
+		//			}));
+		//			$.each(res, function (index, item) {
+		//				$("#cmbsourcefield").append($('<option>', {
+		//					value: item.recon_field_desc,
+		//					text: item.recon_field_name
+		//				}).data('code', item.recon_field_type));
+		//			});
+		//			$("#cmbcomparisionfield").empty();
+		//			$("#cmbcomparisionfield").append($('<option>', {
+		//				value: "",
+		//				text: "  Select  "
+		//			}));
+		//			$.each(res, function (index, item) {
+		//				$("#cmbcomparisionfield").append($('<option>', {
+		//					value: item.recon_field_desc,
+		//					text: item.recon_field_name
+		//				}).data('code', item.recon_field_type));
+		//			});
+		//		}
+		//		else {
+		//		}
+		//	},
+		//	error: function (er) {
+		//		alert(er)
+		//		console.log(er)
+		//	}
+		//});
 	}
 	function saveheader() {
 		try {
@@ -2220,6 +2220,7 @@
 	function grid_sourceidentifier(data) {
 		var filter_criteria_list = "";
 		var ident_criteria_list = "";
+		var ident_value_list = "";
 		$("#grid_sourceidentifier").kendoGrid({
 			dataSource: {
 				data: data,
@@ -2238,6 +2239,7 @@
 							close_parentheses_flag: { type: "string", editable: false },
 							ident_criteria: { type: "string" },
 							ident_value: { type: "string" },
+							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
 							join_condition: { type: "string" },
@@ -2369,9 +2371,17 @@
 				},
 			},
 			{
+				field: "ident_value_code",
+				title: "ident_value_code",
+				hidden: true,
+			},
+			{
 				field: "ident_value",
 				title: "Identifier Value",
 				width: 100,
+				editor: function (container, options) {
+					combo_editor_identifiervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "grid_sourceidentifier")
+				},
 			},
 			{
 				field: "active_status",
@@ -2458,7 +2468,7 @@
 			}
 			var newSeqNo = parseInt(max) + 1;
 			// Add a new row with the incremented sequence number
-			dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "S" });
+			dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "S", ident_value_code: '' });
 			var lastRow = grid.tbody.children().last();
 			grid.content.scrollTop(lastRow.position().top);
 		} else {
@@ -2527,9 +2537,57 @@
 			}
 		});
 	}
+	function combo_editor_identifiervalues(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "ident_value") {
+					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
 	function grid_comparisionidentifier(data) {
 		var filter_criteria_list = "";
 		var ident_criteria_list = "";
+		var ident_value_list = "";
 		$("#grid_comparisionidentifier").kendoGrid({
 			dataSource: {
 				data: data,
@@ -2545,6 +2603,7 @@
 							filter_field_code: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
+							ident_value_code: { type: "string" },
 							ident_value: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
@@ -2679,9 +2738,17 @@
 				},
 			},
 			{
+				field: "ident_value_code",
+				title: "ident_value_code",
+				hidden: true,
+			},
+			{
 				field: "ident_value",
 				title: "Identifier Value",
 				width: 100,
+				editor: function (container, options) {
+					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "grid_comparisionidentifier")
+				},
 			},
 			{
 				field: "active_status",
@@ -2770,7 +2837,7 @@
 			}
 			var newSeqNo = parseInt(max) + 1;
 			// Add a new row with the incremented sequence number
-			dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "C" });
+			dataSource.add({ ruleselefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", ruleselefilter_gid: 0, filter_applied_on: "C", ident_value_code: '' });
 			var lastRow = grid.tbody.children().last();
 			grid.content.scrollTop(lastRow.position().top);
 		} else {
@@ -2840,6 +2907,53 @@
 			}
 		});
 	}
+	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var reconcode = $("#cmbreconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "ident_value") {
+					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
 	function saveIdentifier() {
 		try {
 			var grid = $("#grid_sourceidentifier").data("kendoGrid");
@@ -2850,7 +2964,16 @@
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = "EXACT";
 			var identifiercriteria = model.ident_criteria;
-			var identifiervalue = model.ident_value;
+			if (model.ident_value_input != undefined) {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value_input;
+			} else if (model.ident_value_code == "") {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value;
+			} else {
+				var ident_value_flag = 'N';
+				var identifiervalue = model.ident_value_code;
+			}
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
 			var action_by = ""
@@ -2870,7 +2993,7 @@
 				url: '../Rulesetup/ruleIdentifiersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition,
+					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
 					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, ruleselefilter_seqno: ruleselefilter_seqno,
 					in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 				}),
@@ -2910,7 +3033,16 @@
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = "EXACT";
 			var identifiercriteria = model.ident_criteria;
-			var identifiervalue = model.ident_value;
+			if (model.ident_value_input != undefined) {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value_input;
+			} else if (model.ident_value_code == "") {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value;
+			} else {
+				var ident_value_flag = 'N';
+				var identifiervalue = model.ident_value_code;
+			}
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
 			var action_by = ""
@@ -2930,7 +3062,7 @@
 				url: '../Rulesetup/ruleIdentifiersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition,
+					in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
 					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, ruleselefilter_seqno: ruleselefilter_seqno,
 					in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 				}),
@@ -2983,6 +3115,7 @@
 						var extractcriteria = "";
 						var identifiercriteria = "";
 						var identifiervalue = "";
+						var ident_value_flag = "";
 						var action = "DELETE";
 						var action_by = ""
 						var ruleselefilter_gid = parseInt(model.ruleselefilter_gid);
@@ -2993,7 +3126,7 @@
 							url: '../Rulesetup/ruleIdentifiersave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon,
+								in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_ident_value_flag: ident_value_flag,
 								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, ruleselefilter_seqno: ruleselefilter_seqno,
 								in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status
 							}),
@@ -3056,6 +3189,7 @@
 						var extractcriteria = "";
 						var identifiercriteria = "";
 						var identifiervalue = "";
+						var ident_value_flag = "";
 						var action = "DELETE";
 						var action_by = ""
 						var ruleselefilter_gid = parseInt(model.ruleselefilter_gid);
@@ -3066,7 +3200,7 @@
 							url: '../Rulesetup/ruleIdentifiersave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon,
+								in_ruleselefilter_gid: ruleselefilter_gid, in_rule_code: in_rule_code, in_filter_applied_on: filterapplyon, in_ident_value_flag: ident_value_flag,
 								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, ruleselefilter_seqno: ruleselefilter_seqno,
 								in_ident_criteria: identifiercriteria, in_action: action, in_user_code: action_by, in_active_status: status
 							}),
@@ -3505,7 +3639,7 @@
 					max = grid.dataSource._data[i].recorder_seqno;
 				}
 			}
-			var newSeqNo = parseInt(max) + 1;			
+			var newSeqNo = parseInt(max) + 1;
 
 			// Add a new row with the incremented sequence number
 			dataSource.add({ recorder_seqno: newSeqNo, rulerecorder_gid: 0 });
@@ -3545,24 +3679,21 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
 							type: 'green',
 						});
 						getfetch($("#rulegid").val(), "orders");
-					}
-					else {
-
-					}
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}					
 				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-
 			});
 		}
 		catch (e) {
@@ -3742,24 +3873,21 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
 							type: 'green',
 						});
-						getfetch($("#rulegid").val(), "orderc");
-					}
-					else {
-
-					}
+						getfetch($("#rulegid").val(), "orders");
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}					
 				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-
 			});
 		}
 		catch (e) {
