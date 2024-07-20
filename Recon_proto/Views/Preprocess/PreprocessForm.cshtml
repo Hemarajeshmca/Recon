@@ -2143,7 +2143,12 @@
 				lookup_dataset_code = $("#cmblookupdataset").val();
 				lookup_return_field = $("#Cmblookupdatasetfield").val();
 				set_recon_field = $("#Cmbreconfield1").val();
-
+				var checkbox = document.getElementById("returnflag");
+				if (checkbox.checked) {
+					var returnflag = 'Y';
+				} else {
+					var returnflag = 'N';
+				}
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
 				if ($("#validquery").val() == "false") {
@@ -2237,6 +2242,7 @@
 				});
 				return;
 			}
+			var returnflag = '';
 			var preprocess_name = $("#preprocessname").val();
 			var preprocess_Code = $("#txtpreprocesscode").val();
 			var recon_code = $("#cmbrecon").val();
@@ -2281,7 +2287,12 @@
 				lookup_dataset_code = $("#cmblookupdataset").val();
 				lookup_return_field = $("#Cmblookupdatasetfield").val();
 				set_recon_field = $("#Cmbreconfield1").val();
-
+				var checkbox = document.getElementById("returnflag");
+				if (checkbox.checked) {
+					var returnflag = 'Y';
+				} else {
+					var returnflag = 'N';
+				}
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
 				if ($("#validquery").val() == "false") {
@@ -2293,7 +2304,7 @@
 					return;
 				}
 			}
-			var returnflag = '';
+			
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
 			var preprocess_gid = $("#preprocessgid").val();
@@ -2369,6 +2380,7 @@
 			var lookup_return_field = "";
 			var process_query = "";
 			var clone_process = "";
+			var returnflag = '';
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 				if ($("#cmbgetrecon").val() == "") {
 					$.alert({
