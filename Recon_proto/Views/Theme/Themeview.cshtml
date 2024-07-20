@@ -1369,6 +1369,7 @@
 			var join_condition_list = "";
 			var filter_field_list = "";
 			var filter_criteria_list = "";
+			var filter_value_list = "";
 			$("#grid_themefilterfield").kendoGrid({
 				dataSource: {
 					data: data,
@@ -1383,7 +1384,8 @@
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
 								themefilter_seqno: { type: "string", defaultValue: 0 },
-								filter_value: { type: "string" },
+								filter_value: { type: "string", defaultValue: ""  },
+								filter_value_code: { type: "string", defaultValue: "" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
 								join_condition: { type: "string", defaultValue: "" },
@@ -1497,9 +1499,17 @@
 					},
 				},
 				{
+					field: "filter_value_code",
+					title: "filter_value_code",
+					hidden: true,
+				},
+				{
 					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
+					editor: function (container, options) {
+						combo_editor_filtervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_themefilterfield")
+					},
 				},
 				{
 					field: "active_status",
@@ -1594,7 +1604,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
+		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0, filter_value_code:'' });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -1682,8 +1692,6 @@
 				}
 			}
 		});
-
-		debugger;
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
@@ -1710,6 +1718,53 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
+	function combo_editor_filtervalues(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_value") {
+					if (datafield == "filter_value" && selectedItem.filter_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
 	function savedetail() {
 		try {
 			var grid = $("#grid_themefilterfield").data("kendoGrid");
@@ -1725,10 +1780,15 @@
 			} else {
 				var filter_criteria = "";
 			}
-			if (model.filter_value != undefined) {
+			if (model.filter_value_input != undefined) {
+				var filter_value_flag = 'Y';
+				var filter_value = model.filter_value_input;
+			} else if (model.filter_value_code == "") {
+				var filter_value_flag = 'Y';
 				var filter_value = model.filter_value;
-			} else {
-				var filter_value = "";
+			} else{
+				var filter_value_flag = 'N';
+				var filter_value = model.filter_value_code;
 			}
 			var in_open_flag = model.open_parentheses_flag
 			var in_close_flag = model.close_parentheses_flag;
@@ -1753,7 +1813,7 @@
 				url: '../theme/themedetail',
 				dataType: 'json',
 				data: JSON.stringify({
-					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 					themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
 					action: action, active_status: active_status,
 					open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
@@ -1807,6 +1867,7 @@
 						var in_close_flag = "";
 						var filter_applied_on = "";
 						var in_join_condition = "";
+						var filter_value_flag="";
 						var themefilter_seqno = 0;
 						var themefilter_gid = model.themefilter_gid;
 						var action = "Delete";
@@ -1817,7 +1878,7 @@
 							url: '../theme/themedetail',
 							dataType: 'json',
 							data: JSON.stringify({
-								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 								themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
 								action: action, active_status: status,
 								open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
@@ -1867,6 +1928,7 @@
 			var join_condition_list = "";
 			var filter_field_list = "";
 			var filter_criteria_list = "";
+			var filter_value_list = "";
 			$("#grid_comparisionfilter").kendoGrid({
 				dataSource: {
 					data: data,
@@ -1882,6 +1944,7 @@
 								filter_criteria: { type: "string", defaultValue: "" },
 								themefilter_seqno: { type: "string", defaultValue: 0 },
 								filter_value: { type: "string" },
+								filter_value_code: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
 								join_condition: { type: "string", defaultValue: "" },
@@ -1995,9 +2058,17 @@
 					},
 				},
 				{
+					field: "filter_value_code",
+					title: "filter_value_code",
+					hidden: true,
+				},
+				{
 					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
+					editor: function (container, options) {
+						combo_editor_filtervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_comparisionfilter")
+					},
 				},
 				{
 					field: "active_status",
@@ -2092,7 +2163,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0 });
+		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0, filter_value_code: '' });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -2180,8 +2251,6 @@
 				}
 			}
 		});
-
-		debugger;
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
@@ -2208,6 +2277,53 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
+	function combo_editor_filtervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_value") {
+					if (datafield == "filter_value" && selectedItem.filter_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
 	function savedetailc() {
 		try {
 			var grid = $("#grid_comparisionfilter").data("kendoGrid");
@@ -2222,11 +2338,16 @@
 				var filter_criteria = model.filter_criteria;
 			} else {
 				var filter_criteria = "";
-			}
-			if (model.filter_value != undefined) {
+			}			
+			if (model.filter_value_input != undefined) {
+				var filter_value_flag = 'Y';
+				var filter_value = model.filter_value_input;
+			} else if (model.filter_value_code == "") {
+				var filter_value_flag = 'Y';
 				var filter_value = model.filter_value;
 			} else {
-				var filter_value = "";
+				var filter_value_flag = 'N';
+				var filter_value = model.filter_value_code;
 			}
 			var in_open_flag = model.open_parentheses_flag
 			var in_close_flag = model.close_parentheses_flag;
@@ -2251,7 +2372,7 @@
 				url: '../theme/themedetail',
 				dataType: 'json',
 				data: JSON.stringify({
-					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 					themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
 					action: action, active_status: active_status,
 					open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
@@ -2304,6 +2425,7 @@
 						var in_open_flag = "";
 						var in_close_flag = "";
 						var filter_applied_on = "";
+						var filter_value_flag="";
 						var in_join_condition = "";
 						var themefilter_seqno = 0;
 						var themefilter_gid = model.themefilter_gid;
@@ -2315,7 +2437,7 @@
 							url: '../theme/themedetail',
 							dataType: 'json',
 							data: JSON.stringify({
-								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on,
+								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 								themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
 								action: action, active_status: status,
 								open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition

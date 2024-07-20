@@ -251,6 +251,12 @@
 											<select id="Cmbreconfield1" class="form-select form-control">
 											</select>
 										</div>
+										<div class="col-sm-2" style="margin-top:35px">
+											<input type="checkbox" id="returnflag" onclick="returnflag()">
+											<label for="vehicle1">
+												Group Return Field
+											</label>
+										</div>
 									</div>
 									<div class="col-xs-12" style="margin-top:5px;">
 										<div id="grid_lookup">
@@ -497,7 +503,7 @@
 				$("#preprocessorder").val(data.preprocess_order);
 				$("#preprocessgid").val(data.preprocess_gid);
 				$("#Cmbprocessmethod").val(data.process_method);
-				
+
 				$("#cmbgetrecon").val(data.get_recon_field);
 				jQuery('#cmbgetrecon').trigger("change");
 				$("#Cmbfunction").val(data.process_function);
@@ -524,7 +530,11 @@
 				$("#Cmblookupdatasetfield").prop('disabled', true);
 				$("#Cmbclone").prop('disabled', true)
 				$("#btnclone").prop('disabled', true)
-
+				if (res.RuleHeader[0].threshold_flag == "Y") {
+					$("#thersholdflag").prop("checked", true);					
+				} else {
+					$("#thersholdflag").prop("checked", false);					
+				}
 			}
 		}
 	}
@@ -618,6 +628,7 @@
 		var join_condition_list = "";
 		var filter_criteria_list = "";
 		var filter_field_list = "";
+		var ident_value_list = "";
 		$("#grid_filter").kendoGrid({
 			dataSource: {
 				data: data,
@@ -633,6 +644,7 @@
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
 							ident_value: { type: "string" },
+							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
 							join_condition: { type: "string" },
@@ -739,9 +751,17 @@
 				},
 			},
 			{
+				field: "ident_value_code",
+				title: "ident_value_code",
+				hidden: true,
+			},
+			{
 				field: "ident_value",
 				title: "Filter Value",
 				width: 100,
+				editor: function (container, options) {
+					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "grid_filter")
+				},
 			},
 			{
 				field: "active_status",
@@ -815,7 +835,53 @@
 			}
 		}
 	}
-
+	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "ident_value") {
+					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
 	function combo_editor_man_process(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
@@ -934,7 +1000,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '' });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -1512,7 +1578,16 @@
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
-			var identifiervalue = model.ident_value;
+			if (model.ident_value_input != undefined) {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value_input;
+			} else if (model.ident_value_code == "") {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value;
+			} else {
+				var ident_value_flag = 'N';
+				var identifiervalue = model.ident_value_code;
+			}
 			var in_filter_seqno = model.filter_seqno
 			var action = "";
 			var action_by = ""
@@ -1532,7 +1607,7 @@
 				url: '../Preprocess/filterdatasave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition,
+					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
 					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
 					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 				}),
@@ -1587,6 +1662,7 @@
 						var in_filter_seqno = model.filter_seqno
 						var action = "DELETE";
 						var action_by = ""
+						var ident_value_flag = "";
 						var preprocessfilter_gid = model.preprocessfilter_gid;
 						var status = "Y";
 						var in_open_flag = "";
@@ -1607,7 +1683,7 @@
 							url: '../Preprocess/filterdatasave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition,
+								in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
 								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
 								in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
 							}),
@@ -1697,7 +1773,11 @@
 					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
 					jQuery('#cmblookupdataset').trigger("change");
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
-
+					if (result.header[0].lookup_group_flag == "Y") {
+						$("#returnflag").prop("checked", true);
+					} else {
+						$("#returnflag").prop("checked", false);
+					}
 					$("#holdflag").val(result.header[0].hold_flag);
 					$("#txtstatus").val(result.header[0].active_status_desc);
 					$("#Cmbclone").prop('disabled', true)
@@ -1787,6 +1867,12 @@
 			var in_Ldataset_code = $("#cmblookupdataset").val();
 			var in_Lreturn_field = $("#Cmblookupdatasetfield").val();
 			var in_setrecon_field = $("#Cmbreconfield1").val();
+			var checkbox = document.getElementById("returnflag");
+			if (checkbox.checked) {
+				var returnflag = 'Y'
+			} else {
+				var returnflag = 'N'
+			}
 			var comparison_field = model.comparison_field;
 			var condition_seqno = model.condition_seqno;
 			var source_field_code = model.source_field_code;
@@ -1812,11 +1898,11 @@
 				url: '../Preprocess/conditiondatasave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno,
+					in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno, in_returnflag: returnflag,
 					in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
 					in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter,
 					in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
-					in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field
+					in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field: in_setrecon_field
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -1864,6 +1950,7 @@
 						var in_Ldataset_code = $("#cmblookupdataset").val();
 						var in_Lreturn_field = $("#Cmblookupdatasetfield").val();
 						var in_setrecon_field = $("#Cmbreconfield1").val();
+						var returnflag = "";
 						var comparison_field = model.comparison_field;
 						var condition_seqno = model.condition_seqno;
 						var source_field_code = model.source_field_code;
@@ -1894,11 +1981,11 @@
 							url: '../Preprocess/conditiondatasave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno,
+								in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno, in_returnflag: returnflag,
 								in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
 								in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter,
 								in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
-								in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field
+								in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field: in_setrecon_field
 							}),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
@@ -2015,6 +2102,7 @@
 			var preprocess_Code = $("#txtpreprocesscode").val();
 			var recon_code = $("#cmbrecon").val();
 			var process_method = $("#Cmbprocessmethod").val();
+			var returnflag = '';
 			var get_recon_field = "";
 			var set_recon_field = "";
 			var process_function = "";
@@ -2092,7 +2180,7 @@
 				url: '../Preprocess/preprocessheader',
 				dataType: 'json',
 				data: JSON.stringify({
-					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
 				}),
@@ -2205,7 +2293,7 @@
 					return;
 				}
 			}
-
+			var returnflag = '';
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
 			var preprocess_gid = $("#preprocessgid").val();
@@ -2230,7 +2318,7 @@
 				url: '../Preprocess/preprocessheader',
 				dataType: 'json',
 				data: JSON.stringify({
-					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
 				}),
@@ -2338,6 +2426,12 @@
 				lookup_dataset_code = $("#cmblookupdataset").val();
 				lookup_return_field = $("#Cmblookupdatasetfield").val();
 				set_recon_field = $("#Cmbreconfield1").val();
+				var checkbox = document.getElementById("returnflag");
+				if (checkbox.checked) {
+					var returnflag = 'Y';
+				} else {
+					var returnflag = 'N';
+				}
 
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 				process_query = $("#querydata").val();
@@ -2375,7 +2469,7 @@
 				url: '../Preprocess/preprocessheader',
 				dataType: 'json',
 				data: JSON.stringify({
-					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
 				}),

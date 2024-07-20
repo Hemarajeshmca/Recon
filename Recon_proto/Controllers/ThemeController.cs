@@ -173,6 +173,7 @@ namespace Recon_proto.Controllers
 			public string filter_field { get; set; }
 			public string filter_criteria { get; set; }
 			public string filter_value { get; set; }
+			public string filter_value_flag { get; set; }
 			public string open_flag { get; set; }
 			public string close_flag { get; set; }
 			public string join_condition { get; set; }

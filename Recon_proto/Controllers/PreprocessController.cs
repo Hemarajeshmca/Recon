@@ -120,6 +120,7 @@ namespace Recon_proto.Controllers
 			public string? preprocess_order { get; set; }
 			public string? lookup_dataset_code { get; set; }
 			public string? lookup_return_field { get; set; }
+			public string? in_returnflag { get; set; }
 			public string? active_status { get; set; }
 			public string? in_action { get; set; }
 			public string? in_action_by { get; set; }
@@ -137,6 +138,7 @@ namespace Recon_proto.Controllers
 			public Double in_filter_seqno { get; set; }
 			public string? in_filter_field { get; set; }
 			public string? in_filter_criteria { get; set; }
+			public string? in_ident_value_flag { get; set; }
 			public string? in_ident_value { get; set; }
 			public string? in_open_flag { get; set; }
 			public string? in_close_flag { get; set; }
@@ -244,6 +246,7 @@ namespace Recon_proto.Controllers
 			public string? in_comparison_criteria { get; set; }
 			public string? in_comparison_filter { get; set; }
 			public string? in_open_flag { get; set; }
+			public string? in_returnflag { get; set; }
 			public string? in_close_flag { get; set; }
 			public string? in_join_condition { get; set; }
 			public string? in_active_status { get; set; }
