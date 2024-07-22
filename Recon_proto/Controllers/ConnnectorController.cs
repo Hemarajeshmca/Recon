@@ -14,7 +14,8 @@ namespace Recon_proto.Controllers
         public IActionResult connectors()
 		{
             var conn = _configuration.GetValue<string>("AppSettings:connector");
-            ViewBag.conn = conn;
+            var user_code = HttpContext.Session.GetString("user_code");
+            ViewBag.conn = conn+"?user_code=" + user_code;
             return View();
 		}
 	}
