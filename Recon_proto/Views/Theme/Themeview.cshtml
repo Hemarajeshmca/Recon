@@ -1785,7 +1785,11 @@
 				var filter_value = model.filter_value_input;
 			} else if (model.filter_value_code == "") {
 				var filter_value_flag = 'Y';
-				var filter_value = model.filter_value;
+				if (model.filter_value == undefined) {
+					var filter_value = model.filter_value_code
+				} else {
+					var filter_value = model.filter_value;
+				}
 			} else{
 				var filter_value_flag = 'N';
 				var filter_value = model.filter_value_code;
@@ -2344,7 +2348,11 @@
 				var filter_value = model.filter_value_input;
 			} else if (model.filter_value_code == "") {
 				var filter_value_flag = 'Y';
-				var filter_value = model.filter_value;
+				if (model.filter_value == undefined){
+					var filter_value = model.filter_value_code
+				}else{
+					var filter_value = model.filter_value;
+				}				
 			} else {
 				var filter_value_flag = 'N';
 				var filter_value = model.filter_value_code;

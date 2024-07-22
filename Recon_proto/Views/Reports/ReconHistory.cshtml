@@ -235,6 +235,9 @@
         });
     }
     function reconchange() {
+        grid_reconverion([]);
+        theme_grid([]);
+        grid_preprocess([]);
         if ($("#cmbreconname").val() != '') {
             sessionStorage.setItem("reconcode", $("#cmbreconname").val());
             sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
@@ -347,12 +350,12 @@
                 {
                     field: "hold_flag_desc",
                     title: "Hold Flag",
-                    width: 100,
+                    width: 80,
                 },
                 {
                     field: "probable_match_desc",
                     title: "Probable Flag",
-                    width: 100,
+                    width: 80,
                 },
             ],
             editable: false,

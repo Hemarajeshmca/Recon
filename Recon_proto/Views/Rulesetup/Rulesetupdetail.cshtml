@@ -2969,7 +2969,11 @@
 				var identifiervalue = model.ident_value_input;
 			} else if (model.ident_value_code == "") {
 				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value;
+				if (model.filter_value == undefined) {
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var identifiervalue = model.ident_value;
+				}
 			} else {
 				var ident_value_flag = 'N';
 				var identifiervalue = model.ident_value_code;
@@ -3038,7 +3042,11 @@
 				var identifiervalue = model.ident_value_input;
 			} else if (model.ident_value_code == "") {
 				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value;
+				if (model.filter_value == undefined) {
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var identifiervalue = model.ident_value;
+				}
 			} else {
 				var ident_value_flag = 'N';
 				var identifiervalue = model.ident_value_code;
