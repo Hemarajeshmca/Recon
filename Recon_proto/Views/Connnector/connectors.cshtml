@@ -3,12 +3,8 @@
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <body>
-    <div>
-     
-@*        <embed src=@ViewBag.conn title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
-*@
-        <embed id="embedConnector" title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
-
+    <div>     
+        <embed src=@ViewBag.conn title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
        </div>
 </body>
 
@@ -16,19 +12,5 @@
     $(document).ready(function () {
         $("#navhead").text("Connectors");
         $("#contextdiv").hide();   
-        debugger;
-        console.log("ViewBag.conn:", '@ViewBag.conn');
-        var userCode = sessionStorage.getItem("usrname");
-        var conn = '@ViewBag.conn';
-        console.log("userCode:", userCode);
-        console.log("conn:", conn);
-        if (userCode) {
-            var embedSrc = conn + "?user_code=" + encodeURIComponent(userCode);
-            console.log("embedSrc:", embedSrc);
-            $("#embedConnector").attr("src", embedSrc);
-        } else {
-            console.error("User code not found in sessionStorage.");
-        }
     });
-
 </script>

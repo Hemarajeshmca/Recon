@@ -14,7 +14,8 @@ namespace Recon_proto.Controllers
         public IActionResult Pipeline()
 		{
             var pipe = _configuration.GetValue<string>("AppSettings:pipeline");
-            ViewBag.pipe = pipe;
+            var user_code = HttpContext.Session.GetString("user_code");
+            ViewBag.pipe = pipe+"?user_code="+ user_code;
             return View();
 		}
 	}
