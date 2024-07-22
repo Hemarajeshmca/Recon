@@ -254,7 +254,7 @@
 										<div class="col-sm-2" style="margin-top:35px">
 											<input type="checkbox" id="returnflag" onclick="returnflag()">
 											<label for="vehicle1">
-												Group Return Field
+												Group Return Value
 											</label>
 										</div>
 									</div>
@@ -1583,7 +1583,11 @@
 				var identifiervalue = model.ident_value_input;
 			} else if (model.ident_value_code == "") {
 				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value;
+				if (model.filter_value == undefined) {
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var identifiervalue = model.ident_value;
+				}				
 			} else {
 				var ident_value_flag = 'N';
 				var identifiervalue = model.ident_value_code;
