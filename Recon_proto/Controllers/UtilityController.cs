@@ -311,11 +311,19 @@ namespace Recon_proto.Controllers
 						var get_outresult = getfilepath("download_xls_folder");
 						List<fileconfigmodel> obj_outresult = JsonConvert.DeserializeObject<List<fileconfigmodel>>(get_outresult.Value.ToString());
                         string out_filepath = "";
+                        string fileName = "";
                         if (obj_outresult.Count > 0)
 						{
 							out_filepath = obj_outresult[0].out_config_value;
 						}
-                        string fileName = file_name + ".xlsx";
+                        if (file_name.ToLower().Contains(".xlsx"))
+                        {
+                            fileName = file_name;
+                        }
+                        else
+                        {
+                            fileName = file_name + ".xlsx";
+                        }
 						string filePath = Path.Combine(out_filepath, fileName);
 
 						if (!System.IO.File.Exists(filePath))

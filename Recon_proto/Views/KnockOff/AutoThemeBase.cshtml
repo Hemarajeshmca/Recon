@@ -418,6 +418,7 @@
 	}
 
 	function runTheme() {
+		hideProgress();
 		var recon_code = $("#reconname").val();
 		var toDate = validateDateFormat($("#initiated_to").val());
 		if (recon_code && toDate) {
@@ -453,6 +454,7 @@
 						}
 
 						if (in_recon_code && period_from && period_to && firstColumnValues) {
+							hideProgress();
 							$.alert({
 								title: 'Recon',
 								content: "Job Initated, Please check the Job Status in Utility",
@@ -461,6 +463,7 @@
 							$("#run_theme").prop("disabled", false);
 							$.ajax({
 								type: "POST",
+								async: true,
 								url: '../theme/runtheme',
 								dataType: 'json',
 								data: JSON.stringify({
@@ -513,6 +516,7 @@
 								type: 'red',
 							});
 						}
+						hideProgress();
 					},
 					cancel: function () {
 						$.alert({
@@ -539,7 +543,7 @@
 				type: 'red',
 			});
 		}
-	
+		hideProgress();
 	}
 
 	document.addEventListener('DOMContentLoaded', function () {

@@ -516,6 +516,7 @@
 				jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
 				jsondata.in_recon_code = getselectedTemplate.recon_code;
 				jsondata.in_report_code = getselectedTemplate.report_code;
+				jsondata.in_action_by = sessionStorage.getItem("usrname");
 				//detail fetch
 				$.ajax({
 					type: "POST",
@@ -1181,6 +1182,7 @@
 				"in_recon_code": $("#reconname").val(),
 				"in_report_code": $("#cmbreporttype").val(),
 				"in_report_condition": condition,
+				"in_action_by": sessionStorage.getItem("usrname")
 			};
 		if (rpt_cond && $("#cmbreporttype").val() && $("#reconname").val()) {
 				$.ajax({
@@ -1364,6 +1366,7 @@
 			data.in_reporttemplate_code = template_code;
 			data.in_recon_code = selected_template.recon_code;
 			data.in_report_code = selected_template.report_code;
+			data.in_action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Reports/getPageNoReport',
@@ -1725,6 +1728,7 @@
 			"in_user_code": txtusername,
 			"file_name": $("#file_name").val(),
 			"in_report_name": concatName,
+			"in_action_by": sessionStorage.getItem("usrname")
 		};
 		dataArray.push(dataset1);
 		var dataset = {
@@ -1732,46 +1736,46 @@
 			dataset2: JSON.stringify(dataset2)
 		};
 		if (dataset1.in_report_param && rpt_cond) {
-			$.alert({
-				title: 'Recon',
-				content: "Report Generated, Please check the Job Status in Utility",
-				type: 'green',
-			});
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Report Generated, Please check the Job Status in Utility",
+			//	type: 'green',
+			//});
 			$.ajax({
 				type: "POST",
 				url: '../Reports/generateReportXLSXdynamic_new',
 				dataType: 'json',
 				data: JSON.stringify(dataset),
 				contentType: 'application/json; charset=utf-8',
-				//success: function (response) {
-				//	var res = JSON.parse(response);
-				//	if (res.length > 0) {
-				//		var data = res[0];
-				//		if (data.out_result != '0') {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: data.msg,
-				//				type: 'green',
-				//			});
-				//		} else {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: data.msg,
-				//				type: 'red',
-				//			});
-				//		}
-				//	} else {
-				//		$.alert({
-				//			title: 'Recon',
-				//			content: "Something Went Wrong ..!",
-				//			type: 'red',
-				//		});
-				//	}
-				//},
-				//error: function (er) {
-				//	alert(er)
-				//	console.log(er)
-				//}
+				success: function (response) {
+					var res = JSON.parse(response);
+					if (res.length > 0) {
+						var data = res[0];
+						if (data.out_result != '0') {
+							$.alert({
+								title: 'Recon',
+								content: data.msg,
+								type: 'green',
+							});
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: data.msg,
+								type: 'red',
+							});
+						}
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: "Something Went Wrong ..!",
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
 			});
 			hideProgress();
 		}

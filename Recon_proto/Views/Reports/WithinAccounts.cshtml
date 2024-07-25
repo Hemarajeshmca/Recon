@@ -120,11 +120,12 @@
             var in_tran_date = $("#tran_date").val();
             var ts = in_tran_date.split("/");
             var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+            var in_user_code = sessionStorage.getItem("usrname");
             $.ajax({
                 type: "POST",
                 url: '../Reports/reconwithinacc',
                 dataType: 'json',
-                data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr }),
+                data: JSON.stringify({ in_recon_code: in_recon_code, in_tran_date: pr, in_action_by: in_user_code }),
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     var data = JSON.parse(response)
@@ -235,13 +236,14 @@
     function monthbrs() {
         var tranDate = validateDateFormat($("#tran_date").val());
         var in_recon_code = $("#reconname").val();
+        var in_user_code = sessionStorage.getItem("usrname");
         if (tranDate && in_recon_code) {
             var in_recon_name = $("#reconname").find(":selected").text();
                 var in_tran_date = $("#tran_date").val();
                 var ts = in_tran_date.split("/");
                 var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
                 var slice_recon_name = in_recon_name.slice(0, 20);
-                window.location.href = '@Url.Action("kendogrid_download_withinaccount", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + slice_recon_name + '';
+            window.location.href = '@Url.Action("kendogrid_download_withinaccount", "Reports")?in_tran_date=' + pr + '&in_recon_code=' + in_recon_code + '&in_recon_name=' + slice_recon_name + '&in_action_by=' + in_user_code + '';
 
         } else if (!tranDate) {
             $.alert({
