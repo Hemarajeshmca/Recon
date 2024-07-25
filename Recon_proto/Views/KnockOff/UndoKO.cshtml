@@ -101,12 +101,13 @@
 	function reconsubmit() {
 		var in_recon_code = $("#cmbreconname").val();
 		var Ko_id = $("#Ko_id").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		if (in_recon_code && Ko_id) {
 			$.ajax({
 				type: "POST",
 				url: '../knockoff/undorunreport',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_code: in_recon_code, in_report_code: "RPT_KO", in_report_param: "", in_report_condition: "and a.ko_gid =" + Ko_id, in_ip_addr: "", in_outputfile_flag: false, in_user_code: "" }),
+				data: JSON.stringify({ in_recon_code: in_recon_code, in_report_code: "RPT_KO", in_report_param: "", in_report_condition: "and a.ko_gid =" + Ko_id, in_ip_addr: "", in_outputfile_flag: false, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response != " " && response != null && response != "{}" && response != "[]") {
@@ -386,7 +387,7 @@
 		var data = {};
 		data.in_ko_gid = $("#Ko_id").val();
 		data.in_undo_ko_reason = reason;
-		data.in_user_code = "";
+		data.in_user_code = sessionStorage.getItem("usrname");
 		if (data.in_ko_gid && data.in_undo_ko_reason) {
 			$.ajax({
 				type: "POST",

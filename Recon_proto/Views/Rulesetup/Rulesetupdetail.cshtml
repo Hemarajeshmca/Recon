@@ -699,12 +699,13 @@
 			$("#cmbreconname").val(data[0].recon_code);
 			$("#ruleorder").val(data[0].rule_order);
 			var reconcode = $("#cmbreconname").val();
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/rulereconfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
@@ -726,12 +727,13 @@
 			});
 			//dataset combo
 			var reconcode = $("#cmbreconname").val();
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/rulerecondatasetfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
@@ -777,12 +779,13 @@
 				$("#cmbreconname").val(data.recon_code);
 				jQuery('#cmbreconname').trigger("change");
 				var reconcode = $("#cmbreconname").val();
+				var in_user_code = sessionStorage.getItem("usrname");
 				$.ajax({
 					type: "POST",
 					url: '../Rulesetup/rulereconfetch',
 					dataType: 'json',
 					async: false,
-					data: JSON.stringify({ in_recon_code: reconcode }),
+					data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 						var res = JSON.parse(response);
@@ -804,12 +807,13 @@
 				});
 				//dataset combo
 				var reconcode = $("#cmbreconname").val();
+				var in_user_code = sessionStorage.getItem("usrname");
 				$.ajax({
 					type: "POST",
 					url: '../Rulesetup/rulerecondatasetfetch',
 					dataType: 'json',
 					async: false,
-					data: JSON.stringify({ in_recon_code: reconcode }),
+					data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 						var res = JSON.parse(response);
@@ -839,12 +843,13 @@
 				});
 				$("#txtstatus").val(data.active_status_desc);
 				$("#rulegid").val(data.rule_gid);
+				var in_user_code = sessionStorage.getItem("usrname");
 				$.ajax({
 					type: "POST",
 					url: '../Rulesetup/rulefetch',
 					dataType: 'json',
 					async: false,
-					data: JSON.stringify({ in_rule_gid: data.rule_gid }),
+					data: JSON.stringify({ in_rule_gid: data.rule_gid, in_user_code: in_user_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 						if (response != null) {
@@ -976,12 +981,13 @@
 			$("#comsupdataset").text("Target Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 			//dataset combo
 			var reconcode = $("#cmbreconname").val();
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/rulerecondatasetfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
@@ -1014,12 +1020,13 @@
 			$("#lblcomaccmode").text("Supporting Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 			//dataset combo
 			var reconcode = $("#cmbreconname").val();
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/rulerecondatasetfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
@@ -1340,11 +1347,12 @@
 		}
 	}
 	function getfetch(rulecode, screen) {
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_rule_gid: rulecode }),
+			data: JSON.stringify({ in_rule_gid: rulecode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1676,7 +1684,7 @@
 				addRowrule();
 				return
 			}
-
+			var in_user_code = sessionStorage.getItem("usrname");
 			var in_rule_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
@@ -1702,7 +1710,7 @@
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
-					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status,
+					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code,
 					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
 					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
 					in_inactive_reason: in_inactive_reason
@@ -1991,12 +1999,13 @@
 			var codeValue = selectedItem.comparison_field_desc;
 		}
 		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2044,12 +2053,13 @@
 	function cmbsourcefield() {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2097,7 +2107,7 @@
 			var in_comparison_criteria = model.comparison_criteria;
 			var rulecondition_seqno = model.rulecondition_seqno;
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var rulecondtion_gid = model.rulecondition_gid;
 			if (rulecondtion_gid == "0") {
 				rulecondtion_gid = 0;
@@ -2116,7 +2126,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_rulecondition_gid: rulecondtion_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_rulecondition_seqno: rulecondition_seqno,
-					in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status, in_join_condition: in_join_condition
+					in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_user_code: action_by, in_active_status: status, in_join_condition: in_join_condition
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2167,7 +2177,7 @@
 						var in_extraction_criteria = "";
 						var in_comparison_criteria = "";
 						var action = "Delete";
-						var action_by = "";
+						var action_by = sessionStorage.getItem("usrname");
 						var status = "";
 						var rulecondition_seqno = 0;
 						$.ajax({
@@ -2176,7 +2186,7 @@
 							dataType: 'json',
 							data: JSON.stringify({
 								in_rulecondition_gid: rulecondition_gid, in_rule_code: in_rule_code, in_source_field: in_source_field, in_comparison_field: in_comparison_field, in_rulecondition_seqno: rulecondition_seqno,
-								in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_action_by: action_by, in_active_status: status
+								in_extraction_criteria: in_extraction_criteria, in_comparison_criteria: in_comparison_criteria, in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
@@ -2486,12 +2496,13 @@
 			var codeValue = selectedItem.filter_field;
 		}
 		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2540,12 +2551,13 @@
 	function combo_editor_identifiervalues(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2856,12 +2868,13 @@
 			var codeValue = selectedItem.filter_field;
 		}
 		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2910,12 +2923,13 @@
 	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2980,7 +2994,7 @@
 			}
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var ruleselefilter_gid = model.ruleselefilter_gid;
 			if (ruleselefilter_gid == "0") {
 				ruleselefilter_gid = 0;
@@ -3053,7 +3067,7 @@
 			}
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var ruleselefilter_gid = model.ruleselefilter_gid;
 			if (ruleselefilter_gid == "0") {
 				ruleselefilter_gid = 0;
@@ -3125,7 +3139,7 @@
 						var identifiervalue = "";
 						var ident_value_flag = "";
 						var action = "DELETE";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var ruleselefilter_gid = parseInt(model.ruleselefilter_gid);
 						var status = "";
 						var ruleselefilter_seqno = 0;
@@ -3199,7 +3213,7 @@
 						var identifiervalue = "";
 						var ident_value_flag = "";
 						var action = "DELETE";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var ruleselefilter_gid = parseInt(model.ruleselefilter_gid);
 						var status = "";
 						var ruleselefilter_seqno = 0;
@@ -3394,7 +3408,7 @@
 			var cmbcomgrpfield = model.recon_field_code;
 			var rulegrpfield_seqno = model.rulegrpfield_seqno;
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var rulegrpfield_gid = model.rulegrpfield_gid;
 			if (rulegrpfield_gid == "0") {
 				rulegrpfield_gid = 0;
@@ -3409,7 +3423,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, rulegrpfield_seqno: rulegrpfield_seqno,
-					in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
+					in_grp_field: cmbcomgrpfield, in_action: action, in_user_code: action_by, in_active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -3459,7 +3473,7 @@
 						var in_group_method_flag = "";
 						var in_manytomany_match_flag = "";
 						var action = "DELETE";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var rulegrpfield_seqno = 0;
 						var status = "";
 						$.ajax({
@@ -3468,7 +3482,7 @@
 							dataType: 'json',
 							data: JSON.stringify({
 								in_rulegrpfield_gid: rulegrpfield_gid, in_rule_code: in_rule_code, rulegrpfield_seqno: rulegrpfield_seqno,
-								in_grp_field: cmbcomgrpfield, in_action: action, in_action_by: action_by, in_active_status: status
+								in_grp_field: cmbcomgrpfield, in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
@@ -3666,7 +3680,7 @@
 			var in_recorder_seqno = model.recorder_seqno;
 			var in_recorder_field = model.recorder_field_code;
 			var action = "";
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var rulerecorder_gid = model.rulerecorder_gid;
 			if (rulerecorder_gid == "0") {
 				in_rulerecorder_gid = 0;
@@ -3700,7 +3714,7 @@
 							content: response.out_msg,
 							type: 'red',
 						});
-					}					
+					}
 				},
 			});
 		}
@@ -3860,7 +3874,7 @@
 			var in_recorder_seqno = model.recorder_seqno;
 			var in_recorder_field = model.recorder_field_code;
 			var action = "INSERT";
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var rulerecorder_gid = model.rulerecorder_gid;
 			if (rulerecorder_gid == "0") {
 				in_rulerecorder_gid = 0;
@@ -3894,7 +3908,7 @@
 							content: response.out_msg,
 							type: 'red',
 						});
-					}					
+					}
 				},
 			});
 		}
@@ -3926,7 +3940,7 @@
 						var in_recorder_seqno = 0;
 						var in_recorder_field = "";
 						var action = "DELETE";
-						var action_by = "";
+						var action_by = sessionStorage.getItem("usrname");
 						var status = ""
 						$.ajax({
 							type: "POST",
@@ -3995,7 +4009,7 @@
 						var in_recorder_seqno = 0;
 						var in_recorder_field = "";
 						var action = "DELETE";
-						var action_by = "";
+						var action_by = sessionStorage.getItem("usrname");
 						var status = ""
 						$.ajax({
 							type: "POST",
@@ -4079,7 +4093,7 @@
 				in_comparison_dataset_code = $("#comdataset").val();
 				in_comparison_acc_mode = $("#comaccmode").val();
 			}
-
+			var in_user_code = sessionStorage.getItem("usrname");
 			var action = "";
 			var action_by = ""
 			var rulegid = $("#rulegid").val();
@@ -4115,7 +4129,7 @@
 					in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
 					in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
-					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status,
+					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code,
 					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
 					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
 					in_inactive_reason: in_inactive_reason
@@ -4165,12 +4179,13 @@
 				text: "  Select  "
 			}));
 			var reconcode = $("#cmbreconname").val();
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/rulerecondatasetfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);

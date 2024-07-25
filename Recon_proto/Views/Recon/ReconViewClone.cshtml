@@ -555,12 +555,13 @@
 			$("#cmbParentDataset_new").attr('disabled', false);
 			var reconcode = $("#reconcode").val();
 			var recongid = $("#recon_id").val();
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Reconheaderfetch',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_recon_code: reconcode }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response != null) {
@@ -617,12 +618,13 @@
 	}
 	function Datasetname() {
 		var datasetcode = $("#cmbdatasetmap").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Datasetfieldlist',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ datasetCode: datasetcode }),
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -672,11 +674,12 @@
 				if (data.until_active_flag == "Y") {
 					$('#untillactive').attr('checked', true);
 				}
+				var in_user_code = sessionStorage.getItem("usrname");
 				$.ajax({
 					type: "POST",
 					url: '../Recon/Reconheaderfetch',
 					dataType: 'json',
-					data: JSON.stringify({ in_recon_code: data.recon_code }),
+					data: JSON.stringify({ in_recon_code: data.recon_code, in_user_code: in_user_code }),
 					contentType: 'application/json; charset=utf-8',
 					success: function (response) {
 
@@ -773,11 +776,12 @@
 		}
 	}
 	function detailfetch(reconcode) {
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Recon/fetchcloneRecondetails',
 			dataType: 'json',
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != " ") {
@@ -954,12 +958,13 @@
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
 			url: '../DataSet/Datasetlistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status, in_user_code: Context.in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -1018,11 +1023,12 @@
 		data.in_user_code = '';
 		var Context = data;
 		var reconCode = getlocalStorage('cloned_reconCode');
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/getallRule',
 			dataType: 'json',
-			data: JSON.stringify({}),
+			data: JSON.stringify({ in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -1052,12 +1058,13 @@
 		});
 		//dataset combo
 		var reconcode = getlocalStorage('cloned_reconCode');
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulerecondatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: $("#clone_reconcode").val() }),
+			data: JSON.stringify({ in_recon_code: $("#clone_reconcode").val(), in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -1125,7 +1132,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var recon_id = $("#recon_id").val();
 			if (recon_id > 0) {
 				recon_id = $("#recon_id").val();
@@ -1359,7 +1366,7 @@
 			data.in_parent_dataset_code = $("#cmbParentDataset_new").val() ? $("#cmbParentDataset_new").val() : '';
 			data.in_clone_recon_code = $("#clone_reconcode").val();
 			data.in_clone_dataset_code = $("#cmbdatasetname").val();
-			data.in_user_code = '';
+			data.in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Recon/cloneRecondataset',
@@ -1419,8 +1426,8 @@
 				recondataset_gid = 0;
 				action = "INSERT"
 			}
-			var action_by = "";
-			var in_user_code = "";
+			var action_by = sessionStorage.getItem("usrname");
+			var in_user_code = sessionStorage.getItem("usrname");
 			status = "Y"
 
 			$.ajax({
@@ -1568,8 +1575,8 @@
 				action = "UPDATE"
 			}
 
-			var action_by = "";
-			var in_user_code = "";
+			var action_by = sessionStorage.getItem("usrname");
+			var in_user_code = sessionStorage.getItem("usrname");
 			var reconfield_gid = $("#reconfield_gid").val();
 			if (reconfield_gid > 0) {
 				reconfield_gid = $("#reconfield_gid").val();
@@ -1603,11 +1610,12 @@
 						$("#reconfieldmapping_gid").val(0)
 						var reconfield = $("#Reconfieldname").val();
 						var reconcod = $("#reconcode").val();
+						var in_user_code = sessionStorage.getItem("usrname");
 						$.ajax({
 							type: "POST",
 							url: '../Recon/Recondatasetmappingfetch',
 							dataType: 'json',
-							data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '' }),
+							data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '', in_user_code: in_user_code }),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
 								if (response != null) {
@@ -1743,11 +1751,12 @@
 			$("#displayorder").val(selectedItem.entries[5]);
 			$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
 			$("#txtmodedatasetmapping").val("Edit");
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Recon/Recondatasetmappingfetch',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1] }),
+				data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1], in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response != null) {
@@ -1801,8 +1810,8 @@
 					var DatasetType = model.dataset_type;
 					var parentdataset = model.parent_dataset_code;
 					var action = "DELETE";
-					var action_by = ""
-					var in_user_code = "";
+					var action_by = sessionStorage.getItem("usrname");
+					var in_user_code = sessionStorage.getItem("usrname");
 					var recondataset_gid = model.recondataset_gid;
 					var status = "";
 					$.ajax({
@@ -1916,8 +1925,8 @@
 					var cmbdatasetmap = "";
 					var cmbdatasetfieldname = "";
 					var action = "DELETE";
-					var action_by = ""
-					var in_user_code = "";
+					var action_by = sessionStorage.getItem("usrname");
+					var in_user_code = sessionStorage.getItem("usrname");
 					var reconfield_gid = parseInt(model.entries[0]);
 					var in_reconfieldmapping_gid = 0;
 					var status = "";
@@ -1979,8 +1988,8 @@
 					var cmbdatasetmap = "";
 					var cmbdatasetfieldname = "";
 					var action = "DELETE";
-					var action_by = ""
-					var in_user_code = "";
+					var action_by = sessionStorage.getItem("usrname");
+					var in_user_code = sessionStorage.getItem("usrname");
 					var reconfield_gid = 0;
 					var in_reconfieldmapping_gid = model.reconfieldmapping_gid;
 					var status = "";
@@ -1999,11 +2008,12 @@
 								});
 								var reconfield = $("#Reconfieldname").val();
 								var reconcod = $("#reconcode").val();
+								var in_user_code = sessionStorage.getItem("usrname");
 								$.ajax({
 									type: "POST",
 									url: '../Recon/Recondatasetmappingfetch',
 									dataType: 'json',
-									data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '' }),
+									data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '', in_user_code: in_user_code }),
 									contentType: 'application/json; charset=utf-8',
 									success: function (response) {
 										if (response != null) {
@@ -2132,7 +2142,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var recon_id = $("#recon_id").val();
 			if (recon_id > 0) {
 				recon_id = $("#recon_id").val();
@@ -2236,11 +2246,12 @@
 
 	function getcloneddataset(clonedreconCode) {
 		//debugger;
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Reconheaderfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_recon_code: clonedreconCode }),
+			data: JSON.stringify({ in_recon_code: clonedreconCode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 
@@ -2404,12 +2415,13 @@
 		$("#sourcedataset").val(selectedItem.clone_source_dataset_code);
 		$("#comparisondataset").val(selectedItem.clone_comparison_dataset_code);
 		var reconcode = getlocalStorage('cloned_reconCode');
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulerecondatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -2461,6 +2473,7 @@
 		data.in_clone_rule_code = $("#cmbrulename").val();
 		data.in_clone_source_dataset_code = $("#sourcedataset").val();
 		data.in_clone_comparison_dataset_code = $("#comparisondataset").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/cloneReconRule',

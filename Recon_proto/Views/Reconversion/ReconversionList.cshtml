@@ -30,6 +30,7 @@
 
 		.k-grid-content {
 			overflow-x: hidden;
+			height: 347px !important;
 		}
 
 		.k-grid-header {
@@ -104,9 +105,7 @@
 										class="nav-link active"
 										role="tab"
 										data-bs-toggle="tab"
-										data-bs-target="#navs-pills-top-Rule"
-										aria-controls="navs-pills-top-Rule"
-										aria-selected="true">
+										data-bs-target="#navs-pills-top-Rule">
 									Rule
 								</button>
 							</li>
@@ -116,9 +115,7 @@
 										class="nav-link"
 										role="tab"
 										data-bs-toggle="tab"
-										data-bs-target="#navs-pills-top-Theme"
-										aria-controls="navs-pills-top-Theme"
-										aria-selected="true">
+										data-bs-target="#navs-pills-top-Theme">
 									Theme
 								</button>
 							</li>
@@ -127,9 +124,7 @@
 										class="nav-link"
 										role="tab"
 										data-bs-toggle="tab"
-										data-bs-target="#navs-pills-top-preprocess"
-										aria-controls="navs-pills-top-preprocess"
-										aria-selected="true">
+										data-bs-target="#navs-pills-top-preprocess">
 									Preprocess
 								</button>
 							</li>
@@ -153,9 +148,7 @@
 								<div class="panel panel-default">
 									<div class="panel-body">
 										<div class="col-xs-12">
-											<div id="gd_themerecon">
-												<div id="themerecon_grid"> </div>
-											</div>
+											<div id="themerecon_grid"> </div>
 										</div>
 									</div>
 								</div>
@@ -164,9 +157,7 @@
 								<div class="panel panel-default">
 									<div class="panel-body">
 										<div class="col-xs-12">
-											<div id="gd_preprocess">
-												<div id="preprocess_grid"> </div>
-											</div>
+											<div id="preprocess_grid"> </div>
 										</div>
 									</div>
 								</div>
@@ -174,7 +165,6 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -184,15 +174,19 @@
 	$(document).ready(function () {
 		grid_ruleversion([]);
 		$("#navhead").text("Recon Version");
-		gridlist();
+		
 		var screen_code = rolevalidatescreen('rule_version')
 		if (screen_code[0].process == "N") {
 			$("#btnsubmit").hide();
 		}
+		grid_ruleversion([]);
+		theme_grid([]);
+		grid_preprocess([]);
+		gridlist();
 	});
 	function gridlist() {
 		//recon name
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -231,6 +225,9 @@
 		});
 	}
 	function reconchange() {
+		grid_ruleversion([]);
+		theme_grid([]);
+		grid_preprocess([]);
 		if ($("#cmbreconname").val() != '') {
 			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
 			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
@@ -263,7 +260,7 @@
 					} else {
 						grid_preprocess([]);
 					}
-					
+
 				}
 			},
 			error: function (er) {
@@ -273,8 +270,7 @@
 		});
 	}
 
-	function grid_ruleversion(data) {
-		debugger;
+	function grid_ruleversion(data) {		
 		$("#grid_ruleversion").kendoGrid({
 			dataSource: {
 				data: data,
@@ -302,11 +298,12 @@
 
 			},
 			sortable: true,
+			scrollable: true,
 			selectable: false,
 			filterable: true,
 			navigatable: true,
 			pageable: false,
-			resizable: true,
+			resizable: false,
 			columns: [
 				{
 					field: "rule_gid",
@@ -587,15 +584,11 @@
 			},
 			height: 380,
 			groupable: false,
-			dataBound: function (e) {
-
-			},
+			scrollable: true,
 			sortable: true,
-			selectable: false,
 			filterable: true,
-			navigatable: true,
-			pageable: false,
-			resizable: true,
+			navigatable: false,
+			resizable: true,		
 			columns: [
 				{
 					field: "theme_gid",
@@ -633,7 +626,6 @@
 				}
 			],
 			editable: false,
-
 		});
 
 	}
@@ -658,7 +650,7 @@
 						fields: {
 							preprocess_gid: { type: "string" },
 							preprocess_code: { type: "string" },
-							preprocess_desc: { type: "string" },							
+							preprocess_desc: { type: "string" },
 							preprocess_order: { type: "number" },
 							hold_flag_desc: { type: "string" }
 						}
@@ -670,39 +662,40 @@
 			dataBound: function (e) {
 
 			},
+			height: 380,
+			groupable: false,
+			scrollable: true,
 			sortable: true,
-			selectable: false,
 			filterable: true,
-			navigatable: true,
-			pageable: false,
+			navigatable: false,
 			resizable: true,
 			columns: [
-			{
-				field: "preprocess_gid",
-				title: "Row id",
-				width: 100,
-				hidden: true,
-			},
-			{
-				field: "preprocess_order",
-				title: "Preprocess Order",
-				width: 40,
-				attributes: { style: "text-align: right;" },
-				filterable: {
-					ui: "numeric",
-					extra: false,
+				{
+					field: "preprocess_gid",
+					title: "Row id",
+					width: 100,
+					hidden: true,
 				},
-			},
-			{
-				field: "preprocess_code",
-				title: "Preprocess Code",
-				width: 50,
-			},
-			{
-				field: "preprocess_desc",
-				title: "Preprocess Name",
-				width: 130,
-			},
+				{
+					field: "preprocess_order",
+					title: "Preprocess Order",
+					width: 40,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
+				},
+				{
+					field: "preprocess_code",
+					title: "Preprocess Code",
+					width: 50,
+				},
+				{
+					field: "preprocess_desc",
+					title: "Preprocess Name",
+					width: 130,
+				},
 				{
 					field: "hold_flag_desc",
 					title: "Hold Flag",
