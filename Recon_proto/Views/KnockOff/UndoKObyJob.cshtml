@@ -282,11 +282,12 @@
 		var period_to = $("#initiated_to").val();
 		var ts1 = period_to.split("/");
 		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../KnockOff/undoKOjob',
 			dataType: 'json',
-			data: JSON.stringify({ in_recon_code: reconcode, in_job_type: jobtype, in_job_status: jobstatus, in_from_date: pr, in_to_date: pr1 }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_job_type: jobtype, in_job_status: jobstatus, in_from_date: pr, in_to_date: pr1, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -320,7 +321,7 @@
 	function downloadFile() {
 		var reconcode = $("#cmbreconname").val();
 		var ip_addr = "";
-		var user_code = "";
+		var user_code = sessionStorage.getItem("usrname");
 		var grid = $("#undojob_grid").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var jobgid = parseInt((model.job_gid));

@@ -265,8 +265,6 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
-
-
 		#region getconfig
 		public class configvalueModel
 		{

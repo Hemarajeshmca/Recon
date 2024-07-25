@@ -78,12 +78,13 @@
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
 			url: '../DataSet/Datasetlistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status, in_user_code: Context.in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);

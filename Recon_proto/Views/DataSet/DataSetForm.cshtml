@@ -278,11 +278,12 @@
 		}
 	}
 	function detailsfetch(datasetgid) {
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../DataSet/Datasetdetailreadlist',
 			dataType: 'json',
-			data: JSON.stringify({ dataset_gid: datasetgid }),
+			data: JSON.stringify({ dataset_gid: datasetgid, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				debugger;
@@ -341,7 +342,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");;
 			var status = "D"
 			var inactive_reason = "";
 			$.ajax({
@@ -518,7 +519,7 @@
 			var precision_length = $("#fieldPrecision").val() ? $("#fieldPrecision").val() : '5';
 			var scale_length = $("#fieldscale").val() ? $("#fieldscale").val() : '2';
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			if (datasetdetail_id > 0) {
 				datasetdetail_id = $("#datasetdetail_id").val();
 				action = "UPDATE"
@@ -631,7 +632,7 @@
 						dataset_id = 0;
 					}
 					action = "INSERT"
-					var action_by = ""
+					var action_by = sessionStorage.getItem("usrname");
 					var status = "D"
 					$.ajax({
 						type: "POST",
@@ -676,12 +677,13 @@
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
 			url: '../DataSet/Datasetlistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status }),
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status, in_user_code: Context.in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -701,7 +703,7 @@
 			}
 		});
 		var in_master_code = "QCD_DS_CATEGORY";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -725,7 +727,7 @@
 		});
 
 		var in_master_code = "QCD_RC_FIELD_TYPE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -767,7 +769,7 @@
 						var fieldlength = model.field_length;
 						var dataset_code = $("#txtdatasetcode").val();
 						var action = "DELETE";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var datasetdetail_id = model.datasetfield_gid;
 						var mandatory = "";
 						$.ajax({
@@ -859,7 +861,7 @@
 			var dataset_code = $("#txtdatasetcode").val();
 			var clone_dataset = $("#Cmbclone").val();
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var dataset_id = $("#datasetgid").val();
 			if (dataset_id > 0) {
 				dataset_id = $("#datasetgid").val();

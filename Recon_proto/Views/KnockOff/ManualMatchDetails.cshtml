@@ -131,6 +131,7 @@
         console.log("data", data);
         var data = {};
         data.in_scheduler_gid = getdata.scheduler_gid;
+        data.in_user_code = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
             url: '../KnockOff/ManualMatchDetails',
@@ -411,7 +412,7 @@
         var data = {};
         data.in_scheduler_gid = getdata.scheduler_gid;
         data.in_ip_addr = ""
-
+        data.in_user_code = sessionStorage.getItem("usrname");
         $.confirm({
             icon: 'fa fa-warning',
             title: 'Recon',

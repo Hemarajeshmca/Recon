@@ -238,11 +238,12 @@
 			var period_to = $("#period_to").val();
 			var ts1 = period_to.split("/");
 			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../KnockOff/runkosum',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: '' }),
+				data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response) {
@@ -442,7 +443,8 @@
 		var in_todate = $("#period_to").val();
 		var ts1 = in_todate.split("/");
 		var pr1 = ts[2] + "-" + ts1[1] + "-" + ts1[0];
-		window.location.href = '@Url.Action("KOMISreport", "KnockOff")?in_period_from=' + pr + '&in_period_to=' + pr1 + '&in_recon_code=' + in_recon_code + '';
+		var user_code = sessionStorage.getItem("usrname");
+		window.location.href = '@Url.Action("KOMISreport", "KnockOff")?in_period_from=' + pr + '&in_period_to=' + pr1 + '&in_recon_code=' + in_recon_code + '&user_code=' + user_code + '';
 
 	}
 

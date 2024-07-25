@@ -294,12 +294,13 @@
 			var period_to = $("#initiated_to").val();
 			var ts1 = period_to.split("/");
 			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../KnockOff/getundoKOjobrule',
 				dataType: 'json',
 				contentType: 'application/json; charset=utf-8',
-				data: JSON.stringify({ in_recon_code: reconcode, in_start_date: pr, in_end_date: pr1 }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_start_date: pr, in_end_date: pr1, in_user_code: in_user_code }),
 				success: function (response) {
 					var result = JSON.parse(response);
 					if (result.Table.length > 0) {
@@ -609,12 +610,13 @@
 		}
 		var objpplmapupdlist = [];
 		var dropdownid = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../KnockOff/getRuleAgainstJob',
 			dataType: 'json',
 			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify({ in_job_gid: selected_job.job_gid }),
+			data: JSON.stringify({ in_job_gid: selected_job.job_gid, in_user_code: in_user_code }),
 			success: function (response) {
 				var result = JSON.parse(response);
 				if (result.length > 0) {
@@ -660,6 +662,7 @@
 		}
 		var grid_rule = $("#grid_rule").data("kendoGrid");
 		var checkedrows = $("#rule_selected:checked", grid_rule.tbody).closest("tr");
+		var in_user_code = sessionStorage.getItem("usrname");
 		for (var i = 0; i < checkedrows.length; i++) {
 			selected_ruleGid = grid_rule.dataItem(checkedrows[i]);
 		}
@@ -667,7 +670,7 @@
 			$.ajax({
 				url: '../KnockOff/kobyRule',
 				type: 'POST',
-				data: JSON.stringify({ in_recon_code: reconcode, in_job_gid: selected_jobid.job_gid, in_rule_code: selected_ruleGid.rule_code, in_undo_job_reason: '' }),
+				data: JSON.stringify({ in_recon_code: reconcode, in_job_gid: selected_jobid.job_gid, in_rule_code: selected_ruleGid.rule_code, in_undo_job_reason: '', in_user_code: in_user_code }),
 				dataType: 'json',
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {

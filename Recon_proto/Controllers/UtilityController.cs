@@ -118,7 +118,8 @@ namespace Recon_proto.Controllers
                         objcat.job_remark = result.Rows[i]["job_remark"].ToString();
                         objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
                         objcat.jobtype_desc = result.Rows[i]["jobtype_desc"].ToString();
-                        objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+						objcat.job_initiated_by = result.Rows[i]["job_initiated_by"].ToString();
+						objcat.recon_code = result.Rows[i]["recon_code"].ToString();
                         objcat.recon_name = result.Rows[i]["recon_name"].ToString();
                         objcat_lst.Add(objcat);
                     }
