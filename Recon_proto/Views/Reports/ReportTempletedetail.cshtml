@@ -506,6 +506,7 @@
         $("#cmbreporttype").prop("disabled", true);
         data.in_recon_code = reconcode;
         data.in_custom_flag = true;
+        data.in_action_by = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
             url: '../Reports/reportTempletelist',
@@ -569,11 +570,13 @@
 
 
         var data = getlocalStorage("ls_pageList");
+        var in_user_code = sessionStorage.getItem("usrname");
+
         $.ajax({
             type: "POST",
             url: '../Reports/ReportList',
             dataType: 'json',
-            data: JSON.stringify({}),
+            data: JSON.stringify({ in_action_by: in_user_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 $("#cmbreporttype").empty();
@@ -698,6 +701,7 @@
                 jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
                 jsondata.in_recon_code = getselectedTemplate.recon_code;
                 jsondata.in_report_code = getselectedTemplate.report_code;
+                jsondata.in_action_by = sessionStorage.getItem("usrname");
                 //detail fetch
                 $.ajax({
                     type: "POST",
@@ -1298,6 +1302,7 @@
         jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
         jsondata.in_recon_code = getselectedTemplate.recon_code;
         jsondata.in_report_code = getselectedTemplate.report_code;
+        jsondata.in_action_by = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
             url: "../Reports/reporttemplatefetch",
@@ -1458,6 +1463,7 @@
                 data.in_active_status = 'Y';
                 data.in_open_parentheses_flag = "";
                 data.in_close_parentheses_flag = "";
+                data.in_action_by = sessionStorage.getItem("usrname");
                 if ($('#chk_sel_' + model.reporttemplatefilter_gid).is(":checked")) {
                     data.in_open_parentheses_flag = "Y";
                 } else {
@@ -1550,6 +1556,7 @@
         }
         data.templateJSON = JSON.stringify(modelArr);
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
+        data.in_action_by = sessionStorage.getItem("usrname");
         if (data.templateJSON) {
             $.ajax({
                 url: '@Url.Action("reporttemplatefield", "Reports")',
@@ -1630,6 +1637,7 @@
                             data.in_active_status = 'Y';
                             data.in_open_parentheses_flag = "";
                             data.in_close_parentheses_flag = "";
+                            data.in_action_by = sessionStorage.getItem("usrname");
                             $.ajax({
                                 type: "POST",
                                 url: '../Reports/reporttemplatefilter',
@@ -1706,7 +1714,7 @@
                         data.in_active_status = 'Y';
                         data.in_action = 'DELETE';
                         data.in_action_by = sessionStorage.getItem("usrname"),
-                            data.in_delete_flag = 'N'
+                        data.in_delete_flag = 'N';
                         $.ajax({
                             url: '@Url.Action("reporttemplatesorting", "Reports")',
                             type: "post",
@@ -1766,6 +1774,7 @@
             data.in_action = 'INSERT';
             data.in_active_status = 'D';
             data.in_sortby_code = $("input[name='sortOrder']:checked").val();
+            data.in_action_by = sessionStorage.getItem("usrname");
             if (data.in_reporttemplate_name && data.in_report_code && data.in_recon_code) {
                 $.ajax({
                     type: "POST",
@@ -1862,6 +1871,7 @@
         data.in_action = $("#reporttemplate_gid").val() == '0' ? 'INSERT' : 'UPDATE';
         data.in_active_status = 'Y';
         data.in_sortby_code = $("input[name='sortOrder']:checked").val();
+        data.in_action_by = sessionStorage.getItem("usrname");
         if (data.in_reporttemplate_name && data.in_report_code && data.in_recon_code) {
             $.ajax({
                 type: "POST",
@@ -1957,6 +1967,7 @@
                     data.in_report_code = $("#cmbreporttype").val();
                     data.in_action = 'INSERT';
                     data.in_active_status = 'Y';
+                    data.in_action_by = sessionStorage.getItem("usrname");
                     if (data.in_reporttemplate_name && data.in_clone_reporttemplate_code) {
                         $.ajax({
                             type: "POST",
@@ -1971,7 +1982,8 @@
                                         if (result[0].out_result == '1') {
                                             var obj = {
                                                 source_code: data.in_clone_reporttemplate_code,
-                                                destination_code: result[0].out_reporttemplate_code
+                                                destination_code: result[0].out_reporttemplate_code,
+                                                in_action_by: sessionStorage.getItem("usrname");
                                             }
                                            // clonefiles(obj);
                                             var reconcode = getlocalStorage("ls_pageList");

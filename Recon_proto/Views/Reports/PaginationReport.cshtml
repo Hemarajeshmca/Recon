@@ -614,6 +614,7 @@
         data.in_page_size = pagesize;
         data.in_tot_records = result;
         data.in_recon_code = $("#reconname").val();
+        data.in_action_by = sessionStorage.getItem("usrname");
         // $("#processGrid").data("kendoGrid").dataSource.read();
         debugger;
         $.ajax({
@@ -824,6 +825,7 @@
         data.in_report_code = $("#report_name").val();
         data.in_recon_code = $("#reconname").val();
         data.in_report_condition = 'AND' + orgindata;
+        data.in_action_by = sessionStorage.getItem("usrname");
         Transaction_Rpt.Report_condition = 'AND' + orgindata;
 
         if (ran == "emptyvalue") {
@@ -936,9 +938,10 @@
         var model = grid.dataItem($(event.target).closest("tr"));
         var tranrecon_gid = $("#tranrecon_gid").val();
         var remark1 = $("#remark_desc").data("kendoDropDownList").value();
+        var in_user_code = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
-            data: '{remark1: "' + remark1 + '",tran_gid:  "' + trangid + '" }',
+            data: '{remark1: "' + remark1 + '",tran_gid:  "' + trangid + '" ,in_action_by: "'+ in_user_code + '" }',
             url: '@Url.Action("RemarkReason", "SetUp")',
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
@@ -1004,10 +1007,11 @@
 
         var filetype = model.filetype;
         var tranrecon_gid = model.tranrecon_gid;
-        var reportcondition = "and tranrecon_gid = " + tranrecon_gid
+        var reportcondition = "and tranrecon_gid = " + tranrecon_gid;
+        var in_user_code = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
-            data: '{table_name: "' + table_name + '",condition:  "' + reportcondition + '" }',
+            data: '{table_name: "' + table_name + '",condition:  "' + reportcondition + '",in_action_by: "' + in_user_code+'" }',
             // url: "/Report/ReportExpenceGrid_Read",
             url: '@Url.Action("ReportExpenceGrid_Read", "Report")',
             dataType: "json",
@@ -1172,11 +1176,12 @@
         data.in_user_gid = 0;
         data.in_active_status = '';
         var Context = data;
+        var in_user_code = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
             url: '../Reports/ReportList',
             dataType: 'json',
-            data: JSON.stringify({}),
+            data: JSON.stringify({ in_action_by: in_user_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
                 debugger;

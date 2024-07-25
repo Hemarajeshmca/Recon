@@ -115,6 +115,7 @@
 		var data = {};
 		data.in_recon_code = $("#cmbreconname").val();
 		data.in_custom_flag = true;
+		data.in_action_by = sessionStorage.getItem("usrname");
 		if (data.in_recon_code) {
 		$.ajax({
 			type: "POST",
@@ -335,6 +336,8 @@
 		data.in_report_code = $("#report_name").val();
 		data.in_action = $("#mode").val();
 		data.in_active_status = 'Y';
+		data.in_action_by = sessionStorage.getItem("usrname");
+
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reporttemplate',
@@ -420,6 +423,7 @@
 		data.in_report_code = selectedItem.report_code;
 		data.in_action = 'DELETE';
 		data.in_active_status = 'N';
+		data.in_action_by = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reporttemplate',
