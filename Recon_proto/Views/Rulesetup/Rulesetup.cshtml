@@ -524,7 +524,7 @@
 		}
 		var cmbreconname = $("#cmbreconname").val();
 		var data = {};
-		data.in_user_code = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
 			type: "POST",
@@ -606,7 +606,7 @@
 										var in_applyrule_on = "";
 										var in_comparison_acc_mode = "";
 										var in_rule_order = 0;
-										var in_user_code = "";
+										var in_user_code = sessionStorage.getItem("usrname");
 										var probableflag = "";
 										var in_rule_automatch_partial = "";
 										var in_threshold_plus_value = 0;
@@ -697,12 +697,13 @@
 	function getReconDataset() {
 		debugger;
 		var reconcode = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulerecondatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: , in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -747,12 +748,13 @@
 	function reconchangelist_new() {
 		debugger;
 		var reconcode = $("#cmbreconname_new").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulerecondatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -797,6 +799,7 @@
 		data.in_clone_rule_code = $("#rule_code").val();
 		data.in_clone_source_dataset_code = $("#sourcedataset").val();
 		data.in_clone_comparison_dataset_code = $("#comparisondataset").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/cloneReconRule',

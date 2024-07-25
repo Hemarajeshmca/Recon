@@ -69,7 +69,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "Recondatasetsave");
+				objcom.errorlog(ex.Message, "rolesave");
 				return Json(ex.Message);
 			}
 		}

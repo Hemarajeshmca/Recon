@@ -167,7 +167,8 @@
 		var in_todate = $("#to_date").val();
 		var ts1 = in_todate.split("/");
 		var pr1 = ts[2] + "-" + ts1[1] + "-" + ts1[0];
-		window.location.href = '@Url.Action("KOMISreport", "Report")?period_from=' + periodfrom + '&period_to=' + periodto + '&Recongid=' + arrString + '';
+		var user_code = sessionStorage.getItem("usrname");
+		window.location.href = '@Url.Action("KOMISreport", "Report")?period_from=' + periodfrom + '&period_to=' + periodto + '&Recongid=' + arrString + '&user_code=' + user_code + '';
 
 	}
 </script>

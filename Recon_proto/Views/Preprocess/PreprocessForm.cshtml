@@ -540,12 +540,13 @@
 	}
 	function reconcode() {
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -594,13 +595,14 @@
 	function cmbgetfunction() {
 		var sourcedata = "SOURCE1";
 		var codeValue = $('#cmbgetrecon').find(":selected").text();
-		var in_recon_code = $("#cmbrecon").val()
+		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -838,12 +840,13 @@
 	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -885,12 +888,13 @@
 	function combo_editor_man_process(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -943,12 +947,13 @@
 			var codeValue = selectedItem.filter_field;
 		}
 		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1268,12 +1273,13 @@
 	function combo_editor_man_lookup(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/FieldAgainstRecon',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1317,12 +1323,13 @@
 	function combo_editor_man_lookup1(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var datasetcode = $("#cmblookupdataset").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Datasetfieldlist',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ datasetCode: datasetcode }),
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1373,12 +1380,13 @@
 			var codeValue = selectedItem.source_field_desc;
 		}
 		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1583,7 +1591,7 @@
 				var identifiervalue = model.ident_value_input;
 			} else if (model.ident_value_code == "") {
 				var ident_value_flag = 'Y';
-				if (model.filter_value == undefined) {
+				if (model.ident_value == undefined) {
 					var identifiervalue = model.ident_value_code;
 				} else {
 					var identifiervalue = model.ident_value;
@@ -1805,12 +1813,13 @@
 	}
 	function lookupchange() {
 		var datasetcode = $("#cmblookupdataset").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Recon/Datasetfieldlist',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ datasetCode: datasetcode }),
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
