@@ -317,7 +317,7 @@
 	function getGridComboList() {
 		//recon type
 		var in_master_code = "QCD_PROCESSM";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -373,7 +373,7 @@
 		});
 		// holdflag flag
 		var in_master_code = "QCD_YN";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -424,11 +424,12 @@
 			}
 		});
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/Preprocesslistfetchclone',
 			dataType: 'json',
-			data: JSON.stringify({ recon_code: reconcode }),
+			data: JSON.stringify({ recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -1515,7 +1516,7 @@
 						var action = "DELETEPREPROCESS";
 						var preprocess_gid = $("#preprocessgid").val();
 						var holdflag = "";
-						var action_by = "";
+						var action_by = sessionStorage.getItem("usrname");
 						var status = "";
 						$.ajax({
 							type: "POST",
@@ -1602,7 +1603,7 @@
 			}
 			var in_filter_seqno = model.filter_seqno
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var preprocessfilter_gid = model.preprocessfilter_gid;
 			if (preprocessfilter_gid == "0") {
 				preprocessfilter_gid = 0;
@@ -1673,7 +1674,7 @@
 						var identifiervalue = model.ident_value;
 						var in_filter_seqno = model.filter_seqno
 						var action = "DELETE";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var ident_value_flag = "";
 						var preprocessfilter_gid = model.preprocessfilter_gid;
 						var status = "Y";
@@ -1737,6 +1738,7 @@
 	}
 	function preprocessfetch(preprocess_code) {
 		var cmbpreprocess_code = preprocess_code;
+		var in_user_code = sessionStorage.getItem("usrname");
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -1745,7 +1747,7 @@
 			type: "POST",
 			url: '../Preprocess/Preprocessfetch',
 			dataType: 'json',
-			data: JSON.stringify({ preprocess_code: cmbpreprocess_code }),
+			data: JSON.stringify({ preprocess_code: cmbpreprocess_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -2191,7 +2193,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var status = "D"
 			$.ajax({
 				type: "POST",
@@ -2335,7 +2337,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var status = "D"
 			$.ajax({
 				type: "POST",
@@ -2486,7 +2488,7 @@
 			}
 
 
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 
 			var holdflag = $("#holdflag").val();
 			$.ajax({

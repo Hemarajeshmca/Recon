@@ -139,12 +139,13 @@
 		} if ((getls_pageList == "" && getlocalStorage('btn_clk_val') == "Create")) {
 			in_role_code = $("#txtrolecode").val();
 		}
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 				type: "POST",
 				url: '../Admin/rolefetch',
 				dataType: 'json',
 				async: false,
-			data: JSON.stringify({ in_role_code: in_role_code ? in_role_code : '' }),
+			data: JSON.stringify({ in_role_code: in_role_code ? in_role_code : '', in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var data = JSON.parse(response)
@@ -421,12 +422,13 @@
 			var rolename = $("#txtrolename").val();
 			var status = 'Y';
 			var rolegid = $("#txtrolegid").val();
+			var action_by = sessionStorage.getItem("usrname");
 			var action = ($("#txtrolecode").val() == '0' || $("#txtrolecode").val() == 0) ? 'INSERT' : 'UPDATE'
 				$.ajax({
 				type: "POST",
 				url: '../Admin/rolesave',
 				dataType: 'json',
-				data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: '', in_action: action }),
+				data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: '', in_action: action, action_by: action_by }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (res) {
 					if (res) {
@@ -484,10 +486,11 @@
 			modelArr.push(modelobj);
 		}
 		var displayedDataAsJSON = JSON.stringify(modelArr);
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			url: '@Url.Action("saveRoleAccess", "Admin")',
 			type: "post",
-			data: JSON.stringify({ roledetails: displayedDataAsJSON }),
+			data: JSON.stringify({ roledetails: displayedDataAsJSON, in_user_code: in_user_code }),
 			contentType: "application/json",
 			success: function (data) {
 				var result = JSON.parse(data);

@@ -234,12 +234,13 @@
 			setcon();
 		}
 		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Reconversion/ReconversionListfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: in_recon_code }),
+			data: JSON.stringify({ in_recon_code: in_recon_code.in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -464,7 +465,7 @@
 		var concatstring = "";
 		var in_recon_code = $("#cmbreconname").val();
 		var in_recon_version = $("#reconversion").val();
-		var action_by = "";
+		var action_by = sessionStorage.getItem("usrname");
 		var grid_val = JSON.stringify($("#grid_ruleversion").data().kendoGrid._data);
 		var flag = "";
 		var Bind = {};

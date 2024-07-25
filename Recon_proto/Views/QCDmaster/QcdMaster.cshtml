@@ -188,7 +188,7 @@
 		$("#kendoVersion").text(kendo.version);
 		$("#depend").hide();
 		var data = {};
-		data.in_user_code = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
 		data.in_master_code = 'QCD_MAST';
 		var Context = data;
 		$.ajax({
@@ -232,7 +232,7 @@
 		$("#grid").remove();
 		$('#maingrid').append('<div id="grid" style="margin-top: 6px;margin-left: 4px;"></div>');
 		var data = {};
-		data.in_user_code = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
 		data.in_master_code = master_code;
 		selected_masterName = $('#qcdcode').children('option:selected').text();
 		document.getElementById('mastercode_label').innerHTML = selected_masterName + " " + "code";
@@ -470,7 +470,7 @@
 		});
 		// dependMasterCode 
 		var in_master_code = $("#depparentCode").val();
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -509,6 +509,7 @@
 		objdata.depend_parent_master_syscode = $("#depparentCode").val() ? $("#depparentCode").val() : '';
 		objdata.depend_master_syscode = $("#dependMasterCode").val() ? $("#dependMasterCode").val() : '';
 		objdata.depend_flag = $("#depend_flag").val();
+		objdata.action_by = sessionStorage.getItem("usrname");
 		var objdata = objdata;
 		$.ajax({
 			type: "POST",
@@ -594,7 +595,7 @@
 		});
 		// dependMasterCode
 		var in_master_code = $("#depparentCode").val();
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -655,7 +656,7 @@
 		});
 		// dependMasterCode
 		var in_master_code = $("#depparentCode").val();
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',

@@ -303,7 +303,7 @@
 			}
 		});
 		var in_master_code = "QCD_RS_ACC_MODE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		var response = [];
 		$.ajax({
 			type: "POST",
@@ -329,7 +329,7 @@
 		});
 		// holdflag flag
 		var in_master_code = "QCD_YN";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -354,7 +354,7 @@
 		});
 		// theme_type flag
 		var in_master_code = "QCD_THEME_TYPE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -544,12 +544,13 @@
 		});
 		//dataset combo
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/themerecondatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -608,11 +609,12 @@
 
 
 	function detailsfetchtheme(theme_code) {
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/Themedetailfetch',
 			dataType: 'json',
-			data: JSON.stringify({ theme_code: theme_code }),
+			data: JSON.stringify({ theme_code: theme_code, in_user_code: in_user_code }),
 			async: false,
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
@@ -1652,7 +1654,7 @@
 	function grpfield_applied_on() {
 		var arr1 = [];
 		var in_master_code = "QCD_Appiled_on";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1947,12 +1949,13 @@
 	function combo_editor_condition(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
 		var arr1 = [];
 		var theme_code = $("#txtthemecode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/Themedetailfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ theme_code: theme_code }),
+			data: JSON.stringify({ theme_code: theme_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2049,12 +2052,13 @@
 		var themeagg_code = selectedItem.themeagg_field_code;
 		var sourcedata = "COMPARISON";
 		var in_theme_code = $("#txtthemecode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/getconditionfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: themeagg_code, in_theme_code: in_theme_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: themeagg_code, in_theme_code: in_theme_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {

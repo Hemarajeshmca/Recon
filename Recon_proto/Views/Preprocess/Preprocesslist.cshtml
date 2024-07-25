@@ -137,6 +137,7 @@
 			setcon();
 		}
 		var cmbreconname = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -145,7 +146,7 @@
 			type: "POST",
 			url: '../Preprocess/Preprocesslistfetch',
 			dataType: 'json',
-			data: JSON.stringify({ recon_code: cmbreconname }),
+			data: JSON.stringify({ recon_code: cmbreconname, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -463,7 +464,7 @@
 										var preprocess_gid = model.preprocess_gid;
 
 										var holdflag = "";
-										var action_by = "";
+										var action_by = sessionStorage.getItem("usrname");
 										var status = "";
 										$.ajax({
 											type: "POST",

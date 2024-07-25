@@ -1216,7 +1216,7 @@
 	function getGridComboList() {
 		// THERSOLD type
 		var in_master_code = "QCD_TV";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1235,7 +1235,7 @@
 		});
 		//recon type
 		var in_master_code = "QCD_RC_RCON_TYPE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1289,7 +1289,7 @@
 		});
 		// Dataset type
 		var in_master_code = "QCD_DS_TYPE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1576,7 +1576,7 @@
 			$("#recondataset_gid").val(selectedItem.recondataset_gid);
 			// Dataset type
 			var in_master_code = "QCD_DS_TYPE";
-			var in_user_code = "";
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Common/Qcdmaster',

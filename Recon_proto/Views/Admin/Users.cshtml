@@ -179,11 +179,12 @@
 		griduserlist();
 		gridlist();
 		$("#treeviewpop").hide();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Admin/treeviewread',
 			dataType: 'json',
-			data: "",
+			data: JSON.stringify({ in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -202,11 +203,12 @@
 			}
 		});
 		var data = {}
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Admin/rolelist',
 			dataType: 'json',
-			data: JSON.stringify(data),
+			data: JSON.stringify({ in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -242,7 +244,7 @@
 	}
 	function gridlist() {
 		var data = {};
-		data.user_code = '';
+		data.user_code = sessionStorage.getItem("usrname");
 		data.role_code = '';
 		data.lang_code = '';
 		var Context = data;
@@ -461,7 +463,7 @@
 			} else {
 				usergid = 0;
 			}
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var action = "";
 			var Cmbrole = $("#Cmbrole").val();
 			var mode = $("#txtmode :selected").val();
@@ -540,13 +542,14 @@
 		dialog.title("Recon Access");
 		var usergid = $("#usergid").val();
 		var usercode = $("#userid").val();
+		var action_by = sessionStorage.getItem("usrname");
 		if (usergid > 0) {
 			$.ajax({
 				type: "POST",
 				contentType: "application/json; charset=utf-8",
 				async: false,
 				url: '../Admin/getcheckednode',
-				data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+				data: JSON.stringify({ user_gid: usergid, user_code: usercode, action_by: action_by }),
 				success: function (data) {
 					var result = JSON.parse(data);
 					var value1 = result;
@@ -609,11 +612,12 @@
 			var user_gid = parseInt($("#usergid").val());
 			var user_code = $("#userid").val();
 			var level_mapping = $("#checkn").val();
+			var action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Admin/usermappingsave',
 				dataType: 'json',
-				data: JSON.stringify({ user_gid: user_gid, user_code: user_code, level_mapping: level_mapping }),
+				data: JSON.stringify({ user_gid: user_gid, user_code: user_code, level_mapping: level_mapping, action_by: action_by }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -690,7 +694,7 @@
 									var emailid = "";
 									var passworduser = "123";
 									var usergid = parseInt(user_gid);
-									var action_by = "";
+									var action_by = sessionStorage.getItem("usrname");
 									var action = "DELETE";
 									var Cmbrole = "0";
 									var in_active_reason = name;

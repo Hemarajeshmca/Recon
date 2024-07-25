@@ -41,7 +41,7 @@ namespace Recon_proto.Controllers
                     //client.BaseAddress = new Uri("https://localhost:44348/api/qcdmaster/");
                     client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -108,7 +108,7 @@ namespace Recon_proto.Controllers
                     //client.BaseAddress = new Uri("https://localhost:44348/api/qcdmaster/");
                     client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code",  context.action_by);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -142,7 +142,8 @@ namespace Recon_proto.Controllers
             public string? masterCode { get; set; }
             public string? active_status { get; set; }
             public string? action { get; set; }
-            public int? masterGid { get; set; }
+			public string? action_by { get; set; }
+			public int? masterGid { get; set; }
             public string? mastermutiplename { get; set; }
             public string? masterName { get; set; }
             public string? masterShortCode { get; set; }
@@ -171,7 +172,7 @@ namespace Recon_proto.Controllers
 					//client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
