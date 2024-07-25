@@ -490,12 +490,13 @@
 			$('.modal').attr('data-bs-keyboard', 'false');
 			var usergid = 0;
 			var usercode = sessionStorage.getItem("usrname");
+			var action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Admin/setcontextread',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+				data: JSON.stringify({ user_gid: usergid, user_code: usercode, action_by: action_by }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -669,12 +670,13 @@
 						$("#setcont").modal('show');
 						var usergid = 0;
 						var usercode = sessionStorage.getItem("usrname");
+						var action_by = sessionStorage.getItem("usrname");
 						$.ajax({
 							type: "POST",
 							url: '../Admin/setcontextread',
 							dataType: 'json',
 							async: false,
-							data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+							data: JSON.stringify({ user_gid: usergid, user_code: usercode, action_by: action_by }),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {
 								var result = JSON.parse(response);
@@ -913,12 +915,13 @@
 		function getconfigvalue(selectElement) {
 			var result = "";
 			var selectElement = selectElement;
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Common/getconfigvalue',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_config_name: selectElement }),
+				data: JSON.stringify({ in_config_name: selectElement, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var res = JSON.parse(response);
@@ -993,12 +996,13 @@
 			var selectedValue = selectElement.value;
 			var usergid = 0;
 			var usercode = sessionStorage.getItem("usrname");
+			var action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Admin/setcontextread',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+				data: JSON.stringify({ user_gid: usergid, user_code: usercode, action_by: action_by }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -1035,12 +1039,13 @@
 			var selectedValue = selectElement.value;
 			var usergid = 0;
 			var usercode = sessionStorage.getItem("usrname");
+			var action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Admin/setcontextread',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ user_gid: usergid, user_code: usercode }),
+				data: JSON.stringify({ user_gid: usergid, user_code: usercode, action_by: action_by }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -1075,12 +1080,13 @@
 		}
 		function rolevalidatescreen(selectElement) {
 			var result = {};
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Common/rolevalidate',
 				dataType: 'json',
 				async: false,
-				data: JSON.stringify({ in_screen_code: selectElement }),
+				data: JSON.stringify({ in_screen_code: selectElement, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					result = response;

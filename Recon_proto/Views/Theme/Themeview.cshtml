@@ -336,7 +336,7 @@
 			}
 		});
 		var in_master_code = "QCD_RS_ACC_MODE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		var response = [];
 		$.ajax({
 			type: "POST",
@@ -362,7 +362,7 @@
 		});
 		// theme_type flag
 		var in_master_code = "QCD_THEME_TYPE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -408,7 +408,7 @@
 						var clone_theme = "";
 						var action = "DELETETHEME";
 						var theme_gid = $("#themegid").val();
-						var action_by = "";
+						var action_by = sessionStorage.getItem("usrname");
 						var status = "Y"
 						var theme_order = "";
 						var themetype = $("#themetype").val();
@@ -618,12 +618,13 @@
 		});
 		//dataset combo
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/themerecondatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -652,11 +653,12 @@
 			}
 		});
 		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/Themelistfetchclone',
 			dataType: 'json',
-			data: JSON.stringify({ recon_code: reconcode }),
+			data: JSON.stringify({ recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -1243,7 +1245,7 @@
 			var in_comparison_criteria = model.comparison_criteria;
 			var themecondition_seqno = model.themecondition_seqno;
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var themecondition_gid = model.themecondition_gid;
 			if (themecondition_gid == "0") {
 				themecondition_gid = 0;
@@ -1314,7 +1316,7 @@
 						var in_extraction_criteria = "";
 						var in_comparison_criteria = "";
 						var action = "Delete";
-						var action_by = "";
+						var action_by = sessionStorage.getItem("usrname");
 						var status = "";
 						var themecondition_seqno = 0;
 						var in_open_flag = "";
@@ -1387,7 +1389,7 @@
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
 								themefilter_seqno: { type: "string", defaultValue: 0 },
-								filter_value: { type: "string", defaultValue: ""  },
+								filter_value: { type: "string", defaultValue: "" },
 								filter_value_code: { type: "string", defaultValue: "" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
@@ -1607,7 +1609,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0, filter_value_code:'' });
+		dataSource.add({ themefilter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", themefilter_gid: 0, filter_value_code: '' });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -1796,7 +1798,7 @@
 				} else {
 					var filter_value = model.filter_value;
 				}
-			} else{
+			} else {
 				var filter_value_flag = 'N';
 				var filter_value = model.filter_value_code;
 			}
@@ -1818,6 +1820,7 @@
 				action = "UPDATE"
 			}
 			var active_status = "Y";
+			var in_action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../theme/themedetail',
@@ -1825,7 +1828,7 @@
 				data: JSON.stringify({
 					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 					themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
-					action: action, active_status: active_status,
+					action: action, active_status: active_status, in_action_by: in_action_by,
 					open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -1877,11 +1880,11 @@
 						var in_close_flag = "";
 						var filter_applied_on = "";
 						var in_join_condition = "";
-						var filter_value_flag="";
+						var filter_value_flag = "";
 						var themefilter_seqno = 0;
 						var themefilter_gid = model.themefilter_gid;
 						var action = "Delete";
-						var action_by = "";
+						var in_action_by = sessionStorage.getItem("usrname");
 						var status = "";
 						$.ajax({
 							type: "POST",
@@ -1890,7 +1893,7 @@
 							data: JSON.stringify({
 								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 								themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
-								action: action, active_status: status,
+								action: action, active_status: status, in_action_by: in_action_by,
 								open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -2194,7 +2197,7 @@
 			url: '../Rulesetup/rulefilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code,in_user_code: in_user_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2351,17 +2354,17 @@
 				var filter_criteria = model.filter_criteria;
 			} else {
 				var filter_criteria = "";
-			}			
+			}
 			if (model.filter_value_input != undefined) {
 				var filter_value_flag = 'Y';
 				var filter_value = model.filter_value_input;
 			} else if (model.filter_value_code == "") {
 				var filter_value_flag = 'Y';
-				if (model.filter_value == undefined){
+				if (model.filter_value == undefined) {
 					var filter_value = model.filter_value_code
-				}else{
+				} else {
 					var filter_value = model.filter_value;
-				}				
+				}
 			} else {
 				var filter_value_flag = 'N';
 				var filter_value = model.filter_value_code;
@@ -2384,6 +2387,7 @@
 				action = "UPDATE"
 			}
 			var active_status = "Y";
+			var in_action_by = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../theme/themedetail',
@@ -2391,7 +2395,7 @@
 				data: JSON.stringify({
 					themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 					themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
-					action: action, active_status: active_status,
+					action: action, active_status: active_status, in_action_by: in_action_by,
 					open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -2442,12 +2446,12 @@
 						var in_open_flag = "";
 						var in_close_flag = "";
 						var filter_applied_on = "";
-						var filter_value_flag="";
+						var filter_value_flag = "";
 						var in_join_condition = "";
 						var themefilter_seqno = 0;
 						var themefilter_gid = model.themefilter_gid;
 						var action = "Delete";
-						var action_by = "";
+						var in_action_by = sessionStorage.getItem("usrname");
 						var status = "";
 						$.ajax({
 							type: "POST",
@@ -2456,7 +2460,7 @@
 							data: JSON.stringify({
 								themefilter_gid: themefilter_gid, theme_code: theme_code, filter_applied_on: filter_applied_on, filter_value_flag: filter_value_flag,
 								themefilter_seqno: themefilter_seqno, filter_field: filter_field, filter_criteria: filter_criteria, filter_value: filter_value,
-								action: action, active_status: status,
+								action: action, active_status: status, in_action_by: in_action_by,
 								open_flag: in_open_flag, close_flag: in_close_flag, join_condition: in_join_condition
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -2637,7 +2641,7 @@
 	function grpfield_applied_on() {
 		var arr1 = [];
 		var in_master_code = "QCD_Appiled_on";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -2668,7 +2672,7 @@
 			var themegrpfield_seqno = model.grpfield_seqno;
 			var grpfield_applied_on_code = model.grpfield_applied_on_code
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var themegrpfield_gid = model.themegrpfield_gid;
 			if (themegrpfield_gid == "0") {
 				themegrpfield_gid = 0;
@@ -2676,7 +2680,7 @@
 			} else {
 				action = "UPDATE"
 			}
-			var status = "Y";
+			var status = "Y";			
 			$.ajax({
 				type: "POST",
 				url: '../theme/themegroupingsave',
@@ -2733,7 +2737,7 @@
 						var grp_field = "";
 						var themegrpfield_seqno = 0;
 						var grpfield_applied_on_code = "";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var themegrpfield_gid = model.themegrpfield_gid;
 						var status = "";
 						$.ajax({
@@ -2941,7 +2945,7 @@
 			var themeaggfield_applied_on = model.themeaggfield_applied_on_code;
 			var themeagg_function = model.themeagg_function;
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var themeaggfield_gid = model.themeaggfield_gid;
 			if (themeaggfield_gid == "0") {
 				themeaggfield_gid = 0;
@@ -3009,7 +3013,7 @@
 						var themeaggfield_seqno = 0;
 						var themeaggfield_applied_on = "";
 						var themeagg_function = "";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var themeaggfield_gid = model.themeaggfield_gid;
 						var status = "";
 						$.ajax({
@@ -3376,12 +3380,13 @@
 		var themeagg_code = selectedItem.themeagg_field_code;
 		var sourcedata = "COMPARISON";
 		var in_theme_code = $("#txtthemecode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Theme/getconditionfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: themeagg_code, in_theme_code: in_theme_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: themeagg_code, in_theme_code: in_theme_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -3444,7 +3449,7 @@
 				in_join_condition = "";
 			}
 			var action = "";
-			var action_by = ""
+			var action_by = sessionStorage.getItem("usrname");
 			var themeaggcondition_gid = model.themeaggcondition_gid;
 			if (themeaggcondition_gid == "0") {
 				themeaggcondition_gid = 0;
@@ -3529,7 +3534,7 @@
 						var in_open_flag = "";
 						var in_close_flag = "";
 						var in_join_condition = "";
-						var action_by = ""
+						var action_by = sessionStorage.getItem("usrname");
 						var themeaggcondition_gid = model.themeaggcondition_gid;
 						var status = "";
 						$.ajax({
@@ -3616,7 +3621,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var status = "D";
 			var inactive_reason = "";
 			var theme_order = $("#theme_order").val();
@@ -3689,7 +3694,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var status = "D";
 			var inactive_reason = "";
 			var theme_order = $("#theme_order").val();
@@ -3760,7 +3765,7 @@
 				status = "D";
 			}
 			var holdflag = $("#holdflag").val();
-			var action_by = "";
+			var action_by = sessionStorage.getItem("usrname");
 			var inactive_reason = "";
 			var theme_order = $("#theme_order").val();
 			$.ajax({
@@ -3820,11 +3825,12 @@
 				confirm: function () {
 					var newthemeName = $("#themename").val();
 					var selectedthemeCode = $("#Cmbclone").val();
+					var in_user_code = sessionStorage.getItem("usrname");
 					$.ajax({
 						type: "POST",
 						url: '../theme/Themeclone',
 						dataType: 'json',
-						data: JSON.stringify({ in_theme_name: newthemeName, in_clone_theme_code: selectedthemeCode }),
+						data: JSON.stringify({ in_theme_name: newthemeName, in_clone_theme_code: selectedthemeCode, in_user_code: in_user_code }),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
 							var result = JSON.parse(response);

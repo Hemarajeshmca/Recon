@@ -137,13 +137,13 @@
 	});
 
 	function grid_role() {
-		var data = {}
+		var in_user_code = sessionStorage.getItem("usrname");
 		grid_role_details([]);
 		$.ajax({
 			type: "POST",
 			url: '../Admin/rolelist',
 			dataType: 'json',
-			data: JSON.stringify(data),
+			data: JSON.stringify({ in_user_code: in_user_code}),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -282,12 +282,13 @@
 			var rolename = $("#role_name").val();
 			var status = $("#cmbstatus").val();
 			var rolegid = $("#role_gid").val();
+			var action_by = sessionStorage.getItem("usrname");
 			var action = (rolegid && rolecode) ? 'UPDATE' : 'INSERT'
 			$.ajax({
 				type: "POST",
 				url: '../Admin/rolesave',
 				dataType: 'json',
-				data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: '', in_action: action }),
+				data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: '', in_action: action, action_by: action_by }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (res) {
 					if(res) {
@@ -325,12 +326,13 @@
 	}
 
 	function detailfetch(role_gid){
+		var in_user_code = sessionStorage.getItem("usrname");
 		try {
 			$.ajax({
 				type: "POST",
 				url: '../Admin/roledetails',
 				dataType: 'json',
-				data: JSON.stringify({ in_role_gid: role_gid }),
+				data: JSON.stringify({ in_role_gid: role_gid, in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (res) {
 					if (res) {
@@ -433,11 +435,12 @@
 									var rolecode = model.role_code;
 									var action = "DELETE";
 									var rolegid = model.role_gid;
+									var action_by = sessionStorage.getItem("usrname");
 									$.ajax({
 										type: "POST",
 										url: '../Admin/rolesave',
 										dataType: 'json',
-										data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: name, in_action: action }),
+										data: JSON.stringify({ in_role_gid: rolegid, in_role_code: rolecode, in_role_name: rolename, in_active_status: 'Y', in_active_reason: name, in_action: action, action_by: action_by }),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {
 											var result = JSON.parse(response);

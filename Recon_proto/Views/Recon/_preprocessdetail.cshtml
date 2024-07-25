@@ -275,7 +275,7 @@
 
 		//recon type
 		var in_master_code = "QCD_PROCESSM";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -331,7 +331,7 @@
 		});
 		// holdflag flag
 		var in_master_code = "QCD_YN";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -377,12 +377,13 @@
 
 		$("#holdflag1").val(data.hold_flag);
 		$("#txtstatus2").val("Active");		
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/Preprocessfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ preprocess_code: data.preprocess_code }),
+			data: JSON.stringify({ preprocess_code: data.preprocess_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -1341,6 +1342,7 @@
 	
 	function preprocessfetch(preprocess_code) {
 		var cmbpreprocess_code = preprocess_code;
+		var in_user_code = sessionStorage.getItem("usrname");
 		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
@@ -1349,7 +1351,7 @@
 			type: "POST",
 			url: '../Preprocess/Preprocessfetch',
 			dataType: 'json',
-			data: JSON.stringify({ preprocess_code: cmbpreprocess_code }),
+			data: JSON.stringify({ preprocess_code: cmbpreprocess_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);

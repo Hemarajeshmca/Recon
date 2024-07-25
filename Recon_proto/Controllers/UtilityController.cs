@@ -153,7 +153,7 @@ namespace Recon_proto.Controllers
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
                     client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
                     client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -217,7 +217,8 @@ namespace Recon_proto.Controllers
             public String? in_end_date { get; set; }
             public String? in_jobtype_code { get; set; }
             public String? in_jobstatus { get; set; }
-        }
+			public string? in_user_code { get; set; }
+		}
         #endregion
 
         #region Downloads

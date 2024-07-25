@@ -38,7 +38,7 @@ namespace Recon_proto.Controllers
                     //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
                     client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -153,7 +153,8 @@ namespace Recon_proto.Controllers
             public string in_recon_code { get; set; }
             public string in_period_from {get; set; }
             public string in_period_to { get; set; }
-        }
+			public string in_user_code { get; set; }
+		}
 
         [HttpPost]
         public JsonResult GetDashboarddtl([FromBody] dashboardinfo context)
@@ -170,7 +171,7 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -218,7 +219,7 @@ namespace Recon_proto.Controllers
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -262,6 +263,7 @@ namespace Recon_proto.Controllers
 			public string process { get; set; }
 			public string download { get; set; }
 			public string deny { get; set; }
+			public string in_user_code { get; set; }
 		}
 		#endregion
 
@@ -269,6 +271,7 @@ namespace Recon_proto.Controllers
 		public class configvalueModel
 		{
 			public string in_config_name { get; set; }
+			public string in_user_code { get; set; }
 		}
 		public JsonResult getconfigvalue([FromBody] configvalueModel confing_val)
 		{
@@ -283,7 +286,7 @@ namespace Recon_proto.Controllers
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", confing_val.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -311,6 +314,7 @@ namespace Recon_proto.Controllers
 		public class Reconmindate
 		{
 			public string in_recon_code { get; set; }
+			public string in_user_code { get; set; }
 		}
 		public JsonResult reconmindate([FromBody] Reconmindate recon_date)
 		{
@@ -325,7 +329,7 @@ namespace Recon_proto.Controllers
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+					client.DefaultRequestHeaders.Add("user_code", recon_date.in_user_code);
 					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
 					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -343,7 +347,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "getconfigvalue");
+				objcom.errorlog(ex.Message, "reconmindate");
 				return Json(ex.Message);
 			}
 		}

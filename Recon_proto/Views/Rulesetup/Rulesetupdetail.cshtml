@@ -1070,7 +1070,7 @@
 		if (recontype == "W" || recontype == 'B' || recontype == 'I') {
 			// Source account mode
 			var in_master_code = "QCD_RS_ACC_MODE";
-			var in_user_code = "";
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Common/Qcdmaster',
@@ -1109,7 +1109,7 @@
 			});
 		} else {
 			var in_master_code = "QCD_RS_ACC_MODE";
-			var in_user_code = "";
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Common/Qcdmaster',
@@ -1153,7 +1153,7 @@
 		var sourceAccmode = $("#souaccmode").val();
 		var ruleappliedon = $("#RuleAppliedOn").val();
 		var in_master_code = "QCD_RS_ACC_MODE";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		var response = [];
 		$.ajax({
 			type: "POST",
@@ -1459,7 +1459,7 @@
 	function getGridComboList() {
 		// Dataset type
 		var in_master_code = "QCD_RS_RULE_APPLLIED";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1480,7 +1480,7 @@
 		});
 		// probableflag flag
 		var in_master_code = "QCD_YN";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
@@ -1505,7 +1505,7 @@
 		});
 		// THERSOLD type
 		var in_master_code = "QCD_TV";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$("#cmbthersholdvalue").empty();
 		$("#cmbthersholdvalue").append($('<option>', {
 			value: "",
@@ -1529,7 +1529,7 @@
 		});
 		// group flag
 		var in_master_code = "QCD_RULE_GRP";
-		var in_user_code = "";
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Common/Qcdmaster',
