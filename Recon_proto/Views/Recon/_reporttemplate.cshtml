@@ -293,6 +293,7 @@
 		$("#cmbreconname1").val(reconcode.recon_code);
 		$("#cmbreporttype").prop("disabled", true);
 		data.in_recon_code = reconcode.recon_code;
+		data.in_action_by = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reportTempletelist',
@@ -358,11 +359,12 @@
 		});
 
 		var data = getlocalStorage("rpttemplatedetails");
+		var action_by = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/ReportList',
 			dataType: 'json',
-			data: JSON.stringify({}),
+			data: JSON.stringify({ in_action_by: action_by }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				$("#cmbreporttype").empty();
@@ -462,6 +464,7 @@
 		jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
 		jsondata.in_recon_code = getselectedTemplate.recon_code;
 		jsondata.in_report_code = getselectedTemplate.report_code;
+		jsondata.in_action_by = sessionStorage.getItem("usrname");
 		//detail fetch
 		$.ajax({
 			type: "POST",
@@ -693,8 +696,7 @@
 		}
 	}
 
-	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
-		
+	function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {		
 		var arr = [];
 		var in_master_code = "QCD_RP_CONSTRAINT";
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -752,11 +754,12 @@
 		data.in_report_code = $("#cmbreporttype").val();
 		data.in_recon_code = $("#cmbreconname1").val();
 		data.in_action = '';
+		data.in_action_by = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: "../Reports/getreportparamrecon",
 			dataType: "json",
-			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code }),
+			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code, in_action_by: data.in_action_by }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -961,11 +964,12 @@
 		data.in_report_code = $("#cmbreporttype").val();
 		data.in_recon_code = $("#cmbreconname1").val();
 		data.in_action = '';
+		data.in_action_by = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: "../Reports/getreportparamrecon",
 			dataType: "json",
-			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code }),
+			data: JSON.stringify({ in_reportparam_gid: data.in_reportparam_gid, in_report_code: data.in_report_code, in_action: data.in_action, in_recon_code: data.in_recon_code, in_action_by: data.in_action_by }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != " " && response != null && response != "{}" && response != "[]") {
