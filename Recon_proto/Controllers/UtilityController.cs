@@ -320,9 +320,7 @@ namespace Recon_proto.Controllers
                         if (file_name.ToLower().Contains(".xlsx"))
                         {
                             fileName = file_name;
-                        }
-                        else
-                        {
+                        } else {
                             fileName = file_name + ".xlsx";
                         }
 						string filePath = Path.Combine(out_filepath, fileName);
@@ -331,7 +329,7 @@ namespace Recon_proto.Controllers
 						{
 							return NotFound(); 
 						}
-						var zipName = $"{file_name}.zip";
+						
 						using (var memoryStream = new MemoryStream())
 						{
 							using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
@@ -345,8 +343,8 @@ namespace Recon_proto.Controllers
 									fileStream.CopyTo(entryStream);
 								}
 							}
-
-							memoryStream.Seek(0, SeekOrigin.Begin);
+                            var zipName = $"{file_name}.zip";
+                            memoryStream.Seek(0, SeekOrigin.Begin);
 							return File(memoryStream.ToArray(), "application/zip", zipName);
 						}
 					}
