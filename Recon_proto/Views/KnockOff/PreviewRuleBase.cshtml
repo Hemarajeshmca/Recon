@@ -441,6 +441,9 @@
 			setcon();
 		}
 		try {
+			$("#reconversion").val("");
+			grid_rule([]);
+			grid_dataset([]);
 			var in_recon_code = $("#reconname").val();
 			var in_user_code = sessionStorage.getItem("usrname");
 			//var rulepreview = $("#prviewon").val();
@@ -777,8 +780,8 @@
 			if (firstColumnValues != "") {
 				firstColumnValues = firstColumnValues.slice(0, -1);
 			}
-
-			if (in_recon_code && period_from && period_to && firstColumnValues) {
+			//if (in_recon_code && period_from && period_to && firstColumnValues) {
+			if (in_recon_code && period_from && period_to ) {
 				$.alert({
 					title: 'Recon',
 					content: "Job Initated, Please check the Job Status in Utility",
@@ -826,13 +829,14 @@
 					content: 'Please select Preiod To',
 					type: 'red',
 				});
-			} else if (!firstColumnValues) {
-				$.alert({
-					title: 'Recon',
-					content: 'Please select Rules',
-					type: 'red',
-				});
-			}
+			} 
+			//else if (!firstColumnValues) {
+			//	$.alert({
+			//		title: 'Recon',
+			//		content: 'Please select Rules',
+			//		type: 'red',
+			//	});
+			//}
 			hideProgress();
 		} else if (!in_recon_code) {
 			$.alert({

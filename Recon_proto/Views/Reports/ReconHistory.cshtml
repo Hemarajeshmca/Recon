@@ -16,6 +16,10 @@
             margin-left: 10px;
         }
 
+        .k-grid-header th.k-header > .k-link {
+            color: white !important;
+        }
+
         .k-grid.k-widget {
             height: 360px;
         }
@@ -268,12 +272,6 @@
                         }));
                     });
                 }
-                else {
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
             }
         });
     }
@@ -287,6 +285,7 @@
                         fields: {
                             rule_gid: { type: "string" },
                             rule_name: { type: "string" },
+                            rule_order: { type: "string" },
                             source_dataset_name: { type: "string" },
                             comparsion_dataset_name: { type: "string" },
                             system_match_flag_desc: { type: "string" },
@@ -323,6 +322,12 @@
                     width: 100,
                 },
                 {
+                    field: "rule_order",
+                    title: "Rule Order",
+                    attributes: { style: "text-align: right" },
+                    width: 60,                  
+                },
+                {
                     field: "source_dataset_code",
                     title: "source_dataset_code",
                     width: 100,
@@ -342,26 +347,71 @@
                 {
                     field: "comparison_dataset_desc",
                     title: "Comparsion Dataset Name",
-                    width: 120,
+                    width: 100,
                 },
                 {
                     field: "system_match_flag_desc",
                     title: "System Matchoff Flag",
-                    width: 100,
+                    width: 70,
+                    attributes: { style: "text-align: center" },
+                    filterable: false,
+                    template: '#=sel_checkbox(data)#'
                 },
                 {
                     field: "hold_flag_desc",
                     title: "Hold Flag",
-                    width: 80,
+                    width: 70,
+                    attributes: { style: "text-align: center" },
+                    filterable: false,
+                    template: '#=sel_checkbox2(data)#'
                 },
                 {
                     field: "probable_match_desc",
                     title: "Probable Flag",
-                    width: 80,
+                    width: 50,
+                    filterable: false,
+                    attributes: { style: "text-align: center" },
+                    //template: "<input id='scheduler_gid1' onclick='rowselected(this)' name='hold_flag_desc' type='checkbox'/>"
+                    template: '#=sel_checkbox1(data)#'
                 },
             ],
             editable: false,
         });
+    }
+    function sel_checkbox(data) {
+        debugger;
+        var isChecked = data.system_match_flag_desc;
+        var con = "";
+        if (isChecked == "YES") {
+            con = 'checked=checked';
+            return '<input id="chk_sel_' + data.rule_gid + '" checked name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
+
+        } else {
+            return '<input id="chk_sel_' + data.rule_gid + '" name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
+
+        }
+    }
+    function sel_checkbox1(data) {
+        var isChecked1 = data.hold_flag_desc;
+        var con1 = "";
+        if (isChecked1 == "YES") {
+            con1 = 'checked=checked';
+            return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox" disabled /> ';
+        } else {
+            return '<input id="chk_sel1_' + data.rule_gid + '"  name = "hold_flag_desc" type="checkbox" disabled/> ';
+
+        }
+    }
+    function sel_checkbox2(data) {
+        var isChecked2 = data.probable_match_desc;
+        var con1 = "";
+        if (isChecked2 == "YES") {
+            con1 = 'checked=checked';
+            return '<input id="chk_sel2_' + data.rule_gid + '" checked  name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
+        } else {
+            return '<input id="chk_sel2_' + data.rule_gid + '" disabled name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
+
+        }
     }
     function reconversionhistory() {
         var in_recon_code = $("#cmbreconname").val();
@@ -455,12 +505,24 @@
                     field: "hold_flag_desc",
                     title: "Hold Flag",
                     width: 30,
+                    filterable: false,
+                    attributes: { style: "text-align: center" },
+                    template: '#=sel_checkbox5(data)#'
                 }
             ],
             editable: false,
-
         });
+    }
+    function sel_checkbox5(data) {
+        var isChecked5 = data.hold_flag_desc;
+        var con1 = "";
+        if (isChecked5 == "YES") {
+            con1 = 'checked=checked';
+            return '<input id="chk_sel5_' + data.theme_gid + '" checked  name = "hold_flag_desc" type="checkbox" disabled /> ';
+        } else {
+            return '<input id="chk_sel5_' + data.theme_gid + '" name = "hold_flag_desc" type="checkbox" disabled /> ';
 
+        }
     }
     function grid_preprocess(data) {
         $("#preprocess_grid").kendoGrid({
@@ -521,13 +583,25 @@
                     field: "hold_flag_desc",
                     title: "Hold Flag",
                     width: 30,
+                    filterable: false,
+                    attributes: { style: "text-align: center" },
+                    template: '#=sel_checkbox6(data)#'
                 }
             ],
             editable: false,
 
         });
     }
-
+    function sel_checkbox6(data) {
+        var isChecked6 = data.hold_flag_desc;
+        var con1 = "";
+        if (isChecked6 == "YES") {
+            con1 = 'checked=checked';
+            return '<input id="chk_sel6_' + data.preprocess_gid + '" checked  name = "hold_flag_desc" type="checkbox" disabled /> ';
+        } else {
+            return '<input id="chk_sel6_' + data.preprocess_gid + '" name = "hold_flag_desc" type="checkbox" disabled /> ';
+        }
+    }
     $('#pdf_gen').click(function () {
         
         var in_recon_name = $("#cmbreconname").find(":selected").text();
@@ -537,7 +611,7 @@
         var in_user_code = sessionStorage.getItem("usrname");
 
         if (in_recon_code && in_version_code) {
-            window.location.href = '@Url.Action("GeneratePdf", "Reports")?in_recon_code=' + in_recon_code + '&in_version_code=' + in_version_code + '&in_action_by=' + in_user_code '';
+            window.location.href = '@Url.Action("GeneratePdf", "Reports")?in_recon_code=' + in_recon_code + '&in_version_code=' + in_version_code + '&in_action_by=' + in_user_code;
         } else if (!in_recon_code) {
             $.alert({
                 title: 'Recon',

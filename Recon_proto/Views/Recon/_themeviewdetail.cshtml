@@ -144,13 +144,13 @@
 						</button>
 					</li>
 					<li class="nav-item">
-						<button type="button" id="grouping"
+						<button type="button" id="grouping2"
 								class="nav-link"
 								role="tab"
 								data-bs-toggle="tab"
-								data-bs-target="#navs-pills-top-grouping"
-								aria-controls="navs-pills-top-grouping"
-								aria-selected="false">
+								data-bs-target="#navs-pills-top-grouping2"
+								aria-controls="navs-pills-top-grouping2"
+								aria-selected="true">
 							Additional Grouping Field
 						</button>
 					</li>
@@ -220,7 +220,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="tab-pane fade" id="navs-pills-top-grouping" role="tabpanel" style="margin-top:-19px;">
+					<div class="tab-pane fade" id="navs-pills-top-grouping2" role="tabpanel" style="margin-top:-19px;">
 						<div class="panel panel-default">
 							<div class="row" style="padding-bottom:3px;padding-right:5px;">
 								<div class="col-xs-12">
@@ -398,16 +398,18 @@
 				$("div#navs-pills-top-aggregatecondition").toggleClass('tab-pane fade');
 				$("div#navs-pills-top-comparisionfilter").removeClass('tab-pane fade active show');
 				$("div#navs-pills-top-comparisionfilter").toggleClass('tab-pane fade');
-				$("div#navs-pills-top-grouping").removeClass('tab-pane fade active show');
-				$("div#navs-pills-top-grouping").toggleClass('tab-pane fade');
-				$("#sourcedatasettheme").prop('disabled', true);
-				$("#comdatasettheme").prop('disabled', true);
+				$("div#navs-pills-top-grouping2").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-grouping2").toggleClass('tab-pane fade');
+				$("#sourcedataset").prop('disabled', true);
+				$("#comdataset").prop('disabled', true);
 				$("#themeCondition").hide();
 				$("#sourcefilter").show();
 				$("#comparisionfilter").hide();
-				$("#grouping").hide();
+				$("#grouping2").hide();
 				$("#aggregatefunction").hide();
 				$("#aggregatecondition").hide();
+				$("#lblsourcedataset").text("Source Dataset").append("&nbsp;");
+				$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;");
 			}
 		} else if (themetype == "QCD_THEME_COMPARE") {
 			if ($('#sourcefilter').attr('class') == 'nav-link active') {
@@ -422,15 +424,15 @@
 				$("div#navs-pills-top-comparisionfilter").removeClass('tab-pane fade active show');
 				$("div#navs-pills-top-comparisionfilter").toggleClass('tab-pane fade');
 			}
-			if ($('#grouping').attr('class') == 'nav-link active') {
-				$("#grouping").removeClass('nav-link active');
-				$("#grouping").toggleClass('nav-link');
-				$("div#navs-pills-top-grouping").removeClass('tab-pane fade active show');
-				$("div#navs-pills-top-grouping").toggleClass('tab-pane fade');
+			if ($('#grouping2').attr('class') == 'nav-link active') {
+				$("#grouping2").removeClass('nav-link active');
+				$("#grouping2").toggleClass('nav-link');
+				$("div#navs-pills-top-grouping2").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-grouping2").toggleClass('tab-pane fade');
 			}
-			if ($('#grouping').attr('class') == 'nav-link active') {
-				$("#grouping").removeClass('nav-link active');
-				$("#grouping").toggleClass('nav-link');
+			if ($('#grouping2').attr('class') == 'nav-link active') {
+				$("#grouping2").removeClass('nav-link active');
+				$("#grouping2").toggleClass('nav-link');
 			}
 			if ($('#aggregatefunction').attr('class') == 'nav-link active') {
 				$("#aggregatefunction").removeClass('nav-link active');
@@ -450,14 +452,15 @@
 				$("div#navs-pills-themecondition").removeClass('tab-pane fade');
 				$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');
 			}
-			$("#sourcedatasettheme").prop('disabled', true);
-			$("#comdatasettheme").prop('disabled', true);
+			$("#sourcedataset").prop('disabled', false);
+			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
 			$("#comparisionfilter").show();
-			$("#grouping").show();
+			$("#grouping2").show();
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
-
+			$("#lblsourcedataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 		} else {
 			if ($('#sourcefilter').attr('class') == 'nav-link active') {
 				$("#sourcefilter").removeClass('nav-link active');
@@ -471,15 +474,15 @@
 				$("div#navs-pills-top-comparisionfilter").removeClass('tab-pane fade active show');
 				$("div#navs-pills-top-comparisionfilter").toggleClass('tab-pane fade');
 			}
-			if ($('#grouping').attr('class') == 'nav-link active') {
-				$("#grouping").removeClass('nav-link active');
-				$("#grouping").toggleClass('nav-link');
-				$("div#navs-pills-top-grouping").removeClass('tab-pane fade active show');
-				$("div#navs-pills-top-grouping").toggleClass('tab-pane fade');
+			if ($('#grouping2').attr('class') == 'nav-link active') {
+				$("#grouping2").removeClass('nav-link active');
+				$("#grouping2").toggleClass('nav-link');
+				$("div#navs-pills-top-grouping2").removeClass('tab-pane fade active show');
+				$("div#navs-pills-top-grouping2").toggleClass('tab-pane fade');
 			}
-			if ($('#grouping').attr('class') == 'nav-link active') {
-				$("#grouping").removeClass('nav-link active');
-				$("#grouping").toggleClass('nav-link');
+			if ($('#grouping2').attr('class') == 'nav-link active') {
+				$("#grouping2").removeClass('nav-link active');
+				$("#grouping2").toggleClass('nav-link');
 			}
 			if ($('#aggregatefunction').attr('class') == 'nav-link active') {
 				$("#aggregatefunction").removeClass('nav-link active');
@@ -499,13 +502,15 @@
 				$("div#navs-pills-themecondition").removeClass('tab-pane fade');
 				$("div#navs-pills-themecondition").toggleClass('tab-pane fade active show');
 			}
-			$("#sourcedatasettheme").prop('disabled', true);
-			$("#comdatasettheme").prop('disabled', true);
+			$("#sourcedataset").prop('disabled', false);
+			$("#comdataset").prop('disabled', false);
 			$("#themeCondition").show();
 			$("#comparisionfilter").show();
-			$("#grouping").show();
+			$("#grouping2").show();
 			$("#aggregatefunction").show();
 			$("#aggregatecondition").show();
+			$("#lblsourcedataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 		}
 	}
 	function reconchangetheme() {
@@ -598,8 +603,7 @@
 			$("#savesubmit").hide();
 			$("#adddataset").hide();
 			$("#datasetfieldadd").hide();
-			$(".k-grid-edit").hide();
-			
+			$(".k-grid-edit").hide();			
 			$("#grid_themefilterfield .k-grid-toolbar").hide();
 			$("#themename").prop('disabled', true);
 			$("#theme_order").prop('disabled', true);
@@ -768,12 +772,12 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					//template: '#=sel_checkbox(data)#'
+					//template: '#=sel_checkboxtheme(data)#'
 					template: function (dataItem) {
 						if (dataItem.themecondition_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" disabled>';
 						}
 					}
 				},
@@ -851,12 +855,12 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					//template: '#=sel_checkbox1(data)#'
+					//template: '#=sel_checkboxtheme1(data)#'
 					template: function (dataItem) {
 						if (dataItem.themecondition_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2" disabled>';
 						}
 					},
 				},
@@ -1045,12 +1049,12 @@
 					{
 						field: "open_parentheses_flag",
 						title: "(", width: 20,
-						//template: '#=sel_checkbox(data)#'
+						//template: '#=sel_checkboxtheme(data)#'
 						template: function (dataItem) {
 							if (dataItem.themefilter_gid > 0) {
-								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3" disabled>';
 							} else {
-								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3" disabled>';
 							}
 						}
 					},
@@ -1107,12 +1111,12 @@
 					{
 						field: "close_parentheses_flag",
 						title: ")", width: 20,
-						//template: '#=sel_checkbox1(data)#'
+						//template: '#=sel_checkboxtheme1(data)#'
 						template: function (dataItem) {
 							if (dataItem.themefilter_gid > 0) {
-								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4" disabled>';
 							} else {
-								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4" disabled>';
 							}
 						},
 					},
@@ -1331,12 +1335,12 @@
 					{
 						field: "open_parentheses_flag",
 						title: "(", width: 20,
-						//template: '#=sel_checkbox(data)#'
+						//template: '#=sel_checkboxtheme(data)#'
 						template: function (dataItem) {
 							if (dataItem.themefilter_gid > 0) {
-								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
+								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5" disabled>';
 							} else {
-								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
+								return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5" disabled>';
 							}
 						}
 					},
@@ -1393,12 +1397,12 @@
 					{
 						field: "close_parentheses_flag",
 						title: ")", width: 20,
-						//template: '#=sel_checkbox1(data)#'
+						//template: '#=sel_checkboxtheme1(data)#'
 						template: function (dataItem) {
 							if (dataItem.themefilter_gid > 0) {
-								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
+								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6" disabled>';
 							} else {
-								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
+								return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6" disabled>';
 							}
 						},
 					},
@@ -1866,12 +1870,12 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					//template: '#=sel_checkbox(data)#'
+					//template: '#=sel_checkboxtheme(data)#'
 					template: function (dataItem) {
 						if (dataItem.themeaggcondition_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7" disabled>';
 						}
 					}
 				},
@@ -1912,12 +1916,12 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					//template: '#=sel_checkbox1(data)#'
+					//template: '#=sel_checkboxtheme1(data)#'
 					template: function (dataItem) {
 						if (dataItem.themeaggcondition_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8" disabled>';
 						}
 					},
 				},

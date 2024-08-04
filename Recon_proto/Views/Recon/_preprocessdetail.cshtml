@@ -206,8 +206,7 @@
 									<label class="form-label" for="">Update Recon Field&nbsp;</label>
 									<select id="Cmbreconfield" class="form-select form-control">
 									</select>
-								</div>
-
+								</div>								
 							</div>
 						</div>
 					</div>
@@ -231,6 +230,12 @@
 								<label class="form-label" for="">Update Recon Field&nbsp;</label>
 								<select id="Cmbreconfield1" class="form-select form-control">
 								</select>
+							</div>
+							<div class="col-sm-2" style="margin-top:35px">
+								<input type="checkbox" id="returnflag" disabled>
+								<label for="vehicle1">
+									Group Return Value
+								</label>
 							</div>
 						</div>
 						<div class="col-xs-12" style="margin-top:5px;">
@@ -423,6 +428,11 @@
 					$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
 					$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					$("#holdflag1").val(result.header[0].hold_flag);
+					if (result.header[0].lookup_group_flag == "Y") {
+						$("#returnflag").prop("checked", true);
+					} else {
+						$("#returnflag").prop("checked", false);
+					}
 				}
 			}
 		});
@@ -624,12 +634,12 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					//template: '#=sel_checkbox(data)#'
+					//template: '#=sel_checkboxpreprocess(data)#'
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" disabled>';
 						}
 					}
 				},
@@ -678,12 +688,12 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					//template: '#=sel_checkbox1(data)#'
+					//template: '#=sel_checkboxpreprocess1(data)#'
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2" disabled>';
 						}
 					},
 				},
@@ -929,12 +939,12 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					//template: '#=sel_checkbox(data)#'
+					//template: '#=sel_checkboxpreprocess(data)#'
 					template: function (dataItem) {
 						if (dataItem.preprocesscondition_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1" disabled>';
 						}
 					}
 				},
@@ -1012,12 +1022,12 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					//template: '#=sel_checkbox1(data)#'
+					//template: '#=sel_checkboxpreprocess1(data)#'
 					template: function (dataItem) {
 						if (dataItem.preprocesscondition_gid > 0) {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2" disabled>';
 						} else {
-							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2" disabled>';
 						}
 					},
 				},
