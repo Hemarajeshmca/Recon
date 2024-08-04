@@ -108,12 +108,12 @@
 					</div>
 					<div class="row" style="margin-bottom:2px;">
 						<div class="col-sm-3">
-							<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<label id="lblsourcedataset" class="form-label">Source Dataset</label>
 							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;">
 							</select>
 						</div>
 						<div class="col-sm-3">
-							<label id=comsupdataset class="form-label">Comparison Dataset</label>
+							<label id=lblcomdataset class="form-label">Comparison Dataset</label>
 							<select id="comdataset" class="form-select form-control" style=" width: 100%;">
 							</select>
 						</div>
@@ -482,6 +482,8 @@
 				$("#grouping").hide();
 				$("#aggregatefunction").hide();
 				$("#aggregatecondition").hide();
+				$("#lblsourcedataset").text("Source Dataset").append("&nbsp;");
+				$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;");
 			}
 		} else if (themetype == "QCD_THEME_COMPARE") {
 			if ($('#sourcefilter').attr('class') == 'nav-link active') {
@@ -531,7 +533,8 @@
 			$("#grouping").show();
 			$("#aggregatefunction").hide();
 			$("#aggregatecondition").hide();
-
+			$("#lblsourcedataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 		} else {
 			if ($('#sourcefilter').attr('class') == 'nav-link active') {
 				$("#sourcefilter").removeClass('nav-link active');
@@ -580,6 +583,8 @@
 			$("#grouping").show();
 			$("#aggregatefunction").show();
 			$("#aggregatecondition").show();
+			$("#lblsourcedataset").text("Source Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
+			$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
 		}
 	}
 	function reconchange() {

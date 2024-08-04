@@ -373,7 +373,6 @@ namespace Recon_proto.Controllers
 
 		#endregion
 
-
 		public (string fileType, byte[] archiveData, string archiveName) DownloadFiles(string subDirectory, string y)
 		{
 			string jobid = y;
