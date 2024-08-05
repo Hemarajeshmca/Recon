@@ -668,7 +668,7 @@
 	}
 
 	function start() {
-		hideProgress();
+		//hideProgress();
 		var fileName = '';
 		var fileType = '';
 		var fileInput = '';
@@ -704,23 +704,17 @@
 							type: 'red',
 						});
 					} else if (response) {
-						$.alert({
-							title: 'Recon',
-							content: response,
-							type: 'red',
-						});
-					}else {
 						var res = JSON.parse(response)
-						if(res.length > 0){
+						if(res.result == 0){
 							$.alert({
 								title: 'Recon',
-								content: res[0].out_msg,
+								content: res.message,
 								type: 'green',
 							});
 						} else {
 							$.alert({
 								title: 'Recon',
-								content: 'Something went wrong',
+								content: res.message,
 								type: 'red',
 							});
 						}
@@ -760,7 +754,7 @@
 			$("#File_Import").val("");
 			$("#FileName").val("");
 		}
-		hideProgress();
+		//hideProgress();
 	}
 
 	function openInfoModel() {
