@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System;
 using System.Reflection;
 using System.IO;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Recon_proto
 {
@@ -24,19 +25,21 @@ namespace Recon_proto
         public void ConfigureServices(IServiceCollection services)
         {
            
-            services.AddControllersWithViews();
             services.AddMvc(option => option.EnableEndpointRouting = false);              
             services.AddSession();
             services.AddHttpContextAccessor();           
             services.AddRouting();
-            services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddSingleton(Configuration);
+			services.Configure<FormOptions>(options =>
+			{
+				options.MultipartBodyLengthLimit = 524288000; // Set the limit to 100MB or any other size
+			});
+			services.AddControllersWithViews();
+		}
 
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             //if (env.IsDevelopment())
             //{
@@ -51,9 +54,14 @@ namespace Recon_proto
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
-            app.UseRouting();        
-            app.UseAuthorization();
-            app.UseMvc(routes =>
+			app.UseDeveloperExceptionPage();
+			app.UseRouting();
+			app.UseAuthorization();
+			app.UseEndpoints(endpoints =>
+			{
+				endpoints.MapControllers();
+			});
+			app.UseMvc(routes =>
             {
                 routes.MapRoute(
                name: "default",
