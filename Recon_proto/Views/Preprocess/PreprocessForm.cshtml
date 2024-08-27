@@ -64,9 +64,9 @@
 			margin-bottom: 9px;
 		}
 
-			.accordion:last-child {
-				margin-bottom: 0;
-			}
+		.accordion:last-child {
+			margin-bottom: 0;
+		}
 
 		.accordion-label {
 			display: flex;
@@ -81,19 +81,18 @@
 			color: white;
 		}
 
-			.accordion-label:hover {
-				/*background: rgba(4,57,94,1);*/
-				background: rgb(135, 46, 123)
-			}
+		.accordion-label:hover {
+			background: rgb(135, 46, 123)
+		}
 
-			.accordion-label::after {
-				content: "\276F";
-				width: 16px;
-				height: 16px;
-				text-align: center;
-				-webkit-transition: all 0.3s;
-				transition: all 0.3s;
-			}
+		.accordion-label::after {
+			content: "\276F";
+			width: 16px;
+			height: 16px;
+			text-align: center;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
 
 		.accordion-content {
 			max-height: 0;
@@ -104,20 +103,20 @@
 			transition: all 0.3s;
 		}
 
-			.accordion-content p {
-				margin: 0;
-				color: rgba(4,57,94,.7);
-				font-size: 18px;
-			}
+		.accordion-content p {
+			margin: 0;
+			color: rgba(4,57,94,.7);
+			font-size: 18px;
+		}
 
 		input:checked + .accordion-label {
 			background: rgba(4,57,94,1);
 		}
 
-			input:checked + .accordion-label::after {
-				-webkit-transform: rotate(90deg);
-				transform: rotate(90deg);
-			}
+		input:checked + .accordion-label::after {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
 
 		input:checked ~ .accordion-content {
 			max-height: 100vh;
@@ -512,10 +511,9 @@
 				$("#querydata").prop('disabled', true);
 				$("#cmblookupdataset").prop('disabled', true);
 				$("#Cmblookupdatasetfield").prop('disabled', true);
-				$("#Cmbclone").prop('disabled', true)
-				$("#btnclone").prop('disabled', true)
-				$("#returnflag").prop('disabled', true)
-
+				$("#Cmbclone").prop('disabled', true);
+				$("#btnclone").prop('disabled', true);
+				$("#returnflag").prop('disabled', true);
 			}
 		}
 	}
@@ -652,6 +650,7 @@
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
+							ident_value_flag: { type: "string" },
 							ident_value: { type: "string" },
 							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
@@ -765,11 +764,16 @@
 				hidden: true,
 			},
 			{
+				field: "ident_value_flag",
+				title: "ident_value_flag",
+				hidden: true,
+			},
+			{
 				field: "ident_value",
 				title: "Filter Value",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "grid_filter")
+					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code","ident_value_flag", "grid_filter")
 				},
 			},
 			{
@@ -844,7 +848,7 @@
 			}
 		}
 	}
-	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -883,9 +887,11 @@
 				if (datafield == "ident_value") {
 					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.ident_value_input;
+						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -1832,8 +1838,13 @@
 					var identifiervalue = model.ident_value;
 				}
 			} else {
-				var ident_value_flag = 'N';
-				var identifiervalue = model.ident_value_code;
+				if (model.ident_value_flag == 'Y') {
+					var ident_value_flag = model.ident_value_flag;
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var ident_value_flag = 'N';
+					var identifiervalue = model.ident_value_code;
+				}
 			}
 			var in_filter_seqno = model.filter_seqno
 			var action = "";
