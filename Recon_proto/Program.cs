@@ -11,10 +11,16 @@
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    //webBuilder.UseKestrel();
-                    webBuilder.UseStartup<Startup>();
-                    //webBuilder.UseUrls("http://localhost:8001"); 
-                });
+					//webBuilder.UseKestrel();
+					webBuilder.UseStartup<Startup>();
+					//webBuilder.UseUrls("http://localhost:8001"); 
+					webBuilder.ConfigureKestrel(options =>
+					{
+						// Set the maximum request body size (in bytes)
+						options.Limits.MaxRequestBodySize = 524288000; // 500 MB
+					});
+				});
+
     }
 }
    
