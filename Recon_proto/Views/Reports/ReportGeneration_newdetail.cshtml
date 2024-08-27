@@ -763,13 +763,11 @@
 			// Get the last sequence number and increment it
 			var lastSeqNo = grid.dataSource._data.length;
 
-			if (e.model.isLastRow == true && e.model.reporttemplatefilter_gid > 0) {
-				//e.container.find("input[name='filter_value']").prop('readonly', true);
+			if (e.model.reporttemplatefilter_gid > 0) {
 				e.container.find("input[name='filter_seqno']").prop('readonly', true);
-			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid > 0) {
+			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid > 0 && !e.model.filter_value) {
 				e.sender.closeCell();
-			} else if (e.model.isLastRow == false && e.model.reporttemplatefilter_gid == 0) {
-				//e.container.find("input[name='filter_value']").prop('readonly', false);
+			} else if (e.model.reporttemplatefilter_gid == 0) {
 				e.container.find("input[name='filter_seqno']").prop('readonly', false);
 			}
 		}

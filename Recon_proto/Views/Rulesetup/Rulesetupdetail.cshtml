@@ -50,10 +50,10 @@
 			z-index: 1;
 		}
 
-		#dropdown-list li {
-			padding: 5px;
-			cursor: pointer;
-		}
+			#dropdown-list li {
+				padding: 5px;
+				cursor: pointer;
+			}
 
 		#editable-input {
 			width: 100%;
@@ -385,7 +385,6 @@
 													aria-controls="navs-pills-top-grouping"
 													aria-selected="false">
 												Additional Grouping
-												@*Grouping*@
 											</button>
 										</li>
 										<li class="nav-item">
@@ -427,7 +426,6 @@
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-														@*<i data-bs-toggle="modal" onclick='getrulecondition(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 														<div class="col-xs-12">
 															<div id="gd_rulecondition">
 																<div id="grid_rulecondition">
@@ -442,7 +440,6 @@
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 														<div class="col-xs-12">
 															<div id="gd_sourceidentifier">
 																<div id="grid_sourceidentifier">
@@ -457,7 +454,6 @@
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 														<div class="col-xs-12">
 															<div id="gd_comparisionidentifier">
 																<div id="grid_comparisionidentifier">
@@ -485,7 +481,6 @@
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 														<div class="col-xs-12">
 															<div id="gd_sourceorder">
 																<div id="grid_sourceorder">
@@ -500,7 +495,6 @@
 											<div class="panel panel-default">
 												<div class="panel-body">
 													<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
-														@*<i data-bs-toggle="modal" onclick='getidentifier(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
 														<div class="col-xs-12">
 															<div id="gd_comparisonorder">
 																<div id="grid_comparisonorder">
@@ -660,7 +654,7 @@
 				$("#thersholdminus").prop('disabled', false)
 				$("#thersholdplus").prop('disabled', false)
 				$("#cmbthersholdvalue").prop('disabled', false);
-				$("#cmbthersholdvalue").val("B")
+				$("#cmbthersholdvalue").val("B");
 
 				var select = document.getElementById("cmbthersholdvalue");
 				var condition = true; // Change this condition as needed
@@ -1335,7 +1329,6 @@
 		debugger;
 		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
 			$("#period_to").val('');
-			//$("#period_to").removeAttr('disabled', true);
 			$("#period_to").prop("disabled", true);
 			$('#period_to').unbind('click');
 		}
@@ -1587,50 +1580,6 @@
 			}
 		});
 		load();
-
-		////sorce dataset
-		//var reconcode = $("#cmbreconname").val();
-		//$.ajax({
-		//	type: "POST",
-		//	url: '../Rulesetup/FieldAgainstRecon',
-		//	dataType: 'json',
-		//	async: false,
-		//	data: JSON.stringify({ in_recon_code: reconcode }),
-		//	contentType: 'application/json; charset=utf-8',
-		//	success: function (response) {
-		//		if (response != null) {
-		//			var res = JSON.parse(response);
-		//			$("#cmbsourcefield").empty();
-		//			$("#cmbsourcefield").append($('<option>', {
-		//				value: "",
-		//				text: "  Select  "
-		//			}));
-		//			$.each(res, function (index, item) {
-		//				$("#cmbsourcefield").append($('<option>', {
-		//					value: item.recon_field_desc,
-		//					text: item.recon_field_name
-		//				}).data('code', item.recon_field_type));
-		//			});
-		//			$("#cmbcomparisionfield").empty();
-		//			$("#cmbcomparisionfield").append($('<option>', {
-		//				value: "",
-		//				text: "  Select  "
-		//			}));
-		//			$.each(res, function (index, item) {
-		//				$("#cmbcomparisionfield").append($('<option>', {
-		//					value: item.recon_field_desc,
-		//					text: item.recon_field_name
-		//				}).data('code', item.recon_field_type));
-		//			});
-		//		}
-		//		else {
-		//		}
-		//	},
-		//	error: function (er) {
-		//		alert(er)
-		//		console.log(er)
-		//	}
-		//});
 	}
 	function saveheader() {
 		try {
@@ -1810,11 +1759,6 @@
 						id: "Save",
 						template: "<a href=''onclick='saverulecondition()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:25%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					//{
-					//	name: "edit",
-					//	id: "Edit",
-					//	template: "<a href=''class='k-grid-edit'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
 					{
 						name: "Delete",
 						id: "Delete",
@@ -1826,7 +1770,6 @@
 								return "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -1842,7 +1785,6 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.rulecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
@@ -1925,7 +1867,6 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.rulecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
@@ -2247,6 +2188,7 @@
 							close_parentheses_flag: { type: "string", editable: false },
 							ident_criteria: { type: "string" },
 							ident_value: { type: "string" },
+							ident_value_flag: { type: "string" },
 							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
@@ -2288,11 +2230,6 @@
 						id: "Save",
 						template: "<a href=''onclick='saveIdentifier()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:15%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					//{
-					//	name: "edit",
-					//	id: "Edit",
-					//	template: "<a href='' onclick='getidentifier(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
 					{
 						name: "Delete",
 						id: "Delete",
@@ -2304,7 +2241,6 @@
 								return "<a href='' onclick='myDeleteJsidentifier()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsidentifier()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -2327,7 +2263,6 @@
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 					}
 				}
-				//template: '#=sel_checkboxsI(data)#'
 			},
 			{
 				field: "ruleselefilter_gid",
@@ -2384,11 +2319,16 @@
 				hidden: true,
 			},
 			{
+				field: "ident_value_flag",
+				title: "ident_value_flag",
+				hidden: true,
+			},
+			{
 				field: "ident_value",
 				title: "Identifier Value",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_identifiervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "grid_sourceidentifier")
+					combo_editor_identifiervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code","ident_value_flag", "grid_sourceidentifier")
 				},
 			},
 			{
@@ -2405,7 +2345,6 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				//template: '#=sel_checkboxsI1(data)#'
 				template: function (dataItem) {
 					if (dataItem.ruleselefilter_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
@@ -2546,7 +2485,7 @@
 			}
 		});
 	}
-	function combo_editor_identifiervalues(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+	function combo_editor_identifiervalues(container, cmbid, datasource, datafield, code_datafield,code_flag, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -2585,9 +2524,11 @@
 				if (datafield == "ident_value") {
 					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.ident_value_input;
+						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -2614,6 +2555,7 @@
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
 							ident_value_code: { type: "string" },
+							ident_value_flag: { type: "string" },
 							ident_value: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
@@ -2656,11 +2598,6 @@
 						id: "Save",
 						template: "<a href='' onclick='saveIdentifierC()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:15%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					//{
-					//	name: "edit",
-					//	id: "Edit",
-					//	template: "<a href='' onclick='getidentifier(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
 					{
 						name: "Delete",
 						id: "Delete",
@@ -2672,7 +2609,6 @@
 								return "<a href='' onclick='myDeleteJsidentifier1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsidentifier1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -2688,7 +2624,6 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				//template: '#=sel_checkboxCI(data)#'
 				template: function (dataItem) {
 					if (dataItem.ruleselefilter_gid > 0) {
 						return '<input type="checkbox"' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
@@ -2753,11 +2688,16 @@
 				hidden: true,
 			},
 			{
+				field: "ident_value_flag",
+				title: "ident_value_flag",
+				hidden: true,
+			},
+			{
 				field: "ident_value",
 				title: "Identifier Value",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "grid_comparisionidentifier")
+					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code","ident_value_flag", "grid_comparisionidentifier")
 				},
 			},
 			{
@@ -2774,7 +2714,6 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				//template: '#=sel_checkboxsI1(data)#'
 				template: function (dataItem) {
 					if (dataItem.ruleselefilter_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
@@ -2918,7 +2857,7 @@
 			}
 		});
 	}
-	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield,code_flag, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -2957,9 +2896,11 @@
 				if (datafield == "ident_value") {
 					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.ident_value_input;
+						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -2981,14 +2922,19 @@
 				var identifiervalue = model.ident_value_input;
 			} else if (model.ident_value_code == "") {
 				var ident_value_flag = 'Y';
-				if (model.filter_value == undefined) {
+				if (model.ident_value == undefined) {
 					var identifiervalue = model.ident_value_code;
 				} else {
 					var identifiervalue = model.ident_value;
 				}
 			} else {
-				var ident_value_flag = 'N';
-				var identifiervalue = model.ident_value_code;
+				if (model.ident_value_flag == 'Y') {
+					var ident_value_flag = model.ident_value_flag;
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var ident_value_flag = 'N';
+					var identifiervalue = model.ident_value_code;
+				}
 			}
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
@@ -3054,14 +3000,19 @@
 				var identifiervalue = model.ident_value_input;
 			} else if (model.ident_value_code == "") {
 				var ident_value_flag = 'Y';
-				if (model.filter_value == undefined) {
+				if (model.ident_value == undefined) {
 					var identifiervalue = model.ident_value_code;
 				} else {
 					var identifiervalue = model.ident_value;
 				}
 			} else {
-				var ident_value_flag = 'N';
-				var identifiervalue = model.ident_value_code;
+				if (model.ident_value_flag == 'Y') {
+					var ident_value_flag = model.ident_value_flag;
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var ident_value_flag = 'N';
+					var identifiervalue = model.ident_value_code;
+				}
 			}
 			var ruleselefilter_seqno = model.ruleselefilter_seqno;
 			var action = "";
@@ -3105,7 +3056,6 @@
 					alert(er)
 					console.log(er)
 				}
-
 			});
 		}
 		catch (e) {
@@ -3311,11 +3261,6 @@
 						id: "Save",
 						template: "<a href=''onclick='savegrouping()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:11%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					//{
-					//	name: "edit",
-					//	id: "Edit",
-					//	template: "<a href='' onclick='getgrouping(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
 					{
 						name: "Delete",
 						id: "Delete",
@@ -3327,7 +3272,6 @@
 								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "20px",
 			},
@@ -3432,6 +3376,7 @@
 							content: response.out_msg,
 							type: 'green',
 						});
+						getfetch($("#rulegid").val(), "group");
 					}
 					else {
 
@@ -3441,7 +3386,6 @@
 					alert(er)
 					console.log(er)
 				}
-
 			});
 		}
 		catch (e) {
@@ -3573,11 +3517,6 @@
 						id: "Save",
 						template: "<a href=''onclick='saverulesourceorder()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
 					},
-					//{
-					//	name: "edit",
-					//	id: "Edit",
-					//	template: "<a href='' onclick='getgrouping(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
-					//},
 					{
 						name: "Delete",
 						id: "Delete",
@@ -3783,7 +3722,6 @@
 								return "<a href='' onclick='myDeleteJscomparisonorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJscomparisonorder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "10px",
 			},

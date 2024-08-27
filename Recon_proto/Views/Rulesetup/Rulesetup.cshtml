@@ -109,6 +109,7 @@
 								<input class="form-control" type="text" id="cmbrulename" disabled />
 								<input type="hidden" id="rule_gid" />
 								<input type="hidden" id="rule_code" />
+								<input type="hidden" id="rule_apply_on" />
 							</div>
 							<div class="col-sm-3">
 								<label for="" class="form-label">Clone Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -141,6 +142,7 @@
 								<label for="" class="form-label">New Comparision Dataset&nbsp;</label>
 								<select id="comparisondataset_new" class="form-select form-control" value="">
 								</select>
+
 							</div>
 
 						</div>
@@ -156,7 +158,6 @@
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>
 <script type="text/javascript">
@@ -168,6 +169,7 @@
 		//recon name
 		gridlist();
 	});
+
 	function gridlist() {
 		var data = {};
 		data.in_user_gid = 0;
@@ -213,13 +215,13 @@
 				alert(er)
 				console.log(er)
 			}
-
 		});
 	}
 
 	function rr1() {
 		$("#newdebit").hide();
 	}
+
 	var status_Priority = [];
 	function grid_rulesetup_details(data) {
 		try {
@@ -445,12 +447,14 @@
 
 		}
 	}
+
 	function priorityFilter(element) {
 		element.kendoDropDownList({
 			dataSource: status_Priority,
 			optionLabel: "--Select Value--"
 		});
 	}
+
 	function getSerializedRows() {
 		btn_onClick('Create');
 		var grid = $("#grid_rulesetup").data("kendoGrid");
@@ -481,6 +485,7 @@
 			});
 		}
 	}
+
 	function getSerializedSelectedRows(mode) {
 		try {
 			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
@@ -506,6 +511,7 @@
 
 		}
 	}
+
 	function selectRow() {
 		try {
 			var grid = $("#grid_rulesetup").data("kendoGrid");
@@ -516,6 +522,7 @@
 
 		}
 	}
+
 	function reconchangelist() {
 		if ($("#cmbreconname").val() != '') {
 			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
@@ -551,6 +558,7 @@
 
 		});
 	}
+
 	function myDeleteJs() {
 		var grid = $("#grid_rulesetup").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
@@ -625,7 +633,7 @@
 												in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode, in_user_code: in_user_code, probableflag: probableflag,
 												in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
 												in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
-													in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: name
+												in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: name
 											}),
 											contentType: 'application/json; charset=utf-8',
 											success: function (response) {
@@ -674,7 +682,6 @@
 	}
 
 	function clonePopup(e) {
-
 		getReconDataset();
 		var grid = $("#grid_rulesetup").data("kendoGrid");
 		var selectedItem = grid.dataItem($(event.target).closest("tr"));
@@ -686,6 +693,7 @@
 			$("#rule_code").val(selectedItem.rule_code);
 			$("#sourcedataset").val(selectedItem.source_dataset_code);
 			$("#comparisondataset").val(selectedItem.comparison_dataset_code);
+			$("#rule_apply_on").val(selectedItem.rule_apply_on);
 			$("#sourcedataset_new").val("");
 			$("#comparisondataset_new").val("");
 			$("#cmbrulename_new").val("");
@@ -694,7 +702,7 @@
 		}
 	}
 
-	function getReconDataset() {		
+	function getReconDataset() {
 		var reconcode = $("#cmbreconname").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
@@ -745,9 +753,9 @@
 	}
 
 	function reconchangelist_new() {
-		debugger;
 		var reconcode = $("#cmbreconname_new").val();
 		var in_user_code = sessionStorage.getItem("usrname");
+		var rule_apply_on = $("#rule_apply_on").val();
 		$.ajax({
 			type: "POST",
 			url: '../Rulesetup/rulerecondatasetfetch',
@@ -763,11 +771,18 @@
 					text: "  Select  "
 				}));
 				$.each(res, function (index, item) {
-					if (item.dataset_type != "S") {
+					if (rule_apply_on == 'S') {
 						$("#sourcedataset_new").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
 						}));
+					} else {
+						if (item.dataset_type != "S") {
+							$("#sourcedataset_new").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
 					}
 				});
 				$("#comparisondataset_new").empty();
@@ -776,11 +791,18 @@
 					text: "  Select  "
 				}));
 				$.each(res, function (index, item) {
-					if (item.dataset_type != "S") {
+					if (rule_apply_on == 'S') {
 						$("#comparisondataset_new").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
 						}));
+					} else {
+						if (item.dataset_type != "S") {
+							$("#comparisondataset_new").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
 					}
 				});
 			}
@@ -788,7 +810,6 @@
 	}
 
 	function saveCloneRule() {
-		debugger;
 		var data = {};
 		data.in_recon_code = $("#cmbreconname_new").val();
 		data.in_rule_name = $("#cmbrulename_new").val();
@@ -806,7 +827,7 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				debugger;
+
 				if (response != "") {
 					var res = JSON.parse(response);
 					if (res.length > 0) {
@@ -840,5 +861,4 @@
 			}
 		});
 	}
-
 </script>

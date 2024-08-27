@@ -968,7 +968,6 @@
 								return "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsrulecondition()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "50px",
 			},
@@ -984,7 +983,6 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.themecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
@@ -1067,7 +1065,6 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.themecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
@@ -1394,6 +1391,7 @@
 								filter_field: { type: "string" },
 								filter_criteria: { type: "string", defaultValue: "" },
 								themefilter_seqno: { type: "string", defaultValue: 0 },
+								filter_value_flag: { type: "string" },
 								filter_value: { type: "string", defaultValue: "" },
 								filter_value_code: { type: "string", defaultValue: "" },
 								active_status: { type: "string" },
@@ -1449,7 +1447,6 @@
 									return "<a href='' onclick='myDeleteJssource()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
 								}
 							}
-							//template: "<a href='' onclick='myDeleteJssource()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 						},
 					], title: "Action&nbsp;", width: "40px",
 				},
@@ -1465,7 +1462,6 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					//template: '#=sel_checkbox(data)#'
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
@@ -1514,11 +1510,16 @@
 					hidden: true,
 				},
 				{
+					field: "filter_value_flag",
+					title: "filter_value_flag",
+					hidden: true,
+				},
+				{
 					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
 					editor: function (container, options) {
-						combo_editor_filtervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_themefilterfield")
+						combo_editor_filtervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code","filter_value_flag", "grid_themefilterfield")
 					},
 				},
 				{
@@ -1535,7 +1536,6 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					//template: '#=sel_checkbox1(data)#'
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
@@ -1727,10 +1727,9 @@
 				}
 			}
 		});
-
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
-	function combo_editor_filtervalues(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+	function combo_editor_filtervalues(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -1769,9 +1768,11 @@
 				if (datafield == "filter_value") {
 					if (datafield == "filter_value" && selectedItem.filter_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.filter_value_input;
+						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -1804,8 +1805,13 @@
 					var filter_value = model.filter_value;
 				}
 			} else {
-				var filter_value_flag = 'N';
-				var filter_value = model.filter_value_code;
+				if (model.filter_value_flag == 'Y') {
+					var filter_value_flag = model.filter_value_flag;
+					var filter_value = model.filter_value_code;
+				} else {
+					var filter_value_flag = 'N';
+					var filter_value = model.filter_value_code;
+				}
 			}
 			var in_open_flag = model.open_parentheses_flag
 			var in_close_flag = model.close_parentheses_flag;
@@ -1962,6 +1968,7 @@
 								filter_criteria: { type: "string", defaultValue: "" },
 								themefilter_seqno: { type: "string", defaultValue: 0 },
 								filter_value: { type: "string" },
+								filter_value_flag: { type: "string" },
 								filter_value_code: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
@@ -2016,7 +2023,6 @@
 									return "<a href='' onclick='myDeleteJscompare()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
 								}
 							}
-							//template: "<a href='' onclick='myDeleteJstheme()' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 						},
 					], title: "Action&nbsp;", width: "40px",
 				},
@@ -2032,7 +2038,6 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					//template: '#=sel_checkbox(data)#'
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
@@ -2081,11 +2086,16 @@
 					hidden: true,
 				},
 				{
+					field: "filter_value_flag",
+					title: "filter_value_flag",
+					hidden: true,
+				},
+				{
 					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
 					editor: function (container, options) {
-						combo_editor_filtervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_comparisionfilter")
+						combo_editor_filtervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code","filter_value_flag", "grid_comparisionfilter")
 					},
 				},
 				{
@@ -2102,7 +2112,6 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					//template: '#=sel_checkbox1(data)#'
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
@@ -2297,7 +2306,7 @@
 
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
-	function combo_editor_filtervaluec(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+	function combo_editor_filtervaluec(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -2336,9 +2345,11 @@
 				if (datafield == "filter_value") {
 					if (datafield == "filter_value" && selectedItem.filter_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.filter_value_input;
+						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -2371,8 +2382,13 @@
 					var filter_value = model.filter_value;
 				}
 			} else {
-				var filter_value_flag = 'N';
-				var filter_value = model.filter_value_code;
+				if (model.filter_value_flag == 'Y') {
+					var filter_value_flag = model.filter_value_flag;
+					var filter_value = model.filter_value_code;
+				} else {
+					var filter_value_flag = 'N';
+					var filter_value = model.filter_value_code;
+				}
 			}
 			var in_open_flag = model.open_parentheses_flag
 			var in_close_flag = model.close_parentheses_flag;
@@ -2569,7 +2585,6 @@
 								return "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "20px",
 			},
@@ -2855,7 +2870,6 @@
 								return "<a href='' onclick='myDeleteJsaggfun()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -3139,7 +3153,6 @@
 								return "<a href='' onclick='myDeleteJsaggcon()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
-						//template: "<a href='' onclick='myDeleteJsgrouping()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
 					},
 				], title: "Action&nbsp;", width: "40px",
 			},
@@ -3160,7 +3173,6 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.themeaggcondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
@@ -3206,7 +3218,6 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.themeaggcondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
