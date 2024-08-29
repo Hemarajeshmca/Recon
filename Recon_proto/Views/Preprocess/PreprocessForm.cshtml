@@ -240,12 +240,12 @@
 											<select id="cmblookupdataset" class="form-select form-control" onchange="lookupchange()">
 											</select>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-3" id="luprfield">
 											<label class="form-label" for="">Lookup Return Field&nbsp;</label>
 											<select id="Cmblookupdatasetfield" class="form-select form-control">
 											</select>
 										</div>
-										<div class="col-sm-3">
+										<div class="col-sm-3" id="uprfield">
 											<label class="form-label" for="">Update Recon Field&nbsp;</label>
 											<select id="Cmbreconfield1" class="form-select form-control">
 											</select>
@@ -255,7 +255,7 @@
 												<input type="checkbox" id="lookupflag" onclick="lookupflagjs()">
 												<label for="vehicle1">Enable Mutiple Update Recon Field </label>
 											</div>
-											<div style="margin-top:10px">
+											<div style="margin-top:10px" id="rflag">
 												<input type="checkbox" id="returnflag" onclick="returnflag()">
 												<label for="vehicle1">Group Return Value</label>
 											</div>
@@ -3094,10 +3094,16 @@
 			$("#lookupgrid").show();
 			$("#Cmblookupdatasetfield").prop('disabled', true);
 			$("#Cmbreconfield1").prop('disabled', true);
+			$("#luprfield").hide();
+			$("#uprfield").hide();
+			$("#rflag").hide();
 		} else {
 			$("#lookupgrid").hide();
 			$("#Cmblookupdatasetfield").prop('disabled', false);
 			$("#Cmbreconfield1").prop('disabled', false);
+			$("#luprfield").show();
+			$("#uprfield").show();
+			$("#rflag").show();
 		}
 	}
 </script>

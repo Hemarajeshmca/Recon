@@ -198,7 +198,7 @@
 							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;position: relative;">
 								<div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
 									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Partial</p></center>
+									<center><p class="card-text" style="font-weight:600;color:white;">Partial <span id="partial_percentage"></span></p></center>
 								</div>
 							</div>
 						</div>
@@ -639,17 +639,21 @@
 					var tran_count = 0;
 					var ko_txt = "";
 					var excp_txt = "";
+					var partial_txt = "";
 
 					if (response != null) {
 						var data = JSON.parse(response);
 						tran_count = data.DataSet1[0]["tran_count"];
 						ko_count = data.DataSet1[0]["ko_count"];
 						excp_count = data.DataSet1[0]["excp_count"];
+						partial_count = data.DataSet1[0]["ko_partialexcp_count"];
 						ko_percentage = (ko_count / tran_count) * 100.00;
 						excp_percentage = (excp_count / tran_count) * 100.00;
+						partial_percentage = (partial_count / tran_count) * 100.00;
 						if (tran_count > 0) {
 							ko_txt = " (" + ko_percentage.toFixed(2) + " %)";
 							excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
+							partial_txt = " (" + partial_percentage.toFixed(2) + " %)";
 						}
 						$("#recon_count").text(data.DataSet1[0]["recon_count"]);
 						$("#acc_count").text(data.DataSet1[0]["dataset_count"]);
@@ -659,6 +663,7 @@
 						$("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]);
 						$("#excp_percentage").text(excp_txt);
 						$("#match_percentage").text(ko_txt);
+						$("#partial_percentage").text(partial_txt);
 						$("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
 
 						var sys_ko_count = data.DataSet2[0]["system_ko_count"];
