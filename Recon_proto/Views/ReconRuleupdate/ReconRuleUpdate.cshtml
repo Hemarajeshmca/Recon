@@ -1,0 +1,537 @@
+﻿@{
+	ViewBag.title = "Recon Rule Update";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 82%;">
+				
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Base Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="gridlist()">
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="gd_rulelist">
+							<div id="grid_rulelist"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Recon Rule Update</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<div class="row">
+							<div class="col-md-6">
+								<label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="updatereconname" class="form-select form-control" onchange="updateRule()">
+								</select>
+								<input class="form-control" type="hidden" id="selectedRule">
+							</div>
+							<div class="col-md-6">
+								<label for="" class="form-label">Update Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+									<span>
+										<img style="cursor:pointer" src='../Assets/images/viewicons.png' onclick="viewRuleDetails()" />
+									</span>
+								</label>
+								<select id="updaterulename" class="form-select form-control" onchange="gridlist()">
+								</select>								
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4"> </div>
+					<div class="col-sm-4" style="margin-bottom:30px;float: right;">						
+						<center>
+							<button type="button" class="btn btn-sm btn-success me-2" onclick="updateRecon()" style="padding: 4px 25px;"> Update</button>
+							<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button>
+						</center>
+					</div>
+					<div class="col-sm-4"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal" id="ReconRuledetail">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:585px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_UpdateRuleviewdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+<script type="text/javascript">
+	var ruleList = [];
+	$(document).ready(function () {
+		$("#navhead").text("Recon Rule Update");
+		kendodate_format();
+		grid_rulelist([]);
+		gridreconlist();
+	});
+
+	function gridreconlist() {
+		var data = {};	
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#updatereconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$("#updatereconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#updatereconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function getSerializedRows() {
+		btn_onClick('Create');
+		document.location = "../Reports/ReportTempletedetail";
+	}
+
+	function gridlist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		var data = {};
+		data.in_recon_code = $("#cmbreconname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		if (data.in_recon_code) {
+		$.ajax({
+				type: "POST",
+				url: '../Rulesetup/Rulesetuplistfetch',
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(data),
+				success: function (response) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
+					var res = JSON.parse(response)
+					$("#gd_rulelist").empty();
+					$("#gd_rulelist").append("<div id='grid_rulelist'></div>");
+					var activeItems = res.filter(item => item.active_status == 'Y');
+						grid_rulelist(activeItems);
+				}
+				else {
+						grid_rulelist([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	} else {
+			grid_rulelist([]);
+		}
+	}
+
+	function grid_rulelist(data) {
+		try {
+			$("#grid_rulelist").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								rule_gid: { type: "string" },
+								rule_code: { type: "string" },
+								rule_name: { type: "string" },
+								rule_order: { type: "string" },
+								rule_apply_on_desc: { type: "string" },
+								source_dataset_desc: { type: "string" },
+								comparison_dataset_desc: { type: "string" },
+								group_flag_desc: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 420,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_rulelist').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				change: selectRow,
+				resizable: true,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-process' value='edit' data-bs-toggle='modal'><img style='height: 16px;width: 16px; cursor: pointer;' src = '../Assets/images/update.png' title='Update'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' class='k-grid-view' value='view' data-bs-toggle='modal'><img title='View' style='cursor: pointer;' src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					],
+					title: "Action&nbsp;",
+					width: "40px",
+					attributes: { style: "text-align: center;" },
+				},
+				{
+					field: "rule_gid",
+					title: "Row id",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "rule_code",
+					title: "Rule Code",
+					width: 80,
+				},
+				{
+					field: "rule_name",
+					title: "Rule Name",
+					width: 100,
+				},
+				{
+					field: "source_dataset_desc",
+					title: "source_dataset_desc",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_dataset_desc",
+					title: "comparison_dataset_desc",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_apply_on_desc",
+					title: "Rule Applied On",
+					width: 100,
+				},
+				{
+					field: "rule_order",
+					title: "Rule Order",
+					width: 80,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numericInput",
+						extra: false,
+					},
+				},
+				{
+					field: "group_flag_desc",
+					title: "Group Flag",
+					width: 100,
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+	function selectRow() {
+		try {
+			var grid = $("#grid_rulelist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#selectedRule").val(selectedItem.rule_code);
+		}
+		catch (err) {
+
+		}
+	}
+
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
+	}
+
+	function viewRuleDetails() {
+		if ($("#updaterulename").val()) {
+			event.preventDefault();
+			var selectedItem = ruleList.filter(item => item.rule_code == $("#updaterulename").val());
+			setlocalStorage("rule_details", selectedItem[0]);
+			btn_onClick('Edit');
+			getRuleGridComboList();
+			cmbsourcefield();
+			$("#ReconRuledetail").on("click", function (event) {
+				event.stopPropagation();
+			});
+			$("#ReconRuledetail").modal('show');
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Updated Rule .!",
+				type: 'green',
+			});
+		}
+
+	}
+
+	function getSerializedSelectedRows(mode) {		
+		try {
+			var grid = $("#grid_rulelist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			if ($(mode).attr('value') == "edit") {
+				$("#updatereconname").val("");
+				$("#updaterulename").val("");
+				$("#infomodal").modal("show");
+				
+			} else if ($(mode).attr('value') == "view") {
+				event.preventDefault();
+				var grid = $("#grid_rulelist").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+				setlocalStorage("rule_details", selectedItem);
+				btn_onClick('Edit');
+				getRuleGridComboList();
+				cmbsourcefield();
+				$("#ReconRuledetail").on("click", function (event) {
+					event.stopPropagation();
+				});
+				$("#ReconRuledetail").modal('show');
+			}
+		}
+		catch (err) {
+
+		}
+	}
+
+	function rr1() {
+		$("#updatereconname").val("");
+		$("#updaterulename").val("");
+		$("#selectedRule").val("");
+		$("#infomodal").modal("hide");
+		//$("#infomodal").hide();
+	}
+
+	function updateRecon(){
+		var data = {};
+		data.in_base_recon_code = $("#cmbreconname").val();
+		data.in_base_rule_code = $("#selectedRule").val();
+		data.in_update_recon_code = $("#updatereconname").val();
+		data.in_update_rule_code = $("#updaterulename").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		if (data.in_update_recon_code && data.in_update_rule_code) {
+			$.ajax({
+				type: "POST",
+				url: '../ReconRuleupdate/ReconUpdateRule',
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(data),
+				success: function (response) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
+						var res = JSON.parse(response);
+						if (res[0]["out_result"] == 1) {
+							$.alert({
+								title: 'Recon',
+								content: res[0]["out_msg"],
+								type: 'green',
+							});
+							rr1();
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: res[0]["out_msg"],
+								type: 'red',
+							});
+						}
+					} else {
+						
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if (!data.in_update_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Update Recon .!",
+				type: 'red',
+			});
+
+		} else if (!data.in_update_rule_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Update Rule .!",
+				type: 'red',
+			});
+		}
+	}
+
+	function updateRule(){
+		var grid = $("#grid_rulelist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var data = {};
+		data.in_recon_code = $("#updatereconname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		if (data.in_recon_code) {
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/Rulesetuplistfetch',
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(data),
+				success: function (response) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
+						var res = JSON.parse(response);
+						$("#updaterulename").empty();
+						$("#updaterulename").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							if (item.rule_apply_on == selectedItem.rule_apply_on && item.active_status == 'Y') {
+								ruleList.push(item);
+								$("#updaterulename").append($('<option>', {
+									value: item.rule_code,
+									text: item.rule_name
+								}));
+							}
+						});						
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: "No Rules Found .!",
+							type: 'red',
+						});
+					}				
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else {
+			$("#updaterulename").val("");
+		}
+	}
+
+</script>
