@@ -145,6 +145,7 @@ namespace Recon_proto.Controllers
 			public string? in_open_flag { get; set; }
 			public string? in_close_flag { get; set; }
 			public string? in_join_condition { get; set; }
+			public string? in_filter_applied_on { get; set; }
 			public string? in_active_status { get; set; }
 			public string? in_action { get; set; }
 			public string? in_user_code { get; set; }
@@ -252,6 +253,7 @@ namespace Recon_proto.Controllers
 			public string? in_returnflag { get; set; }
 			public string? in_close_flag { get; set; }
 			public string? in_join_condition { get; set; }
+			public string? in_source_field_type { get; set; }
 			public string? in_active_status { get; set; }
 			public string? in_action { get; set; }
 			public string? in_action_by { get; set; }
