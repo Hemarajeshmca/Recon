@@ -64,9 +64,9 @@
 			margin-bottom: 9px;
 		}
 
-		.accordion:last-child {
-			margin-bottom: 0;
-		}
+			.accordion:last-child {
+				margin-bottom: 0;
+			}
 
 		.accordion-label {
 			display: flex;
@@ -81,18 +81,18 @@
 			color: white;
 		}
 
-		.accordion-label:hover {
-			background: rgb(135, 46, 123)
-		}
+			.accordion-label:hover {
+				background: rgb(135, 46, 123)
+			}
 
-		.accordion-label::after {
-			content: "\276F";
-			width: 16px;
-			height: 16px;
-			text-align: center;
-			-webkit-transition: all 0.3s;
-			transition: all 0.3s;
-		}
+			.accordion-label::after {
+				content: "\276F";
+				width: 16px;
+				height: 16px;
+				text-align: center;
+				-webkit-transition: all 0.3s;
+				transition: all 0.3s;
+			}
 
 		.accordion-content {
 			max-height: 0;
@@ -103,20 +103,20 @@
 			transition: all 0.3s;
 		}
 
-		.accordion-content p {
-			margin: 0;
-			color: rgba(4,57,94,.7);
-			font-size: 18px;
-		}
+			.accordion-content p {
+				margin: 0;
+				color: rgba(4,57,94,.7);
+				font-size: 18px;
+			}
 
 		input:checked + .accordion-label {
 			background: rgba(4,57,94,1);
 		}
 
-		input:checked + .accordion-label::after {
-			-webkit-transform: rotate(90deg);
-			transform: rotate(90deg);
-		}
+			input:checked + .accordion-label::after {
+				-webkit-transform: rotate(90deg);
+				transform: rotate(90deg);
+			}
 
 		input:checked ~ .accordion-content {
 			max-height: 100vh;
@@ -230,10 +230,10 @@
 									</div>
 								</div>
 							</div>
-							<div class="accordion" id="headinglookup">
+							<div class="accordion" id="headinglookupdataset">
 								<input type="checkbox" name="radio-a" id="check3" style="display:none">
-								<label class="accordion-label" for="check3">&nbsp;&nbsp;&nbsp;Lookup</label>
-								<div id="headinglookup" class="accordion-content">
+								<label class="accordion-label" for="check3">&nbsp;&nbsp;&nbsp;Lookup Dataset</label>
+								<div id="headinglookupdataset" class="accordion-content">
 									<div class="row" style="margin-bottom:5px;">
 										<div class="col-sm-3">
 											<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -266,16 +266,47 @@
 										<div id="grid_lookupfield">
 										</div>
 									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headinglookuprecon">
+								<input type="checkbox" name="radio-a" id="check4" style="display:none">
+								<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Recon (vs) Lookup</label>
+								<div id="headinglookuprecon" class="accordion-content">
+									<div class="row" style="margin-bottom:5px;">
+										<div class="col-xs-12" style="margin-top:5px;">
+											<div id="grid_lookup">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headinglookup">
+								<input type="checkbox" name="radio-a" id="check5" style="display:none">
+								<label class="accordion-label" for="check5">&nbsp;&nbsp;&nbsp;Lookup (vs) Recon</label>
+								<div id="headinglookup" class="accordion-content">
+									<div class="row" style="margin-bottom:5px;">
+										<div class="col-xs-12" style="margin-top:5px;">
+											<div id="grid_lookuprecon">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headinglookupfilter">
+								<input type="checkbox" name="radio-a" id="check7" style="display:none">
+								<label class="accordion-label" for="check7">&nbsp;&nbsp;&nbsp;Lookup Filter</label>
+								<div class="accordion-content" id="headinglookupfilter">
 									<div class="col-xs-12" style="margin-top:5px;">
-										<label class="form-label" style="font-size: 14px;margin-left: -13px;font-weight:bold">&nbsp;&nbsp;&nbsp;Lookup Condition</label>
-										<div id="grid_lookup">
+										<div id="gd_lookupfilter">
+											<div id="grid_lookupfilter">
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="accordion" id="headingfilter">
 								<input type="checkbox" name="radio-a" id="check1" style="display:none">
-								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Filter</label>
+								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Recon Filter</label>
 								<div class="accordion-content" id="headingfilter">
 									<div class="col-xs-12" style="margin-top:5px;">
 										<div id="gd_filter">
@@ -286,8 +317,8 @@
 								</div>
 							</div>
 							<div class="accordion" id="headingquery">
-								<input type="checkbox" name="radio-a" id="check4" style="display:none">
-								<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Query</label>
+								<input type="checkbox" name="radio-a" id="check6" style="display:none">
+								<label class="accordion-label" for="check6">&nbsp;&nbsp;&nbsp;Query</label>
 								<div id="collapsequery" class="accordion-content" aria-labelledby="headingquery" data-bs-parent="#accordionquery">
 									<textarea id="querydata" name="querydata" rows="4" style="margin-top: 20px;height: 115px;width: 1155px;border-radius: 0.375rem;"></textarea>
 									<button type="button" id="validatequery" class="btn btn-sm btn btn-primary" onclick="validatequery1()">Validate</button>&nbsp;&nbsp;&nbsp;
@@ -317,8 +348,11 @@
 		$("#navhead").text("Preprocess");
 		$("#headingquery").hide();
 		$("#headinglookup").hide();
+		$("#headinglookupdataset").hide();
+		$("#headinglookuprecon").hide();
 		$("#headingfunction").hide();
 		$("#headingfilter").hide();
+		$("#headinglookupfilter").hide();
 		getGridComboList();
 	});
 	function getGridComboList() {
@@ -448,8 +482,10 @@
 			$("#holdflag").val('N');
 			$("#preprocessorder").val(data[0].preprocess_order);
 			grid_lookup([]);
+			grid_lookuprecon([]);
 			grid_lookupfield([]);
 			grid_filterdata([]);
+			grid_lookupfilter([]);
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -773,7 +809,7 @@
 				title: "Filter Value",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code","ident_value_flag", "grid_filter")
+					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "ident_value_flag", "grid_filter")
 				},
 			},
 			{
@@ -1007,6 +1043,398 @@
 	}
 	function addRowfilter() {
 		var grid = $("#grid_filter").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].filter_seqno > max) {
+				max = grid.dataSource._data[i].filter_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '' });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	//----lookup filter ----------
+	function grid_lookupfilter(data) {
+		var join_condition_list = "";
+		var filter_criteria_list = "";
+		var filter_field_list = "";
+		var ident_value_list = "";
+		$("#grid_lookupfilter").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "filter_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessfilter_gid: { type: "string", defaultValue: "0" },
+							filter_seqno: { type: "NUMBER" },
+							filter_field_code: { type: "string" },
+							filter_field: { type: "string" },
+							filter_criteria: { type: "string" },
+							ident_criteria: { type: "string" },
+							ident_value_flag: { type: "string" },
+							ident_value: { type: "string" },
+							ident_value_code: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							join_condition: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
+						}
+					}
+				}
+			},
+			height: 210,
+			groupable: false,
+			dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_filter').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				};
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a onclick=savefilterheader1()  href='javascript:void(0)'><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [{
+				command: [
+
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='savefilterlookup()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return "";
+							} else {
+								return "<a href='' onclick='myDeleteJsfilter()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJsfilter()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "filter_seqno",
+				title: "Seq No.",
+				width: 30,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "open_parentheses_flag",
+				title: "(", width: 20,
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocessfilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+					}
+				}
+			},
+			{
+				field: "preprocessfilter_gid",
+				title: "preprocessfilter_gid",
+				hidden: true,
+			},
+			{
+				field: "filter_field_code",
+				title: "filter_field_code",
+				hidden: true,
+			},
+			{
+				field: "filter_field",
+				title: "Filter Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_man_process1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_lookupfilter")
+				},
+			},
+			{
+				field: "filter_criteria",
+				title: "Filter Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_filter_fieldl(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_lookupfilter", "COMPARISON")
+				},
+			},
+			{
+				field: "ident_value_code",
+				title: "ident_value_code",
+				hidden: true,
+			},
+			{
+				field: "ident_value_flag",
+				title: "ident_value_flag",
+				hidden: true,
+			},
+			{
+				field: "ident_value",
+				title: "Filter Value",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_identifiervaluecl(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "ident_value_flag", "grid_lookupfilter")
+				},
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			},
+			{
+				field: "close_parentheses_flag",
+				title: ")", width: 20,
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocessfilter_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+					}
+				},
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_lookupfilter")
+				},
+				width: 50,
+			}],
+			editable: true,
+		});
+
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+		$(function () {
+			$('#grid_lookupfilter').on('click', '.chkbx3', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_lookupfilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			})
+		})
+		$(function () {
+			$('#grid_lookupfilter').on('click', '.chkbx4', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_lookupfilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			})
+		})
+		function OnEdit(e) {
+			try {
+				setDefaultValues(e);
+			}
+			catch (err) {
+				javascript_log4j_root(arguments.callee.name, err);
+			}
+		}
+	}
+	function combo_editor_identifiervaluecl(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "ident_value") {
+					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_value_input;
+						selectedItem[code_flag] = 'Y';
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+						selectedItem[code_flag] = 'N';
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_man_process1(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var datasetcode = $("#cmblookupdataset").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					var res = result.DataSet;
+					for (i = 0; res.length > i; i++) {
+						var list1 = {};
+						list1.code = res[i].dataset_table_field;
+						list1.desc = res[i].field_name;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+
+	function combo_filter_fieldl(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.filter_field;
+		} else {
+			var codeValue = selectedItem.filter_field;
+		}
+		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_criteria") {
+					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.filter_criteria_input = undefined;
+				}
+
+			}
+		});
+	}
+	function addRowlookupfilter() {
+		var grid = $("#grid_lookupfilter").data("kendoGrid");
 		var dataSource = grid.dataSource;
 		var max = 0;
 		// Get the last sequence number and increment it
@@ -1725,6 +2153,479 @@
 			},
 		});
 	}
+
+	function grid_lookuprecon(data) {
+		var source_field_desc_list = "";
+		var extraction_criteria_list = "";
+		var comparison_criteria_list = "";
+		$("#grid_lookuprecon").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "condition_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocesscondition_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							condition_seqno: { type: "NUMBER" },
+							source_field_code: { type: "string", defaultValue: "" },
+							source_field_desc: { type: "string", defaultValue: "" },
+							comparison_field: { type: "string", defaultValue: "" },
+							comparison_field_desc: { type: "string" },
+							extraction_criteria: { type: "string" },
+							extraction_criteria_code: { type: "string" },
+							comparison_criteria: { type: "string" },
+							comparison_criteria_code: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							join_condition: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
+						}
+					}
+				}
+			},
+			height: 200,
+			groupable: false,
+			//dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_lookuprecon').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				};
+			},
+			sortable: false,
+			selectable: "row",
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='savelookup1()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:25%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return "";
+							} else {
+								return "<a href='' onclick='myDeleteJslookup1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+						//template: "<a href='' onclick='myDeleteJslookup1()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "condition_seqno",
+				title: "Seq No.",
+				width: 40,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "open_parentheses_flag",
+				title: "(", width: 20,
+				//template: '#=sel_checkbox(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocesscondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+					}
+				}
+			},
+			{
+				field: "preprocesscondition_gid",
+				title: "preprocesscondition_gid",
+				hidden: true,
+			},
+			{
+				field: "comparison_field_desc",
+				title: "Lookup Field",
+				editor: function (container, options) {
+					combo_editor_man_lookup1new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_lookuprecon")
+				},
+				width: 120,
+			},
+			{
+				field: "comparison_criteria_code",
+				title: "comparison_criteria_code",
+				hidden: true,
+			},
+			{
+				field: "comparison_criteria",
+				title: "Comparison Criteria",
+				editor: function (container, options) {
+					combo_editor_mannew(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_criteria", "grid_lookuprecon", "COMPARISON")
+				},
+				width: 120,
+			},
+			{
+				field: "source_field_code",
+				title: "Recon Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "source_field_desc",
+				title: "Recon Field",
+				editor: function (container, options) {
+					combo_editor_man_lookupnew(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_lookuprecon")
+				},
+				width: 120,
+			},
+			{
+				field: "extraction_criteria_code",
+				title: "Extraction Criteria",
+				hidden: true,
+			},
+			{
+				field: "extraction_criteria",
+				title: "Extraction Criteria",
+				editor: function (container, options) {
+					combo_editor_man1new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "extraction_criteria", "grid_lookuprecon", "SOURCE")
+				},
+				editable: true,
+				width: 120,
+			},
+			{
+				field: "comparison_field",
+				title: "comparison_field",
+				width: 100,
+				hidden: true,
+			},
+
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			},
+			{
+				field: "close_parentheses_flag",
+				title: ")", width: 20,
+				//template: '#=sel_checkbox1(data)#'
+				template: function (dataItem) {
+					if (dataItem.preprocesscondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
+					}
+				},
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_lookuprecon")
+				},
+				width: 40,
+			}],
+			editable: true,
+		});
+		source_field_desc_list = "";
+		comparison_field_desc_list = "";
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+	}
+	$(function () {
+		$('#grid_lookuprecon').on('click', '.chkbx1', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_lookuprecon').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_lookuprecon').on('click', '.chkbx2', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_lookuprecon').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
+	function OnEdit(e) {
+		try {
+			setDefaultValues(e);
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+	}
+	function addRowrecon() {
+		var grid = $("#grid_lookuprecon").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].condition_seqno > max) {
+				max = grid.dataSource._data[i].condition_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ condition_seqno: newSeqNo, preprocesscondition_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function color() {
+		$("#grid_lookuprecon").data("kendoGrid").dataItem($(event.target).closest("tr")).css('backgroundColor', '#ff3333');
+	}
+	function combo_editor_man_lookupnew(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_man_lookup1new(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var datasetcode = $("#cmblookupdataset").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.DataSet.length > i; i++) {
+						var list1 = {};
+						list1.code = result.DataSet[i].dataset_table_field;
+						list1.desc = result.DataSet[i].field_name;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_man1new(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.source_field_desc;
+		} else {
+			var codeValue = selectedItem.source_field_desc;
+		}
+		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "extraction_criteria") {
+					if (datafield == "extraction_criteria" && selectedItem.extraction_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.extraction_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.extraction_criteria_input = undefined;
+				}
+
+			}
+		});
+	}
+	function combo_editor_mannew(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "SOURCE") {
+			var codeValue = selectedItem.source_field_desc;
+		} else {
+			var codeValue = selectedItem.comparison_field_desc;
+		}
+		var in_dataset_code = $("#cmblookupdataset").val();
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/lookupfilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_dataset_code: in_dataset_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "extraction_criteria") {
+					if (datafield == "extraction_criteria" && selectedItem.extraction_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.extraction_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.extraction_criteria_input = undefined;
+				}
+				if (datafield == "comparison_criteria") {
+					if (datafield == "comparison_criteria" && selectedItem.comparison_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.comparison_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.comparison_criteria_input = undefined;
+				}
+			},
+		});
+	}
 	function processmethodcon() {
 		var processmethod = $("#Cmbprocessmethod").val();
 		var preprocesscode = $("#txtpreprocesscode").val();
@@ -1857,6 +2758,7 @@
 				action = "UPDATE"
 			}
 			var status = "Y";
+			var in_filter_applied_on = "RECON";
 			var in_open_flag = model.open_parentheses_flag;
 			var in_close_flag = model.close_parentheses_flag;
 			var in_join_condition = model.join_condition;
@@ -1867,7 +2769,84 @@
 				data: JSON.stringify({
 					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
 					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
-					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag
+					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						preprocessfetch($("#txtpreprocesscode").val());
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function savefilterlookup() {
+		try {
+			var grid = $("#grid_lookupfilter").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+			var in_recon_code = $("#cmbrecon").val();
+			var cmbfiltername = model.filter_field_code;
+			var extractcriteria = model.filter_criteria;
+			var identifiercriteria = model.ident_criteria;
+			if (model.ident_value_input != undefined) {
+				var ident_value_flag = 'Y';
+				var identifiervalue = model.ident_value_input;
+			} else if (model.ident_value_code == "") {
+				var ident_value_flag = 'Y';
+				if (model.ident_value == undefined) {
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var identifiervalue = model.ident_value;
+				}
+			} else {
+				if (model.ident_value_flag == 'Y') {
+					var ident_value_flag = model.ident_value_flag;
+					var identifiervalue = model.ident_value_code;
+				} else {
+					var ident_value_flag = 'N';
+					var identifiervalue = model.ident_value_code;
+				}
+			}
+			var in_filter_seqno = model.filter_seqno
+			var action = "";
+			var action_by = sessionStorage.getItem("usrname");
+			var preprocessfilter_gid = model.preprocessfilter_gid;
+			if (preprocessfilter_gid == "0") {
+				preprocessfilter_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			var in_filter_applied_on = "LOOKUP";
+			var in_open_flag = model.open_parentheses_flag;
+			var in_close_flag = model.close_parentheses_flag;
+			var in_join_condition = model.join_condition;
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/filterdatasave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -1981,6 +2960,94 @@
 			});
 		}
 	}
+	function myDeleteJsfilterlookup() {
+		var grid = $("#grid_lookupfilter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessfilter_gid = parseInt(model.preprocessfilter_gid);
+		if (preprocessfilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_recon_code = $("#cmbrecon").val();
+						var cmbfiltername = model.filter_field_code;
+						var extractcriteria = model.filter_criteria;
+						var identifiercriteria = model.ident_criteria;
+						var identifiervalue = model.ident_value;
+						var in_filter_seqno = model.filter_seqno
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var ident_value_flag = "";
+						var preprocessfilter_gid = model.preprocessfilter_gid;
+						var status = "Y";
+						var in_open_flag = "";
+						if ($('#chk_sel_' + model.preprocessfilter_gid).is(":checked")) {
+							in_open_flag = "Y";
+						} else {
+							in_open_flag = "N";
+						}
+						var in_close_flag = "";
+						if ($('#chk_sel1_' + model.preprocessfilter_gid).is(":checked")) {
+							in_close_flag = "Y";
+						} else {
+							in_close_flag = "N";
+						}
+						var in_join_condition = model.join_condition;
+						var in_filter_applied_on = "LOOKUP";
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/filterdatasave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
+								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+								in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
 	function preprocessfetch(preprocess_code) {
 		var cmbpreprocess_code = preprocess_code;
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -1998,7 +3065,6 @@
 			success: function (response) {
 				var result = JSON.parse(response);
 				if (result != null) {
-
 					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
 					$("#preprocessgid").val(result.header[0].preprocess_gid)
 					$("#cmbrecon").val(result.header[0].recon_code);
@@ -2045,11 +3111,25 @@
 					else {
 						grid_filterdata([]);
 					}
+					if (result.filterlookup.length > 0) {
+						$("#gd_lookupfilter").empty();
+						$("#gd_lookupfilter").append("<div id='grid_lookupfilter'></div>");
+						grid_lookupfilter(result.filterlookup);
+					}
+					else {
+						grid_lookupfilter([]);
+					}
 					if (result.condition.length > 0) {
 						grid_lookup(result.condition)
 					} else {
 						grid_lookup([]);
 					}
+					if (result.conditionlookup.length > 0) {
+						grid_lookuprecon(result.condition)
+					} else {
+						grid_lookuprecon([])
+					}
+
 					if (result.lookup.length > 0) {
 						grid_lookupfield(result.lookup)
 					} else {
@@ -2058,12 +3138,16 @@
 					if ($("#txtmode").val() == "View") {
 						$("#grid_filter .k-grid-toolbar").hide();
 						$("#grid_lookup .k-grid-toolbar").hide();
+						$("#grid_lookuprecon .k-grid-toolbar").hide();
+						$("#grid_lookupfilter .k-grid-toolbar").hide();
 					}
 				}
 				else {
 					grid_filterdata([]);
 					grid_lookup([]);
+					grid_lookuprecon([]);
 					grid_lookupfield([]);
+					grid_lookupfilter([]);
 				}
 			},
 			error: function (er) {
@@ -2122,7 +3206,7 @@
 				var checkbox1 = document.getElementById("lookupflag");
 				if (checkbox1.checked) {
 					var muti_lookup_flag = '';
-				} else {				
+				} else {
 					if ($("#Cmblookupdatasetfield").val() == "") {
 						$.alert({
 							title: 'Recon',
@@ -2160,6 +3244,7 @@
 			var comparison_criteria = model.comparison_criteria;
 			var in_extraction_filter = "0";
 			var in_comparison_filter = "0";
+			var source_field_type = 'RECON';
 			var action = "";
 			var action_by = ""
 			var preprocesscondition_gid = model.preprocesscondition_gid;
@@ -2180,7 +3265,109 @@
 				data: JSON.stringify({
 					in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno, in_returnflag: returnflag,
 					in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
-					in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter,
+					in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter, in_source_field_type: source_field_type,
+					in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
+					in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field: in_setrecon_field
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						preprocessfetch($("#txtpreprocesscode").val());
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function savelookup1() {
+		try {
+			if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				var checkbox1 = document.getElementById("lookupflag");
+				if (checkbox1.checked) {
+					var muti_lookup_flag = '';
+				} else {
+					if ($("#Cmblookupdatasetfield").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Lookup Return Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#Cmbreconfield1").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Update Recon Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+				}
+			}
+			var grid = $("#grid_lookuprecon").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+			var in_Ldataset_code = $("#cmblookupdataset").val();
+			var in_Lreturn_field = $("#Cmblookupdatasetfield").val();
+			var in_setrecon_field = $("#Cmbreconfield1").val();
+			var checkbox = document.getElementById("returnflag");
+			var source_field_type = 'LOOKUP';
+			if (checkbox.checked) {
+				var returnflag = 'Y'
+			} else {
+				var returnflag = 'N'
+			}
+			var comparison_field = model.comparison_field;
+			var condition_seqno = model.condition_seqno;
+			var source_field_code = model.source_field_code;
+			var extraction_criteria = model.extraction_criteria;
+			var comparison_criteria = model.comparison_criteria;
+			var in_extraction_filter = "0";
+			var in_comparison_filter = "0";
+			var action = "";
+			var action_by = ""
+			var preprocesscondition_gid = model.preprocesscondition_gid;
+			if (preprocesscondition_gid == "0") {
+				preprocesscondition_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			var in_open_flag = model.open_parentheses_flag;
+			var in_close_flag = model.close_parentheses_flag;
+			var in_join_condition = model.join_condition;
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/conditiondatasave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno, in_returnflag: returnflag,
+					in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
+					in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter, in_source_field_type: source_field_type,
 					in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
 					in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field: in_setrecon_field
 				}),
@@ -2238,6 +3425,7 @@
 						var comparison_criteria = model.comparison_criteria;
 						var in_extraction_filter = "0";
 						var in_comparison_filter = "0";
+						var source_field_type = '';
 						var action = "DELETE";
 						var action_by = ""
 						var preprocesscondition_gid = model.preprocesscondition_gid;
@@ -2263,7 +3451,102 @@
 							data: JSON.stringify({
 								in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno, in_returnflag: returnflag,
 								in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
-								in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter,
+								in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter, in_source_field_type: source_field_type,
+								in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
+								in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field: in_setrecon_field
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	function myDeleteJslookup1() {
+		var grid = $("#grid_lookuprecon").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocesscondition_gid = parseInt(model.preprocesscondition_gid);
+		if (preprocesscondition_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_Ldataset_code = $("#cmblookupdataset").val();
+						var in_Lreturn_field = $("#Cmblookupdatasetfield").val();
+						var in_setrecon_field = $("#Cmbreconfield1").val();
+						var returnflag = "";
+						var comparison_field = model.comparison_field;
+						var condition_seqno = model.condition_seqno;
+						var source_field_code = model.source_field_code;
+						var extraction_criteria = model.extraction_criteria;
+						var comparison_criteria = model.comparison_criteria;
+						var in_extraction_filter = "0";
+						var in_comparison_filter = "0";
+						var source_field_type = '';
+						var action = "DELETE";
+						var action_by = ""
+						var preprocesscondition_gid = model.preprocesscondition_gid;
+
+						var status = "Y";
+						var in_open_flag = "";
+						if ($('#chk_sels_' + model.preprocesscondition_gid).is(":checked")) {
+							in_open_flag = "Y";
+						} else {
+							in_open_flag = "N";
+						}
+						var in_close_flag = "";
+						if ($('#chk_sels1_' + model.preprocesscondition_gid).is(":checked")) {
+							in_close_flag = "Y";
+						} else {
+							in_close_flag = "N";
+						}
+						var in_join_condition = model.join_condition;
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/conditiondatasave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocesscondition_gid: preprocesscondition_gid, in_preprocess_code: in_txtpreprocesscode, in_condition_seqno: condition_seqno, in_returnflag: returnflag,
+								in_recon_field: source_field_code, in_extraction_criteria: extraction_criteria, in_extraction_filter: in_extraction_filter,
+								in_lookup_field: comparison_field, in_comparison_criteria: comparison_criteria, in_comparison_filter: in_comparison_filter, in_source_field_type: source_field_type,
 								in_open_flag: in_open_flag, in_close_flag: in_close_flag, in_join_condition: in_join_condition, in_Ldataset_code: in_Ldataset_code,
 								in_action: action, in_action_by: action_by, in_active_status: status, in_Lreturn_field: in_Lreturn_field, in_setrecon_field: in_setrecon_field
 							}),
@@ -2389,7 +3672,7 @@
 			var lookup_return_field = "";
 			var process_query = "";
 			var clone_process = "";
-			var muti_lookup_flag ="";
+			var muti_lookup_flag = "";
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 				get_recon_field = $("#cmbgetrecon").val();
 				set_recon_field = $("#Cmbreconfield").val();
@@ -2457,6 +3740,7 @@
 			if (preprocess_gid > 0) {
 				preprocess_gid = $("#preprocessgid").val();
 				addRow();
+				addRowrecon();
 				return;
 			} else {
 				preprocess_gid = 0;
@@ -2536,7 +3820,7 @@
 			var lookup_return_field = "";
 			var process_query = "";
 			var clone_process = "";
-			var muti_lookup_flag ="";
+			var muti_lookup_flag = "";
 			if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
 				if ($("#cmblookupdataset").val() == "") {
 					$.alert({
@@ -2656,7 +3940,7 @@
 			var lookup_return_field = "";
 			var process_query = "";
 			var clone_process = "";
-			var muti_lookup_flag ="";
+			var muti_lookup_flag = "";
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 				get_recon_field = $("#cmbgetrecon").val();
 				set_recon_field = $("#Cmbreconfield").val();
@@ -2772,6 +4056,160 @@
 			console.log(e)
 		}
 	}
+	function savefilterheader1() {
+		var preprocess_clone = $("#Cmbclone").val();
+		if (preprocess_clone == '') {
+			savefilterheadernew1()
+		} else {
+			saveclone();
+		}
+	}
+	function savefilterheadernew1() {
+		try {
+			if ($("#preprocessname").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Preprocess Name cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+			if ($("#preprocessorder").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Preprocess Order cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+			var returnflag = '';
+			var preprocess_name = $("#preprocessname").val();
+			var preprocess_Code = $("#txtpreprocesscode").val();
+			var recon_code = $("#cmbrecon").val();
+			var process_method = $("#Cmbprocessmethod").val();
+			var get_recon_field = "";
+			var set_recon_field = "";
+			var process_function = "";
+			var lookup_dataset_code = "";
+			var lookup_return_field = "";
+			var process_query = "";
+			var clone_process = "";
+			var muti_lookup_flag = "";
+			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
+
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				lookup_dataset_code = $("#cmblookupdataset").val();
+				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
+				var checkbox1 = document.getElementById("lookupflag");
+				if (checkbox1.checked) {
+					lookup_return_field = "";
+					set_recon_field = "";
+					muti_lookup_flag = 'Y';
+				} else {
+					if ($("#Cmblookupdatasetfield").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Lookup Return Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#Cmbreconfield1").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Update Recon Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					muti_lookup_flag = '';
+				}
+
+				var checkbox = document.getElementById("returnflag");
+				if (checkbox.checked) {
+					var returnflag = 'Y';
+				} else {
+					var returnflag = 'N';
+				}
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+				process_query = $("#querydata").val();
+				if ($("#validquery").val() == "false") {
+					$.alert({
+						title: 'Recon',
+						content: "Kindly Validate the Query",
+						type: 'green',
+					});
+					return;
+				}
+			}
+
+			var preprocess_order = $("#preprocessorder").val();
+			var action = "";
+			var preprocess_gid = $("#preprocessgid").val();
+
+			if (preprocess_gid > 0) {
+				preprocess_gid = $("#preprocessgid").val();
+				addRowlookupfilter();
+				return;
+			} else {
+				preprocess_gid = 0;
+			}
+			var holdflag = $("#holdflag").val();
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = sessionStorage.getItem("usrname");
+			var status = "D"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,
+					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						addRowlookupfilter();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
 	function saveheadersubmit() {
 		var preprocess_clone = $("#Cmbclone").val();
 		if (preprocess_clone == '') {
@@ -2794,7 +4232,7 @@
 			var process_query = "";
 			var clone_process = "";
 			var returnflag = '';
-			var muti_lookup_flag ="";
+			var muti_lookup_flag = "";
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 				if ($("#cmbgetrecon").val() == "") {
 					$.alert({
@@ -3010,8 +4448,12 @@
 			$("#querydata").val('');
 			$("#headingquery").hide();
 			$("#headinglookup").hide();
+			$("#headinglookupdataset").hide();
+			$("#headinglookuprecon").hide();
+			$("#headinglookupfilter").hide();
 			$("#headingfunction").show();
 			$("#headingfilter").show();
+			$("#check1").prop('checked', true);
 			$("#check2").prop('checked', true);
 
 		} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
@@ -3023,10 +4465,17 @@
 			$("#Cmbreconfield1").val('');
 			$("#querydata").val('');
 			$("#headingquery").hide();
+			$("#headinglookupdataset").show();
 			$("#headinglookup").show();
+			$("#headinglookuprecon").show();
+			$("#headinglookupfilter").show();
 			$("#headingfunction").hide();
 			$("#headingfilter").show();
 			$("#check3").prop('checked', true);
+			$("#check4").prop('checked', true);
+			$("#check5").prop('checked', true);
+			$("#check6").prop('checked', true);
+			$("#check7").prop('checked', true);
 			$("#lookupgrid").hide();
 		} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 			$("#Cmbreconfield").val('');
@@ -3037,6 +4486,9 @@
 			$("#Cmbreconfield1").val('');
 			$("#headingquery").show();
 			$("#headinglookup").hide();
+			$("#headinglookupdataset").hide();
+			$("#headinglookuprecon").hide();
+			$("#headinglookupfilter").hide();
 			$("#headingfunction").hide();
 			$("#headingfilter").hide();
 			$("#check4").prop('checked', true);
