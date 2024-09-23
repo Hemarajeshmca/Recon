@@ -459,12 +459,13 @@
 	function reconcode() {
 		//dataset combo
 		var reconcode = $("#cmbrecon1").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/Preprocessdatasetfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var res = JSON.parse(response);
@@ -1275,12 +1276,13 @@
 			var codeValue = selectedItem.comparison_field_desc;
 		}
 		var in_dataset_code = $("#cmblookupdataset1").val();
+		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Preprocess/lookupfilterfetch',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_dataset_code: in_dataset_code }),
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_dataset_code: in_dataset_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {

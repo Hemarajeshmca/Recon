@@ -95,7 +95,7 @@ namespace Recon_proto.Controllers
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
                     client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
                     client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -223,7 +223,7 @@ namespace Recon_proto.Controllers
 
         #region Downloads
 
-        public JsonResult getfilepath(string confing_val)
+        public JsonResult getfilepath(string confing_val,string username)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             fileconfigmodel FileDownload = new fileconfigmodel();
@@ -240,7 +240,7 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("user_code", username);
                     client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
                     client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -258,14 +258,14 @@ namespace Recon_proto.Controllers
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "Datasetdetail");
+                objcom.errorlog(ex.Message, "getfilepath");
                 return Json(ex.Message);
             }
         }
 
-        public IActionResult Downloads(string jobid, string filetype, string file_name)
+        public IActionResult Downloads(string jobid, string filetype, string file_name,string username)
         {
-            var out_result = getfilepath("fileconfig_value");
+            var out_result = getfilepath("fileconfig_value", username);
             List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
             urlstring = _configuration.GetSection("Appsettings")["filedownload"].ToString();
             fileModel FileDownloadgrid = new fileModel();
@@ -287,7 +287,7 @@ namespace Recon_proto.Controllers
                     client.Timeout = Timeout.InfiniteTimeSpan;
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
-                    content.Headers.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    content.Headers.Add("user_code", username);
                     var response = client.PostAsync("files", content).Result;
                     if(filetype != "xlsx")
                     {
@@ -309,7 +309,7 @@ namespace Recon_proto.Controllers
 						return File(bytes, "application/octet-stream", fileName);
 					} else
                     {
-						var get_outresult = getfilepath("download_xls_folder");
+						var get_outresult = getfilepath("download_xls_folder", username);
 						List<fileconfigmodel> obj_outresult = JsonConvert.DeserializeObject<List<fileconfigmodel>>(get_outresult.Value.ToString());
                         string out_filepath = "";
                         string fileName = "";

@@ -1679,7 +1679,7 @@ namespace Recon_proto.Controllers
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", _configuration.GetSection("AppSettings")["user_code"].ToString());
+                    client.DefaultRequestHeaders.Add("user_code", context.in_action_by);
                     client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
                     client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
@@ -2086,7 +2086,7 @@ namespace Recon_proto.Controllers
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "Datasetdetail");
+                objcom.errorlog(ex.Message, "getuploadfolderpath");
                 return Json(ex.Message);
             }
         }
@@ -2212,7 +2212,7 @@ namespace Recon_proto.Controllers
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "Datasetdetail");
+                objcom.errorlog(ex.Message, "getfilepath");
                 return Json(ex.Message);
             }
         }
@@ -2237,7 +2237,7 @@ namespace Recon_proto.Controllers
             catch (Exception ex)
             {
                 CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "Datasetdetail");
+                objcom.errorlog(ex.Message, "clonefiles");
                 return "Error";
             }
         }

@@ -1637,8 +1637,8 @@
 		}
 	});
 
-	function generateXlsxdynamic() {
-		hideProgress();
+	function generateXlsxdynamic() {	
+		
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var objpplmapupdlist = [];
 		var rpt_cond = "";
@@ -1735,48 +1735,51 @@
 			dataset2: JSON.stringify(dataset2)
 		};
 		if (dataset1.in_report_param && rpt_cond) {
-			$.alert({
-				title: 'Recon',
-				content: "Report Generated, Please check the Job Status in Utility",
-				type: 'green',
-			});
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Report Generated, Please check the Job Status in Utility",
+			//	type: 'green',
+			//});
 			$.ajax({
 				type: "POST",
 				url: '../Reports/generateReportXLSXdynamic_new',
 				dataType: 'json',
+				async: true,
 				data: JSON.stringify(dataset),
 				contentType: 'application/json; charset=utf-8',
-				//success: function (response) {
-				//	var res = JSON.parse(response);
-				//	if (res.length > 0) {
-				//		var data = res[0];
-				//		if (data.out_result != '0') {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: data.msg,
-				//				type: 'green',
-				//			});
-				//		} else {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: data.msg,
-				//				type: 'red',
-				//			});
-				//		}
-				//	} else {
-				//		$.alert({
-				//			title: 'Recon',
-				//			content: "Something Went Wrong ..!",
-				//			type: 'red',
-				//		});
-				//	}
-				//},
-				//error: function (er) {
-				//	alert(er)
-				//	console.log(er)
-				//}
+				success: function (response) {
+					var res = JSON.parse(response);
+					if (res.length > 0) {
+						var data = res[0];
+						if (data.out_result != '0') {
+							$.alert({
+								title: 'Recon',
+								content: data.msg,
+								type: 'green',
+							});
+							
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: data.msg,
+								type: 'red',
+							});
+							
+						}
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: "Something Went Wrong ..!",
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
 			});
-			hideProgress();
+			
 		}
 		else if (!dataset1.data.in_report_param) {
 			$.alert({
@@ -1784,7 +1787,7 @@
 				content: "Report Param is missing!",
 				type: 'red',
 			});
-			hideProgress();
+			
 		}
 	}
 </script>

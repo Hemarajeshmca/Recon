@@ -509,29 +509,39 @@
 										<div class="tab-pane fade" id="navs-pills-top-AddtionalConfiguration" role="tabpanel" style="margin-top:-13px;">
 											<div class="panel panel-default">
 												<div class="panel-body" style="height:175px;padding:31px">
-													<div class="col-sm-2">
-														<input type="checkbox" id="thersholdflag" onclick="thersflag()">
-														<label for="vehicle1">
-															Enable Rule level Threshold
-														</label>
-													</div>
-													<div class="row" id="addconfig" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px;border:1px solid">
-														<div class="col-sm-2">
-															<label for="" class="form-label">Partial Match&nbsp;</label>
-															<div style="margin-left:2px;margin-top:5px">
-																<input type="radio" id="partialmatch1" name="partialmatch" value="Y" onclick="onpartialrule()">&nbsp;Yes &nbsp;
-																<input type="radio" id="partialmatch2" name="partialmatch" value="N" onclick="onpartialrule()" style="margin-left: 10px;">&nbsp;No&nbsp;
+													<div class="row">
+														<div class="col-sm-6">
+															<div class="col-sm-4">
+																<label for="" class="form-label">Rule Remark&nbsp;</label>
+																<textarea id="ruleremark" name="ruleremark" rows="4" style="height: 111px;width: 455px;border-radius: 0.375rem;"></textarea>
 															</div>
 														</div>
-														<div class="col-sm-2">
-															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
-															<input class="form-control" id="thersholdplus" onpaste="return false;" type="text" maxlength="16" value="0" onkeypress='return isNumberKey(event)'>
-															<input class="form-control" id="thersholdminus" type="hidden" value="0">
-														</div>
-														<div class="col-sm-2">
-															<label for="" class="form-label">Applied On&nbsp;</label>
-															<select id="cmbthersholdvalue" class="form-select form-control">
-															</select>
+														<div class="col-sm-6">
+															<div class="col-sm-4">
+																<input type="checkbox" id="thersholdflag" onclick="thersflag()">
+																<label for="vehicle1">
+																	Enable Rule level Threshold
+																</label>
+															</div>
+															<div class="row" id="addconfig" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px;border:1px solid">
+																<div class="col-sm-4">
+																	<label for="" class="form-label">Partial Match&nbsp;</label>
+																	<div style="margin-left:2px;margin-top:5px">
+																		<input type="radio" id="partialmatch1" name="partialmatch" value="Y" onclick="onpartialrule()">&nbsp;Yes &nbsp;
+																		<input type="radio" id="partialmatch2" name="partialmatch" value="N" onclick="onpartialrule()" style="margin-left: 10px;">&nbsp;No&nbsp;
+																	</div>
+																</div>
+																<div class="col-sm-4">
+																	<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
+																	<input class="form-control" id="thersholdplus" onpaste="return false;" type="text" maxlength="16" value="0" onkeypress='return isNumberKey(event)'>
+																	<input class="form-control" id="thersholdminus" type="hidden" value="0">
+																</div>
+																<div class="col-sm-4">
+																	<label for="" class="form-label">Applied On&nbsp;</label>
+																	<select id="cmbthersholdvalue" class="form-select form-control">
+																	</select>
+																</div>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -756,6 +766,7 @@
 				}
 			});
 			$("#txtstatus").val("Draft");
+			thersflag();
 			grid_rulecondition([]);
 			grid_grouping([]);
 			grid_sourceidentifier([]);
@@ -873,6 +884,7 @@
 							$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
 							$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
+							$("#ruleremark").val(res.RuleHeader[0].rule_remark);
 							if (res.RuleHeader[0].until_active_flag == "Y") {
 								$('#untillactive').attr('checked', true);
 							}
@@ -1377,7 +1389,7 @@
 							$("#thersholdflag").prop("checked", false);
 							$("#addconfig").hide();
 						}
-
+						$("#ruleremark").val(res.RuleHeader[0].rule_remark);
 						$("#thersholdplus").val(res.RuleHeader[0].threshold_plus_value);
 						$("#thersholdminus").val(res.RuleHeader[0].threshold_minus_value);
 						$("#cmbthersholdvalue").val(res.RuleHeader[0].threshold_code);
@@ -1648,6 +1660,7 @@
 			var Groupflag = $("#cmbgroupflag").val();
 			var in_inactive_reason = "";
 			var probableflag = $("#probableflag").val();
+			var ruleremark = $("#ruleremark").val();
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/Ruleheader',
@@ -1659,7 +1672,7 @@
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
 					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code,
 					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
-					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
+					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, ruleremark: ruleremark,
 					in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -2328,7 +2341,7 @@
 				title: "Identifier Value",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_identifiervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code","ident_value_flag", "grid_sourceidentifier")
+					combo_editor_identifiervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "ident_value_flag", "grid_sourceidentifier")
 				},
 			},
 			{
@@ -2485,7 +2498,7 @@
 			}
 		});
 	}
-	function combo_editor_identifiervalues(container, cmbid, datasource, datafield, code_datafield,code_flag, grid_id, Sdata) {
+	function combo_editor_identifiervalues(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -2697,7 +2710,7 @@
 				title: "Identifier Value",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code","ident_value_flag", "grid_comparisionidentifier")
+					combo_editor_identifiervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ident_value_code", "ident_value_flag", "grid_comparisionidentifier")
 				},
 			},
 			{
@@ -2857,7 +2870,7 @@
 			}
 		});
 	}
-	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield,code_flag, grid_id, Sdata) {
+	function combo_editor_identifiervaluec(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id, Sdata) {
 		var arr1 = [];
 		var reconcode = $("#cmbreconname").val();
 		var in_user_code = sessionStorage.getItem("usrname");
@@ -4056,6 +4069,7 @@
 			var Groupflag = $("#cmbgroupflag").val();
 			var in_inactive_reason = "";
 			var probableflag = $("#probableflag").val();
+			var ruleremark = $("#ruleremark").val();
 			$.ajax({
 				type: "POST",
 				url: '../Rulesetup/Ruleheader',
@@ -4067,7 +4081,7 @@
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
 					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code,
 					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
-					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value,
+						in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, ruleremark: ruleremark,
 					in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',
