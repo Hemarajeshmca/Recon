@@ -71,11 +71,12 @@
 			var period_from = $("#initiated_from").val();
 			var ts = period_from.split("/");
 			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
 				type: "POST",
 				url: '../Datasetfile/getschedulerlist',
 				dataType: 'json',
-				data: JSON.stringify({ in_processed_date: pr, in_scheduler_status: "C" }),
+				data: JSON.stringify({ in_processed_date: pr, in_scheduler_status: "C", in_user_code: in_user_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.length > 0) {
@@ -225,12 +226,13 @@
 									}
 									var in_scheduler_gid = scheduler_gid;
 									var in_remark = name;
+									var in_user_code = sessionStorage.getItem("usrname");
 									$.ajax({
 										type: "POST",
 										url: '../Datasetfile/deletescheduler',
 										dataType: 'json',
 										data: JSON.stringify({
-											in_scheduler_gid: in_scheduler_gid, in_remark, in_remark
+												in_scheduler_gid: in_scheduler_gid, in_remark, in_remark, in_user_code: in_user_code
 										}),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {

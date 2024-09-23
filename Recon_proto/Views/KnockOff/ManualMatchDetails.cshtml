@@ -1,476 +1,491 @@
 ﻿@{
-    ViewBag.title = "Manual Matching and Posting";
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+	ViewData["Title"] = "Manual Matching and Posting";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
-
 <!Doctype html>
 <html>
 <head>
-    <title></title>
-    <style>
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 28rem !important;
-        }
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
 
-        .k-grid td {
-            border: unset !important;
-            border-left: 1px solid #c5c5c5 !important;
-        }
+		.k-grid td {
+			border: unset !important;
+			border-left: 1px solid #c5c5c5 !important;
+		}
 
-        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-            color: #fff !important;
-        }
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: #fff !important;
+		}
 
-        table {
-            border: 1px solid #C5C5C5 !important;
-        }
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
 
-        .k-grid-content {
-            overflow-x: hidden;
-        }
-        .error_show {
-            color: red;
-            margin-left: 10px;
-        }
+		.k-grid-content {
+			overflow-x: hidden;
+		}
 
-        .k-grid.k-widget {
-            height: 360px;
-        }
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
 
-        /*       .k-grid-header th.k-header > .k-link {
-                            width: 100px;
-                        }*/
+		.k-grid.k-widget {
+			height: 360px;
+		}
 
-        .k-grid-header {
-            font-weight: bold;
-        }
+		/*       .k-grid-header th.k-header > .k-link {
+									width: 100px;
+								}*/
 
-        .k-state-active {
-            display: none;
-        }
+		.k-grid-header {
+			font-weight: bold;
+		}
 
-        .k-content {
-            font-weight: normal;
-            font-size: 13px;
-        }
+		.k-state-active {
+			display: none;
+		}
 
-        .k-widget.k-window {
-            padding-top: 35px;
-            min-width: 90px;
-            min-height: 50px;
-            width: 700px !important;
-            height: 300px !important;
-            top: 180.766px !important;
-            /*left: 120px !important;*/
-            z-index: 10003;
-            left: 300px !important;
-        }
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
 
-        .tooltip-container {
-            position: relative;
-            display: inline-block;
-        }
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
 
-        .info-icon {
-            cursor: pointer;
-        }
+		.tooltip-container {
+			position: relative;
+			display: inline-block;
+		}
 
-        .tooltip1 {
-            display: none;
-            position: absolute;
-            background-color: lightslategray;
-            color: #fff;
-            padding: 10px;
-            border-radius: 15px;
-            white-space: nowrap;
-            z-index: 1;
-            top: 100%;
-            margin-left: -142px;
-            transform: translateX(-50%);
-        }
+		.info-icon {
+			cursor: pointer;
+		}
 
-        .tooltip-container:hover .tooltip1 {
-            display: block;
-        }
-    </style>
+		.tooltip1 {
+			display: none;
+			position: absolute;
+			background-color: lightslategray;
+			color: #fff;
+			padding: 10px;
+			border-radius: 15px;
+			white-space: nowrap;
+			z-index: 1;
+			top: 100%;
+			margin-left: -142px;
+			transform: translateX(-50%);
+		}
+
+		.tooltip-container:hover .tooltip1 {
+			display: block;
+		}
+	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-    <div class="content-wrapper">
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;height: 84%;overflow-x:scroll;">
-                <div style="margin-bottom: 2%;">
-                <div id="grid_maualmatch1"></div>
-                </div>
-                <div style="margin-bottom: 2%;">
-                    <div id="grid_maualmatch2"></div>
-                </div>
-                <div style="margin-bottom: 2%;">
-                    <div id="grid_maualmatch3"></div>
-                </div >
-                 <div style="margin-bottom: 2%;">
-                    <div id="grid_maualmatch4"></div>
-                </div>
-                <div>
-                    <button type="button" class="btn btn-sm me-2 save_btn" onclick="proceedtoRun()">Proceed</button>&nbsp;&nbsp;&nbsp;
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 84%;overflow-x:scroll;">
+				<div style="margin-bottom: 2%;">
+					<div id="grid_maualmatch1"></div>
+				</div>
+				<div style="margin-bottom: 2%;">
+					<div id="grid_maualmatch2"></div>
+				</div>
+				<div style="margin-bottom: 2%;">
+					<div id="grid_maualmatch3"></div>
+				</div>
+				<div style="margin-bottom: 2%;">
+					<div id="grid_maualmatch4"></div>
+				</div>
+				<div>
+					<button type="button" class="btn btn-sm me-2 save_btn" onclick="proceedtoRun()">Proceed</button>&nbsp;&nbsp;&nbsp;
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#navhead").text("Manual Matching and Posting");
-        kendodate_format();
-        getdetails()
-    });
+	$(document).ready(function () {
+		$("#navhead").text("Manual Matching and Posting");
+		kendodate_format();
+		getdetails()
+	});
 
-    function getdetails() {
-        var getdata = getlocalStorage("manualMatch_schedulerid");
-        console.log("data", data);
-        var data = {};
-        data.in_scheduler_gid = getdata.scheduler_gid;
-        data.in_user_code = sessionStorage.getItem("usrname");
-        $.ajax({
-            type: "POST",
-            url: '../KnockOff/ManualMatchDetails',
-            dataType: 'json',
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                if (response != null) {
-                    var data = JSON.parse(response)
-                    grid_manual_details1(data.DataSet1);
-                    grid_manual_details2(data.DataSet2);
-                    grid_manual_details3(data.DataSet3);
-                    grid_manual_details4(data.Table3);
-                }
-                else {
-                    grid_dataset_details([]);
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
+	function getdetails() {
+		var getdata = getlocalStorage("manualMatch_schedulerid");
+		var data = {};
+		data.in_scheduler_gid = getdata.scheduler_gid;
+		data.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KnockOff/ManualMatchDetails',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var data = JSON.parse(response);
+					if (data.DataSet1.length > 0) {
+						grid_manual_details1(data.DataSet1);
+					} else {
+						grid_manual_details1([]);
+					}
+					if (data.DataSet2.length > 0) {
+						grid_manual_details2(data.DataSet2);
+					} else {
+						grid_manual_details2([]);
+					}
+					if (data.DataSet3.length > 0) {
+						grid_manual_details3(data.DataSet3);
+					} else {
+						grid_manual_details3([]);
+					}
+					if (data.Table3.length > 0) {
+						grid_manual_details4(data.Table3);
+					} else {
+						grid_manual_details4([]);
+					}
+				}
+				else {
+					grid_dataset_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
 
-        });
-    }
+		});
+	}
 
-    function grid_manual_details1(data) {
-        var columns = [];
-        var rows = [];
-        for (var key in data[0]) {
-            var field = key.replace(/\s+/g, '_');
-            var propType = typeof data[0][key];
-            if(propType == 'number') {
-                columns.push({
-                field: field,
-                title: key,
-                type: propType,
-                attributes: { style: "text-align: right;" },
-                filterable: false,
-            });
-            } else {
-            columns.push({
-                field: field,
-                title: key,
-                type: propType,
-                attributes: { style: "text-align: left;" },
-                filterable: false,
-            });
-            }
-        }
-        $.each(data, function (i, e) {
-            var entryObject = {};
-            for (var key in e) {
-                var field = key.replace(/\s+/g, '_');
-                entryObject[field] = e[key];
-            }
-            rows.push(entryObject);
-        });
+	function grid_manual_details1(data) {
+		var columns = [];
+		var rows = [];
+		for (var key in data[0]) {
+			var field = key.replace(/\s+/g, '_');
+			var propType = typeof data[0][key];
+			if (propType == 'number') {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: right;" },
+					filterable: false,
+				});
+			} else {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: left;" },
+					filterable: false,
+				});
+			}
+		}
+		$.each(data, function (i, e) {
+			var entryObject = {};
+			for (var key in e) {
+				var field = key.replace(/\s+/g, '_');
+				entryObject[field] = e[key];
+			}
+			rows.push(entryObject);
+		});
 
-        var configuration = {
-            dataSource: {
-                data: rows,
-                pageSize: 10
-            },
-            height: 80,
-            navigatable: false,
-            groupable: false,
-            editable: false,
-            sortable: false,
-            scrollable: false,
-            pageable: false,
-            attributes: { style: "text-align: center;" },
-            filterable: {
-                extra: false,
-                operators: {
-                    string: {
-                        contains: "Contains"
-                    }
-                }
-            },
-            resizable: true,
-            persistSelection: true,
-            selectable: true,
-            columns: columns
-        };
+		var configuration = {
+			dataSource: {
+				data: rows,
+				pageSize: 10
+			},
+			height: 80,
+			navigatable: false,
+			groupable: false,
+			editable: false,
+			sortable: false,
+			scrollable: false,
+			pageable: false,
+			attributes: { style: "text-align: center;" },
+			filterable: {
+				extra: false,
+				operators: {
+					string: {
+						contains: "Contains"
+					}
+				}
+			},
+			resizable: true,
+			persistSelection: true,
+			selectable: true,
+			columns: columns
+		};
 
-        $("#example1").remove();
-        $('#grid_maualmatch1').append('<div id="example1" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
-        var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
-    }
+		$("#example1").remove();
+		$('#grid_maualmatch1').append('<div id="example1" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
+		var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+	}
 
-    function grid_manual_details2(data){
-        var columns = [];
-        var rows = [];
-        for (var key in data[0]) {
-            var field = key.replace(/\s+/g, '_');
-            var propType = typeof data[0][key];
-                if (propType == 'number'){
-            columns.push({
-                field: field,
-                title: key,
-                type: propType,
-                attributes: { style: "text-align: right;" },
-                filterable: false,
-            });
-                } else {
-                    columns.push({
-                        field: field,
-                        title: key,
-                        type: propType,
-                        attributes: { style: "text-align: left;" },
-                        filterable: false,
-                    });
-                }
-        }
-        $.each(data, function (i, e) {
-            var entryObject = {};
-            for (var key in e) {
-                var field = key.replace(/\s+/g, '_');
-                entryObject[field] = e[key];
-            }
-            rows.push(entryObject);
-        });
+	function grid_manual_details2(data) {
+		var columns = [];
+		var rows = [];
+		for (var key in data[0]) {
+			var field = key.replace(/\s+/g, '_');
+			var propType = typeof data[0][key];
+			if (propType == 'number') {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: right;" },
+					filterable: false,
+				});
+			} else {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: left;" },
+					filterable: false,
+				});
+			}
+		}
+		$.each(data, function (i, e) {
+			var entryObject = {};
+			for (var key in e) {
+				var field = key.replace(/\s+/g, '_');
+				entryObject[field] = e[key];
+			}
+			rows.push(entryObject);
+		});
 
-        var configuration = {
-            dataSource: {
-                data: rows,
-                pageSize: 10
-            },
-            height: 60,
-            navigatable: false,
-            groupable: false,
-            editable: false,
-            sortable: false,
-            scrollable: false,
-            pageable: false,
-            attributes: { style: "text-align: center;" },
-            filterable: {
-                extra: false,
-                operators: {
-                    string: {
-                        contains: "Contains"
-                    }
-                }
-            },
-            resizable: false,
-            persistSelection: false,
-            selectable: false,
-            columns: columns
-        };
-        $("#example2").remove();
-        $('#grid_maualmatch2').append('<div id="example2" style="position:relative;" class="k-content"><table id="grid2" style="position:relative;overflow:scroll;width:100%"></table></div>');
-        var timeEditGrid = $("#grid2").kendoGrid(configuration).data("kendoGrid");
-    }
+		var configuration = {
+			dataSource: {
+				data: rows,
+				pageSize: 10
+			},
+			height: 60,
+			navigatable: false,
+			groupable: false,
+			editable: false,
+			sortable: false,
+			scrollable: false,
+			pageable: false,
+			attributes: { style: "text-align: center;" },
+			filterable: {
+				extra: false,
+				operators: {
+					string: {
+						contains: "Contains"
+					}
+				}
+			},
+			resizable: false,
+			persistSelection: false,
+			selectable: false,
+			columns: columns
+		};
+		$("#example2").remove();
+		$('#grid_maualmatch2').append('<div id="example2" style="position:relative;" class="k-content"><table id="grid2" style="position:relative;overflow:scroll;width:100%"></table></div>');
+		var timeEditGrid = $("#grid2").kendoGrid(configuration).data("kendoGrid");
+	}
 
-    function grid_manual_details3(data) {
-        var columns = [];
-        var rows = [];
-        for (var key in data[0]) {
-            var field = key.replace(/\s+/g, '_');
-            var propType = typeof data[0][key];
-                if (propType == 'number') {
-            columns.push({
-                field: field,
-                title: key,
-                type: propType,
-                attributes: { style: "text-align: right;" },
-                filterable: true,
-            });
-                } else {
-                    columns.push({
-                        field: field,
-                        title: key,
-                        type: propType,
-                        attributes: { style: "text-align: left;" },
-                        filterable: true,
-                    });
-                }
-        }
-        $.each(data, function (i, e) {
-            var entryObject = {};
-            for (var key in e) {
-                var field = key.replace(/\s+/g, '_');
-                entryObject[field] = e[key];
-            }
-            rows.push(entryObject);
-        });
+	function grid_manual_details3(data) {
+		var columns = [];
+		var rows = [];
+		for (var key in data[0]) {
+			var field = key.replace(/\s+/g, '_');
+			var propType = typeof data[0][key];
+			if (propType == 'number') {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: right;" },
+					filterable: true,
+				});
+			} else {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: left;" },
+					filterable: true,
+				});
+			}
+		}
+		$.each(data, function (i, e) {
+			var entryObject = {};
+			for (var key in e) {
+				var field = key.replace(/\s+/g, '_');
+				entryObject[field] = e[key];
+			}
+			rows.push(entryObject);
+		});
 
-        var configuration = {
-            dataSource: {
-                data: rows,
-            },
-            height: 115,
-            navigatable: true,
-            groupable: false,
-            editable: false,
-            sortable: true,
-            scrollable: true,
-            attributes: { style: "text-align: center;" },
-            filterable: false,
-            pageable: false,
-            resizable: true,
-            persistSelection: true,
-            selectable: true,
-            columns: columns
-        };
-        $("#example3").remove();
-        $('#grid_maualmatch3').append('<div id="example3" style="position:relative;" class="k-content"><table id="grid3" style="position:relative;overflow:scroll;width:100%"></table></div>');
-        var timeEditGrid = $("#grid3").kendoGrid(configuration).data("kendoGrid");
-    }
+		var configuration = {
+			dataSource: {
+				data: rows,
+			},
+			height: 115,
+			navigatable: true,
+			groupable: false,
+			editable: false,
+			sortable: true,
+			scrollable: true,
+			attributes: { style: "text-align: center;" },
+			filterable: false,
+			pageable: false,
+			resizable: true,
+			persistSelection: true,
+			selectable: true,
+			columns: columns
+		};
+		$("#example3").remove();
+		$('#grid_maualmatch3').append('<div id="example3" style="position:relative;" class="k-content"><table id="grid3" style="position:relative;overflow:scroll;width:100%"></table></div>');
+		var timeEditGrid = $("#grid3").kendoGrid(configuration).data("kendoGrid");
+	}
 
-    function grid_manual_details4(data) {
-        var columns = [];
-        var rows = [];
-        for (var key in data[0]) {
-            var field = key.replace(/\s+/g, '_');
-            var propType = typeof data[0][key];
-                if (propType == 'number'){
-            columns.push({
-                field: field,
-                title: key,
-                type: propType,
-                attributes: { style: "text-align: right;" },
-                filterable: false,
-            });
-                } else {
-                    columns.push({
-                        field: field,
-                        title: key,
-                        type: propType,
-                        attributes: { style: "text-align: left;" },
-                        filterable: false,
-                    });
-                }
-        }
-        $.each(data, function (i, e) {
-            var entryObject = {};
-            for (var key in e) {
-                var field = key.replace(/\s+/g, '_');
-                entryObject[field] = e[key];
-            }
-            rows.push(entryObject);
-        });
+	function grid_manual_details4(data) {
+		var columns = [];
+		var rows = [];
+		for (var key in data[0]) {
+			var field = key.replace(/\s+/g, '_');
+			var propType = typeof data[0][key];
+			if (propType == 'number') {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: right;" },
+					filterable: false,
+				});
+			} else {
+				columns.push({
+					field: field,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: left;" },
+					filterable: false,
+				});
+			}
+		}
+		$.each(data, function (i, e) {
+			var entryObject = {};
+			for (var key in e) {
+				var field = key.replace(/\s+/g, '_');
+				entryObject[field] = e[key];
+			}
+			rows.push(entryObject);
+		});
 
-        var configuration = {
-            dataSource: {
-                data: rows,
-                pageSize: 10
-            },
-            height: 60,
-            navigatable: false,
-            groupable: false,
-            editable: false,
-            sortable: false,
-            scrollable: false,
-            attributes: { style: "text-align: center;" },
-            filterable: {
-                extra: false,
-                operators: {
-                    string: {
-                        contains: "Contains"
-                    }
-                }
-            },
-            resizable: false,
-            persistSelection: false,
-            selectable: false,
-            columns: columns
-        };
-        $("#example4").remove();
-        $('#grid_maualmatch4').append('<div id="example4" style="position:relative;" class="k-content"><table id="grid4" style="position:relative;overflow:scroll;width:100%"></table></div>');
-        var timeEditGrid = $("#grid4").kendoGrid(configuration).data("kendoGrid");
-    }
+		var configuration = {
+			dataSource: {
+				data: rows,
+				pageSize: 10
+			},
+			height: 60,
+			navigatable: false,
+			groupable: false,
+			editable: false,
+			sortable: false,
+			scrollable: false,
+			attributes: { style: "text-align: center;" },
+			filterable: {
+				extra: false,
+				operators: {
+					string: {
+						contains: "Contains"
+					}
+				}
+			},
+			resizable: false,
+			persistSelection: false,
+			selectable: false,
+			columns: columns
+		};
+		$("#example4").remove();
+		$('#grid_maualmatch4').append('<div id="example4" style="position:relative;" class="k-content"><table id="grid4" style="position:relative;overflow:scroll;width:100%"></table></div>');
+		var timeEditGrid = $("#grid4").kendoGrid(configuration).data("kendoGrid");
+	}
 
-    function proceedtoRun(){
-        var getdata = getlocalStorage("manualMatch_schedulerid");
-        console.log("data", data);
-        var data = {};
-        data.in_scheduler_gid = getdata.scheduler_gid;
-        data.in_ip_addr = ""
-        data.in_user_code = sessionStorage.getItem("usrname");
-        $.confirm({
-            icon: 'fa fa-warning',
-            title: 'Recon',
-            autoClose: 'cancel|10000',
-            theme: 'dark',
-            animationSpeed: 700,
-            content: 'Are you sure do you want to Proceed!',
-            type: 'orange',
-            buttons: {
-                confirm: function () {
-                    $.alert({
-                        title: 'Recon',
-                        content: "Manual Matching KO Initated..!",
-                        type: 'green',
-                    });
-                    $.ajax({
-                        type: "POST",
-                        url: '../KnockOff/runmanualfile',
-                        dataType: 'json',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json; charset=utf-8',
-                        //success: function (response) {
-                        //    var res = JSON.parse(response)
-                        //    if (res.length > 0) {
-                        //        $.alert({
-                        //            title: 'Recon',
-                        //            content: res[0].out_msg,
-                        //            type: 'green',
-                        //        });
-                        //    }
-                        //    else {
-                        //        $.alert({
-                        //            title: 'Recon',
-                        //            content: "Something went wrong",
-                        //            type: 'red',
-                        //        });
-                        //    }
-                        //},
-                        //error: function (er) {
-                        //    alert(er)
-                        //    console.log(er)
-                        //}
+	function proceedtoRun() {
+		var getdata = getlocalStorage("manualMatch_schedulerid");
+		console.log("data", data);
+		var data = {};
+		data.in_scheduler_gid = getdata.scheduler_gid;
+		data.in_ip_addr = ""
+		data.in_user_code = sessionStorage.getItem("usrname");
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to Proceed!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					$.alert({
+						title: 'Recon',
+						content: "Manual Matching KO Initated..!",
+						type: 'green',
+					});
+					$.ajax({
+						type: "POST",
+						url: '../KnockOff/runmanualfile',
+						dataType: 'json',
+						data: JSON.stringify(data),
+						contentType: 'application/json; charset=utf-8',
+						//success: function (response) {
+						//    var res = JSON.parse(response)
+						//    if (res.length > 0) {
+						//        $.alert({
+						//            title: 'Recon',
+						//            content: res[0].out_msg,
+						//            type: 'green',
+						//        });
+						//    }
+						//    else {
+						//        $.alert({
+						//            title: 'Recon',
+						//            content: "Something went wrong",
+						//            type: 'red',
+						//        });
+						//    }
+						//},
+						//error: function (er) {
+						//    alert(er)
+						//    console.log(er)
+						//}
 
-                    });
-                },
-                cancel: function () {
-                    $.alert({
-                        icon: 'fa fa-success',
-                        title: 'Recon',
-                        theme: 'dark',
-                        content: 'Canceled Sucessfully.!',
-                        type: 'blue',
-                        animationSpeed: 700,
-                    });
-                },
-            }
-        });
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Canceled Sucessfully.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
 
-    
-    }
+
+	}
 </script>

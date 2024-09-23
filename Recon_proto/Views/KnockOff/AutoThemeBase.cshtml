@@ -461,6 +461,7 @@
 								type: 'green',
 							});
 							$("#run_theme").prop("disabled", false);
+							var in_user_code = sessionStorage.getItem("usrname");
 							$.ajax({
 								type: "POST",
 								async: true,
@@ -471,7 +472,7 @@
 									in_job_gid: in_job_gid,
 									in_period_from: pr,
 									in_period_to: pr1,
-									in_automatch_flag: 'Y',
+									in_automatch_flag: 'Y',in_user_code:in_user_code,
 								}),
 								contentType: 'application/json; charset=utf-8',
 								//success: function (response) {

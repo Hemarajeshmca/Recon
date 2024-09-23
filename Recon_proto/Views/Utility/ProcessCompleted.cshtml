@@ -343,10 +343,11 @@
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var job_gid = model.job_gid;
 		var file_name = model.file_name;
+		var user_code = sessionStorage.getItem("usrname");
 		if (model.file_type != 'xlsx') {
-			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '&file_name=' + file_name + '';
+			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '&file_name=' + file_name + '' + '&username=' + user_code + '';
 		} else {
-			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '&file_name=' + file_name + '';
+			window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '&file_name=' + file_name + '' + '&username=' + user_code + '';
 		}
 	}
 
