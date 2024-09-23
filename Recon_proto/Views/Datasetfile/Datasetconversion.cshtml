@@ -791,57 +791,58 @@
 						if (e.lengthComputable) {
 							var percentComplete = (e.loaded / e.total) * 100;
 							$('#progressBar').val(percentComplete);
-							if (percentComplete === 100) {
-								hideProgress();
-								$.alert({
-									title: 'Recon',
-									content: "Job Initiated. Kindly check the Job Status in Utility",
-									type: 'green',
-								});
-								$("#File_Import").val("");
-								$("#FileName").val("");
-								$('#progressBar').val("0");
-							} 
+							//if (percentComplete === 100) {
+							//	hideProgress();
+							//	$.alert({
+							//		title: 'Recon',
+							//		content: "Job Initiated. Kindly check the Job Status in Utility",
+							//		type: 'green',
+							//	});
+							//	$("#File_Import").val("");
+							//	$("#FileName").val("");
+							//	$('#progressBar').val("0");
+							//} 
 						}
 					};
 					return xhr;
 				},
-				//success: function (response) {
-				//	hideProgress();
-				//	if (!response) {
-				//		$.alert({
-				//			title: 'Recon',
-				//			content: 'Something went wrong',
-				//			type: 'red',
-				//		});
-				//	} else {
-				//		var res = JSON.parse(response);
-				//		if (res.result == 0) {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: res.message,
-				//				type: 'green',
-				//			});
-				//		} else {
-				//			$.alert({
-				//				title: 'Recon',
-				//				content: res.message,
-				//				type: 'red',
-				//			});
-				//		}
-				//		$("#FileName").val("");
-				//		$("#File_Import").val("");
-				//		$("#Pipeline").val("");
-				//	}
-				//},
-				//error: function () {
-				//	hideProgress();
-				//	$.alert({
-				//		title: 'Recon',
-				//		content: "Upload Failed .!",
-				//		type: 'red',
-				//	});
-				//}
+				success: function (response) {
+					hideProgress();
+					if (!response) {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong',
+							type: 'red',
+						});
+					} else {
+						var res = JSON.parse(response);
+						if (res.result == 0) {
+							$.alert({
+								title: 'Recon',
+								content: res.message,
+								type: 'green',
+							});
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: res.message,
+								type: 'red',
+							});
+						}
+						$("#FileName").val("");
+						$("#File_Import").val("");
+						$("#Pipeline").val("");
+						$('#progressBar').val("0");
+					}
+				},
+				error: function () {
+					hideProgress();
+					$.alert({
+						title: 'Recon',
+						content: "Upload Failed .!",
+						type: 'red',
+					});
+				}
 			});
 		} else if (!pipeline_code) {
 			$.alert({
@@ -869,6 +870,7 @@
 			});
 			$("#File_Import").val("");
 			$("#FileName").val("");
+			$('#progressBar').val("0");
 		}
 	}
 

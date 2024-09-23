@@ -747,12 +747,23 @@
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var dataSource = grid.dataSource;
 
+		// Get the last row's index
+		var lastRowIndex = grid.dataSource._data.length - 1;
+
+		// Set the previous row's "join_condition" to "AND" if the value is blank
+		if (lastRowIndex >= 0) {
+			var previousRow = dataSource.at(lastRowIndex);
+			if (!previousRow.join_condition || previousRow.join_condition === "") {
+				previousRow.set("join_condition", "AND");
+			}
+		}
+
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		var newSeqNo = parseInt(lastSeqNo) + 1;
-	
+		var filter_val = "";
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", reporttemplatefilter_gid: 0, isLastRow : false});
+		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", reporttemplatefilter_gid: 0, isLastRow: false, filter_value: filter_val });
 	}
 
 	function OnEdit(e) {
@@ -988,7 +999,11 @@
 			}
 
 			// Condition based value assigning
-			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+				value = " is not null ";
+			} else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+				value = " is null ";
+			} else if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
 				value = " != '" + grid._data[i].filter_value + "'";
 			}
 			else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
@@ -1141,7 +1156,11 @@
 				}
 
 				// Condition based value assigning
-				if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+				if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+					value = " is not null ";
+				} else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+					value = " is null ";
+				} else if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
 					value = " != '" + grid._data[i].filter_value + "'";
 				}
 				else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
@@ -1313,7 +1332,11 @@
 			}
 
 			// Condition based value assigning
-			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+				value = " is not null ";
+			} else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+				value = " is null ";
+			} else if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
 				value = " != '" + grid._data[i].filter_value + "'";
 			}
 			else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
@@ -1676,7 +1699,13 @@
 			if ($('#chk_sel_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
 				open_braces = "(";
 			}
-			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
+
+			// Condition based value assigning
+			if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+				value = " is not null ";
+			} else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO" && grid._data[i].filter_value == 'null') {
+				value = " is null ";
+			} else if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
 				value = " != '" + grid._data[i].filter_value + "'";
 			}
 			else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
