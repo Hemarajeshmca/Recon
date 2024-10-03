@@ -568,6 +568,7 @@ namespace Recon_proto.Controllers
 
 		public class undoKOModel
 		{
+			public String in_recon_code { get; set; }
 			public int in_ko_gid { get; set; }
 			public string in_undo_ko_reason { get; set; }
 			public string in_user_code { get; set; }
@@ -607,7 +608,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "undoKO");
+				objcom.errorlog(ex.Message, "undoKOjob");
 				return Json(ex.Message);
 			}
 		}
