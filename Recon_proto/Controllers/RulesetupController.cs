@@ -518,6 +518,7 @@ namespace Recon_proto.Controllers
 		}
 		#endregion
 
+		#region RuleAgainstRecon
 		public class Ruleagainstrecon
 		{
 			public string? in_recon_code { get; set; }
@@ -585,11 +586,10 @@ namespace Recon_proto.Controllers
 				objcom.errorlog(ex.Message, "RuleAgainstRecon");
 				return Json(ex.Message);
 			}
-
-
-
-
 		}
+		#endregion
+
+		#region cloneReconRule
 
 		[HttpPost]
 		public JsonResult cloneReconRule([FromBody] cloneReconRuleModel context)
@@ -641,6 +641,7 @@ namespace Recon_proto.Controllers
 			public string in_clone_comparison_dataset_code { get; set; }
 			public string? in_user_code { get; set; }
 		}
+		#endregion
 
 		#region getallRule
 		public class getallRulemodel
