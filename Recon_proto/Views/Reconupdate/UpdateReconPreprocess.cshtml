@@ -63,16 +63,19 @@
 					<hr style="margin-top:-1px; width:100%;">
 					<div class="container">
 						<div class="row">
-							<div class="selectedRule col-md-12" id="selected_preprocess_name"></div>
+							<div class="selectedRule col-md-6" id="selected_preprocess_name"></div>
+							<div class="selectedRule col-md-6" id="selected_recon_name"></div>
+
 						</div>
-						<div class="row">
-							<div class="col-md-6">
+						<div class="row" style="margin-top: 20px;">
+							<div class="col-md-10">
 								<label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="updatereconname" class="form-select form-control" onchange="updatePreProcess()">
-								</select>
+								@*<select id="updatereconname" class="form-select form-control" onchange="updatePreProcess()">
+								</select>*@
+								<input id="updatereconname" style="width:65%" />
 								<input class="form-control" type="hidden" id="selectedPreprocess">
 							</div>
-							<div class="col-md-6">
+							@*<div class="col-md-6">
 								<label for="" class="form-label">
 									Update PreProcess&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
 									<span>
@@ -81,7 +84,7 @@
 								</label>
 								<select id="updatepreprocessname" class="form-select form-control" onchange="gridlist()">
 								</select>
-							</div>
+							</div>*@
 						</div>
 					</div>
 				</div>
@@ -129,6 +132,7 @@
 </html>
 <script type="text/javascript">
 	var preprocessList = [];
+	var reconarray = [];
 	$(document).ready(function () {
 		$("#navhead").text("Recon PreProcess Update");
 		kendodate_format();
@@ -151,15 +155,15 @@
 			success: function (response) {
 				var res = JSON.parse(response);
 				$("#cmbreconname").empty();
-				$("#updatereconname").empty();
+				//$("#updatereconname").empty();
 				$("#cmbreconname").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
-				$("#updatereconname").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
+				//$("#updatereconname").append($('<option>', {
+				//	value: "",
+				//	text: "  Select  "
+				//}));
 				$.each(res, function (index, item) {
 					if (item.active_status == "Y") {
 						$("#cmbreconname").append($('<option>', {
@@ -168,14 +172,14 @@
 						}));
 					}
 				});
-				$.each(res, function (index, item) {
-					if (item.active_status == "Y") {
-						$("#updatereconname").append($('<option>', {
-							value: item.recon_code,
-							text: item.recon_name
-						}));
-					}
-				});
+				//$.each(res, function (index, item) {
+				//	if (item.active_status == "Y") {
+				//		$("#updatereconname").append($('<option>', {
+				//			value: item.recon_code,
+				//			text: item.recon_name
+				//		}));
+				//	}
+				//});
 
 				if (sessionStorage.getItem("reconcode") != null) {
 					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
@@ -279,7 +283,7 @@
 						{
 							name: "edit",
 							id: "btn_Edit",
-							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-process' value='edit' data-bs-toggle='modal'><img style='height: 16px;width: 16px; cursor: pointer;' src = '../Assets/images/update.png' title='Update'></a>&nbsp;&nbsp;&nbsp;",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-process' value='edit' data-bs-toggle='modal'><img style='height: 16px;width: 16px; cursor: pointer;' src = '../Assets/images/login-refresh.png' title='Update'></a>&nbsp;&nbsp;&nbsp;",
 						},
 						{
 							name: "view",
@@ -416,7 +420,10 @@
 			var grid = $("#grid_preprocesslist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			$('#selected_preprocess_name').text('Selected PreProcess :' + selectedItem.preprocess_desc);
+			$('#selected_recon_name').text('Selected Recon:' + selectedItem.recon_name);
 			if ($(mode).attr('value') == "edit") {
+				clearCheckboxes();
+				getupdatePreProcessList();
 				$("#updatereconname").val("");
 				$("#updatepreprocessname").val("");
 				$("#infomodal").modal("show");
@@ -446,13 +453,33 @@
 	}
 
 	function updateRecon() {
+		var grid = $("#grid_preprocesslist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var Attribid = [];
+		var arrstring = "";
+		var cbs = document.getElementsByName("cb");
+		for (var i = 0; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				var item = cbs[i].value;
+				Attribid.push(item);
+			}
+		}
+		arrString = Attribid.join("$");
+		if (arrString == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Recon name should not be Empty",
+				type: 'red',
+			});
+			return;
+		}
 		var data = {};
 		data.in_base_recon_code = $("#cmbreconname").val();
 		data.in_base_preprocess_code = $("#selectedPreprocess").val();
-		data.in_update_recon_code = $("#updatereconname").val();
-		data.in_update_preprocess_code = $("#updatepreprocessname").val();
+		data.in_update_recon_code = "$" + arrString;
+		data.in_update_preprocess_code = selectedItem.preprocess_desc;
 		data.in_user_code = sessionStorage.getItem("usrname");
-		if (data.in_update_recon_code && data.in_update_preprocess_code) {
+		if (arrString != "" && data.in_update_preprocess_code) {
 			$.ajax({
 				type: "POST",
 				url: '../Reconupdate/ReconUpdatePreprocess',
@@ -485,7 +512,7 @@
 					console.log(er)
 				}
 			});
-		} else if (!data.in_update_recon_code) {
+		} else if (arrString == "") {
 			$.alert({
 				title: 'Recon',
 				content: "Please Select Update Recon .!",
@@ -501,52 +528,219 @@
 		}
 	}
 
-	function updatePreProcess() {
-		var grid = $("#grid_preprocesslist").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());
-		var data = {};
-		data.recon_code = $("#updatereconname").val();
-		data.in_user_code = sessionStorage.getItem("usrname");
-		if (data.recon_code) {
-			$.ajax({
-				type: "POST",
-				url: '../Preprocess/Preprocesslistfetch',
-				dataType: 'json',
-				contentType: 'application/json; charset=utf-8',
-				data: JSON.stringify(data),
-				success: function (response) {
-					if (response != " " && response != null && response != "{}" && response != "[]") {
-						var res = JSON.parse(response);
-						$("#updatepreprocessname").empty();
-						$("#updatepreprocessname").append($('<option>', {
-							value: "",
-							text: "  Select  "
-						}));
-						$.each(res, function (index, item) {
-							//if (item.rule_apply_on == selectedItem.rule_apply_on && item.active_status == 'Y') {
-								preprocessList.push(item);
-								$("#updatepreprocessname").append($('<option>', {
-									value: item.preprocess_code,
-									text: item.preprocess_desc
-								}));
-							//}
-						});
-					} else {
-						$.alert({
-							title: 'Recon',
-							content: "No PreProcess Found .!",
-							type: 'red',
-						});
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
-			});
-		} else {
-			$("#updatepreprocessname").val("");
+	function clearCheckboxes() {
+		var checkboxes = document.getElementsByName("cb");
+		// Iterate through the NodeList and uncheck each checkbox
+		for (var i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false; // Uncheck the checkbox
 		}
 	}
 
+	//function updatePreProcess() {
+	//	var grid = $("#grid_preprocesslist").data("kendoGrid");
+	//	var selectedItem = grid.dataItem(grid.select());
+	//	var data = {};
+	//	data.recon_code = $("#updatereconname").val();
+	//	data.in_user_code = sessionStorage.getItem("usrname");
+	//	if (data.recon_code) {
+	//		$.ajax({
+	//			type: "POST",
+	//			url: '../Preprocess/Preprocesslistfetch',
+	//			dataType: 'json',
+	//			contentType: 'application/json; charset=utf-8',
+	//			data: JSON.stringify(data),
+	//			success: function (response) {
+	//				if (response != " " && response != null && response != "{}" && response != "[]") {
+	//					var res = JSON.parse(response);
+	//					$("#updatepreprocessname").empty();
+	//					$("#updatepreprocessname").append($('<option>', {
+	//						value: "",
+	//						text: "  Select  "
+	//					}));
+	//					$.each(res, function (index, item) {
+	//						//if (item.rule_apply_on == selectedItem.rule_apply_on && item.active_status == 'Y') {
+	//							preprocessList.push(item);
+	//							$("#updatepreprocessname").append($('<option>', {
+	//								value: item.preprocess_code,
+	//								text: item.preprocess_desc
+	//							}));
+	//						//}
+	//					});
+	//				} else {
+	//					$.alert({
+	//						title: 'Recon',
+	//						content: "No PreProcess Found .!",
+	//						type: 'red',
+	//					});
+	//				}
+	//			},
+	//			error: function (er) {
+	//				alert(er)
+	//				console.log(er)
+	//			}
+	//		});
+	//	} else {
+	//		$("#updatepreprocessname").val("");
+	//	}
+	//}
+
+	function getupdatePreProcessList() {
+		var grid = $("#grid_preprocesslist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var data = {};
+		data.in_preprocess_name = selectedItem.preprocess_desc;
+		$.ajax({
+			type: "POST",
+			url: '../Reconupdate/ReconagainstPreProcess',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				reconarray = res;
+				var arr = [];
+				var list2 = {};
+				list2.value = "";
+				list2.text = "ALL";
+				arr.push(list2);
+				for (i = 0; res.length > i; i++) {
+					var list1 = {};
+					if (res[i]["active_status"] == 'Y') {
+						list1.value = res[i].recon_code;
+						list1.text = res[i].recon_name;
+						arr.push(list1);
+					}
+				}
+				dropdown = $("#updatereconname").kendoDropDownList({
+					dataTextField: "text",
+					dataValueField: "value",
+					template: $("#CheckboxTemplate").html(),
+					dataSource: arr,
+					placeholder: "Select...",
+					select: function (e) {
+						e.preventDefault();
+					}
+				}).data("kendoDropDownList");
+
+				dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
+					var $item = $(this);
+					var $input;
+
+					if ($item.hasClass("check-item")) {
+						// Text was clicked
+						$input = $item.children(".check-input");
+						$input.prop("checked", !$input.is(':checked'));
+					}
+					else
+						// Checkbox was clicked
+						$input = $item;
+
+					// Check all clicked?
+					if ($input.val() == "")
+						dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
+
+					updateDropDown()
+
+					e.stopImmediatePropagation();
+				});
+
+				updateDropDown();
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function updateDropDown() {
+		var items = [];
+		dropdown.list.find(".check-input").each(function () {
+			var $input = $(this);
+			if ($input.val() != "" && $input.is(':checked'))
+				items.push($input.next().text());
+		});
+		dropdown.text(items.toString());
+	}
 </script>
+
+<script type="text/x-kendo-template" id="CheckboxTemplate">
+	<li unselectable="on" class="k-item nowrap check-item">
+		<input type="checkbox"  name="cb" value="#= value #" class="check-input"  />
+		<span >#= text #</span>
+	</li>
+</script>
+
+@*<script>
+	var dataone = [];
+
+	(function ($) {
+		var MultiSelectBox = window.kendo.ui.DropDownList.extend({
+			_select: function (li) { },//Prevents highlighting
+			_blur: function () { },//Prevents auto close
+		});
+
+		window.kendo.ui.plugin(MultiSelectBox);
+	})(jQuery);
+
+	function onSelect(e) {
+		var cbs = document.getElementsByName("cb");
+		var checkboxes = document.getElementsByTagName('input');
+		var ddl = $("#ReconName_id").data("kendoDropDownList");
+		var id = ddl.element.attr("ReconName_id");
+		multiselect();
+		var item = e.item;
+		var index = item.index();
+		if (index == 0) {
+			for (var i = 1; i < cbs.length; i++) {
+				var selectAll = cbs[0].checked;
+				if (cbs[0].checked) {
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].type == 'checkbox') {
+							checkboxes[i].checked = true;
+						}
+					}
+					multiselect();
+				}
+
+				else {
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].type == 'checkbox') {
+							checkboxes[i].checked = false;
+						}
+					}
+					multiselect();
+				}
+			}
+		}
+
+	}
+
+	function multiselect() {
+		var ddl = $("#ReconName_id").data("kendoDropDownList");
+		var isAllChecked = $('#cb').prop("checked");
+		var cbs = document.getElementsByName("cb");
+		var display;
+
+		var list = [];
+		for (var i = 1; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				list.push(cbs[i].value);
+			}
+
+		}
+
+
+		if (list.length == 0) {
+			display = "-- SelectAll --";
+			$("#ReconAttr").html("Recon - All");
+		}
+		else {
+			display = list.join(", ");
+			$("#ReconAttr").html("Recon - " + display + "");
+		}
+		ddl.text(display);
+
+	}
+
+</script>*@
