@@ -625,10 +625,12 @@
 						console.log(`result.ReconDataSet`, result.ReconDataSet);
 						$.each(result.ReconDataSet, function (index, item) {
 							if (item.dataset_type != "S") {
-								$("#cmbParentDataset").append($('<option>', {
-									value: item.dataset_code,
-									text: item.dataset_name
-								}));
+								if (item.dataset_type != "L") {
+									$("#cmbParentDataset").append($('<option>', {
+										value: item.dataset_code,
+										text: item.dataset_name
+									}));
+								}
 							}
 						});
 					}
@@ -1785,7 +1787,7 @@
 				});
 				return;
 			}
-		}else{
+		} else {
 			$.alert({
 				title: 'Recon',
 				content: "Display Order cannot be empty",
@@ -2514,7 +2516,7 @@
 			} else if ($("#txtmode").val() == "Edit") {
 				action = "UPDATE"
 			}
-			var action_by =sessionStorage.getItem("usrname");
+			var action_by = sessionStorage.getItem("usrname");
 			var recon_id = $("#recon_id").val();
 			if (recon_id > 0) {
 				recon_id = $("#recon_id").val();
