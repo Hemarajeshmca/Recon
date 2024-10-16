@@ -235,6 +235,10 @@
 		.info-label.active .info-content {
 			display: block;
 		}
+
+		.k-grid-content {
+			height: 90px !important;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -1152,6 +1156,7 @@
 		}
 	}
 	function Sourcemodechange() {
+		var recontype = $("#recontype").val();
 		var groupflag = $("#cmbgroupflag").val();
 		var sourceAccmode = $("#souaccmode").val();
 		var ruleappliedon = $("#RuleAppliedOn").val();
@@ -1170,7 +1175,7 @@
 			}
 		});
 		//-----Transaction-----
-		if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "T") {
+		if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "T" && recontype != "I") {
 			$("#comaccmode").empty();
 			$("#comaccmode").append($('<option>', {
 				value: "",
@@ -1185,7 +1190,32 @@
 				}
 			});
 			$("#comaccmode").val("C")
-		} else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "T") {
+		} else if (groupflag == "OTO" && sourceAccmode == "D" && ruleappliedon == "T" && recontype == "I") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+				if (item.code != "B") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		}
+		else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "T" && recontype != "I") {
 			$("#comaccmode").empty();
 			$("#comaccmode").append($('<option>', {
 				value: "",
@@ -1209,8 +1239,30 @@
 					}));
 				}
 			});
+		} else if (groupflag != "OTO" && sourceAccmode == "D" && ruleappliedon == "T" && recontype == "I") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				});
 		}
-		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "T") {
+		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "T" && recontype != "I") {
 			$("#comaccmode").empty();
 			$("#comaccmode").append($('<option>', {
 				value: "",
@@ -1225,7 +1277,31 @@
 				}
 			});
 			$("#comaccmode").val("D")
-		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "T") {
+		} else if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "T" && recontype == "I") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {
+				if (item.code != "B") {
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));
+				}
+			});
+		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "T" && recontype != "I") {
 			$("#comaccmode").empty();
 			$("#comaccmode").append($('<option>', {
 				value: "",
@@ -1249,6 +1325,28 @@
 						text: item.desc
 					}));
 				}
+			});
+		} else if (groupflag != "OTO" && sourceAccmode == "C" && ruleappliedon == "T" && recontype == "I") {
+			$("#comaccmode").empty();
+			$("#comaccmode").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			var arr = [];
+			for (i = 0; i < response.length; i++) {
+				var syscode = response[i].masterCode;
+				if (syscode != "NA") {
+					var list = {};
+					list.code = response[i].masterCode;
+					list.desc = response[i].masterName;
+					arr.push(list);
+				}
+			}
+			$.each(arr, function (index, item) {				
+					$("#comaccmode").append($('<option>', {
+						value: item.code,
+						text: item.desc
+					}));				
 			});
 		}
 		//----tranction----
@@ -4080,7 +4178,7 @@
 					in_parent_dataset_code: in_parent_dataset_code, in_parent_acc_mode: in_parent_acc_mode, probableflag: probableflag,
 					in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_user_code: in_user_code,
 					in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
-						in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, ruleremark: ruleremark,
+					in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, ruleremark: ruleremark,
 					in_inactive_reason: in_inactive_reason
 				}),
 				contentType: 'application/json; charset=utf-8',

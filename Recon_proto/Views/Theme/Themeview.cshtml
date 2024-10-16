@@ -25,9 +25,7 @@
 			background-color: initial !important;
 		}
 
-		.k-grid.k-widget {
-			height: 360px;
-		}
+		
 
 		.k-grid-header th.k-header > .k-link {
 			width: 100px;
@@ -52,6 +50,22 @@
 			/*left: 120px !important;*/
 			z-index: 10003;
 			left: 300px !important;
+		}
+
+		div.k-grid tbody .k-button {
+			min-width: 0;
+		}
+
+		.form-horizontal .control-label {
+			font-weight: 400;
+		}
+
+		.k-grid .k-autocomplete.k-state-default, .k-grid .k-picker-wrap.k-state-default, .k-grid .k-numeric-wrap.k-state-default {
+			height: 18px;
+		}
+
+		.k-grid-content {
+			height: 100px !important;
 		}
 	</style>
 </head>
@@ -225,7 +239,7 @@
 								<div class="tab-pane fade" id="navs-pills-top-sourcefilter" role="tabpanel" style="margin-top:-19px;">
 									<div class="panel panel-default">
 										<div class="panel-body">
-											<div class="row" style="margin-top:5px;">
+											<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
 												<div class="col-xs-12">
 													<div id="gd_themefilter">
 														<div id="grid_themefilterfield">
@@ -943,21 +957,29 @@
 					$("#querydata").val(res.themeHeader[0].theme_query);
 					fthemetype();
 					if (res.sourceidentifier.length > 0) {
+						$("#gd_themefilter").empty();
+						$("#gd_themefilter").append("<div id='grid_themefilterfield'></div>");
 						grid_themefilter(res.sourceidentifier);
 					} else {
 						grid_themefilter([]);
 					}
 					if (res.themeCondition.length > 0) {
+						$("#gd_themecondition").empty();
+						$("#gd_themecondition").append("<div id='grid_themecondition'></div>");
 						grid_themecondition(res.themeCondition);
 					} else {
 						grid_themecondition([]);
 					}
 					if (res.comparisionidentifier.length > 0) {
+						$("#gd_comparisionfilter").empty();
+						$("#gd_comparisionfilter").append("<div id='grid_comparisionfilter'></div>");
 						grid_comparisionfilter(res.comparisionidentifier);
 					} else {
 						grid_comparisionfilter([]);
 					}
 					if (res.themeGrouping.length > 0) {
+						$("#gd_grouping").empty();
+						$("#gd_grouping").append("<div id='grid_themegrouping'></div>");
 						grid_themegrouping(res.themeGrouping);
 					} else {
 						grid_themegrouping([]);
@@ -1025,6 +1047,8 @@
 						grid_themecondition(res.themeCondition);
 					}
 					if (screen == "source") {
+						$("#gd_themefilter").empty();
+						$("#gd_themefilter").append("<div id='grid_themefilterfield'></div>");
 						grid_themefilter(res.sourceidentifier);
 					}
 					if (screen == "compare") {
@@ -1592,8 +1616,8 @@
 				selectable: "row",
 				filterable: false,
 				navigatable: true,
-				pageable: true,
 				resizable: true,
+				pageable: true,
 				pageable: {
 					refresh: false,
 					pageSizes: true,
