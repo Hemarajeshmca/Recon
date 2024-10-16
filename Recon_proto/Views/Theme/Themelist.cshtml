@@ -470,11 +470,12 @@
 										var themetype = "";
 										var sourcedataset = "";
 										var comparedataset = "";
+										var themequery="";
 										$.ajax({
 											type: "POST",
 											url: '../theme/themeheader',
 											dataType: 'json',
-											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name }),
+											data: JSON.stringify({ theme_name: themename, theme_Code: theme_code, theme_gid: theme_gid, theme_type: themetype, in_action: action, in_action_by: action_by, recon_code: cmbrecon, active_status: status, theme_order: theme_order, source_dataset: sourcedataset, comparison_dataset: comparedataset, inactive_reason: name, themequery: themequery }),
 											contentType: 'application/json; charset=utf-8',
 											success: function (response) {
 												var result = JSON.parse(response);
