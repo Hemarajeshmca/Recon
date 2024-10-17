@@ -453,7 +453,7 @@
 							firstColumnValues = firstColumnValues.slice(0, -1);
 						}
 
-						if (in_recon_code && period_from && period_to && firstColumnValues) {
+						if (in_recon_code && period_from && period_to) {
 							hideProgress();
 							$.alert({
 								title: 'Recon',
@@ -509,14 +509,15 @@
 								content: 'Date is missing',
 								type: 'red',
 							});
-						} else if (!firstColumnValues) {
-							$("#run_theme").prop("disabled", false);
-							$.alert({
-								title: 'Recon',
-								content: 'No Rules to Run Theme',
-								type: 'red',
-							});
-						}
+						} 
+						//else if (!firstColumnValues) {
+						//	$("#run_theme").prop("disabled", false);
+						//	$.alert({
+						//		title: 'Recon',
+						//		content: 'No Rules to Run Theme',
+						//		type: 'red',
+						//	});
+						//}
 						hideProgress();
 					},
 					cancel: function () {
