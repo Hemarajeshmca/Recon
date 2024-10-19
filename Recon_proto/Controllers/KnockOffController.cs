@@ -819,15 +819,17 @@ namespace Recon_proto.Controllers
 					d2 = JsonConvert.DeserializeObject<string>(post_data);
 					result2 = JsonConvert.DeserializeObject<DataSet>(d2);
 					Table1 = result2.Tables[0].Copy();
-					Table1.Columns.RemoveAt(7);
-					Table1.Columns.RemoveAt(7);
+					Table1.Columns.RemoveAt(5);
+					Table1.Columns.RemoveAt(5);
+					//Table1.Columns.RemoveAt(7);
+					//Table1.Columns.RemoveAt(7);
 					Table1.Columns[0].ColumnName = "Rows Labels";
 					Table1.Columns[1].ColumnName = "Debit Count";
 					Table1.Columns[2].ColumnName = "Debit Amount";
 					Table1.Columns[3].ColumnName = "Credit Count";
 					Table1.Columns[4].ColumnName = "Credit Amount";
-					Table1.Columns[5].ColumnName = "Total Count";
-					Table1.Columns[6].ColumnName = "Total Amount";
+					//Table1.Columns[5].ColumnName = "Total Count";
+					//Table1.Columns[6].ColumnName = "Total Amount";
 
 					for (int i = 0; i < Table1.Rows.Count; i++)
 					{
@@ -842,7 +844,8 @@ namespace Recon_proto.Controllers
 
 					int rowscount = Table1.Rows.Count + 3;
 					string celltxt = "A" + rowscount.ToString() + "";
-					string celltxt2 = "G" + rowscount.ToString() + "";
+					string celltxt2 = "E" + rowscount.ToString() + "";
+					//string celltxt2 = "G" + rowscount.ToString() + "";
 					string rangetxt = celltxt + ":" + celltxt2;
 					using (XLWorkbook wb = new XLWorkbook())
 					{
@@ -864,20 +867,20 @@ namespace Recon_proto.Controllers
 						wb.Worksheet(1).Table(0).Style.Border.LeftBorderColor = XLColor.Black;
 						wb.Worksheet(1).Table(0).Style.Border.RightBorder = XLBorderStyleValues.Thin;
 						wb.Worksheet(1).Table(0).Style.Border.RightBorderColor = XLColor.Black;
-						ws.Range("A3:G3").Style.Font.Bold = true;
-						ws.Range("A3:G3").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
+						ws.Range("A3:E3").Style.Font.Bold = true;
+						ws.Range("A3:E3").Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 						ws.Range(rangetxt).Style.Font.Bold = true;
 						ws.Range(rangetxt).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
 						rowscount = rowscount - 2;
 						celltxt = "A" + rowscount.ToString() + "";
-						celltxt2 = "G" + rowscount.ToString() + "";
+						celltxt2 = "E" + rowscount.ToString() + "";
 						rangetxt = celltxt + ":" + celltxt2;
 						ws.Range(rangetxt).Style.Font.Bold = true;
 						ws.Range(rangetxt).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
 
 						celltxt = "A" + subtotal_count.ToString() + "";
-						celltxt2 = "G" + subtotal_count.ToString() + "";
+						celltxt2 = "E" + subtotal_count.ToString() + "";
 						rangetxt = celltxt + ":" + celltxt2;
 						ws.Range(rangetxt).Style.Font.Bold = true;
 						ws.Range(rangetxt).Style.Fill.BackgroundColor = XLColor.FromTheme(XLThemeColor.Accent1, 0.5);
