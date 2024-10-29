@@ -155,6 +155,7 @@ namespace Recon_proto.Controllers
 			public String? in_recon_automatch_partial { get; set; }
 			public String in_period_from { get; set; }
 			public String in_period_to { get; set; }
+			public String closure_date { get; set; }
 			public String? in_until_active_flag { get; set; }
 			public String? in_active_status { get; set; }
 			public String? in_recon_date_flag { get; set; }
