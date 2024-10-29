@@ -60,9 +60,9 @@
 			background-color: green;
 		}
 
-			.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
-				background-color: red;
-			}
+		.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+			background-color: red;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -120,6 +120,13 @@
 									</label>
 									<div>
 										<input class="cusDate" #datepicker data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Recon Closure Date&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<div>
+										<input class="cusDate" #datepicker data-role='datepicker' id="closure_date" name="closure_date" style="width:100%" />
+										<span data-for='valid' class='k-invalid-msg'></span>
 									</div>
 								</div>
 							</div>
@@ -593,8 +600,7 @@
 		kendodate_format();
 		getGridComboList();
 		grid_datasetrecon([]);
-		grid_recondatasetmapping([]);
-
+		grid_recondatasetmapping([]);		
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
@@ -711,6 +717,7 @@
 				gridpreprocessMapping([]);
 				grid_reportTemplist([]);
 				gridthemeMapping([]);
+				$("#closure_date").val('');
 			} else {
 				var data = {};
 				data.recon_code = $("#reconcode").val();
@@ -865,7 +872,7 @@
 							} else {
 								$("#partialmatch2").prop("checked", true);
 							}
-
+							$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
 							$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
 							$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
@@ -1004,7 +1011,7 @@
 						} else {
 							$("#partialmatch2").prop("checked", true);
 						}
-
+						$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
 						$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 						$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
 						$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
@@ -1125,6 +1132,8 @@
 					$("#period_to").val(res.ReconHeader[0].period_to);
 					$("#txtstatus").val(res.ReconHeader[0].active_status_desc);
 					$("#recon_id").val(res.ReconHeader[0].recon_gid);
+					$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
+					
 					if (res.ReconHeader[0].recon_value_flag == "Y") {
 						$("#reconvalueflag1").prop("checked", true);
 					} else {
@@ -1345,7 +1354,14 @@
 					var pr1 = "1901-01-02";
 				}
 			}
-
+			var closure_date = $("#closure_date").val();
+			if (closure_date != "") {
+				var ts4 = closure_date.split("/");
+				var pr4 = ts4[2] + "-" + ts4[1] + "-" + ts4[0];
+			} else {
+				var pr4 = "1901-01-01";
+			}
+			
 			var action = "";
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
@@ -1389,7 +1405,7 @@
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2509,7 +2525,13 @@
 					var pr1 = "1901-01-02";
 				}
 			}
-
+			var closure_date = $("#closure_date").val();
+			if (closure_date != "") {
+				var ts4 = closure_date.split("/");
+				var pr4 = ts4[2] + "-" + ts4[1] + "-" + ts4[0];
+			} else {
+				var pr4 = "1901-01-01";
+			}
 			var action = "";
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
@@ -2561,7 +2583,7 @@
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code }),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {

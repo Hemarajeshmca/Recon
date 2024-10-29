@@ -23,9 +23,7 @@
 
 		.k-grid-filter.k-state-active {
 			background-color: initial !important;
-		}
-
-		
+		}		
 
 		.k-grid-header th.k-header > .k-link {
 			width: 100px;
@@ -1466,8 +1464,7 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					debugger;
-					if (response != null) {
+					if (response.out_result == 1) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -1476,7 +1473,11 @@
 						getfetch($("#txtthemecode").val(), "themecond");
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -1767,36 +1768,38 @@
 				javascript_log4j_root(arguments.callee.name, err);
 			}
 		}
-
+		$(function () {
+			debugger;
+			$('#grid_themefilterfield').on('click', '.chkbx3', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_themefilterfield').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			});
+		});
+		$(function () {
+			debugger;
+			$('#grid_themefilterfield').on('click', '.chkbx4', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_themefilterfield').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			});
+		});
 	}
-	$(function () {
-		$('#grid_themefilterfield').on('click', '.chkbx3', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_themefilterfield').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	})
-	$(function () {
-		$('#grid_themefilterfield').on('click', '.chkbx4', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_themefilterfield').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('close_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('close_parentheses_flag', 'N');
-			}
-		})
-	})
+	
 	function addRowsource() {
 		var grid = $("#grid_themefilterfield").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -2343,36 +2346,36 @@
 				javascript_log4j_root(arguments.callee.name, err);
 			}
 		}
-
+		$(function () {
+			$('#grid_comparisionfilter').on('click', '.chkbx5', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_comparisionfilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			})
+		})
+		$(function () {
+			$('#grid_comparisionfilter').on('click', '.chkbx6', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_comparisionfilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			})
+		})
 	}
-	$(function () {
-		$('#grid_comparisionfilter').on('click', '.chkbx5', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_comparisionfilter').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	})
-	$(function () {
-		$('#grid_comparisionfilter').on('click', '.chkbx6', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_comparisionfilter').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('close_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('close_parentheses_flag', 'N');
-			}
-		})
-	})
+	
 	function addRowcomparision() {
 		var grid = $("#grid_comparisionfilter").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -3181,7 +3184,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
-					if (response != null) {
+					if (response.out_result == 1) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -3190,7 +3193,11 @@
 						getfetch($("#txtthemecode").val(), "aggfun");
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {

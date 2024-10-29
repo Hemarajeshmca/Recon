@@ -81,18 +81,18 @@
 			color: white;
 		}
 
-			.accordion-label:hover {
-				background: rgb(135, 46, 123)
-			}
+		.accordion-label:hover {
+			background: rgb(135, 46, 123)
+		}
 
-			.accordion-label::after {
-				content: "\276F";
-				width: 16px;
-				height: 16px;
-				text-align: center;
-				-webkit-transition: all 0.3s;
-				transition: all 0.3s;
-			}
+		.accordion-label::after {
+			content: "\276F";
+			width: 16px;
+			height: 16px;
+			text-align: center;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
 
 		.accordion-content {
 			max-height: 0;
@@ -103,20 +103,20 @@
 			transition: all 0.3s;
 		}
 
-			.accordion-content p {
-				margin: 0;
-				color: rgba(4,57,94,.7);
-				font-size: 18px;
-			}
+		.accordion-content p {
+			margin: 0;
+			color: rgba(4,57,94,.7);
+			font-size: 18px;
+		}
 
 		input:checked + .accordion-label {
 			background: rgba(4,57,94,1);
 		}
 
-			input:checked + .accordion-label::after {
-				-webkit-transform: rotate(90deg);
-				transform: rotate(90deg);
-			}
+		input:checked + .accordion-label::after {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
 
 		input:checked ~ .accordion-content {
 			max-height: 100vh;
@@ -2844,7 +2844,7 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -2853,7 +2853,11 @@
 						preprocessfetch($("#txtpreprocesscode").val());
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -2921,7 +2925,7 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -2930,7 +2934,11 @@
 						preprocessfetch($("#txtpreprocesscode").val());
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -3347,7 +3355,7 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -3356,7 +3364,11 @@
 						preprocessfetch($("#txtpreprocesscode").val());
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -3449,7 +3461,7 @@
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					if (response != null) {
+					if (response.out_result == "1") {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -3458,7 +3470,11 @@
 						preprocessfetch($("#txtpreprocesscode").val());
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {

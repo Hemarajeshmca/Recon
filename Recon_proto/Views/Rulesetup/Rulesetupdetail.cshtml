@@ -50,10 +50,10 @@
 			z-index: 1;
 		}
 
-			#dropdown-list li {
-				padding: 5px;
-				cursor: pointer;
-			}
+		#dropdown-list li {
+			padding: 5px;
+			cursor: pointer;
+		}
 
 		#editable-input {
 			width: 100%;
@@ -159,9 +159,9 @@
 			font-size: 12px;
 		}
 
-			.k-grid-header th.k-header.k-filter-row th {
-				text-align: center;
-			}
+		.k-grid-header th.k-header.k-filter-row th {
+			text-align: center;
+		}
 
 		.k-grid td {
 			padding: 0.3em 0.3em;
@@ -1256,11 +1256,11 @@
 				}
 			}
 			$.each(arr, function (index, item) {
-					$("#comaccmode").append($('<option>', {
-						value: item.code,
-						text: item.desc
-					}));
-				});
+				$("#comaccmode").append($('<option>', {
+					value: item.code,
+					text: item.desc
+				}));
+			});
 		}
 		if (groupflag == "OTO" && sourceAccmode == "C" && ruleappliedon == "T" && recontype != "I") {
 			$("#comaccmode").empty();
@@ -1342,11 +1342,11 @@
 					arr.push(list);
 				}
 			}
-			$.each(arr, function (index, item) {				
-					$("#comaccmode").append($('<option>', {
-						value: item.code,
-						text: item.desc
-					}));				
+			$.each(arr, function (index, item) {
+				$("#comaccmode").append($('<option>', {
+					value: item.code,
+					text: item.desc
+				}));
 			});
 		}
 		//----tranction----
@@ -2180,7 +2180,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
-					if (response != null) {
+					if (response.out_result == 1) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -2189,7 +2189,11 @@
 						getfetch($("#rulegid").val(), "rulecond");
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -3072,7 +3076,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
-					if (response != null) {
+					if (response.out_result == 1) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -3081,7 +3085,11 @@
 						getfetch($("#rulegid").val(), "idents");
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -3150,7 +3158,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
-					if (response != null) {
+					if (response.out_result == 1) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -3159,7 +3167,11 @@
 						getfetch($("#rulegid").val(), "identc");
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
@@ -3480,7 +3492,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					debugger;
-					if (response != null) {
+					if (response.out_result == 1) {
 						$.alert({
 							title: 'Recon',
 							content: response.out_msg,
@@ -3489,7 +3501,11 @@
 						getfetch($("#rulegid").val(), "group");
 					}
 					else {
-
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
 					}
 				},
 				error: function (er) {
