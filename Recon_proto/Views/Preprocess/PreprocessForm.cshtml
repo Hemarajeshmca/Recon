@@ -328,6 +328,18 @@
 									</div>
 								</div>
 							</div>
+							<div class="accordion" id="headingcumexp">
+								<input type="checkbox" name="radio-a" id="check9" style="display:none">
+								<label class="accordion-label" for="check9">&nbsp;&nbsp;&nbsp;Recon Order</label>
+								<div class="accordion-content" id="headingcumexp">
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_cumexporder">
+											<div id="grid_cumexporder">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="accordion" id="headingfilter">
 								<input type="checkbox" name="radio-a" id="check1" style="display:none">
 								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Recon Filter</label>
@@ -378,7 +390,9 @@
 		$("#headingfilter").hide();
 		$("#headinglookupfilter").hide();
 		$("#headingexpression").hide();
+		$("#headingcumexp").hide();
 		getGridComboList();
+		$("#btncoll").hide();
 	});
 	function getGridComboList() {
 		//recon type
@@ -536,6 +550,7 @@
 			grid_lookupfield([]);
 			grid_filterdata([]);
 			grid_lookupfilter([]);
+			grid_cumexporder([]);
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -601,6 +616,8 @@
 				$("#Cmbclone").prop('disabled', true);
 				$("#btnclone").prop('disabled', true);
 				$("#returnflag").prop('disabled', true);
+				$("#postprocessflag").prop('disabled', true);
+				$("#CmbExpression").prop('disabled', true);
 			}
 		}
 	}
@@ -2776,20 +2793,7 @@
 		}
 	}
 
-	const button = document.getElementById('validatequery');
-	function validateAndChangeColor() {
-		// Perform validation here
-		if ($("#validquery").val() == "true") {
-			button.classList.remove('validated');
-			button.classList.add('validated1');
-		} else {
-			// If validation fails, remove 'validateds' class
-			button.classList.remove('btn-primary');
-			button.classList.add('validated');
-
-		}
-	}
-	button.addEventListener('click', validateAndChangeColor);
+	const button = document.getElementById('validatequery');	
 	function savefilter() {
 		try {
 			var grid = $("#grid_filter").data("kendoGrid");
@@ -3166,6 +3170,10 @@
 						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
 						$("#CmbExpression").val(result.header[0].process_expression)
 					}
+					if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
+						$("#CmbExpression").val(result.header[0].process_expression)
+					}					
 					$("#postprocessflag").val(result.header[0].postprocess_flag)
 					$("#querydata").val(result.header[0].process_query);
 					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
@@ -3219,11 +3227,18 @@
 					} else {
 						grid_lookupfield([]);
 					}
+					if (result.preprocessorder.length > 0) {
+						grid_cumexporder(result.preprocessorder)
+					} else {
+						grid_cumexporder([]);
+					}
 					if ($("#txtmode").val() == "View") {
 						$("#grid_filter .k-grid-toolbar").hide();
 						$("#grid_lookup .k-grid-toolbar").hide();
 						$("#grid_lookuprecon .k-grid-toolbar").hide();
 						$("#grid_lookupfilter .k-grid-toolbar").hide();
+						$("#grid_lookupfield .k-grid-toolbar").hide
+						$("#grid_cumexporder .k-grid-toolbar").hide();
 					}
 				}
 				else {
@@ -3232,6 +3247,7 @@
 					grid_lookuprecon([]);
 					grid_lookupfield([]);
 					grid_lookupfilter([]);
+					grid_cumexporder([]);
 				}
 			},
 			error: function (er) {
@@ -3830,6 +3846,10 @@
 				expression = $("#CmbExpression").val();
 				set_recon_field = $("#Cmbreconfield2").val();
 			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+			}			
 
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
@@ -3839,6 +3859,7 @@
 				preprocess_gid = $("#preprocessgid").val();
 				addRow();
 				addRowrecon();
+				addrowexporder();
 				return;
 			} else {
 				preprocess_gid = 0;
@@ -4105,7 +4126,11 @@
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
 				expression = $("#CmbExpression").val();
 				set_recon_field = $("#Cmbreconfield2").val();
-			}
+			} 
+			else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+			} 
 
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
@@ -4265,7 +4290,11 @@
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
 				expression = $("#CmbExpression").val();
 				set_recon_field = $("#Cmbreconfield2").val();
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
 			}
+			
 
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
@@ -4435,6 +4464,10 @@
 				expression = $("#CmbExpression").val();
 				set_recon_field = $("#Cmbreconfield2").val();
 			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+			}
 
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
@@ -4572,6 +4605,7 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headingexpression").hide();
+			$("#headingcumexp").hide();
 			$("#headingfunction").show();
 			$("#headingfilter").show();
 			//$("#check1").prop('checked', true);
@@ -4591,6 +4625,7 @@
 			$("#headinglookuprecon").show();
 			$("#headinglookupfilter").show();
 			$("#headingfunction").hide();
+			$("#headingcumexp").hide();
 			$("#headingexpression").hide();
 			$("#headingfilter").show();
 			$("#check3").prop('checked', true);
@@ -4612,6 +4647,7 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headingfunction").hide();
+			$("#headingcumexp").hide();
 			$("#headingexpression").hide();
 			$("#headingfilter").hide();
 			$("#check6").prop('checked', true);
@@ -4627,7 +4663,24 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headingfunction").hide();
+			$("#headingcumexp").hide();
 			$("#headingexpression").show();
+			$("#headingfilter").show();
+			$("#check8").prop('checked', true);
+			//$("#check1").prop('checked', true);
+		} else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+			$("#cmblookupdataset").val('');
+			$("#Cmblookupdatasetfield").val('');
+			$("#Cmbreconfield1").val('');
+			$("#querydata").val('');
+			$("#headingquery").hide();
+			$("#headinglookup").hide();
+			$("#headinglookupdataset").hide();
+			$("#headinglookuprecon").hide();
+			$("#headinglookupfilter").hide();
+			$("#headingfunction").hide();			
+			$("#headingexpression").show();
+			$("#headingcumexp").show();
 			$("#headingfilter").show();
 			$("#check8").prop('checked', true);
 			//$("#check1").prop('checked', true);
@@ -4749,6 +4802,309 @@
 								console.log(er)
 							}
 
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	function grid_cumexporder(data) {
+		var recorder_field_list = "";
+		$("#grid_cumexporder").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "recorder_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessrecorder_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							recorder_seqno: { type: "string" },
+							recorder_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			toolbar: "<a onclick=addrowexporder()  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_cumexporder').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saverulecumexporder()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJscumexporder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "10px",
+			},
+			{
+				field: "preprocessrecorder_gid",
+				title: "preprocessrecorder_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocess_code",
+				title: "preprocess_code",
+				width: 100,
+				hidden: true,
+			},			
+			{
+				field: "recorder_field_code",
+				title: "recorder_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_field",
+				title: "Recon Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_manreorder(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_cumexporder")
+				},
+			},
+			{
+				field: "recorder_seqno",
+				title: "Order Seq No.",
+				width: 30,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+
+		});		
+	}
+	function addrowexporder() {
+		if ($("#txtpreprocesscode").val() != '') {
+			var grid = $("#grid_cumexporder").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var max = 0;
+			var lastSeqNo = grid.dataSource._data.length;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].recorder_seqno > max) {
+					max = grid.dataSource._data[i].recorder_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
+
+			// Add a new row with the incremented sequence number
+			dataSource.add({ recorder_seqno: newSeqNo, preprocessrecorder_gid: 0 });
+			var lastRow = grid.tbody.children().last();
+			grid.content.scrollTop(lastRow.position().top);
+		} else {
+			saveheader();
+		}
+	}
+	function combo_editor_manreorder(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function saverulecumexporder() {
+		try {
+			var grid = $("#grid_cumexporder").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_preprocess_code = $("#txtpreprocesscode").val();
+			var in_recorder_seqno = model.recorder_seqno;
+			var in_recorder_field = model.recorder_field_code;
+			var action = "INSERT";
+			var action_by = sessionStorage.getItem("usrname");
+			var in_preprocessrecorder_gid = model.preprocessrecorder_gid;
+			if (in_preprocessrecorder_gid == "0") {
+				in_preprocessrecorder_gid = 0;
+				action = "INSERT"
+			} else {
+				in_preprocessrecorder_gid = model.preprocessrecorder_gid
+				action = "UPDATE"
+			}
+			var status = "Y"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/reconfieldordersave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocessrecorder_gid: in_preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
+					in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,
+					in_action: action, in_user_code: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});						
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}
+				},
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJscumexporder() {
+		var grid = $("#grid_cumexporder").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessrecorder_gid = parseInt(model.preprocessrecorder_gid);
+		if (preprocessrecorder_gid == 0) {
+			grid.dataSource.remove(model);
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_preprocess_code = "";						
+						var in_recorder_seqno = 0;
+						var in_recorder_field = "";
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var status = ""
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/reconfieldordersave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessrecorder_gid: preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
+								in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,
+								in_action: action, in_user_code: action_by, in_active_status: status
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});									
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
 						})
 					},
 					cancel: function () {
