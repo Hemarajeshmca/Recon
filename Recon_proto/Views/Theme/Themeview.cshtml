@@ -3980,15 +3980,6 @@
 			var sourcedataset = $("#sourcedataset").val();
 			var comparedataset = $("#comdataset").val();
 			var themequery = "";
-			if (themetype == "QCD_THEME_DIRECT") {
-				sourcedataset = "";
-				comparedataset = "";
-			} else if (themetype == "QCD_THEME_QUERY") {
-				sourcedataset = "";
-				comparedataset = "";
-				themequery = $("#querydata").val();
-			}
-			var action = "";
 			var theme_gid = $("#themegid").val();
 			if (theme_gid > 0) {
 				theme_gid = $("#themegid").val();
@@ -3999,6 +3990,17 @@
 				action = "INSERT"
 				status = "D";
 			}
+			if (themetype == "QCD_THEME_DIRECT") {
+				sourcedataset = "";
+				comparedataset = "";
+			} else if (themetype == "QCD_THEME_QUERY") {
+				sourcedataset = "";
+				comparedataset = "";
+				themequery = $("#querydata").val();
+				status = "Y";
+			}
+			var action = "";
+			
 			var holdflag = $("#holdflag").val();
 			var action_by = sessionStorage.getItem("usrname");
 			var inactive_reason = "";
