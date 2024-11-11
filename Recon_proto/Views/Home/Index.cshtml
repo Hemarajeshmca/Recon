@@ -1,4 +1,4 @@
-@{
+﻿@{
 	ViewBag.title = "Dashboard";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
@@ -7,7 +7,7 @@
 <html>
 <head>
 
-	<style>
+	<style>		
 		.content-wrapper {
 			min-height: 564px !important;
 			margin-top: -12px;
@@ -162,51 +162,60 @@
 						</div>
 					</div>
 					<div class="row" style="margin-left:0px; margin-bottom: 5px;margin-top:6px;margin-right: -17px;">
-						<div class="col-sm-2">
+						
+						<div class="col-sm-2" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#ff6a00;">Recons</p></center>
 							<div class="card shadow-none bg-transparent border border-primary mb-3" style="border-radius: 20px;border-color: #ff6a00 !important;">
 								<div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="recon_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Recons</p></center>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="recon_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="recon_value"></span></h5>
+									
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2" >
-							<div class="card shadow-none bg-transparent border border-secondary mb-3" style="border-radius: 20px;border-color: #71DD37  !important;position: relative;">
+						<div class="col-sm-2" id="dataset">
+							<center><p class="card-text" style="font-weight:600;color:#71DD37;">Dataset</p></center>
+							<div class="card shadow-none bg-transparent border border-secondary mb-3" id="dataset1" style="border-radius: 20px;border-color: #71DD37  !important;position: relative;">
 								<div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="acc_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Dataset</p></center>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="acc_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="acc_value"></span></h5>
+									
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2" >
+						<div class="col-sm-2" id="trans">
+							<center><p class="card-text" style="font-weight:600;color:#FFAB00;">Transactions</p></center>
 							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #FFAB00 !important;position: relative;">
 								<div class="card-body" style="background:#FFAB00;border-radius: 17px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="tran_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Transactions</p></center>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="tran_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="tran_value"></span></h5>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-2" id="matches">
+							<center><p class="card-text" style="font-weight:600;color:#8592A3;">Matches <span id="match_percentage"></span></p></center>
 							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #8592A3 !important;position: relative;">
 								<div class="card-body" style="background:#8592A3;border-radius: 19px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Matches <span id="match_percentage"></span></p></center>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="ko_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="ko_value"></span></h5>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2" >
+						<div class="col-sm-2 dataset" id="div_partial">
+							<center><p class="card-text" style="font-weight:600;color:#ef8737;">Partial <span id="partial_percentage"></span></p></center>
 							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;position: relative;">
 								<div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Partial <span id="partial_percentage"></span></p></center>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="ko_Partialcount"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="ko_Partialvalue"></span></h5>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2" >
+						<div class="col-sm-2" id="exp">
+							<center><p class="card-text" style="font-weight:600;color:#696cff;">Exceptions <span id="excp_percentage"></span></p></center>
 							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#696cff  !important; position: relative;">
 								<div class="card-body" style="background:#696cff ;border-radius: 20px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="excp_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Exceptions <span id="excp_percentage"></span></p></center>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="excp_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 15px !important;"><span id="excp_value"></span></h5>
 								</div>
 							</div>
 						</div>
@@ -238,6 +247,12 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+		$("#dataset").css({ "width": "215px" });
+		$("#trans").css({ "width": "215px" });
+		$("#matches").css({ "width": "215px" });
+		$("#div_partial").css({ "width": "215px" });
+		$("#exp").css({ "width": "215px" });
+		$("#dataset1").css({ "height": "61px" });
 		kendodate_format();
 		var data = {};		
 		data.in_user_gid = 0;
@@ -640,6 +655,8 @@
 					var ko_txt = "";
 					var excp_txt = "";
 					var partial_txt = "";
+					var ko_value_percentage = 0.00;
+					var excp_value_percentage = 0.00;
 
 					if (response != null) {
 						var data = JSON.parse(response);
@@ -658,13 +675,62 @@
 						$("#recon_count").text(data.DataSet1[0]["recon_count"]);
 						$("#acc_count").text(data.DataSet1[0]["dataset_count"]);
 						$("#tran_count").text(data.DataSet1[0]["tran_count"]);
-						$("#ko_count").text(data.DataSet1[0]["ko_count"]);
-						$("#excp_count").text(data.DataSet1[0]["excp_count"]);
+						$("#ko_count").text(data.DataSet1[0]["ko_count"] + " " + ko_txt);
+						$("#excp_count").text(data.DataSet1[0]["excp_count"] + " " + excp_txt);
 						$("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]);
-						$("#excp_percentage").text(excp_txt);
+						/*$("#excp_percentage").text(excp_txt);
 						$("#match_percentage").text(ko_txt);
-						$("#partial_percentage").text(partial_txt);
+						$("#partial_percentage").text(partial_txt);*/
 						$("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
+
+						if (data.DataSet4[0]["recontype_code"] != "V") {
+							$("#div_partial").css("display", "block");
+							$("#recon_value").text("");
+							$("#tran_value").text("");
+							$("#ko_value").text("");
+							$("#excp_value").text("");
+							$("#ko_Partialvalue").text("");			
+							$("#dataset").css({ "width": "215px" });			
+							$("#trans").css({ "width": "215px" });
+							$("#matches").css({ "width": "215px" });
+							$("#div_partial").css({ "width": "215px" });
+							$("#exp").css({ "width": "215px" });
+							$("#dataset1").css({ "height": "76px" });
+
+						}
+
+						if (data.DataSet4[0]["recontype_code"] == "V") {
+							debugger;
+							$("#div_partial").css("display", "none"); // or "block" to show it
+							$("#dataset").css({ "width": "250px" });
+							$("#dataset1").css({ "height": "91px" });
+							$("#trans").css({ "width": "250px" });
+							$("#matches").css({ "width": "250px" });
+							$("#exp").css({ "width": "250px" });
+
+							ko_value_percentage = (data.DataSet4[0]["ko_value"] / data.DataSet4[0]["tran_value"]);
+							if (!isNaN(ko_value_percentage)) {
+								ko_value_percentage = ko_value_percentage  * 100.00;
+							}else{
+								ko_value_percentage = 0.00;
+							}
+
+							excp_value_percentage = (data.DataSet4[0]["excp_value"] / data.DataSet4[0]["tran_value"]);
+							if (!isNaN(excp_value_percentage)) {
+								excp_value_percentage = excp_value_percentage * 100.00;
+							} else {
+								excp_value_percentage = 0.00;
+							}
+							
+
+							$("#recon_value").text("₹ " + data.DataSet4[0]["tran_value"]);
+							//$("#acc_value").text(data.DataSet4[0]["tran_value"] + " (₹)" );
+							$("#tran_value").text("₹ " + data.DataSet4[0]["tran_value"]);
+							$("#ko_value").text("₹ " + data.DataSet4[0]["ko_value"] + " (" + ko_value_percentage + " %)");
+							$("#excp_value").text("₹ " + data.DataSet4[0]["excp_value"] + " (" + excp_value_percentage + " %)");
+							$("#ko_Partialvalue").text("₹ " + data.DataSet4[0]["tran_value"] + " (" + " %)");
+						}
+						
 
 						var sys_ko_count = data.DataSet2[0]["system_ko_count"];
 						var man_ko_count = data.DataSet2[0]["manual_ko_count"];
