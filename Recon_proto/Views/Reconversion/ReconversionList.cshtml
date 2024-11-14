@@ -450,7 +450,6 @@
 			$('#chk_sel2_' + id1[2]).attr('disabled', false);
 		}
 	}
-
 	function reconsubmit() {
 		debugger;
 		var in_recon_version = $("#reconversion").val();
@@ -569,8 +568,7 @@
 	function theme_grid(data) {
 		$("#themerecon_grid").kendoGrid({
 			dataSource: {
-				data: data,
-				pageSize: 15,
+				data: data,			
 				schema: {
 					model: {
 						fields: {
@@ -585,11 +583,15 @@
 			},
 			height: 380,
 			groupable: false,
+			dataBound: function (e) {
+
+			},
 			scrollable: true,
 			sortable: true,
 			filterable: true,
 			navigatable: false,
-			resizable: true,		
+			resizable: true,
+			pageable: false,
 			columns: [
 				{
 					field: "theme_gid",
@@ -644,8 +646,7 @@
 	function grid_preprocess(data) {
 		$("#preprocess_grid").kendoGrid({
 			dataSource: {
-				data: data,
-				pageSize: 15,
+				data: data,				
 				schema: {
 					model: {
 						fields: {
@@ -662,14 +663,13 @@
 			groupable: false,
 			dataBound: function (e) {
 
-			},
-			height: 380,
-			groupable: false,
+			},	
 			scrollable: true,
 			sortable: true,
 			filterable: true,
 			navigatable: false,
 			resizable: true,
+			pageable: false,
 			columns: [
 				{
 					field: "preprocess_gid",
