@@ -686,5 +686,151 @@ namespace Recon_proto.Controllers
 			}
 		}
 		#endregion
+
+		#region Aggfunction
+		public class Aggfunction
+		{
+			public int? ruleaggfield_gid { get; set; }
+			public Decimal? ruleaggfield_seqno { get; set; }
+			public string? recon_field { get; set; }
+			public string? ruleaggfield_applied_on { get; set; }
+			public string? ruleaggfield_desc { get; set; }
+			public string? ruleagg_function { get; set; }
+			public string? in_rule_code { get; set; }
+			public string? in_active_status { get; set; }
+			public string? in_action { get; set; }
+			public string? in_action_by { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+		[HttpPost]
+		public JsonResult Aggfunctionsave([FromBody] Aggfunction context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Aggfunction objList = new Aggfunction();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.Timeout = Timeout.InfiniteTimeSpan;
+				client.DefaultRequestHeaders.Add("user_code", context.in_action_by);
+				client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+				client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+				client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("ruleaggfun", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					objList.ruleaggfield_gid = Convert.ToInt32(result.Rows[i]["in_ruleaggfield_gid"]);
+					objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					objList.out_result = result.Rows[i]["out_result"].ToString();
+				}
+				return Json(objList);
+			}
+		}
+		#endregion
+
+		#region Aggcondition
+		public class Aggcondition
+		{
+			public int? ruleaggcondition_gid { get; set; }
+			public Decimal? ruleaggcondition_seqno { get; set; }
+			public string? ruleagg_applied_on { get; set; }
+			public string? ruleagg_field { get; set; }
+			public string? ruleagg_criteria { get; set; }
+			public string? ruleagg_value_flag { get; set; }
+			public string? ruleagg_value { get; set; }
+			public string? in_rule_code { get; set; }
+			public string? in_open_flag { get; set; }
+			public string? in_close_flag { get; set; }
+			public string? in_join_condition { get; set; }
+			public string? in_active_status { get; set; }
+			public string? in_action { get; set; }
+			public string? in_action_by { get; set; }
+			public string? out_msg { get; set; }
+			public string? out_result { get; set; }
+		}
+		[HttpPost]
+		public JsonResult Aggconditionsave([FromBody] Aggcondition context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			Aggcondition objList = new Aggcondition();
+			DataTable result = new DataTable();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.Timeout = Timeout.InfiniteTimeSpan;
+				client.DefaultRequestHeaders.Add("user_code", context.in_action_by);
+				client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+				client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+				client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("ruleaggcondition", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				result = JsonConvert.DeserializeObject<DataTable>(d2);
+				for (int i = 0; i < result.Rows.Count; i++)
+				{
+					objList.ruleaggcondition_gid = Convert.ToInt32(result.Rows[i]["in_ruleaggcondition_gid"]);
+					objList.out_msg = result.Rows[i]["out_msg"].ToString();
+					objList.out_result = result.Rows[i]["out_result"].ToString();
+				}
+				return Json(objList);
+			}
+		}
+		#endregion
+
+		#region fetch condition agg
+		public class getConditionrule
+		{
+			public String? in_condition_type { get; set; }
+			public String? in_field_type { get; set; }
+			public String? in_rule_code { get; set; }
+			public string? in_user_code { get; set; }
+		}
+		[HttpPost]
+		public JsonResult getconditionfetch([FromBody] getConditionrule context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			string post_data = "";
+			string d2 = "";
+			using (var client = new HttpClient())
+			{
+				string Urlcon = "Rulesetup/";
+				client.BaseAddress = new Uri(urlstring + Urlcon);
+				client.DefaultRequestHeaders.Accept.Clear();
+				client.Timeout = Timeout.InfiniteTimeSpan;
+				client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+				client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+				client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+				client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+				var response = client.PostAsync("getConditioncriteriarule", content).Result;
+				Stream data = response.Content.ReadAsStreamAsync().Result;
+				StreamReader reader = new StreamReader(data);
+				post_data = reader.ReadToEnd();
+				d2 = JsonConvert.DeserializeObject<string>(post_data);
+				return Json(d2);
+			}
+		}
+		#endregion
 	}
 }

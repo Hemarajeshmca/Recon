@@ -453,8 +453,7 @@
     function theme_grid(data) {
         $("#themerecon_grid").kendoGrid({
             dataSource: {
-                data: data,
-                pageSize: 15,
+                data: data,               
                 schema: {
                     model: {
                         fields: {
@@ -469,11 +468,12 @@
             },
             height: 380,
             groupable: false,
-            scrollable: true,
             sortable: true,
+            selectable: true,
             filterable: true,
-            navigatable: false,
+            navigatable: true,
             resizable: true,
+            pageable: false,
             columns: [
                 {
                     field: "themehistory_gid",
@@ -527,8 +527,7 @@
     function grid_preprocess(data) {
         $("#preprocess_grid").kendoGrid({
             dataSource: {
-                data: data,
-                pageSize: 15,
+                data: data,               
                 schema: {
                     model: {
                         fields: {
