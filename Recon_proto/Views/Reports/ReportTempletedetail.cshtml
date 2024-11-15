@@ -436,7 +436,7 @@
                                                         <div class="col-sm-4">
                                                             <div class="form-group">
                                                                 <label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                                                <input type="file" onchange="filechange(this)" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx, .csv" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+                                                                <input type="file" onchange="filechange(this)" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx, .xls, .xlsm, .csv" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
                                                                 <label class="col-md-6 control-label" id="FileName" hidden></label>
                                                             </div>
                                                             <div>
@@ -2223,7 +2223,8 @@
         return new Promise((resolve, reject) => {
             reader.onload = function (e) {
                 var data = new Uint8Array(e.target.result);
-                if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                if (!file.name.endsWith('.csv')) {
+               // if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls') || file.name.endsWith('.xlsm')) {
                     // Read XLSX and XLS files
                     try{
                         var workbook = XLSX.read(data, { type: 'array' });
