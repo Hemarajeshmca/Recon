@@ -285,9 +285,10 @@
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
+			async: true,
 			url: '../KnockOff/undoKOjob',
 			dataType: 'json',
-				data: JSON.stringify({ in_recon_code: reconcode, in_job_type: jobtype, in_job_status: jobstatus, in_from_date: pr, in_to_date: pr1, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_recon_code: reconcode, in_job_type: jobtype, in_job_status: jobstatus, in_from_date: pr, in_to_date: pr1, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -337,7 +338,7 @@
 					$.ajax({
 						type: "POST",
 						url: '../KnockOff/undomatchjob',
-						async: false,
+						async: true,
 						dataType: 'json',
 						data: JSON.stringify({ reconcode: reconcode, job_id: jobgid, undo_job_reason: knockoff, in_ip_addr: ip_addr, in_user_code: user_code }),
 						contentType: 'application/json; charset=utf-8',
