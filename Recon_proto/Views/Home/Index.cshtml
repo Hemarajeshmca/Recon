@@ -672,18 +672,23 @@
 							excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
 							partial_txt = " (" + partial_percentage.toFixed(2) + " %)";
 						}
+						else{
+							ko_txt = " (0%)";
+							excp_txt = " (0%)";
+							partial_txt = " (0%)";
+						}
 						$("#recon_count").text(data.DataSet1[0]["recon_count"]);
 						$("#acc_count").text(data.DataSet1[0]["dataset_count"]);
 						$("#tran_count").text(data.DataSet1[0]["tran_count"]);
 						$("#ko_count").text(data.DataSet1[0]["ko_count"] + " " + ko_txt);
 						$("#excp_count").text(data.DataSet1[0]["excp_count"] + " " + excp_txt);
-						$("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]);
+						$("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]+ " " + partial_txt);
 						/*$("#excp_percentage").text(excp_txt);
 						$("#match_percentage").text(ko_txt);
 						$("#partial_percentage").text(partial_txt);*/
 						$("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
 
-						if (data.DataSet4[0]["recontype_code"] != "V") {
+						if (data.DataSet4[0]["recontype_code"] == "N") {
 							$("#div_partial").css("display", "block");
 							$("#recon_value").text("");
 							$("#tran_value").text("");
@@ -701,10 +706,9 @@
 							$("#tran_count").css({ "position": "relative", "top": "9px" });
 							$("#ko_Partialcount").css({ "position": "relative", "top": "9px" });
 							$("#excp_count").css({ "position": "relative", "top": "9px" });
-
 						}
 
-						if (data.DataSet4[0]["recontype_code"] == "V") {
+						if (data.DataSet4[0]["recontype_code"] != "N") {
 							debugger;
 
 							$("#div_partial").css("display", "none"); // or "block" to show it
