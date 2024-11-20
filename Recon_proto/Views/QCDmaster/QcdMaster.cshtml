@@ -326,6 +326,7 @@
 							id: "View",
 							template: "<a href=''onclick='openQCDModelview()' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 						},
+
 						{
 							name: "Delete",
 							id: "Delete",
@@ -437,7 +438,7 @@
 
 		}
 	}
-	
+
 	function closeModal() {
 		clearModal();
 		$("#newQcd").hide();
@@ -468,7 +469,7 @@
 				$("#depparentCode").val(item.depend_parent_master_syscode);
 			}
 		});
-		// dependMasterCode 
+		// dependMasterCode
 		var in_master_code = $("#depparentCode").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
@@ -548,13 +549,13 @@
 						content: 'Something went wrong .!',
 						type: 'red',
 					});
-				}else {
+				} else {
 					$.alert({
 						title: 'Recon',
 						content: 'Something went wrong .!',
 						type: 'red',
 					});
-				}				
+				}
 			},
 			error: function (er) {
 				console.log(er)
@@ -583,7 +584,7 @@
 		$("#depend_flag").val(selectedItem.depend_flag);
 		if ($("#depend_flag").val() == 'Y') {
 			$("#depend").show();
-		}else{
+		} else {
 			$("#depend").hide();
 		}
 		var items = getlocalStorage("master");
@@ -617,7 +618,7 @@
 				});
 			}
 		});
-		$("#dependMasterCode").val(selectedItem.depend_master_syscode);	
+		$("#dependMasterCode").val(selectedItem.depend_master_syscode);
 		$("#MasterCode").prop("disabled", false);
 		$("#MasterName").prop("disabled", false);
 		$("#dependMasterCode").prop("disabled", false);
