@@ -26,10 +26,6 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
-        public IActionResult QueSuspend()
-        {
-            return View();
-        }
 
         #region jobtypelist
 
@@ -197,7 +193,6 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-       
         public class Joblistmodel
         {
             public int job_gid { get; set; }
@@ -225,120 +220,7 @@ namespace Recon_proto.Controllers
 			public string? in_user_code { get; set; }
 		}
         #endregion
-        #region QueueListFetch
-        [HttpPost]
-        public JsonResult QueueListFetch([FromBody] Jobstatusmodel context)
-        {
-            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            Jobstatusmodel objList = new Jobstatusmodel();
-            DataTable result = new DataTable();
-            List<Queuelistmodel> objcat_lst = new List<Queuelistmodel>();
-            string post_data = "";
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    string Urlcon = "Utility/";
-                    client.BaseAddress = new Uri(urlstring + Urlcon);
-                    //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
-                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("jobinQueue", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    for (int i = 0; i < result.Rows.Count; i++)
-                    {
-						Queuelistmodel objcat = new Queuelistmodel();
-                        objcat.in_koqueue_gid = Convert.ToInt32(result.Rows[i]["koqueue_gid"]);
-						objcat.recon_code = result.Rows[i]["recon_code"].ToString();
-						objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-						objcat.scheduled_date = result.Rows[i]["scheduled_date"].ToString();
-                        objcat.in_koqueue_remark = result.Rows[i]["koqueue_remark"].ToString();
-                        objcat.koqueue_status = result.Rows[i]["koqueue_status"].ToString();
-                        objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
-                        objcat.scheduled_by = result.Rows[i]["scheduled_by"].ToString();
-                        objcat_lst.Add(objcat);
-                    }
-					return Json(objcat_lst);
-					//return Json(d2);
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "Queuelistfetch");
-                return Json(ex.Message);
-            }
-        }
-		[HttpPost]
-		public JsonResult QueueSuspend([FromBody] KoQueued context)
-		{
-			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-			Jobstatusmodel objList = new Jobstatusmodel();
-			DataTable result = new DataTable();
-			List<Queuelistmodel> objcat_lst = new List<Queuelistmodel>();
-			string post_data = "";
-			try
-			{
-				using (var client = new HttpClient())
-				{
-					string Urlcon = "Utility/";
-					client.BaseAddress = new Uri(urlstring + Urlcon);
-					//client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
-					client.DefaultRequestHeaders.Accept.Clear();
-					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
-					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-					var response = client.PostAsync("SuspendKoQueue", content).Result;
-					Stream data = response.Content.ReadAsStreamAsync().Result;
-					StreamReader reader = new StreamReader(data);
-					post_data = reader.ReadToEnd();
-					string d2 = JsonConvert.DeserializeObject<string>(post_data);
-					result = JsonConvert.DeserializeObject<DataTable>(d2);
-					
-					return Json(d2);
-				}
-			}
-			catch (Exception ex)
-			{
-				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "QueueSuspend");
-				return Json(ex.Message);
-			}
-		}
-		public class Queuelistmodel
-		{
-			public int in_koqueue_gid { get; set; }
-			public String? recon_code { get; set; }
-			public String? recon_name { get; set; }
-			public String? scheduled_date { get; set; }
-			public String? in_koqueue_remark { get; set; }
-			public String? koqueue_status { get; set; }
-			public String? jobstatus_desc { get; set; }
-			public string? scheduled_by { get; set; }
-			public string? in_user_code { get; set; }
-		}
-        public class KoQueued
-        {
-            public string? in_koqueue_remark { get; set; }
-            public int in_koqueue_gid { get; set; }
-            public string? in_user_code { get; set; }
 
-        }
-        #endregion
         #region Downloads
 
         public JsonResult getfilepath(string confing_val,string username)

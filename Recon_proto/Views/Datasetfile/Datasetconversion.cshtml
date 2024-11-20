@@ -193,7 +193,7 @@
 												<form id="theuploadformempff">
 													<div class="form-group">
 														<label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-														<input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx,.xls,.csv" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+														<input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
 														<label class="col-md-6 control-label" id="FileName" hidden></label>
 													</div>
 												</form>
@@ -778,7 +778,7 @@
 			fileType = fileInput.files[0].name;
 		}
 		formData.append('initiated_by', sessionStorage.getItem("usrname"));
-		if (pipeline_code && filepath && fileInput) {
+		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
 			$.ajax({
 				url: '../Datasetfile/datasetfile',
 				type: 'POST',
@@ -862,17 +862,16 @@
 				content: "File is missing",
 				type: 'red',
 			});
-		} 
-		//else if (!fileType.endsWith('.xlsx')) {
-		//	$.alert({
-		//		title: 'Recon',
-		//		content: "Incorrect File type",
-		//		type: 'red',
-		//	});
-		//	$("#File_Import").val("");
-		//	$("#FileName").val("");
-		//	$('#progressBar').val("0");
-		//}
+		} else if (!fileType.endsWith('.xlsx')) {
+			$.alert({
+				title: 'Recon',
+				content: "Incorrect File type",
+				type: 'red',
+			});
+			$("#File_Import").val("");
+			$("#FileName").val("");
+			$('#progressBar').val("0");
+		}
 	}
 
 
