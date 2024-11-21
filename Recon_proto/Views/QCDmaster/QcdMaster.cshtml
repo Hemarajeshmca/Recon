@@ -1,0 +1,737 @@
+﻿@{
+	ViewData["Title"] = "QCDMaster";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body>
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height:95%;padding-top: 5px;">
+				<div class="row" style="margin-bottom: 1%;">
+					<div class="col-sm-4">
+						<label for="" class="form-label">Master</label>
+						<select id="qcdcode" class="form-select form-control" onchange="getQcdlist($('#qcdcode').val())">
+							<option value="">Select</option>
+						</select>
+						<input class="form-control" id="parentdesc" type="text" value="" hidden>
+						<input class="form-control" id="depend_flag" type="text" value="" hidden>
+					</div>
+					<div class="col-sm-4" hidden>
+						<form id="theuploadformempff">
+							<div class="form-group">
+								<label for="Filename" class="form-label">File Name</label>
+								<input type="file" class="form-control input-lg browse btn btn-primary input-lg" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+								<label class="col-md-6 control-label" id="FileName"></label>
+							</div>
+						</form>
+					</div>
+					<div class="col-sm-2" style="margin-top:29px" hidden>
+						<label class="form-label"></label>
+						<input type="button" name="Import" class="btn btn-sm save_btn me-2" value="Start" />
+
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<i data-bs-toggle="modal" onclick="openNewModel()" data-bs-target="#newQcd" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+				</div>
+				<div class="col-md-12" id="maingrid">
+					<div id="grid"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="newQcd" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">QCD Master</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-4">
+								<label for="" class="form-label">Master<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" id="parentCode" type="text" value="" disabled>
+								<input class="form-control" id="master_gid" type="text" value="" hidden>
+								<input class="form-control" id="mode" type="text" value="" hidden>
+							</div>
+
+
+							<div class="col-sm-4">
+								<label for="" id="mastercode_label" class="form-label"> </label>
+								<input class="form-control" id="MasterCode" type="text" value="">
+							</div>
+							<div class="col-sm-4">
+								<label id="masterName_label" for="" class="form-label">
+								</label>
+								<input class="form-control" id="MasterName" type="text" value="">
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px;display:none" id="depend">
+							<div class="col-sm-4">
+								<label for="" class="form-label">Depend Parent code<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" id="depparentdesc" type="text" value="" disabled>
+								<input class="form-control" id="depparentCode" type="hidden" value="" disabled>
+							</div>
+							<div class="col-sm-4">
+								<label for="" class="form-label">Depend master code </label>
+								<select id="dependMasterCode" class="form-select form-control">
+								</select>
+							</div>
+
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+							<div class="col-sm-4" hidden>
+								<label for="" class="form-label">
+									Master ShortCode
+								</label>
+								<input class="form-control" id="MasterShortCode" type="text" value="">
+							</div>
+							<div class="col-sm-4" hidden>
+								<label for="" class="form-label"> Master Syscode </label>
+								<input class="form-control" id="MasterSysCode" type="text" value="">
+							</div>
+							<div class="col-sm-4" hidden>
+								<label for="" class="form-label">
+									Master Multiple Name
+								</label>
+								<input class="form-control" id="MasterMultipleName" type="text" value="">
+							</div>
+						</div>
+
+						<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:30px;padding-right:5px" hidden>
+							<div class="col-sm-4">
+								<label for="" class="form-label">Status&nbsp;</label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="radio" id="active" name="qcd_status" checked value="Y">&nbsp;&nbsp;Active&nbsp;
+									<input type="radio" id="inactive" name="qcd_status" style="margin-left: 10px;" value="N">&nbsp;&nbsp;InActive&nbsp;
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4" style="margin-top:10px;float: right;">
+						<center>
+							<button type="submit" id="saveid" class="btn btn-sm save_btn me-2" onclick="saveQcd()">Save</button>&nbsp;&nbsp;&nbsp;
+							<button type="submit" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="closeModal()">Cancel</button>
+						</center>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript">
+
+	var selected_masterName = '';
+	$(document).ready(function () {
+		$("#contextdiv").hide();
+		var mode = "";
+		$("#navhead").text("QCD Master");
+		$("#kendoVersion").text(kendo.version);
+		$("#depend").hide();
+		var data = {};
+		data.in_user_code = sessionStorage.getItem("usrname");
+		data.in_master_code = 'QCD_MAST';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../QCDmaster/getallQcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: Context.in_user_code, in_master_code: Context.in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					setlocalStorage("master", response);
+					$("#qcdcode").empty();
+					$.each(response, function (index, item) {
+						$("#qcdcode").append($('<option>', {
+							value: item.master_syscode,
+							text: item.master_name,
+							'data-code': item.depend_flag
+						}));
+					});
+					getQcdlist($("#qcdcode").val());
+					var cur_value = $('#qcdcode').children('option:selected').text();
+					$("#parentCode").val(cur_value);
+				}
+				else {
+					alert("Error Else");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	});
+
+
+	function getQcdlist(master_code) {
+		var selectedOption = $('#qcdcode option:selected');
+		var codeValue = selectedOption.attr('data-code');
+		$("#depend_flag").val(codeValue);
+		//grid_dataset_details([]);
+		$("#grid").remove();
+		$('#maingrid').append('<div id="grid" style="margin-top: 6px;margin-left: 4px;"></div>');
+		var data = {};
+		data.in_user_code = sessionStorage.getItem("usrname");
+		data.in_master_code = master_code;
+		selected_masterName = $('#qcdcode').children('option:selected').text();
+		document.getElementById('mastercode_label').innerHTML = selected_masterName + " " + "code";
+		document.getElementById('masterName_label').innerHTML = selected_masterName + " " + "Description";
+		var cur_value = $('#qcdcode').children('option:selected').text();
+		$("#parentCode").val(cur_value);
+		$.ajax({
+			type: "POST",
+			url: "../QCDmaster/getallQcdmaster",
+			dataType: "json",
+			data: JSON.stringify({ in_user_code: data.in_user_code, in_master_code: data.in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				if (data != null) {
+					grid_dataset_details(data, selected_masterName);
+				} else {
+					grid_dataset_details([]);
+				}
+			}
+		});
+	}
+	var status_Priority = [];
+	function grid_dataset_details(data, QcdName) {
+		try {
+			var name = $('#qcdcode').children('option:selected').text();
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
+			$("#grid").kendoGrid({
+				dataSource: {
+					type: "odata",
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								Action: { type: "string" },
+								master_gid: { type: "int" },
+								parent_master_syscode: { type: "string" },
+								master_syscode: { type: "string" },
+								master_code: { type: "string" },
+								master_name: { type: "string" },
+								master_multiple_name: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" },
+								parent_master_syscode_desc: { type: "string" },
+								master_short_code: { type: "string" },
+								depend_master_syscode: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 350,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					if ($("#depend_flag").val() == "Y") {
+						$(".k-grid-edit").hide();
+						$(".k-grid-delete").hide();
+					}
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				resizable: true,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "Edit",
+							template: "<a href='' onclick='openQCDModel()' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a> &nbsp;&nbsp;  ",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='openQCDModelview()' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteQCD()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					],
+					title: "Action",
+					width: "40px",
+					attributes: {
+						style: "text-align: left;"
+					}
+				},
+				{
+					field: "master_gid",
+					title: "Master Gid",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "parent_master_syscode",
+					title: "parent_master_syscode",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "parent_master_syscode_desc",
+					title: "Master",
+					width: 100,
+				},
+				{
+					field: "master_syscode",
+					title: "MasterSync Code",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "master_code",
+					title: $('#qcdcode').children('option:selected').text() + " " + "Code",
+					width: 100,
+				},
+				{
+					field: "master_name",
+					title: name + " " + "Description",
+					width: 100,
+				},
+				{
+					field: "master_multiple_name",
+					title: "Master Multiple Name",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "master_short_code",
+					title: "Master Short Code",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "depend_master_syscode",
+					title: "depend_master_syscode",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "active_status",
+					title: "Active stauts",
+					width: 10,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 100,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
+				}],
+				editable: false,
+				resizable: false
+			});
+			var grid = $("#grid").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
+			function priorityFilter(element) {
+				element.kendoDropDownList({
+					dataSource: status_Priority,
+					optionLabel: "--Select Value--"
+				});
+			}
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+	function closeModal() {
+		clearModal();
+		$("#newQcd").hide();
+	}
+
+	function openModel() {
+		$("#newQcd").show();
+
+	}
+
+	function openNewModel() {
+		clearModal();
+		$("#newQcd").show();
+		$("#master_gid").val(0);
+		$("#mode").val("INSERT");
+		var selectedOption = $('#qcdcode option:selected');
+		var codeValue = selectedOption.attr('data-code');
+		$("#depend_flag").val(codeValue);
+		if ($("#depend_flag").val() == 'Y') {
+			$("#depend").show();
+		} else {
+			$("#depend").hide();
+		}
+		var items = getlocalStorage("master");
+		$.each(items, function (index, item) {
+			if ($("#qcdcode").val() == item.master_syscode) {
+				$("#depparentdesc").val(item.depend_parent_master_syscode_desc);
+				$("#depparentCode").val(item.depend_parent_master_syscode);
+			}
+		});
+		// dependMasterCode
+		var in_master_code = $("#depparentCode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#dependMasterCode").empty();
+				$("#dependMasterCode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#dependMasterCode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+	};
+
+	function saveQcd() {
+		var master_code = '';
+		var objdata = {};
+		objdata.masterGid = $("#master_gid").val();
+		objdata.action = $("#mode").val();
+		objdata.active_status = $("input[name='qcd_status']:checked").val() ? $("input[name='qcd_status']:checked").val() : 'Y';
+		objdata.masterCode = $("#MasterCode").val();
+		objdata.mastermutiplename = $("#MasterName").val() ? $("#MasterName").val() : '';
+		objdata.masterName = $("#MasterName").val();
+		objdata.masterShortCode = $("#MasterShortCode").val();
+		objdata.masterSyscode = $("#MasterCode").val() ? $("#MasterCode").val() : '';
+		objdata.parentMasterSyscode = $("#qcdcode").val();
+		objdata.depend_parent_master_syscode = $("#depparentCode").val() ? $("#depparentCode").val() : '';
+		objdata.depend_master_syscode = $("#dependMasterCode").val() ? $("#dependMasterCode").val() : '';
+		objdata.depend_flag = $("#depend_flag").val();
+		objdata.action_by = sessionStorage.getItem("usrname");
+		var objdata = objdata;
+		$.ajax({
+			type: "POST",
+			url: '../QCDmaster/QcdCrud',
+			data: JSON.stringify(objdata),
+			dataType: "json",
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != " " && response != null && response != "{}" && response != "[]") {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						master_code = $("#MasterCode").val();
+						closeModal();
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						var data = {};
+						data.in_user_code = '';
+						data.in_master_code = master_code;
+						//grid_dataset_details(data);
+						window.location.reload(1);
+						master_code = "";
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				} else if (response == "[]") {
+					$.alert({
+						title: 'Recon',
+						content: 'Something went wrong .!',
+						type: 'red',
+					});
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: 'Something went wrong .!',
+						type: 'red',
+					});
+				}
+			},
+			error: function (er) {
+				console.log(er)
+			}
+		});
+
+	}
+
+	function openQCDModel() {
+		$("#newQcd").modal('show');
+		var grid = $("#grid").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		console.log("selectedItem", selectedItem);
+		$("#master_gid").val(selectedItem.master_gid);
+		$("#mode").val("UPDATE");
+		$("#MasterSysCode").val(selectedItem.master_syscode);
+		$("#MasterShortCode").val(selectedItem.master_short_code);
+		$("#MasterCode").val(selectedItem.master_code);
+		$("#MasterName").val(selectedItem.master_name);
+		$("#MasterMultipleName").val(selectedItem.master_multiple_name);
+		if (selectedItem.active_status == "Y") {
+			$("#active").prop("checked", true);
+		} else {
+			$("#inactive").prop("checked", true);
+		}
+		$("#depend_flag").val(selectedItem.depend_flag);
+		if ($("#depend_flag").val() == 'Y') {
+			$("#depend").show();
+		} else {
+			$("#depend").hide();
+		}
+		var items = getlocalStorage("master");
+		$.each(items, function (index, item) {
+			if ($("#qcdcode").val() == item.master_syscode) {
+				$("#depparentdesc").val(item.depend_parent_master_syscode_desc);
+				$("#depparentCode").val(item.depend_parent_master_syscode);
+			}
+		});
+		// dependMasterCode
+		var in_master_code = $("#depparentCode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#dependMasterCode").empty();
+				$("#dependMasterCode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#dependMasterCode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		$("#dependMasterCode").val(selectedItem.depend_master_syscode);
+		$("#MasterCode").prop("disabled", false);
+		$("#MasterName").prop("disabled", false);
+		$("#dependMasterCode").prop("disabled", false);
+		$("#saveid").show();
+	}
+
+	function openQCDModelview() {
+		$("#newQcd").modal('show');
+		var grid = $("#grid").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		console.log("selectedItem", selectedItem);
+		$("#master_gid").val(selectedItem.master_gid);
+		$("#mode").val("UPDATE");
+		$("#MasterSysCode").val(selectedItem.master_syscode);
+		$("#MasterShortCode").val(selectedItem.master_short_code);
+		$("#MasterCode").val(selectedItem.master_code);
+		$("#MasterName").val(selectedItem.master_name);
+		$("#MasterMultipleName").val(selectedItem.master_multiple_name);
+		if (selectedItem.active_status == "Y") {
+			$("#active").prop("checked", true);
+		} else {
+			$("#inactive").prop("checked", true);
+		}
+		$("#depend_flag").val(selectedItem.depend_flag);
+		if ($("#depend_flag").val() == 'Y') {
+			$("#depend").show();
+		} else {
+			$("#depend").hide();
+		}
+		var items = getlocalStorage("master");
+		$.each(items, function (index, item) {
+			if ($("#qcdcode").val() == item.master_syscode) {
+				$("#depparentdesc").val(item.depend_parent_master_syscode_desc);
+				$("#depparentCode").val(item.depend_parent_master_syscode);
+			}
+		});
+		// dependMasterCode
+		var in_master_code = $("#depparentCode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#dependMasterCode").empty();
+				$("#dependMasterCode").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#dependMasterCode").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		$("#dependMasterCode").val(selectedItem.depend_master_syscode);
+		$("#MasterSysCode").prop("disabled", true);
+		$("#MasterShortCode").prop("disabled", true);
+		$("#MasterCode").prop("disabled", true);
+		$("#MasterName").prop("disabled", true);
+		$("#MasterMultipleName").prop("disabled", true);
+		$("#dependMasterCode").prop("disabled", true);
+		$("#saveid").hide();
+	}
+
+	function clearModal() {
+		$("#MasterSysCode").val("");
+		$("#MasterShortCode").val("");
+		$("#MasterCode").val("");
+		$("#MasterName").val("");
+		$("#MasterMultipleName").val("");
+		$("#active").prop("checked", true);
+	}
+
+	function myDeleteQCD() {
+		var grid = $("#grid").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		$("#master_gid").val(selectedItem.master_gid);
+		$("#mode").val("Delete");
+		$("#MasterSysCode").val(selectedItem.master_syscode);
+		$("#MasterShortCode").val(selectedItem.master_short_code);
+		$("#MasterCode").val(selectedItem.master_code);
+		$("#MasterName").val(selectedItem.master_name);
+		$("#MasterMultipleName").val(selectedItem.master_multiple_name);
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					saveQcd();
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+</script>

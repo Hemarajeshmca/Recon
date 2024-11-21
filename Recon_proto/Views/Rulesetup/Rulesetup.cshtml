@@ -1,0 +1,864 @@
+﻿@{
+	ViewBag.title = "Rule Setup";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;min-height:82%;">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
+					<div class="col-xs-12">
+						<a href='' id="btn_new" onclick='getSerializedRows()' data-bs-toggle='modal'><i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i></a>
+						<div id="gd_rulesetup">
+							<div id="grid_rulesetup">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="clone_rule" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Rule</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding: 0px 0px;">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" type="text" id="cmbreconname_clone" disabled />
+								<input class="form-control" type="text" id="cmbreconcode_clone" hidden />
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								@*<select id="cmbrulename" disabled class="form-select form-control">
+								</select>*@
+								<input class="form-control" type="text" id="cmbrulename" disabled />
+								<input type="hidden" id="rule_gid" />
+								<input type="hidden" id="rule_code" />
+								<input type="hidden" id="rule_apply_on" />
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="sourcedataset" disabled class="form-select form-control" onchange="DatasetTypefield()">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">Clone Comparision Dataset&nbsp;</label>
+								<select id="comparisondataset" disabled class="form-select form-control" value="">
+								</select>
+							</div>
+
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="cmbreconname_new" class="form-select form-control" onchange="reconchangelist_new()">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" type="text" id="cmbrulename_new" />
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<select id="sourcedataset_new" class="form-select form-control" onchange="DatasetTypefield()">
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label for="" class="form-label">New Comparision Dataset&nbsp;</label>
+								<select id="comparisondataset_new" class="form-select form-control" value="">
+								</select>
+
+							</div>
+
+						</div>
+
+					</div>
+					<div class="col-sm-4" style="margin-top:30px;float: right;">
+						<center>
+							<button type="button" class="btn btn-sm save_btn me-2" onclick="saveCloneRule()">Save</button>&nbsp;&nbsp;&nbsp;
+							<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="cancelRule()">Cancel</button>
+						</center>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$("#navhead").text("Rule Setup");
+		kendodate_format();
+		grid_rulesetup_details([]);
+		//recon name
+		gridlist();
+	});
+
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname_new").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$("#cmbreconname_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+						$("#cmbreconname_new").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function rr1() {
+		$("#newdebit").hide();
+	}
+
+	var status_Priority = [];
+	function grid_rulesetup_details(data) {
+		try {
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
+			$("#grid_rulesetup").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								rule_gid: { type: "string" },
+								rule_code: { type: "string" },
+								rule_name: { type: "string" },
+								recon_code: { type: "string" },
+								recon_name: { type: "string" },
+								rule_order: { type: "number" },
+								source_dataset_code: { type: "string" },
+								comparison_dataset_code: { type: "string" },
+								source_dataset_desc: { type: "string" },
+								comparison_dataset_desc: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 420,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_rulesetup').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('rule_setup')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
+				},
+				pageable: true,
+				serverPaging: false,
+				pageable: {
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5,
+					change: function (e) {
+						console.log("Page changed to: " + (e.index + 1));
+					}
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				resizable: true,
+				change: selectRow,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-edit' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' class='k-grid-view' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						}, {
+							name: "Clone",
+							id: "Clone",
+							template: "<a href='' title='Clone' id='cloneid' onclick='clonePopup(this)' data-bs-toggle='modal'><img style='height: 15px;width:15px;' src = '../Assets/images/clone.png' alt='Clone'></a>"
+						},
+					], title: "Action&nbsp;", width: "70px",
+				},
+				{
+					field: "rule_gid",
+					title: "Row id",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "rule_code",
+					title: "Rule Code",
+					width: 80,
+				},
+				{
+					field: "rule_name",
+					title: "Rule Name",
+					width: 100,
+				},
+				{
+					field: "rule_apply_on",
+					title: "rule_apply_on",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "source_dataset_code",
+					title: "source_dataset_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_dataset_code",
+					title: "comparison_dataset_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "source_dataset_desc",
+					title: "source_dataset_desc",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_dataset_desc",
+					title: "comparison_dataset_desc",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_apply_on_desc",
+					title: "Rule Applied On",
+					width: 100,
+				},
+				{
+					field: "group_flag",
+					title: "group_flag",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_order",
+					title: "Rule Order",
+					width: 80,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numericInput",
+						extra: false,
+					},
+				},
+				{
+					field: "group_flag_desc",
+					title: "Group Flag",
+					width: 100,
+				},
+				{
+					field: "recon_code",
+					title: "Recon Code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "recon_name",
+					title: "Recon Name",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
+				},
+				{
+					field: "In_mode_flag",
+					title: "Mode",
+					hidden: true
+				}],
+				editable: false,
+			});
+			var grid = $("#grid_rulesetup").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
+	}
+
+	function getSerializedRows() {
+		btn_onClick('Create');
+		var grid = $("#grid_rulesetup").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (grid.dataSource._data[i].rule_order > max) {
+				max = grid.dataSource._data[i].rule_order;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+
+		var selectedItem = [];
+		var list = {};
+		list.recon_code = $("#cmbreconname").val();
+		list.rule_order = newSeqNo;
+		selectedItem.push(list);
+		if (selectedItem[0].recon_code != "") {
+			setlocalStorage("ls_pageList", selectedItem);
+			document.location = "../Rulesetup/Rulesetupdetail";
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ",
+				type: 'red',
+			});
+		}
+	}
+
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						if (items.active_status != "N") {
+							btn_onClick("Edit");
+							document.location = '../Rulesetup/Rulesetupdetail';
+						}
+					}
+					else if ($(mode).attr('value') == "view") {
+						btn_onClick('View');
+						document.location = "../Rulesetup/Rulesetupdetail";
+					}
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+
+	function selectRow() {
+		try {
+			var grid = $("#grid_rulesetup").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem);
+		}
+		catch (err) {
+
+		}
+	}
+
+	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		var cmbreconname = $("#cmbreconname").val();
+		var data = {};
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/Rulesetuplistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: Context.in_user_code, in_recon_code: cmbreconname }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				if (res != null) {
+					$("#gd_rulesetup").empty();
+					$("#gd_rulesetup").append("<div id='grid_rulesetup'></div>");
+					grid_rulesetup_details(res);
+				}
+				else {
+					grid_rulesetup_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function myDeleteJs() {
+		var grid = $("#grid_rulesetup").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		if (model.active_status != "N") {
+			var rule_gid = model.rule_gid;
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							title: 'Delete Reason',
+							content: '' +
+								'<form action="" class="formName">' +
+								'<div class="form-group">' +
+								'<label>Reason</label>' +
+								'<input type="text" placeholder="Reason" class="name form-control" required />' +
+								'</div>' +
+								'</form>',
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var name = this.$content.find('.name').val();
+										if (!name) {
+											$.alert('Reason cannot be empty');
+											return false;
+										}
+										var in_rule_code = "";
+										var ruleName = "";
+										var cmbreconname = "";
+										var pr1 = "1901-01-01";
+										var pr = "1901-01-01";
+										var in_source_dataset_code = "";
+										var in_comparison_dataset_code = "";
+										var in_source_acc_mode = "";
+										var in_parent_dataset_code = "";
+										var in_support_dataset_code = "";
+										var in_parent_acc_mode = "";
+										var action = "DELETE";
+										var action_by = ""
+										var rulegid = model.rule_gid;
+										var status = "";
+										var Reversal = "";
+										var Groupflag = "";
+										var in_until_active_flag = "";
+										var in_applyrule_on = "";
+										var in_comparison_acc_mode = "";
+										var in_rule_order = 0;
+										var in_user_code = sessionStorage.getItem("usrname");
+										var probableflag = "";
+										var in_rule_automatch_partial = "";
+										var in_threshold_plus_value = 0;
+										var in_threshold_minus_value = 0;
+										var in_threshold_code = "";
+										var thersholdflag = "";
+										var ruleremark = "";
+										$.ajax({
+											type: "POST",
+											url: '../Rulesetup/Ruleheader',
+											dataType: 'json',
+											data: JSON.stringify({
+												in_rule_gid: rulegid, in_rule_code: in_rule_code, in_rule_name: ruleName, in_recon_code: cmbreconname, in_period_from: pr,
+												in_period_to: pr1, in_until_active_flag: in_until_active_flag, in_applyrule_on: in_applyrule_on, in_rule_order: in_rule_order,
+												in_source_dataset_code: in_source_dataset_code, in_comparison_dataset_code: in_comparison_dataset_code, in_source_acc_mode: in_source_acc_mode, in_comparison_acc_mode: in_comparison_acc_mode,
+												in_parent_dataset_code: in_parent_dataset_code, in_support_dataset_code: in_support_dataset_code, in_parent_acc_mode: in_parent_acc_mode, in_user_code: in_user_code, probableflag: probableflag,
+												in_rule_automatch_partial: in_rule_automatch_partial, thresholdflag: thersholdflag, threshold_code: in_threshold_code,
+												in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, ruleremark: ruleremark,
+												in_reversal_flag: Reversal, in_group_flag: Groupflag, in_action: action, in_action_by: action_by, in_active_status: status, in_inactive_reason: name
+											}),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												if (response.out_result == "1") {
+													$.alert({
+														icon: 'fa fa-success',
+														title: 'Recon',
+														theme: 'dark',
+														content: response.out_msg,
+														type: 'green',
+														animationSpeed: 700,
+													});
+													gridlist();
+													grid_rulesetup_details([]);
+												} else {
+													$.alert({
+														title: 'Recon',
+														content: data.out_msg,
+														type: 'red',
+													});
+												}
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
+							},
+
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+
+	function clonePopup(e) {
+		getReconDataset();
+		var grid = $("#grid_rulesetup").data("kendoGrid");
+		var selectedItem = grid.dataItem($(event.target).closest("tr"));
+		if (selectedItem.active_status == 'Y') {
+			$("#clone_rule").modal('show');
+			$("#cmbreconname_clone").val(selectedItem.recon_name);
+			$("#cmbreconcode_clone").val(selectedItem.recon_code);
+			$("#cmbrulename").val(selectedItem.rule_name);
+			$("#rule_code").val(selectedItem.rule_code);
+			$("#sourcedataset").val(selectedItem.source_dataset_code);
+			$("#comparisondataset").val(selectedItem.comparison_dataset_code);
+			$("#rule_apply_on").val(selectedItem.rule_apply_on);
+			$("#sourcedataset_new").val("");
+			$("#comparisondataset_new").val("");
+			$("#cmbrulename_new").val("");
+			$("#cmbreconname_new").val(selectedItem.recon_code);
+			reconchangelist_new();
+		}
+	}
+
+	function getReconDataset() {
+		var reconcode = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset").empty();
+				$("#sourcedataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "Y" && item.dataset_type != "L" && item.dataset_type != "S") {
+						$("#sourcedataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#comparisondataset").empty();
+				$("#comparisondataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "L" && item.dataset_type != "Y") {
+						$("#comparisondataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
+	}
+
+	function reconchangelist_new() {
+		var reconcode = $("#cmbreconname_new").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		var rule_apply_on = $("#rule_apply_on").val();
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset_new").empty();
+				$("#sourcedataset_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (rule_apply_on == 'S') {
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					} else {
+						if (item.dataset_type != "S") {
+							$("#sourcedataset_new").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					}
+				});
+				$("#comparisondataset_new").empty();
+				$("#comparisondataset_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (rule_apply_on == 'S') {
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					} else {
+						if (item.dataset_type != "S") {
+							$("#comparisondataset_new").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						}
+					}
+				});
+			}
+		});
+	}
+
+	function saveCloneRule() {
+		var data = {};
+		data.in_recon_code = $("#cmbreconname_new").val();
+		data.in_rule_name = $("#cmbrulename_new").val();
+		data.in_source_dataset_code = $("#sourcedataset_new").val();
+		data.in_comparison_dataset_code = $("#comparisondataset_new").val();
+		data.in_clone_recon_code = $("#cmbreconcode_clone").val();
+		data.in_clone_rule_code = $("#rule_code").val();
+		data.in_clone_source_dataset_code = $("#sourcedataset").val();
+		data.in_clone_comparison_dataset_code = $("#comparisondataset").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/cloneReconRule',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+
+				if (response != "") {
+					var res = JSON.parse(response);
+					if (res.length > 0) {
+						if (res[0].out_result == "1") {
+							$.alert({
+								title: 'Recon',
+								content: res[0].out_msg,
+								type: 'green',
+							});
+							$("#clone_rule").modal('hide');
+							window.location.href = "../Rulesetup/Rulesetup";
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: res[0].out_msg,
+								type: 'green',
+							});
+						}
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: 'Something Went wrong',
+							type: 'red',
+						});
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+</script>

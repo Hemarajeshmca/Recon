@@ -1,0 +1,442 @@
+﻿@{
+    ViewBag.title = "Jobs In Queue";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+    <title></title>
+    <style>
+        .nav-item.me-2.me-xl-50 {
+            margin-right: 33rem !important;
+        }
+
+        .error_show {
+            color: red;
+            margin-left: 10px;
+        }
+
+        table {
+            border: 1px solid #C5C5C5 !important;
+        }
+
+        .k-grid-content {
+            overflow-x: hidden;
+        }
+
+        .k-grid.k-widget {
+            height: 360px;
+        }
+
+        /*	.k-grid-header th.k-header > .k-link {
+                                            width: 100px;
+                                        }*/
+
+        .k-grid-header {
+            font-weight: bold;
+        }
+
+        .k-grid-filter.k-state-active {
+            color: #ffffff;
+            background-color: #1274AC;
+        }
+
+        .k-content {
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        button.k-button.k-primary.disabled {
+            background: #afafaf;
+            color: #fff;
+        }
+
+        .k-widget.k-window {
+            padding-top: 35px;
+            min-width: 90px;
+            min-height: 50px;
+            width: 700px !important;
+            height: 300px !important;
+            top: 180.766px !important;
+            /*left: 120px !important;*/
+            z-index: 10003;
+            left: 300px !important;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top: -1%; min-height: 82%;">
+                <div class="row" style="margin-bottom: 1%;">
+                    @* <div class="col-md-3">
+                    <label class="form-label">Process Type<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                    <select id="jobtype" class="form-select form-control"> </select>
+                    </div> *@
+                    <div class="col-md-3">
+                        <label for="" class="form-label">Initiated From Date<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                        <div>
+                            <input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label"> Initiated To Date <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                        <div>
+                            <input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" style="width:100%" />
+                            <span data-for='valid' class='k-invalid-msg'></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3" style="margin-top: 2%;">
+                        <button type="button" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="searchJob()">
+                            Search
+                        </button>
+                    </div>
+                </div>
+                <div id="gd_jobinprogress">
+                    <div id="grid_jobinprogress"> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    // $(document).ready(function () {
+    //     $("#navhead").text("Jobs In Queue");
+    //     $("#contextdiv").hide();
+    //     kendodate_format();
+    //     getjobtypelist();
+    // });
+    var isjobrun = false;
+    $(document).ready(function () {
+        $("#contextdiv").hide();
+       
+        //getjobtypelist();
+        setInterval(function () {
+            isjobrun = true;
+        }, 5000);
+        $("#navhead").text("Jobs In Queue");
+        kendodate_format();
+        searchJob();
+        if (isjobrun = true) {
+            setInterval(function () {
+                searchJob();
+            }, 5000);// 5000 milliseconds = 5 seconds
+        }
+    });
+
+    function getjobtypelist() {
+        $.ajax({
+            type: "POST",
+            url: '../Utility/jobtypelist',
+            dataType: 'json',
+            data: JSON.stringify({}),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#jobtype").empty();
+                $.each(response, function (index, item) {
+                    $("#jobtype").append($('<option>', {
+                        value: item.jobtype_code,
+                        text: item.jobtype_desc
+                    }));
+                });
+                searchJob();
+            }
+        });
+    }
+
+
+    function searchJob() {
+        var fromDate = validateDateFormat($("#initiated_from").val());
+        var toDate = validateDateFormat($("#initialed_to").val());
+        if (fromDate && toDate) {
+            try {
+                var job_type = $("#jobtype").val();
+                var period_from = $("#initiated_from").val();
+                var ts = period_from.split("/");
+                var start_date = ts[2] + "-" + ts[1] + "-" + ts[0];
+                var period_end = $("#initialed_to").val();
+                var te = period_end.split("/");
+                var end_date = te[2] + "-" + te[1] + "-" + te[0];
+                var action_by = sessionStorage.getItem("usrname");
+                $.ajax({
+                    type: "POST",
+                    url: '../Utility/QueueListFetch',
+                    dataType: 'json',
+                    data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobstatus: 'I', in_user_code: action_by }),
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        if (response != null) {
+                            $("#gd_jobinprogress").empty();
+                            $("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
+                            fetchGrid(response);
+                        }
+                        else {
+                            fetchGrid();
+                        }
+                    },
+                    error: function (er) {
+                        alert(er)
+                        console.log(er)
+                    }
+
+                });
+            }
+            catch (e) {
+                console.log(e)
+            }
+        } else if (!fromDate || !toDate) {
+            $.alert({
+                title: 'Recon',
+                content: "Invalid Date ..!",
+                type: 'red',
+            });
+        }
+    }
+
+    function fetchGrid(data) {
+        try {
+            var formatdatetime = sessionStorage.getItem("kendatetime");
+            var formatdatetime1 = "{0:" + formatdatetime + "}";
+            $("#grid_jobinprogress").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 10,
+                    schema: {
+                        model: {
+                            fields: {
+                                scheduled_date: { type: "date" },
+                                in_koqueue_gid: { type: "number" },
+                                in_koqueue_remark: { type: "string" },
+                                koqueue_status: { type: "string" },
+                                jobstatus_desc: { type: "string" },
+                                recon_code: { type: "string" },
+                                recon_name: { type: "string" },
+                                scheduled_by: { type: "string" },
+                            }
+                        },
+                        parse: function (data) {
+                            $.each(data, function (i, item) {
+                                item.scheduled_date = kendo.parseDate(item.scheduled_date, formatdatetime);
+                            });
+                            return data;
+                        }
+                    }
+                },
+                height: 380,
+                groupable: false,
+                // dataBound: function (e) {
+                // 	resultData = e.sender._data;
+                // 	var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+                // 	setColor(rows, resultData);
+                // },
+                pageable: {
+                    refresh: false,
+                    pageSizes: true,
+                    buttonCount: 5
+                },
+                sortable: true,
+                selectable: true,
+                filterable: true,
+                navigatable: true,
+                resizable: true,
+                columns: [
+                    {
+                        title: "Action&nbsp;",
+                        attributes: { style: "text-align: center;" },
+                        template: function (data) {
+                            if (data.koqueue_status == "I") {
+                                return "<button class='k-button k-primary' onclick='suspendQue()'>Cancel</button>";
+                            }
+                            else {
+                                return "<button class='k-button k-primary disabled' disabled onclick='suspendQue()'>Cancel</button>";
+                            }
+                            // return data.koqueue_status === 'Initiated'
+                            //     ? `<button class='k-button k-primary' onclick="suspendQue()">Suspend</button>`
+                            //     : `<button class='k-button k-primary' onclick="suspendQue()">Suspend</button>`;
+                        },
+                        //template: "<button class='k-button k-primary'  onclick='suspendQue()'>Suspend</button>",
+                        width: "50px"
+                        //${data.koqueue_gid}
+
+                    },
+                    { 
+                        field: "in_koqueue_gid", 
+                        title: "Ko Queue ID",
+                        width: 70,
+                        attributes: { style: "text-align: right;" },
+                        filterable: {
+                            ui: "numeric",
+                            extra: false,
+                        },
+                    },
+
+                    {
+                        field: "recon_name",
+                        title: "Recon Name",
+                        width: 100,
+                    },
+                    {
+                        field: "scheduled_date",
+                        title: "Scheduled Date",
+                        format: formatdatetime1,
+                        width: 120,
+                        filterable: {
+                            ui: function (element) {
+                                element.kendoDateTimePicker({
+                                    format: formatdatetime1,
+                                });
+                            },
+                        },
+                    },
+
+                    {
+                        field: "in_koqueue_remark",
+                        title: "Ko Queue Remark",
+                        width: 100,
+                    },
+                    {
+                        field: "scheduled_by",
+                        title: "Scheduled By",
+                        width: 80,
+                    },
+                    {
+                        field: "jobstatus_desc",
+                        title: "Job Status",
+                        width: 80,
+                    },
+
+
+                ],
+                editable: false,
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    function suspendQue() {
+        debugger;
+        // alert("t");
+        var grid = $("#grid_jobinprogress").data("kendoGrid");
+        var model = grid.dataItem($(event.target).closest("tr"));
+        var koqueue_gid = model.in_koqueue_gid;
+        var action_by = sessionStorage.getItem("usrname");
+        var koqueue_remark = "suspended testing";
+
+        $.confirm({
+            icon: 'fa fa-warning',
+            title: 'Recon',
+            autoClose: 'cancel|10000',
+            theme: 'dark',
+            animationSpeed: 700,
+            content: 'Are you sure do you want to Suspend this record!',
+            type: 'orange',
+            buttons: {
+                confirm: function () {
+                    $.confirm({
+                        title: 'Suspend Reason',
+                        content: '' +
+                            '<form action="" class="formName">' +
+                            '<div class="form-group">' +
+                            '<label>Reason</label>' +
+                            '<input type="text" placeholder="Reason" class="name form-control" required />' +
+                            '</div>' +
+                            '</form>',
+                        buttons: {
+                            formSubmit: {
+                                text: 'Submit',
+                                btnClass: 'btn-blue',
+                                action: function () {
+                                    var name = this.$content.find('.name').val();
+                                    if (!name) {
+                                        $.alert('Reason cannot be empty');
+                                        return false;
+                                    }
+                                    try {
+                                        var context1 = {
+                                            in_koqueue_gid: koqueue_gid, // Replace with the correct property name
+                                            in_koqueue_remark: name,
+                                            in_user_code: action_by
+                                        };
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '../Utility/QueueSuspend',
+                                            dataType: 'json',
+                                            data: JSON.stringify(context1),
+                                            contentType: 'application/json; charset=utf-8',
+                                            success: function (response) {
+                                                if (response && response.length > 0) {
+                                                    debugger;
+                                                    var message = JSON.parse(response) // Access out_msg from the first object in the array
+                                                    $.alert({
+                                                        icon: 'fa fa-success',
+                                                        title: 'Recon',
+                                                        theme: 'dark',
+                                                        content: message[0].out_msg,
+                                                        type: 'green',
+                                                        animationSpeed: 700,
+                                                    });
+                                                    searchJob();
+                                                } else {
+                                                    console.log("Unexpected response format");
+                                                }
+
+                                            },
+                                            error: function (er) {
+                                                alert(er)
+                                                console.log(er)
+                                            }
+
+                                        });
+                                    }
+                                    catch (err) {
+                                        console.log(err);
+                                    }
+                                }
+                            },
+                            cancel: function () {
+                                //close
+                            },
+                        },
+
+                    });
+                },
+                cancel: function () {
+                    $.alert({
+                        icon: 'fa fa-success',
+                        title: 'Recon',
+                        theme: 'dark',
+                        content: 'Suspend Canceled.!',
+                        type: 'blue',
+                        animationSpeed: 700,
+                    });
+                },
+            }
+        });
+
+    }
+    function downloadJob(val) {
+        var data = $(val).attr('value');
+        var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+        var grid = $("#grid_jobinprogress").data("kendoGrid");
+        var model = grid.dataItem($(event.target).closest("tr"));
+        var job_gid = model.job_gid;
+        var file_name = model.file_name;
+        var user_code = sessionStorage.getItem("usrname");
+        if (model.file_type != 'xlsx') {
+            window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'csv' + '&file_name=' + file_name + '' + '&username=' + user_code + '';
+        } else {
+            window.location.href = '@Url.Action("Downloads", "Utility")?jobid=' + job_gid + '&filetype=' + 'xlsx' + '&file_name=' + file_name + '' + '&username=' + user_code + '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.getElementById('initiated_from');
+        const dateInput1 = document.getElementById('initialed_to');
+        dateInput.addEventListener('focusout', onFocusOut);
+        dateInput1.addEventListener('focusout', onFocusOut);
+    });
+</script>

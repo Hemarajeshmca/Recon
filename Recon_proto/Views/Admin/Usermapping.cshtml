@@ -1,0 +1,304 @@
+﻿@{
+	
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 82%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="lbldatasetcode" class="form-label">Role Code</label>
+									<input class="form-control" type="text" id="txtdatasetcode" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblmode" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblstatus" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../DataSet/DataSetList"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="row" style="margin-top:20px;">
+						<div class="col-xs-12">
+							<div id="Maingrid">
+							</div>
+						</div>
+					</div>
+					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
+							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+							<a href="../DataSet/DataSetList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Dataset");
+		grid_datasetfield();
+	});
+
+
+	function grid_datasetfield() {
+		var columns = [];
+		var chkval = JSON.parse(result.Data1);
+		var arr = [];
+		$.each(chkval, function (i, e) {
+			$.each(e, function (key, val) {
+				arr.push(val);
+			});
+
+		});
+
+		if (arr == "No Records Found!" || arr == "Error in Data!") {
+			$.alert({
+				title: ' ',
+				content: 'No Records found..!',
+				type: 'blue',
+			});
+			//$('#btnbulmail').prop('disabled', true);
+			return false;
+		}
+
+
+		var data = JSON.parse(result.Data1);
+		$("#usrgrpName").val(data[0].usergrp_name);
+		$("#usrgrpStat").val(data[0].usergrp_stat);
+		//    var data2 = JSON.parse(result.Data2);
+		var i = 0;
+
+		var entryIndex = "entries[" + i + "]";
+		var m = 0;
+		var disabledflag = "";
+		if ("@ViewBag.mode_flag" == "V") {
+			disabledflag = "disabled";
+		}
+		for (var key in data[0]) {
+			debugger;
+			// var val = data2[0][key];
+			// var lock = false;
+			try {
+
+				if (key == "Add" || key == "Modify" || key == "View" || key == "Download" || key == "Deny") {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						template: '<input type="checkbox"  class="form-check-input ' + key + '" name="checkbox" id="attributecheckbox_' + key + '" value="1"  onchange = "selectRowchild(this,' + m + ')"  ' + disabledflag + '/> ',
+						type: "boolean",
+						width: "80px",
+						filterable: false,
+						// lockable: false
+					});
+				}
+				else if (key == "usergrp_name" || key == "usergrp_stat") {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						type: 'string',
+						hidden: true
+					});
+				}
+				else if (key == "rolemenu_rowid" || key == "menu_gid") {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						type: 'number',
+						hidden: true
+					});
+				}
+
+				else {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						type: 'string',
+					});
+				}
+			}
+			catch (e) {
+				columns.push({
+					field: entryIndex,
+					title: key,
+					width: "150px",
+					type: 'string'
+				});
+			}
+
+			i = i + 1;
+			m = m + 1;
+			entryIndex = "entries[" + i + "]";
+		}
+		var rows = [];
+		var data1 = JSON.parse(result.Data1);;
+		$.each(data1, function (i, e) {
+			var entryArray = [];
+			$.each(e, function (key, val) {
+				entryArray.push(val);
+			});
+			rows.push(kendo.observable({
+
+				entries: entryArray
+			}));
+		});
+
+		var viewModel = kendo.observable({
+			gridRows: rows
+		});
+
+		var configuration = {
+			height: "400px",
+			dataBound: onDataBound,
+			editable: false,
+			sortable: true,
+			scrollable: false,
+			filterable: true,
+			pagable: false,
+			resizable: true,
+			selectable: "false",
+			columns: columns,
+			rows: viewModel
+		};
+
+		$("#example").remove();
+		$('#Maingrid').append('<div id="example" class="table-responsive text-nowrap" id="chk1"><table id="grid" data-bind="source: gridRows" class="table table-sm" style="width:100%;height:auto;line-height:1em;font-size:12px;"></table></div>');
+		var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
+
+		kendo.bind($("#grid"), viewModel);
+
+		var grid = $("#grid").data("kendoGrid");
+	}
+
+	function selectRowchild(tog_, sel_) {
+		var grid1 = $("#grid").data("kendoGrid");
+		var checked = tog_.checked,
+			row = $(tog_).closest("tr"),
+			gridss = $("#grid").data("kendoGrid"),
+			dataItem = gridss.dataItem(row);
+		if (checked) {
+			dataItem.entries[sel_] = "1";
+			if (sel_ == "11") {
+				dataItem.entries[4] = "0";
+				dataItem.entries[5] = "0";
+				dataItem.entries[6] = "0";
+				dataItem.entries[7] = "0";
+				dataItem.entries[8] = "0";
+				dataItem.entries[9] = "0";
+				dataItem.entries[10] = "0";
+				denyAll("Deny", dataItem.entries[1]);
+			}
+			else {
+				dataItem.entries[11] = "0";
+				denyAll("Allow", dataItem.entries[1]);
+			}
+		}
+		else {
+			dataItem.entries[sel_] = "0";
+		}
+	}
+	function onDataBound(e) {
+		debugger
+		var checked = [];
+		for (var i in checkedIds) {
+			if (checkedIds[i]) {
+				checked.push(i);
+			}
+		}
+		debugger
+		var view = this.dataSource.view();
+		for (var i = 0; i < view.length; i++) {
+			if (view[i].entries[4] == "1") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Add")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[5] == "1") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Modify")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[6] == "1") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.View")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[7] == "1") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Download")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[8] == "1") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Deny")
+					.attr("checked", "checked");
+			}
+		}
+	}
+
+</script>
+
+

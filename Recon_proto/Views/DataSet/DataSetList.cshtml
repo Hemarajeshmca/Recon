@@ -1,0 +1,399 @@
+﻿@{
+	ViewBag.title = "Dataset";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-top:-15px;">
+					<div class="col-xs-12">
+						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
+							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+						</a>
+						<div id="gd_dataset">
+							<div id="grid_dataset"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		gridlist();
+		$("#navhead").text("Dataset");
+		setlocalStorage("ls_pageList", "");
+	});
+
+	function gridlist() {
+		grid_dataset_details([]);
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../DataSet/Datasetlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status, in_user_code: Context.in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					$("#gd_dataset").empty();
+					$("#gd_dataset").append("<div id='grid_dataset' style='width:100%'></div>");
+					grid_dataset_details(result);
+				}
+				else {
+					grid_dataset_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+
+	}
+	var status_Priority = [];
+	function grid_dataset_details(data) {
+		try {
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								dataset_gid: { type: "string" },
+								dataset_code: { type: "string" },
+								dataset_name: { type: "string" },
+								dataset_category: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 458,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('ds_setup')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				resizable: true,
+				change: selectRow,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-edit'  value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' class='k-grid-view' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal' class='k-grid-delete' ><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					], title: "Action&nbsp;", width: 30,
+				},
+				{
+					field: "dataset_gid",
+					title: "Row id",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "dataset_code",
+					title: "Dataset Code",
+					width: 40,
+				},
+				{
+					field: "dataset_name",
+					title: "Dataset Name",
+					width: 120,
+				},
+				{
+					field: "dataset_category",
+					title: "Category",
+					width: 50,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					width: 100,
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 50,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
+				},
+				{
+					field: "In_mode_flag",
+					title: "Mode",
+					hidden: true,
+				}],
+				editable: false,
+
+			});
+			var grid = $("#grid_dataset").data("kendoGrid");
+			function filterActiveData() {
+				var dataSource = grid.dataSource;
+				dataSource.filter({
+					logic: "and",
+					filters: [
+						{ field: "active_status_desc", operator: "neq", value: "InActive" }
+					]
+				});
+			}
+			filterActiveData();
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+	
+
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
+	}
+	function getSerializedRows() {
+		btn_onClick('Create');
+		document.location = "../DataSet/DataSetForm";
+	}
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						if (items.active_status != "N") {
+							btn_onClick("Edit");
+							document.location = '../DataSet/DataSetForm';
+						}
+					}
+					else if ($(mode).attr('value') == "view") {
+						btn_onClick('View');
+						document.location = "../DataSet/DataSetForm";
+					}
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+	function selectRow() {
+		try {
+			var grid = $("#grid_dataset").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem);
+		}
+		catch (err) {
+
+		}
+	}
+	function myDeleteJs() {
+
+		var grid = $("#grid_dataset").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		if (model.active_status != "N") {
+			var dataset_gid = model.dataset_gid;
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							title: 'Delete Reason',
+							content: '' +
+								'<form action="" class="formName">' +
+								'<div class="form-group">' +
+								'<label>Reason</label>' +
+								'<input type="text" placeholder="Reason" class="name form-control" required />' +
+								'</div>' +
+								'</form>',
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var name = this.$content.find('.name').val();
+										if (!name) {
+											$.alert('Reason cannot be empty');
+											return false;
+										}
+										var dataset_name = "";
+										var dataset_category = "";
+										var dataset_code = model.dataset_code;
+										var action = "DELETE";
+										var action_by = ""
+										var dataset_gid = model.dataset_gid;
+										var status = "";
+										$.ajax({
+											type: "POST",
+											url: '../DataSet/Datasetheader',
+											dataType: 'json',
+											data: JSON.stringify({ dataset_name: dataset_name, dataset_category: dataset_category, datasetCode: dataset_code, in_action: action, in_action_by: action_by, dataset_id: dataset_gid, active_status: status, inactive_reason: name }),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												var result = JSON.parse(response);
+												var data = result[0];
+												debugger;
+												if (data.out_result == "1") {
+													$.alert({
+														icon: 'fa fa-success',
+														title: 'Recon',
+														theme: 'dark',
+														content: data.out_msg,
+														type: 'green',
+														animationSpeed: 700,
+													});
+													gridlist();
+												} else {
+													$.alert({
+														title: 'Recon',
+														content: data.out_msg,
+														type: 'red',
+													});
+												}
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
+							},
+
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+</script>

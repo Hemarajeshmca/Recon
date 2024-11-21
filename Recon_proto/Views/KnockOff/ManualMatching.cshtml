@@ -1,0 +1,235 @@
+﻿@{
+    ViewBag.title = "Manual Matching and Posting";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+    <title></title>
+    <style>
+        .nav-item.me-2.me-xl-50 {
+            margin-right: 28rem !important;
+        }
+
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+            color: #fff !important;
+        }
+
+        .error_show {
+            color: red;
+            margin-left: 10px;
+        }
+
+        table {
+            border: 1px solid #C5C5C5 !important;
+        }
+
+        .k-grid-content {
+            overflow-x: hidden;
+        }
+        .k-grid.k-widget {
+            height: 360px;
+        }
+
+        /*       .k-grid-header th.k-header > .k-link {
+                    width: 100px;
+                }*/
+
+        .k-grid-header {
+            font-weight: bold;
+        }
+
+        .k-state-active {
+            display: none;
+        }
+
+        .k-content {
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .k-widget.k-window {
+            padding-top: 35px;
+            min-width: 90px;
+            min-height: 50px;
+            width: 700px !important;
+            height: 300px !important;
+            top: 180.766px !important;
+            /*left: 120px !important;*/
+            z-index: 10003;
+            left: 300px !important;
+        }
+
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .info-icon {
+            cursor: pointer;
+        }
+
+        .tooltip1 {
+            display: none;
+            position: absolute;
+            background-color: lightslategray;
+            color: #fff;
+            padding: 10px;
+            border-radius: 15px;
+            white-space: nowrap;
+            z-index: 1;
+            top: 100%;
+            margin-left: -142px;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-container:hover .tooltip1 {
+            display: block;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top:-1%;height: 84%;">
+                <div id="grid_maualmatch"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#navhead").text("Manual Matching and Posting");
+        kendodate_format();
+        grid_reload()
+    });
+
+    function grid_reload() {
+        $.ajax({
+            type: "POST",
+            url: '../KnockOff/ManualMatchList',
+            dataType: 'json',
+            data: JSON.stringify({}),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if (response != null) {
+                    var data = JSON.parse(response)
+                    grid_dataset_details(data);
+                }
+                else {
+                    grid_dataset_details([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+    }
+
+	function grid_dataset_details(data) {
+		try {
+			$("#grid_maualmatch").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								scheduler_gid: { type: "string" },
+								scheduled_date: { type: "string" },
+								recon_name: { type: "string" },
+                                dataset_type: { type: "string" },
+								file_name: { type: "string" },
+								last_sync_date: { type: "string" },
+								last_sync_status: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 423,
+				groupable: false,
+                dataBound: function (e) {
+                    resultData = e.sender._data;
+                    var rows = $('#grid_maualmatch').data('kendoGrid').tbody.children();
+                    setColor(rows, resultData);
+                },
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+                filterable: false,
+				navigatable: true,
+                resizable: true,
+				columns: [
+					{
+						field: "name",
+						title: "Action",
+						template: "<input id='scheduler_gid' onclick='rowselected(this)' name='scheduler_gid' type='radio'/>",
+						width: 50,
+						filterable: false,
+                        attributes: {
+                            style: "text-align: center;"
+                        }
+					},
+					{
+                        field: "scheduler_gid",
+                        title: "scheduler_gid",
+						width: 100,
+						hidden: true,
+					},
+
+					{
+                        field: "scheduled_date",
+                        title: "Scheduled Date",
+						width: 100,
+					},
+					{
+                        field: "recon_name",
+						title: "Recon Name",
+						width: 200,
+					},
+					{
+                        field: "dataset_type",
+						title: "Type",
+						width: 100,
+					},
+					{
+                        field: "file_name",
+						title: "File Name",
+						width: 100,
+					},
+					{
+                        field: "last_sync_date",
+						title: "Last sync Date",
+						width: 100
+					},
+					{
+                        field: "last_sync_status",
+                        title: "Last sync Status",
+                        width: 100
+					}],
+				editable: false,
+			});
+
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+    function rowselected(){
+        var grid = $("#grid_maualmatch").data("kendoGrid");
+        var selectedItem = grid.dataItem($(event.target).closest("tr"));
+        setlocalStorage("manualMatch_schedulerid", selectedItem);
+        document.location = "../KnockOff/ManualMatchDetails";
+    }
+</script>

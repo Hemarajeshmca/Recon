@@ -1,0 +1,55 @@
+﻿@{
+    ViewBag.Title = "session_expires";
+    Layout = null;
+}
+
+
+<script src="~/Scripts/jquery-confirm.min.js"></script>
+<script src="~/Scripts/kendo1/2015.1.318/jquery.min.js"></script>
+<script src="~/Scripts/kendo1/2015.1.318/jszip.min.js"></script>
+<h2></h2>
+<html>
+<body>
+    <div style="text-align:center;margin-top:230px;color:red;">
+		<a href="#"  onclick="Signout();" style="color:red;">Session Expired!..Please login </a>
+    </div>
+</body>
+</html>
+
+
+<script>
+    
+	function Signout() {
+		sessionStorage.clear();
+		localStorage.clear();
+		sessionStorage.setItem("level1", "");
+		sessionStorage.setItem("level2", "");
+		sessionStorage.setItem("level3", "");
+		sessionStorage.setItem("level1txt", "");
+		sessionStorage.setItem("level2txt", "");
+		sessionStorage.setItem("level3txt", "");
+		sessionStorage.setItem("reconcode", "");
+		sessionStorage.setItem("reconname", "");
+		sessionStorage.setItem("usrname", "");
+		//setlocalStorage("lastlogindb", "");
+		$.ajax({
+			type: "POST",
+			contentType: "application/json; charset=utf-8",
+			data: {},
+			dataType: "html",
+			url: '@Url.Action("Signout", "Login")',
+			success: function (data) {
+				var url = '@Url.Action("Login", "Login")'
+				window.location.href = url;
+			},
+			error: function (data) {
+				$.alert({
+					title: 'Recon',
+					content: 'Error' + data,
+					type: 'red',
+				});
+			}
+		});
+	}
+</script>
+

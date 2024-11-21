@@ -1,0 +1,245 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+		.accordion {
+			background-color: #eee;
+			color: #444;
+			cursor: pointer;
+			padding: 9px;
+			width: 100%;
+			border: none;
+			text-align: left;
+			outline: none;
+			font-size: 15px;
+			transition: 0.4s;
+		}
+
+			.active, .accordion:hover {
+				background-color: #ccc;
+			}
+
+			.accordion:after {
+				content: '\002B';
+				color: #777;
+				font-weight: bold;
+				float: right;
+				margin-left: 5px;
+			}
+
+		.active:after {
+			content: "\2212";
+		}
+
+		.panel {
+			padding: 0 18px;
+			background-color: white;
+			max-height: 0;
+			overflow: hidden;
+			transition: max-height 0.2s ease-out;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;">
+				<div class="row" style="margin-top:10px;margin-bottom: 2%;">
+					<div class="col-md-3">
+						<label class="form-label">Recon Name</label>
+						<select id="type" class="form-select form-control">
+							<option value="" selected>HDFC CC BRS</option>
+							<option value="all" >CUB CC BRS - 113120000100488</option>
+							<option value="">SBI CC BRS - 40904776466</option>
+							<option value="">Indusind CA BRS - 201003823096</option>
+						</select>
+					</div>
+
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%;margin-top: 7px">
+							Refresh
+						</button> &nbsp;&nbsp;&nbsp;
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: Green;border-color: Green;width:40%;margin-top: 7px">
+							Move Selected
+						</button> &nbsp;&nbsp;&nbsp;
+					</div>
+					<div class="col-md-3"> </div>
+					<div class="col-md-3"> </div>
+				</div>
+
+				
+
+				<button class="accordion">Exception List</button>
+				<div class="panel">
+					<table class="table table-bordered table-sm" style="margin-top: 1%;">
+						<thead style="background: #c1c1c1;">
+							<tr class="text-nowrap">
+								<th style="width: 50px;">Select</th>
+								<th style="width: 50px;">Action</th>
+								<th>Dataset Name</th>
+								<th>Dataset Type</th>
+								<th>Date</th>
+								<th>Amount</th>
+								<th>Exception Amount</th>
+								
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="height:25px;">
+								<td style="text-align:center">
+									<input type="checkbox" id="Status" name="Status" value="S" >
+								</td>
+								<td style="text-align:center">
+									<i data-bs-toggle="modal" class="fa-solid fa-eye cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>
+
+								</td>
+								<td>HDFC Bank - 123456</td>
+								<td>Base	</td>
+								<td>01-09-2023</td>
+								<td>Dr 5000.00</td>
+								<td>Dr 5000.00</td>
+								
+							</tr>
+							<tr style="height:25px;">
+								<td style="text-align:center"><input type="checkbox" id="Status" name="Status" value="S" ></td>
+								<td style="text-align:center">
+									<i data-bs-toggle="modal" class="fa-solid fa-eye cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>
+
+								</td>
+								<td>HDFC Ledger - 00234123</td>
+								<td>Target</td>
+								<td>01-09-2023</td>
+								<td>Cr 5000.00	</td>
+								<td>Cr 5000.00</td>
+								
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<button class="accordion">Knock Off</button>
+				<div class="panel">
+					<table class="table table-bordered table-sm" style="margin-top: 1%;">
+						<thead style="background: #c1c1c1;">
+							<tr class="text-nowrap">
+								<th style="width: 50px;">Select</th>
+								<th style="width: 50px;">Action</th>
+								<th>Dataset Name</th>
+								<th>Dataset Type</th>
+								<th>Date</th>
+								<th>Amount</th>
+								<th>Exception Amount</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr style="height:25px;">
+								<td style="text-align:center"><input type="checkbox" id="Status" name="Status" value="S" ></td>
+								<td style="text-align:center">
+									<i data-bs-toggle="modal" class="fa-solid fa-eye cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>
+								</td>
+								
+								<td>HDFC Bank - 123456</td>
+								<td>Base</td>
+								<td>01-09-2023</td>
+								<td>Dr 5000.00</td>
+								<td>Dr 5000.00</td>
+								
+							</tr>
+							<tr style="height:25px;">
+								<td style="text-align:center">
+									<input type="checkbox" id="Status" name="Status" value="S" >
+
+								</td>
+								<td style="text-align:center">
+									
+									<i data-bs-toggle="modal" class="fa-solid fa-eye cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>
+								</td>
+								
+								<td>HDFC Ledger - 00234123</td>
+								<td>Target</td>
+								<td>01-09-2023</td>
+								<td>Cr 5000.00</td>
+								<td>Cr 5000.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="row" style="margin-top: 1%;">
+					<div class="col-md-2">
+						Total Base Exception
+					</div>
+					<div class="col-md-1">
+						0.00
+					</div>
+					<div class="col-md-2">
+						Total Target Exception
+					</div>
+					<div class="col-md-1">
+						0.00
+					</div>
+					<div class="col-md-2">
+						Difference
+					</div>
+					<div class="col-md-1">
+						0.00
+					</div>
+					<div class="col-md-3"> </div>
+				</div>
+				<div class="row" style="margin-top: 1%;">
+					<div class="col-md-2">
+						Knock Off Reason
+					</div>
+					<div class="col-md-8">
+						<textarea class="form-control" style="min-height:100px;" id="reason" name="extraction" type="text" value="" rows="4" cols="20"></textarea>
+					</div>
+					<div class="col-md-2">
+
+					</div>
+				</div>
+				<div class="row" style="margin-top: 1%;">
+					<div class="col-md-4"></div>
+					<div class="col-md-3">
+						<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Match Selected</button>&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-sm btn-success me-2" style="background: red;border-color: red;width:46%" >Clear All Selected</button>
+					</div>
+					<div class="col-md-4"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$("#navhead").text("Manual Posting & Knockoff");
+		kendodate_format();
+
+	});
+
+	var acc = document.getElementsByClassName("accordion");
+	var i;
+
+	for (i = 0; i < acc.length; i++) {
+		acc[i].addEventListener("click", function () {
+			this.classList.toggle("active");
+			var panel = this.nextElementSibling;
+			if (panel.style.maxHeight) {
+				panel.style.maxHeight = null;
+			} else {
+				panel.style.maxHeight = panel.scrollHeight + "px";
+			}
+		});
+	}
+
+</script>
