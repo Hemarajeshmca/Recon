@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.title = "Queue Suspend";
+    ViewBag.title = "Jobs In Queue";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -104,11 +104,28 @@
 </html>
 
 <script type="text/javascript">
+    // $(document).ready(function () {
+    //     $("#navhead").text("Jobs In Queue");
+    //     $("#contextdiv").hide();
+    //     kendodate_format();
+    //     getjobtypelist();
+    // });
+    var isjobrun = false;
     $(document).ready(function () {
-        $("#navhead").text("Queue Suspend");
         $("#contextdiv").hide();
+       
+        //getjobtypelist();
+        setInterval(function () {
+            isjobrun = true;
+        }, 5000);
+        $("#navhead").text("Jobs In Queue");
         kendodate_format();
-        getjobtypelist();
+        searchJob();
+        if (isjobrun = true) {
+            setInterval(function () {
+                searchJob();
+            }, 5000);// 5000 milliseconds = 5 seconds
+        }
     });
 
     function getjobtypelist() {
@@ -232,10 +249,10 @@
                         attributes: { style: "text-align: center;" },
                         template: function (data) {
                             if (data.koqueue_status == "I") {
-                                return "<button class='k-button k-primary' onclick='suspendQue()'>Suspend</button>";
+                                return "<button class='k-button k-primary' onclick='suspendQue()'>Cancel</button>";
                             }
                             else {
-                                return "<button class='k-button k-primary disabled' disabled onclick='suspendQue()'>Suspend</button>";
+                                return "<button class='k-button k-primary disabled' disabled onclick='suspendQue()'>Cancel</button>";
                             }
                             // return data.koqueue_status === 'Initiated'
                             //     ? `<button class='k-button k-primary' onclick="suspendQue()">Suspend</button>`
