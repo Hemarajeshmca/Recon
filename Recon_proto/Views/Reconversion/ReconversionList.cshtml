@@ -1,0 +1,724 @@
+﻿@{
+	ViewBag.title = "Recon Rule Version";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+			height: 347px !important;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.km-switch.km-widget.km-switch-off {
+			background-color: red;
+			font-size: 14px;
+			border-radius: 0.375rem;
+			height: 23px;
+			color: white;
+		}
+
+		.km-switch.km-widget.km-switch-on {
+			background-color: green;
+			font-size: 14px;
+			border-radius: 0.375rem;
+			height: 23px;
+			color: white;
+		}
+
+		.km-switch-label-on {
+			left: -159%;
+			text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;padding-top: 5px ">
+				<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+					<div class="col-sm-4">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchange()">
+						</select>
+					</div>
+					<div class="col-sm-4">
+						<label for="" class="form-label">Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" id="reconversion" type="text" maxlength="32" onkeypress='return isNumberKey(event)'>
+						<input class="form-control" type="hidden" id="rulegid">
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" id="btnsubmit" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="reconsubmit()">
+							Submit
+						</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="nav-align-top mt-3">
+						<ul class="nav nav-pills mb-2" role="tablist">
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link active"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-Rule">
+									Rule
+								</button>
+							</li>
+
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-Theme">
+									Theme
+								</button>
+							</li>
+							<li class="nav-item">
+								<button type="button"
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-top-preprocess">
+									Preprocess
+								</button>
+							</li>
+						</ul>
+						<div class="tab-content" style="box-shadow:none !important;padding: 20px 0px;">
+							@*Rule*@
+							<div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<div id="gd_ruleversion">
+												<div id="grid_ruleversion">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							@*Theme*@
+							<div class="tab-pane fade" id="navs-pills-top-Theme" role="tabpanel" style="margin-top:-25px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<div id="themerecon_grid"> </div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="navs-pills-top-preprocess" role="tabpanel" style="margin-top:-25px;">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div class="col-xs-12">
+											<div id="preprocess_grid"> </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		grid_ruleversion([]);
+		$("#navhead").text("Recon Version");
+		
+		var screen_code = rolevalidatescreen('rule_version')
+		if (screen_code[0].process == "N") {
+			$("#btnsubmit").hide();
+		}
+		grid_ruleversion([]);
+		theme_grid([]);
+		grid_preprocess([]);
+		gridlist();
+	});
+	function gridlist() {
+		//recon name
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function reconchange() {
+		grid_ruleversion([]);
+		theme_grid([]);
+		grid_preprocess([]);
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Reconversion/ReconversionListfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code,in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					if (res.versionlist.length > 0) {
+						grid_ruleversion(res.versionlist);
+						$("#reconversion").val(res.versionlist[0].recon_rule_version)
+					} else {
+						grid_ruleversion([]);
+					}
+					if (res.theme.length > 0) {
+						theme_grid(res.theme);
+					} else {
+						theme_grid([]);
+					}
+					if (res.preprocess.length > 0) {
+						grid_preprocess(res.preprocess);
+					} else {
+						grid_preprocess([]);
+					}
+
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function grid_ruleversion(data) {		
+		$("#grid_ruleversion").kendoGrid({
+			dataSource: {
+				data: data,
+				schema: {
+					model: {
+						fields: {
+							rule_gid: { type: "string" },
+							rule_name: { type: "string" },
+							rule_order: { type: "number" },
+							source_dataset_name: { type: "string" },
+							comparsion_dataset_name: { type: "string" },
+							system_match_flag_desc: { type: "string", editable: false, },
+							hold_flag_desc: { type: "string", editable: false, },
+							system_match_flag: { type: "string", editable: false, },
+							hold_flag: { type: "string" },
+							probable_flag: { type: "string", editable: false, },
+							rule_code: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 380,
+			groupable: false,
+			dataBound: function (e) {
+
+			},
+			sortable: true,
+			scrollable: true,
+			selectable: false,
+			filterable: true,
+			navigatable: true,
+			pageable: false,
+			resizable: false,
+			columns: [
+				{
+					field: "rule_gid",
+					title: "rule_gid",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_code",
+					title: "rule_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "rule_name",
+					title: "Rule Name",
+					width: 120,
+				},
+				{
+					field: "rule_order",
+					title: "Rule Order",
+					attributes: { style: "text-align: right" },
+					width: 60,
+					filterable: {
+						ui: "numericInput",
+						extra: false,
+					},
+				},
+				{
+					field: "source_dataset_code",
+					title: "source_dataset_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "source_dataset_desc",
+					title: "Source Dataset Name",
+					width: 100,
+				},
+				{
+					field: "comparison_dataset_code",
+					title: "comparison_dataset_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "comparison_dataset_desc",
+					title: "Comparsion Dataset Name",
+					width: 100,
+				},
+				{
+					field: "system_match_flag_desc",
+					title: "System Matchoff",
+					width: 70,
+					//template: "<input id='scheduler_gid' onclick='rowselected(this)' name='system_match_flag_desc' type='checkbox'/>",
+					attributes: { style: "text-align: center" },
+					filterable: false,
+					template: '#=sel_checkbox(data)#'
+				},
+				{
+					field: "probable_match_desc",
+					title: "Probable Matchoff",
+					width: 70,
+					attributes: { style: "text-align: center" },
+					filterable: false,
+					template: '#=sel_checkbox2(data)#'
+				},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 50,
+					filterable: false,
+					attributes: { style: "text-align: center" },
+					//template: "<input id='scheduler_gid1' onclick='rowselected(this)' name='hold_flag_desc' type='checkbox'/>"
+					template: '#=sel_checkbox1(data)#'
+				},
+			],
+			editable: false,
+			//cancel: function (e) {
+			//	var grid = this;
+			//	var rowUid = e.container.data("uid");
+			//	setTimeout(function () {
+			//		createSwitch(grid.element.find("tr[data-uid='" + rowUid + "'] .customClass"));
+			//	});
+			//},
+		});
+	}
+	function sel_checkbox(data) {
+		debugger;
+		var isChecked = data.system_match_flag_desc;
+		var con = "";
+		if (isChecked == "YES") {
+			con = 'checked=checked';
+			return '<input id="chk_sel_' + data.rule_gid + '" checked name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
+
+		} else {
+			return '<input id="chk_sel_' + data.rule_gid + '" name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
+
+		}
+	}
+	function sel_checkbox1(data) {
+		var isChecked1 = data.hold_flag_desc;
+		var con1 = "";
+		if (isChecked1 == "YES") {
+			con1 = 'checked=checked';
+			return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox" /> ';
+		} else {
+			return '<input id="chk_sel1_' + data.rule_gid + '"  name = "hold_flag_desc" type="checkbox"/> ';
+
+		}
+	}
+	function sel_checkbox2(data) {
+		var isChecked2 = data.probable_match_desc;
+		var con1 = "";
+		if (isChecked2 == "YES") {
+			con1 = 'checked=checked';
+			return '<input id="chk_sel2_' + data.rule_gid + '" checked  name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
+		} else {
+			return '<input id="chk_sel2_' + data.rule_gid + '" disabled name = "probable_match_desc" type="checkbox" onchange="onChange2(event)"/> ';
+
+		}
+	}
+
+	function onChange2(e) {
+		var isCheck = e.target.checked
+		var id = e.target.id
+		var id1 = id.split("_")
+		if (isCheck == true) {
+			$('#chk_sel_' + id1[2]).attr('checked', false);
+			//$('#chk_sel_' + id1[2]).attr('disabled', true);
+		} else {
+			$('#chk_sel_' + id1[2]).attr('disabled', false);
+		}
+	}
+	function onChange1(e) {
+		var isCheck = e.target.checked
+		var id = e.target.id
+		var id1 = id.split("_")
+		if (isCheck == true) {
+			$('#chk_sel2_' + id1[2]).attr('checked', false);
+			//$('#chk_sel_' + id1[2]).attr('disabled', true);
+		} else {
+			$('#chk_sel2_' + id1[2]).attr('disabled', false);
+		}
+	}
+
+	function reconsubmit() {
+		debugger;
+		var in_recon_version = $("#reconversion").val();
+		if (in_recon_version == '') {
+			$.alert({
+				title: 'Recon',
+				content: 'please enter version !',
+				type: 'green',
+			});
+			return;
+		}
+		var concatstring = "";
+		var in_recon_code = $("#cmbreconname").val();
+		var in_recon_version = $("#reconversion").val();
+		var action_by = sessionStorage.getItem("usrname");
+		var grid_val = JSON.stringify($("#grid_ruleversion").data().kendoGrid._data);
+		var flag = "";
+		var Bind = {};
+		Bind = grid_val;
+		var result = JSON.parse(Bind);
+		$.each(result, function (index, value) {
+			var row_id = value.rule_gid;
+			var rule_code = value.rule_code;
+			var in_System = "";
+			if ($('#chk_sel_' + value.rule_gid).is(":checked")) {
+				in_System = "Y";
+			} else {
+				in_System = "N";
+			}
+			var in_hold = "";
+			if ($('#chk_sel1_' + value.rule_gid).is(":checked")) {
+				in_hold = "Y";
+			} else {
+				in_hold = "N";
+			}
+			var in_probable = "";
+			if ($('#chk_sel2_' + value.rule_gid).is(":checked")) {
+				in_probable = "Y";
+			} else {
+				in_probable = "N";
+			}
+			if (concatstring != "") {
+				flag = "$"
+			}
+			concatstring = concatstring + flag + rule_code + "#" + in_System + "#" + in_hold + "#" + in_probable
+		});
+		var concatstring1 = "";
+		var grid_val = JSON.stringify($("#themerecon_grid").data().kendoGrid._data);
+		var flag = "";
+		var Bind = {};
+		Bind = grid_val;
+		var result = JSON.parse(Bind);
+		$.each(result, function (index, value) {
+			var row_id = value.theme_gid;
+			var theme_code = value.theme_code;
+			var in_theme_hold = "";
+			if ($('#chk_sel5_' + value.theme_gid).is(":checked")) {
+				in_theme_hold = "Y";
+			} else {
+				in_theme_hold = "N";
+			}
+			if (concatstring1 != "") {
+				flag = "$"
+			}
+			concatstring1 = concatstring1 + flag + theme_code + "#" + in_theme_hold
+		});
+		var concatstring2 = "";
+		var grid_val = JSON.stringify($("#preprocess_grid").data().kendoGrid._data);
+		var flag = "";
+		var Bind = {};
+		Bind = grid_val;
+		var result = JSON.parse(Bind);
+		$.each(result, function (index, value) {
+			var row_id = value.preprocess_gid;
+			var preprocess_code = value.preprocess_code;
+			var in_preprocess_hold = "";
+			if ($('#chk_sel6_' + value.preprocess_gid).is(":checked")) {
+				in_preprocess_hold = "Y";
+			} else {
+				in_preprocess_hold = "N";
+			}
+			if (concatstring2 != "") {
+				flag = "$"
+			}
+			concatstring2 = concatstring2 + flag + preprocess_code + "#" + in_preprocess_hold
+		});
+		$.ajax({
+			type: "POST",
+			url: '../Reconversion/Reconversionsave',
+			dataType: 'json',
+			data: JSON.stringify({
+				in_recon_code: in_recon_code, in_rule_code: concatstring, in_theme_code: concatstring1, in_preprocess_code: concatstring2, in_reconrule_version: in_recon_version, in_user_code: action_by
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				if (response != null) {
+					$.alert({
+						title: 'Recon',
+						content: res[0].out_msg,
+						type: 'green',
+					});
+				}
+				else {
+
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+
+	}
+	function theme_grid(data) {
+		$("#themerecon_grid").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 15,
+				schema: {
+					model: {
+						fields: {
+							theme_gid: { type: "string" },
+							theme_code: { type: "string" },
+							theme_desc: { type: "string" },
+							theme_order: { type: "number" },
+							hold_flag_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 380,
+			groupable: false,
+			scrollable: true,
+			sortable: true,
+			filterable: true,
+			navigatable: false,
+			resizable: true,		
+			columns: [
+				{
+					field: "theme_gid",
+					title: "Row id",
+					width: 50,
+					hidden: true,
+				},
+				{
+					field: "theme_order",
+					title: "Theme Order",
+					width: 30,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numericInput",
+						extra: false,
+					},
+				},
+				{
+					field: "theme_code",
+					title: "Theme Code",
+					width: 40,
+				},
+				{
+					field: "theme_desc",
+					title: "Theme Description",
+					width: 150,
+				},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 30,
+					filterable: false,
+					attributes: { style: "text-align: center" },
+					template: '#=sel_checkbox5(data)#'
+				}
+			],
+			editable: false,
+		});
+
+	}
+	function sel_checkbox5(data) {
+		var isChecked5 = data.hold_flag_desc;
+		var con1 = "";
+		if (isChecked5 == "YES") {
+			con1 = 'checked=checked';
+			return '<input id="chk_sel5_' + data.theme_gid + '" checked  name = "hold_flag_desc" type="checkbox" /> ';
+		} else {
+			return '<input id="chk_sel5_' + data.theme_gid + '" name = "hold_flag_desc" type="checkbox" /> ';
+
+		}
+	}
+	function grid_preprocess(data) {
+		$("#preprocess_grid").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 15,
+				schema: {
+					model: {
+						fields: {
+							preprocess_gid: { type: "string" },
+							preprocess_code: { type: "string" },
+							preprocess_desc: { type: "string" },
+							preprocess_order: { type: "number" },
+							hold_flag_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 380,
+			groupable: false,
+			dataBound: function (e) {
+
+			},
+			height: 380,
+			groupable: false,
+			scrollable: true,
+			sortable: true,
+			filterable: true,
+			navigatable: false,
+			resizable: true,
+			columns: [
+				{
+					field: "preprocess_gid",
+					title: "Row id",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "preprocess_order",
+					title: "Preprocess Order",
+					width: 40,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
+				},
+				{
+					field: "preprocess_code",
+					title: "Preprocess Code",
+					width: 50,
+				},
+				{
+					field: "preprocess_desc",
+					title: "Preprocess Name",
+					width: 130,
+				},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 30,
+					filterable: false,
+					attributes: { style: "text-align: center" },
+					template: '#=sel_checkbox6(data)#'
+				}
+			],
+			editable: false,
+
+		});
+	}
+	function sel_checkbox6(data) {
+		var isChecked6 = data.hold_flag_desc;
+		var con1 = "";
+		if (isChecked6 == "YES") {
+			con1 = 'checked=checked';
+			return '<input id="chk_sel6_' + data.preprocess_gid + '" checked  name = "hold_flag_desc" type="checkbox" /> ';
+		} else {
+			return '<input id="chk_sel6_' + data.preprocess_gid + '" name = "hold_flag_desc" type="checkbox" /> ';
+		}
+	}
+</script>
+

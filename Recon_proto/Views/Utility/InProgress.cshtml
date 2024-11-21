@@ -1,0 +1,292 @@
+﻿@{
+	ViewBag.title = "Job in progress";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: transparent;
+		}
+
+		.k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+			color: white !important;
+		}
+
+		.k-header, .k-grid-header {
+			color: white !important;
+		}
+
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-bottom: 1%;">
+					<div class="col-md-3">
+						<label class="form-label">Process Type <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="jobtype" class="form-select form-control"> </select>
+					</div>
+					<div class="col-md-3" style="display:none">
+						<label for="" class="form-label">Initiated From Date <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="display:none">
+						<label class="form-label"> Initiated To Date <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initialed_to" name="initialed_to" data-value="2022-12-21" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px" onclick="searchJob()">
+							Search
+						</button>
+					</div>
+				</div>
+				<div id="gd_jobinprogress">
+					<div id="grid_jobinprogress"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	var isjobrun = false;
+	$(document).ready(function () {
+		$("#contextdiv").hide();
+		fetchGrid();
+		getjobtypelist();
+		setInterval(function () {
+			isjobrun = true;
+		}, 5000);
+		$("#navhead").text("Job in progress");
+		kendodate_format();
+		if (isjobrun = true) {
+			setInterval(function () {
+				searchJob();
+			}, 5000);// 5000 milliseconds = 5 seconds
+		}
+	});
+
+
+
+	function getjobtypelist() {
+		$.ajax({
+			type: "POST",
+			url: '../Utility/jobtypelist',
+			dataType: 'json',
+			data: JSON.stringify({}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#jobtype").empty();
+				$.each(response, function (index, item) {
+					$("#jobtype").append($('<option>', {
+						value: item.jobtype_code,
+						text: item.jobtype_desc
+					}));
+				});
+				searchJob();
+			}
+		});
+	}
+
+
+	function searchJob() {
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		var toDate = validateDateFormat($("#initialed_to").val());
+		if (fromDate && toDate) {
+			try {
+				var job_type = $("#jobtype").val();
+				var period_from = $("#initiated_from").val();
+				var ts = period_from.split("/");
+				var start_date = ts[2] + "-" + ts[1] + "-" + ts[0];
+				var period_end = $("#initialed_to").val();
+				var te = period_end.split("/");
+				var end_date = te[2] + "-" + te[1] + "-" + te[0];
+				var in_user_code = sessionStorage.getItem("usrname");
+				$.ajax({
+					type: "POST",
+					url: '../Utility/getjobinprogresslist',
+					dataType: 'json',
+						data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'P', in_user_code: in_user_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
+							$("#gd_jobinprogress").empty();
+							$("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
+							fetchGrid(response);
+						}
+						else {
+							fetchGrid();
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
+			catch (e) {
+				console.log(e)
+			}
+		} else if (!fromDate || !toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		}
+
+
+	}
+
+	function fetchGrid(data) {
+		try {
+			$("#grid_jobinprogress").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 10,
+					schema: {
+						model: {
+							fields: {
+								end_date: { type: "string" },
+								job_gid: { type: "number" },
+								job_name: { type: "string" },
+								job_remark: { type: "string" },
+								jobstatus_desc: { type: "string" },
+								jobtype_code: { type: "string" },
+								jobtype_desc: { type: "string" },
+								start_date: { type: "string" },
+								recon_code: { type: "string" },
+								recon_name: { type: "string" },
+								job_initiated_by: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 400,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_jobinprogress').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: false,
+				navigatable: true,
+				resizable: true,
+				columns: [{
+					field: "job_gid",
+					title: "Job ID",
+					width: 50,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
+				},
+
+				{
+					field: "job_name",
+					title: "Job Name",
+					width: 125
+				},
+				{
+					field: "jobtype_desc",
+					title: "Job Type",
+					width: 60
+				},
+				{
+					field: "recon_name",
+					title: "Recon Name",
+					width: 125
+				},
+				{
+					field: "start_date",
+					title: "Start Date",
+					width: 100
+				},
+				{
+					field: "job_initiated_by",
+					title: "Initated By",
+					width: 80,
+				},
+				{
+					field: "job_remark",
+					title: "Job Remark",
+					width: 250,
+				}],
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		const dateInput1 = document.getElementById('initialed_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
+</script>

@@ -1,0 +1,2555 @@
+﻿@{
+	ViewData["Title"] = "Recon";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.k-grid-content {
+			height: 176px;
+		}
+
+		/*		.datepicker table tr td.active:active,
+								.datepicker table tr td.active.highlighted:active,
+								.datepicker table tr td.active.active,
+								.datepicker table tr td.active.highlighted.active {
+									background-color: green;
+								}
+
+									.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+										background-color: red;
+									}*/
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 84%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Recon code</label>
+									<input class="form-control" type="text" id="reconcode" value="" disabled>
+									<input class="form-control" type="text" id="clone_reconcode" value="" hidden>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="mode" disabled>
+
+									<input class="form-control" type="text" id="txtmode" hidden>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5"></div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../Recon/ReconList"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="box box-orange" style="height:auto;">
+							<div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
+								<div class="col-sm-4">
+									<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<input class="form-control" id="ReconName" name="ReconName" type="text">
+									<input class="form-control" type="hidden" id="recon_id" value=0>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Recon Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select id="cmbrecontype" class="form-select form-control" onchange="recontypeconfig()">
+									</select>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<div>
+										<input class="cusDate" #datepicker data-role='datepicker' id="period_from" name="period_from" style="width:100%" />
+										<span data-for='valid' class='k-invalid-msg'></span>
+									</div>
+								</div>
+								<div class="col-sm-2">
+									<label for="organization" class="form-label">
+										<span>Period To</span>&nbsp;&nbsp;&nbsp;<input class="form-check-input" type="checkbox" value="false" onclick="checkactive()" id="untillactive" />&nbsp;&nbsp;<span style="font-size:13px;">Until Active</span>
+									</label>
+									<div>
+										<input class="cusDate" data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="nav-align-top mb-3 mt-3">
+									<ul class="nav nav-pills mb-2" role="tablist">
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link active"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-Dataset"
+													aria-controls="navs-pills-top-Dataset"
+													aria-selected="true">
+												Dataset
+											</button>
+										</li>
+
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-Datasetmapping"
+													aria-controls="navs-pills-top-Datasetmapping"
+													aria-selected="true">
+												Dataset Mapping
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-AddtionalConfiguration"
+													aria-controls="navs-pills-top-AddtionalConfiguration"
+													aria-selected="true">
+												Addtional Configuration
+											</button>
+										</li>
+										<li class="nav-item">
+											<button type="button"
+													class="nav-link"
+													role="tab"
+													data-bs-toggle="tab"
+													data-bs-target="#navs-pills-top-Rule"
+													aria-controls="navs-pills-top-Rule"
+													aria-selected="true">
+												Rule
+											</button>
+										</li>
+									</ul>
+
+									<div class="tab-content">
+										@*Dataset*@
+										<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default" style="margin-top:5px;">
+												<div class="panel-body">
+													@*													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													*@													<div class="col-xs-12">
+														<div id="gd_datasetrecon">
+															<div id="grid_datasetrecon">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*Datasetmapping*@
+										<div class="tab-pane fade" id="navs-pills-top-Datasetmapping" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default" style="margin-top:5px;">
+												<div class="panel-body">
+													@*													<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													*@													<div class="col-xs-12">
+														<div id="maingrid">
+														</div>
+														<div id="maingrid1">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*AddtionalConfiguration*@
+										<div class="tab-pane fade" id="navs-pills-top-AddtionalConfiguration" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Partial Match&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="partialmatch1" name="partialmatch" value="Y" onclick="onpartial()">&nbsp;Yes &nbsp;
+																<input type="radio" id="partialmatch2" name="partialmatch" value="N" onclick="onpartial()" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
+															<input class="form-control" id="thersholdplus" type="text" value="0" onkeypress='return isNumberKey(event)'>
+														</div>
+														@*<div class="col-sm-2">
+														<label for="" class="form-label">Threshold - Value&nbsp;</label>
+														<input class="form-control" id="thersholdminus" type="text" value="0">
+														</div>*@
+														<div class="col-sm-2">
+															<label for="" class="form-label">Applied On&nbsp;</label>
+															<select id="cmbthersholdvalue" class="form-select form-control">
+															</select>
+														</div>
+													</div>
+													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Date Flag&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="recondateflag1" name="recondateflag" value="Y">&nbsp;Yes &nbsp;
+																<input type="radio" id="recondateflag2" name="recondateflag" value="N" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Date Field&nbsp;</label>
+															<select id="cmbrecondatefield" class="form-select form-control">
+															</select>
+														</div>
+													</div>
+													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Value Flag&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="reconvalueflag1" name="reconvalueflag" value="Y">&nbsp;Yes &nbsp;
+																<input type="radio" id="reconvalueflag2" name="reconvalueflag" value="N" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Value Field&nbsp;</label>
+															<select id="cmbreconvaluefield" class="form-select form-control">
+															</select>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										@*Rule*@
+										<div class="tab-pane fade show" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													@*													<i data-bs-toggle="modal" onclick='getdatasetrecon(this)' value='create' class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+													*@													@*<i data-bs-toggle="modal" onclick="saveheader()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
+													<div class="col-xs-12" style="margin-top:25px;">
+														<div id="gd_rule">
+															<div id="grid_rule">
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+								<div class="col-sm-4"></div>
+								<div class="col-sm-4" style="text-align:center">
+									<button type="button" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+									<a href="../Recon/ReconList" class="btn btn-sm cancel_btn me-2">Cancel</a>
+								</div>
+								<div class="col-sm-4"></div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal" id="Accountform" tabindex="-1" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								</div>
+								<div class="modal-body" style="margin-top: -26px;">
+									<div class="row">
+										<div class="col-sm-4">
+										</div>
+										<div class="col-sm-4">
+											<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Dataset</h4>
+										</div>
+										<div class="col-sm-4">
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										</div>
+									</div>
+									<hr style="margin-top:-1px; width:100%;">
+									<div class="container">
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Cloned Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbdatasetname" disabled class="form-select form-control">
+												</select>
+												<input type="hidden" id="recondataset_gid" value="0" />
+												<input type="hidden" id="txtmodedataset" value="Create" />
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Cloned Dataset Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="DatasetType" disabled class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Cloned Parent Dataset&nbsp;</label>
+												<select id="cmbParentDataset" disabled class="form-select form-control" value="">
+												</select>
+											</div>
+
+										</div>
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbdatasetname_new" class="form-select form-control">
+												</select>
+												<input type="hidden" id="recondataset_gid_new" value="0" />
+												<input type="hidden" id="txtmodedataset_new" value="Create" />
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Dataset Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="DatasetType_new" class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Parent Dataset&nbsp;</label>
+												<select id="cmbParentDataset_new" class="form-select form-control" value="" disabled>
+												</select>
+											</div>
+
+										</div>
+
+									</div>
+									<div class="col-sm-4" style="margin-top:30px;float: right;">
+										<center>
+											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveClonedDataset()">Save</button>&nbsp;&nbsp;&nbsp;
+											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+										</center>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal" id="Datasetmappingform" tabindex="-1" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								</div>
+								<div class="modal-body" style="margin-top: -26px;">
+									<div class="row">
+										<div class="col-sm-4">
+										</div>
+										<div class="col-sm-4">
+											<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Field Mapping</h4>
+										</div>
+										<div class="col-sm-4">
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										</div>
+									</div>
+									<hr style="margin-top:-1px; width:100%;">
+									<div class="container">
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Recon Field Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<input class="form-control" id="Reconfieldname" name="ReconName" type="text" value="">
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Display Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<input class="form-control" id="displayorder" name="" type="number" value=0>
+												<input type="hidden" id="reconfield_gid" value="0" />
+												<input type="hidden" id="txtmodedatasetmapping" value="Create" />
+												<input type="hidden" id="reconfieldmapping_gid" value="0" />
+											</div>
+
+										</div>
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:5px">
+											<div class="col-sm-8">
+												<label for="" class="form-label">Dataset Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbdatasetmap" class="form-select form-control" onchange="Datasetname()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Dataset Field Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbdatasetfieldname" class="form-select form-control">
+												</select>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4"></div>
+											<div class="col-sm-4"></div>
+											<div class="col-sm-4" style="margin-top:13px;float: right;margin-bottom:10px">
+												<center>
+													<button type="button" class="btn btn-sm save_btn me-2" onclick="saveDatasetmapping()">Add</button>&nbsp;&nbsp;&nbsp;
+													<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="rr3()">Cancel</button>
+												</center>
+											</div>
+										</div>
+										<div class="col-xs-12">
+											<div id="grid_datasetreconmapping">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="modal" id="ReconRuleForm" tabindex="-1" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								</div>
+								<div class="modal-body" style="margin-top: -26px;">
+									<div class="row">
+										<div class="col-sm-4">
+										</div>
+										<div class="col-sm-4">
+											<h4 style="font-size: 14px;text-align: center;color: #1a9950;font-weight: 600;">Rule</h4>
+										</div>
+										<div class="col-sm-4">
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										</div>
+									</div>
+									<hr style="margin-top:-1px; width:100%;">
+									<div class="container">
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Clone Rule Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmbrulename" disabled class="form-select form-control">
+												</select>
+												<input type="hidden" id="rule_gid" />
+												<input type="hidden" id="rule_code" />
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Clone Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="sourcedataset" disabled class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">Clone Comparision Dataset&nbsp;</label>
+												<select id="comparisondataset" disabled class="form-select form-control" value="">
+												</select>
+											</div>
+
+										</div>
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<input class="form-control" type="text" id="cmbrulename_new" />
+												@*<select id="cmbrulename_new" class="form-select form-control">
+												</select>
+												<input type="hidden" id="rule_gid_new" value="0" />
+												<input type="hidden" id="rule_code_new" />*@
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="sourcedataset_new" class="form-select form-control" onchange="DatasetTypefield()">
+												</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="" class="form-label">New Comparision Dataset&nbsp;</label>
+												<select id="comparisondataset_new" class="form-select form-control" value="">
+												</select>
+											</div>
+
+										</div>
+
+									</div>
+									<div class="col-sm-4" style="margin-top:30px;float: right;">
+										<center>
+											<button type="button" class="btn btn-sm save_btn me-2" onclick="saveCloneRule()">Save</button>&nbsp;&nbsp;&nbsp;
+											<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" onclick="cancelRule()">Cancel</button>
+										</center>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="ReconRuledetail">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:603px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_Rulesetupdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Recon");
+		$("#mode").val("Clone");
+		$("#reconcode").val(getlocalStorage('cloned_reconCode'));
+		kendodate_format();
+		getGridComboList(); // recontype, Rule, dataset Comparision and Source
+		grid_datasetrecon([]); // recondataset
+		grid_recondatasetmapping([]);//recondatasetmapping
+		recontypeconfig(); //recontypeconfiguration
+		DatasetTypefield();
+		detailfetch(getlocalStorage('cloned_reconCode'));
+
+	});
+	function DatasetTypefield() {
+		
+		if ($("#DatasetType_new").val() == "S") {
+			$("#cmbParentDataset_new").empty();
+			$("#cmbParentDataset_new").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$("#cmbParentDataset").attr('disabled', true);
+			$("#cmbParentDataset_new").attr('disabled', false);
+			var reconcode = $("#reconcode").val();
+			var recongid = $("#recon_id").val();
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Reconheaderfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var result = JSON.parse(response);
+						$("#cmbParentDataset").empty();
+						$("#cmbParentDataset").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						console.log(`result.ReconDataSet`, result.ReconDataSet);
+						$.each(result.ReconDataSet, function (index, item) {
+							$("#cmbParentDataset").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+							$("#cmbParentDataset_new").append($('<option>', {
+								value: item.dataset_code,
+								text: item.dataset_name
+							}));
+						});
+					}
+					else {
+						console.log(`Failed`)
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		} else {
+			$("#cmbParentDataset_new").empty();
+			$("#cmbParentDataset_new").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$("#cmbParentDataset").attr('disabled', true);
+			$("#cmbParentDataset_new").attr('disabled', true);
+			
+		}
+	}
+	function checkactive() {
+		if ($("input:checkbox[id='untillactive']").is(":checked") == true) {
+			$("#period_to").val('');
+			//$("#period_to").removeAttr('disabled', true);
+			$("#period_to").prop("disabled", true);
+			$('#period_to').unbind('click');
+		}
+		else {
+
+			$("#period_to").removeAttr('disabled', false);
+		}
+	}
+	function Datasetname() {
+		var datasetcode = $("#cmbdatasetmap").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					$("#cmbdatasetfieldname").empty();
+					$("#cmbdatasetfieldname").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result.DataSet, function (index, item) {
+						$("#cmbdatasetfieldname").append($('<option>', {
+							value: item.dataset_table_field,
+							text: item.field_name
+						}));
+					});
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function load() {
+		if (getlocalStorage('btn_clk_val') == "Create") {
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#txtstatus").val("Draft");
+			gridmap([]);
+			$('#partialmatch2').attr('checked', true);
+			onpartial();
+		}
+		else if (getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit") {
+			if (getlocalStorage("ls_pageList") != undefined) {
+				var data = getlocalStorage("ls_pageList");
+				var cat = data.dataset_category;
+				$("#txtmode").val(getlocalStorage('btn_clk_val'));
+				$("#reconcode").val(data.recon_code);
+				$("#cmbrecontype").val(data.recontype_code);
+				jQuery('#cmbrecontype').trigger("change");
+				$("#ReconName").val(data.recon_name);
+				$("#period_from").val(data.period_from);
+				$("#period_to").val(data.period_to);
+				$("#txtstatus").val(data.active_status_desc);
+				$("#recon_id").val(data.recon_gid);
+				if (data.until_active_flag == "Y") {
+					$('#untillactive').attr('checked', true);
+				}
+				var in_user_code = sessionStorage.getItem("usrname");
+				$.ajax({
+					type: "POST",
+					url: '../Recon/Reconheaderfetch',
+					dataType: 'json',
+					data: JSON.stringify({ in_recon_code: data.recon_code, in_user_code: in_user_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+
+						if (response != " ") {
+							var res = JSON.parse(response);
+							if (res.ReconHeader.length > 0) {
+								if (res.ReconHeader[0].recon_value_flag == "Y") {
+									$("#reconvalueflag1").prop("checked", true);
+								} else {
+									$("#reconvalueflag2").prop("checked", true);
+								}
+								if (res.ReconHeader[0].recon_date_flag == "Y") {
+									$("#recondateflag1").prop("checked", true);
+								} else {
+									$("#recondateflag2").prop("checked", true);
+								}
+								if (res.ReconHeader[0].recon_automatch_partial == "Y") {
+									$("#partialmatch1").prop("checked", true);
+								} else {
+									$("#partialmatch2").prop("checked", true);
+								}
+
+								$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
+								$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
+
+								////debugger;
+								//getcloneddataset(res.ReconHeader[0].clone_recon_code);
+								$("#gd_datasetrecon").empty();
+								$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
+
+							}
+							grid_datasetrecon(res.ReconDataSet);
+							if (res.ReconDataSetmapping.length > 0) {
+								griddatamapping(res.ReconDataSetmapping);
+							} else {
+								gridmap([]);
+							}
+
+							$("#cmbdatasetmap").empty();
+							$("#cmbdatasetmap").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res.ReconDataSet, function (index, item) {
+								if (item.new_dataset_code != "") {
+									$("#cmbdatasetmap").append($('<option>', {
+										value: item.new_dataset_code,
+										text: item.new_dataset_name
+									}));
+								}
+							});
+							$("#cmbrecondatefield").empty();
+							$("#cmbrecondatefield").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res.Reconfield, function (index, item) {
+								if (item.recon_field_type == "DATE") {
+									$("#cmbrecondatefield").append($('<option>', {
+										value: item.recon_field_name,
+										text: item.recon_field_desc
+									}));
+								}
+							});
+							$("#cmbreconvaluefield").empty();
+							$("#cmbreconvaluefield").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res.Reconfield, function (index, item) {
+								if (item.recon_field_type == "NUMERIC") {
+									$("#cmbreconvaluefield").append($('<option>', {
+										value: item.recon_field_name,
+										text: item.recon_field_desc
+									}));
+								}
+							});
+							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
+							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+							recontypeconfig();
+						}
+						else {
+							grid_datasetrecon([]);
+							gridmap([]);
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
+
+				});
+			}
+		}
+	}
+	function detailfetch(reconcode) {
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/fetchcloneRecondetails',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != " ") {
+					var res = JSON.parse(response);
+					if (res.ReconHeader.length > 0) {
+						$("#reconcode").val(res.ReconHeader[0].recon_code);
+						$("#cmbrecontype").val(res.ReconHeader[0].recontype_code);
+						jQuery('#cmbrecontype').trigger("change");
+						$("#ReconName").val(res.ReconHeader[0].recon_name);
+						$("#period_from").val(res.ReconHeader[0].period_from);
+						$("#period_to").val(res.ReconHeader[0].period_to);
+						$("#txtstatus").val(res.ReconHeader[0].active_status_desc);
+						$("#recon_id").val(res.ReconHeader[0].recon_gid);
+						$("#clone_reconcode").val(res.ReconHeader[0].clone_recon_code);
+						if (res.ReconHeader[0].until_active_flag == "Y") {
+							$('#untillactive').attr('checked', true);
+						}
+						if (res.ReconHeader[0].recon_value_flag == "Y") {
+							$("#reconvalueflag1").prop("checked", true);
+						} else {
+							$("#reconvalueflag2").prop("checked", true);
+						}
+						if (res.ReconHeader[0].recon_date_flag == "Y") {
+							$("#recondateflag1").prop("checked", true);
+						} else {
+							$("#recondateflag2").prop("checked", true);
+						}
+						if (res.ReconHeader[0].recon_automatch_partial == "Y") {
+							$("#partialmatch1").prop("checked", true);
+						} else {
+							$("#partialmatch2").prop("checked", true);
+						}
+						$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
+						$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
+						////debugger;
+						//	getcloneddataset(res.ReconHeader[0].clone_recon_code)
+						$("#gd_datasetrecon").empty();
+						$("#gd_datasetrecon").append("<div id='grid_datasetrecon'></div>");
+					}
+					grid_datasetrecon(res.ReconDataSet);
+					if (res.ReconDataSetmapping.length > 0) {
+						griddatamapping(res.ReconDataSetmapping);
+						$("#maingrid1").hide()
+					} else {
+						gridmap([]);
+					}
+					if (res.ReconRule.length > 0) {
+						gridruleMapping(res.ReconRule);
+					} else {
+						gridruleMapping([]);
+					}
+
+					$("#cmbdatasetmap").empty();
+					$("#cmbdatasetmap").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.ReconDataSet, function (index, item) {
+						if (item.new_dataset_code != "") {
+							$("#cmbdatasetmap").append($('<option>', {
+								value: item.new_dataset_code,
+								text: item.new_dataset_name
+							}));
+						}
+					});
+					$("#cmbrecondatefield").empty();
+					$("#cmbrecondatefield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.Reconfield, function (index, item) {
+						if (item.recon_field_type == "DATE") {
+							$("#cmbrecondatefield").append($('<option>', {
+								value: item.recon_field_name,
+								text: item.recon_field_desc
+							}));
+						}
+					});
+					$("#cmbreconvaluefield").empty();
+					$("#cmbreconvaluefield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.Reconfield, function (index, item) {
+						if (item.recon_field_type == "number") {
+							$("#cmbreconvaluefield").append($('<option>', {
+								value: item.recon_field_name,
+								text: item.recon_field_desc
+							}));
+						}
+					});
+					$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
+					$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
+					//Rule fetch
+					$("#sourcedataset").empty();
+					$("#sourcedataset").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(res.ReconRule, function (index, item) {
+						$("#sourcedataset").append($('<option>', {
+							value: item.clone_source_dataset_code,
+							text: item.clone_source_dataset_desc
+						}));
+						$("#comparisondataset").append($('<option>', {
+							value: item.clone_comparison_dataset_code,
+							text: item.clone_comparison_dataset_desc
+						}));
+					});
+					recontypeconfig();
+				}
+				else {
+					grid_datasetrecon([]);
+					gridmap([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	function getGridComboList() {
+		// THERSOLD type
+		var in_master_code = "QCD_TV";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbthersholdvalue").empty();
+				$("#cmbthersholdvalue").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbthersholdvalue").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+		//recon type
+		var in_master_code = "QCD_RC_RCON_TYPE";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbrecontype").empty();
+				$("#cmbrecontype").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbrecontype").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+				//load();
+			}
+		});
+		//dataset combo
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../DataSet/Datasetlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status, in_user_code: Context.in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				$("#cmbdatasetname").empty();
+				$("#cmbdatasetname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(result, function (index, item) {
+					if (item.active_status == "Y" && item.system_flag == "N") {
+						$("#cmbdatasetname").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#cmbdatasetname_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+
+			}
+		});
+		// Dataset type
+		var in_master_code = "QCD_DS_TYPE";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#DatasetType").empty();
+				$("#DatasetType").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if (item.masterSyscode != "Y") {
+						$("#DatasetType").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+						$("#DatasetType_new").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					}
+				});
+			}
+		});
+
+		//rule list
+		var data = {};
+		data.in_user_code = '';
+		var Context = data;
+		var reconCode = getlocalStorage('cloned_reconCode');
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/getallRule',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				$("#cmbrulename").empty();
+				$("#cmbrulename").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(result, function (index, item) {
+					//if (item.active_status == "Y") {
+					$("#cmbrulename").append($('<option>', {
+						value: item.rule_code,
+						text: item.rule_name
+					}));
+					$("#cmbrulename_new").append($('<option>', {
+						value: item.rule_code,
+						text: item.rule_name
+					}));
+					//}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+		//dataset combo
+		var reconcode = getlocalStorage('cloned_reconCode');
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: $("#clone_reconcode").val(), in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset").empty();
+				$("#sourcedataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#sourcedataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#comparisondataset").empty();
+				$("#comparisondataset").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#comparisondataset").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
+
+
+	}
+	function saveheader() {
+		try {
+			var reconcode = $("#reconcode").val();
+			var cmbrecontype = $("#cmbrecontype").val();
+			var ReconName = $("#ReconName").val();
+			var period_from = $("#period_from").val();
+			var ts = period_from.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var in_until_active_flag = "";
+			if ($('#untillactive').is(":checked")) {
+				in_until_active_flag = "Y"
+				var pr1 = "1901-01-01";
+			} else {
+				in_until_active_flag = "N"
+				var period_to = $("#period_to").val();
+				var ts1 = period_to.split("/");
+				var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			}
+
+			var action = "";
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = sessionStorage.getItem("usrname");
+			var recon_id = $("#recon_id").val();
+			if (recon_id > 0) {
+				recon_id = $("#recon_id").val();
+				$("#Accountform").modal('show');
+				return;
+
+			} else {
+				recon_id = 0;
+			}
+			var status = 0;
+			status = "D"
+			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
+			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			var in_recon_date_field = $("#cmbrecondatefield").val();
+			if (in_recon_date_field == null) {
+				in_recon_date_field = '';
+			}
+			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+			var in_recon_value_field = $("#cmbreconvaluefield").val();
+			if (in_recon_value_field == null) {
+				in_recon_value_field = '';
+			}
+			var in_active_reason = "";
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val()).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdminus").val()).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Reconheadersave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						//$.alert({
+						//	title: 'Recon',
+						//	content: response.out_msg,
+						//	type: 'green',
+						//});
+						$("#recon_id").val(response.in_recon_gid);
+						$("#reconcode").val(response.in_recon_code);
+						detailfetch(response.in_recon_code);
+						$("#Accountform").modal('show');
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function grid_datasetrecon(data) {
+		$("#grid_datasetrecon").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+
+				schema: {
+					model: {
+						fields: {
+							recondataset_gid: { type: "string" },
+							clone_recon_code: { type: "string" },
+							clone_dataset_code: { type: "string" },
+							clone_dataset_name: { type: "string" },
+							clone_dataset_type_desc: { type: "string" },
+							clone_parent_dataset_code: { type: "string" },
+							clone_parent_dataset_name: { type: "string" },
+							new_dataset_name: { type: "string" },
+							new_parent_dataset_code: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							In_mode_flag: { type: "string", defaultValue: "I" }
+						}
+					}
+				}
+			},
+			height: 225,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_datasetrecon').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			resizable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getdatasetrecon(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px; width: 20px;' src = '../Assets/images/clone.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "recondataset_gid",
+				title: "datasetdetail_id",
+				hidden: true,
+			},
+			{
+				field: "clone_recon_code",
+				title: "clone_recon_code",
+				hidden: true,
+			},
+			{
+				field: "clone_dataset_code",
+				title: "Cloned Dataset code",
+				hidden: true,
+			},
+			{
+				field: "clone_dataset_name",
+				title: "Cloned Dataset Name",
+				width: 100,
+			},
+			{
+				field: "dataset_type",
+				title: "Dataset code",
+				hidden: true,
+			},
+			{
+				field: "clone_dataset_type_desc",
+				title: "Cloned Dataset Type",
+				width: 100,
+			},
+			{
+				field: "clone_parent_dataset_code",
+				title: "Cloned Parent Dataset",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "clone_parent_dataset_name",
+				title: "Cloned Parent Dataset",
+				width: 100,
+			},
+			{
+				field: "new_dataset_name",
+				title: "New Dataset Name",
+				width: 100,
+			},
+			{
+				field: "new_parent_dataset_code",
+				title: "New Parent Dataset Name",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+			},
+			{
+				field: "In_mode_flag",
+				title: "Mode",
+				hidden: true
+			}],
+			editable: false,
+
+		});
+	}
+	function getdatasetrecon(mode) {
+		if ($(mode).attr('value') == "edit") {
+			var grid = $("#grid_datasetrecon").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#cmbdatasetname").val(selectedItem.clone_dataset_code);
+			$("#Accountform").modal('show');
+			$("#recondataset_gid").val(selectedItem.recondataset_gid);
+			// Dataset type
+			var in_master_code = "QCD_DS_TYPE";
+			var in_user_code = sessionStorage.getItem("usrname");
+			DatasetTypefield();
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#DatasetType").empty();
+					$("#DatasetType").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#DatasetType").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					});
+					$("#DatasetType").val(selectedItem.clone_dataset_type);
+					$("#cmbParentDataset").val(selectedItem.clone_parent_dataset_name);
+				}
+			});
+		} else if ($(mode).attr('value') == "create") {
+			$("#cmbdatasetname").val("");
+			$("#DatasetType").val("");
+			$("#cmbParentDataset").val("");
+			$("#recondataset_gid").val(0);
+			saveheader();
+		}
+	}
+	function saveClonedDataset() {
+		var data = {};
+		try {
+			data.in_recon_code = $("#reconcode").val();
+			data.in_dataset_code = $("#cmbdatasetname_new").val();
+			data.in_parent_dataset_code = $("#cmbParentDataset_new").val() ? $("#cmbParentDataset_new").val() : '';
+			data.in_clone_recon_code = $("#clone_reconcode").val();
+			data.in_clone_dataset_code = $("#cmbdatasetname").val();
+			data.in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Recon/cloneRecondataset',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (res) {
+					var response = JSON.parse(res);
+					if (response.length > 0) {
+						if (response[0].out_result == "1") {
+							$.alert({
+								title: 'Recon',
+								content: response[0].out_msg,
+								type: 'green',
+							});
+							$("#cmbParentDataset_new").val("");
+							$("#cmbdatasetname_new").val("");
+							$("#clone_reconcode").val("");
+							$("#cmbdatasetname").val("");
+							$("#Accountform").modal('hide');
+							detailfetch($("#reconcode").val());
+						}
+						else {
+							$.alert({
+								title: 'Recon',
+								content: response[0].out_msg,
+								type: 'red',
+							});
+						}
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} catch (e) {
+			console.log(e)
+		}
+	}
+	function saveDataset() {
+		try {
+			var reconcode = $("#reconcode").val();
+			var datasetname = $("#cmbdatasetname").val();
+			var DatasetType = $("#DatasetType").val();
+			var parentdataset = $("#cmbParentDataset").val();
+			var recondataset_gid = $("#recondataset_gid").val();
+			var status = 0;
+			if (parentdataset == null) {
+				parentdataset = "";
+			}
+			var action = "";
+			if (recondataset_gid > 0) {
+				action = "UPDATE";
+				recondataset_gid = $("#recondataset_gid").val();
+			} else {
+				recondataset_gid = 0;
+				action = "INSERT"
+			}
+			var action_by = sessionStorage.getItem("usrname");
+			var in_user_code = sessionStorage.getItem("usrname");
+			status = "Y"
+
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Recondatasetsave',
+				dataType: 'json',
+				data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetname, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						$("#txtmodedataset").val("");
+						$("#DatasetType").val("");
+						$("#cmbParentDataset").val("");
+						$("#cmbdatasetname").val("");
+						$("#recondataset_gid").val(response.in_recondataset_gid)
+						$("#Accountform").modal('hide');
+						//detailfetch($("#recon_id").val());
+						detailfetch($("#reconcode").val());
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function grid_recondatasetmapping(data) {
+		$("#grid_datasetreconmapping").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							reconfieldmapping_gid: { type: "string" },
+							in_dataset_code: { type: "string" },
+							in_datasetname_code: { type: "string" },
+							in_dataset_field_name: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							mode_flag: { type: "string", defaultValue: "I" }
+						}
+					}
+				}
+			},
+			height: 225,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_datasetreconmapping').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			resizable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getdatasetmapping()' value='edit'  data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJsdatasetmapping()'  data-bs-toggle='modal' ><img src = '../Assets/images/del.png' href=''></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "reconfieldmapping_gid",
+				title: "datasetdetail_id",
+				hidden: true,
+			},
+			{
+				field: "in_dataset_code",
+				title: "in_dataset_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "in_datasetname_code",
+				title: "Dataset Name",
+				width: 100,
+			},
+			{
+				field: "in_dataset_field_name",
+				title: "Dataset Field Name",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+			},
+			{
+				field: "mode_flag",
+				title: "Mode",
+				hidden: true
+			}],
+			editable: false,
+
+		});
+	}
+	function saveDatasetmapping() {
+		try {
+			var reconcode = $("#reconcode").val();
+			var Reconfieldname = $("#Reconfieldname").val();
+			var displayorder = parseFloat($("#displayorder").val()).toFixed(2);
+			var cmbdatasetmap = $("#cmbdatasetmap").val();
+			var cmbdatasetfieldname = $("#cmbdatasetfieldname").val();
+			var action = "";
+			if ($("#txtmodedatasetmapping").val() == "Create" && cmbdatasetmap != "") {
+				action = "INSERT"
+			} else if ($("#txtmodedatasetmapping").val() == "Edit") {
+				action = "UPDATE"
+			}
+
+			var action_by = sessionStorage.getItem("usrname");
+			var in_user_code = sessionStorage.getItem("usrname");
+			var reconfield_gid = $("#reconfield_gid").val();
+			if (reconfield_gid > 0) {
+				reconfield_gid = $("#reconfield_gid").val();
+			} else {
+				reconfield_gid = 0;
+			}
+			var reconfieldmapping_gid = $("#reconfieldmapping_gid").val();
+			if (reconfieldmapping_gid > 0) {
+				reconfieldmapping_gid = $("#reconfieldmapping_gid").val();
+			} else {
+				reconfieldmapping_gid = 0;
+			}
+			var status = "Y";
+
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Recondatasetmappingsave',
+				dataType: 'json',
+				data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						$("#reconfield_gid").val(response.in_reconfield_gid);
+						$("#cmbdatasetmap").val("");
+						$("#cmbdatasetfieldname").val("");
+						$("#reconfieldmapping_gid").val(0)
+						var reconfield = $("#Reconfieldname").val();
+						var reconcod = $("#reconcode").val();
+						var in_user_code = sessionStorage.getItem("usrname");
+						$.ajax({
+							type: "POST",
+							url: '../Recon/Recondatasetmappingfetch',
+							dataType: 'json',
+							data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '', in_user_code: in_user_code }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response != null) {
+									grid_recondatasetmapping(response);
+									$("#Reconfieldname").prop('disabled', true);
+								}
+								else {
+									grid_recondatasetmapping([]);
+								}
+							},
+							error: function (er) {
+								alert(er)
+								console.log(er)
+							}
+						});
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function griddatamapping(datamapping) {
+		var columns = [];
+		var chkval = datamapping;
+		var data = datamapping;
+		var i = 0;
+		columns.push({
+			field: entryIndex - 1,
+			title: 'Action',
+			template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;<a href='' onclick='myDeletedatamapping()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
+			filterable: false,
+			sortable: false,
+			editable: true,
+			width: '100px'
+		});
+
+		var entryIndex = "entries[" + i + "]";
+		for (var key in data[0]) {
+
+			var propType = typeof data[0][key];
+
+			if (key == "display_order" || key == "display_order") {
+				columns.push({
+					field: entryIndex,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: right;" },
+					filterable: true,
+				});
+			}
+			if (key != "" && key != "display_order") {
+				columns.push({
+					field: entryIndex,
+					title: key,
+					type: propType,
+					attributes: { style: "text-align: left;" },
+					filterable: true,
+				});
+			}
+			i = i + 1;
+			entryIndex = "entries[" + i + "]";
+		}
+
+		var rows = [];
+		var data1 = datamapping;
+		$.each(data1, function (i, e) {
+			var entryArray = [];
+			$.each(e, function (key, val) {
+				entryArray.push(val);
+			});
+			rows.push(kendo.observable({
+				entries: entryArray
+			}));
+		});
+		var viewModel = kendo.observable({
+			gridRows: rows
+
+		});
+		var configuration = {
+			pageSize: 10,
+			height: 225,
+			navigatable: true,
+			groupable: false,
+			editable: false,
+			sortable: false,
+			scrollable: true,
+			filterable: false,
+			attributes: { style: "text-align: center;" },
+			//filterable: {
+			//	extra: false,
+			//	operators: {
+			//		string: {
+			//			contains: "Contains"
+			//		}
+			//	}
+			//},
+			pageable: {
+				pageSize: 10,
+				buttonCount: 4
+			},
+			resizable: true,
+			persistSelection: true,
+			selectable: true,
+			columns: columns,
+			rows: viewModel
+		};
+		$("#example").remove();
+		$('#maingrid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1"  data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+		var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+		kendo.bind($("#grid1"), viewModel);
+
+		var grid = $("#grid1").data("kendoGrid");
+		grid.hideColumn(1);
+		grid.hideColumn(2);
+		grid.hideColumn(3);
+		grid.hideColumn(4);
+	}
+	function getdetailSelectedRows(mode) {
+		//debugger;
+		if ($(mode).attr('value') == "edit") {
+			var grid = $("#grid1").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#Reconfieldname").val(selectedItem.entries[4]);
+			$("#displayorder").val(selectedItem.entries[5]);
+			$("#reconfield_gid").val(parseInt(selectedItem.entries[0]));
+			$("#txtmodedatasetmapping").val("Edit");
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Recondatasetmappingfetch',
+				dataType: 'json',
+				data: JSON.stringify({ in_recon_code: selectedItem.entries[2], in_recon_field_name: selectedItem.entries[4], in_dataset_code: selectedItem.entries[1], in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						grid_recondatasetmapping(response)
+					}
+					else {
+						grid_recondatasetmapping([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+			$("#Datasetmappingform").modal('show');
+		} else if ($(mode).attr('value') == "create") {
+			$("#Reconfieldname").prop('disabled', false);
+			grid_recondatasetmapping([]);
+			$("#Reconfieldname").val("");
+			$("#displayorder").val(0);
+			$("#reconfield_gid").val(0);
+			$("#Datasetmappingform").modal('show');
+		}
+	}
+	function getdatasetmapping() {
+		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		$("#cmbdatasetmap").val(selectedItem.in_dataset_code);
+		jQuery('#cmbdatasetmap').trigger("change");
+		$("#Datasetmappingform").modal('show');
+		$("#cmbdatasetfieldname").val(selectedItem.dataset_table_field);
+		$("#reconfieldmapping_gid").val(selectedItem.reconfieldmapping_gid);
+	}
+	function myDeleteJsdataset() {
+
+		var grid = $("#grid_datasetrecon").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var recondataset_gid = model.recondataset_gid;
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var reconcode = model.recon_code;
+					var datasetcode = model.dataset_code;
+					var DatasetType = model.dataset_type;
+					var parentdataset = model.parent_dataset_code;
+					var action = "DELETE";
+					var action_by = sessionStorage.getItem("usrname");
+					var in_user_code = sessionStorage.getItem("usrname");
+					var recondataset_gid = model.recondataset_gid;
+					var status = "";
+					$.ajax({
+						type: "POST",
+						url: '../Recon/Recondatasetsave',
+						dataType: 'json',
+						data: JSON.stringify({ in_recondataset_gid: recondataset_gid, in_recon_code: reconcode, in_dataset_code: datasetcode, in_dataset_type: DatasetType, in_action: action, in_action_by: action_by, in_active_status: status, in_parent_dataset_code: parentdataset, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+
+							if (response != null) {
+								$.alert({
+									title: 'Recon',
+									content: response.out_msg,
+									type: 'green',
+								});
+								//load();
+							}
+							else {
+
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+	function gridmap(data) {
+		$("#maingrid1").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							dataset_name: { type: "string" },
+							dataset_type_desc: { type: "string" },
+							dataset_code: { type: "string" },
+						}
+					}
+				}
+			},
+			height: 250,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#maingrid1').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "dataset_name",
+					title: "Recon name",
+					width: 100,
+				},
+				{
+					field: "dataset_type_desc",
+					title: "Display Order",
+					width: 100,
+				},
+				{
+					field: "parent_dataset_code",
+					title: "Dataset Name",
+					width: 100,
+				},
+			],
+			editable: false,
+		});
+	}
+	function myDeletedatamapping() {
+		var grid = $("#grid1").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var reconcode = model.entries[2];
+					var Reconfieldname = model.entries[6];
+					var displayorder = parseInt(model.entries[5]);
+					var cmbdatasetmap = "";
+					var cmbdatasetfieldname = "";
+					var action = "DELETE";
+					var action_by = sessionStorage.getItem("usrname");
+					var in_user_code = sessionStorage.getItem("usrname");
+					var reconfield_gid = parseInt(model.entries[0]);
+					var in_reconfieldmapping_gid = 0;
+					var status = "";
+					$.ajax({
+						type: "POST",
+						url: '../Recon/Recondatasetmappingsave',
+						dataType: 'json',
+						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							if (response != null) {
+								$.alert({
+									title: 'Recon',
+									content: response.out_msg,
+									type: 'green',
+								});
+								detailfetch(getlocalStorage('cloned_reconCode'));
+							}
+							else {
+
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+	function myDeleteJsdatasetmapping() {
+		$("#Datasetmappingform").modal('show');
+		var grid = $("#grid_datasetreconmapping").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var reconcode = $("#reconcode").val();
+					var Reconfieldname = $("#Reconfieldname").val();
+					var displayorder = $("#displayorder").val();
+					var cmbdatasetmap = "";
+					var cmbdatasetfieldname = "";
+					var action = "DELETE";
+					var action_by = sessionStorage.getItem("usrname");
+					var in_user_code = sessionStorage.getItem("usrname");
+					var reconfield_gid = 0;
+					var in_reconfieldmapping_gid = model.reconfieldmapping_gid;
+					var status = "";
+					$.ajax({
+						type: "POST",
+						url: '../Recon/RecondatasetmappingDelete',
+						dataType: 'json',
+						data: JSON.stringify({ in_reconfield_gid: reconfield_gid, in_reconfieldmapping_gid: in_reconfieldmapping_gid, in_recon_code: reconcode, in_recon_field_name: Reconfieldname, in_display_order: displayorder, in_action: action, in_action_by: action_by, in_active_status: status, in_dataset_code: cmbdatasetmap, in_dataset_field_name: cmbdatasetfieldname, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							if (response != null) {
+								$.alert({
+									title: 'Recon',
+									content: response.out_msg,
+									type: 'green',
+								});
+								var reconfield = $("#Reconfieldname").val();
+								var reconcod = $("#reconcode").val();
+								var in_user_code = sessionStorage.getItem("usrname");
+								$.ajax({
+									type: "POST",
+									url: '../Recon/Recondatasetmappingfetch',
+									dataType: 'json',
+									data: JSON.stringify({ in_recon_code: reconcod, in_recon_field_name: reconfield, in_dataset_code: '', in_user_code: in_user_code }),
+									contentType: 'application/json; charset=utf-8',
+									success: function (response) {
+										if (response != null) {
+											grid_recondatasetmapping(response)
+										}
+										else {
+											grid_recondatasetmapping([]);
+										}
+									},
+									error: function (er) {
+										alert(er)
+										console.log(er)
+									}
+
+								});
+							}
+							else {
+
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+	function rr3() {
+		$("#Datasetmappingform").modal('hide');
+		detailfetch($("#reconcode").val());
+		//detailfetch($("#recon_id").val());
+	}
+	function recontypeconfig() {
+		var recontype = $("#cmbrecontype").val();
+		if (recontype == "V") {
+			if ($("#thersholdplus").val() > 0) {
+				$('#partialmatch1').prop('checked', true);
+				$("#thersholdplus").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', false);
+			} else {
+				$('#partialmatch2').prop('checked', true);
+				$("#thersholdplus").prop('disabled', true);
+				$("#partialmatch1").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', true);
+			}
+			$('#reconvalueflag1').prop('checked', true);
+			$('#recondateflag2').prop('checked', true);
+			$("#cmbrecondatefield").prop('disabled', true);
+			$("#cmbreconvaluefield").prop('disabled', false);
+			$("#recondateflag1").prop('disabled', true);
+			$("#reconvalueflag2").prop('disabled', true);
+			$("#recondateflag2").prop('disabled', false);
+			$("#reconvalueflag1").prop('disabled', false);
+			$("#thersholdminus").prop('disabled', true);
+			onpartial();
+		} else if (recontype == "N") {
+			$("#partialmatch1").prop('disabled', true);
+			$('#partialmatch2').prop('checked', true);
+			$('#reconvalueflag2').prop('checked', true);
+			$('#recondateflag2').prop('checked', true);
+			$("#cmbrecondatefield").prop('disabled', true);
+			$("#cmbreconvaluefield").prop('disabled', true);
+			$("#recondateflag1").prop('disabled', true);
+			$("#reconvalueflag2").prop('disabled', true);
+			$("#recondateflag2").prop('disabled', true);
+			$("#reconvalueflag1").prop('disabled', true);
+			$("#thersholdplus").prop('disabled', true);
+			$("#thersholdminus").prop('disabled', true);
+			onpartial();
+		} else {
+			if ($("#thersholdplus").val() > 0) {
+				$('#partialmatch1').prop('checked', true);
+				$("#thersholdplus").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', false);
+			} else {
+				$('#partialmatch2').prop('checked', true);
+				$("#thersholdplus").prop('disabled', true);
+				$("#partialmatch1").prop('disabled', false);
+				$("#cmbthersholdvalue").prop('disabled', true);
+			}
+			$('#recondateflag1').prop('checked', true);
+			$('#reconvalueflag2').prop('checked', true);
+			$("#cmbreconvaluefield").prop('disabled', true);
+			$("#cmbrecondatefield").prop('disabled', false);
+			$('#recondateflag2').prop('disabled', true);
+			$('#reconvalueflag1').prop('disabled', true);
+			$('#recondateflag1').prop('disabled', false);
+			$('#reconvalueflag2').prop('disabled', false);
+			onpartial();
+		}
+	}
+	function saveheadersubmit() {
+		try {
+			var reconcode = $("#reconcode").val();
+			var cmbrecontype = $("#cmbrecontype").val();
+			var ReconName = $("#ReconName").val();
+			var period_from = $("#period_from").val();
+			var ts = period_from.split("/");
+			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+			var in_until_active_flag = "";
+			if ($('#untillactive').is(":checked")) {
+				in_until_active_flag = "Y"
+				var pr1 = "1901-01-01";
+			} else {
+				in_until_active_flag = "N"
+				var period_to = $("#period_to").val();
+				var ts1 = period_to.split("/");
+				var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+			}
+
+			var action = "";
+			if ($("#txtmode").val() == "Create") {
+				action = "INSERT"
+			} else if ($("#txtmode").val() == "Edit") {
+				action = "UPDATE"
+			}
+			var action_by = sessionStorage.getItem("usrname");
+			var recon_id = $("#recon_id").val();
+			if (recon_id > 0) {
+				recon_id = $("#recon_id").val();
+				action = "UPDATE"
+			} else {
+				recon_id = 0;
+				action = "INSERT"
+			}
+			var status = "D";
+			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
+			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			if (in_recon_date_flag == undefined) {
+				in_recon_date_flag = "";
+			}
+			var in_recon_date_field = $("#cmbrecondatefield").val();
+			if (in_recon_date_field == null) {
+				in_recon_date_field = '';
+			}
+			var in_recon_value_field = $("#cmbreconvaluefield").val();
+			if (in_recon_value_field == null) {
+				in_recon_value_field = '';
+			}
+
+			var in_recon_value_flag = $("input[name='reconvalueflag']:checked").val();
+			if (in_recon_value_flag == undefined) {
+				in_recon_value_flag = "";
+			}
+
+			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
+			var in_threshold_code = $("#cmbthersholdvalue").val();
+			var in_active_reason = "";
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Reconheadersave',
+				dataType: 'json',
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: response.out_msg,
+							type: 'green',
+							animationSpeed: 700,
+						});
+						$("#reconcode").val(response.in_recon_code);
+						$("#recon_id").val(response.in_recon_gid);
+						detailfetch(response.in_recon_code);
+						window.location.href = "../Recon/ReconList";
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}
+
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function onpartial() {
+		if ($("input[name='partialmatch']:checked").val() == "Y") {
+			$("#thersholdplus").val(0);
+			$("#thersholdminus").val(0);
+			$("#thersholdminus").prop('disabled', false)
+			$("#thersholdplus").prop('disabled', false)
+			$("#cmbthersholdvalue").prop('disabled', false);
+			if ($("#cmbthersholdvalue").val() != "") {
+				$("#cmbthersholdvalue").val("B")
+			}
+			var select = document.getElementById("cmbthersholdvalue");
+			var condition = true; // Change this condition as needed
+			// Remove the "N/A" option if the condition is met
+			if (condition) {
+				var optionToRemove = select.querySelector("option[value='N']");
+				if (optionToRemove) {
+					optionToRemove.remove();
+				}
+			}
+		} else {
+			$("#thersholdplus").val(0);
+			$("#thersholdminus").val(0)
+			$("#thersholdminus").prop('disabled', true)
+			$("#thersholdplus").prop('disabled', true)
+			$("#cmbthersholdvalue").prop('disabled', true)
+			$("#cmbthersholdvalue").val("N");
+		}
+	}
+
+	function getcloneddataset(clonedreconCode) {
+		//debugger;
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconheaderfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_code: clonedreconCode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+
+				if (response != " ") {
+					var res = JSON.parse(response);
+					grid_datasetrecon(res.ReconDataSet);
+				}
+				else {
+					grid_datasetrecon([]);
+					gridmap([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function gridruleMapping(data) {
+		$("#grid_rule").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							rule_gid: { type: "string" },
+							new_recon_code: { type: "string" },
+							new_rule_code: { type: "string" },
+							new_rule_name: { type: "string" },
+							new_source_dataset_code: { type: "string" },
+							new_source_dataset_desc: { type: "string" },
+							new_comparison_dataset_code: { type: "string" },
+							new_comparison_dataset_desc: { type: "string" },
+							clone_rule_code: { type: "string" },
+							clone_rule_name: { type: "string" },
+							clone_source_dataset_code: { type: "string" },
+							clone_source_dataset_desc: { type: "string" },
+							clone_comparison_dataset_code: { type: "string" },
+							clone_comparison_dataset_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 250,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_rule').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			resizable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getreconRule(this)' value='edit' data-bs-toggle='modal'><img style='height: 20px; width: 20px;' src = '../Assets/images/clone.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "view",
+						id: "View",
+						template: "<a href=''onclick='openRuleModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+				], title: "Action&nbsp;", width: "60px",
+			},
+			{
+				field: "rule_gid",
+				title: "rule_gid",
+				hidden: true,
+			},
+			{
+				field: "clone_rule_code",
+				title: "Clone Rule Code",
+				hidden: true
+			},
+			{
+				field: "clone_rule_name",
+				title: "Clone Rule Name",
+				width: 150,
+			},
+			{
+				field: "clone_comparison_dataset_code",
+				title: "clone_comparison_dataset_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "clone_source_dataset_code",
+				title: "clone_source_dataset_code",
+				width: 100,
+				hidden: true
+			}, {
+				field: "clone_source_dataset_desc",
+				title: "Clone Source Dataset",
+				width: 150,
+			},
+			{
+				field: "clone_comparison_dataset_desc",
+				title: "Clone Comparison Dataset",
+				width: 100,
+			}, {
+				field: "new_recon_code",
+				title: "new_recon_code",
+				hidden: true,
+			},
+			{
+				field: "new_rule_code",
+				title: "new_rule_code",
+				hidden: true,
+			},
+			{
+				field: "new_rule_name",
+				title: "New Rule Name",
+				width: 150,
+			},
+			{
+				field: "new_source_dataset_desc",
+				title: "New Source Dataset",
+				width: 150,
+			},
+			{
+				field: "new_comparison_dataset_desc",
+				title: "New Comparison Dataset",
+				width: 100,
+			},
+			{
+				field: "new_source_dataset_code",
+				title: "new_source_dataset_code",
+				hidden: true
+			},
+			{
+				field: "new_comparison_dataset_code",
+				title: "new_comparison_dataset_code",
+				hidden: true
+			}],
+			editable: false,
+
+		});
+	}
+
+	function getreconRule() {
+		//debugger;
+		var grid = $("#grid_rule").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		$("#cmbrulename").val(selectedItem.clone_rule_code);
+		$("#rule_gid").val(selectedItem.rule_gid);
+		$("#rule_code").val(selectedItem.clone_rule_code);
+		$("#sourcedataset").val(selectedItem.clone_source_dataset_code);
+		$("#comparisondataset").val(selectedItem.clone_comparison_dataset_code);
+		var reconcode = getlocalStorage('cloned_reconCode');
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulerecondatasetfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#sourcedataset_new").empty();
+				$("#sourcedataset_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#sourcedataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#comparisondataset_new").empty();
+				$("#comparisondataset_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type != "S") {
+						$("#comparisondataset_new").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			}
+		});
+		$("#ReconRuleForm").modal('show');
+	}
+
+
+	function saveCloneRule() {
+		//debugger;
+		//var reconcode = $("#reconcode").val();
+		//var grid = $("#grid_rule").data("kendoGrid");
+		//var selectedItem = grid.dataItem(grid.select());
+		//$("#cmbdatasetfieldname").val(selectedItem.dataset_table_field);
+		//$("#reconfieldmapping_gid").val(selectedItem.reconfieldmapping_gid);
+		var data = {};
+		data.in_recon_code = $("#reconcode").val();
+		data.in_rule_name = $("#cmbrulename_new").val();
+		data.in_source_dataset_code = $("#sourcedataset_new").val();
+		data.in_comparison_dataset_code = $("#comparisondataset_new").val();
+		data.in_clone_recon_code = $("#clone_reconcode").val();
+		data.in_clone_rule_code = $("#cmbrulename").val();
+		data.in_clone_source_dataset_code = $("#sourcedataset").val();
+		data.in_clone_comparison_dataset_code = $("#comparisondataset").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/cloneReconRule',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				//debugger;
+				if (response != "") {
+					var res = JSON.parse(response);
+					if (res[0].out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+						detailfetch($("#reconcode").val());
+						cancelRule();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: res[0].out_msg,
+							type: 'green',
+						});
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+	}
+
+	function cancelRule() {
+		$("#ReconRuleForm").modal('hide');
+		$("#cmbrulename").val("");
+		$("#rule_gid").val("");
+		$("#rule_code").val("");
+		$("#sourcedataset").val("");
+		$("#comparisondataset").val("");
+		$("#sourcedataset_new").val("");
+		$("#comparisondataset_new").val("");
+		$("#cmbrulename_new").val("");
+	}
+
+	//window.addEventListener('beforeunload', function () {
+	//	// Clear the localStorage
+	//	localStorage.removeItem("cloned_reconCode");
+	//});
+
+	function openRuleModel(event) {
+		event.preventDefault();
+		var grid = $("#grid_rule").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		setlocalStorage("rule_details", selectedItem);
+		btn_onClick('Edit');
+		getRuleGridComboList();
+		cmbsourcefield();
+		// Prevent modal close when clicking inside it
+		$("#ReconRuledetail").on("click", function (event) {
+			event.stopPropagation();
+		});
+		$("#ReconRuledetail").modal('show');
+
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		if ($("input:checkbox[id='untillactive']").is(":checked") == false) {
+			const dateInput1 = document.getElementById('period_to');
+			dateInput1.addEventListener('focusout', onFocusOut);
+		}
+		const dateInput = document.getElementById('period_from');
+		dateInput.addEventListener('focusout', onFocusOut);
+	});
+</script>
+
+

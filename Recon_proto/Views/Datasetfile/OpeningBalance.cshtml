@@ -1,0 +1,556 @@
+﻿@{
+	ViewBag.title = "Opening Balance";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: transparent;
+		}
+
+		.k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+			color: white !important;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+			height: 173px;
+		}
+
+		.k-header, .k-grid-header {
+			color: white !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 84%;">
+				<div class="row">
+					<div class="col-md-3">
+						<label class="form-label">Recon Name<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="reconname" onchange="showDataset()" class="form-select form-control"> </select>
+					</div>
+					<div class="col-sm-3">
+						<label class="form-label">Dataset Name<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="datasetname" class="form-select form-control"> </select>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;" >
+						<button type="button" class="btn btn-sm save_btn me-2" onclick="run()" style="width:40%;margin-top: 7px">
+							Run
+						</button> 
+					</div>
+					</div>
+				<div class="col-md-12" style="margin-top: 2%;">
+					<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
+						<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+					</a>
+					<div id="grid_dataset">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="accbal_popup" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Opening Balance</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" onclick="cancel()" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="row">
+						<div class="col-md-6">
+							<label>Dataset Name</label>
+							<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+							<input class="form-control" id="dataset_code" type="text" hidden />
+							<input class="form-control" id="accbal_gid" type="text" hidden />
+							<input class="form-control" id="dataset_name" type="text" disabled />
+
+						</div>
+						<div class="col-md-3">
+							<label>Tran Date</label>
+							<div>
+								<input class="cusDate" #datepicker data-role='datepicker' id="tran_date" name="tran_date" style="width:100%" />
+								<span data-for='valid' class='k-invalid-msg'></span>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<label>Balance Amount</label>
+							<input class="form-control" id="bal_value" onpaste="return false;" type="text" maxlength="16" value="0" onkeypress='return isNumberKeywithMinus(event)' />
+						</div>
+					</div>
+
+
+					<div class="row" style="margin-top: 2%;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-top:20px;float: right;">
+							<center>
+								<button type="button" class="btn btn-sm save_btn me-2" id="save_btn" onclick="save()">Save</button>&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-sm cancel_btn me-2" onclick="cancel()">Cancel</button>
+							</center>
+						</div>
+						<div class="col-sm-4"></div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Closing Balance");
+		kendodate_format();
+		getreconlist();
+		loadGrid([]);
+	});
+
+	function getreconlist() {
+		$.ajax({
+			type: "GET",
+			url: '../Recon/getReconforOpeningBalance',
+			dataType: 'json',
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#reconname").empty();
+				$("#reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#reconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#reconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#reconname').trigger("change");
+				}
+			
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function showDataset() {
+		if ($("#reconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#reconname").val());
+			sessionStorage.setItem("reconname", $("#reconname :selected").text());
+			setcon();
+		}
+		loadGrid([]);
+		var data = {};
+		data.in_recon_code = $("#reconname").val();
+		$.ajax({
+			type: "POST",
+			url: '../Recon/getdatasetagainstRecon',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#datasetname").empty();
+				$("#datasetname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#datasetname").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+
+	function run(){
+		var data = {};
+		data.in_dataset_code = $("#datasetname").val();
+		if(data.in_dataset_code) {
+			$.ajax({
+				type: "POST",
+				url: '../Datasetfile/getaccbaldataset',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response && response != '[]') {
+						var res = JSON.parse(response)
+						if (res.length > 0) {
+							loadGrid(res);
+						}
+					} else {
+						loadGrid([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if (!data.in_dataset_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Please select Dataset Name",
+				type: 'red',
+			});
+		}
+	
+	}
+
+	function loadGrid(data) {
+		try {
+			var formatdate = sessionStorage.getItem("kendate");
+			var formatdate1 = "{0:" + formatdate + "}";
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 20,
+					schema: {
+						model: {
+							fields: {
+								accbal_gid: {type: "string"},
+								dataset_code: { type: "string" },
+								dataset_name: { type: "string" },
+								tran_date: { type: "date" },
+								tran_date_fetch: { type: "string" },
+								bal_value: { type: "string" },
+							}
+						},
+						parse: function (data) {
+							$.each(data, function (i, item) {
+								item.tran_date = kendo.parseDate(item.tran_date, "yyyy-MM-dd");
+							});
+							return data;
+						}
+					}
+				},
+				height: 380,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('opening_bal')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
+				},
+				pageable: false,
+				sortable: false,
+				selectable: true,
+				filterable: false,
+				navigatable: true,
+				columns: [
+					{
+						command: [
+							{
+								name: "edit",
+								id: "btn_Edit",
+								template: "<a href='' onclick='getSerializedSelectedRows(this)' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+							},
+							{
+								name: "view",
+								id: "View",
+								template: "<a href='' onclick='getSerializedSelectedRows(this)' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+							},		
+							{
+								name: "Delete",
+								id: "Delete",
+								template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+							},
+						],
+						title: "Action&nbsp;",
+						width: 50,
+					},
+					{
+						field: "dataset_code",
+						title: "dataset_code",
+						width: 100,
+						hidden: true
+					},
+
+					{
+						field: "dataset_name",
+						title: "Dataset Name",
+						width: 200,
+					},
+					{
+						field: "tran_date_fetch",
+						title: "tran_date_fetch",
+						width: 200,
+						hidden: true
+					},
+					{
+						field: "tran_date",
+						title: "Tran Date",
+						width: 100,
+						format: formatdate1,
+						filterable: {
+							ui: function (element) {
+								element.kendoDatePicker({
+									format: formatdate
+								});
+							},
+						},
+					},
+					{
+						field: "bal_value",
+						title: "Balance Amount",
+						width: 100,
+						attributes: { style: "text-align: right;" },
+					}],
+
+				editable: false,
+
+			});
+		}
+		catch (err) {
+			console.log(err)
+		}
+	}
+
+	function getSerializedSelectedRows(mode) {
+		try {
+			if ($(mode).attr('value') == "view") {
+				$("#save_btn").hide();
+			} 
+			var grid = $("#grid_dataset").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#dataset_code").val(selectedItem.dataset_code);
+			$("#accbal_gid").val(selectedItem.accbal_gid ? selectedItem.accbal_gid : 0);
+			$("#dataset_name").val(selectedItem.dataset_name);
+			$("#tran_date").val(selectedItem.tran_date_fetch);
+			$("#bal_value").val(selectedItem.bal_value);
+			$("#accbal_popup").modal('show');
+		} catch (err) {
+
+		}
+	}
+
+	function save(){
+		var grid = $("#grid_dataset").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var in_tran_date = $("#tran_date").val();
+		var ts = in_tran_date.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		var data = {};
+		data.in_accbal_gid = $("#accbal_gid").val();
+		data.in_dataset_code = $("#dataset_code").val();
+		data.in_tran_date = pr;
+		data.in_bal_value = $("#bal_value").val() ? $("#bal_value").val() : 0;
+		data.in_action = $("#accbal_gid").val() == 0 ? 'INSERT' : 'UPDATE';
+		if (data.in_dataset_code && in_tran_date) {
+			$.ajax({
+				type: "POST",
+				url: '../Datasetfile/setAccountbalance',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (res) {
+					var response = JSON.parse(res);
+					if (response.length > 0) {
+						if (response[0].out_result == "1") {
+							$.alert({
+								icon: 'fa fa-success',
+								title: 'Recon',
+								theme: 'dark',
+								content: response[0].out_msg,
+								type: 'green',
+								animationSpeed: 700,
+							});
+							cancel();
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: response[0].out_msg,
+								type: 'red',
+							});
+						}
+					}
+
+				},
+				error: function (er) {
+					console.log(er)
+				}
+			});
+		} else if (!data.in_dataset_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Please select Dataset Code",
+				type: 'red',
+			});
+		} else if (!in_tran_date) {
+			$.alert({
+				title: 'Recon',
+				content: "Please select Tran Date",
+				type: 'red',
+			});
+		}
+		
+	}
+
+	function getSerializedRows() {
+		if ($("#datasetname").val() && $("#reconname").val()) {
+			$("#dataset_code").val($("#datasetname").val());
+			$("#accbal_gid").val(0);
+			var gettext = $("#datasetname").find(":selected").text();
+			$("#dataset_name").val(gettext);
+			$("#accbal_popup").modal('show');
+			var now = new Date();
+			var year = now.getFullYear();
+			var month = String(now.getMonth() + 1).padStart(2, '0');
+			var day = String(now.getDate()).padStart(2, '0');
+			var formattedDate = day + '/' + month + '/' + year;
+			$("#tran_date").val(formattedDate);
+		} else if (!$("#datasetname").val()) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Dataset Name",
+				type: 'red',
+			});
+		} else if (!$("#reconname").val()) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon Name",
+				type: 'red',
+			});
+		}
+
+	}
+
+	function cancel() {
+		//var now = new Date();
+		//var formattedDate = now.toISOString();
+		//$("#tran_date").val(formattedDate);
+		$("#accbal_popup").modal('hide');
+		$("#dataset_code").val("");
+		$("#accbal_gid").val(0);
+		$("#dataset_name").val("");
+		$("#bal_value").val(0);
+		run();
+	}
+
+	function myDeleteJs() {
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					deleteconfirm();
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+	function deleteconfirm(data) {
+		var grid = $("#grid_dataset").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var data = {};
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = String(now.getMonth() + 1).padStart(2, '0');
+		var day = String(now.getDate()).padStart(2, '0');
+		var formattedDate = year + '-' + month + '-' + day;
+		var in_tran_date = $("#tran_date").val();
+		var ts = in_tran_date.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		data.in_accbal_gid = selectedItem.accbal_gid;
+		data.in_dataset_code = selectedItem.dataset_code;
+		data.in_tran_date = formattedDate;
+		data.in_bal_value = selectedItem.bal_value;
+		data.in_action = 'DELETE';
+		$.ajax({
+			type: "POST",
+			url: '../Datasetfile/setAccountbalance',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result.length > 0) {
+					if (result[0].out_result == '1') {
+						$.alert({
+							title: 'Recon',
+							content: result[0].out_msg,
+							type: 'green',
+						});
+						run();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: result[0].out_msg,
+							type: 'red',
+						});
+					}
+				}
+			}
+		});
+	}
+
+</script>

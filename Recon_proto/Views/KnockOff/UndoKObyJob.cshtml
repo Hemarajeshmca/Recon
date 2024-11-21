@@ -1,0 +1,398 @@
+﻿@{
+	ViewBag.title = "Undo KO by Job ID";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
+
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-top: -19px;margin-bottom: 13px;">
+					<div class="col-sm-3">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="onc()">
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label class="form-label">
+							Job Type
+						</label>
+						<input class="form-control" value="Auto Matching" disabled />
+					</div>
+					<div class="col-md-2">
+						<label for="" class="form-label">Initiated From Date</label>
+						<div>
+							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<label class="form-label"> Initiated To Date </label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initiated_to" name="initialed_to" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-2" style="margin-top: 2.5%;">
+						<button type="submit" onclick="showjob()" class="btn btn-sm me-2 save_btn">
+							Search
+						</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="undojob_grid"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Undo KO by Job ID");
+		kendodate_format();
+		undojob_grid([]);
+		//recon name
+		var data = {};		
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	});
+	function onc() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+	}
+	function undojob_grid(data) {
+		$("#undojob_grid").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							job_gid: { type: "number" },
+							job_name: { type: "string" },
+							job_type: { type: "string" },
+							jobtype_desc: { type: "string" },
+							start_date: { type: "string" },
+							end_date: { type: "string" },
+							job_initiated_by: { type: "string" },
+							job_status: { type: "string" },
+							jobstatus_desc: { type: "string" },
+							job_remark: { type: "string" },
+							file_path: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 400,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#undojob_grid').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			sortable: true,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [
+				{
+					command: [
+						{
+							name: "Action",
+							id: "Edit",
+							template: "<i class='fa fa-undo fa_custom' style = 'font-size:15px;color:green;align:center' onclick=downloadFile()> </i>"
+						},
+					], title: "Action&nbsp;", width: "80px",
+				},
+				{
+					field: "job_gid",
+					title: "Job Id",
+					width: 80,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numeric",
+						extra: false,
+					},
+				},
+				{
+					field: "job_name",
+					title: "Job Name",
+					width: 150,
+				},
+				{
+					field: "job_type",
+					title: "job_type",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "jobtype_desc",
+					title: "Job Type",
+					width: 180,
+				},
+				{
+					field: "start_date",
+					title: "Initiated Date & Time",
+					width: 180,
+				},
+				{
+					field: "end_date",
+					title: "end_date",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "job_initiated_by",
+					title: "Initiated By",
+					width: 180,
+				},
+				{
+					field: "job_status",
+					title: "job_status",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "jobstatus_desc",
+					title: "Status",
+					width: 180,
+				},
+				{
+					field: "job_remark",
+					title: "Remark",
+					width: 180,
+				},
+				{
+					field: "file_path",
+					title: "Path",
+					width: 120,
+					hidden: true,
+				},
+			],
+			editable: false,
+
+		});
+	}
+	function showjob() {
+		var reconcode = $("#cmbreconname").val();
+		var fromDate = validateDateFormat($("#initiated_from").val());
+		var toDate = validateDateFormat($("#initiated_to").val());
+		if (reconcode && fromDate && toDate) {
+		var jobtype = "A";
+		var jobstatus = "C";
+		var period_from = $("#initiated_from").val();
+		var ts = period_from.split("/");
+		var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+		var period_to = $("#initiated_to").val();
+		var ts1 = period_to.split("/");
+		var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KnockOff/undoKOjob',
+			dataType: 'json',
+				data: JSON.stringify({ in_recon_code: reconcode, in_job_type: jobtype, in_job_status: jobstatus, in_from_date: pr, in_to_date: pr1, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					undojob_grid(result);
+				}
+				else {
+					undojob_grid([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+		} else if (!reconcode) {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon ..!",
+				type: 'red',
+			});
+		} else if (!fromDate || !toDate) {
+			$.alert({
+				title: 'Recon',
+				content: "Invalid Date ..!",
+				type: 'red',
+			});
+		}
+	}
+	function downloadFile() {
+		var reconcode = $("#cmbreconname").val();
+		var ip_addr = "";
+		var user_code = sessionStorage.getItem("usrname");
+		var grid = $("#undojob_grid").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var jobgid = parseInt((model.job_gid));
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Job Undo Reason',
+			animationSpeed: 700,
+			content: '<input type="textarea" id="undoknockoff" style="margin-left:10px;width:297px;">',
+			type: 'green',
+			buttons: {
+				confirm: function () {
+					var knockoff = $("#undoknockoff").val();
+					$.ajax({
+						type: "POST",
+						url: '../KnockOff/undomatchjob',
+						async: false,
+						dataType: 'json',
+						data: JSON.stringify({ reconcode: reconcode, job_id: jobgid, undo_job_reason: knockoff, in_ip_addr: ip_addr, in_user_code: user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var data = response;
+							if (data.out_result == "1") {
+								$.alert({
+									icon: 'fa fa-success',
+									title: 'Impact',
+									content: data.out_msg,
+									type: 'blue',
+									animationSpeed: 700,
+								});
+								setTimeout(function () {
+									window.location.reload(1);
+								}, 2000);
+
+							}
+							else {
+								$.alert({
+									icon: 'fa fa-success',
+									title: 'Impact',
+									content: data.out_msg,
+									type: 'blue',
+									animationSpeed: 700,
+								});
+								preventCloseOnSave = true;
+							}
+						},
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Impact',
+						content: 'Delete cancelled !',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
+
+	function validateNextdataset() {
+		var grid = $("#grid_rule").data("kendoGrid");
+		var dropdownid = "";
+	}
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const dateInput = document.getElementById('initiated_from');
+		const dateInput1 = document.getElementById('initiated_to');
+		dateInput.addEventListener('focusout', onFocusOut);
+		dateInput1.addEventListener('focusout', onFocusOut);
+	});
+
+
+</script>

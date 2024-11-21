@@ -1,0 +1,1146 @@
+﻿@{
+	ViewBag.title = "Dataset Import";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+
+		.highlighted-column {
+			color: #000 !important;
+		}
+
+		#grid_dataset .k-grid-header th.k-header > a {
+			color: #fff !important;
+		}
+
+		.selectedDataset {
+			font-size: 13px;
+			font-weight: 600;
+			color: brown;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.action-button {
+			width: 120px;
+			background: #673AB7;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 0px 10px 5px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		.action-button-previous {
+			width: 100px;
+			background: #616161;
+			font-weight: bold;
+			color: white;
+			border: 0 none;
+			border-radius: 0px;
+			cursor: pointer;
+			padding: 10px 5px;
+			margin: 10px 5px 10px 0px;
+			float: right;
+			border-radius: 20px;
+		}
+
+		.tooltip-container {
+			position: relative;
+			display: inline-block;
+		}
+
+		.info-icon {
+			cursor: pointer;
+		}
+
+		.tooltip1 {
+			display: none;
+			position: absolute;
+			background-color: lightslategray;
+			color: #fff;
+			padding: 10px;
+			border-radius: 15px;
+			white-space: nowrap;
+			z-index: 1;
+			top: 100%;
+			margin-left: -95px;
+			transform: translateX(-50%);
+		}
+
+		#grid_jobhistory {
+			flex: 1 1 auto;
+		}
+
+		.k-grid-pager {
+			flex-shrink: 0;
+		}
+		.tooltip-container:hover .tooltip1 {
+			display: block;
+		}
+	</style>
+	<script src="upload.js"></script>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 84%;">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="nav-align-top mb-3 mt-3">
+						<ul class="nav nav-pills mb-2" role="tablist">
+							<li class="nav-item">
+								<button type="button" id="Datasetlist" disabled
+										class="nav-link active"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-Datasetlist"
+										aria-controls="navs-pills-Datasetlist"
+										aria-selected="true">
+									Dataset list
+								</button>
+							</li>
+							<li class="nav-item">
+								<button type="button" id="DatasetProgress" disabled
+										class="nav-link"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-DatasetProgress"
+										aria-controls="navs-pills-DatasetProgress"
+										aria-selected="true">
+									Dataset Progress
+								</button>
+							</li>
+						</ul>
+						<div class="tab-content" style="box-shadow:none; padding:20px 0px;">
+							<div class="tab-pane fade show active" id="navs-pills-Datasetlist" role="tabpanel">
+								<div class="panel panel-default">
+									<div class="panel-body">
+										<div id="gd_dataset" style="margin-top:-15px;">
+											<div id="grid_dataset"> </div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4">
+											<input type="button" name="next" class="next action-button" value="Next" onclick="validateNextdataset();" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="navs-pills-DatasetProgress" role="tabpanel">
+								<div class="panel panel-default">
+									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
+										<div class="selectedDataset" id="selected_dataset_name"></div>
+										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="Pipeline" class="form-select form-control"> </select>
+											</div>
+											<div class="col-sm-4">
+												<form id="theuploadformempff">
+													<div class="form-group">
+														<label for="Filename" class="form-label">Choose Excel<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+														<input type="file" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
+														<label class="col-md-6 control-label" id="FileName" hidden></label>
+													</div>
+												</form>
+											</div>
+											<div class="col-sm-2" style="margin-top:29px">
+												<label class="form-label"></label>
+												<input type="button" onclick="start()" style="background: #175650;border-color: #175650;width:40%; color:#fff;" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
+												<progress id="progressBar" value="0" max="100"></progress>
+											</div>
+										</div>
+									</div>
+								</div>
+								<input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevdp();" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="display:none">
+						<div class="row">
+							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Description </strong></p></div>
+							<div class="col-md-1">  <strong>:</strong> </div>
+							<div class="col-md-7"> <p><span id="job_desc"></span></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Initiated Date-Time </strong></p></div>
+							<div class="col-md-1">  <strong>:</strong> </div>
+							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="initated_datetime"></span></p></div>
+						</div>
+						@*<div class="row">
+						<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Completed Date-Time </strong></p></div>
+						<div class="col-md-1">  <strong>:</strong> </div>
+						<div class="col-md-7" style="white-space: nowrap;"> <p><span id="completed_datetime"></span></p></div>
+						</div>*@
+						<div class="row">
+							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Initiated By </strong></p></div>
+							<div class="col-md-1">  <strong>:</strong> </div>
+							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="initatedby"></span></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Status </strong></p></div>
+							<div class="col-md-1">  <strong>:</strong> </div>
+							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="status"></span></p></div>
+						</div>
+						<div class="row">
+							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Remark </strong></p></div>
+							<div class="col-md-1">  <strong>:</strong> </div>
+							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="remarks"></span></p></div>
+						</div>						
+					</div>
+					<div class="col-xs-12">
+						<div id="gd_jobhistory">
+							<div id="grid_jobhistory">
+							</div>
+						</div>
+					</div>
+					@*  <div class="container">
+
+					<p><strong>Job Description&nbsp;&nbsp;:&nbsp;</strong><span id="job_desc"></span></p>
+					<p><strong>Job Initiated Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="initated_datetime"></span></p>
+					<p><strong>Job Completed Date-Time&nbsp;&nbsp;:&nbsp;</strong><span id="completed_datetime"></span></p>
+					<p><strong>Job Initiated By&nbsp;&nbsp;:&nbsp;</strong><span id="initatedby"></span></p>
+					<p><strong>Job Status&nbsp;&nbsp;:&nbsp;</strong> <span id="status"></span></p>
+					<p><strong>Job Remark&nbsp;&nbsp;:&nbsp;</strong><span id="remarks"></span></p>
+
+					</div>*@
+				</div>
+				<div class="row">
+					<div class="col-sm-4"> </div>
+
+					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
+						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
+					</div>
+					<div class="col-sm-4"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
+<script>
+	var selected_dataset = '';
+	$(document).ready(function () {
+		$("#navhead").text("Dataset Import");
+		gridlist();
+		grid_dataset_details([]);
+		grid_jobhistory([]);
+	});
+
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		grid_dataset_details([]);
+		var data = {};
+		data.in_recon_code = $("#cmbreconname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Datasetfile/datasetAgainstRecon',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response.length > 0) {
+					$("#gd_dataset").empty();
+					$("#gd_dataset").append("<div id='grid_dataset'></div>");
+					const activeData = response.filter(item => item.active_status == "Y");
+					grid_dataset_details(activeData);
+				} else {
+					grid_dataset_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	var status_Priority = [];
+	function grid_dataset_details(data) {
+		var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
+		try {
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
+			$("#grid_dataset").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								dataset_code: { type: "string" },
+								dataset_name: { type: "string" },
+								dataset_category: { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" },
+								sl_no: { type: "string" },
+								last_sync_date: { type: "date" },
+								last_sync_status: { type: "string" },
+								completed_date: { type: "string" },
+								job_remark: { type: "string" },
+								in_user_code: { type: "string" }
+							}
+						},
+						parse: function (data) {
+							$.each(data, function (i, item) {
+								item.last_sync_date = kendo.parseDate(item.last_sync_date, formatdatetime);
+							});
+							return data;
+						}
+					}
+				},
+				height: 300,
+				edit: OnEdit,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: false,
+				navigatable: true,
+				resizable: true,
+				columns: [
+					{
+						field: "name",
+						title: "Action",
+						template: "<input id='dataset_selected' onclick='rowselected(this)' name='dataset_code' type='radio'/>",
+						width: 40,
+						filterable: false,
+						attributes: {
+							style: "text-align: center;"
+						}
+					},
+					{
+						field: "sl_no",
+						title: "Sl No",
+						width: 60,
+						attributes: {
+							style: "text-align: right;"
+						},
+						hidden: true,
+					},
+					{
+						field: "dataset_code",
+						title: "Dataset Code",
+						width: 100,
+						hidden: true
+					},
+					{
+						field: "dataset_name",
+						title: "Dataset Name",
+						width: 150,
+					},
+					{
+						field: "dataset_category",
+						title: "Category",
+						width: 100,
+					},
+					{
+						field: "active_status",
+						title: "Status",
+						width: 80,
+						hidden: true
+					},
+					{
+						field: "active_status_desc",
+						title: "Status",
+						width: 80,
+					},
+					{
+						field: "in_user_code",
+						title: "in_user_code",
+						hidden: true,
+					},
+					{
+						field: "last_sync_date",
+						title: "Last sync Date",
+						format: formatdatetime1,
+						width: 120,
+						filterable: {
+							ui: "datetimepicker",
+						},
+						//format: "{0:dd-MM-yyyy hh:mm tt}",
+						//width: 120,
+						//filterable: {
+						//	ui: "datetimepicker",
+						//	format: "{0:dd-MM-yyyy hh:mm tt}",
+						//	operators: {
+						//		datetime: {
+						//			eq: "Is equal to",
+						//			neq: "Is not equal to",
+						//			gte: "Is after or equal to",
+						//			gt: "Is after",
+						//			lte: "Is before or equal to",
+						//			lt: "Is before",
+						//		}
+						//	},
+						//},
+					},
+					{
+						field: "last_sync_status",
+						title: "Last sync Status",
+						width: 100
+					},
+					{
+						field: "In_mode_flag",
+						title: "Mode",
+						hidden: true
+					}, {
+						field: "Info",
+						title: "",
+						template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img style='height:17px;width:17px' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
+						width: 50,
+						filterable: false,
+						attributes: {
+							style: "text-align: center;"
+						}
+
+					}],
+				editable: false,
+			});
+
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+
+	function OnEdit(e) {
+		try {
+			var grid = $("#grid_dataset").data("kendoGrid");
+			grid.table.find("td:last_sync_date").addClass("highlighted-column");
+		} catch {
+		}
+	}
+
+	function validateNextdataset() {
+		var grid = $("#grid_dataset").data("kendoGrid");
+		var checkedrows = $("#dataset_selected:checked", grid.tbody).closest("tr");
+		var objpplmapupdlist = [];
+		var dropdownid = "";
+		for (var i = 0; i < checkedrows.length; i++) {
+			selected_dataset = grid.dataItem(checkedrows[i]);
+		}
+		if (selected_dataset) {
+			$("#Datasetlist").removeClass('nav-link active');
+			$("#Datasetlist").toggleClass('nav-link');
+			$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade active in');
+			$("#navs-pills-Datasetlist").toggleClass('tab-pane fade');
+			$("#DatasetProgress").removeClass('nav-link');
+			$("#DatasetProgress").toggleClass('nav-link active');
+			$("#navs-pills-Datasetlist").hide();
+			$("#navs-pills-DatasetProgress").show();
+			$('#selected_dataset_name').text('Selected Dataset :' + selected_dataset.dataset_name);
+			getpipelinelist(selected_dataset.dataset_code);
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Dataset code not selected",
+				type: 'red',
+			});
+		}
+
+	}
+
+	function validatePrevdp() {
+		$("#DatasetProgress").removeClass('nav-link active');
+		$("#DatasetProgress").toggleClass('nav-link');
+		$("#navs-pills-Datasetlist").toggleClass('tab-pane fade active in');
+		$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade');
+		$("#Datasetlist").removeClass('nav-link');
+		$("#Datasetlist").toggleClass('nav-link active');
+		$("#navs-pills-DatasetProgress").hide();
+		$("#navs-pills-Datasetlist").show();
+		$("#FileName").val("");
+		$("#File_Import").val("");
+		$("#Pipeline").val("");
+		$("#Pipeline").empty();
+		reconchangelist();
+	}
+
+	function rr1() {
+		$("#infomodal").hide();
+	}
+
+	function getpipelinelist(dataset_code) {
+		$.ajax({
+			type: "POST",
+			url: '../DataSet/getPipelinelist',
+			dataType: 'json',
+			data: JSON.stringify({ in_target_dataset_code: dataset_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response.length == 1) {
+					$.each(response, function (index, item) {
+						$("#Pipeline").empty();
+						$("#Pipeline").append($('<option>', {
+							value: item.pipeline_code,
+							text: item.pipeline_name
+						}));
+					});
+				} else if (response.length > 1) {
+					$("#Pipeline").empty();
+					$("#Pipeline").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#Pipeline").append($('<option>', {
+							value: item.pipeline_code,
+							text: item.pipeline_name
+						}));
+					});
+				} else {
+					$("#Pipeline").empty();
+					$("#Pipeline").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+				}
+
+			}
+		});
+	}
+
+	// code to hit API directly
+	function start1() {
+		var baseurl = '@ViewBag.baseurl';
+		var fileName = '';
+		var fileType = '';
+		var pipeline_code = $("#Pipeline").val();
+		var filepath = $("#File_Import").val();
+		var fileInput = document.getElementById('File_Import');
+		var formData = new FormData();
+		formData.append('pipeline_code', pipeline_code);
+
+		if (fileInput.files.length > 0) {
+			formData.append('file', fileInput.files[0]);
+			fileType = fileInput.files[0].type;
+		}
+		formData.append('initiated_by', sessionStorage.getItem("usrname"));
+		$.ajax({
+			url: baseurl + 'Pipeline/NewScheduler_new',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function (response) {
+			}
+		});
+	}
+
+	function start2() {
+		const files = document.getElementById('File_Import').files;
+		const progressBar = document.getElementById('progressBar');
+		const pipeline_code = $("#Pipeline").val();
+		const filepath = $("#File_Import").val();
+		const formData = new FormData();
+
+		if (files.length > 0) {
+			for (let i = 0; i < files.length; i++) {
+				formData.append('files', files[i]);
+			}
+			formData.append('pipeline_code', pipeline_code);
+			formData.append('initiated_by', sessionStorage.getItem("usrname"));
+
+			if (pipeline_code && filepath && files[0].name.endsWith('.xlsx')) {
+				const xhr = new XMLHttpRequest();
+
+				xhr.upload.onprogress = function (event) {
+					if (event.lengthComputable) {
+						const percentComplete = (event.loaded / event.total) * 100;
+						progressBar.value = percentComplete;
+					}
+				};
+
+				xhr.onload = function () {
+					if (xhr.status == 200) {
+						const response = JSON.parse(xhr.responseText);
+						handleResponse(response);
+					} else {
+						alert('Upload failed!');
+					}
+				};
+
+				xhr.open('POST', '../Datasetfile/datasetfile', true);
+				xhr.send(formData);
+			} else {
+				if (!pipeline_code) {
+					$.alert({
+						title: 'Recon',
+						content: "Pipeline code is missing",
+						type: 'red',
+					});
+				} else if (!filepath) {
+					$.alert({
+						title: 'Recon',
+						content: "File path is missing",
+						type: 'red',
+					});
+				} else if (!files[0].name.endsWith('.xlsx')) {
+					$.alert({
+						title: 'Recon',
+						content: "Incorrect File type",
+						type: 'red',
+					});
+					$("#File_Import").val("");
+					$("#FileName").val("");
+				}
+			}
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Please select a file to upload.",
+				type: 'red',
+			});
+		}
+	}
+
+	function handleResponse(response) {
+		if (response) {
+			if (response.result == 0) {
+				$.alert({
+					title: 'Recon',
+					content: response.message,
+					type: 'green',
+				});
+			} else {
+				$.alert({
+					title: 'Recon',
+					content: response.message,
+					type: 'red',
+				});
+			}
+			$("#FileName").val("");
+			$("#File_Import").val("");
+			$("#Pipeline").val("");
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: 'Something went wrong',
+				type: 'red',
+			});
+		}
+	}
+
+	function start() {
+		var fileName = '';
+		var fileType = '';
+		var fileInput = '';
+		var pipeline_code = $("#Pipeline").val();
+		var filepath = $("#File_Import").val();
+		fileInput = document.getElementById('File_Import');
+		var formData = new FormData();
+		formData.append('pipeline_code', pipeline_code);
+
+		if (fileInput.files.length > 0) {
+			formData.append('file', fileInput.files[0]);
+			fileType = fileInput.files[0].name;
+		}
+		formData.append('initiated_by', sessionStorage.getItem("usrname"));
+		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
+			$.ajax({
+				url: '../Datasetfile/datasetfile',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				xhr: function () {
+					var xhr = new XMLHttpRequest();
+					xhr.upload.onprogress = function (e) {
+						if (e.lengthComputable) {
+							var percentComplete = (e.loaded / e.total) * 100;
+							$('#progressBar').val(percentComplete);
+							//if (percentComplete === 100) {
+							//	hideProgress();
+							//	$.alert({
+							//		title: 'Recon',
+							//		content: "Job Initiated. Kindly check the Job Status in Utility",
+							//		type: 'green',
+							//	});
+							//	$("#File_Import").val("");
+							//	$("#FileName").val("");
+							//	$('#progressBar').val("0");
+							//} 
+						}
+					};
+					return xhr;
+				},
+				success: function (response) {
+					hideProgress();
+					if (!response) {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong',
+							type: 'red',
+						});
+					} else {
+						var res = JSON.parse(response);
+						if (res.result == 0) {
+							$.alert({
+								title: 'Recon',
+								content: res.message,
+								type: 'red',
+							});
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: "Success",
+								type: 'green',
+							});
+						}
+						$("#FileName").val("");
+						$("#File_Import").val("");
+						$("#Pipeline").val("");
+						$('#progressBar').val("0");
+					}
+				},
+				error: function () {
+					hideProgress();
+					$.alert({
+						title: 'Recon',
+						content: "Upload Failed .!",
+						type: 'red',
+					});
+				}
+			});
+		} else if (!pipeline_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Pipeline code is missing",
+				type: 'red',
+			});
+		} else if (!filepath) {
+			$.alert({
+				title: 'Recon',
+				content: "File path is missing",
+				type: 'red',
+			});
+		} else if (!fileInput) {
+			$.alert({
+				title: 'Recon',
+				content: "File is missing",
+				type: 'red',
+			});
+		} else if (!fileType.endsWith('.xlsx')) {
+			$.alert({
+				title: 'Recon',
+				content: "Incorrect File type",
+				type: 'red',
+			});
+			$("#File_Import").val("");
+			$("#FileName").val("");
+			$('#progressBar').val("0");
+		}
+	}
+
+
+	function start3() {
+		hideProgress();
+		var fileName = '';
+		var fileType = '';
+		var fileInput = '';
+		var pipeline_code = $("#Pipeline").val();
+		var filepath = $("#File_Import").val();
+		fileInput = document.getElementById('File_Import');
+		var formData = new FormData();
+		formData.append('pipeline_code', pipeline_code);
+
+		if (fileInput.files.length > 0) {
+			formData.append('file', fileInput.files[0]);
+			fileType = fileInput.files[0].name;
+		}
+		formData.append('initiated_by', sessionStorage.getItem("usrname"));
+		if (pipeline_code && filepath && fileInput && fileType.endsWith('.xlsx')) {
+			$.ajax({
+				url: '../Datasetfile/datasetfile',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				xhr: function () {
+					var xhr = new window.XMLHttpRequest();
+					xhr.upload.addEventListener("progress", function (event) {
+						if (event.lengthComputable) {
+							var percentComplete = (event.loaded / event.total) * 100;
+							progressBar.value = percentComplete;
+						}
+					}, false);
+					xhr.addEventListener("load", function () {
+						const response = JSON.parse(xhr.responseText);
+						if (xhr.status === 200) {
+							$.alert({
+								title: 'Recon',
+								content: "Job Initiated. Kindly check the Job Status in Utility",
+								type: 'green',
+							});
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: response.message,
+								type: 'red',
+							});
+						}
+						progressBar.value = 0;
+					});
+					xhr.addEventListener("error", function () {
+						//const response = JSON.parse(xhr.responseText);
+						$.alert({
+							title: 'Recon',
+							content: "Upload Failed .!",
+							type: 'red',
+						});
+					});
+					return xhr;
+				},
+				success: function (response) {
+					hideProgress()
+					if (!response) {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong',
+							type: 'red',
+						});
+					} else {
+						var res = JSON.parse(response);
+						if (res.result == 1) {
+							$.alert({
+								title: 'Recon',
+								content: 'Success',
+								type: 'green',
+							});
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: res.message,
+								type: 'red',
+							});
+						}
+						$("#FileName").val("");
+						$("#File_Import").val("");
+						$("#Pipeline").val("");
+					}
+				},
+				error: function () {
+					hideProgress();
+					//const response = JSON.parse(xhr.responseText);
+					$.alert({
+						title: 'Recon',
+						content: "Upload Failed .!",
+						type: 'red',
+					});
+				}
+			});
+			//$.alert({
+			//	title: 'Recon',
+			//	content: "Job Initiated Kindly check the Job Status in Utility",
+			//	type: 'green',
+			//});
+			//$.ajax({
+			//	url: '../Datasetfile/datasetfile',
+			//	type: 'POST',
+			//	data: formData,
+			//	processData: false,
+			//	contentType: false,
+			//	async: true,
+			//	success: function (response) {
+			//		if(!response) {
+			//			$.alert({
+			//				title: 'Recon',
+			//				content: 'Something went wrong',
+			//				type: 'red',
+			//			});
+			//		} else if (response) {
+			//			var res = JSON.parse(response)
+			//			if(res.result == 0){
+			//				$.alert({
+			//					title: 'Recon',
+			//					content: res.message,
+			//					type: 'green',
+			//				});
+			//			} else {
+			//				$.alert({
+			//					title: 'Recon',
+			//					content: res.message,
+			//					type: 'red',
+			//				});
+			//			}
+			//			$("#FileName").val("");
+			//			$("#File_Import").val("");
+			//			$("#Pipeline").val("");
+			//		}
+			//	}
+			//});
+		}
+		else if (!pipeline_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Pipeline code is missing",
+				type: 'red',
+			});
+		}
+		else if (!filepath) {
+			$.alert({
+				title: 'Recon',
+				content: "File path is missing",
+				type: 'red',
+			});
+		} else if (!fileInput) {
+			$.alert({
+				title: 'Recon',
+				content: "File is missing",
+				type: 'red',
+			});
+		} else if (!fileType.endsWith('.xlsx')) {
+			$.alert({
+				title: 'Recon',
+				content: "Incorrect File type",
+				type: 'red',
+			});
+			$("#File_Import").val("");
+			$("#FileName").val("");
+		}
+		//hideProgress();
+	}
+
+	function openInfoModel() {
+		var grid = $("#grid_dataset").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var data = {};
+		data.in_dataset_code = selectedItem.dataset_code;
+		$.ajax({
+			type: "POST",
+			url: '../Datasetfile/datasethistory',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != "[]") {					
+					grid_jobhistory(response);
+				} else {
+					grid_jobhistory([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		$("#infomodal").modal("show");
+	}
+
+	function rowselected(val) {
+		$("#infomodal").modal("hide");
+	}
+
+
+	function grid_jobhistory(data) {
+		$("#grid_jobhistory").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						fields: {
+							dataset_name: { type: "string" },
+							start_date: { type: "string"},
+							job_initiated_by: { type: "string" },
+							job_status: { type: "string" },
+							job_remark: { type: "string" },
+							job_name: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 250,			
+			pageable: true,
+			selectable: "row",
+			dataBound: function (e) {
+				var grid = this;
+				var gridContent = grid.element.find(".k-grid-content");
+				// Set the height of the grid content
+				gridContent.height(177); // Set this to your desired height
+			},
+			pageable: {
+				refresh: false,
+				pageSizes: [10,20],
+				buttonCount: 5
+			},
+			columns: [
+				{
+					field: "dataset_name",
+					title: "Job Description",
+					width: 100,
+				},
+
+				{
+					field: "start_date",
+					title: "Job Initiated Date-Time",
+					width: 110,
+				},
+				{
+					field: "job_initiated_by",
+					title: "Job Initiated By",
+					width: 100,
+				},
+				{
+					field: "job_status",
+					title: "Job Status",
+					width: 80,
+				},
+				{
+					field: "job_name",
+					title: "job_name",
+					hidden: true,
+				},
+				{
+					field: "job_remark",
+					title: "Job Remark",
+					width: 120,
+				}],
+			editable: false,
+
+		});
+	}
+
+</script>

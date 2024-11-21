@@ -1,0 +1,1121 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-state-active {
+			display: none;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-33px;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Apply Rule Code</label>
+									<input class="form-control" type="text" name="coursedesc" id="coursedesc" value="" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Mode</label>
+									<input class="form-control" type="text" name="coursedesc" id="coursedesc" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="organization" class="form-label">Status</label><br>
+									<input class="form-control" type="text" name="coursedesc" id="coursedesc" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../Applyrule/Applyrule"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:15px">
+							<div class="col-sm-4">
+								<label for="" class="form-label">Recon Name&nbsp;</label>
+								<select id="mode" class="form-select form-control">
+									<option value="1">HDFC CC BRS</option>
+									<option value="2">SBI CC BRS</option>
+								</select>
+							</div>
+							<div class="col-sm-4">
+								<label for="" class="form-label">Rule Applied On</label>
+								<select id="mode" class="form-select form-control">
+									<option value="BA">Transaction</option>
+									<option value="SF" selected>Supporting File</option>
+								</select>
+							</div>
+							<div class="col-sm-4">
+								<label for="" class="form-label">Support File</label>
+								<select id="mode" class="form-select form-control">
+									<option value="9">Hdfc CC-NACH Collection</option>
+									<option value="14">HDFC CMS</option>
+									<option value="12">Razorpay - MIS Collection</option>
+								</select>
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-right:15px">
+							<div class="col-sm-2">
+								<label for="" class="form-label">Period From&nbsp;</label>
+								<div>
+									<input class="cusDate" data-role='datepicker' id="period_from" name="period_from" data-bind="15-06-2023" style="width:100%" />
+									<span data-for='valid' class='k-invalid-msg'></span>
+								</div>
+							</div>
+							<div class="col-sm-2">
+								<label for="organization" class="form-label">
+									<span>Period To</span>&nbsp;&nbsp;&nbsp;&nbsp;
+									<input class="form-check-input" style="margin: 0px; padding:0px;" type="checkbox" value="false" name="untillactive" id="untillactive" />&nbsp;&nbsp;<span style="font-size:14px;">Until Active</span>
+								</label>
+								<div>
+									<input class="cusDate" data-role='datepicker' id="period_to" onclick="Dateformat()" style="height:25px;width: 100%;" data-bind="null" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<label class="form-label">Match Off</label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="checkbox" id="Status" name="Status" value="S" checked>&nbsp;&nbsp;System&nbsp;
+									<input type="checkbox" id="Status" style="margin-left: 10px;" name="Status" value="P">&nbsp;&nbsp;Preview&nbsp;
+								</div>
+							</div>
+							<div class="col-sm-4" style="margin-top: 2%;">
+								<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+								@*<button class="btn btn-sm btn-success me-2" style="background: red;border-color: red;width:40%" onclick="window.location.href = '/Applyrule/Applyrule'">Cancel</button>*@
+								<a href="../Applyrule/Applyrule" class="btn btn-sm btn-success me-2" style="background: red;border-color: red;width:40%;cursor:pointer;">Cancel</a>
+							</div>
+						</div>
+
+
+						<div class="row" style="padding-bottom:8px;padding-top:8px;padding-right:15px">
+							<div class="table-responsive text-nowrap">
+								<i data-bs-toggle="modal" onclick="window.location.href = '/Applyrule/Applyrulesetup'" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor: pointer"></i>
+								<table class="table table-bordered table-sm">
+									<thead style="background: #c1c1c1;">
+										<tr class="text-nowrap">
+											<th style="width: 50px;">Action</th>
+											<th>Rule Name</th>
+											<th>
+
+											</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr style="height:25px;">
+											<td align="center"><i data-bs-toggle="modal" onclick="window.location.href = '/Applyrule/Applyrulesetup'" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+											<td>HDFC CC - Cash Collection</td>
+											<td>1</td>
+											<td>Active</td>
+										</tr>
+										<tr style="height:25px;">
+											<td align="center"><i data-bs-toggle="modal" onclick="window.location.href = '/Applyrule/Applyrulesetup'" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+											<td>HDFC CC - UPI Collection</td>
+											<td>2</td>
+											<td>Active</td>
+										</tr>
+										<tr style="height:25px;">
+											<td align="center"><i data-bs-toggle="modal" onclick="window.location.href = '/Applyrule/Applyrulesetup'" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+											<td>HDFC CC - RTGS Collection</td>
+											<td>3</td>
+											<td>Active</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="newdebit" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+
+						<div class="row">
+							<div class="nav-align-top mb-3 mt-3">
+								<ul class="nav nav-pills mb-2" role="tablist">
+									<li class="nav-item">
+										<button type="button"
+												class="nav-link active"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-Rule"
+												aria-controls="navs-pills-top-Rule"
+												aria-selected="true">
+											Rule
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-baseidentifier"
+												aria-controls="navs-pills-top-baseidentifier"
+												aria-selected="true">
+											Base & Identifier
+										</button>
+									</li>
+									<li class="nav-item">
+										<button type="button"
+												class="nav-link"
+												role="tab"
+												data-bs-toggle="tab"
+												data-bs-target="#navs-pills-top-genericcondition"
+												aria-controls="navs-pills-top-genericcondition"
+												aria-selected="true">
+											Generic Condition
+										</button>
+									</li>
+									@*<li class="nav-item">
+									<button type="button"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-additionalondition"
+									aria-controls="navs-pills-top-additionalondition"
+									aria-selected="true">
+									Additional Condition
+									</button>
+									</li>		*@
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+										<div class="panel panel-default">
+											<div class="panel-body" style="padding: 10px 0px;">
+
+												<div class="row" style="padding-bottom:5px;margin-top:5px;">
+													<div class="col-sm-4">
+														<label for="" class="form-label">Rule Name</label>
+														<select id="mode" class="form-select form-control">
+															<option value="1" selected>Hdfc CC- UPI Collection From Customer</option>
+															<option value="2">Hdfc CC- IMPS Collection From Customer</option>
+														</select>
+													</div>
+
+													<div class="col-sm-4">
+														<label for="" class="form-label"> Rule Order</label>
+														<input class="form-control" id="extraction" name="ruleorder" type="text" value="1" data-bind="value:Rule order">
+													</div>
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">Reversal Flag</label>
+														<div style="margin-left:2px;margin-top:5px">
+															<input type="radio" id="Status" name="Reversal" value="Y">&nbsp;&nbsp;Yes&nbsp;
+															<input type="radio" id="Status" style="margin-left: 10px;" name="Reversal" value="N" checked>&nbsp;&nbsp;No&nbsp;
+														</div>
+													</div>
+												</div>
+												<div class="row" style="padding-bottom:8px;padding-top:8px;">
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">Group Flag</label>
+														<div style="margin-left:2px;margin-top:5px">
+															<input type="radio" id="Status" name="Groupflag" value="Y">&nbsp;&nbsp;Yes&nbsp;
+															<input type="radio" id="Status" style="margin-left: 10px;" name="Groupflag" value="N" checked>&nbsp;&nbsp;No&nbsp;
+														</div>
+													</div>
+													<div class="col-sm-4">
+														<label for="" class="form-label">Group Method</label>
+														<div style="margin-left:2px;margin-top:5px">
+															<input type="radio" id="Status" name="Groupmethod" value="C">&nbsp;&nbsp;Contra/Mirror&nbsp;
+															<input type="radio" id="Status" style="margin-left: 10px;" name="Groupmethod" value="B" checked>&nbsp;&nbsp;Both&nbsp;
+														</div>
+													</div>
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">Group Many-To-Many</label>
+														<div style="margin-left:2px;margin-top:5px">
+															<input type="radio" id="Status" name="Grouptomany" value="Y">&nbsp;&nbsp;Yes&nbsp;
+															<input type="radio" id="Status" style="margin-left: 10px;" name="Grouptomany" value="N" checked>&nbsp;&nbsp;No&nbsp;
+														</div>
+													</div>
+												</div>
+
+												<div class="row" style="padding-bottom:8px;padding-top:8px;">
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">Status</label>
+														<div style="margin-left:2px;margin-top:5px">
+															<input type="radio" id="Status" name="_Status1" value="Y" checked>&nbsp;&nbsp;Active&nbsp;
+															<input type="radio" id="Status" style="margin-left: 10px;" name="_Status1" value="N">&nbsp;&nbsp;InActive&nbsp;
+														</div>
+													</div>
+
+													<div class="col-sm-4">
+														<label for="" class="form-label"></label>
+													</div>
+													<div class="col-sm-4" style="margin-top:2%;">
+														<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+														<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Cancel</button>
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-baseidentifier" role="tabpanel" style="margin-top:-25px;">
+										<div class="panel panel-default">
+											<div class="panel-body" style="padding: 10px 0px;">
+												<div style="text-align:left;padding-bottom: 3.5%;">
+													<i data-bs-toggle="modal" data-bs-target="#base_identifier" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+												</div>
+												<div class="table-responsive text-nowrap" style="margin-top: -20px;">
+
+													<table class="table table-bordered table-sm">
+														<thead style="background: #c1c1c1;">
+															<tr class="text-nowrap">
+																<th style="width: 50px;">Action</th>
+																<th>Dr/Cr</th>
+																<th>Base Account No</th>
+																<th>Target Account No</th>
+																<th>Order</th>
+																<th>Status</th>
+																<th>Target-Grouping</th>
+															</tr>
+														</thead>
+														<tbody>
+															<tr style="height:25px;">
+																<td align="center"><i data-bs-toggle="modal" data-bs-target="#base_identifier" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+																<td>Credit</td>
+																<td>409000472606-Hdfc CC- Bank	</td>
+																<td>409000472606-Hdfc CC- Bank	</td>
+																<td>2</td>
+																<td> Active</td>
+																<td>
+																	<a data-bs-toggle="modal" style=" cursor:pointer" onclick="rr8()">
+																		Select
+																	</a>
+																</td>
+															</tr>
+															<tr style="height:25px;">
+																<td align="center"><i data-bs-toggle="modal" data-bs-target="#base_identifier" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+																<td>Debit</td>
+																<td>409000472606-Hdfc CC- Bank</td>
+																<td>409000472606-Hdfc CC- Bank</td>
+																<td>2</td>
+																<td>Active</td>
+																<td>
+																	<a data-bs-toggle="modal" style=" cursor:pointer" onclick="rr8()">
+																		Select
+																	</a>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane fade" id="navs-pills-top-genericcondition" role="tabpanel" style="margin-top:-25px;">
+										<div class="panel panel-default">
+											<div class="panel-body" style="padding: 10px 0px;">
+												<table class="table table-bordered table-sm">
+													<thead style="background: #c1c1c1;">
+														<tr class="text-nowrap">
+															<th>Base Field</th>
+															<th>Extraction Criteria</th>
+															<th>Target Field</th>
+															<th>Comparison criteria</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr style="height:25px;">
+															<td>Tran Date	</td>
+															<td>EXACT</td>
+															<td>Tran Date	</td>
+															<td>BETWEEN(-1,-1)	</td>
+															<td>Active</td>
+														</tr>
+														@*  <tr style="height:25px;">
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														</tr>*@
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal" id="newconfiguration" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header"> </div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Edit</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
+						<div class="col-sm-4">
+							<label for="" class="form-label">Rule Name</label>
+							<select id="mode" class="form-select form-control">
+								<option value="1" selected>Hdfc CC- UPI Collection From Customer</option>
+								<option value="2">Hdfc CC- IMPS Collection From Customer</option>
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label"> Rule Order</label>
+							<input class="form-control" id="extraction" name="ruleorder" type="text" value="1" data-bind="value:Rule order">
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label">Reversal Flag</label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="Status" name="Reversalflag" value="Y" checked>&nbsp;&nbsp;Yes&nbsp;
+								<input type="radio" id="Status" style="margin-left: 10px;" name="Reversalflag" value="N">&nbsp;&nbsp;No&nbsp;
+							</div>
+						</div>
+					</div>
+					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
+						<div class="col-sm-4">
+							<label for="" class="form-label">Group Flag</label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="Status" name="groupflag1" value="Y" checked>&nbsp;&nbsp;Yes&nbsp;
+								<input type="radio" id="Status" style="margin-left: 10px;" name="groupflag1" value="N">&nbsp;&nbsp;No&nbsp;
+							</div>
+						</div>
+
+						<div class="col-sm-4">
+							<label for="" class="form-label">Group Method</label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="Status" name="Groupmethod1" value="C" checked>&nbsp;&nbsp;Contra/Mirror&nbsp;
+								<input type="radio" id="Status" style="margin-left: 10px;" name="Groupmethod1" value="B">&nbsp;&nbsp;Both&nbsp;
+							</div>
+						</div>
+
+						<div class="col-sm-4">
+							<label for="" class="form-label">Group Many-To-Many</label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="Status" name="Grouptomany1" value="Y" checked>&nbsp;&nbsp;Yes&nbsp;
+								<input type="radio" id="Status" style="margin-left: 10px;" name="Grouptomany1" value="N">&nbsp;&nbsp;No&nbsp;
+							</div>
+						</div>
+					</div>
+					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
+						<div class="col-sm-4">
+							<label for="" class="form-label">Status</label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="Status" name="_Status2" value="Y" checked>&nbsp;&nbsp;Active&nbsp;
+								<input type="radio" id="Status" style="margin-left: 10px;" name="_Status2" value="N">&nbsp;&nbsp;InActive&nbsp;
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label"></label>
+						</div>
+						<div class="col-sm-4" style="margin-top:2%;">
+							<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+							<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr7()">Cancel</button>
+						</div>
+					</div>
+					<div class="row" style="padding-top:20px">
+						<div class="nav-align-top mb-3 mt-3">
+							<ul class="nav nav-pills mb-2" role="tablist">
+								<li class="nav-item">
+									<button type="button"
+											class="nav-link active"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-baseidentifier"
+											aria-controls="navs-pills-top-baseidentifier"
+											aria-selected="true">
+										Base & Identifier
+									</button>
+								</li>
+								<li class="nav-item">
+									<button type="button"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-genericcondition"
+											aria-controls="navs-pills-top-genericcondition"
+											aria-selected="false">
+										Generic Condition
+									</button>
+								</li>
+								@*<li class="nav-item">
+								<button type="button"
+								class="nav-link"
+								role="tab"
+								data-bs-toggle="tab"
+								data-bs-target="#navs-pills-top-additionalondition"
+								aria-controls="navs-pills-top-additionalondition"
+								aria-selected="true">
+								Additional Condition
+								</button>
+								</li>		*@
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="navs-pills-top-baseidentifier" role="tabpanel" style="margin-top:-25px;">
+									<div class="panel panel-default">
+										<div class="panel-body" style="padding: 10px 0px;">
+											<div style="text-align:left;padding-bottom: 3.5%;">
+												<i data-bs-toggle="modal" data-bs-target="#base_identifier" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>
+											</div>
+											<div class="table-responsive text-nowrap" style="margin-top: -20px;">
+
+												<table class="table table-bordered table-sm">
+													<thead style="background: #c1c1c1;">
+														<tr class="text-nowrap">
+															<th style="width: 50px;">Action</th>
+															<th>Dr/Cr</th>
+															<th>Base Account No</th>
+															<th>Target Account No</th>
+															<th>Order</th>
+															<th>Status</th>
+															<th>Target-Grouping</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr style="height:25px;">
+															<td align="center"><i data-bs-toggle="modal" data-bs-target="#base_identifier" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+															<td>Credit</td>
+															<td>409000472606-Hdfc CC- Bank	</td>
+															<td>409000472606-Hdfc CC- Bank	</td>
+															<td>2</td>
+															<td> Active</td>
+															<td>
+																<a data-bs-toggle="modal" style=" cursor:pointer" onclick="rr8()">
+																	Select
+																</a>
+															</td>
+														</tr>
+														<tr style="height:25px;">
+															<td align="center"><i data-bs-toggle="modal" data-bs-target="#base_identifier" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+															<td>Debit</td>
+															<td>409000472606-Hdfc CC- Bank</td>
+															<td>409000472606-Hdfc CC- Bank</td>
+															<td>2</td>
+															<td>Active</td>
+															<td>
+																<a data-bs-toggle="modal" style=" cursor:pointer" onclick="rr8()">
+																	Select
+																</a>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-genericcondition" role="tabpanel" style="margin-top:-25px;">
+									<div class="panel panel-default">
+										<div class="panel-body" style="padding: 10px 0px;">
+											<table class="table table-bordered table-sm">
+												<thead style="background: #c1c1c1;">
+													<tr class="text-nowrap">
+														<th>Base Field</th>
+														<th>Extraction Criteria</th>
+														<th>Target Field</th>
+														<th>Comparison criteria</th>
+														<th>Status</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr style="height:25px;">
+														<td>Tran Date	</td>
+														<td>EXACT</td>
+														<td>Tran Date	</td>
+														<td>BETWEEN(-1,-1)	</td>
+														<td>Active</td>
+													</tr>
+													@*  <tr style="height:25px;">
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													</tr>*@
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane fade" id="navs-pills-top-additionalondition" role="tabpanel" style="margin-top:-25px;">
+									<div class="panel panel-default">
+										<div class="panel-body" style="padding: 10px 0px;">
+											<div style="text-align:left;padding-bottom: 3.5%;">
+												<i data-bs-toggle="modal" onclick="rr4()" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor:pointer"></i>
+											</div>
+											<div class="table-responsive text-nowrap" style="margin-top: -20px;">
+
+												<table class="table table-bordered table-sm">
+													<thead style="background: #c1c1c1;">
+														<tr class="text-nowrap">
+															<th style="width: 50px;">Action</th>
+															<th>Base Field</th>
+															<th>Extraction Criteria</th>
+															<th>Target Field</th>
+															<th>Comparision Criteria</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr style="height:25px;">
+															@*<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>*@
+														</tr>
+														<tr style="height:25px;">
+															@* <td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td></td>*@
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade" id="base_identifier" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header"> </div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New/Edit</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-4">
+								<label for="" class="form-label">
+									Base Account No
+								</label>
+
+								<select id="mode" class="form-select form-control">
+									<option value="1" selected>409000472606-Hdfc CC- Bank </option>
+									<option value="2">Account2</option>
+									<option value="3">Account3</option>
+								</select>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="" class="form-label">Order</label>
+								<input class="form-control" id="order" name="order" type="text" value="2" data-bind="value:order">
+							</div>
+
+							<div class="col-sm-4">
+								<label for="" class="form-label">Account Mode</label>
+								<select id="mode" class="form-select form-control">
+									<option value="1" selected>Credit</option>
+									<option value="2">Saving</option>
+								</select>
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-4">
+								<label for="" class="form-label">Status</label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="radio" id="Status" name="Status3" value="Y" checked>&nbsp;&nbsp;Active&nbsp;
+									<input type="radio" id="Status" style="margin-left: 10px;" name="Status3" value="N">&nbsp;&nbsp;InActive&nbsp;
+								</div>
+							</div>
+							<div class="col-sm-4"> </div>
+							<div class="col-sm-4" style="margin-top: 2%;text-align: right;">
+								<button type="submit" class="btn btn-sm btn-success me-2" style="background: #0f6cbd ;border-color: #0f6cbd;width:40%">Update</button>
+
+							</div>
+						</div>
+
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+
+							<div class="container">
+
+								<div class="clearfix"></div>
+								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="headingOne">
+											<h4 class="panel-title">
+												<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+												</a>
+											</h4>
+										</div>
+										<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+											<div class="panel-body" style="padding: 10px 0px;">
+												<div class="row" style="padding-bottom:5px;margin-top:5px">
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">
+															Filter Apply On
+														</label>
+														<select id="mode" class="form-select form-control">
+															<option value="1" selected>Field1</option>
+															<option value="2">Field2</option>
+															<option value="3">Field3</option>
+														</select>
+													</div>
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">
+															Filter Name
+														</label>
+														<select id="mode" class="form-select form-control">
+															<option value="1" selected>Name1</option>
+															<option value="2">Name2</option>
+															<option value="3">Name3</option>
+														</select>
+													</div>
+													<div class="col-sm-4">
+														<label for="" class="form-label">Status</label>
+														<div style="margin-left:2px;margin-top:5px">
+															<input type="radio" id="Status" name="Status4" value="Y" checked>&nbsp;&nbsp;Active&nbsp;
+															<input type="radio" id="Status" style="margin-left: 10px;" name="Status4" value="N">&nbsp;&nbsp;InActive&nbsp;
+														</div>
+													</div>
+												</div>
+
+
+												<div class="row" style="padding-bottom:5px;margin-top:5px;">
+													<div class="col-sm-4">
+														<label for="" class="form-label">External Criteria</label>
+														<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+													</div>
+													<div class="col-sm-8">
+														<label for="" class="form-label">
+															Extraction Filter
+														</label>
+														<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+													</div>
+
+												</div>
+
+
+
+
+												<div class="row" style="padding-bottom:5px;margin-top:5px;">
+
+													<div class="col-sm-4">
+														<label for="" class="form-label">Identifier Criteria</label>
+														<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+													</div>
+													<div class="col-sm-4">
+														<label for="" class="form-label">Identifier value</label>
+														<input class="form-control" id="order" name="order" type="text" value="" data-bind="value:order">
+													</div>
+
+													<div class="col-sm-4" style="margin-top:3%;">
+														<button type="submit" class="btn btn-sm btn-success me-2" style="background: green ;border-color: Green;width:40%">Update</button>&nbsp;&nbsp;&nbsp;
+														<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr6()">Cancel</button>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+
+						</div>
+
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="table-responsive text-nowrap" style="margin-top: -20px;">
+								<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green; cursor: pointer"></i>
+								<table class="table table-bordered table-sm">
+									<thead style="background: #c1c1c1;">
+										<tr class="text-nowrap">
+											<th style="width: 50px;">Action</th>
+											<th>Filter Applied On</th>
+											<th>Filter Field</th>
+											<th>Filter Criteria</th>
+											<th>Identifier Criteria</th>
+											<th>Identifier Value</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr style="height:25px;">
+											<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+											<td>Base-409000472606-Hdfc CC- Bank	</td>
+											<td>Narration	</td>
+											<td>EXACT	</td>
+											<td>BEGINS WITH	</td>
+											<td>ACH TRANS	</td>
+											<td>Active</td>
+										</tr>
+										<tr style="height:25px;">
+											@* <td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff;"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red;" aria-hidden="true"></i></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td></td>*@
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal" id="additional_condition" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header"> </div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">New/Edit</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-6">
+								<label for="" class="form-label">
+									Sl No
+								</label>
+								<input class="form-control" id="slno" name="slno" type="text" value="" data-bind="value:slno">
+							</div>
+
+							<div class="col-sm-6">
+								<label for="" class="form-label">Status</label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="radio" id="Status" name="Status5" value="Y" checked>&nbsp;&nbsp;Active&nbsp;
+									<input type="radio" id="Status" style="margin-left: 10px;" name="Status5" value="N">&nbsp;&nbsp;InActive&nbsp;
+								</div>
+							</div>
+
+
+
+
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-6">
+								<label for="" class="form-label">Base Field</label>
+								<select id="mode" class="form-select form-control">
+									<option value="1" selected>AC No</option>
+									<option value="2">Amount</option>
+									<option value="3">Application Name</option>
+								</select>
+							</div>
+							<div class="col-sm-6">
+								<label for="" class="form-label">Target Field</label>
+								<select id="mode" class="form-select form-control">
+									<option value="1" selected>AC No</option>
+									<option value="2">Amount</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-6">
+								<label for="" class="form-label"> Extraction Criteria </label>
+								<input class="form-control" id="externalcriteria" name="externalcriteria" type="text" value="" data-bind="value:externalcriteria">
+							</div>
+							<div class="col-sm-6">
+								<label for="" class="form-label"> Comparison Criteria  </label>
+								<input class="form-control" id="Comparisoncriteria" name="Comparisoncriteria" type="text" value="" data-bind="value:Comparisoncriteria">
+							</div>
+						</div>
+
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-6">
+								<label for="" class="form-label">  Extraction Filter  </label>
+								@*<textarea class="form-control" id="Extractionfilter" name="Extractionfilter" type="text" value="" data-bind="value:Extractionfilter" rows="3" cols="20">
+								</textarea>*@
+								<textarea class="form-control" style="min-height:100px;" id="extraction" name="extraction" type="text" value="" data-bind="value:Extraction Criteria" rows="4" cols="20"></textarea>
+
+							</div>
+
+							<div class="col-sm-6">
+								<label for="" class="form-label"> Comparison Filter </label>
+								@*  <textarea class="form-control" id="Comparisionfilter" name="Comparisionfilter" type="text" value="" data-bind="value:Comparisionfilter" rows="3" cols="20">
+								</textarea>*@
+								<textarea class="form-control" style="min-height:100px;" id="Comparision" name="Comparision" type="text" value="" data-bind="value:Comparision Criteria" rows="4" cols="20"></textarea>
+
+							</div>
+						</div>
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-4" style="margin-top: 2%;"></div>
+							<div class="col-sm-4" style="margin-top: 2%;">
+							</div>
+							<div class="col-sm-4" style="margin-top: 2%; text-align: right;">
+								<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+								<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr5()">Cancel</button>
+
+							</div>
+
+
+						</div>
+
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal" id="target-grouping" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header"> </div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Target Grouping</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<div class="col-sm-4">
+								<label for="" class="form-label">  Field Name  </label>
+								<select id="mode" class="form-select form-control">
+									<option value="1" selected>AC No</option>
+									<option value="2">Amount</option>
+									<option value="3">Application Name</option>
+								</select>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="" class="form-label">Status</label>
+								<div style="margin-left:2px;margin-top:5px">
+									<input type="radio" id="Status" name="Status" value="Y" checked>&nbsp;&nbsp;Active&nbsp;
+									<input type="radio" id="Status" style="margin-left: 10px;" name="Status" value="N">&nbsp;&nbsp;InActive&nbsp;
+								</div>
+							</div>
+
+							<div class="col-sm-4" style="margin-top: 2%;">
+								<button type="submit" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:40%">Save</button>&nbsp;&nbsp;&nbsp;
+								<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr9()">Cancel</button>
+
+							</div>
+
+
+						</div>
+
+						<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:10px;padding-right:10px">
+							<table class="table table-bordered table-sm">
+								<thead style="background: #c1c1c1;">
+									<tr class="text-nowrap">
+										<th style="width: 50px;">Action</th>
+										<th>Sl No</th>
+										<th>Target Group Field</th>
+										<th>Status</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr style="height:25px;">
+										@*<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+										<td></td>
+										<td></td>
+										<td></td>*@
+									</tr>
+									<tr style="height:25px;">
+										@*<td align="center"><i data-bs-toggle="modal" data-bs-target="#viewdebit" class="fa fa-pencil cursor-pointer" aria-hidden="true" style="font-size: 12px;color: #5490ff; cursor:pointer"></i>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-trash" style="font-size: 12px;color: red; cursor:pointer" aria-hidden="true"></i></td>
+										<td></td>
+										<td></td>
+										<td></td>*@
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</body>
+</html>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#navhead").text("Apply Rule");
+		kendodate_format();
+	});
+
+	$(document).ready(function () {
+
+		$(".toggle-accordion").on("click", function () {
+			var accordionId = $(this).attr("accordion-id"),
+				numPanelOpen = $(accordionId + ' .collapse.in').length;
+
+			$(this).toggleClass("active");
+
+			if (numPanelOpen == 0) {
+				openAllPanels(accordionId);
+			} else {
+				closeAllPanels(accordionId);
+			}
+		})
+
+		openAllPanels = function (aId) {
+			console.log("setAllPanelOpen");
+			$(aId + ' .panel-collapse:not(".in")').collapse('show');
+		}
+		closeAllPanels = function (aId) {
+			console.log("setAllPanelclose");
+			$(aId + ' .panel-collapse.in').collapse('hide');
+		}
+
+	});
+
+	function rr() {
+		$("#newdebit").show();
+	}
+	function rr1() {
+		$("#newdebit").hide();
+	}
+	function rr2() {
+		$("#newconfiguration").show();
+	}
+	function rr7() {
+		$("#newconfiguration").hide();
+	}
+
+	function rr3() {
+		$("#base_identifier").show();
+	}
+
+	function rr4() {
+		$("#additional_condition").show();
+	}
+
+	function rr5() {
+		$("#additional_condition").hide();
+	}
+
+	function rr6() {
+		$("#base_identifier").hide();
+	}
+
+	function rr8() {
+		$("#target-grouping").show();
+	}
+
+	function rr9() {
+		$("#target-grouping").hide();
+	}
+</script>
