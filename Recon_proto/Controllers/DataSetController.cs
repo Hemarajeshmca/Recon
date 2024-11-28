@@ -347,8 +347,9 @@ namespace Recon_proto.Controllers
                         objcat.pipeline_desc = result.Rows[i]["pipeline_desc"].ToString();
                         objcat.pipeline_name = result.Rows[i]["pipeline_name"].ToString();
                         objcat.pipeline_status = result.Rows[i]["pipeline_status"].ToString();
+                        objcat.file_extenstion = result.Rows[i]["file_extenstion"].ToString();
 
-                        objcat_lst.Add(objcat);
+						objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
                 }
@@ -373,8 +374,11 @@ namespace Recon_proto.Controllers
 			public string pipeline_desc { get; set; }
 			public string pipeline_name { get; set; }
 			public string pipeline_status { get; set; }
+            public string file_extenstion { get; set;}
 		}
         #endregion
+
+
 
 
     }

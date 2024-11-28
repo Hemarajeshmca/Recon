@@ -183,11 +183,16 @@
 							<div class="tab-pane fade" id="navs-pills-DatasetProgress" role="tabpanel">
 								<div class="panel panel-default">
 									<div class="panel-body" style="padding-left: 20px;padding-right: 20px;">
-										<div class="selectedDataset" id="selected_dataset_name"></div>
+										<span>
+											<span style="margin-left: 17px;" class="selectedDataset" id="selected_dataset_name"></span>
+										</span>
 										<div class="row" style="padding-bottom:5px;margin-top:5px;padding-left:30px;padding-right:5px">
 											<div class="col-sm-4">
 												<label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="Pipeline" class="form-select form-control"> </select>
+											</div>
+											<div class="col-sm-1" style="margin-top: 27px;margin-left: 25px;">
+												<img style="height: 35px; width: 35px;cursor: pointer; margin-left: 4px;" title="Download Pipeline Template" src="../Assets/images/download.png" onclick="downloadTemplate()" />
 											</div>
 											<div class="col-sm-4">
 												<form id="theuploadformempff">
@@ -204,6 +209,7 @@
 												<progress id="progressBar" value="0" max="100"></progress>
 											</div>
 										</div>
+										
 									</div>
 								</div>
 								<input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevdp();" />
@@ -298,6 +304,7 @@
 	var selected_dataset = '';
 	$(document).ready(function () {
 		$("#navhead").text("Dataset Import");
+		var piplinelist = [];
 		gridlist();
 		grid_dataset_details([]);
 		grid_jobhistory([]);
@@ -611,6 +618,7 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response.length == 1) {
+					piplinelist = response;
 					$.each(response, function (index, item) {
 						$("#Pipeline").empty();
 						$("#Pipeline").append($('<option>', {
@@ -619,6 +627,7 @@
 						}));
 					});
 				} else if (response.length > 1) {
+					piplinelist = response;
 					$("#Pipeline").empty();
 					$("#Pipeline").append($('<option>', {
 						value: "",
@@ -1141,6 +1150,22 @@
 			editable: false,
 
 		});
+	}
+
+	function downloadTemplate(){
+		var pipeline_code = $("#Pipeline").val();
+		if (pipeline_code) {
+		const getfile_extension = piplinelist.filter(item => item.pipeline_code == pipeline_code);
+		var user_code = sessionStorage.getItem("usrname");
+		var file_extension = getfile_extension[0].file_extenstion;
+		window.location.href = '@Url.Action("TemplateDownload", "Datasetfile")?pipeline_code=' + pipeline_code + '&file_extension=' + file_extension + '&file_name=' + 'file_name' + '' + '&username=' + user_code + '';
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Pipeline",
+				type: 'red',
+			});
+		}
 	}
 
 </script>
