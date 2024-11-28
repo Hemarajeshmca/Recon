@@ -103,8 +103,6 @@
 
 			div#spinner img {
 				position: absolute;
-				/*width: 100px;
-																						height: 100px;*/
 				top: 40%;
 				left: 42%;
 				opacity: 4.5;
@@ -119,8 +117,6 @@
 				margin-top: 100px;
 				color: white;
 			}
-
-		/*grid content should not be wrap*/
 
 		.k-grid td {
 			white-space: nowrap;
@@ -162,6 +158,15 @@
 		.info-label.active .info-content {
 			display: block;
 		}
+
+		.nav {
+			/*display: flex;*/
+			display: -webkit-box;
+			flex-wrap: nowrap !important;
+			padding-left: 0;
+			margin-bottom: 0;
+			list-style: none;
+		}
 	</style>
 
 </head>
@@ -202,9 +207,9 @@
 				</div>
 				<div class="col-sm-3">
 					<label for="" class="form-label"></label>
-						Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;
-						<select id="cmbreconname" class="form-select form-control" disabled>
-						</select>
+					Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;
+					<select id="cmbreconname" class="form-select form-control" disabled>
+					</select>
 				</div>
 				<div class="col-md-2">
 					<label for="" class="form-label">Period From&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -267,7 +272,7 @@
 			</div>
 			<div class="row">
 				<div class="nav-align-top mb-3 mt-3">
-					<ul class="nav nav-pills mb-2" role="tablist" style="font-size:12px">
+					<ul class="nav nav-pills mb-2" role="tablist" style="font-size:12px;border-radius: 0.375rem; overflow-x: auto;">
 						<li class="nav-item">
 							<button type="button" id="ruleCondition"
 									class="nav-link active"
@@ -311,6 +316,28 @@
 									aria-selected="false">
 								Additional Grouping
 								@*Grouping*@
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="aggregatefunction"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-aggregatefunction"
+									aria-controls="navs-pills-top-aggregatefunction"
+									aria-selected="true">
+								Aggregate Function
+							</button>
+						</li>
+						<li class="nav-item">
+							<button type="button" id="aggregatecondition"
+									class="nav-link"
+									role="tab"
+									data-bs-toggle="tab"
+									data-bs-target="#navs-pills-top-aggregatecondition"
+									aria-controls="navs-pills-top-aggregatecondition"
+									aria-selected="true">
+								Aggregate Condition
 							</button>
 						</li>
 						<li class="nav-item">
@@ -404,7 +431,30 @@
 									</div>
 								</div>
 							</div>
-
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-aggregatefunction" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+									<div class="col-xs-12">
+										<div id="gd_aggfunction">
+											<div id="grid_aggfunction">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="navs-pills-top-aggregatecondition" role="tabpanel" style="margin-top:-13px;">
+							<div class="panel panel-default">
+								<div class="row" style="padding-bottom:3px;padding-right:5px;padding-top:10px;">
+									<div class="col-xs-12">
+										<div id="gd_aggcondition">
+											<div id="grid_aggcondition">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="tab-pane fade" id="navs-pills-top-sourceorder" role="tabpanel" style="margin-top:-13px;">
 							<div class="panel panel-default">
@@ -439,29 +489,39 @@
 						<div class="tab-pane fade" id="navs-pills-top-AddtionalConfiguration1" role="tabpanel" style="margin-top:-13px;">
 							<div class="panel panel-default">
 								<div class="panel-body" style="height:175px;padding:31px">
-									<div class="col-sm-4">
-										<input type="checkbox" id="thersholdflag" onclick="thersflag()" disabled>
-										<label for="vehicle1">
-											Enable Rule level Threshold
-										</label>
-									</div>
-									<div class="row" id="addconfig" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px;border:1px solid">
-										<div class="col-sm-2">
-											<label for="" class="form-label">Partial Match&nbsp;</label>
-											<div style="margin-left:2px;margin-top:5px">
-												<input type="radio" id="partialmatch3" disabled name="partialmatch" value="Y" onclick="onpartialrule()">&nbsp;Yes &nbsp;
-												<input type="radio" id="partialmatch4" disabled name="partialmatch" value="N" onclick="onpartialrule()" style="margin-left: 10px;">&nbsp;No&nbsp;
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="col-sm-4">
+												<label for="" class="form-label">Rule Remark&nbsp;</label>
+												<textarea id="ruleremark" name="ruleremark" rows="4" style="height: 93px;width: 455px;border-radius: 0.375rem;"></textarea>
 											</div>
 										</div>
-										<div class="col-sm-2">
-											<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
-											<input class="form-control" disabled id="thersholdplus1" onpaste="return false;" type="text" maxlength="16" value="0" onkeypress='return isNumberKey(event)'>
-											<input class="form-control" id="thersholdminus1" type="hidden" value="0">
-										</div>
-										<div class="col-sm-4">
-											<label for="" class="form-label">Applied On&nbsp;</label>
-											<select id="cmbthersholdvalue1" class="form-select form-control" disabled>
-											</select>
+										<div class="col-sm-6">
+											<div class="col-sm-5" style="margin-left: -20px;padding-bottom: 7px;">
+												<input type="checkbox" id="thersholdflag" onclick="thersflag()" disabled>
+												<label for="vehicle1">
+													Enable Rule level Threshold
+												</label>
+											</div>
+											<div class="row" id="addconfig" style="padding-bottom:3px;padding-left:5px;padding-top:10px;padding-right:5px;border:1px solid;margin-left: -99px;">
+												<div class="col-sm-4">
+													<label for="" class="form-label">Partial Match&nbsp;</label>
+													<div style="margin-left:2px;margin-top:5px">
+														<input type="radio" id="partialmatch3" disabled name="partialmatch" value="Y" onclick="onpartialrule()">&nbsp;Yes &nbsp;
+														<input type="radio" id="partialmatch4" disabled name="partialmatch" value="N" onclick="onpartialrule()" style="margin-left: 10px;">&nbsp;No&nbsp;
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<label for="" class="form-label">Knockoff Threshold Value&nbsp;</label>
+													<input class="form-control" disabled id="thersholdplus1" onpaste="return false;" type="text" maxlength="16" value="0" onkeypress='return isNumberKey(event)'>
+													<input class="form-control" id="thersholdminus1" type="hidden" value="0">
+												</div>
+												<div class="col-sm-4">
+													<label for="" class="form-label">Applied On&nbsp;</label>
+													<select id="cmbthersholdvalue1" class="form-select form-control" disabled>
+													</select>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -579,6 +639,7 @@
 						$("#thersholdplus1").val(res.RuleHeader[0].threshold_plus_value);
 						$("#thersholdminus1").val(res.RuleHeader[0].threshold_minus_value);
 						$("#cmbthersholdvalue1").val(res.RuleHeader[0].threshold_code);
+						$("#ruleremark").val(res.RuleHeader[0].rule_remark);
 						if (res.RuleHeader[0].until_active_flag == "Y") {
 							$('#untillactive').attr('checked', true);
 						}
@@ -627,6 +688,20 @@
 							grid_comparisonorder(res.Rulefieldordercomparison);
 						} else {
 							grid_comparisonorder([]);
+						}
+						if (res.Ruleaggfunction.length > 0) {
+							$("#gd_aggfunction").empty();
+							$("#gd_aggfunction").append("<div id='grid_aggfunction'></div>");
+							grid_aggfunction(res.Ruleaggfunction);
+						} else {
+							grid_aggfunction([]);
+						}
+						if (res.Ruleaggcondition.length > 0) {
+							$("#gd_aggcondition").empty();
+							$("#gd_aggcondition").append("<div id='grid_aggcondition'></div>");
+							grid_aggcondition(res.Ruleaggcondition);
+						} else {
+							grid_aggcondition([]);
 						}
 					}
 					else {
@@ -738,7 +813,7 @@
 			}
 		});
 		//recon name
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -1821,6 +1896,478 @@
 		recorder_field_list = cmbsourcefield();
 	}
 	//-----------------------------------------------------     Source order    ----------------------------------------------------------------
+	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
+	function grid_aggfunction(data) {
+		$("#grid_aggfunction").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "ruleaggfield_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							ruleaggfield_gid: { type: "string", defaultValue: "0" },
+							ruleaggfield_seqno: { type: "string", defaultValue: "0" },
+							ruleaggfield_applied_on: { type: "string" },
+							ruleagg_field: { type: "string" },
+							ruleaggfield_desc: { type: "string" },
+							recon_field: { type: "string" },
+							ruleagg_function: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 165,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggfunction').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowagg()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [
+				{
+					field: "ruleaggfield_gid",
+					title: "ruleaggfield_gid",
+					hidden: true,
+				},
+				{
+					field: "ruleaggfield_seqno",
+					title: "Seq No.",
+					width: 40,
+					attributes: { style: "text-align: right;" },
+					editor: function (container, options) {
+						item_rate(container, options.field, '9', '2');
+					},
+				},
+				{
+					field: "ruleaggfield_desc",
+					title: "Aggregate Function Desc",
+					width: 100,
+				},
+				{
+					field: "ruleaggfield_applied_on_code",
+					title: "ruleaggfield_applied_on_code",
+					hidden: true,
+				},
+				{
+					field: "ruleaggfield_applied_on",
+					title: "Applied On",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ruleaggfield_applied_on_code", "grid_aggfunction")
+					},
+					width: 100,
+				},
+				{
+					field: "recon_field_code",
+					title: "recon_field_code",
+					hidden: true,
+				},
+				{
+					field: "recon_field",
+					title: "Recon Field",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recon_field_code", "grid_aggfunction")
+					},
+					width: 100,
+				},
+				{
+					field: "ruleagg_function",
+					title: "Aggregate Function",
+					width: 100,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true,
+				}],
+			editable: true,
+
+		});
+		recon_field_list = cmbsourcefield();
+		ruleaggfield_applied_on_list = grpfield_applied_on();
+	}
+
+	function grpfield_applied_on() {
+		var arr1 = [];
+		var in_master_code = "QCD_Appiled_on";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				var response = data;
+				if (response != null) {
+					for (i = 0; response.length > i; i++) {
+						var list1 = {};
+						list1.code = response[i].masterSyscode;
+						list1.desc = response[i].masterName;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;
+	}
+	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
+	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
+	var join_condition_list = "";
+	var ruleagg_field_list = "";
+	var ruleagg_value_list = "";
+	var ruleagg_criteria_list = "";
+	function grid_aggcondition(data) {
+		$("#grid_aggcondition").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "ruleaggcondition_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							ruleaggcondition_gid: { type: "string", defaultValue: "0" },
+							ruleagg_applied_on: { type: "string", defaultValue: "0" },
+							ruleagg_applied_on: { type: "string" },
+							ruleagg_value: { type: "string" },
+							ruleagg_value_code: { type: "string" },
+							ruleagg_field_code: { type: "string" },
+							ruleagg_field: { type: "string" },
+							ruleagg_criteria: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
+						}
+					}
+				}
+			},
+			height: 165,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggfunction').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowaggcon()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [
+				{
+					field: "ruleaggcondition_gid",
+					title: "ruleaggcondition_gid",
+					hidden: true,
+				},
+				{
+					field: "ruleaggcondition_seqno",
+					title: "Seq No.",
+					width: 40,
+					attributes: { style: "text-align: right;" },
+					editor: function (container, options) {
+						item_rate(container, options.field, '9', '2');
+					},
+				},
+				{
+					field: "open_parentheses_flag",
+					title: "(", width: 20,
+					template: function (dataItem) {
+						if (dataItem.themeaggcondition_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+						}
+					}
+				},
+				{
+					field: "ruleagg_field_code",
+					title: "ruleagg_field_code",
+					hidden: true,
+				},
+				{
+					field: "ruleagg_field",
+					title: "Condition Field",
+					editor: function (container, options) {
+						combo_editor_condition(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ruleagg_field_code", "grid_aggcondition")
+					},
+					width: 100,
+				},
+				{
+					field: "ruleagg_criteria",
+					title: "Condition Criteria",
+					width: 100,
+					editor: function (container, options) {
+						combo_editor_conditionCriteria(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ruleagg_criteria", "grid_aggcondition")
+					},
+				},
+				{
+					field: "ruleagg_value_code",
+					title: "ruleagg_value_code",
+					hidden: true,
+				},
+				{
+					field: "ruleagg_value",
+					title: "Comparison Field/Value",
+					width: 100,
+					editor: function (container, options) {
+						combo_editor_conditionvalue(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "ruleagg_value_code", "grid_aggcondition")
+					},
+				},
+				{
+					field: "close_parentheses_flag",
+					title: ")", width: 20,
+					template: function (dataItem) {
+						if (dataItem.themeaggcondition_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+						}
+					},
+				},
+				{
+					field: "join_condition",
+					title: "Joins",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_aggcondition")
+					},
+					width: 40,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true,
+				}],
+			editable: true,
+
+		});
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+	}
+	$(function () {
+		$('#grid_aggcondition').on('click', '.chkbx7', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_aggcondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_aggcondition').on('click', '.chkbx8', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_aggcondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
+	function combo_editor_condition(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var rule_code = $("#rulegid").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_rule_gid: rule_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					if (result.Ruleaggfunction.length > 0) {
+						for (i = 0; result.Ruleaggfunction.length > i; i++) {
+							var list1 = {};
+							list1.code = result.Ruleaggfunction[i].ruleagg_field;
+							list1.desc = result.Ruleaggfunction[i].ruleaggfield_desc;
+							arr1.push(list1);
+						}
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_conditionvalue(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var rule_code = $("#rulegid").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_rule_gid: rule_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					if (result.Ruleaggfunction.length > 0) {
+						for (i = 0; result.Ruleaggfunction.length > i; i++) {
+							var list1 = {};
+							list1.code = result.Ruleaggfunction[i].ruleagg_field;
+							list1.desc = result.Ruleaggfunction[i].ruleaggfield_desc;
+							arr1.push(list1);
+						}
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "ruleagg_value") {
+					if (datafield == "ruleagg_value" && selectedItem.ruleagg_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.ruleagg_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_conditionCriteria(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var themeagg_code = selectedItem.ruleagg_field_code;
+		var sourcedata = "COMPARISON";
+		var in_rule_code = $("#txtrulecode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/getconditionfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: themeagg_code, in_rule_code: in_rule_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr1.push(list);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "ruleagg_criteria") {
+					if (datafield == "ruleagg_criteria" && selectedItem.ruleagg_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.ruleagg_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.themeagg_criteria_input = undefined;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
 	function RuleApplied() {
 		if ($("#RuleAppliedOn").val() == 'T') {
 			$("#lblcomaccmode").text("Target Account mode").append("&nbsp;<span style='font - size: 12px; color: red; font - weight: bold; '>*</span>");
