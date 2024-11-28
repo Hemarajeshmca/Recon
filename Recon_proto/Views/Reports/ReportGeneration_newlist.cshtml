@@ -348,7 +348,7 @@
 			var grid = $("#grid_reporttemplist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 
-			var template_code = "";
+			var template_code = selectedItem.reporttemplate_code;
 			var str = selectedItem.reporttemplate_name;
 			var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
 			var data = {
@@ -364,47 +364,56 @@
 				"file_name": selectedItem.reporttemplate_name,
 				"in_report_name": concatName
 			};
-				$.alert({
-					title: 'Recon',
-					content: "Report Generated, Please check the Job Status in Utility",
-					type: 'green',
-				});
+				//$.alert({
+				//	title: 'Recon',
+				//	content: "Report Generated, Please check the Job Status in Utility",
+				//	type: 'green',
+				//});
 				$.ajax({
 					type: "POST",
 					url: '../Reports/generatedynamicreport_typeC',
 					dataType: 'json',
 					data: JSON.stringify(data),
 					contentType: 'application/json; charset=utf-8',
-					//success: function (response) {
-					//	var res = JSON.parse(response);
-					//	if (res.length > 0) {
-					//		var data = res[0];
-					//		if (data.out_result != '0') {
-					//			$.alert({
-					//				title: 'Recon',
-					//				content: data.out_msg,
-					//				type: 'green',
-					//			});
+					success: function (response) {
+					if (response != '{}' || response != '[]' || response != '[{}]' || response != null || response != '') {
+						var res = JSON.parse(response); //res.outparam[0].out_result
 
-					//		} else {
-					//			$.alert({
-					//				title: 'Recon',
-					//				content: data.out_msg,
-					//				type: 'red',
-					//			});
-					//		}
-					//	} else {
-					//		$.alert({
-					//			title: 'Recon',
-					//			content: "Something Went Wrong ..!",
-					//			type: 'red',
-					//		});
-					//	}
-					//},
-					//error: function (er) {
-					//	alert(er)
-					//	console.log(er)
-					//}
+						if (res.outparam.length > 0) {
+							var data = res.outparam[0];
+							if (data.out_result != '0') {
+								$.alert({
+									title: 'Recon',
+									content: data.out_msg,
+									type: 'green',
+								});
+
+							} else {
+								$.alert({
+									title: 'Recon',
+									content: data.out_msg,
+									type: 'red',
+								});
+							}
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: "Something Went Wrong ..!",
+								type: 'red',
+							});
+						}
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: "Something Went Wrong ..!",
+							type: 'red',
+						});
+					  }
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
+					}
 				});
 		} catch{
 
