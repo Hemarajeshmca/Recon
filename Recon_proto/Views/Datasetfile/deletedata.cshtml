@@ -14,8 +14,8 @@
 		}
 
 		/*.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-			color: #fff !important;
-		}*/
+					color: #fff !important;
+				}*/
 
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
@@ -24,6 +24,44 @@
 		.error_show {
 			color: red;
 			margin-left: 10px;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
 		}
 	</style>
 </head>
@@ -43,14 +81,15 @@
 						<div class="col-md-3" style="margin-top: 2%;">
 							<button type="button" class="btn btn-sm save_btn me-2" onclick="run()" style="width:40%;margin-top: 7px">
 								View
-							</button> &nbsp;&nbsp;&nbsp;						
+							</button> &nbsp;&nbsp;&nbsp;
 						</div>
 					</div>
-				
+
 					<div class="col-xs-12" style="margin-top: 1%;">
-						<div id="scheduled_grid"></div>
+						<div id="gd_scheduled">
+							<div id="scheduled_grid"></div>
+						</div>
 					</div>
-				
 				</div>
 			</div>
 		</div>
@@ -80,6 +119,8 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.length > 0) {
+						$("#gd_scheduled").empty();
+						$("#gd_scheduled").append("<div id='scheduled_grid'></div>");
 						gridlistload(response);
 					}
 					else {
@@ -232,7 +273,7 @@
 										url: '../Datasetfile/deletescheduler',
 										dataType: 'json',
 										data: JSON.stringify({
-												in_scheduler_gid: in_scheduler_gid, in_remark, in_remark, in_user_code: in_user_code
+											in_scheduler_gid: in_scheduler_gid, in_remark, in_remark, in_user_code: in_user_code
 										}),
 										contentType: 'application/json; charset=utf-8',
 										success: function (response) {
