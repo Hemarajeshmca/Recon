@@ -37,7 +37,9 @@
 					</div>
 				</div>
 				<div class="col-xs-12" style="margin-top: 1%;">
-					<div id="undo_grid"></div>
+					<div id="gd_undo">
+						<div id="undo_grid"></div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -53,7 +55,7 @@
 
 	function gridlist() {
 		//recon name
-		var data = {};	
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -112,6 +114,8 @@
 				success: function (response) {
 					if (response != " " && response != null && response != "{}" && response != "[]") {
 						var res = JSON.parse(response);
+						$("#gd_undo").empty();
+						$("#gd_undo").append("<div id='undo_grid'></div>");
 						grid_reconverion(res);
 						//if(res.length > 0){
 						//	grid_reconverion(res);
