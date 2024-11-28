@@ -358,7 +358,7 @@
 				"in_report_param": "",
 				"in_report_condition": "",
 				"in_outputfile_flag": true,
-				"in_outputfile_type": 'csv',
+				"in_outputfile_type": 'xlsx',
 				"in_ip_addr": "",
 				"in_user_code": sessionStorage.getItem("usrname"),
 				"file_name": selectedItem.reporttemplate_name,
@@ -381,13 +381,12 @@
 
 						if (res.outparam.length > 0) {
 							var data = res.outparam[0];
-							if (data.out_result != '0') {
+							if (data.out_result == 1 ) {
 								$.alert({
 									title: 'Recon',
 									content: data.out_msg,
 									type: 'green',
 								});
-
 							} else {
 								$.alert({
 									title: 'Recon',
