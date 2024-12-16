@@ -126,12 +126,16 @@ namespace Recon_proto.Controllers
 			public string? lookup_multi_return_flag { get; set; }
 			public string? in_returnflag { get; set; }
 			public string? in_cumulative_flag { get; set; }
+			public string? in_opening_flag { get; set; }
 			public string? active_status { get; set; }
 			public string? in_action { get; set; }
 			public string? in_action_by { get; set; }
 			public string? hold_flag { get; set; }
 			public string? clone_process { get; set; }
-		}
+            public string? source_dataset_code { get; set; }
+            public string? comparison_dataset_code { get; set; }
+            public string? recorderby_type { get; set; }
+        }
 		#endregion
 
 		#region Filter
@@ -519,7 +523,8 @@ namespace Recon_proto.Controllers
 			public string? in_active_status { get; set; }
 			public string? in_action { get; set; }
 			public string? in_user_code { get; set; }
-			public string? out_msg { get; set; }
+            public string? reverse_update_flag { get; set; }
+            public string? out_msg { get; set; }
 			public string? out_result { get; set; }
 		}
 		[HttpPost]
@@ -657,6 +662,65 @@ namespace Recon_proto.Controllers
 				return Json(objList);
 			}
 		}
-		#endregion
-	}
+        #endregion
+
+        #region Preprocess Condition
+        public class preprocessconditiondata
+        {
+            public int? in_preprocesscondition_gid { get; set; }
+            public string? in_preprocess_code { get; set; }
+            public Double in_condition_seqno { get; set; }            
+            public string? in_extraction_criteria { get; set; }
+            public string? in_extraction_filter { get; set; }           
+            public string? in_comparison_criteria { get; set; }
+            public string? in_comparison_filter { get; set; }
+            public string? source_field { get; set; }
+            public string? comparison_field { get; set; }
+            public string? in_open_flag { get; set; }           
+            public string? in_close_flag { get; set; }
+            public string? in_join_condition { get; set; }
+            public string? in_source_field_type { get; set; }
+            public string? in_active_status { get; set; }
+            public string? in_action { get; set; }
+            public string? in_action_by { get; set; }
+            public string? out_msg { get; set; }
+            public string? out_result { get; set; }
+        }
+        [HttpPost]
+        public JsonResult preprocesscomparisonsave([FromBody] preprocessconditiondata context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            conditiondata objList = new conditiondata();
+            DataTable result = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Preprocess/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_action_by);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("preprocessconditioncomparsion", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataTable>(d2);
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    objList.in_preprocesscondition_gid = Convert.ToInt32(result.Rows[i]["in_preprocesscondition_gid"]);
+                    objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                    objList.out_result = result.Rows[i]["out_result"].ToString();
+                }
+                return Json(objList);
+            }
+        }
+        #endregion
+    }
 }

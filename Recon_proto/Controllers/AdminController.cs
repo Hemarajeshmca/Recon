@@ -77,11 +77,11 @@ namespace Recon_proto.Controllers
 		public class rolemodel
 		{
 			public Int32 in_role_gid { get; set; }
-			public string in_role_code { get; set; }
-			public string in_role_name { get; set; }
-			public string in_active_status { get; set; }
-			public string in_active_reason { get; set; }
-			public string in_action { get; set; }
+			public string? in_role_code { get; set; }
+			public string? in_role_name { get; set; }
+			public string? in_active_status { get; set; }
+			public string? in_active_reason { get; set; }
+			public string? in_action { get; set; }
 			public string? action_by { get; set; }
 		}
 		#endregion
@@ -212,7 +212,7 @@ namespace Recon_proto.Controllers
 
 		public class rolefetchModel
 		{
-			public string in_role_code { get; set; }
+			public string? in_role_code { get; set; }
 			public string? in_user_code { get; set; }
 		}
 
@@ -256,7 +256,7 @@ namespace Recon_proto.Controllers
 		}
 		public class saveroleAccessModel
 		{
-			public string roledetails { get; set; }
+			public string? roledetails { get; set; }
 			public string? in_user_code { get; set; }
 		}
 		#endregion
@@ -301,9 +301,9 @@ namespace Recon_proto.Controllers
 		}
 		public class usermodellist
 		{
-			public string user_code { get; set; }
-			public string role_code { get; set; }
-			public string lang_code { get; set; }
+			public string? user_code { get; set; }
+			public string? role_code { get; set; }
+			public string? lang_code { get; set; }
 		}
 		#endregion
 
@@ -314,7 +314,7 @@ namespace Recon_proto.Controllers
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DataTable result = new DataTable();
 			string post_data = "";
-			var pass = Encrypt(context.user_password);
+			var pass = Encrypt(clearText: context.user_password);
 			usermodel usr = new usermodel();
 			usr.user_password = pass;
 			usr.user_code = context.user_code;
@@ -357,16 +357,16 @@ namespace Recon_proto.Controllers
 		}
 		public class usermodel
 		{
-			public string user_code { get; set; }
-			public string user_contact_no { get; set; }
-			public string user_emailid { get; set; }
+			public string? user_code { get; set; }
+			public string? user_contact_no { get; set; }
+			public string? user_emailid { get; set; }
 			public int user_gid { get; set; }
-			public string user_name { get; set; }
-			public string user_password { get; set; }
-			public string action_by { get; set; }
-			public string in_active_reason { get; set; }
-			public string action { get; set; }
-			public string role_code { get; set; }
+			public string? user_name { get; set; }
+			public string? user_password { get; set; }
+			public string? action_by { get; set; }
+			public string? in_active_reason { get; set; }
+			public string? action { get; set; }
+			public string? role_code { get; set; }
 			public String? out_msg { get; set; }
 			public Int16? out_result { get; set; }
 		}
@@ -417,11 +417,11 @@ namespace Recon_proto.Controllers
 		public class treeviewllist
 		{
 			public List<treeviewllist> items = new List<treeviewllist>();
-			public string depend_code { get; set; }
-			public string master_code { get; set; }
-			public string master_name { get; set; }
-			public string parent_code { get; set; }
-			public string id { get; set; }
+			public string? depend_code { get; set; }
+			public string? master_code { get; set; }
+			public string? master_name { get; set; }
+			public string? parent_code { get; set; }
+			public string? id { get; set; }
 
 		}
 		public treeviewllist add_node(DataTable _dt, DataRow _dr)
@@ -447,7 +447,7 @@ namespace Recon_proto.Controllers
 			}
 			catch (Exception ex)
 			{
-				throw ex;
+                string throwq = ex.Message;
 			}
 			return node;
 		}
@@ -492,7 +492,7 @@ namespace Recon_proto.Controllers
 			{
 				using (var client = new HttpClient())
 				{
-					string Urlcon = "UserManagement/";
+					string Urlcon = "UserManagement/";   
 					client.BaseAddress = new Uri(urlstring + Urlcon);
 					client.DefaultRequestHeaders.Accept.Clear();
 					client.Timeout = Timeout.InfiniteTimeSpan;
@@ -519,10 +519,10 @@ namespace Recon_proto.Controllers
 		}
 		public class usermappingmodel
 		{
-			public string user_code { get; set; }
+			public String? user_code { get; set; }
 			public int user_gid { get; set; }
-			public string level_mapping { get; set; }
-			public string action_by { get; set; }
+			public String? level_mapping { get; set; }
+			public String? action_by { get; set; }
 			public String? out_msg { get; set; }
 			public Int16? out_result { get; set; }
 		}
