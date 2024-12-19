@@ -461,92 +461,15 @@ namespace Recon_proto.Controllers
 				string fileName = pipeline_code + file_extension; // Assuming the file extension is .csv; adjust as needed
 				
 				string filePath = Path.Combine(filepath, fileName);
-
 				// Check if the file exists
 				if (!System.IO.File.Exists(filePath))
 				{
 					return NotFound("File not found.");
 				}
-
 				// Read the file into a stream
 				var fileBytes = System.IO.File.ReadAllBytes(filePath);
-
 				// Return the file for download
 				return File(fileBytes, "application/octet-stream", fileName);
-
-				//using (var client = new HttpClient())
-				//{
-				//	string[] result = { };
-				//	client.BaseAddress = new Uri(urlstring);
-				//	client.DefaultRequestHeaders.Accept.Clear();
-				//	client.Timeout = Timeout.InfiniteTimeSpan;
-				//	client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				//	HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
-				//	content.Headers.Add("user_code", username);
-				//	var response = client.PostAsync("files", content).Result;
-				//	if (filetype != "xlsx")
-				//	{
-				//		Stream data = response.Content.ReadAsStreamAsync().Result;
-				//		StreamReader reader = new StreamReader(data);
-				//		string base64data = string.Empty;
-				//		var bytes = new byte[data.Length];
-				//		data.Read(bytes, 0, bytes.Length);
-				//		var responses = new FileContentResult(bytes, "application/octet-stream");
-				//		var fileName = file_name.ToString() + ".zip";
-				//		var contentDisposition = new ContentDisposition
-				//		{
-				//			FileName = file_name,
-				//			Inline = true,
-				//		};
-				//		Response.Clear();
-				//		Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-				//		Response.Headers.Add("Content-Type", "application/octet-stream");
-				//		return File(bytes, "application/octet-stream", fileName);
-				//	}
-				//	else
-				//	{
-				//		var get_outresult = getfilepath("download_xls_folder", username);
-				//		List<fileconfigmodel> obj_outresult = JsonConvert.DeserializeObject<List<fileconfigmodel>>(get_outresult.Value.ToString());
-				//		string out_filepath = "";
-				//		string fileName = "";
-				//		if (obj_outresult.Count > 0)
-				//		{
-				//			out_filepath = obj_outresult[0].out_config_value;
-				//		}
-				//		if (file_name.ToLower().Contains(".xlsx"))
-				//		{
-				//			fileName = file_name;
-				//		}
-				//		else
-				//		{
-				//			fileName = file_name + ".xlsx";
-				//		}
-				//		string filePath = Path.Combine(out_filepath, fileName);
-
-				//		if (!System.IO.File.Exists(filePath))
-				//		{
-				//			return NotFound();
-				//		}
-
-				//		using (var memoryStream = new MemoryStream())
-				//		{
-				//			using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-				//			{
-				//				var fileName1 = Path.GetFileName(filePath);
-				//				var entry = archive.CreateEntry(fileName1, CompressionLevel.Optimal);
-
-				//				using (var entryStream = entry.Open())
-				//				using (var fileStream = System.IO.File.OpenRead(filePath))
-				//				{
-				//					fileStream.CopyTo(entryStream);
-				//				}
-				//			}
-				//			var zipName = $"{file_name}.zip";
-				//			memoryStream.Seek(0, SeekOrigin.Begin);
-				//			return File(memoryStream.ToArray(), "application/zip", zipName);
-				//		}
-				//	}
-				//}
 			}
 			catch (Exception ex)
 			{

@@ -191,7 +191,7 @@
 												<label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="Pipeline" class="form-select form-control"> </select>
 											</div>
-											<div class="col-sm-1" style="margin-top: 27px;margin-left: 25px;">
+											<div class="col-sm-1" style="margin-top: 27px;padding: 0px;width: 4%;">
 												<img style="height: 35px; width: 35px;cursor: pointer; margin-left: 4px;" title="Download Pipeline Template" src="../Assets/images/download.png" onclick="downloadTemplate()" />
 											</div>
 											<div class="col-sm-4">
@@ -1153,19 +1153,60 @@
 	}
 
 	function downloadTemplate(){
-		var pipeline_code = $("#Pipeline").val();
-		if (pipeline_code) {
-		const getfile_extension = piplinelist.filter(item => item.pipeline_code == pipeline_code);
-		var user_code = sessionStorage.getItem("usrname");
-		var file_extension = getfile_extension[0].file_extenstion;
-		window.location.href = '@Url.Action("TemplateDownload", "Datasetfile")?pipeline_code=' + pipeline_code + '&file_extension=' + file_extension + '&file_name=' + 'file_name' + '' + '&username=' + user_code + '';
-		} else {
+		try  {
+			var pipeline_code = $("#Pipeline").val();
+			if (pipeline_code) {
+				const getfile_extension = piplinelist.filter(item => item.pipeline_code == pipeline_code);
+				var user_code = sessionStorage.getItem("usrname");
+				var file_extension = getfile_extension[0].file_extenstion;
+				//window.location.href = '@Url.Action("TemplateDownload", "Datasetfile")?pipeline_code=' + pipeline_code + '&file_extension=' + file_extension + '&file_name=' + 'file_name' + '' + '&username=' + user_code + '';
+				
+				const url = '@Url.Action("TemplateDownload", "Datasetfile")';
+				const fullUrl = `${url}?pipeline_code=${pipeline_code}&file_extension=${file_extension}&file_name=file_name&username=${user_code}`;
+
+				fetch(fullUrl).then(response => {
+					debugger;
+						if (!response.ok) {
+							$.alert({
+								title: 'Recon',
+								content: response.statusText,
+								type: 'red',
+							});
+							//throw new Error('HTTP Error: ' + response.status + ' - ' + response.statusText);
+						} 
+							return response.blob(); // Assuming the file is being downloaded as a blob
+						
+					})
+					.then(blob => {
+						// Logic to handle the downloaded file (e.g., trigger download)
+						const link = document.createElement('a');
+						link.href = URL.createObjectURL(blob);
+						link.download = pipeline_code+".xlsx"; // Adjust file name as needed
+						link.click();
+					})
+					.catch(error => {
+						// Catch the fetch-related errors or other thrown errors
+						$.alert({
+							title: 'Recon',
+							content: response.statusText,
+							type: 'red',
+						});
+					});
+			} else {
+				$.alert({
+					title: 'Recon',
+					content: "Please Select Pipeline",
+					type: 'red',
+				});
+			}
+		} catch (error) {
 			$.alert({
 				title: 'Recon',
-				content: "Please Select Pipeline",
+				content: error.message,
 				type: 'red',
 			});
 		}
+
 	}
 
 </script>
