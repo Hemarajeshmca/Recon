@@ -171,128 +171,83 @@
         data.in_active_status = '';
         data.in_user_code = sessionStorage.getItem("usrname");
         var Context = data;
-        // $.ajax({
-        //     type: "POST",
-        //     url: '../Recon/Reconlistfetch',
-        //     dataType: 'json',
-        //     data: JSON.stringify(data),
-        //     contentType: 'application/json; charset=utf-8',
-        //     success: function (response) {
-        //         var res = JSON.parse(response);
-        //         $("#cmbreconname").empty();
-        //         $("#cmbreconname").append($('<option>', {
-        //             value: "",
-        //             text: "  Select  "
-        //         }));
-        //         $.each(res, function (index, item) {
-        //             if (item.active_status == "Y") {
-        //                 $("#cmbreconname").append($('<option>', {
-        //                     value: item.recon_code,
-        //                     text: item.recon_name
-        //                 }));
-        //             }
-        //         });
-        //         // target dataset
-        //         $("#target_reconname").empty();
-        //         $("#target_reconname").append($('<option>', {
-        //             value: "",
-        //             text: "  Select  "
-        //         }));
-        //         $.each(res, function (index, item) {
-        //             if (item.active_status == "Y") {
-        //                 $("#target_reconname").append($('<option>', {
-        //                     value: item.recon_code,
-        //                     text: item.recon_name
-        //                 }));
-        //             }
-        //         });
-        //         // selected Recon
-        //         $("#selected_reconName").empty();
-        //         $("#selected_reconName").append($('<option>', {
-        //             value: "",
-        //             text: "  Select  "
-        //         }));
-        //         $.each(res, function (index, item) {
-        //             if (item.active_status == "Y") {
-        //                 $("#selected_reconName").append($('<option>', {
-        //                     value: item.recon_code,
-        //                     text: item.recon_name
-        //                 }));
-        //             }
-        //         });
-
-        //         // update Recon 
-        //         $("#cmbupdatereconname").empty();
-        //         $("#cmbupdatereconname").append($('<option>', {
-        //             value: "",
-        //             text: "  Select  "
-        //         }));
-        //         $.each(res, function (index, item) {
-        //             if (item.active_status == "Y") {
-        //                 $("#cmbupdatereconname").append($('<option>', {
-        //                     value: item.recon_code,
-        //                     text: item.recon_name
-        //                 }));
-        //             }
-        //         });
-
-        //         if (sessionStorage.getItem("reconcode") != null) {
-        //             $("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-        //             jQuery('#cmbreconname').trigger("change");
-        //         }
-        //     },
-        //     error: function (er) {
-        //         alert(er)
-        //         console.log(er)
-        //     }
-
-        // });
         $.ajax({
-        type: "POST",
-        url: '../Recon/Reconlistfetch',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        contentType: 'application/json; charset=utf-8',
-        success: function (response) {
-            var res = JSON.parse(response);
-
-            // Helper function to populate the select element
-            function populateSelect(selectId, data) {
-                var selectElement = $(selectId);
-                selectElement.empty();
-                selectElement.append($('<option>', {
+            type: "POST",
+            url: '../Recon/Reconlistfetch',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var res = JSON.parse(response);
+                $("#cmbreconname").empty();
+                $("#cmbreconname").append($('<option>', {
                     value: "",
-                    text: "Select"
+                    text: "  Select  "
                 }));
-
-                $.each(data, function (index, item) {
+                $.each(res, function (index, item) {
                     if (item.active_status == "Y") {
-                        selectElement.append($('<option>', {
+                        $("#cmbreconname").append($('<option>', {
                             value: item.recon_code,
                             text: item.recon_name
                         }));
                     }
                 });
+                // target dataset
+                $("#target_reconname").empty();
+                $("#target_reconname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(res, function (index, item) {
+                    if (item.active_status == "Y") {
+                        $("#target_reconname").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    }
+                });
+                // selected Recon
+                $("#selected_reconName").empty();
+                $("#selected_reconName").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(res, function (index, item) {
+                    if (item.active_status == "Y") {
+                        $("#selected_reconName").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    }
+                });
+
+                // update Recon 
+                $("#cmbupdatereconname").empty();
+                $("#cmbupdatereconname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(res, function (index, item) {
+                    if (item.active_status == "Y") {
+                        $("#cmbupdatereconname").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    }
+                });
+
+                if (sessionStorage.getItem("reconcode") != null) {
+                    $("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+                    jQuery('#cmbreconname').trigger("change");
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
             }
 
-            // Populate all the selects
-            populateSelect("#cmbreconname", res);
-            populateSelect("#target_reconname", res);
-            populateSelect("#selected_reconName", res);
-            populateSelect("#cmbupdatereconname", res);
-
-            // Set selected value for cmbreconname if available in sessionStorage
-            if (sessionStorage.getItem("reconcode") != null) {
-                $("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-                $('#cmbreconname').trigger("change");
-            }
-        },
-        error: function (er) {
-            alert("Error: " + er);
-            console.log(er);
-        }
-    });
-
+        });
+    
     
     }
 
