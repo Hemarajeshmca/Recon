@@ -1,0 +1,273 @@
+﻿@*@{
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}*@
+<!Doctype html>
+<html>
+<head>
+    <style type="text/css">
+        .k-tooltip-content {
+            white-space: nowrap !important;
+            font-size: 12px !important;
+        }
+
+        .k-grid td {
+            border-style: solid;
+            border-width: 0 0 0 1px;
+            padding: 0.4em 0.6em;
+            overflow: hidden;
+            line-height: 1.6em;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+        }
+
+        .k-state-selected {
+            color: coral !important;
+        }
+
+        .footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #e4e4e4;
+            color: white;
+            text-align: center;
+            z-index: 2;
+            height: 30px;
+        }
+
+        .k-grid td {
+            white-space: nowrap;
+            background-color: #eceef1;
+            border-color: inherit;
+            /* text-align: center; */
+        }
+
+        #overlayy {
+            background-color: transparent;
+            z-index: 999;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+
+
+        li {
+            display: block;
+        }
+
+        .ms-options {
+            min-height: 100px;
+            max-height: 100px;
+        }
+
+        ul {
+            padding-left: 0rem;
+        }
+
+        .navbar-nav > .home-menu .home-image {
+            float: left;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            margin-right: 10px;
+            margin-top: -2px 0px;
+            background-color: blue;
+        }
+
+        #loader {
+            position: absolute;
+            background: url('http://sampsonresume.com/labs/pIkfp.gif') no-repeat center center;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        div#spinner {
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            display: block;
+            opacity: 0.6;
+            background: #aaaaaa url('~/content/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png');
+            z-index: 1006;
+            text-align: center;
+            display: none;
+        }
+
+            div#spinner img {
+                position: absolute;
+                /*width: 100px;
+                                                                                                                height: 100px;*/
+                top: 40%;
+                left: 42%;
+                opacity: 4.5;
+                z-index: 1007;
+            }
+
+            div#spinner span {
+                font-family: Arial Tahoma;
+                font-size: large;
+                font-weight: bold;
+                opacity: 4.5;
+                margin-top: 100px;
+                color: white;
+            }
+
+        /*grid content should not be wrap*/
+
+        .k-grid td {
+            white-space: nowrap;
+            border-style: solid;
+            border-width: 1px 0px 0px 1px !important;
+            padding: -3.6em 5.6em;
+            overflow: hidden;
+            line-height: -1.4em;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            border-color: #80808040;
+        }
+        /*grid header should not be wrap*/
+        .k-grid-header table {
+            width: 100% !important;
+        }
+
+        .k-grid.k-widget {
+            height: 360px;
+            overflow-y: auto;
+        }
+
+        .info-label {
+            display: inline-block;
+            cursor: pointer;
+            color: blue;
+        }
+
+        .info-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1;
+        }
+
+        .info-label:hover .info-content,
+        .info-label.active .info-content {
+            display: block;
+        }
+    </style>
+    <div class="row">
+        @*		<div class="selectedRule col-md-6" id="selected_reconName"></div>
+        *@
+        <div class="col-md-4">
+            <label for="" class="form-label">Source Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+            <select disabled id="selected_reconName" class="form-select form-control">
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="" class="form-label">Target Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+            <select id="target_reconname" class="form-select form-control" onchange="getdatasetagainstrecon()">
+            </select>
+        </div>
+        <div class="col-md-2" style="margin-top:31px;">
+            <button type="button" class="btn btn-sm btn-success me-2" onclick="save()">Save</button>
+        </div>
+    </div>
+    <div style="margin-top:1%" class="selectedRule">Dataset</div>
+    <div id="gd_dataset">
+        <div id="grid_dataset"> </div>
+    </div>
+
+
+</head>
+<body>
+
+</body>
+</html>
+<script type="text/javascript">
+
+
+
+    function save() {
+        if ($("#target_reconname").val()) {
+            var modelArr = [];
+            var grid = $("#grid_dataset").data("kendoGrid");
+            var colfilterData = $("#grid_dataset").data().kendoGrid.dataSource.view();
+            var concatData = "";
+            for (var i = 0; i < colfilterData.length; i++) {
+                var j = i+1;
+                var dataItem = colfilterData[i];
+                if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
+                    concatData += $("#target_reconname").val() + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field + "$"
+                } else {
+                    $.alert({
+                        title: 'Recon',
+                        content: 'Target Dataset is missing for ' + j + ' row',
+                        type: 'red',
+                    });
+                    return;
+                }
+            }
+            var data = {
+                in_datasetmap_gid: 0,
+                in_recon_code: concatData,
+                in_active_status: 'Y',
+                in_action: 'INSERT',
+                in_action_by: sessionStorage.getItem("usrname"),
+                in_user_code: sessionStorage.getItem("usrname"),
+            };
+            $.ajax({
+                url: '@Url.Action("datasetmap", "Reconupdate")',
+                type: "post",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (data) {
+                    if (data != " " && data != null && data != "{}" && data != "[]") {
+                        var result = JSON.parse(data);
+                        if (result[0].out_result == 1 || result[0].out_result == "1") {
+                            $.alert({
+                                title: 'Recon',
+                                content: result[0].out_msg,
+                                type: 'green',
+                            });
+                            closeModel();
+                        } else {
+                            $.alert({
+                                title: 'Recon',
+                                content: result[0].out_msg,
+                                type: 'red',
+                            });
+                        }
+                    } else {
+                        $.alert({
+                            title: 'Recon',
+                            content: 'Something went wrong .!',
+                            type: 'red',
+                        });
+                    }
+                },
+                error: function (er) {
+                    $.alert({
+                        title: 'Recon',
+                        content: er.statusText,
+                        type: 'red',
+                    });
+                }
+            });
+        } else {
+            $.alert({
+                title: 'Recon',
+                content: 'Please Select Target Recon .!',
+                type: 'red',
+            });
+        }
+    }
+
+</script>
