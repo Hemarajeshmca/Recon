@@ -32,8 +32,14 @@
                         <select id="cmbreconname" class="form-select form-control" onchange="gridlist()">
                         </select>
                     </div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-sm btn-success me-2" onclick='newClone()' style="padding: 4px 25px;margin-top: 30px;"> Dataset Map</button>
+                    </div>
                 </div>
                 <div class="row">
+                    @*<a href='' onclick='newClone()' data-bs-toggle='modal' id="btn_new">
+                        <i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+                    </a>*@
                     <div class="col-xs-12">
                         <div id="gd_rulelist">
                             <div id="grid_rulelist"> </div>
@@ -45,7 +51,7 @@
     </div>
 
     <div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                 </div>
@@ -67,22 +73,19 @@
                             <div class="selectedRule col-md-6" id="selected_recon_name"></div>
                         </div>
                         <div class="row" style="margin-top: 20px;">
-                            <div class="col-md-10">
-                                <label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                @*<select id="updatereconname" class="form-select form-control" onchange="updateRule()">
-                                </select>*@
-                                <input id="updatereconname" style="width:65%" />
-                                <input class="form-control" type="hidden" id="selectedRule">
+                            <div class="col-md-6">
+                              <label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+                                <select id="cmbupdatereconname" class="form-select form-control" onchange="updatedatasetRecon()">
+                                </select>
+
+                                @*  <input id="updatereconname" style="width:65%" />
+                                <input class="form-control" type="hidden" id="selectedRule">*@
                             </div>
-                            @*<div class="col-md-6">
-                            <label for="" class="form-label">Update Rule&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
-                            <span>
-                            <img style="cursor:pointer" src='../Assets/images/viewicons.png' onclick="viewRuleDetails()" />
-                            </span>
-                            </label>
-                            <select id="updaterulename" class="form-select form-control" onchange="gridlist()">
-                            </select>
-                            </div>*@
+                        </div>
+                        <div class="row" style="margin-top:15px;">                            
+                                <div id="gd_mappeddataset">
+                                    <div id="grid_mappeddataset"> </div>
+                                </div>                            
                         </div>
                     </div>
                 </div>
@@ -91,7 +94,7 @@
                     <div class="col-sm-4" style="margin-bottom:30px;float: right;">
                         <center>
                             <button type="button" class="btn btn-sm btn-success me-2" onclick="updateRecon()" style="padding: 4px 25px;"> Update</button>
-                            <button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button>
+                            <button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:27%" onclick="rr1()">Close</button>
                         </center>
                     </div>
                     <div class="col-sm-4"> </div>
@@ -126,6 +129,30 @@
         </div>
     </div>
 
+    <div class="modal" id="addNewRuleClone">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content" style="height:585px;">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body" style="margin-top: -26px;">
+                    <div class="row">
+                        <div class="col-sm-4">
+                        </div>
+                        <div class="col-sm-4">
+                            <h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Map</h4>
+                        </div>
+                        <div class="col-sm-4">
+                            <i onclick="closeModel()" class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+                        </div>
+                    </div>
+                    <hr style="margin-top:-1px; width:100%;">
+                    <div class="container" style="padding:0px !important;">
+                        @await Html.PartialAsync("_addNewRuleClone")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 <script type="text/javascript">
@@ -165,6 +192,50 @@
                         }));
                     }
                 });
+                // target dataset
+                $("#target_reconname").empty();
+                $("#target_reconname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(res, function (index, item) {
+                    if (item.active_status == "Y") {
+                        $("#target_reconname").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    }
+                });
+                // selected Recon
+                $("#selected_reconName").empty();
+                $("#selected_reconName").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(res, function (index, item) {
+                    if (item.active_status == "Y") {
+                        $("#selected_reconName").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    }
+                });
+
+                // update Recon 
+                $("#cmbupdatereconname").empty();
+                $("#cmbupdatereconname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(res, function (index, item) {
+                    if (item.active_status == "Y") {
+                        $("#cmbupdatereconname").append($('<option>', {
+                            value: item.recon_code,
+                            text: item.recon_name
+                        }));
+                    }
+                });
+
                 if (sessionStorage.getItem("reconcode") != null) {
                     $("#cmbreconname").val(sessionStorage.getItem("reconcode"));
                     jQuery('#cmbreconname').trigger("change");
@@ -176,6 +247,8 @@
             }
 
         });
+    
+    
     }
 
     function getSerializedRows() {
@@ -344,12 +417,10 @@
                     },
                 }],
                 editable: false,
-
             });
         }
         catch (err) {
-            console.log(err)
-
+            console.log(err);
         }
     }
 
@@ -400,8 +471,9 @@
             $('#selected_rule_name').text('Selected Rule:' + selectedItem.rule_name);
             $('#selected_recon_name').text('Selected Recon:' + selectedItem.recon_name);
             if ($(mode).attr('value') == "edit") {
-                clearCheckboxes();
-                getupdateRuleList();
+               // clearCheckboxes();
+               // getupdateRuleList();
+                getdatasetagainstrecon();
                 $("#updatereconname").val("");
                 $("#updaterulename").val("");
                 $("#infomodal").modal("show");
@@ -420,7 +492,6 @@
             }
         }
         catch (err) {
-
         }
     }
 
@@ -429,10 +500,26 @@
         $("#updaterulename").val("");
         $("#selectedRule").val("");
         $("#infomodal").modal("hide");
-        //$("#infomodal").hide();
     }
 
     function updateRecon() {
+        var grid = $("#grid_mappeddataset").data("kendoGrid");
+        var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
+        var concatData = "";
+        for (var i = 0; i < colfilterData.length; i++) {
+            var j = i + 1;
+            var dataItem = colfilterData[i];
+            if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
+                concatData += $("#cmbupdatereconname").val() + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field + "$"
+            } else {
+                $.alert({
+                    title: 'Recon',
+                    content: 'Target Dataset is missing for ' + j + ' row, Please map the dataset and try again.!',
+                    type: 'red',
+                });
+                return;
+            }
+        }
         var grid = $("#grid_rulelist").data("kendoGrid");
         var selectedItem = grid.dataItem(grid.select());
         var Attribid = [];
@@ -510,60 +597,12 @@
 
     function clearCheckboxes() {
         var checkboxes = document.getElementsByName("cb");
-        // Iterate through the NodeList and uncheck each checkbox
         for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = false; // Uncheck the checkbox
+            checkboxes[i].checked = false;
         }
     }
 
-    //function updateRule() {
 
-    //    var grid = $("#grid_rulelist").data("kendoGrid");
-    //    var selectedItem = grid.dataItem(grid.select());
-    //    var data = {};
-    //    data.in_recon_code = $("#updatereconname").val();
-    //    data.in_user_code = sessionStorage.getItem("usrname");
-    //    if (data.in_recon_code) {
-    //        $.ajax({
-    //            type: "POST",
-    //            url: '../Rulesetup/Rulesetuplistfetch',
-    //            dataType: 'json',
-    //            contentType: 'application/json; charset=utf-8',
-    //            data: JSON.stringify(data),
-    //            success: function (response) {
-    //                if (response != " " && response != null && response != "{}" && response != "[]") {
-    //                    var res = JSON.parse(response);
-    //                    $("#updaterulename").empty();
-    //                    $("#updaterulename").append($('<option>', {
-    //                        value: "",
-    //                        text: "  Select  "
-    //                    }));
-    //                    $.each(res, function (index, item) {
-    //                        if (item.rule_apply_on == selectedItem.rule_apply_on && item.active_status == 'Y') {
-    //                            ruleList.push(item);
-    //                            $("#updaterulename").append($('<option>', {
-    //                                value: item.rule_code,
-    //                                text: item.rule_name
-    //                            }));
-    //                        }
-    //                    });
-    //                } else {
-    //                    $.alert({
-    //                        title: 'Recon',
-    //                        content: "No Rules Found .!",
-    //                        type: 'red',
-    //                    });
-    //                }
-    //            },
-    //            error: function (er) {
-    //                alert(er)
-    //                console.log(er)
-    //            }
-    //        });
-    //    } else {
-    //        $("#updaterulename").val("");
-    //    }
-    //}
     var dropdown = "";
     function getupdateRuleList() {
         var grid = $("#grid_rulelist").data("kendoGrid");
@@ -608,15 +647,11 @@
                     var $input;
 
                     if ($item.hasClass("check-item")) {
-                        // Text was clicked
                         $input = $item.children(".check-input");
                         $input.prop("checked", !$input.is(':checked'));
                     }
                     else
-                        // Checkbox was clicked
                         $input = $item;
-
-                    // Check all clicked?
                     if ($input.val() == "")
                         dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
 
@@ -643,7 +678,293 @@
         });
         dropdown.text(items.toString());
     }
-</script>
+
+    function newClone() {
+        if ($("#cmbreconname").val()) {
+            getdatasetagainstrecon();
+            $("#selected_reconName").val(sessionStorage.getItem("reconcode"));
+            jQuery('#selected_reconName').trigger("change");
+            $("#addNewRuleClone").modal('show');
+        } else {
+            $.alert({
+                title: 'Recon',
+                content: 'Please Select Recon ..!',
+                type: 'red',
+            });
+        }
+    }
+
+    function getdatasetagainstrecon() {
+        var reconcode = $("#cmbreconname").val();
+        var target_recon_code = $("#target_reconname").val();
+        var in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+            type: "POST",
+            url: '../Reconupdate/datasetlistmapped',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify({ in_recon_code: reconcode, in_target_recon_code: target_recon_code }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var res = JSON.parse(response);
+               var result = res.filter(item => item.dataset_type != 'S');
+                griddataset(result);
+            }
+        });
+    }
+
+    function griddataset(data) {
+        var source_field_desc_list = "";
+        var extraction_criteria_list = "";
+        var comparison_criteria_list = "";
+        $("#grid_dataset").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 5,
+                schema: {
+                    model: {
+                        fields: {
+                            dataset_code: { type: "string", editable: false },
+                            dataset_name: { type: "string", editable: false },
+                            dataset_type: { type: "string", editable: false },
+                            dataset_type_desc: { type: "string", editable: false },
+                            parent_dataset_code: { type: "string", editable: false },
+                            parent_dataset_name: { type: "string", editable: false },
+                            comparison_field_desc: { type: "string", defaultValue: "", editable: true },
+                            comparison_field: { type: "string", editable: false },
+                        }
+                    }
+                }
+            },
+            height: 300,
+            groupable: false,
+            dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+                setColor(rows, resultData);
+            },
+            pageable: {
+                refresh: false,
+                pageSizes: [5, 10, 15, 20],
+                buttonCount: 5
+            },
+            sortable: true,
+            selectable: true,
+            filterable: true,
+            navigatable: true,
+            resizable: true,
+            columns: [
+                {
+                    field: "dataset_code",
+                    title: "Dataset Code",
+                    width: 40,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    field: "dataset_name",
+                    title: "Source Dataset",
+                    width: 80,
+                    editable: false,
+                },
+                {
+                    field: "dataset_type_desc",
+                    title: "Dataset Type",
+                    width: 45,
+                    editable: false,
+                },
+                {
+                    field: "parent_dataset_code",
+                    title: "parent_dataset_code",
+                    width: 50,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    field: "parent_dataset_name",
+                    title: "Source Parent Datset",
+                    width: 60,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    field: "comparison_field",
+                    title: "comparison_field",
+                    width: 100,
+                    hidden: true,
+                    editable: false,
+                },
+                {
+                    field: "comparison_field_desc",
+                    title: "Target Dataset",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_dataset")
+                    },
+                    width: 80,
+                    editable: true,
+                }, {
+                    field: "dataset_type_desc",
+                    title: "Target Dataset Type",
+                    width: 45,
+                    editable: false,
+                }],
+            editable: true,
+        });
+        var target_recon_code = $("#target_reconname").val();
+        comparison_field_desc_list = getdatasetlist(target_recon_code);
+    }
+
+    function getdatasetlist(recon_code) {
+        var arr1 = [];
+        var data = {};
+        data.in_recon_code = recon_code;
+        data.in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+            type: "POST",
+            url: '../Datasetfile/datasetAgainstRecon',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                if(response.length > 0){
+                    for (i = 0; response.length > i; i++) {
+                        var list1 = {};
+                        list1.code = response[i].dataset_code;
+                        list1.desc = response[i].dataset_name;
+                        arr1.push(list1);
+                    }
+                }
+            }
+        });
+        return arr1;
+    }
+
+    function closeModel(){
+        $("#addNewRuleClone").modal('hide');
+        $("#target_reconname").val("");
+    }
+
+    function updatedatasetRecon() {
+        var reconcode = $("#cmbreconname").val();
+        var target_recon_code = $("#cmbupdatereconname").val();
+        var in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+            type: "POST",
+            url: '../Reconupdate/datasetlistmapped',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify({ in_recon_code: reconcode, in_target_recon_code: target_recon_code }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var res = JSON.parse(response);
+                var result = res.filter(item => item.dataset_type != 'S');
+                updategriddataset(result);
+            }
+        });
+    }
+
+    function updategriddataset(data) {
+        var source_field_desc_list = "";
+        var extraction_criteria_list = "";
+        var comparison_criteria_list = "";
+        $("#grid_mappeddataset").kendoGrid({
+            dataSource: {
+                data: data,
+                pageSize: 5,
+                schema: {
+                    model: {
+                        fields: {
+                            dataset_code: { type: "string", editable: false },
+                            dataset_name: { type: "string", editable: false },
+                            dataset_type: { type: "string", editable: false },
+                            dataset_type_desc: { type: "string", editable: false },
+                            parent_dataset_code: { type: "string", editable: false },
+                            parent_dataset_name: { type: "string", editable: false },
+                            comparison_field_desc: { type: "string", defaultValue: "", editable: false },
+                            comparison_field: { type: "string", editable: false },
+                        }
+                    }
+                }
+            },
+            height: 300,
+            groupable: false,
+            dataBound: function (e) {
+                resultData = e.sender._data;
+                var rows = $('#grid_dataset').data('kendoGrid').tbody.children();
+                setColor(rows, resultData);
+            },
+            pageable: {
+                refresh: false,
+                pageSizes: [5, 10, 15, 20],
+                buttonCount: 5
+            },
+            sortable: true,
+            selectable: true,
+            filterable: true,
+            navigatable: true,
+            resizable: true,
+            columns: [
+                {
+                    field: "dataset_code",
+                    title: "Dataset Code",
+                    width: 40,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    field: "dataset_name",
+                    title: "Source Dataset",
+                    width: 80,
+                    editable: false,
+                },
+                {
+                    field: "dataset_type_desc",
+                    title: "Dataset Type",
+                    width: 45,
+                    editable: false,
+                },
+                {
+                    field: "parent_dataset_code",
+                    title: "parent_dataset_code",
+                    width: 50,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    field: "parent_dataset_name",
+                    title: "Source Parent Datset",
+                    width: 60,
+                    editable: false,
+                    hidden: true,
+                },
+                {
+                    field: "comparison_field",
+                    title: "comparison_field",
+                    width: 100,
+                    hidden: true,
+                    editable: false,
+                },
+                {
+                    field: "comparison_field_desc",
+                    title: "Target Dataset",
+                    editor: function (container, options) {
+                        combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "gd_mappeddataset")
+                    },
+                    width: 80,
+                    editable: false,
+                }, {
+                    field: "dataset_type_desc",
+                    title: "Target Dataset Type",
+                    width: 45,
+                    editable: false,
+                }],
+            editable: false,
+        });
+        //var update_recon_code = $("#cmbupdatereconname").val();
+        //comparison_field_desc_list = getdatasetlist(update_recon_code);
+    }
+   </script>
 <script type="text/x-kendo-template" id="CheckboxTemplate">
     <li unselectable="on" class="k-item nowrap check-item">
         <input type="checkbox"  name="cb" value="#= value #" class="check-input"  />
@@ -651,77 +972,3 @@
     </li>
 </script>
 
-<script>
-    //var dataone = [];
-
-    //(function ($) {
-    //    var MultiSelectBox = window.kendo.ui.DropDownList.extend({
-    //        _select: function (li) { },//Prevents highlighting
-    //        _blur: function () { },//Prevents auto close
-    //    });
-
-    //    window.kendo.ui.plugin(MultiSelectBox);
-    //})(jQuery);
-
-    //function onSelect(e) {
-    //    debugger;
-    //    var cbs = document.getElementsByName("cb");
-    //    var checkboxes = document.getElementsByTagName('input');
-    //    var ddl = $("#ReconName_id").data("kendoDropDownList");
-    //    var id = ddl.element.attr("ReconName_id");
-    //    multiselect();
-    //    var item = e.item;
-    //    var index = item.index();
-    //    if (index == 0) {
-    //        for (var i = 1; i < cbs.length; i++) {
-    //            var selectAll = cbs[0].checked;
-    //            if (cbs[0].checked) {
-    //                for (var i = 0; i < checkboxes.length; i++) {
-    //                    if (checkboxes[i].type == 'checkbox') {
-    //                        checkboxes[i].checked = true;
-    //                    }
-    //                }
-    //                multiselect();
-    //            }
-
-    //            else {
-    //                for (var i = 0; i < checkboxes.length; i++) {
-    //                    if (checkboxes[i].type == 'checkbox') {
-    //                        checkboxes[i].checked = false;
-    //                    }
-    //                }
-    //                multiselect();
-    //            }
-    //        }
-    //    }
-
-    //}
-
-    //function multiselect() {
-    //    debugger;
-    //    var ddl = $("#ReconName_id").data("kendoDropDownList");
-    //    var isAllChecked = $('#cb').prop("checked");
-    //    var cbs = document.getElementsByName("cb");
-    //    var display;
-
-    //    var list = [];
-    //    for (var i = 1; i < cbs.length; i++) {
-    //        if (cbs[i].checked) {
-    //            list.push(cbs[i].value);
-    //        }
-
-    //    }
-
-
-    //    if (list.length == 0) {
-    //        display = "-- SelectAll --";
-    //        $("#ReconAttr").html("Recon - All");
-    //    }
-    //    else {
-    //        display = list.join(", ");
-    //        $("#ReconAttr").html("Recon - " + display + "");
-    //    }
-    //    ddl.text(display);
-    //}
-
-</script>

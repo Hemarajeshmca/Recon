@@ -2142,7 +2142,7 @@
              data.in_file_name = fileInput.files[0].name;
             getFirstSheetNameFromFile(fileInput.files[0])
                 .then(firstSheetName => {
-                    if (firstSheetName === "Data") {
+                    //if (firstSheetName === "Data") {
                         formData.append('in_reporttemplate_code', data.in_reporttemplate_code);
                         formData.append('in_action_by', data.in_action_by);
                         formData.append('in_file_name', data.in_file_name);
@@ -2202,14 +2202,15 @@
                                 type: 'green',
                             });
                         }
-                    } else {
-                        $.alert({
-                            title: 'Recon',
-                            content: 'First sheet name should be "Data", Please rename it as "Data"',
-                            type: 'red',
-                        });
-                        return;
-                    }
+                    //} 
+                    //else {
+                    //    $.alert({
+                    //        title: 'Recon',
+                    //        content: 'First sheet name should be "Data", Please rename it as "Data"',
+                    //        type: 'red',
+                    //    });
+                    //    return;
+                    //}
                 })
                 .catch(error => {
                     console.error("Error reading file:", error);
