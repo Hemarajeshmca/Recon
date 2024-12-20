@@ -215,8 +215,7 @@
 						}
 					}
 				},
-				height: 450,
-				groupable: false,
+				height: 450,				
 				dataBound: function (e) {
 					resultData = e.sender._data;
 					var rows = $('#grid_reconlist').data('kendoGrid').tbody.children();
@@ -240,12 +239,13 @@
 					pageSizes: [10, 15, 20, 25, 50],
 					buttonCount: 5
 				},
+				pageable: true,
+				serverPaging: false,
 				sortable: true,
 				selectable: true,
 				filterable: true,
-				navigatable: true,
-				change: selectRow,
 				resizable: true,
+				change: selectRow,
 				columns: [{
 					command: [
 						{
@@ -282,7 +282,7 @@
 				{
 					field: "recon_code",
 					title: "Recon Code",
-					width: 50
+					width: 60
 				},
 				{
 					field: "recon_name",
@@ -298,12 +298,12 @@
 				{
 					field: "recontype_desc",
 					title: "Recon Type",
-					width: 50
+					width: 60
 				},
 				{
 					field: "period_from",
 					title: "Period From",
-					width: 50,
+					width: 60,
 					format: formatdate1,
 					filterable: {
 						ui: function (element) {
@@ -316,7 +316,7 @@
 				{
 					field: "period_to",
 					title: "Period To",
-					width: 50,
+					width: 60,
 					format: formatdate1,
 					filterable: {
 						ui: function (element) {
@@ -329,7 +329,7 @@
 				{
 					field: "active_status_desc",
 					title: "Status",
-					width: 50,
+					width: 60,
 					resizable: false,
 					filterable: {
 						ui: priorityFilter,
