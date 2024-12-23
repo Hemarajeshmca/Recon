@@ -218,7 +218,8 @@ namespace Recon_proto.Controllers
             catch (Exception ex)
             {
                 string control = this.ControllerContext.RouteData.Values["controller"].ToString();
-                //LogHelper.WriteLog(ex.ToString(), control);
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "changepassword_Save");
             }
             return View();
         }
