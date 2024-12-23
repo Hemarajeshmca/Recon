@@ -1,4 +1,4 @@
-﻿﻿@{
+﻿@{
 	ViewBag.title = "Dashboard";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
@@ -10,7 +10,7 @@
 	<style>
 		.content-wrapper {
 			min-height: 564px !important;
-			margin-top: -12px;
+			margin-top: -13px !important;
 		}
 
 		.nav-item.me-2.me-xl-50 {
@@ -161,70 +161,108 @@
 							</button>
 						</div>
 					</div>
-					<div class="row" style="margin-left:0px; margin-bottom: 5px;margin-top:6px;margin-right: -17px;">
-						<div class="col-sm-2">
+					<div class="row" style="margin-left:0px; margin-top:6px;margin-right: -17px;">
+
+						<div class="col-sm-2" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#ff6a00;">Recons</p></center>
 							<div class="card shadow-none bg-transparent border border-primary mb-3" style="border-radius: 20px;border-color: #ff6a00 !important;">
-								<div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="recon_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Recons</p></center>
+								<div class="card-body" style="background:#ff6a00;border-radius: 15px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="recon_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="recon_value"></span></h5>
+
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<div class="card shadow-none bg-transparent border border-secondary mb-3" style="border-radius: 20px;border-color: #71DD37  !important;position: relative;">
-								<div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="acc_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Dataset</p></center>
+						<div class="col-sm-2" id="dataset" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#71DD37;">Dataset</p></center>
+							<div class="card shadow-none bg-transparent border border-secondary mb-3" id="dataset1" style="border-radius: 20px;border-color: #71DD37  !important;position: relative;">
+								<div class="card-body" style="background:#71DD37 ;border-radius: 14px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="acc_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="acc_value"></span></h5>
+
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #FFAB00 !important;position: relative;">
-								<div class="card-body" style="background:#FFAB00;border-radius: 17px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="tran_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Transactions</p></center>
+						<div class="col-sm-2" id="opening" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#c75b04;">Opening Exceptions</p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #c75b04 !important;position: relative;">
+								<div class="card-body" style="background:#c75b04;border-radius: 17px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="openingexp_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="openingexp_value"></span></h5>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #8592A3 !important;position: relative;">
-								<div class="card-body" style="background:#8592A3;border-radius: 19px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Matches <span id="match_percentage"></span></p></center>
+						<div class="col-sm-2" id="trans" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#950095;">Transactions</p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #950095 !important;position: relative;">
+								<div class="card-body" style="background:#950095;border-radius: 17px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="tran_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="tran_value"></span></h5>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#ef8737 !important;position: relative;">
-								<div class="card-body" style="background: #ef8737;border-radius: 20px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="ko_Partialcount"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Partial <span id="partial_percentage"></span></p></center>
+						<div class="col-sm-2" id="matches" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#08720f;">Matches <span id="match_percentage"></span></p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color: #08720f !important;position: relative;">
+								<div class="card-body" style="background:#08720f;border-radius: 19px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="ko_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="ko_value"></span></h5>
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#696cff  !important; position: relative;">
-								<div class="card-body" style="background:#696cff ;border-radius: 20px;padding:8px">
-									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 20px !important;"><span id="excp_count"></span></h5>
-									<center><p class="card-text" style="font-weight:600;color:white;">Exceptions <span id="excp_percentage"></span></p></center>
+						<div class="col-sm-2 dataset" id="div_partial" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#F65631;">Partial Exceptions<span id="partial_percentage"></span></p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#F65631 !important;position: relative;">
+								<div class="card-body" style="background: #F65631;border-radius: 20px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="ko_Partialcount"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="ko_Partialvalue"></span></h5>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2 dataset" id="div_partialmatch" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#49994E;">Partial Matches<span id="partial_matches_percentage"></span></p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#49994E !important;position: relative;">
+								<div class="card-body partialexp" style="background: #49994E;border-radius: 20px;padding:12px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="ko_Partialmatchcount"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="ko_Partialmatchvalue"></span></h5>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2 dataset" id="div_partialexp" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#F65631 ;">Partial Exceptions<span id="partial_exp_percentage"></span></p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#F65631  !important;position: relative;">
+								<div class="card-body " style="background: #F65631 ;border-radius: 20px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="ko_Partialexpcount"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="ko_Partialexpvalue"></span></h5>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-2" id="exp" style="display:none">
+							<center><p class="card-text" style="font-weight:600;color:#dc3912;">Full Exceptions <span id="excp_percentage"></span></p></center>
+							<div class="card shadow-none bg-transparent border border-success mb-3" style="border-radius: 20px;border-color:#dc3912  !important; position: relative;">
+								<div class="card-body" style="background:#dc3912 ;border-radius: 20px;padding:3px">
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 13px !important;"><span id="excp_count"></span></h5>
+									<h5 class="card-title" style="color: #fff;text-align: center;font-size: 14px !important;"><span id="excp_value"></span></h5>
 								</div>
 							</div>
 						</div>
 
-					</div>
-					<div class="row">
-						<div class="col-sm-3" style="margin-left:81%;">
-							<label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span></label>
+					</div><br>
+					<div class="row" style="margin-top:-11px;">
+						<div id="openings" class="col-sm-6" style="margin-left:60%;display:none;">
+							<label for="Exception" class="title" style="color:red;"><span id="openingexcp_count"></span>&nbsp;&nbsp;<span id="openingexcp_value"></span></label>
+
 						</div>
-					</div>
-					<div class="row" style="display: flex; justify-content: space-evenly; height: 400px;">
-						<div class="col-sm-6 col-xl-5 border" style="text-align:center; height: 321px !important;">
+					</div><br />
+
+					<div class="row" style="display: flex; justify-content: space-evenly; height: 400px;margin-left:7px;">
+						<div id="charts" class="col-sm-6 col-xl-5 border" style="text-align:center; height: 321px !important;width:49%;display:none;">
 							<div class="char_lab">Auto Match Vs Manual Match</div>
-							<div id="chart" class="chart" style="height:300px;"></div>
+							<div id="chart" class="chart" style="height:300px;margin-left:37px;"></div>
 						</div>
-						<div class="col-sm-6 col-xl-5 border" style="text-align:center;  height: 321px !important;">
+						<div id="piecharts" class="col-sm-6 col-xl-5 border" style="text-align:center;  height: 321px !important;width:49%;display:none;">
 							<div class="char_lab" style="margin-bottom:25px !important;">Ageing of Exceptions</div>
-							<div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px"></div>
+							<div id="pie-chart" class="pie-chart" style="width: 500px;align-content:center;height: 300px;margin-left:62px"></div>
 						</div>
 					</div>
 				</div>
@@ -238,6 +276,26 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+		$("#dataset").css({ "width": "20%" });
+		$("#opening").css({ "width": "20%" });
+		$("#trans").css({ "width": "20%" });
+		$("#matches").css({ "width": "20%" });
+		$("#div_partial").css({ "width": "20%" });
+		$("#div_partialexp").css({ "width": "20%" });
+		$("#div_partialmatch").css({ "width": "20%" });
+		$("#exp").css({ "width": "20%" });
+		$("#dataset1").css({ "height": "61px" });
+		$(".card-body.partialexp").css({ "padding": "4px", "padding-important": "true" });
+
+		$("#charts").css("display", "block");
+		$("#piecharts").css("display", "block");
+		$("#div_partialmatch").css("display", "none");
+		$("#div_partialexp").css("display", "block");
+		$("#trans").css("display", "block");
+		$("#matches").css("display", "block");
+		$("#exp").css("display", "block");
+		$("#opening").css("display", "block");
+
 		kendodate_format();
 		var data = {};
 		data.in_user_gid = 0;
@@ -272,75 +330,7 @@
 				}
 			}
 		});
-		//var data = {};
-		//var txtusername = JSON.parse(sessionStorage.getItem("recon_userdetail"));
-		//data.in_user_gid = 0;
-		//data.in_active_status = '';
-		//data.in_user_code = txtusername.user_name;
-		//var Context = data;
-		//$.ajax({
-		//	type: "POST",
-		//	url: '../Recon/Reconlistfetch',
-		//	dataType: 'json',
-		//	async: false,
-		//	data: JSON.stringify(data),
-		//	contentType: 'application/json; charset=utf-8',
-		//	success: function (response) {
-		//		var res = JSON.parse(response);
-		//		var arr = [];
-		//		var list2 = {};
-		//		list2.value = "";
-		//		list2.text = "ALL";
-		//		arr.push(list2);
-		//		for (i = 0; res.length > i; i++) {
-		//			var list1 = {};
-		//			if (res[i]["active_status"] == 'Y') {
-		//				list1.value = res[i].recon_code;
-		//				list1.text = res[i].recon_name;
-		//				arr.push(list1);
-		//			}
-		//		}
-		//		dropdown = $("#cmbreconname").kendoDropDownList({
-		//			dataTextField: "text",
-		//			dataValueField: "value",
-		//			template: $("#CheckboxTemplate").html(),
-		//			dataSource: arr,
-		//			placeholder: "Select...",
-		//			select: function (e) {
-		//				e.preventDefault();
-		//			}
-		//		}).data("kendoDropDownList");
-
-		//		dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
-		//			var $item = $(this);
-		//			var $input;
-
-		//			if ($item.hasClass("check-item")) {
-		//				// Text was clicked
-		//				$input = $item.children(".check-input");
-		//				$input.prop("checked", !$input.is(':checked'));
-		//			}
-		//			else
-		//				// Checkbox was clicked
-		//				$input = $item;
-
-		//			// Check all clicked?
-		//			if ($input.val() == "")
-		//				dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
-
-		//			updateDropDown()
-
-		//			e.stopImmediatePropagation();
-		//		});
-
-		//		updateDropDown();
-		//	},
-		//	error: function (er) {
-		//		alert(er)
-		//		console.log(er)
-		//	}
-		//});
-
+		
 		function updateDropDown() {
 			var items = [];
 			dropdown.list.find(".check-input").each(function () {
@@ -351,43 +341,8 @@
 			dropdown.text(items.toString());
 		}
 		$("#kendoVersion").text(kendo.version);
-
-		$("#cmbEmployee").kendoComboBox({
-			dataSource: [{ EmployeeID: 1, EmployeeName: "Ash" }],
-			placeholder: "Select",
-			dataTextField: "EmployeeName",
-			dataValueField: "EmployeeID",
-			index: 0,
-			suggest: true,
-			filter: "contains",
-		});
-
-		$("#grid").kendoGrid({
-			dataSource: [{ CustomerID: "1", ContactName: "Aysh1", CompanyName: "ABC", Country: "IND" },
-			{ CustomerID: "2", ContactName: "Aysh2", CompanyName: "ABC", Country: "IND" },
-			{ CustomerID: "3", ContactName: "Aysh3", CompanyName: "ABC", Country: "IND" },
-			{ CustomerID: "4", ContactName: "Aysh4", CompanyName: "ABC", Country: "IND" },
-			{ CustomerID: "5", ContactName: "Aysh5", CompanyName: "ABC", Country: "IND" }
-			],
-			filterable: true,
-			sortable: true,
-			columns: CustomerHelper.GenerateColumns(),
-			editable: false,
-			navigatable: true,
-			selectable: "row"
-		});
-
 	});
-	var CustomerHelper = {
-		GenerateColumns: function () {
-			return columns = [
-				{ field: "CustomerID", title: "ID", width: 40, editable: false },
-				{ field: "ContactName", title: "Name", width: 60, editable: false },
-				{ field: "CompanyName", title: "Company", width: 60, editable: false },
-				{ field: "Country", title: "Country", width: 60, editable: false },
-			]
-		}
-	}
+
 	function reconchangedashboard() {
 		if ($("#cmbreconname").val() != '') {
 			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
@@ -408,6 +363,23 @@
 				$("#period_from").val(res[0].min_tran_date);
 			}
 		});
+		$("#recon_count").text("");
+		$("#acc_count").text("");
+		$("#tran_count").text("");
+		$("#ko_count").text("");
+		$("#excp_count").text("");
+		$("#ko_Partialcount").text("");
+		$("#ko_Partialexpcount").text("");		
+		$("#openingexcp_count").text("");
+		$("#openingexp_value").text("");
+		$("#recon_value").text("");
+		$("#tran_value").text("");
+		$("#ko_value").text("");
+		$("#excp_value").text("");
+		$("#ko_Partialvalue").text("");
+		$("#openingexp_count").text("");
+		$("#chart").css("display", "none");
+		$("#pie-chart").css("display", "none");
 	}
 </script>
 <script type="text/x-kendo-template" id="CheckboxTemplate">
@@ -544,11 +516,9 @@
 						fontSize: 13,
 						fontWeight: 'bold',
 						height: 230,
-						legend: { position: 'bottom' },
-
+						legend: { position: 'right' },
 						pieSliceText: 'value',
 						sliceVisibilityThreshold: 0,
-
 						titleTextStyle: {
 							bold: true,
 						},
@@ -591,7 +561,7 @@
 						fontSize: 13,
 						fontWeight: 'bold',
 						height: 230,
-						legend: { position: 'bottom' },
+						legend: { position: 'right' },
 						floating: true,
 						pieSliceText: 'value',
 						sliceVisibilityThreshold: 0,
@@ -640,31 +610,103 @@
 					var ko_txt = "";
 					var excp_txt = "";
 					var partial_txt = "";
+					var ko_value_percentage = 0.00;
+					var excp_value_percentage = 0.00;
+					var partial_value_percentage = 0.00;
 
 					if (response != null) {
 						var data = JSON.parse(response);
-						tran_count = data.DataSet1[0]["tran_count"];
-						ko_count = data.DataSet1[0]["ko_count"];
-						excp_count = data.DataSet1[0]["excp_count"];
-						partial_count = data.DataSet1[0]["ko_partialexcp_count"];
-						ko_percentage = (ko_count / tran_count) * 100.00;
-						excp_percentage = (excp_count / tran_count) * 100.00;
-						partial_percentage = (partial_count / tran_count) * 100.00;
-						if (tran_count > 0) {
-							ko_txt = " (" + ko_percentage.toFixed(2) + " %)";
-							excp_txt = " (" + excp_percentage.toFixed(2) + " %)";
-							partial_txt = " (" + partial_percentage.toFixed(2) + " %)";
-						}
+						tran_count = data.DataSet4[0]["tran_count"];
+						ko_count = data.DataSet4[0]["ko_count"];
+						excp_count = data.DataSet4[0]["excp_count"];
+						partial_count = data.DataSet4[0]["ko_partialexcp_count"];
+
 						$("#recon_count").text(data.DataSet1[0]["recon_count"]);
 						$("#acc_count").text(data.DataSet1[0]["dataset_count"]);
-						$("#tran_count").text(data.DataSet1[0]["tran_count"]);
-						$("#ko_count").text(data.DataSet1[0]["ko_count"]);
-						$("#excp_count").text(data.DataSet1[0]["excp_count"]);
-						$("#ko_Partialcount").text(data.DataSet1[0]["ko_partialexcp_count"]);
-						$("#excp_percentage").text(excp_txt);
-						$("#match_percentage").text(ko_txt);
-						$("#partial_percentage").text(partial_txt);
-						$("#openingexcp_count").text("*Opening Exception " + data.DataSet1[0]["opening_excp_count"]);
+						$("#tran_count").text(data.DataSet4[0]["tran_count"]);
+						$("#ko_count").text(data.DataSet4[0]["ko_count"] + data.DataSet4[0]["p_ko_count"]);
+						$("#excp_count").text(data.DataSet4[0]["excp_count"] + data.DataSet4[0]["p_excp_count"]);
+						$("#ko_Partialcount").text(data.DataSet4[0]["ko_partialexcp_count"] + data.DataSet4[0]["p_partial_count"]);
+						$("#ko_Partialexpcount").text(data.DataSet4[0]["ko_partialexcp_count"] + data.DataSet4[0]["p_partial_count"]);
+						$("#openingexcp_count").text("*Opening Exception Count " + data.DataSet4[0]["openingexcp_count"]);
+						$("#openingexp_count").text(data.DataSet4[0]["openingexcp_count"]);
+						$("#chart").css("display", "block");
+						$("#pie-chart").css("display", "block");
+
+						if (data.DataSet4[0]["recontype_code"] == "N" || data.DataSet4[0]["recontype_code"] == "V") {
+							$("#charts").css("display", "block");
+							$("#piecharts").css("display", "block");
+							$("#div_partial").css("display", "none");
+							$("#div_partialmatch").css("display", "none");
+							$("#div_partialexp").css("display", "none");
+							$("#openings").css("display", "none");
+							$("#trans").css("display", "block");
+							$("#matches").css("display", "block");
+							$("#opening").css("display", "block");
+							$("#exp").css("display", "block");
+							$("#recon_value").text("");
+							$("#tran_value").text("");
+							$("#ko_value").text("");
+							$("#excp_value").text("");
+							$("#ko_Partialvalue").text("");
+							$("#dataset").css({ "width": "20%" });
+							$("#trans").css({ "width": "25%" });
+							$("#opening").css({ "width": "25%" });
+							$("#matches").css({ "width": "25%" });
+							$("#div_partial").css({ "width": "20%" });
+							$("#div_partialmatch").css({ "width": "20%" });
+							$("#div_partialexp").css({ "width": "20%" });
+							$("#exp").css({ "width": "25%" });
+							$("#dataset1").css({ "height": "76px" });
+							$("#ko_count").css({ "position": "relative", "top": "9px" });
+							$("#acc_count").css({ "position": "relative", "top": "9px" });
+							$("#tran_count").css({ "position": "relative", "top": "9px" });
+							$("#ko_Partialcount").css({ "position": "relative", "top": "9px" });
+							$("#ko_Partialmatchcount").css({ "position": "relative", "top": "9px" });
+							$("#ko_Partialexpcount").css({ "position": "relative", "top": "9px" });
+							$("#excp_count").css({ "position": "relative", "top": "9px" });
+							$("#openingexcp_count").css({ "position": "relative", "top": "9px" });
+							$("#openingexp_count").css({ "position": "relative", "top": "9px" });
+						}
+
+						if (data.DataSet4[0]["recontype_code"] != "N" && data.DataSet4[0]["recontype_code"] != "V") {
+							debugger;
+							$("#opening").css("display", "block");
+							$("#div_partial").css("display", "block"); // or "block" to show it
+							//$("#div_partial").css("display", "block"); // or "block" to hide it
+							$("#openings").css("display", "none");
+							$("#charts").css("display", "block");
+							$("#piecharts").css("display", "block");
+							$("#div_partialmatch").css("display", "none");
+							$("#div_partialexp").css("display", "none");
+							$("#trans").css("display", "block");
+							$("#matches").css("display", "block");
+							$("#exp").css("display", "block");
+							$("#dataset").css({ "width": "20%" });
+							$("#dataset1").css({ "height": "91px" });
+							$("#trans").css({ "width": "20%" });
+							$("#opening").css({ "width": "20%" });
+							$("#matches").css({ "width": "20%" });
+							$("#exp").css({ "width": "20%" });
+							$("#acc_count").css({ "position": "relative", "top": "20px" });
+							$("#openingexcp_count").css({ "position": "relative", "top": "9px" });
+							$("#openingexcp_value").css({ "position": "relative", "top": "9px" });
+							//$(".card-body.partialexp").css({ "padding": "16px !important" });
+							$(".card-body.partialexp").css({ "padding": "10px", "padding-important": "true" });
+							//$('#ko_Partialexpvalue').css({ "position": "relative", "top": "10px" });
+							$('#ko_Partialmatchvalue').css({ "position": "relative", "top": "10px" });
+							$("#recon_value").text("₹ " + data.DataSet4[0]["tran_value"]);
+							//$("#acc_value").text(data.DataSet4[0]["tran_value"] + " (₹)" );
+							$("#tran_value").text("₹ " + data.DataSet4[0]["c_tran_value"]);
+							$("#ko_value").text("₹ " + data.DataSet4[0]["c_ko_value"] + data.DataSet4[0]["p_ko_value"]);
+							$("#excp_value").text("₹ " + data.DataSet4[0]["c_excp_value"] + data.DataSet4[0]["p_exp_value"]);
+							$("#openingexp_value").text("₹ " + data.DataSet4[0]["c_openingexcp_value"]);
+							//$("#openingexcp_value").text("*Opening Exception Value" + " ₹ " + data.DataSet4[0]["c_openingexcp_value"]);
+							$("#ko_Partialvalue").text("₹ " + data.DataSet4[0]["c_partialexcp_value"] + data.DataSet4[0]["p_partialexp_value"]);
+							$("#ko_Partialmatchvalue").text("₹ " + data.DataSet4[0]["c_partialexpense_value"] + data.DataSet4[0]["p_partialexpense_value"]);
+							$("#ko_Partialexpvalue").text("₹ " + data.DataSet4[0]["c_partialmatch_value"] + data.DataSet4[0]["p_partialmatch_value"]);
+						}
+
 
 						var sys_ko_count = data.DataSet2[0]["system_ko_count"];
 						var man_ko_count = data.DataSet2[0]["manual_ko_count"];
@@ -707,5 +749,18 @@
 		const dateInput = document.getElementById('period_from');
 		dateInput.addEventListener('focusout', onFocusOut);
 	});
+
+
+	function formatValue(value) {
+		if (value < 10000) {
+			return value; // Less than 10,000 as is
+		} else if (value >= 10000 && value < 100000) {
+			return (value / 1000).toFixed(2) + " K"; // 10K to less than 1 lakh
+		} else if (value >= 100000 && value < 10000000) {
+			return (value / 100000).toFixed(2) + " L"; // 1 lakh to less than 1 crore
+		} else {
+			return (value / 10000000).toFixed(2) + " C"; // 1 crore and above
+		}
+	}
 
 </script>
