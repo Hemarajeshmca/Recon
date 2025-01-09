@@ -223,16 +223,18 @@
 					var screen_code = rolevalidatescreen('recon_setup')
 					if (screen_code[0].add == "N") {
 						$("#btn_new").hide();
+						$(".k-grid-clone").hide();
 					}
 					if (screen_code[0].edit == "N") {
 						$(".k-grid-edit").hide();
+						$(".k-grid-clone").hide();
 					}
 					if (screen_code[0].view == "N") {
 						$(".k-grid-view").hide();
 					}
 					if (screen_code[0].delete == "N") {
 						$(".k-grid-delete").hide();
-					}
+					}					
 				},
 				pageable: {
 					refresh: false,
@@ -266,7 +268,7 @@
 						{
 							name: "Clone",
 							id: "Clone",
-							template: "<a href='' title='Clone' id='cloneid' onclick='clonePopup(this)' data-bs-toggle='modal'><img style='height: 15px;width:15px;' src = '../Assets/images/clone.png' alt='Clone'></a>"
+							template: "<a href='' title='Clone' id='cloneid' class='k-grid-clone' onclick='clonePopup(this)' data-bs-toggle='modal'><img style='height: 15px;width:15px;' src = '../Assets/images/clone.png' alt='Clone'></a>"
 						},
 					],
 					title: "Action&nbsp;",
