@@ -763,7 +763,8 @@ namespace Recon_proto.Controllers
 			public String in_recon_code { get; set; }
 			public String in_dataset_code { get; set; }
 			public String in_parent_dataset_code { get; set; }
-			public String in_clone_recon_code { get; set; }
+            public string in_dataset_type { get; set; }
+            public String in_clone_recon_code { get; set; }
 			public String in_clone_dataset_code { get; set; }
 			public string? in_user_code { get; set; }
 		}

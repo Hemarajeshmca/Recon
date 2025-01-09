@@ -56,12 +56,23 @@
 			z-index: 10003;
 			left: 300px !important;
 		}
+
+		.tab-content {
+			padding: 0.9rem;
+			border-radius: 0.375rem;
+			box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 9.12);
+		}
+		.selecteddataset {
+            font-size: 13px;
+            font-weight: 600;
+            color: brown;
+        }
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
-			<div class="card-body" style="margin-top:-12px;height: 82%;">
+			<div class="card-body" style="margin-top:-12px;height: 95%;">
 				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
 					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
 						<div class="col-sm-6">
@@ -108,28 +119,69 @@
 							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
 						</div>
 					</div>
-					<div class="row" style="margin-top:20px;">
-						<div class="col-xs-12">
-
-							@*<i data-bs-toggle="modal" data-bs-target="#newdebit" onclick="saveheader()" id="adddataset" class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green"></i>*@
-
-							<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" style="color:green"></i>
-							<div id="gd_datasetfield">
-								<div id="grid_datasetfield">
+					<div class="row" style="margin-top:-8px">
+						 <div class="nav-align-top mb-3 mt-3">
+							<ul class="nav nav-pills mb-2" role="tablist">
+									<li class="nav-item" style="padding-top:5px">
+									<button type="button" id="Dataset"
+										class="nav-link active"
+										role="tab"
+										data-bs-toggle="tab"
+										data-bs-target="#navs-pills-Dataset"
+										aria-controls="navs-pills-Dataset"
+										aria-selected="true">
+										 Dataset
+									</button>
+									</li>
+									<li class="nav-item" style="padding-top:5px">
+										<button type="button" id="datasetindex"
+											class="nav-link"
+											role="tab"
+											data-bs-toggle="tab"
+											data-bs-target="#navs-pills-top-datasetindex"
+											aria-controls="navs-pills-top-datasetindex"
+											aria-selected="true">
+												Dataset Index
+										</button>
+									</li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane fade show active" id="navs-pills-top-Dataset" role="tabpanel" style="margin-top:-25px;">
+									<div class="panel panel-default" style="margin-top:11px;">
+										<div class="panel-body">
+											<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" style="color:green"></i>
+											<div class="col-xs-12">		
+												<div id="gd_datasetfield">
+													<div id="grid_datasetfield">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>								
+								<div class="tab-pane fade" id="navs-pills-top-datasetindex" role="tabpanel" style="margin-top:-25px;">									
+									<div class="panel panel-default" style="margin-top:11px;">
+										<div class="panel-body">
+											<i data-bs-toggle="modal" onclick='getdetailSelectedRowsindex(this)' id="datasetindexadd" value='create' class="fa fa-plus cursor-pointer" style="color:green"></i>
+											<div class="col-xs-12">
+												<div id="gd_datasetindex">
+													<div id="grid_datasetindex">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>									
 								</div>
-							</div>
-						</div>
-
-					</div>
-					<div class="row" style="padding-bottom:8px;padding-top:8px;padding-left:10px;padding-right:10px">
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4" style="margin-top:2%;margin-left:58px;">
+							</div>	
+						</div>	
+					</div>					
+					<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="text-align:center">
 							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
 							<a href="../DataSet/DataSetList" class="btn btn-sm cancel_btn me-2">Cancel</a>
 						</div>
-						<div class="col-sm-4">
-						</div>
+						<div class="col-sm-4"></div>
 					</div>
 					<div class="modal fade" id="newdebit" tabindex="-1" aria-hidden="true">
 						<div class="modal-dialog modal-lg" role="document">
@@ -195,6 +247,62 @@
 							</div>
 						</div>
 					</div>
+					<div class="modal fade" id="newindex" tabindex="-1" aria-hidden="true">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+								</div>
+								<div class="modal-body" style="margin-top: -26px;">
+									<div class="row">
+										<div class="col-sm-4">
+										</div>
+										<div class="col-sm-4">
+											<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Mapping</h4>
+										</div>
+										<div class="col-sm-4">
+											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+										</div>
+									</div>
+									<hr style="margin-top:-1px; width:100%;">
+									<div class="row" style="padding-bottom:2px;margin-top:5px;">
+										<div class="col-sm-4">
+											<label for="" class="form-label">Dataset Index Code&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input class="form-control" id="datasetindexcode" type="text" style="width:100%;" readonly>
+											<input class="form-control" type="number" id="datasetindex_gid" hidden>
+											<input class="form-control" type="text" id="txtmodeflag1" value="Create" hidden>
+											<input class="form-control" type="text" id="dataset_code1" hidden>
+										</div>
+
+										<div class="col-sm-4">
+											<label for="" class="form-label">index_seqno&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input class="form-control" type="text" onkeypress='return isNumberKey(event)' id="index_seqno">
+										</div>
+										<div class="col-sm-4">
+											<label for="" class="form-label">Index Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input class="form-control" id="indexname"  type="text" style=" width:100%;">
+										</div>									
+									</div>
+									<div class="row" style="margin-top: 20px;">
+										<div class="col-md-10">
+											<label for="" class="form-label">Dataset Field&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input id="datasetfields" style="width:120%" />
+											<input class="form-control" type="hidden" id="selecteddataset">
+										</div>                          
+									</div>
+									<div class="row" style="padding-bottom:3px;padding-top:8px;">
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4"></div>
+										<div class="col-sm-4" style="margin-top:20px;float: right;">
+											<center>
+												<button type="button" class="btn btn-sm save_btn me-2" onclick="savedatasetindex()">Save</button>&nbsp;&nbsp;&nbsp;
+												<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+											</center>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -206,6 +314,7 @@
 		getGridComboList();
 		$("#navhead").text("Dataset");
 		grid_datasetfield([]);
+		grid_datasetindex([]);
 		$("#btncoll").hide();
 	});
 	function fieldtype() {
@@ -286,8 +395,7 @@
 			dataType: 'json',
 			data: JSON.stringify({ dataset_gid: datasetgid, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				debugger;
+			success: function (response) {				
 				if (response != null) {
 					var result = JSON.parse(response);
 					$("#datasetname").val(result.Header[0].dataset_name);
@@ -305,6 +413,7 @@
 					$("#gd_datasetfield").empty();
 					$("#gd_datasetfield").append("<div id='grid_datasetfield'></div>");
 					grid_datasetfield(result.DataSet);
+					grid_datasetindex(result.DataSetindex);
 					if (response.length > 0) {
 						$("#Cmbclone").val();
 						$("#Cmbclone").prop('disabled', true)
@@ -405,7 +514,7 @@
 					}
 				},
 			},
-			height: 270,
+			height: 240,
 			groupable: false,
 			dataBound: function (e) {
 				resultData = e.sender._data;
@@ -506,8 +615,7 @@
 
 		});
 	}
-	function savedetail() {
-		debugger;
+	function savedetail() {		
 		try {
 			var datasetfield = $("#datasetfield").val();
 			var FieldType = $("#cmbFieldType").val();
@@ -596,8 +704,7 @@
 				$("#fieldscale").val(selectedItem.scale_length);
 				$("#newdebit").modal('show');
 			} else if ($(mode).attr('value') == "create") {
-				if ($("#Cmbclone").val()) {
-					debugger;
+				if ($("#Cmbclone").val()) {					
 					saveclone();
 					setTimeout(() => {
 						$("#newdebit").modal('show');
@@ -914,6 +1021,386 @@
 			});
 		}
 	}
+    function grid_datasetindex(data) {
+		$("#grid_datasetindex").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							datasetindex_gid: { type: "string" },
+							dataset_code: { type: "string" },
+							datasetindex_code: { type: "string" },
+							index_seqno: { type: "string" },
+							index_desc: { type: "string" },
+							index_name: { type: "string" },							
+						}
+					}
+				},
+			},
+			height: 240,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_datasetfield').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-edit").hide();
+					$(".k-grid-delete").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			pageable: true,
+			resizable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getdetailSelectedRowsindex(this)' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJsindex()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "datasetindex_gid",
+				title: "datasetindex_gid",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "dataset_code",
+				title: "dataset_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "index_seqno",
+				title: "Seq No.",
+				width: 50,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},			
+			},
+			{
+				field: "datasetindex_code",
+				title: "Dataset Index Code",
+				width: 100,	
+			},			
+			{
+				field: "index_desc",
+				title: "Index Name",
+				width: 100,
+			}],
+			editable: false,
+
+		});
+	}
+
+	function getdetailSelectedRowsindex(mode) {
+		if ($("#txtmode").val() != "View") {
+			if ($(mode).attr('value') == "edit") {
+				clearCheckboxes();
+				$("#selecteddataset").val("");
+				var grid = $("#grid_datasetindex").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+				$("#datasetindex_gid").val(selectedItem.datasetindex_gid);
+				$("#datasetindexcode").val(selectedItem.datasetindex_code);
+				$("#dataset_code1").val(selectedItem.dataset_code);
+				$("#indexname").val(selectedItem.index_desc);
+				$("#txtmodeflag1").val("edit");
+				$("#index_seqno").val(selectedItem.index_seqno);				
+				$("#newindex").modal('show');
+				getupdateRuleList();
+				dropdownchecked();
+			} else if ($(mode).attr('value') == "create") 
+			    {
+						$("#newindex").modal('show');
+						clearCheckboxes();
+						getupdateRuleList();
+						var dd= $("#txtdatasetcode").val();
+						$("#dataset_code1").val(dd);
+				}
+			}
+		
+	}
+	function getupdateRuleList() {
+        var grid = $("#grid_datasetindex").data("kendoGrid");
+        var selectedItem = grid.dataItem(grid.select());
+        var data = {};
+        data.datasetgid = $("#datasetgid").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../DataSet/Datasetdetailreadlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ dataset_gid: data.datasetgid, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {			
+				if (response != null) {
+					var result = JSON.parse(response);					
+					var res = result.DataSet;					
+					reconarray = res;
+					var arr = [];								
+					for (i = 0; res.length > i; i++) {
+					 var list1 = {};
+                        list1.value = res[i].dataset_table_field;
+                        list1.text = res[i].field_name;
+                        arr.push(list1);                  
+					}
+					dropdown = $("#datasetfields").kendoDropDownList({
+						dataTextField: "text",
+						dataValueField: "value",
+						template: $("#CheckboxTemplate").html(),
+						dataSource: arr,
+						placeholder: "Select...",
+						select: function (e) {
+							e.preventDefault();
+						}
+					}).data("kendoDropDownList");
+
+					dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
+						var $item = $(this);
+						var $input;
+
+						if ($item.hasClass("check-item")) {
+							// Text was clicked
+						 $input = $item.children(".check-input");
+						 $input.prop("checked", !$input.is(':checked'));
+						}
+						else
+                        // Checkbox was clicked
+							$input = $item;
+						// Check all clicked?
+						if ($input.val() == "")
+							dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
+							 updateDropDown()
+							e.stopImmediatePropagation();
+					});
+					updateDropDown();
+				}
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+    }
+	function updateDropDown() {
+        var items = [];
+        dropdown.list.find(".check-input").each(function () {
+            var $input = $(this);
+            if ($input.val() != "" && $input.is(':checked'))
+                items.push($input.next().text());
+        });
+        dropdown.text(items.toString());		
+    }
+	function savedatasetindex() {
+		var Attribid = [];
+		var arrstring = "";
+		var cbs = document.getElementsByName("cb");
+		for (var i = 0; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				var index = i+1;
+				var item = cbs[i].value;
+				Attribid.push(item +"#"+ index);
+			}
+		}
+		arrString = Attribid.join("$");
+		if (arrString == "") {
+			$.alert({
+				title: 'Dataset',
+				content: "Dataset Field should not be Empty",
+				type: 'red',
+			});
+			return;
+		}
+		var datasetindexfield = arrString;;
+		var index_seqno  = $("#index_seqno").val();
+		var indexname = $("#indexname").val();
+		var dataset_code1 = $("#txtdatasetcode").val();
+		var in_action = '';
+		var in_datasetindex_gid = $("#datasetindex_gid").val();
+		if (in_datasetindex_gid == "") {
+				in_datasetindex_gid = 0;
+				in_action = "INSERT"
+		} else {
+				in_action = "UPDATE"
+		}
+		
+		var in_active_status ='Y';		
+		var action_by = sessionStorage.getItem("usrname");
+		var in_datasetindex_code = $("#datasetindexcode").val();
+		if(in_datasetindex_code == null){
+			in_datasetindex_code ="";
+		}
+		$.ajax({
+				type: "POST",
+				url: '../DataSet/Datasetindex',
+				dataType: 'json',
+				data: JSON.stringify({ in_dataset_code: dataset_code1, in_datasetindex_gid: in_datasetindex_gid,
+					in_datasetindex_code: in_datasetindex_code, in_index_seqno: index_seqno, in_index_desc: indexname, 
+					in_dataset_field: datasetindexfield, in_active_status: in_active_status,in_index_name:indexname,
+					in_action: in_action, in_action_by: action_by}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						$("#newdebit").modal('hide');
+						detailsfetch($("#datasetgid").val())
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+		});
+	}
+	function clearCheckboxes() {
+        var checkboxes = document.getElementsByName("cb");
+        // Iterate through the NodeList and uncheck each checkbox
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false; // Uncheck the checkbox
+        }
+			var index_seqno  = $("#index_seqno").val();
+		$("#indexname").val("");
+		$("#dataset_code1").val("");	
+		$("#index_seqno").val("");
+		$("#datasetindex_gid").val("");
+		$("#datasetindexcode").val("");
+    }
+	function dropdownchecked() {
+		var in_datasetindex_code = $("#datasetindexcode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../DataSet/Datasetindexlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_datasetindex_code: in_datasetindex_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {			
+				if (response != null) {
+						var result = JSON.parse(response);	
+						var arrchecked = [];								
+						for (i = 0; result.length > i; i++) {
+							var list1 = {};
+							list1.value = result[i].field_name;							
+							arrchecked.push(result[i].field_name);                  
+						}
+						dropdown.list.find(".check-input").each(function () {
+							if (arrchecked.includes($(this).val())) {
+								$(this).prop("checked", true); // Check the item
+							} else {
+								$(this).prop("checked", false); // Uncheck all others
+							}
+						});
+						updateDropDown();
+				}
+			}
+		});
+	}
+	function myDeleteJsindex() {
+		if ($("#txtmode").val() != "View") {
+			    var grid = $("#grid_datasetindex").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var datasetindexfield = "";
+						var index_seqno = 0;
+						var indexname = "";
+						var dataset_code1 ="";
+						var in_action = "DELETE";
+						var in_datasetindex_gid = selectedItem.datasetindex_gid;
+						var in_active_status ='Y';		
+						var action_by = sessionStorage.getItem("usrname");
+						var in_datasetindex_code = selectedItem.datasetindex_code;
+						
+						$.ajax({
+							type: "POST",
+							url: '../DataSet/Datasetindex',
+							dataType: 'json',
+							data: JSON.stringify({ in_dataset_code: dataset_code1, in_datasetindex_gid: in_datasetindex_gid,
+									in_datasetindex_code: in_datasetindex_code, in_index_seqno: index_seqno, in_index_desc: indexname, 
+									in_dataset_field: datasetindexfield, in_active_status: in_active_status,in_index_name:indexname,
+									in_action: in_action, in_action_by: action_by}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								var data = response;
+								if (data.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: data.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									detailsfetch($("#datasetgid").val());								
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: data.out_msg,
+										type: 'red',
+									});
+								}
+							},
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+</script>
+<script type="text/x-kendo-template" id="CheckboxTemplate">
+    <li unselectable="on" class="k-item nowrap check-item">
+        <input type="checkbox"  name="cb" value="#= value #" class="check-input"  />
+        <span >#= text #</span>
+    </li>
 </script>
 
 
