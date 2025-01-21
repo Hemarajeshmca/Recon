@@ -973,6 +973,11 @@
 					value: "",
 					text: "  Select  "
 				}));
+				$("#cmbdatasetname_new").empty();
+				$("#cmbdatasetname_new").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
 				$.each(result, function (index, item) {
 					if (item.active_status == "Y" && item.system_flag == "N") {
 						$("#cmbdatasetname").append($('<option>', {
@@ -1000,6 +1005,11 @@
 			success: function (response) {
 				$("#DatasetType").empty();
 				$("#DatasetType").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$("#DatasetType_new").empty();
+				$("#DatasetType_new").append($('<option>', {
 					value: "",
 					text: "  Select  "
 				}));
@@ -1365,6 +1375,7 @@
 			data.in_dataset_code = $("#cmbdatasetname_new").val();
 			data.in_parent_dataset_code = $("#cmbParentDataset_new").val() ? $("#cmbParentDataset_new").val() : '';
 			data.in_clone_recon_code = $("#clone_reconcode").val();
+			data.in_dataset_type = $("#DatasetType_new").val();
 			data.in_clone_dataset_code = $("#cmbdatasetname").val();
 			data.in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
