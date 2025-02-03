@@ -281,9 +281,9 @@
 															</select>
 														</div>
 														<div class="col-sm-2">
-															<label for="" class="form-label">Recon Closure Date&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+															<label for="" class="form-label">Recon Cycle Date&nbsp;</label>
 															<div>
-																<input class="cusDate" #datepicker data-role='datepicker' id="closure_date" name="closure_date" style="width:100%" />
+																<input class="cusDate" #datepicker data-role='datepicker' id="cycle_date" name="cycle_date" style="width:100%" />
 																<span data-for='valid' class='k-invalid-msg'></span>
 															</div>
 														</div>
@@ -300,6 +300,13 @@
 															<label for="" class="form-label">Recon Value Field&nbsp;</label>
 															<select id="cmbreconvaluefield" class="form-select form-control">
 															</select>
+														</div>
+														<div class="col-sm-2">
+															<label for="" class="form-label">Recon Closure Date&nbsp;</label>
+															<div>
+																<input class="cusDate" #datepicker data-role='datepicker' id="closure_date" name="closure_date" style="width:100%" />
+																<span data-for='valid' class='k-invalid-msg'></span>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -737,6 +744,7 @@
 				grid_reportTemplist([]);
 				gridthemeMapping([]);
 				$("#closure_date").val('');
+				$("#cycle_date").val('');
 			} else {
 				var data = {};
 				data.recon_code = $("#reconcode").val();
@@ -892,6 +900,7 @@
 								$("#partialmatch2").prop("checked", true);
 							}
 							$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
+							$("#cycle_date").val(res.ReconHeader[0].recon_cycle_date);
 							$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
 							$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
@@ -1031,6 +1040,7 @@
 							$("#partialmatch2").prop("checked", true);
 						}
 						$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
+						$("#cycle_date").val(res.ReconHeader[0].recon_cycle_date);
 						$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 						$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
 						$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
@@ -1203,6 +1213,7 @@
 					$("#txtstatus").val(res.ReconHeader[0].active_status_desc);
 					$("#recon_id").val(res.ReconHeader[0].recon_gid);
 					$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
+					$("#cycle_date").val(res.ReconHeader[0].recon_cycle_date);
 
 					if (res.ReconHeader[0].recon_value_flag == "Y") {
 						$("#reconvalueflag1").prop("checked", true);
@@ -1431,7 +1442,13 @@
 			} else {
 				var pr4 = "1901-01-01";
 			}
-
+			var cycle_date = $("#cycle_date").val();
+			if (cycle_date != "") {
+				var ts5 = cycle_date.split("/");
+				var pr5 = ts5[2] + "-" + ts5[1] + "-" + ts5[0];
+			} else {
+				var pr5 = "1901-01-01";
+			}
 			var action = "";
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
@@ -1475,7 +1492,7 @@
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4,cycle_date: pr5
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2628,6 +2645,13 @@
 			} else {
 				var pr4 = "1901-01-01";
 			}
+			var cycle_date = $("#cycle_date").val();
+			if (cycle_date != "") {
+				var ts5 = cycle_date.split("/");
+				var pr5 = ts5[2] + "-" + ts5[1] + "-" + ts5[0];
+			} else {
+				var pr5 = "1901-01-01";
+			}
 			var action = "";
 			if ($("#txtmode").val() == "Create") {
 				action = "INSERT"
@@ -2679,7 +2703,7 @@
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 }),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 ,cycle_date: pr5}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {
