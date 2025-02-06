@@ -107,10 +107,13 @@
 							<label>Selected Recon Name</label>
 							<input class="form-control" id="selectedReconName" type="text" disabled />
 							<input class="form-control" id="selectedReconCode" type="text" hidden />
-
 						</div>
 					</div>
-
+					<div class="row" style="margin-top:15px;">
+						<div id="gd_mappeddataset">
+							<div id="grid_mappeddataset"> </div>
+						</div>
+					</div>
 
 					<div class="row" style="margin-top: 2%;">
 						<div class="col-sm-4"></div>
@@ -171,7 +174,6 @@
 	}
 	var status_Priority = [];
 	function grid_reconlist_details(data) {
-
 		try {
 			$.each(data, function (index, value) {
 				var flag = false;
@@ -495,10 +497,11 @@
 										var in_until_active_flag = "";
 										var pr1 = "1901-01-01";
 										var pr4 = "1901-01-01";
+										var pr5 = "1901-01-01";
 										var action = "DELETE";
 										var action_by = sessionStorage.getItem("usrname");
 										var status = "";
-
+										
 										var in_recon_automatch_partial = "";
 										var in_recon_date_flag = "";
 										var in_recon_date_field = "";
@@ -512,7 +515,7 @@
 											url: '../Recon/Reconheadersave',
 											dataType: 'json',
 											data: JSON.stringify({
-												in_recon_gid: recon_gid, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: name, threshold_code: in_threshold_code, closure_date: pr4
+												in_recon_gid: recon_gid, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: name, threshold_code: in_threshold_code, closure_date: pr4,cycle_date: pr5
 											}),
 											contentType: 'application/json; charset=utf-8',
 											success: function (response) {
@@ -550,7 +553,6 @@
 			});
 		}
 	}
-
 	function clonePopup(e) {
 		var grid = $("#grid_reconlist").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
@@ -558,29 +560,52 @@
 			$("#clone_recon").modal('show');
 			$("#selectedReconName").val(selectedItem.recon_name);
 			$("#selectedReconCode").val(selectedItem.recon_code);
+			updategriddataset([]);
+			updatedatasetRecon();
 		} else if (selectedItem.active_status == 'D') {
-			$("#clone_recon").modal('hide');
-			btn_onClick("Edit");
-			setlocalStorage("cloned_reconCode", selectedItem.recon_code);
-			if (selectedItem.clone_recon_code != '') {
-				document.location = "../Recon/ReconViewClone";
-			}
+			return;
+			$("#clone_recon").modal('hide');			
 		} else if (selectedItem.active_status == 'N') {
 			return;
 		}
 
 	}
-
-	function cloneRecon() {
-		btn_onClick("Edit");
+	function cloneRecon() {		
+			var modelArr = [];
+			var grid = $("#grid_mappeddataset").data("kendoGrid");
+			var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
+			var concatData = "";
+			for (var i = 0; i < colfilterData.length; i++) {
+				var j = i+1;
+				var dataItem = colfilterData[i];
+				if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
+					concatData += "recon" + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field  +"#" + dataItem.dataset_type_desc + "$"
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: 'Target Dataset is missing for ' + j + ' row',
+						type: 'red',
+					});
+					return;
+				}
+			}
+		
 		var newReconName = $("#newReconName").val();
-		var selectedReconCode = $("#selectedReconCode").val();
+		if(newReconName == ""){
+			$.alert({
+				title: 'Recon',
+				content: 'New Recon Name cannot be empty',
+				type: 'red',
+			});
+			return;
+		}
+		var selectedReconCode = $("#selectedReconCode").val();	
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../Recon/cloneRecon',
 			dataType: 'json',
-			data: JSON.stringify({ in_recon_name: newReconName, in_clone_recon_code: selectedReconCode, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_recon_name: newReconName, in_clone_recon_code: selectedReconCode,in_datasetmap : concatData, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -590,11 +615,8 @@
 							title: 'Recon',
 							content: result[0].out_msg,
 							type: 'green',
-						});
-						$("#clone_recon").modal('hide');
-						btn_onClick("Edit");
-						setlocalStorage("cloned_reconCode", result[0].out_recon_code);
-						document.location = "../Recon/ReconViewClone";
+						});		
+						location.reload();
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -606,7 +628,6 @@
 			}
 		});
 	}
-
 	function showCloneIcon() {
 		var grid = $("#grid_reconlist").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
@@ -614,8 +635,162 @@
 			return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
 		}
 	}
-
-
+	 function updategriddataset(data) {		
+		var comparison_field_desc_list = "";
+		$("#grid_mappeddataset").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							dataset_code: { type: "string", editable: false },
+							dataset_name: { type: "string", editable: false },
+							dataset_type: { type: "string", editable: false },
+							dataset_type_desc: { type: "string", editable: false },
+							parent_dataset_code: { type: "string", editable: false },
+							parent_dataset_name: { type: "string", editable: false },
+							comparison_field_desc: { type: "string", defaultValue: "", editable: true },
+							comparison_field: { type: "string", editable: false },
+						}
+					}
+				}
+			},
+			height: 300,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_mappeddataset').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+			},
+			pageable: {
+				refresh: false,
+				pageSizes: [5, 10, 15, 20],
+				buttonCount: 5
+			},
+			sortable: true,
+			selectable: true,
+			filterable: false,
+			edit: OnEdit,
+			navigatable: true,
+			resizable: true,
+			columns: [
+				{
+					field: "dataset_code",
+					title: "Dataset Code",
+					width: 40,
+					editable: false,
+					hidden: true,
+				},
+				{
+					field: "dataset_name",
+					title: "Source Dataset",
+					width: 80,
+					editable: false,
+				},
+				{
+					field: "dataset_type_desc",
+					title: "Dataset Type",
+					width: 45,
+					editable: false,
+				},
+				{
+					field: "parent_dataset_code",
+					title: "parent_dataset_code",
+					width: 50,
+					editable: false,
+					hidden: true,
+				},
+				{
+					field: "parent_dataset_name",
+					title: "Source Parent Datset",
+					width: 60,
+					editable: false,
+					hidden: true,
+				},
+				{
+					field: "comparison_field",
+					title: "comparison_field",
+					width: 100,
+					hidden: true,
+					editable: false,
+				},
+				{
+					field: "comparison_field_desc",
+					title: "Target Dataset",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_mappeddataset")
+					},
+					width: 80,	
+					editable: true,
+				}, {
+					field: "dataset_type_desc",
+					title: "Target Dataset Type",
+					width: 45,
+					editable: false,
+				}],
+			editable: true,
+		});		
+		comparison_field_desc_list = getdatasetlist();
+	}
+	function OnEdit(e) {
+		try {
+			setDefaultValues(e);
+			if (e.model.dataset_type_desc == 'System') {
+				e.sender.closeCell();
+			}
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+	}
+	 function getdatasetlist() {		
+		var arr1 = [];
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../DataSet/Datasetlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_gid: Context.in_user_gid, in_active_status: Context.in_active_status, in_user_code: Context.in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if(result.length > 0){
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].dataset_code;
+						list1.desc = result[i].dataset_name;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;		
+	 }
+	
+	 function updatedatasetRecon() {
+		var reconcode = $("#selectedReconCode").val();
+		var target_recon_code = $("#cmbupdatereconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Reconupdate/datasetlistmapped',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_target_recon_code: target_recon_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				var result = res.filter(item => item.dataset_type != '');
+				updategriddataset(result);
+			}
+		});
+	}	
 </script>
 
 
