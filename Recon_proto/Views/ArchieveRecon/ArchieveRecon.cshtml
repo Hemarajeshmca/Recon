@@ -1,0 +1,149 @@
+﻿@{
+	ViewBag.title = "Archeive Recon";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.table:not(.table-dark) th {
+			color: #fff !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;">
+				<div class="row" style="margin-top:-19px;margin-bottom: 2%;">
+
+
+					<div class="col-md-3">
+						<label for="organization" class="form-label">Recon Name</label><br>
+						<select id="reconname" class="form-select form-control" onchange="reconchange()"> </select>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" onclick="archeiveRecon()" class="btn btn-sm save_btn me-2" style="margin-top: 7px">
+							Archeive Recon
+						</button> &nbsp;&nbsp;
+					</div>
+					<div class="col-md-3">
+					</div>
+					<div class="col-md-3">
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var counter = 1;
+	var clicks = 0;
+	$(document).ready(function () {
+		$("#navhead").text("Reports");
+		kendodate_format();
+		getreconlist();
+	});
+
+
+	function getreconlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#reconname").empty();
+				$("#reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#reconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+					$("#reconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#reconname').trigger("change");
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function reconchange() {
+		if ($("#reconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#reconname").val());
+			sessionStorage.setItem("reconname", $("#reconname :selected").text());
+			setcon();
+		}
+		$("#report_name").val("");
+		$("#report_param").val("");
+	}
+
+	function archeiveRecon(){
+		var data = {};
+		data.in_recon_code = $("#reconname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		if (data.in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: "Recon Aricheive Job initated, Please check the Job Status in Utility .!",
+				type: 'green',
+			});
+			$.ajax({
+				type: "POST",
+				url: '../ArchieveRecon/ArcheiveRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				// success: function (response) {
+				//    var res = JSON.parse(response);
+				// 	if (res[0].out_result != '0' || res[0].out_result != 0) {
+				//            $.alert({
+				//                title: 'Recon',
+				//                content: data.out_msg,
+				//                type: 'green',
+				//            });
+				// 	} else {
+				//            $.alert({
+				//                title: 'Recon',
+				//                content: data.out_msg,
+				//                type: 'red',
+				//            });
+				// 	} 
+				// },error: function (er) {
+				//    alert(er)
+				//    console.log(er)
+				// }
+			});
+		} else if (!data.in_recon_code) {
+			$.alert({
+				title: 'Recon',
+				content: 'Please choose Recon',
+				type: 'red',
+			});
+		}
+	}
+</script>
