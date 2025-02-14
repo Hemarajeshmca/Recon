@@ -8,6 +8,181 @@
     <title></title>
     <style>
 
+        .k-grid-footer-wrap {
+            overflow-x: hidden !important;
+        }
+        /* Ensure table layout is fixed so columns maintain consistent width */
+        table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        /* Freeze the first column header "OMR Cash Recon - Receipt Report" */
+        tr th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 3; /* Ensure it stays on top */
+            background-color: blue; /* For visibility */
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Freeze all other columns: Dr, Dr (L), Cr, Cr (L), Net Value */
+        th[data-field="OMRCashReconReceiptReport_Dr_Count"],
+        th[data-field="OMRCashReconReceiptReport_Dr_Value"],
+        th[data-field="OMRCashReconReceiptReport_Cr_Count"],
+        th[data-field="OMRCashReconReceiptReport_Cr_Value"],
+        th[data-field="OMRCashReconReceiptReport_Net_Value"] {
+            position: sticky;
+            left: 0; /* Align all columns correctly */
+            z-index: 2; /* Make sure it stays under the first column header */
+            background-color: blue; /* For visibility */
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Adjust the left property for each header to prevent overlapping */
+        th[data-field="OMRCashReconReceiptReport_Dr_Count"] {
+            left: 0;
+        }
+
+        th[data-field="OMRCashReconReceiptReport_Dr_Value"] {
+            left: 80px; /* Adjust based on column width */
+        }
+
+        th[data-field="OMRCashReconReceiptReport_Cr_Count"] {
+            left: 160px; /* Adjust based on column width */
+        }
+
+        th[data-field="OMRCashReconReceiptReport_Cr_Value"] {
+            left: 240px; /* Adjust based on column width */
+        }
+
+        th[data-field="OMRCashReconReceiptReport_Net_Value"] {
+            left: 320px; /* Adjust based on column width */
+        }
+        /* Make the table scrollable horizontally */
+        table#grid1 {
+            width: 2400px; /* Adjust to fit your content */
+            height: auto;
+            table-layout: fixed; /* Ensure columns are evenly sized */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            position: relative; /* Allow stacking of elements */
+        }
+
+            /* Make the first five columns sticky */
+            table#grid1 td:nth-child(-n+5) {
+                position: sticky;
+                left: 0;
+                z-index: 999999; /* Ensure sticky columns stay on top */
+                background-color: white !important; /* Set background color to hide content behind */
+            }
+
+            table#grid1 tr:nth-child(even) {
+                background-color: #f2f2f2; /* Light gray */
+            }
+
+            table#grid1 tr:nth-child(odd) {
+                background-color: white; /* White */
+            }
+            /* Adjust the left property for each sticky cell to prevent overlapping */
+            table#grid1 td:nth-child(1) {
+                left: 0;
+            }
+
+            table#grid1 td:nth-child(2) {
+                left: 80px; /* Adjust based on the width of your columns */
+            }
+
+            table#grid1 td:nth-child(3) {
+                left: 160px; /* Adjust based on the width of your columns */
+            }
+
+            table#grid1 td:nth-child(4) {
+                left: 240px; /* Adjust based on the width of your columns */
+            }
+
+
+            table#grid1 td:nth-child(5) {
+                left: 320px; /* Adjust based on the width of your columns */
+            }
+
+            /* Ensure remaining columns get hidden behind the sticky columns */
+            table#grid1 td:nth-child(n+6) {
+                position: relative; /* Ensure columns aren't overlapping */
+                z-index: 1000; /* Lower z-index ensures it stays behind sticky columns */
+                background-color: white; /* To ensure no content is visible behind sticky columns */
+            }
+
+            /* Optional: hide the content behind sticky columns */
+            table#grid1 td:nth-child(n+6) {
+                padding-left: 10px; /* To prevent content overlap */
+            }
+
+        .k-grid-footer-wrap {
+            width: 894px; /* Ensure the container has a fixed width */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            position: relative; /* Needed for sticky positioning */
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+            .k-grid-footer-wrap table {
+                width: 2400px; /* Ensure table is wider than container to enable scrolling */
+                table-layout: fixed;
+                border-collapse: collapse;
+            }
+
+            /* Make the first five columns sticky */
+            .k-grid-footer-wrap td:nth-child(-n+5) {
+                position: sticky;
+                left: 0;
+                z-index: 999;
+                background-color: white !important; /* Ensures it stays visible */
+            }
+
+            /* Set left positions for each sticky column */
+            .k-grid-footer-wrap td:nth-child(1) {
+                left: 0;
+            }
+
+            .k-grid-footer-wrap td:nth-child(2) {
+                left: 80px;
+            }
+            /* Adjust based on column width */
+            .k-grid-footer-wrap td:nth-child(3) {
+                left: 160px;
+            }
+
+            .k-grid-footer-wrap td:nth-child(4) {
+                left: 240px;
+            }
+
+            .k-grid-footer-wrap td:nth-child(5) {
+                left: 320px;
+            }
+
+            /* Style table */
+            .k-grid-footer-wrap td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: right;
+            }
+
+            /* Optional: Style scrollbar */
+            .k-grid-footer-wrap::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .k-grid-footer-wrap::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 4px;
+            }
+
+                .k-grid-footer-wrap::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                }
+
+
         .k-grid-header .k-grid-filter .k-i-filter {
             display: inline-block !important; /* Ensure the filter icon is visible */
             visibility: visible !important;
@@ -50,9 +225,9 @@
             font-weight: 700 !important;
         }
 
-        .k-grid td {
-            background-color: unset !important;
-        }
+        /*  .k-grid td {
+                    background-color: unset !important;
+                } */
 
         .selectedDataset {
             font-size: 13px;
@@ -61,8 +236,8 @@
         }
 
         /*      .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-                                                                                            color: #fff !important;
-                                                                                        }*/
+                                                                                                                                    color: #fff !important;
+                                                                                                                                }*/
 
         .nav-item.me-2.me-xl-50 {
             margin-right: 33rem !important;
@@ -78,16 +253,16 @@
         }
 
         /*		.k-grid-header th.k-header > .k-link {
-                                                                                                                                    width: 100px;
-                                                                                                                                }*/
+                                                                                                                                                                            width: 100px;
+                                                                                                                                                                        }*/
 
         .k-grid-header {
             font-weight: bold;
         }
 
         /* .k-state-active {
-            display: none;
-        } */
+                                                    display: none;
+                                                } */
 
         .k-content {
             font-weight: normal;
@@ -160,6 +335,10 @@
         .tooltip-container:hover .tooltip1 {
             display: block;
         }
+
+        .k-grouping-header {
+            color: #fff;
+        }
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -182,18 +361,35 @@
                             <input class="cusDate" data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" /><span data-for='valid' class='k-invalid-msg'></span>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label for="organization" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label><br>
                         <select id="reconname" class="form-select form-control" onchange="onc()"> </select>
                     </div>
-                    <div class="col-md-3" style="margin-top: 2%;">
-                        <button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:25%;margin-top:6px;">
+                    <div class="col-md-2">
+                        <label class="form-label" for="formatDropdown">Dataset Display</label>
+                        <select class="form-select form-control" id="formatDropdown">
+                            <option value="format1" selected>Column-wise</option>
+                            <option value="format2">Row-wise</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label" for="conversionDropdown">Conversion Type</label>
+                        <select class="form-select form-control" id="conversionDropdown">
+                            @foreach (var item in ViewBag.ConversionTypes)
+                            {
+                                <option value="@item.Key">@item.Label</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2" style="margin-top: 2%;">
+                        <button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:40%;margin-top:6px;">
                             View
                         </button> &nbsp;&nbsp;
                         @* <button type="button" onclick="exportexcel()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:23%;margin-top: 7px">
                         <i class="fa-solid fa-file-excel"></i>
                         </button> *@
                     </div>
+
                 </div>
 
                 <div id="grid"></div>
@@ -205,827 +401,1750 @@
 </body>
 </html>
 <script>
-    var selected_dataset = '';
     $(document).ready(function () {
-        $("#navhead").text("KnockOff MIS");
-        kendodate_format();
-        getreconlist();
-        loadGrid();
-        $("#exportExcel").hide();
+        // Set the default value from ViewBag
+        var defaultType = '@ViewBag.DefaultConversionType';
+        $("#conversionDropdown").val(defaultType);
     });
-
-    function getreconlist() {
-        var data = {};
-        data.in_user_gid = 0;
-        data.in_active_status = '';
-        data.in_user_code = sessionStorage.getItem("usrname");
-        var Context = data;
-        $.ajax({
-            type: "POST",
-            url: '../Recon/Reconlistfetch',
-            dataType: 'json',
-            async: false,
-            data: JSON.stringify(data),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var res = JSON.parse(response);
-                $("#reconname").empty();
-                $("#reconname").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(res, function (index, item) {
-                    if (item.active_status == 'Y') {
-                        $("#reconname").append($('<option>', {
-                            value: item.recon_code,
-                            text: item.recon_name
-                        }));
-                    }
-                    $("#reconname").val(sessionStorage.getItem("reconcode"));
-                });
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
-        });
-    }
-    function onc() {
-        if ($("#reconname").val() != '') {
-            sessionStorage.setItem("reconcode", $("#reconname").val());
-            sessionStorage.setItem("reconname", $("#reconname :selected").text());
-            setcon();
-        }
-    }
-    function run() {
-        var fromDate = validateDateFormat($("#period_from").val());
-        var toDate = validateDateFormat($("#period_to").val());
-        if (fromDate && toDate && $("#reconname").val()) {
-            var in_recon_code = $("#reconname").val();
-            var period_from = $("#period_from").val();
-            var ts = period_from.split("/");
-            var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-            var period_to = $("#period_to").val();
-            var ts1 = period_to.split("/");
-            var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-            var in_user_code = sessionStorage.getItem("usrname");
-            $.ajax({
-                type: "POST",
-                url: '../KnockOff/runkosum',
-                dataType: 'json',
-                data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: in_user_code }),
-                contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    if (response) {
-                        var res = JSON.parse(response)
-                        if (res.Table.length > 0) {
-
-                            loadGrid1(res.Table);
-                            $("#exportExcel").show();
-                        } else {
-                            loadGrid1();
-                            $.alert({
-                                title: 'Recon',
-                                content: "No Records found",
-                                type: 'red',
-                            });
-                        }
-                    } else {
-                        $.alert({
-                            title: 'Recon',
-                            content: "Something Went Wrong..!",
-                            type: 'red',
-                        });
-                    }
-
-                },
-                error: function (er) {
-                    alert(er)
-                    console.log(er)
-                }
-            });
-        } else if (!fromDate) {
-            $.alert({
-                title: 'Recon',
-                content: "Invalid Date ..!",
-                type: 'red',
-            });
-        } else if (!toDate) {
-            $.alert({
-                title: 'Recon',
-                content: "Invalid Date ..!",
-                type: 'red',
-            });
-        } else if (!$("#reconname").val()) {
-            $.alert({
-                title: 'Recon',
-                content: "Please Select Recon ..!",
-                type: 'red',
-            });
-        }
-
-    }
-
-    function loadGrid1(data) {
-        var columns = [];
-        var rows = [];
-        var groupRows = [];
-        var ruleRows = [];
-        var totalRows = [];
-        var finalRows = [];
-        var dataCopy = data;
-
-        if (dataCopy) {
-            var index = 0;
-            // Step 1: Separate the data into group, rule, and total rows
-            $.each(dataCopy, function (i, e) {
-                if (e.backcolor === "White" && e.forecolor === "Blue") {
-                    // Group rows (e.g., "Receipt Report")
-                    groupRows.push(e);
-                } else if (e.backcolor === "White" && e.forecolor === "Black") {
-                    // Rule rows (e.g., "Rule 1 - Cash T+1")
-                    var lastGroupRowLabel = groupRows.length > 0 ? groupRows[groupRows.length - 1]["Row Labels"] : null;
-                    e["groupRowLabel"] = lastGroupRowLabel;
-                    e["groupRowdisplayLabel"] = lastGroupRowLabel;
-                    ruleRows.push(e);
-                } else if (e.backcolor === "Yellow" && e.forecolor === "Red" && e["Row Labels"] === "Sub Total") {
-                    // Total rows (e.g., "Sub Total")
-                    var lastGroupRowLabel = groupRows.length > 0 ? groupRows[groupRows.length - 1]["Row Labels"] : null;
-                    e["groupRowLabel"] = lastGroupRowLabel;
-                    e["groupRowdisplayLabel"] = lastGroupRowLabel;
-                    totalRows.push(e);
-                }
-            });
-            renderGroupedGrid(ruleRows, totalRows);
-        }
-    }
-
-
-    function loadGrid2(data) {
-        var groupedData = {};
-        var columns = [];
-        var finalRows = [];
-        var finalRow = [];
-        var groupLabels = [];
-
-        // Group data by `groupRowLabel`
-        data.forEach(function (entry) {
-            var groupLabel = entry.groupRowLabel.replace(/[\s/[\]]+/g, "_");
-            if (!groupedData[groupLabel]) {
-                groupedData[groupLabel] = [];
-            }
-
-            groupedData[groupLabel].push(entry);
-
-            // Collect group labels for column titles
-            if (!groupLabels.includes(groupLabel)) {
-                groupLabels.push(groupLabel);
-            }
-        });
-
-        // Define columns for the grid
-        columns.push({ field: "Rule", title: "Rules", width: 250, attributes: { style: "text-align:left;" } });
-
-        // Dynamically add columns based on the `groupRowLabel`
-        groupLabels.forEach(function (groupLabel) {
-
-            columns.push({ field: groupLabel + "_Dr_Count", title: groupLabel + " - Dr Count", width: 150, attributes: { style: "text-align:center;" } });
-            columns.push({ field: groupLabel + "_Dr_Value", title: groupLabel + " - Dr Value", width: 150, attributes: { style: "text-align:center;" } });
-            columns.push({ field: groupLabel + "_Cr_Count", title: groupLabel + " - Cr Count", width: 150, attributes: { style: "text-align:center;" } });
-            columns.push({ field: groupLabel + "_Cr_Value", title: groupLabel + " - Cr Value", width: 150, attributes: { style: "text-align:center;" } });
-        });
-
-        // Iterate over each rule and create a row
-        var rules = [...new Set(data.map(d => d["Row Labels"]))];
-
-        rules.forEach(function (rule) {
-            var row = { Rule: rule };
-
-            // For each group, add the respective values
-            groupLabels.forEach(function (groupLabel) {
-                var groupData = groupedData[groupLabel].find(d => d["Row Labels"] === rule);
-                if (groupData) {
-                    row[groupLabel + "_Dr_Count"] = groupData["Dr Count"] || "-";
-                    row[groupLabel + "_Dr_Value"] = groupData["Dr Value"] || "-";
-                    row[groupLabel + "_Cr_Count"] = groupData["Cr Count"] || "-";
-                    row[groupLabel + "_Cr_Value"] = groupData["Cr Value"] || "-";
-                } else {
-                    row[groupLabel + "_Dr_Count"] = "-";
-                    row[groupLabel + "_Dr_Value"] = "-";
-                    row[groupLabel + "_Cr_Count"] = "-";
-                    row[groupLabel + "_Cr_Value"] = "-";
-                }
-            });
-
-            finalRows.push(row);
-        });
-
-        // Calculate totals for each group
-        var totalRow = { Rule: "Total" };
-        groupLabels.forEach(function (groupLabel) {
-            var totalDrCount = 0, totalDrValue = 0, totalCrCount = 0, totalCrValue = 0;
-
-            rules.forEach(function (rule) {
-                var groupData = groupedData[groupLabel].find(d => d["Row Labels"] === rule);
-                if (groupData) {
-                    totalCrCount += (groupData["Cr Count"] || 0);
-                    totalCrValue += parseFloat(groupData["Cr Value"].replace(/,/g, "") || 0);
-                }
-            });
-
-            totalRow[groupLabel + "_Dr_Count"] = "-";
-            totalRow[groupLabel + "_Dr_Value"] = "-";
-            totalRow[groupLabel + "_Cr_Count"] = totalCrCount;
-            totalRow[groupLabel + "_Cr_Value"] = totalCrValue;
-        });
-
-        finalRow.push(totalRow);
-
-        $.each(finalRow, function (i, e) {
-            var entryObject = {};
-            for (var key in e) {
-                var field = key.replace(/\s+/g, '_');
-                entryObject[field] = e[key];
-            }
-            finalRows.push(entryObject);
-        });
-
-        // Configure the grid with columns and rows
-        var gridConfig = {
-            dataSource: {
-                data: finalRows
-            },
-            height: 400,
-            navigatable: false,
-            groupable: false,
-            editable: false,
-            sortable: true,
-            scrollable: true,
-            pageable: false,
-            resizable: true,
-            persistSelection: true,
-            selectable: true,
-            columns: columns
-        };
-
-        // Initialize the grid
-        $("#example").remove();
-        $('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;width:100%"></table></div>');
-        var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
-    }
-
-
-    /*function renderGroupedGrid(datas, totalRows) {
-        // Preprocess the data: replace empty spaces in all string values for datas
-        const data = datas.map(item => {
-            const sanitizedItem = {};
-            for (const key in item) {
-                if (typeof item[key] === "string" && key == "groupRowLabel") {
-                    sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
-                } else {
-                    sanitizedItem[key] = item[key];
-                }
-            }
-            return sanitizedItem;
-        });
-
-        // Preprocess the totalRows in the same way
-        const totals = totalRows.map(item => {
-            const sanitizedTotal = {};
-            for (const key in item) {
-                if (typeof item[key] === "string") {
-                    sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
-                } else {
-                    sanitizedTotal[key] = item[key];
-                }
-            }
-            return sanitizedTotal;
-        });
-
-        // Map groupRowLabel to groupRowdisplayLabel for display purposes
-        const groupLabelMapping = {};
-        datas.forEach(item => {
-            const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
-            groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
-        });
-
-        // Extract unique group headers and row labels
-        const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
-        const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
-        const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
-
-        // Transform data into the required row format
-        const gridData = rowLabels.map(rowLabel => {
-            const row = { "RowLabel": rowLabel };
-
-            groupLabels.forEach(group => {
-                const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
-                row[`${group}_Dr_Count`] = rowData ? rowData["Dr Count"] : "-";
-                row[`${group}_Dr_Value`] = rowData ? rowData["Dr Value"] : "-";
-                row[`${group}_Formal_Dr_Value`] = rowData ? rowData["Formal Dr Value"] : "-";
-                row[`${group}_Cr_Count`] = rowData ? rowData["Cr Count"] : "-";
-                row[`${group}_Cr_Value`] = rowData ? rowData["Cr Value"] : "-";
-                row[`${group}_Formal_Cr_Value`] = rowData ? rowData["Formal Cr Value"] : "-";
-            });
-
-            return row;
-        });
-
-        /// Add "Sub Total" row dynamically
-        const totalRowData = totals.find(t => t["Row Labels"] === "SubTotal") || {}; // Get 'Total' data from totalRows
-        const subTotalRow = {
-            RowLabel: "Total",
-            backcolor: totalRowData.backcolor || "yellow",  // Use dynamic color if available
-            forecolor: totalRowData.forecolor || "red"     // Use dynamic color if available
-        };
-        groupLabels.forEach(group => {
-            const total = totals.find(t => t.groupRowLabel === group);
-            subTotalRow[`${group}_Dr_Count`] = total ? total["Dr Count"] : "-";
-            subTotalRow[`${group}_Dr_Value`] = total ? total["Dr Value"] : "-";
-            subTotalRow[`${group}_Formal_Dr_Value`] = total ? total["Formal Dr Value"] : "-";
-            subTotalRow[`${group}_Cr_Count`] = total ? total["Cr Count"] : "-";
-            subTotalRow[`${group}_Cr_Value`] = total ? total["Cr Value"] : "-";
-            subTotalRow[`${group}_Formal_Cr_Value`] = total ? total["Formal Cr Value"] : "-";
-        });
-
-        // Push the subTotalRow to gridData only once
-        gridData.push(subTotalRow);
-
-        // Define grid columns dynamically
-        const columns = [
-            {
-                field: "RowLabel",
-                title: "Rules",
-                width: 400,
-                //autoWidth: true, // Enable auto-sizing
-                headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
-                locked: true // Freeze the first column
-            }
-        ];
-
-        groupLabels.forEach(group => {
-            const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
-            columns.push({
-                title: displayLabel,
-                headerAttributes: {
-                    style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
-                },
-                columns: [
-                    { field: `${group}_Dr_Count`, title: "Dr Count", width: 120, attributes: { style: "text-align:right;" }, headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white; " } },
-                    { field: `${group}_Dr_Value`, title: "Dr Value", width: 180, hidden: true, attributes: { style: "text-align:right;" }, headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" } },
-                    { field: `${group}_Formal_Dr_Value`, title: "Dr Value", width: 180, attributes: { style: "text-align:right;" }, headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" } },
-                    { field: `${group}_Cr_Count`, title: "Cr Count", width: 120, attributes: { style: "text-align:right;" }, headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" } },
-                    { field: `${group}_Cr_Value`, title: "Cr Value", width: 180, hidden: true, attributes: { style: "text-align:right;" }, headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" } },
-                    { field: `${group}_Formal_Cr_Value`, title: "Cr Value", width: 180, attributes: { style: "text-align:right;" }, headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" } }
-                ]
-            });
-        });
-
-        // Initialize Kendo Grid
-        var gridConfig = {
-            dataSource: {
-                data: gridData
-            },
-            height: 400,
-            width: "auto", // Set the grid width to 100% of its container
-            sortable: false,
-            scrollable: {
-                virtual: false
-            },
-            resizable: true,
-            filterable: true,
-            columns: columns,
-            toolbar: [
-                {
-                    name: "excel",
-                    text: "Export to Excel",
-                    className: "custom-excel-button"
-                }
-            ],
-            excel: {
-                fileName: "Knockoff MIS.xlsx",
-                filterable: true,
-                allPages: true
-            },
-
-            dataBound: function (e) {
-                const grid = e.sender;
-
-                // Get all rows in both locked and non-locked sections
-                const lockedRows = grid.lockedTable ? grid.lockedTable.find("tr") : $();
-                const nonLockedRows = grid.tbody.find("tr");
-
-                // Loop through all rows to find the 'Total' row and apply styles
-                lockedRows.each(function (index) {
-                    const lockedRow = $(this);
-                    const nonLockedRow = $(nonLockedRows[index]); // Corresponding non-locked row
-
-                    const rowLabel = lockedRow.find("td:first").text(); // First column in locked row
-                    if (rowLabel === "Total") {
-                        // Get the corresponding data item for the row
-                        const dataItem = grid.dataSource.view()[index];
-
-                        // Fetch the backcolor and forecolor dynamically
-                        const backColor = dataItem.backcolor || "yellow";
-                        const foreColor = dataItem.forecolor || "red";
-
-                        // Apply background and foreground color to both rows
-                        lockedRow.css({ "background-color": backColor, "color": foreColor });
-                        nonLockedRow.css({ "background-color": backColor, "color": foreColor });
-                    }
-                });
-            }
-        };
-
-        // Initialize the grid and make sure the previous grid is removed to avoid duplication
-        $("#example").remove(); // Remove any existing grid
-        $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:auto;"></table></div>');
-
-        // Bind the grid data
-        var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
-
-
-    }*/
-
-
-    function renderGroupedGrid(datas, totalRows) {
-        // Preprocess the data: replace empty spaces in all string values for datas
-        const data = datas.map(item => {
-            const sanitizedItem = {};
-            for (const key in item) {
-                if (typeof item[key] === "string" && key === "groupRowLabel") {
-                    sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
-                } else {
-                    sanitizedItem[key] = item[key];
-                }
-            }
-            return sanitizedItem;
-        });
-
-        // Preprocess the totalRows in the same way
-        const totals = totalRows.map(item => {
-            const sanitizedTotal = {};
-            for (const key in item) {
-                if (typeof item[key] === "string") {
-                    sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
-                } else {
-                    sanitizedTotal[key] = item[key];
-                }
-            }
-            return sanitizedTotal;
-        });
-
-        // Map groupRowLabel to groupRowdisplayLabel for display purposes
-        const groupLabelMapping = {};
-        datas.forEach(item => {
-            const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
-            groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
-        });
-
-        // Extract unique group headers and row labels
-        const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
-        const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
-        const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
-
-        // Transform data into the required row format
-        const gridData = rowLabels.map(rowLabel => {
-            const row = { "RowLabel": rowLabel };
-
-            groupLabels.forEach(group => {
-                const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
-                row[`${group}_Dr_Count`] = rowData ? rowData["Dr Count"] : "-";
-                row[`${group}_Dr_Value`] = rowData ? rowData["Dr Value"] : "-";
-                row[`${group}_Formal_Dr_Value`] = rowData ? rowData["Formal Dr Value"] : "-";
-                row[`${group}_Cr_Count`] = rowData ? rowData["Cr Count"] : "-";
-                row[`${group}_Cr_Value`] = rowData ? rowData["Cr Value"] : "-";
-                row[`${group}_Formal_Cr_Value`] = rowData ? rowData["Formal Cr Value"] : "-";
-            });
-
-            return row;
-        });
-
-        // Add "Sub Total" row dynamically
-        const totalRowData = totals.find(t => t["Row Labels"] === "SubTotal") || {}; // Get 'Total' data from totalRows
-        const subTotalRow = {
-            RowLabel: "Total",
-            backcolor: totalRowData.backcolor || "yellow",  // Use dynamic color if available
-            forecolor: totalRowData.forecolor || "red"     // Use dynamic color if available
-        };
-        groupLabels.forEach(group => {
-            const total = totals.find(t => t.groupRowLabel === group);
-            subTotalRow[`${group}_Dr_Count`] = total ? total["Dr Count"] : "-";
-            subTotalRow[`${group}_Dr_Value`] = total ? total["Dr Value"] : "-";
-            subTotalRow[`${group}_Formal_Dr_Value`] = total ? total["Formal Dr Value"] : "-";
-            subTotalRow[`${group}_Cr_Count`] = total ? total["Cr Count"] : "-";
-            subTotalRow[`${group}_Cr_Value`] = total ? total["Cr Value"] : "-";
-            subTotalRow[`${group}_Formal_Cr_Value`] = total ? total["Formal Cr Value"] : "-";
-        });
-
-        // Push the subTotalRow to gridData only once
-        //gridData.push(subTotalRow);
-
-        // Define grid columns dynamically with aggregate functions
-        const columns = [
-            {
-                field: "RowLabel",
-                title: "Rules",
-                width: 400,
-                headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
-                footerTemplate: "Total", // Include the text 'Total' in the footer
-                locked: true // Freeze the first column
-            }
-        ];
-
-        // Prepare aggregates dynamically
-        const aggregates = [];
-        groupLabels.forEach(group => {
-            const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
-            columns.push({
-                title: displayLabel,
-                headerAttributes: {
-                    style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
-                },
-                columns: [
-                    {
-                        field: `${group}_Dr_Count`,
-                        title: "Dr Count",
-                        width: 120,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    },
-                    {
-                        field: `${group}_Dr_Value`,
-                        title: "Dr Value",
-                        width: 180,
-                        //hidden: true,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    },
-                    {
-                        field: `${group}_Formal_Dr_Value`,
-                        title: "Dr Value",
-                        width: 180,
-                        hidden: true,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    },
-                    {
-                        field: `${group}_Cr_Count`,
-                        title: "Cr Count",
-                        width: 120,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    },
-                    {
-                        field: `${group}_Cr_Value`,
-                        title: "Cr Value",
-                        width: 180,
-                        //hidden: true,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    },
-                    {
-                        field: `${group}_Formal_Cr_Value`,
-                        title: "Cr Value",
-                        width: 180,
-                        hidden: true,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    }
-                ]
-            });
-
-            // Dynamically add the aggregates for this group
-            aggregates.push(
-                { field: `${group}_Dr_Count`, aggregate: "sum" },
-                { field: `${group}_Dr_Value`, aggregate: "sum" },
-                { field: `${group}_Formal_Dr_Value`, aggregate: "sum" },
-                { field: `${group}_Cr_Count`, aggregate: "sum" },
-                { field: `${group}_Cr_Value`, aggregate: "sum" },
-                { field: `${group}_Formal_Cr_Value`, aggregate: "sum" }
-            );
-        });
-
-        // Initialize Kendo Grid with footer for Grand Total
-        var gridConfig = {
-            dataSource: {
-                data: gridData,
-                aggregate: aggregates
-            },
-            height: 400,
-            width: "auto", // Set the grid width to 100% of its container
-            sortable: false,
-            scrollable: {
-                virtual: false
-            },
-            resizable: true,
-            filterable: true,
-            columns: columns,
-            toolbar: [
-                {
-                    name: "excel",
-                    text: "Export to Excel",
-                    className: "custom-excel-button"
-                }
-            ],
-            excel: {
-                fileName: "Knockoff MIS.xlsx",
-                filterable: true,
-                allPages: true
-            }
-        };
-
-        // Initialize the grid
-        $("#example").remove(); // Remove any existing grid
-        $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
-
-        var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
-    }
-
-
-
-
-    function loadGrid(data) {
-        var columns = [];
-        var rows = [];
-        if (data) {
-            for (var key in data[0]) {
-                var field = key.replace(/\s+/g, '_');
-                var propType = typeof data[0][key];
-                var bool = false;
-                var txtalign = "";
-                var widthval = "";
-                if (field == "forecolor" || field == "backcolor") {
-                    bool = true;
-                } if (field == "Row_Labels") {
-                    txtalign = "left";
-                    widthval = 250;
-                } else {
-                    txtalign = "right"
-                    widthval: 100;
-                }
-                columns.push({
-                    field: field,
-                    title: key,
-                    type: propType,
-                    attributes: { style: "text-align:" + txtalign },
-                    filterable: false,
-                    hidden: bool,
-                    width: widthval
-                });
-            }
-            $.each(data, function (i, e) {
-                var entryObject = {};
-                for (var key in e) {
-                    var field = key.replace(/\s+/g, '_');
-                    entryObject[field] = e[key];
-                }
-                rows.push(entryObject);
-            });
-
-            var configuration = {
-                dataSource: {
-                    data: rows,
-                },
-                height: 400,
-                navigatable: false,
-                groupable: false,
-                editable: false,
-                sortable: false,
-                scrollable: true,
-                attributes: { style: "text-align: center;" },
-                filterable: {
-                    extra: true,
-                    operators: {
-                        string: {
-                            contains: "Contains"
-                        }
-                    }
-                },
-                pageable: false,
-                resizable: true,
-                persistSelection: true,
-                selectable: true,
-                columns: columns,
-                dataBound: function (e) {
-                    var grid = this; // "this" refers to the Kendo Grid
-
-                    grid.tbody.find("tr").each(function (index) {
-                        var rowData = grid.dataItem(this); // Get the data item for the current row
-                        $(this).css("background-color", rowData.backcolor);
-                        $(this).css("color", rowData.forecolor);
-                        //}
-                    });
-                }
-            };
-
-            $("#example").remove();
-            $('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
-            var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
-        } else {
-            var emptydata = [{
-                "Row Labels": "",
-                "Dr Count": "",
-                "Dr Value": "",
-                "Cr Count": "",
-                "Cr Value": "",
-                "Total Count": "",
-                "Total Value": "",
-            }];
-            for (var key in emptydata[0]) {
-                var emptyfield = key.replace(/\s+/g, '_');
-                columns.push({
-                    field: emptyfield,
-                    title: key,
-                    attributes: { style: "text-align: left;" },
-                    filterable: false,
-                });
-            }
-            $.each(emptydata, function (i, e) {
-                var entryObject = {};
-                for (var key in e) {
-                    var field = key.replace(/\s+/g, '_');
-                    entryObject[field] = e[key];
-                }
-                rows.push(entryObject);
-            });
-
-            var configuration = {
-                dataSource: {
-                    data: rows,
-                },
-                height: 400,
-                navigatable: false,
-                groupable: false,
-                editable: false,
-                sortable: false,
-                scrollable: true,
-                attributes: { style: "text-align: center;" },
-                filterable: {
-                    extra: true,
-                    operators: {
-                        string: {
-                            contains: "Contains"
-                        }
-                    }
-                },
-                pageable: false,
-                resizable: true,
-                persistSelection: true,
-                selectable: true,
-                columns: columns
-            };
-
-            $("#example").remove();
-            $('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
-            var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
-        }
-
-
-
-    }
-
-    function exportexcel() {
-        var in_recon_code = $("#reconname").val();
-        var in_tran_date = $("#period_from").val();
-        var ts = in_tran_date.split("/");
-        var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
-        var in_todate = $("#period_to").val();
-        var ts1 = in_todate.split("/");
-        var pr1 = ts[2] + "-" + ts1[1] + "-" + ts1[0];
-        var user_code = sessionStorage.getItem("usrname");
-        window.location.href = '@Url.Action("KOMISreport", "KnockOff")?in_period_from=' + pr + '&in_period_to=' + pr1 + '&in_recon_code=' + in_recon_code + '&user_code=' + user_code + '';
-
-    }
-
-    //Date Validation
-
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const dateInput = document.getElementById('period_from');
-        const dateInput1 = document.getElementById('period_to');
-        dateInput.addEventListener('focusout', onFocusOut);
-        dateInput1.addEventListener('focusout', onFocusOut);
-    });
+</script>
+<script>
+       var selected_dataset = '';
+       var in_conversion_type = "L";
+       $(document).ready(function () {
+           $("#navhead").text("KnockOff MIS");
+           kendodate_format();
+           getreconlist();
+           loadGrid();
+           $("#exportExcel").hide();
+       });
+
+       function getreconlist() {
+           var data = {};
+           data.in_user_gid = 0;
+           data.in_active_status = '';
+           data.in_user_code = sessionStorage.getItem("usrname");
+           var Context = data;
+           $.ajax({
+               type: "POST",
+               url: '../Recon/Reconlistfetch',
+               dataType: 'json',
+               async: false,
+               data: JSON.stringify(data),
+               contentType: 'application/json; charset=utf-8',
+               success: function (response) {
+                   var res = JSON.parse(response);
+                   $("#reconname").empty();
+                   $("#reconname").append($('<option>', {
+                       value: "",
+                       text: "  Select  "
+                   }));
+                   $.each(res, function (index, item) {
+                       if (item.active_status == 'Y') {
+                           $("#reconname").append($('<option>', {
+                               value: item.recon_code,
+                               text: item.recon_name
+                           }));
+                       }
+                       $("#reconname").val(sessionStorage.getItem("reconcode"));
+                   });
+               },
+               error: function (er) {
+                   alert(er)
+                   console.log(er)
+               }
+           });
+       }
+       function onc() {
+           if ($("#reconname").val() != '') {
+               sessionStorage.setItem("reconcode", $("#reconname").val());
+               sessionStorage.setItem("reconname", $("#reconname :selected").text());
+               setcon();
+           }
+       }
+       function run() {
+           var fromDate = validateDateFormat($("#period_from").val());
+           var toDate = validateDateFormat($("#period_to").val());
+           if (fromDate && toDate && $("#reconname").val()) {
+               var in_recon_code = $("#reconname").val();
+               var period_from = $("#period_from").val();
+               var ts = period_from.split("/");
+               var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+               var period_to = $("#period_to").val();
+               var ts1 = period_to.split("/");
+               var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
+               var in_user_code = sessionStorage.getItem("usrname");
+               var in_dataset_formt = $("#formatDropdown").val();//"Format2";
+               in_conversion_type = $("#conversionDropdown").val();//"Format2";
+               $.ajax({
+                   type: "POST",
+                   url: '../KnockOff/runkosum',
+                   dataType: 'json',
+                   data: JSON.stringify({ in_recon_code: in_recon_code, in_period_from: pr, in_period_to: pr1, in_ip_addr: '', in_user_code: in_user_code, in_conversion_type: in_conversion_type, in_dataset_formt: in_dataset_formt }),
+                   contentType: 'application/json; charset=utf-8',
+                   success: function (response) {
+                       if (response) {
+                           var res = JSON.parse(response)
+                           if (res.Table.length > 0) {
+
+                               loadGrid1(res.Table);
+                               $("#exportExcel").show();
+                           } else {
+                               loadGrid1();
+                               $.alert({
+                                   title: 'Recon',
+                                   content: "No Records found",
+                                   type: 'red',
+                               });
+                           }
+                       } else {
+                           $.alert({
+                               title: 'Recon',
+                               content: "Something Went Wrong..!",
+                               type: 'red',
+                           });
+                       }
+
+                   },
+                   error: function (er) {
+                       alert(er)
+                       console.log(er)
+                   }
+               });
+           } else if (!fromDate) {
+               $.alert({
+                   title: 'Recon',
+                   content: "Invalid Date ..!",
+                   type: 'red',
+               });
+           } else if (!toDate) {
+               $.alert({
+                   title: 'Recon',
+                   content: "Invalid Date ..!",
+                   type: 'red',
+               });
+           } else if (!$("#reconname").val()) {
+               $.alert({
+                   title: 'Recon',
+                   content: "Please Select Recon ..!",
+                   type: 'red',
+               });
+           }
+
+       }
+
+       function loadGrid1(data) {
+           var columns = [];
+           var rows = [];
+           var groupRows = [];
+           var ruleRows = [];
+           var totalRows = [];
+           var finalRows = [];
+           var reconType = "";
+           var dataCopy = data;
+           var targetHeader = {
+               "Row Labels": "Target",
+               "Dr Count": null,
+               "Dr Value": null,
+               "Cr Count": null,
+               "Cr Value": null,
+               "backcolor": "White",
+               "forecolor": "Blue",
+
+           }
+
+
+           if (dataCopy) {
+               var index = 0;
+               // Step 1: Separate the data into group, rule, and total rows
+               $.each(dataCopy, function (i, e) {
+                   if (e.backcolor === "White" && e.forecolor === "Blue") {
+                       // Group rows (e.g., "Receipt Report")
+                       groupRows.push(e);
+                       reconType = groupRows.length > 0 ? groupRows[groupRows.length - 1]["recontype"] : null;
+                   } else if (e.backcolor === "White" && e.forecolor === "Black") {
+                       // Rule rows (e.g., "Rule 1 - Cash T+1")
+                       var lastGroupRowLabel = groupRows.length > 0 ? groupRows[groupRows.length - 1]["Row Labels"] : null;
+                       e["groupRowLabel"] = lastGroupRowLabel;
+                       e["groupRowdisplayLabel"] = lastGroupRowLabel;
+                       ruleRows.push(e);
+                   } else if (e.backcolor === "Yellow" && e.forecolor === "Red" && e["Row Labels"] === "Sub Total") {
+                       // Total rows (e.g., "Sub Total")
+                       var lastGroupRowLabel = groupRows.length > 0 ? groupRows[groupRows.length - 1]["Row Labels"] : null;
+                       e["groupRowLabel"] = lastGroupRowLabel;
+                       e["groupRowdisplayLabel"] = lastGroupRowLabel;
+                       totalRows.push(e);
+                   }
+               });
+
+               groupRows.push(targetHeader);
+
+               if (reconType == "B") {
+                   if ($("#formatDropdown").val() == "format1") {
+                       renderGroupedGrid_Contra(ruleRows, totalRows);
+                   }
+                   else {
+                       renderGroupedGridpivot(ruleRows, totalRows);
+                   }
+
+               } else if (reconType == "I") {
+
+                   if ($("#formatDropdown").val() == "format1") {
+                       renderGroupedGrid_Mirror(ruleRows, totalRows);
+                   }
+                   else {
+                       renderGroupedGridpivot(ruleRows, totalRows);
+                   }
+               } else if (reconType == "N") {
+                   renderGroupedGridNonvaluebase(ruleRows, totalRows);
+               } else if (reconType == "V") {
+                   renderGroupedGridValuebase(ruleRows, totalRows);
+               } else {
+
+                   if ($("#formatDropdown").val() == "format1") {
+                       renderGroupedGrid(ruleRows, totalRows);
+                   }
+                   else {
+                       renderGroupedGridpivot(ruleRows, totalRows);
+                   }
+
+
+               }
+           }
+       }
+
+       function renderGroupedGrid_Contra(datas, totalRows) {
+           var format = " ";
+           // Preprocess the data: Replace empty spaces in string values for datas
+           const data = datas.map(item => {
+               const sanitizedItem = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string" && key === "groupRowLabel") {
+                       sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                   } else {
+                       sanitizedItem[key] = item[key];
+                   }
+               }
+               return sanitizedItem;
+           });
+
+           // Preprocess the totalRows in the same way
+           const totals = totalRows.map(item => {
+               const sanitizedTotal = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string") {
+                       sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                   } else {
+                       sanitizedTotal[key] = item[key];
+                   }
+               }
+               return sanitizedTotal;
+           });
+
+           // Map groupRowLabel to groupRowdisplayLabel for display purposes
+           const groupLabelMapping = {};
+           datas.forEach(item => {
+               const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+               groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+           });
+
+           // Extract unique group headers and row labels
+           const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+           const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+           const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+
+           // Transform data into the required row format
+           const gridData = rowLabels.map(rowLabel => {
+               const row = { "RowLabel": rowLabel };
+               let totalNetValue = 0; // Initialize total for Net columns
+
+               groupLabels.forEach(group => {
+                   const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
+                   //const netValue = rowData ? (parseFloat(rowData["Cr Value"] || 0) - parseFloat(rowData["Dr Value"] || 0)) : 0;
+                   const netValue = rowData ? (parseFloat(Number(kendo.toString(rowData["Formal Cr Value"]).split(" ")[0]) || decimalFixed(in_conversion_type, 0.000000)) - parseFloat(Number(kendo.toString(rowData["Formal Dr Value"]).split(" ")[0]) || decimalFixed(in_conversion_type, 0.000000))) : decimalFixed(in_conversion_type, 0.000000);
+                   row[`${group}_Dr_Count`] = rowData ? rowData["Dr Count"] : "0";
+                   //row[`${group}_Dr_Value`] = rowData ? rowData["Dr Value"] : "0";
+                   row[`${group}_Dr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Dr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Dr_Value`] = rowData ? kendo.toString(rowData["Formal Dr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   format = rowData ?  kendo.toString(rowData["Formal Dr Value"]).split(" ")[1]  : format;
+                   row[`${group}_Cr_Count`] = rowData ? rowData["Cr Count"] : "0";
+                   //row[`${group}_Cr_Value`] = rowData ? rowData["Cr Value"] : "0";
+                   row[`${group}_Cr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Cr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Cr_Value`] = rowData ? kendo.toString(rowData["Formal Cr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   row[`${group}_Net_Value`] = parseFloat(decimalFixed(in_conversion_type, netValue));
+                   totalNetValue += netValue;
+               });
+
+               row["Contra"] = parseFloat(decimalFixed(in_conversion_type, totalNetValue)); //totalNetValue.toFixed(3); // Add Contra column value
+               return row;
+           });
+
+           // Define grid columns dynamically with aggregate functions
+           const columns = [
+               {
+                   field: "RowLabel",
+                   title: "Rules",
+                   width: 250,
+                   headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: black;" },
+                   footerTemplate: "Total", // Include the text 'Total' in the footer
+                   locked: true // Freeze the first column
+               }
+           ];
+
+           // Prepare aggregates dynamically
+           const aggregates = [];
+           groupLabels.forEach(group => {
+               const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+               columns.push({
+                   title: displayLabel,
+                   headerAttributes: {
+                       style: "text-align:center; font-weight: bold; background-color: blue; color: white;"
+                   },
+                   columns: [
+                       {
+                           field: `${group}_Dr_Count`,
+                           title: "Dr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Dr_Value`,
+                           title: `Dr ${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" },
+
+                       },
+                       {
+                           field: `${group}_Cr_Count`,
+                           title: "Cr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Cr_Value`,
+                           title: `Cr ${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Net_Value`,
+                           title: `Net Value${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" }
+                       }
+                   ]
+               });
+
+               // Dynamically add the aggregates for this group
+               aggregates.push(
+                   { field: `${group}_Dr_Count`, aggregate: "sum" },
+                   { field: `${group}_Dr_Value`, aggregate: "sum" },
+                   { field: `${group}_Cr_Count`, aggregate: "sum" },
+                   { field: `${group}_Cr_Value`, aggregate: "sum" },
+                   { field: `${group}_Net_Value`, aggregate: "sum" }
+               );
+           });
+
+           // Add Contra column to grid configuration
+           columns.push({
+               field: "Contra",
+               title: "Control Check",
+               width: 100,
+               attributes: { style: "text-align:right;" },
+               headerAttributes: { style: "text-align:center; font-weight: bold; background-color: red; color: white;" },
+               aggregates: ["sum"],
+               footerTemplate: "#= kendo.toString(sum, 'n2') #",
+               footerAttributes: { style: "text-align:right;" }
+           });
+
+           aggregates.push({ field: "Contra", aggregate: "sum" });
+
+           // Initialize Kendo Grid with footer for Grand Total
+           $("#example").remove(); // Remove any existing grid
+           $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+           $("#grid1").kendoGrid({
+               dataSource: {
+                   data: gridData,
+                   aggregate: aggregates,
+                   schema: {
+                       model: {
+                           fields: {
+                               Contra: { type: "number" },
+                               ...groupLabels.reduce((acc, group) => {
+                                   acc[`${group}_Dr_Count`] = { type: "number" };
+                                   acc[`${group}_Dr_Value`] = { type: "number" };
+                                   acc[`${group}_Cr_Count`] = { type: "number" };
+                                   acc[`${group}_Cr_Value`] = { type: "number" };
+                                   acc[`${group}_Net_Value`] = { type: "number" };
+                                   return acc;
+                               }, {})
+                           }
+                       }
+                   }
+               },
+               height: 400,
+               sortable: true,
+               resizable: true,
+               filterable: true,
+               columns: columns,
+               toolbar: [
+                   {
+                       name: "excel",
+                       text: "Export to Excel",
+                       className: "custom-excel-button"
+                   }
+               ],
+               excel: {
+                   fileName: "Knockoff MIS.xlsx",
+                   filterable: true,
+                   allPages: true
+               }
+           });
+       }
+
+
+       function renderGroupedGrid_Mirror(datas, totalRows) {
+           var format = " ";
+           // Preprocess the data: Replace empty spaces in string values for datas
+           const data = datas.map(item => {
+               const sanitizedItem = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string" && key === "groupRowLabel") {
+                       sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                   } else {
+                       sanitizedItem[key] = item[key];
+                   }
+               }
+               return sanitizedItem;
+           });
+
+           // Preprocess the totalRows in the same way
+           const totals = totalRows.map(item => {
+               const sanitizedTotal = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string") {
+                       sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                   } else {
+                       sanitizedTotal[key] = item[key];
+                   }
+               }
+               return sanitizedTotal;
+           });
+
+           // Map groupRowLabel to groupRowdisplayLabel for display purposes
+           const groupLabelMapping = {};
+           datas.forEach(item => {
+               const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+               groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+           });
+
+           // Extract unique group headers and row labels
+           const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+           const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+           const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+
+           // Transform data into the required row format
+           const gridData = rowLabels.map(rowLabel => {
+               const row = { "RowLabel": rowLabel };
+               let totalNetValue = 0; // Initialize total for Net columns
+
+               groupLabels.forEach((group, index) => {
+                   const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
+                   //const netValue = rowData ? (parseFloat(rowData["Cr Value"] || 0) - parseFloat(rowData["Dr Value"] || 0)) : 0;
+                   const netValue = rowData ? (parseFloat(Number(kendo.toString(rowData["Formal Cr Value"]).split(" ")[0]) || decimalFixed(in_conversion_type, 0.000000)) - parseFloat(Number(kendo.toString(rowData["Formal Dr Value"]).split(" ")[0]) || decimalFixed(in_conversion_type, 0.000000))) : decimalFixed(in_conversion_type, 0.000000);
+                   row[`${group}_Dr_Count`] = rowData ? rowData["Dr Count"] : "0";
+                   //row[`${group}_Dr_Value`] = rowData ? rowData["Dr Value"] : "0";
+                   row[`${group}_Dr_Value`] = rowData ? parseFloat(parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Dr Value"]).split(" ")[0])))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Dr_Value`] = rowData ? kendo.toString(rowData["Formal Dr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   format = rowData ?  kendo.toString(rowData["Formal Dr Value"]).split(" ")[1]  : format;
+                   row[`${group}_Cr_Count`] = rowData ? rowData["Cr Count"] : "0";
+                   //row[`${group}_Cr_Value`] = rowData ? rowData["Cr Value"] : "0";
+                   row[`${group}_Cr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Cr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Cr_Value`] = rowData ? kendo.toString(rowData["Formal Cr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   row[`${group}_Net_Value`] = parseFloat(decimalFixed(in_conversion_type, netValue)); //netValue.toFixed(3);
+                   if (index == 0) {
+                       totalNetValue += netValue;
+                   } else {
+                       totalNetValue -= netValue;
+                   }
+
+               });
+
+               row["Mirror"] = parseFloat(decimalFixed(in_conversion_type, totalNetValue)); //totalNetValue.toFixed(3); // Add Contra column value
+               return row;
+           });
+
+           // Define grid columns dynamically with aggregate functions
+           const columns = [
+               {
+                   field: "RowLabel",
+                   title: "Rules",
+                   width: 250,
+                   headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: black;" },
+                   footerTemplate: "Total", // Include the text 'Total' in the footer
+                   locked: true // Freeze the first column
+               }
+           ];
+
+           // Prepare aggregates dynamically
+           const aggregates = [];
+           groupLabels.forEach(group => {
+               const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+               columns.push({
+                   title: displayLabel,
+                   headerAttributes: {
+                       style: "text-align:center; font-weight: bold; background-color: blue; color: white;"
+                   },
+                   columns: [
+                       {
+                           field: `${group}_Dr_Count`,
+                           title: "Dr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Dr_Value`,
+                           title: `Dr ${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Cr_Count`,
+                           title: "Cr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Cr_Value`,
+                           title: `Cr ${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" }
+                       },
+                       {
+                           field: `${group}_Net_Value`,
+                           title: `Net Value ${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" }
+                       }
+                   ]
+               });
+
+               // Dynamically add the aggregates for this group
+               aggregates.push(
+                   { field: `${group}_Dr_Count`, aggregate: "sum" },
+                   { field: `${group}_Dr_Value`, aggregate: "sum" },
+                   { field: `${group}_Cr_Count`, aggregate: "sum" },
+                   { field: `${group}_Cr_Value`, aggregate: "sum" },
+                   { field: `${group}_Net_Value`, aggregate: "sum" }
+               );
+           });
+
+           // Add Contra column to grid configuration
+           columns.push({
+               field: "Mirror",
+               title: "Control Check",
+               width: 100,
+               attributes: { style: "text-align:right;" },
+               headerAttributes: { style: "text-align:center; font-weight: bold; background-color: red; color: white;" },
+               aggregates: ["sum"],
+               footerTemplate: "#= sum #",
+               footerAttributes: { style: "text-align:right;" }
+           });
+
+           aggregates.push({ field: "Mirror", aggregate: "sum" });
+
+           // Initialize Kendo Grid with footer for Grand Total
+           $("#example").remove(); // Remove any existing grid
+           $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+           $("#grid1").kendoGrid({
+               dataSource: {
+                   data: gridData,
+                   aggregate: aggregates,
+                   schema: {
+                       model: {
+                           fields: {
+                               Mirror: { type: "number" },
+                               ...groupLabels.reduce((acc, group) => {
+                                   acc[`${group}_Dr_Count`] = { type: "number" };
+                                   acc[`${group}_Dr_Value`] = { type: "number" };
+                                   acc[`${group}_Cr_Count`] = { type: "number" };
+                                   acc[`${group}_Cr_Value`] = { type: "number" };
+                                   acc[`${group}_Net_Value`] = { type: "number" };
+                                   return acc;
+                               }, {})
+                           }
+                       }
+                   }
+               },
+               height: 400,
+               sortable: true,
+               resizable: true,
+               filterable: true,
+               columns: columns,
+               toolbar: [
+                   {
+                       name: "excel",
+                       text: "Export to Excel",
+                       className: "custom-excel-button"
+                   }
+               ],
+               excel: {
+                   fileName: "Knockoff MIS.xlsx",
+                   filterable: true,
+                   allPages: true
+               } ,
+           excelExport: function(e) {
+                 var sheet = e.workbook.sheets[0];
+
+           // Loop through rows to find all footer rows
+           sheet.rows.forEach(function(row) {
+               if (row.type === "footer") { // Check if the row is a footer row
+                   row.cells.forEach(function(cell) {
+                       cell.hAlign = "right"; // Set horizontal alignment to right for all footer cells
+                      if (!cell.font) {
+                           cell.font = {}; // Ensure font object exists
+                       }
+                       cell.font.bold = true;
+                   });
+               }
+           });
+       }
+           });
+       }
+
+
+       function renderGroupedGrid(datas, totalRows) {
+           var format = " ";
+           // Preprocess the data: replace empty spaces in all string values for datas
+           const data = datas.map(item => {
+               const sanitizedItem = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string" && key === "groupRowLabel") {
+                       sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                   } else {
+                       sanitizedItem[key] = item[key];
+                   }
+               }
+               return sanitizedItem;
+           });
+
+           // Preprocess the totalRows in the same way
+           const totals = totalRows.map(item => {
+               const sanitizedTotal = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string") {
+                       sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                   } else {
+                       sanitizedTotal[key] = item[key];
+                   }
+               }
+               return sanitizedTotal;
+           });
+
+           // Map groupRowLabel to groupRowdisplayLabel for display purposes
+           const groupLabelMapping = {};
+           datas.forEach(item => {
+               const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+               groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+           });
+
+           // Extract unique group headers and row labels
+           const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+           const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+           const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+
+           // Transform data into the required row format
+           const gridData = rowLabels.map(rowLabel => {
+               const row = { "RowLabel": rowLabel };
+               let totalNetValue = 0; // Initialize total for Net columns
+
+               groupLabels.forEach(group => {
+                   const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
+                   row[`${group}_Dr_Count`] = rowData ? rowData["Dr Count"] : "0";
+                   //row[`${group}_Dr_Value`] = rowData ? rowData["Dr Value"] : "0";
+                   //row[`${group}_Formal_Dr_Value`] = rowData ? rowData["Formal Dr Value"] : "0";
+                   row[`${group}_Dr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Dr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Dr_Value`] = rowData ? kendo.toString(rowData["Formal Dr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   format = rowData ?  kendo.toString(rowData["Formal Dr Value"]).split(" ")[1]  : format;
+                   row[`${group}_Cr_Count`] = rowData ? rowData["Cr Count"] : "0";
+                   //row[`${group}_Cr_Value`] = rowData ? rowData["Cr Value"] : "0";
+                   //row[`${group}_Formal_Cr_Value`] = rowData ? rowData["Formal Cr Value"] : "0";
+                   row[`${group}_Cr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Cr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Cr_Value`] = rowData ? kendo.toString(rowData["Formal Cr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   //row[`${group}_Net_Value`] = rowData ? rowData["Net Value"] : "0";
+                   //row[`${group}_Formal_Net_Value`] = rowData ? rowData["Formal Net Value"] : "0";
+                   row[`${group}_Net_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Net Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Net_Value`] = rowData ? kendo.toString(rowData["Formal Net Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   // Accumulate Net values for the Contra column
+                   totalNetValue += row[`${group}_Net_Value`]
+               });
+               row["Contra"] = parseFloat(totalNetValue); // Add Contra column value
+               return row;
+           });
+
+           // Add "Sub Total" row dynamically
+           const totalRowData = totals.find(t => t["Row Labels"] === "SubTotal") || {}; // Get 'Total' data from totalRows
+           const subTotalRow = {
+               RowLabel: "Total",
+               backcolor: totalRowData.backcolor || "yellow",  // Use dynamic color if available
+               forecolor: totalRowData.forecolor || "red"     // Use dynamic color if available
+           };
+           groupLabels.forEach(group => {
+               const total = totals.find(t => t.groupRowLabel === group);
+               subTotalRow[`${group}_Dr_Count`] = total ? total["Dr Count"] : "0";
+               subTotalRow[`${group}_Dr_Value`] = total ? total["Dr Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Formal_Dr_Value`] = total ? total["Formal Dr Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Cr_Count`] = total ? total["Cr Count"] : "0";
+               subTotalRow[`${group}_Cr_Value`] = total ? total["Cr Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Formal_Cr_Value`] = total ? total["Formal Cr Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Net_Value`] = total ? total["Net Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Formal_Net_Value`] = total ? total["Formal Net Value"] : decimalFixed(in_conversion_type, 0.000000);
+           });
+
+           // Push the subTotalRow to gridData only once
+           //gridData.push(subTotalRow);
+
+           // Define grid columns dynamically with aggregate functions
+           const columns = [
+               {
+                   field: "RowLabel",
+                   title: "Rules",
+                   width: 250,
+                   headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+                   footerTemplate: "Total", // Include the text 'Total' in the footer
+                   locked: true // Freeze the first column
+               }
+           ];
+
+           // Prepare aggregates dynamically
+           const aggregates = [];
+           groupLabels.forEach(group => {
+               const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+               columns.push({
+                   title: displayLabel,
+                   headerAttributes: {
+                       style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                   },
+                   columns: [
+                       {
+                           field: `${group}_Dr_Count`,
+                           title: "Dr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Dr_Value`,
+                           title: `Dr ${format}`,
+                           width: 100,
+                           //hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Formal_Dr_Value`,
+                           title: `Dr ${format}`,
+                           width: 100,
+                           hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Cr_Count`,
+                           title: "Cr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Cr_Value`,
+                           title: `Cr ${format}`,
+                           width: 100,
+                           //hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #", // Format the sum to 2 decimal places
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Formal_Cr_Value`,
+                           title: `Cr ${format}`,
+                           width: 100,
+                           hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Net_Value`,
+                           title: `Net Value ${format}`,
+                           width: 100,
+                           //hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Formal_Net_Value`,
+                           title: `Net Values${format}`,
+                           width: 100,
+                           hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       }
+                   ]
+               });
+
+               // Dynamically add the aggregates for this group
+               aggregates.push(
+                   { field: `${group}_Dr_Count`, aggregate: "sum" },
+                   { field: `${group}_Dr_Value`, aggregate: "sum" },
+                   { field: `${group}_Formal_Dr_Value`, aggregate: "sum" },
+                   { field: `${group}_Cr_Count`, aggregate: "sum" },
+                   { field: `${group}_Cr_Value`, aggregate: "sum" },
+                   { field: `${group}_Formal_Cr_Value`, aggregate: "sum" },
+                   { field: `${group}_Net_Value`, aggregate: "sum" },
+                   { field: `${group}_Formal_Net_Value`, aggregate: "sum" },
+                   { field: `Contra`, aggregate: "sum" }
+               );
+           });
+
+           // Initialize Kendo Grid with footer for Grand Total
+           var gridConfig = {
+               dataSource: {
+                   data: gridData,
+                   aggregate: aggregates,
+                   schema: {
+                       model: {
+                           fields: {
+                               ...groupLabels.reduce((acc, group) => {
+                                   acc[`${group}_Dr_Count`] = { type: "number" };
+                                   acc[`${group}_Dr_Value`] = { type: "number" };
+                                   acc[`${group}_Cr_Count`] = { type: "number" };
+                                   acc[`${group}_Cr_Value`] = { type: "number" };
+                                   acc[`${group}_Net_Value`] = { type: "number" };
+                                   return acc;
+                               }, {})
+                           }
+                       }
+                   }
+               },
+               height: 400,
+               width: "auto", // Set the grid width to 100% of its container
+               sortable: true,
+               scrollable: {
+                   virtual: false
+               },
+               resizable: true,
+               filterable: true,
+               columns: columns,
+               toolbar: [
+                   {
+                       name: "excel",
+                       text: "Export to Excel",
+                       className: "custom-excel-button"
+                   }
+               ],
+               excel: {
+                   fileName: "Knockoff MIS.xlsx",
+                   filterable: true,
+                   allPages: true
+               },
+              excelExport: function(e) {
+                 var sheet = e.workbook.sheets[0];
+
+           // Loop through rows to find all footer rows
+           sheet.rows.forEach(function(row) {
+               if (row.type === "footer") { // Check if the row is a footer row
+                   row.cells.forEach(function(cell) {
+                       cell.hAlign = "right"; // Set horizontal alignment to right for all footer cells
+                      if (!cell.font) {
+                           cell.font = {}; // Ensure font object exists
+                       }
+                       cell.font.bold = true;
+                   });
+               }
+           });
+       }
+
+           };
+
+           // Initialize the grid
+           $("#example").remove(); // Remove any existing grid
+           $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+           var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+       }
+
+
+       function renderGroupedGridpivot(datas, totalRows) {
+           var format = " ";
+           // Preprocess the data: replace empty spaces in all string values for datas
+           const data = datas.map(item => {
+               const sanitizedItem = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string" && key === "groupRowLabel") {
+                       sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                   } else {
+                       sanitizedItem[key] = item[key];
+                   }
+               }
+               return sanitizedItem;
+           });
+
+           // Preprocess the totalRows in the same way
+           const totals = totalRows.map(item => {
+               const sanitizedTotal = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string") {
+                       sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                   } else {
+                       sanitizedTotal[key] = item[key];
+                   }
+               }
+               return sanitizedTotal;
+           });
+
+           // Map groupRowLabel to groupRowdisplayLabel for display purposes
+           const groupLabelMapping = {};
+           datas.forEach(item => {
+               const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+               groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+           });
+
+           // Extract unique group headers and row labels
+           const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+           groupLabel.push("Target");
+           const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+           const rowLabels = [...new Set(data.map(d => d["Row Labels"] + "&$~^" + d["Target Labels"]))];
+
+           // Extract target labels if available
+           const targetLabels = [...new Set(data.map(d => d["Target Labels"]))];
+
+           // Transform data into the required row format
+           const gridData = rowLabels.map(rowLabel => {
+               const row = { "RowLabel": rowLabel.split("&$~^")[0] };
+               let totalNetValue = 0; // Initialize total for Net columns rowLabel.split('&$~^')[0]
+
+               groupLabels.forEach(group => {
+                   if (group != "Target") {
+                       const rowData = data.find(d => d["Row Labels"] + "&$~^" + d["Target Labels"] === rowLabel && d.groupRowLabel === group);
+                       //row[`${group}_Dr_Count`] = rowData ? rowData["Dr Count"] : "0";
+                       row[`${group}_Dr_Count`] = rowData ? Number(rowData["Dr Count"]) : 0;
+
+                       // row[`${group}_Dr_Value`] = rowData ? kendo.toString(rowData["Formal Dr Value"]).split(" ")[0] : "0.00";
+                       row[`${group}_Dr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Dr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                       //row[`${group}_Formal_Dr_Value`] = rowData ? rowData["Formal Dr Value"] : "0.00";
+                       row[`${group}_Formal_Dr_Value`] = rowData ? kendo.toString(rowData["Formal Dr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                       format = rowData ?  kendo.toString(rowData["Formal Dr Value"]).split(" ")[1]  : format;
+                       row[`${group}_Cr_Count`] = rowData ? rowData["Cr Count"] : "0";
+                       //row[`${group}_Cr_Value`] = rowData ? rowData["Cr Value"] : "0";
+                       row[`${group}_Cr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Cr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                       row[`${group}_Formal_Cr_Value`] = rowData ? kendo.toString(rowData["Formal Cr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                       row[`${group}_Net_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, rowData["Cr Value"])) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                       row[`${group}_Formal_Net_Value`] = rowData ? rowData["Formal Cr Value"] : decimalFixed(in_conversion_type, 0.000000);
+                       //row["TargetDataSet"] = rowData ? rowData["Target Labels"] : "-";
+
+                   } else {
+                       const rowData = data.find(d => d["Row Labels"] + "&$~^" + d["Target Labels"] === rowLabel && d.groupTargetRowLabel === group);
+                       //row[`${group}_Dr_Count`] = rowData ? rowData["Target Dr Count"] : "0";
+                       row[`${group}_Dr_Count`] = rowData ? Number(rowData["Target Dr Count"]) : 0;
+
+                       //row[`${group}_Dr_Value`] = rowData ? rowData["Target Dr Value"] : "0.00";
+                       row[`${group}_Dr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Target Formal Dr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                       row[`${group}_Cr_Count`] = rowData ? rowData["Target Cr Count"] : "0";
+                       //row[`${group}_Cr_Value`] = rowData ? rowData["Target Cr Value"] : "0.00";
+                       row[`${group}_Cr_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Target Formal Cr Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                       row[`${group}_Formal_Dr_Value`] = rowData ? kendo.toString(rowData["Target Formal Dr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                       row[`${group}_Formal_Cr_Value`] = rowData ? kendo.toString(rowData["Target Formal Cr Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                       //row = { "TargetDataSet": rowData ? rowData["Target Formal Cr Value"] : "-" };
+                       row["TargetDataSet"] = rowData ? rowData["Target Labels"] : "-";
+                   }
+                   // Accumulate Net values for the Contra column
+                   totalNetValue += parseFloat(row[`${group}_Net_Value`]) || decimalFixed(in_conversion_type, 0.000000);;
+                   //row["TargetDataSet"] = rowData ? rowData["Target"] : "-";
+               });
+               row["Contra"] = parseFloat(totalNetValue); // Add Contra column value
+
+               // Add Target Labels if available
+               row["Target_Labels"] = targetLabels.join(", "); // Join all target labels into a single field
+
+               return row;
+           });
+
+           // Add "Sub Total" row dynamically
+           const totalRowData = totals.find(t => t["Row Labels"] === "SubTotal") || {}; // Get 'Total' data from totalRows
+           const subTotalRow = {
+               RowLabel: "Total",
+               backcolor: totalRowData.backcolor || "yellow",  // Use dynamic color if available
+               forecolor: totalRowData.forecolor || "red"     // Use dynamic color if available
+           };
+           groupLabels.forEach(group => {
+               const total = totals.find(t => t.groupRowLabel === group);
+               subTotalRow[`${group}_Dr_Count`] = total ? total["Dr Count"] : "0";
+               subTotalRow[`${group}_Dr_Value`] = total ? total["Dr Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Formal_Dr_Value`] = total ? "C" : "C";
+               subTotalRow[`${group}_Cr_Count`] = total ? total["Cr Count"] : "0";
+               subTotalRow[`${group}_Cr_Value`] = total ? total["Cr Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Formal_Cr_Value`] = total ? "C" : "C";
+               subTotalRow[`${group}_Net_Value`] = total ? total["Net Value"] : decimalFixed(in_conversion_type, 0.000000);
+               subTotalRow[`${group}_Formal_Net_Value`] = total ? total["Formal Net Value"] : decimalFixed(in_conversion_type, 0.000000);
+           });
+
+           // Define grid columns dynamically with aggregate functions
+           const columns = [
+               {
+                   field: "RowLabel",
+                   title: "Rules",
+                   width: 250,
+                   headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;type:number" },
+                   footerTemplate: "Total", // Include the text 'Total' in the footer
+                   locked: true,// Freeze the first column
+                   filterable: true,
+               }
+               // {
+               //     field: "TargetDataSet",
+               //     title: "Target Data Set",
+               //     width: 400,
+               //     headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+               //     //footerTemplate: "Total", // Include the text 'Total' in the footer
+               //     locked: true // Freeze the first column
+               // }
+           ];
+
+           // Prepare aggregates dynamically
+           const aggregates = [];
+           groupLabels.forEach((group, index) => {
+               const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+               columns.push({
+                   title: displayLabel,
+                   headerAttributes: {
+                       style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                   },
+                   columns: [
+                       // Previous group column definitions remain the same
+                       {
+                           field: `${group}_Dr_Count`,
+                           title: "Dr",
+                           width: 80,
+                           type: "number",
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" },
+                           locked: index === 0, // Lock the first group column
+                           filterable: true,
+                       },
+                       {
+                           field: `${group}_Dr_Value`,
+                           title: `Dr ${format}`,
+                           width: 100,
+                           type: "number",
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" },
+                           locked: index === 0, // Lock the first group column
+                           filterable: true,
+                       },
+                       {
+                           field: `${group}_Formal_Dr_Value`,
+                           title: "Units",
+                           width: 50,
+                           attributes: { style: "text-align:center;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: [],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "C",
+                           footerAttributes: { style: "text-align:right;" },
+                           locked: index === 0, // Lock the first group column
+                           filterable: true,
+                           hidden: true,
+                       },
+                       {
+                           field: `${group}_Cr_Count`,
+                           title: "Cr",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" },
+                           locked: index === 0, // Lock the first group column
+                           filterable: true,
+                       },
+                       {
+                           field: `${group}_Cr_Value`,
+                           title: `Cr ${format}`,
+                           width: 100,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" },
+                           locked: index === 0, // Lock the first group column
+                           filterable: true,
+                       },
+                       {
+                           field: `${group}_Formal_Cr_Value`,
+                           title: "Units",
+                           width: 50,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: [],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "C",
+                           footerAttributes: { style: "text-align:right;" },
+                           locked: index === 0, // Lock the first group column
+                           filterable: true,
+                           hidden: true,
+                       },
+                   ]
+               });
+
+               // Dynamically add the aggregates for this group
+               aggregates.push(
+                   { field: `${group}_Dr_Count`, aggregate: "sum" },
+                   { field: `${group}_Dr_Value`, aggregate: "sum" },
+                   // { field: `${group}_Formal_Dr_Value`, null },
+                   { field: `${group}_Cr_Count`, aggregate: "sum" },
+                   { field: `${group}_Cr_Value`, aggregate: "sum" },
+                   //{ field: `${group}_Formal_Cr_Value`,null },
+                   { field: `${group}_Net_Value`, aggregate: "sum" },
+                   { field: `${group}_Formal_Net_Value`, aggregate: "sum" }
+               );
+           });
+
+           columns.push({
+               field: "TargetDataSet",
+               title: "Target Data Set",
+               width: 250,
+               headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+               filterable: true
+           });
+           // Initialize Kendo Grid with footer for Grand Total
+           var gridConfig = {
+               dataSource: {
+                   data: gridData,
+                   aggregate: aggregates,
+                   schema: {
+                       model: {
+                           fields: {
+                               ...groupLabels.reduce((acc, group) => {
+                                   acc[`${group}_Dr_Count`] = { type: "number" };
+                                   acc[`${group}_Dr_Value`] = { type: "number" };
+                                   acc[`${group}_Cr_Count`] = { type: "number" };
+                                   acc[`${group}_Cr_Value`] = { type: "number" };
+                                   return acc;
+                               }, {})
+                           }
+                       }
+                   }
+               },
+               group: [{ field: "TargetDataSet" }], // Grouping by Target Labels
+               height: 400,
+               width: "auto", // Set the grid width to 100% of its container
+               sortable: true,
+               groupable: true, // Enables grouping
+               scrollable: {
+                   virtual: true
+               },
+               resizable: true,
+               filterable: true,
+               columns: columns,
+               toolbar: [
+                   {
+                       name: "excel",
+                       text: "Export to Excel",
+                       className: "custom-excel-button"
+                   }
+               ],
+               excel: {
+                   fileName: "Knockoff MIS.xlsx",
+                   filterable: true,
+                   allPages: true
+               },
+    excelExport: function(e) {
+           var sheet = e.workbook.sheets[0];
+
+           // Loop through rows to find all footer rows
+           sheet.rows.forEach(function(row) {
+               if (row.type === "footer") { // Check if the row is a footer row
+                   row.cells.forEach(function(cell) {
+                       cell.hAlign = "right"; // Set horizontal alignment to right for all footer cells
+                      if (!cell.font) {
+                           cell.font = {}; // Ensure font object exists
+                       }
+                       cell.font.bold = true;
+                   });
+               }
+           });
+       }
+           };
+
+           // Initialize the grid
+           $("#example").remove(); // Remove any existing grid
+           $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+           var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+       }
+
+
+       function renderGroupedGridValuebase(datas, totalRows) {
+           var format = " ";
+           // Preprocess the data: replace empty spaces in all string values for datas
+           const data = datas.map(item => {
+               const sanitizedItem = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string" && key === "groupRowLabel") {
+                       sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                   } else {
+                       sanitizedItem[key] = item[key];
+                   }
+               }
+               return sanitizedItem;
+           });
+
+           // Preprocess the totalRows in the same way
+           const totals = totalRows.map(item => {
+               const sanitizedTotal = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string") {
+                       sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                   } else {
+                       sanitizedTotal[key] = item[key];
+                   }
+               }
+               return sanitizedTotal;
+           });
+
+           // Map groupRowLabel to groupRowdisplayLabel for display purposes
+           const groupLabelMapping = {};
+           datas.forEach(item => {
+               const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+               groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+           });
+
+           // Extract unique group headers and row labels
+           const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+           const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+           const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+
+           // Transform data into the required row format
+           const gridData = rowLabels.map(rowLabel => {
+               const row = { "RowLabel": rowLabel };
+               let totalNetValue = 0; // Initialize total for Net columns
+
+               groupLabels.forEach(group => {
+                   const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
+                   row[`${group}_Count`] = rowData ? rowData["Count"] : "0";
+                   row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   row[`${group}_Formal_Value`] = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   format = rowData ?  kendo.toString(rowData["Formal Value"]).split(" ")[1]  : format;
+               });
+               return row;
+           });
+
+           // Define grid columns dynamically with aggregate functions
+           const columns = [
+               {
+                   field: "RowLabel",
+                   title: "Rules",
+                   width: 250,
+                   headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+                   footerTemplate: "Total", // Include the text 'Total' in the footer
+                   locked: true // Freeze the first column
+               }
+           ];
+
+           // Prepare aggregates dynamically
+           const aggregates = [];
+           groupLabels.forEach(group => {
+               const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+               columns.push({
+                   title: displayLabel,
+                   headerAttributes: {
+                       style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                   },
+                   columns: [
+                       {
+                           field: `${group}_Count`,
+                           title: "Count",
+                           width: 80,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Value`,
+                           title: `Value${format}`,
+                           width: 100,
+                           //hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       },
+                       {
+                           field: `${group}_Formal_Value`,
+                           title: `Unit${format}`,
+                           width: 100,
+                           hidden: true,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           //aggregates: ["sum"],
+                           //footerTemplate: "#= sum #",
+                           //footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       }
+                   ]
+               });
+
+               // Dynamically add the aggregates for this group
+               aggregates.push(
+                   { field: `${group}_Count`, aggregate: "sum" },
+                   { field: `${group}_Value`, aggregate: "sum" }
+               );
+           });
+
+           // Initialize Kendo Grid with footer for Grand Total
+           var gridConfig = {
+               dataSource: {
+                   data: gridData,
+                   aggregate: aggregates,
+                   schema: {
+                       model: {
+                           fields: {
+                               ...groupLabels.reduce((acc, group) => {
+                                   acc[`${group}_Count`] = { type: "number" };
+                                   acc[`${group}_Value`] = { type: "number" };
+                                   return acc;
+                               }, {})
+                           }
+                       }
+                   }
+               },
+               height: 400,
+               width: "auto", // Set the grid width to 100% of its container
+               sortable: true,
+               scrollable: {
+                   virtual: false
+               },
+               resizable: true,
+               filterable: true,
+               columns: columns,
+               toolbar: [
+                   {
+                       name: "excel",
+                       text: "Export to Excel",
+                       className: "custom-excel-button"
+                   }
+               ],
+               excel: {
+                   fileName: "Knockoff MIS.xlsx",
+                   filterable: true,
+                   allPages: true
+               }
+           };
+
+           // Initialize the grid
+           $("#example").remove(); // Remove any existing grid
+           $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+           var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+       }
+
+       function renderGroupedGridNonValuebase(datas, totalRows) {
+           var format = " ";
+           // Preprocess the data: replace empty spaces in all string values for datas
+           const data = datas.map(item => {
+               const sanitizedItem = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string" && key === "groupRowLabel") {
+                       sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                   } else {
+                       sanitizedItem[key] = item[key];
+                   }
+               }
+               return sanitizedItem;
+           });
+
+           // Preprocess the totalRows in the same way
+           const totals = totalRows.map(item => {
+               const sanitizedTotal = {};
+               for (const key in item) {
+                   if (typeof item[key] === "string") {
+                       sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                   } else {
+                       sanitizedTotal[key] = item[key];
+                   }
+               }
+               return sanitizedTotal;
+           });
+
+           // Map groupRowLabel to groupRowdisplayLabel for display purposes
+           const groupLabelMapping = {};
+           datas.forEach(item => {
+               const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+               groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+           });
+
+           // Extract unique group headers and row labels
+           const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+           const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+           const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+
+           // Transform data into the required row format
+           const gridData = rowLabels.map(rowLabel => {
+               const row = { "RowLabel": rowLabel };
+               let totalNetValue = 0; // Initialize total for Net columns
+
+               groupLabels.forEach(group => {
+                   const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
+                   row[`${group}_Count`] = rowData ? rowData["Count"] : "0";
+                   //row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                   //row[`${group}_Formal_Value`] = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                   format = rowData ?  kendo.toString(rowData["Formal Value"]).split(" ")[1]  : format;
+               });
+               return row;
+           });
+
+           // Define grid columns dynamically with aggregate functions
+           const columns = [
+               {
+                   field: "RowLabel",
+                   title: "Rules",
+                   width: 500,
+                   headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+                   footerTemplate: "Total", // Include the text 'Total' in the footer
+                   locked: true // Freeze the first column
+               }
+           ];
+
+           // Prepare aggregates dynamically
+           const aggregates = [];
+           groupLabels.forEach(group => {
+               const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+               columns.push({
+                   title: displayLabel,
+                   headerAttributes: {
+                       style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                   },
+                   columns: [
+                       {
+                           field: `${group}_Count`,
+                           title: "Count",
+                           width: 150,
+                           attributes: { style: "text-align:right;" },
+                           headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                           aggregates: ["sum"],
+                           footerTemplate: "#= sum #",
+                           footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                       }
+                   ]
+               });
+
+               // Dynamically add the aggregates for this group
+               aggregates.push(
+                   { field: `${group}_Count`, aggregate: "sum" }
+               );
+           });
+
+           // Initialize Kendo Grid with footer for Grand Total
+           var gridConfig = {
+               dataSource: {
+                   data: gridData,
+                   aggregate: aggregates,
+                   schema: {
+                       model: {
+                           fields: {
+                               ...groupLabels.reduce((acc, group) => {
+                                   acc[`${group}_Count`] = { type: "number" }
+                                   return acc;
+                               }, {})
+                           }
+                       }
+                   }
+               },
+               height: 400,
+               width: "auto", // Set the grid width to 100% of its container
+               sortable: true,
+               scrollable: {
+                   virtual: false
+               },
+               resizable: true,
+               filterable: true,
+               columns: columns,
+               toolbar: [
+                   {
+                       name: "excel",
+                       text: "Export to Excel",
+                       className: "custom-excel-button"
+                   }
+               ],
+               excel: {
+                   fileName: "Knockoff MIS.xlsx",
+                   filterable: true,
+                   allPages: true
+               }
+           };
+
+           // Initialize the grid
+           $("#example").remove(); // Remove any existing grid
+           $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+           var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+       }
+
+
+       function loadGrid(data) {
+           var columns = [];
+           var rows = [];
+           if (data) {
+               for (var key in data[0]) {
+                   var field = key.replace(/\s+/g, '_');
+                   var propType = typeof data[0][key];
+                   var bool = false;
+                   var txtalign = "";
+                   var widthval = "";
+                   if (field == "forecolor" || field == "backcolor") {
+                       bool = true;
+                   } if (field == "Row_Labels") {
+                       txtalign = "left";
+                       widthval = 250;
+                   } else {
+                       txtalign = "right"
+                       widthval: 100;
+                   }
+                   columns.push({
+                       field: field,
+                       title: key,
+                       type: propType,
+                       attributes: { style: "text-align:" + txtalign },
+                       filterable: false,
+                       hidden: bool,
+                       width: widthval
+                   });
+               }
+               $.each(data, function (i, e) {
+                   var entryObject = {};
+                   for (var key in e) {
+                       var field = key.replace(/\s+/g, '_');
+                       entryObject[field] = e[key];
+                   }
+                   rows.push(entryObject);
+               });
+
+               var configuration = {
+                   dataSource: {
+                       data: rows,
+                   },
+                   height: 400,
+                   navigatable: false,
+                   groupable: false,
+                   editable: false,
+                   sortable: true,
+                   scrollable: true,
+                   attributes: { style: "text-align: center;" },
+                   filterable: {
+                       extra: true,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   },
+                   pageable: false,
+                   resizable: true,
+                   persistSelection: true,
+                   selectable: true,
+                   columns: columns,
+                   dataBound: function (e) {
+                       var grid = this; // "this" refers to the Kendo Grid
+
+                       grid.tbody.find("tr").each(function (index) {
+                           var rowData = grid.dataItem(this); // Get the data item for the current row
+                           $(this).css("background-color", rowData.backcolor);
+                           $(this).css("color", rowData.forecolor);
+                           //}
+                       });
+                   }
+               };
+
+               $("#example").remove();
+               $('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
+               var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+           } else {
+               var emptydata = [{
+                   "Row Labels": "",
+                   "Dr Count": "",
+                   "Dr Value": "",
+                   "Cr Count": "",
+                   "Cr Value": "",
+                   "Total Count": "",
+                   "Total Value": "",
+               }];
+               for (var key in emptydata[0]) {
+                   var emptyfield = key.replace(/\s+/g, '_');
+                   columns.push({
+                       field: emptyfield,
+                       title: key,
+                       attributes: { style: "text-align: left;" },
+                       filterable: false,
+                   });
+               }
+               $.each(emptydata, function (i, e) {
+                   var entryObject = {};
+                   for (var key in e) {
+                       var field = key.replace(/\s+/g, '_');
+                       entryObject[field] = e[key];
+                   }
+                   rows.push(entryObject);
+               });
+
+               var configuration = {
+                   dataSource: {
+                       data: rows,
+                   },
+                   height: 400,
+                   navigatable: false,
+                   groupable: false,
+                   editable: false,
+                   sortable: true,
+                   scrollable: true,
+                   attributes: { style: "text-align: center;" },
+                   filterable: {
+                       extra: true,
+                       operators: {
+                           string: {
+                               contains: "Contains"
+                           }
+                       }
+                   },
+                   pageable: false,
+                   resizable: true,
+                   persistSelection: true,
+                   selectable: true,
+                   columns: columns
+               };
+
+               $("#example").remove();
+               $('#grid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1" style="position:relative;overflow:scroll;width:100%"></table></div>');
+               var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+           }
+
+
+
+       }
+
+       function exportexcel() {
+           var in_recon_code = $("#reconname").val();
+           var in_tran_date = $("#period_from").val();
+           var ts = in_tran_date.split("/");
+           var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
+           var in_todate = $("#period_to").val();
+           var ts1 = in_todate.split("/");
+           var pr1 = ts[2] + "-" + ts1[1] + "-" + ts1[0];
+           var user_code = sessionStorage.getItem("usrname");
+           window.location.href = '@Url.Action("KOMISreport", "KnockOff")?in_period_from=' + pr + '&in_period_to=' + pr1 + '&in_recon_code=' + in_recon_code + '&user_code=' + user_code + '';
+
+       }
+
+       //Date Validation
+
+
+
+       document.addEventListener('DOMContentLoaded', function () {
+           const dateInput = document.getElementById('period_from');
+           const dateInput1 = document.getElementById('period_to');
+           dateInput.addEventListener('focusout', onFocusOut);
+           dateInput1.addEventListener('focusout', onFocusOut);
+       });
+
+       function decimalFixed(conversionType, value) {
+           if (conversionType == "K" || conversionType == "L" || conversionType == "A") {
+               return parseFloat(value).toFixed(2);
+           } else if (conversionType == "Cr") {
+               return parseFloat(value).toFixed(3);
+           } else {
+               return parseFloat(value).toFixed(2);
+           }
+       }
 
 
 </script>
