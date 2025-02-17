@@ -75,11 +75,11 @@
                         <div class="row" style="margin-top: 20px;">
                             <div class="col-md-6">
                               <label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                <select id="cmbupdatereconname" class="form-select form-control" onchange="updatedatasetRecon()">
-                                </select>
+                               @*  <select id="cmbupdatereconname" class="form-select form-control" onchange="updatedatasetRecon()">
+                                </select> *@
 
-                                @*  <input id="updatereconname" style="width:65%" />
-                                <input class="form-control" type="hidden" id="selectedRule">*@
+                                 <input id="updatereconname" style="width:65%" />
+                                <input class="form-control" type="hidden" id="selectedRule">
                             </div>
                         </div>
                         <div class="row" style="margin-top:15px;">                            
@@ -471,9 +471,9 @@
             $('#selected_rule_name').text('Selected Rule:' + selectedItem.rule_name);
             $('#selected_recon_name').text('Selected Recon:' + selectedItem.recon_name);
             if ($(mode).attr('value') == "edit") {
-               // clearCheckboxes();
-               // getupdateRuleList();
-                getdatasetagainstrecon();
+                clearCheckboxes();
+                getupdateRuleList();
+                // getdatasetagainstrecon();
                 $("#updatereconname").val("");
                 $("#updaterulename").val("");
                 $("#infomodal").modal("show");
@@ -503,23 +503,23 @@
     }
 
     function updateRecon() {
-        var grid = $("#grid_mappeddataset").data("kendoGrid");
-        var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
-        var concatData = "";
-        for (var i = 0; i < colfilterData.length; i++) {
-            var j = i + 1;
-            var dataItem = colfilterData[i];
-            if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
-                concatData += $("#cmbupdatereconname").val() + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field + "$"
-            } else {
-                $.alert({
-                    title: 'Recon',
-                    content: 'Target Dataset is missing for ' + j + ' row, Please map the dataset and try again.!',
-                    type: 'red',
-                });
-                return;
-            }
-        }
+        // var grid = $("#grid_mappeddataset").data("kendoGrid");
+        // var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
+        // var concatData = "";
+        // for (var i = 0; i < colfilterData.length; i++) {
+        //     var j = i + 1;
+        //     var dataItem = colfilterData[i];
+        //     if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
+        //         concatData += $("#cmbupdatereconname").val() + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field + "$"
+        //     } else {
+        //         $.alert({
+        //             title: 'Recon',
+        //             content: 'Target Dataset is missing for ' + j + ' row, Please map the dataset and try again.!',
+        //             type: 'red',
+        //         });
+        //         return;
+        //     }
+        // }
         var grid = $("#grid_rulelist").data("kendoGrid");
         var selectedItem = grid.dataItem(grid.select());
         var Attribid = [];
@@ -535,7 +535,7 @@
         if (arrString == "") {
             $.alert({
                 title: 'Recon',
-                content: "Recon name should not be Empty",
+                content: "Please Select Update Recon Name .!",
                 type: 'red',
             });
             return;
@@ -544,9 +544,9 @@
         data.in_base_recon_code = $("#cmbreconname").val();
         data.in_base_rule_code = $("#selectedRule").val();
         data.in_update_recon_code = "$" + arrString;
-        data.in_update_rule_code = selectedItem.rule_name;
+        data.in_update_rule_code = "";
         data.in_user_code = sessionStorage.getItem("usrname");
-        if (arrString != "" && data.in_update_rule_code) {
+        if (arrString != "") {
             $.ajax({
                 type: "POST",
                 url: '../Reconupdate/ReconUpdateRule',
@@ -586,13 +586,15 @@
                 type: 'red',
             });
 
-        } else if (!data.in_update_rule_code) {
-            $.alert({
-                title: 'Recon',
-                content: "Please Select Update Rule .!",
-                type: 'red',
-            });
-        }
+        } 
+        
+        // else if (!data.in_update_rule_code) {
+        //     $.alert({
+        //         title: 'Recon',
+        //         content: "Please Select Update Rule .!",
+        //         type: 'red',
+        //     });
+        // }
     }
 
     function clearCheckboxes() {
@@ -659,7 +661,6 @@
 
                     e.stopImmediatePropagation();
                 });
-
                 updateDropDown();
             },
             error: function (er) {
