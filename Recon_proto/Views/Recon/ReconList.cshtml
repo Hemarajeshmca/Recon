@@ -16,10 +16,6 @@
 			margin-left: 10px;
 		}
 
-		.k-grid.k-widget {
-			height: 360px;
-		}
-
 		.k-grid-header th.k-header > .k-link {
 			width: 100px;
 		}
@@ -39,6 +35,7 @@
 
 		.k-grid-content {
 			overflow-x: hidden;
+			height: 227px;
 		}
 
 		.k-content {
@@ -109,7 +106,7 @@
 							<input class="form-control" id="selectedReconCode" type="text" hidden />
 						</div>
 					</div>
-					<div class="row" style="margin-top:15px;">
+					<div class="col-xs-12" style="margin-top:15px;height:300px">
 						<div id="gd_mappeddataset">
 							<div id="grid_mappeddataset"> </div>
 						</div>
@@ -217,7 +214,7 @@
 						}
 					}
 				},
-				height: 450,				
+				height: 450,
 				dataBound: function (e) {
 					resultData = e.sender._data;
 					var rows = $('#grid_reconlist').data('kendoGrid').tbody.children();
@@ -236,7 +233,7 @@
 					}
 					if (screen_code[0].delete == "N") {
 						$(".k-grid-delete").hide();
-					}					
+					}
 				},
 				pageable: {
 					refresh: false,
@@ -501,7 +498,7 @@
 										var action = "DELETE";
 										var action_by = sessionStorage.getItem("usrname");
 										var status = "";
-										
+
 										var in_recon_automatch_partial = "";
 										var in_recon_date_flag = "";
 										var in_recon_date_field = "";
@@ -564,13 +561,13 @@
 			updatedatasetRecon();
 		} else if (selectedItem.active_status == 'D') {
 			return;
-			$("#clone_recon").modal('hide');			
+			$("#clone_recon").modal('hide');
 		} else if (selectedItem.active_status == 'N') {
 			return;
 		}
 
 	}
-	function cloneRecon() {		
+	function cloneRecon() {
 			var modelArr = [];
 			var grid = $("#grid_mappeddataset").data("kendoGrid");
 			var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
@@ -589,7 +586,7 @@
 					return;
 				}
 			}
-		
+
 		var newReconName = $("#newReconName").val();
 		if(newReconName == ""){
 			$.alert({
@@ -599,7 +596,7 @@
 			});
 			return;
 		}
-		var selectedReconCode = $("#selectedReconCode").val();	
+		var selectedReconCode = $("#selectedReconCode").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
@@ -615,7 +612,7 @@
 							title: 'Recon',
 							content: result[0].out_msg,
 							type: 'green',
-						});		
+						});
 						location.reload();
 					} else {
 						$.alert({
@@ -635,11 +632,11 @@
 			return "<a href='' onclick='clonePopup()' data-bs-toggle='modal'><img style='height: 20px; width: 20px; ' src = '../Assets/images/clone.png'></a>"
 		}
 	}
-	 function updategriddataset(data) {		
+	 function updategriddataset(data) {
 		var comparison_field_desc_list = "";
 		$("#grid_mappeddataset").kendoGrid({
 			dataSource: {
-				data: data,
+				data: data,	
 				pageSize: 15,
 				schema: {
 					model: {
@@ -664,16 +661,13 @@
 				setColor(rows, resultData);
 			},
 			pageable: {
-				refresh: false,
-				pageSizes: [5, 10, 15, 20],
-				buttonCount: 5
-			},
-			sortable: true,
-			selectable: true,
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+			pageable: true,
 			filterable: false,
-			edit: OnEdit,
-			navigatable: true,
-			resizable: true,
+			edit: OnEdit,			
 			columns: [
 				{
 					field: "dataset_code",
@@ -721,16 +715,16 @@
 					editor: function (container, options) {
 						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_mappeddataset")
 					},
-					width: 80,	
+					width: 80,
 					editable: true,
 				}, {
 					field: "dataset_type_desc",
 					title: "Target Dataset Type",
-					width: 45,
+					width: 60,
 					editable: false,
 				}],
 			editable: true,
-		});		
+		});
 		comparison_field_desc_list = getdatasetlist();
 	}
 	function OnEdit(e) {
@@ -744,7 +738,7 @@
 			javascript_log4j_root(arguments.callee.name, err);
 		}
 	}
-	 function getdatasetlist() {		
+	 function getdatasetlist() {
 		var arr1 = [];
 		var data = {};
 		data.in_user_gid = 0;
@@ -761,18 +755,22 @@
 			success: function (response) {
 				var result = JSON.parse(response);
 				if(result.length > 0){
-					for (i = 0; result.length > i; i++) {
-						var list1 = {};
-						list1.code = result[i].dataset_code;
-						list1.desc = result[i].dataset_name;
-						arr1.push(list1);
+					for (i = 0; result.length > i; i++) 
+					{
+						if(result[i].active_status == 'Y') 
+						{
+							var list1 = {};
+							list1.code = result[i].dataset_code;
+							list1.desc = result[i].dataset_name;
+							arr1.push(list1);
+					    }
 					}
 				}
 			}
 		});
-		return arr1;		
+		return arr1;
 	 }
-	
+
 	 function updatedatasetRecon() {
 		var reconcode = $("#selectedReconCode").val();
 		var target_recon_code = $("#cmbupdatereconname").val();
@@ -787,10 +785,12 @@
 			success: function (response) {
 				var res = JSON.parse(response);
 				var result = res.filter(item => item.dataset_type != '');
+				$("#gd_mappeddataset").empty();
+				$("#gd_mappeddataset").append("<div id='grid_mappeddataset' style='width:100%'></div>");
 				updategriddataset(result);
 			}
 		});
-	}	
+	}
 </script>
 
 

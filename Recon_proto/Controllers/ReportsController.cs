@@ -2738,7 +2738,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"]);
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(report), UTF8Encoding.UTF8, "application/json");
-                    content.Headers.Add("user_code", HttpContext.Session.GetString("user_code"));
+                    content.Headers.Add("user_code", in_action_by);
                     var response = client.PostAsync("ReconReportVersionhistory", content).Result;
 
                     Stream data = response.Content.ReadAsStreamAsync().Result;
