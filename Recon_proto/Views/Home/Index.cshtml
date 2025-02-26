@@ -155,7 +155,7 @@
 							<input class="cusDate" data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 						<div class="col-md-2">
-							<label for="conversionsDropdown" class="title">Conversion Type</label>
+							<label for="conversionsDropdown" class="title">Values In</label>
 							<select class="form-select form-control" id="conversionsDropdown">
 								@foreach (var item in ViewBag.ConversionTypes)
 								{
@@ -853,17 +853,17 @@
 	});
 
 
-	function formatValue(value) {
-		if (value < 10000) {
-			return value; // Less than 10,000 as is
-		} else if (value >= 10000 && value < 100000) {
-			return (value / 1000).toFixed(2) + " K"; // 10K to less than 1 lakh
-		} else if (value >= 100000 && value < 10000000) {
-			return (value / 100000).toFixed(2) + " L"; // 1 lakh to less than 1 crore
-		} else {
-			return (value / 10000000).toFixed(2) + " C"; // 1 crore and above
-		}
-	}
+	// function formatValue(value) {
+	// 	if (value < 10000) {
+	// 		return value; // Less than 10,000 as is
+	// 	} else if (value >= 10000 && value < 100000) {
+	// 		return (value / 1000).toFixed(2) + " K"; // 10K to less than 1 lakh
+	// 	} else if (value >= 100000 && value < 10000000) {
+	// 		return (value / 100000).toFixed(2) + " L"; // 1 lakh to less than 1 crore
+	// 	} else {
+	// 		return (value / 10000000).toFixed(2) + " C"; // 1 crore and above
+	// 	}
+	// }
 
 </script>
 

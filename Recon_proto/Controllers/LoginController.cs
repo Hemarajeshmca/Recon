@@ -274,9 +274,11 @@ namespace Recon_proto.Controllers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return e.Message;
+                string control = this.ControllerContext.RouteData.Values["controller"].ToString();
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Encrypt");
             }
             return clearText;
         }
@@ -304,9 +306,11 @@ namespace Recon_proto.Controllers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return e.Message;
+                string control = this.ControllerContext.RouteData.Values["controller"].ToString();
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Encrypt");
             }
             return cipherText;
         }
