@@ -72,10 +72,10 @@
 						<div class="row" style="margin-top: 20px;">
 							<div class="col-md-6">
 								<label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-								<select id="cmbupdatereconname" class="form-select form-control" onchange="updatedatasetRecon()">
-								</select>
-								@* <input id="updatereconname" style="width:65%" />
-								<input class="form-control" type="hidden" id="selectedTheme"> *@
+								@* <select id="cmbupdatereconname" class="form-select form-control" onchange="updatedatasetRecon()">
+								</select> *@ 
+								<input id="updatereconname" style="width:65%" />
+								<input class="form-control" type="hidden" id="selectedTheme">
 							</div>
 						</div>
 						<div class="row" style="margin-top:15px;">
@@ -494,9 +494,9 @@
 			$('#selected_theme_name').text('Selected Theme :' + selectedItem.theme_desc);
 			$('#selected_recon_name').text('Selected Recon :' + selectedItem.recon_name);
 			if ($(mode).attr('value') == "edit") {
-				//clearCheckboxes();
-				//getupdateThemeList();
-				getdatasetagainstrecon();
+				clearCheckboxes();
+				getupdateThemeList();
+				//getdatasetagainstrecon();
 				$("#updatereconname").val("");
 				$("#updatetemename").val("");
 				$("#infomodal").modal("show");
@@ -526,25 +526,25 @@
 	}
 
 	function updateRecon() {
-		var grid = $("#grid_mappeddataset").data("kendoGrid");
-		var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
-		var concatData = "";
-		for (var i = 0; i < colfilterData.length; i++) {
-			var j = i + 1;
-			var dataItem = colfilterData[i];
-			if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
-				concatData += $("#cmbupdatereconname").val() + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field + "$"
-			} else {
-				$.alert({
-					title: 'Recon',
-					content: 'Target Dataset is missing for ' + j + ' row, Please map the dataset and try again.!',
-					type: 'red',
-				});
-				return;
-			}
-		}
-		var grid = $("#grid_themelist").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());
+		// var grid = $("#grid_mappeddataset").data("kendoGrid");
+		// var colfilterData = $("#grid_mappeddataset").data().kendoGrid.dataSource.view();
+		// var concatData = "";
+		// for (var i = 0; i < colfilterData.length; i++) {
+		// 	var j = i + 1;
+		// 	var dataItem = colfilterData[i];
+		// 	if (dataItem.comparison_field != "" && dataItem.comparison_field != undefined) {
+		// 		concatData += $("#cmbupdatereconname").val() + "#" + dataItem.dataset_code + "#" + dataItem.comparison_field + "$"
+		// 	} else {
+		// 		$.alert({
+		// 			title: 'Recon',
+		// 			content: 'Target Dataset is missing for ' + j + ' row, Please map the dataset and try again.!',
+		// 			type: 'red',
+		// 		});
+		// 		return;
+		// 	}
+		// }
+		// var grid = $("#grid_themelist").data("kendoGrid");
+		// var selectedItem = grid.dataItem(grid.select());
 		var Attribid = [];
 		var arrstring = "";
 		var cbs = document.getElementsByName("cb");
@@ -558,7 +558,7 @@
 		if (arrString == "") {
 			$.alert({
 				title: 'Recon',
-				content: "Recon name should not be Empty",
+				content: "Please Select Update Recon .!",
 				type: 'red',
 			});
 			return;
@@ -567,9 +567,9 @@
 		data.in_base_recon_code = $("#cmbreconname").val();
 		data.in_base_theme_code = $("#selectedTheme").val();
 		data.in_update_recon_code = "$" + arrString;
-		data.in_update_theme_code = selectedItem.theme_desc;
+		data.in_update_theme_code = "";
 		data.in_user_code = sessionStorage.getItem("usrname");
-		if (arrString != "" && data.in_update_theme_code) {
+		if (arrString != "") {
 			$.ajax({
 				type: "POST",
 				url: '../Reconupdate/ReconUpdateTheme',
@@ -609,13 +609,14 @@
 				type: 'red',
 			});
 
-		} else if (!data.in_update_theme_code) {
-			$.alert({
-				title: 'Recon',
-				content: "Please Select Update Theme .!",
-				type: 'red',
-			});
-		}
+		} 
+		// else if (!data.in_update_theme_code) {
+		// 	$.alert({
+		// 		title: 'Recon',
+		// 		content: "Please Select Update Theme .!",
+		// 		type: 'red',
+		// 	});
+		// }
 	}
 
 	function clearCheckboxes() {

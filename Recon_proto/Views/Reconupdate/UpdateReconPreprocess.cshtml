@@ -478,7 +478,7 @@
 			if ($(mode).attr('value') == "edit") {
 				clearCheckboxes();
 				getupdatePreProcessList();
-				getdatasetagainstrecon();
+				// getdatasetagainstrecon();
 				$("#updatereconname").val("");
 				$("#updatepreprocessname").val("");
 				$("#infomodal").modal("show");
@@ -508,8 +508,8 @@
 	}
 
 	function updateRecon() {
-		var grid = $("#grid_preprocesslist").data("kendoGrid");
-		var selectedItem = grid.dataItem(grid.select());
+		// var grid = $("#grid_preprocesslist").data("kendoGrid");
+		// var selectedItem = grid.dataItem(grid.select());
 		var Attribid = [];
 		var arrstring = "";
 		var cbs = document.getElementsByName("cb");
@@ -532,9 +532,9 @@
 		data.in_base_recon_code = $("#cmbreconname").val();
 		data.in_base_preprocess_code = $("#selectedPreprocess").val();
 		data.in_update_recon_code = "$" + arrString;
-		data.in_update_preprocess_code = selectedItem.preprocess_desc;
+		data.in_update_preprocess_code = "";
 		data.in_user_code = sessionStorage.getItem("usrname");
-		if (arrString != "" && data.in_update_preprocess_code) {
+		if (arrString != "") {
 			$.ajax({
 				type: "POST",
 				url: '../Reconupdate/ReconUpdatePreprocess',
@@ -574,13 +574,15 @@
 				type: 'red',
 			});
 
-		} else if (!data.in_update_preprocess_code) {
-			$.alert({
-				title: 'Recon',
-				content: "Please Select Update PreProcess .!",
-				type: 'red',
-			});
-		}
+		} 
+		
+		// else if (!data.in_update_preprocess_code) {
+		// 	$.alert({
+		// 		title: 'Recon',
+		// 		content: "Please Select Update PreProcess .!",
+		// 		type: 'red',
+		// 	});
+		// }
 	}
 
 	function clearCheckboxes() {
