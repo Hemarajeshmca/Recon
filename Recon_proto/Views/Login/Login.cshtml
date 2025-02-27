@@ -75,11 +75,11 @@
 				<h3>Login</h3>
 				<form action="" class="form-horizontal" method="post">
 					<div class="form-group has-feedback">
-						<input type="text" style="color:black;" class="form-control" name="txtusername" maxlength="50" id="txtusername" placeholder="User Name">
+						<input type="text" style="color:black;" class="form-control" name="txtusername" maxlength="50" id="txtusername" placeholder="User Name" onkeydown="checkEnter(event)">
 						<span class="fa fa-user form-control-feedback"></span>
 					</div>
 					<div class="form-group has-feedback">
-						<input type="password" style="color:black;" class="form-control" name="txtpwd" maxlength="50" id="txtpwd" placeholder="Password">
+						<input type="password" style="color:black;" class="form-control" name="txtpwd" maxlength="50" id="txtpwd" placeholder="Password" onkeydown="checkEnter(event)">
 						<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 						@*@Html.ValidationMessageFor(m => m.Password)*@
 						@*<span class="fa fa-eye logineye" onmousedown="mouseoverPass() ;" onmouseup="mouseoutPass();"></span>*@
@@ -112,8 +112,14 @@
 </html>
 <script type="text/javascript">
 	$(document).ready(function () {
-		
+		   document.getElementById("txtusername").focus();
 	});
+
+	function checkEnter(event) {
+		if (event.key === "Enter") {
+			validation();
+		}
+	}
 
 	function setlocalStorage(key, value) {
 		var data = "";
@@ -127,6 +133,11 @@
 		}
 		else {
 			msg += "Please Enter User Name";
+		}
+		if ($("#txtpwd").val() != "") {
+		
+		} else {
+			msg += "Please Enter Password";
 		}
 		if (msg == "") {
 			// window.location.href = "../Dashboard/Dashboard";
