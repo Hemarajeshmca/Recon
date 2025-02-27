@@ -7,9 +7,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using static Recon_proto.Controllers.CommonController;
 using ClosedXML.Excel;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Font = iTextSharp.text.Font;
 using System.Net.Mime;
 using Newtonsoft.Json.Linq;
 
