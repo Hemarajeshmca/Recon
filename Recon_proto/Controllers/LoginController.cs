@@ -118,16 +118,7 @@ namespace Recon_proto.Controllers
                                     _configuration.GetSection("AppSettings")["role_code"] = result.Rows[i]["usergroup_code"].ToString();
                                     _configuration.GetSection("AppSettings")["lastlogin"] = result.Rows[i]["lastlogin"].ToString();
                                     _configuration.GetSection("AppSettings")["ipAddress"] = ipAddress;
-                                    HttpContext.Session.SetString("mindate", result.Rows[i]["min_tran_date"].ToString());
-                                    HttpContext.Session.SetString("fin_date", result.Rows[i]["fin_start_date"].ToString());
-                                    HttpContext.Session.SetString("user_code", model.UserName);
-                                    HttpContext.Session.SetString("username", result.Rows[i]["user_name"].ToString());
-                                    HttpContext.Session.SetString("user_gid", result.Rows[i]["user_gid"].ToString());
-                                    HttpContext.Session.SetString("role_code", result.Rows[i]["usergroup_code"].ToString());
-                                    HttpContext.Session.SetString("lang_code", "en_US");
-                                    HttpContext.Session.SetString("usergroup_code", result.Rows[i]["usergroup_code"].ToString());
-                                    HttpContext.Session.SetString("userrole", "ADMIN");
-                                    HttpContext.Session.SetString("ipAddress", ipAddress);
+                                   
                                 }
                             }
                         }

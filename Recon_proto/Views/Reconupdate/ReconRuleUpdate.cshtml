@@ -19,6 +19,12 @@
             margin-right: 28rem !important;
         }
 
+        .k-popup .k-list .k-item, .k-fieldselector .k-list .k-item, .k-list-optionlabel, .k-popup > .k-static-header {
+            padding: 1px 1px 1px 1px;
+            line-height: 0.8em !important;
+            min-height: 0.5em !important;
+        }
+
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -80,6 +86,7 @@
 
                                  <input id="updatereconname" style="width:65%" />
                                 <input class="form-control" type="hidden" id="selectedRule">
+                                <input class="form-control" type="hidden" id="selectedRuledesc">
                             </div>
                         </div>
                         <div class="row" style="margin-top:15px;">                            
@@ -388,10 +395,10 @@
                 {
                     field: "rule_order",
                     title: "Rule Order",
-                    width: 80,
+                    width: 60,
                     attributes: { style: "text-align: right;" },
                     filterable: {
-                        ui: "numericInput",
+                        ui: "number",
                         extra: false,
                     },
                 },
@@ -403,18 +410,7 @@
                 {
                     field: "active_status_desc",
                     title: "Status",
-                    width: 50,
-                    resizable: false,
-                    filterable: {
-                        ui: priorityFilter,
-                        extra: false,
-                        operators: {
-                            string: {
-                                eq: "Is equal to",
-                                neq: "Not equal to"
-                            }
-                        },
-                    },
+                    width: 80,                   
                 }],
                 editable: false,
             });
@@ -423,7 +419,7 @@
             console.log(err);
         }
     }
-
+    
     function selectRow() {
         try {
             var grid = $("#grid_rulelist").data("kendoGrid");
@@ -544,7 +540,7 @@
         data.in_base_recon_code = $("#cmbreconname").val();
         data.in_base_rule_code = $("#selectedRule").val();
         data.in_update_recon_code = "$" + arrString;
-        data.in_update_rule_code = "";
+        data.in_update_rule_code =  $("#selectedRuledesc").val();
         data.in_user_code = sessionStorage.getItem("usrname");
         if (arrString != "") {
             $.ajax({
@@ -607,13 +603,23 @@
 
     var dropdown = "";
     function getupdateRuleList() {
-        var grid = $("#grid_rulelist").data("kendoGrid");
-        var selectedItem = grid.dataItem(grid.select());
+        // var grid = $("#grid_rulelist").data("kendoGrid");
+        // var selectedItem = grid.dataItem(grid.select());
+        // var data = {};
+        // data.in_rule_name = selectedItem.rule_name;
+        // $.ajax({
+        //     type: "POST",
+        //     url: '../Reconupdate/ReconagainstRule',
+        //     dataType: 'json',
+        //     data: JSON.stringify(data),
         var data = {};
-        data.in_rule_name = selectedItem.rule_name;
+        data.in_user_gid = 0;
+        data.in_active_status = '';
+        data.in_user_code = sessionStorage.getItem("usrname");
+        var Context = data;
         $.ajax({
             type: "POST",
-            url: '../Reconupdate/ReconagainstRule',
+            url: '../Recon/Reconlistfetch',
             dataType: 'json',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',
@@ -627,7 +633,7 @@
                 arr.push(list2);
                 for (i = 0; res.length > i; i++) {
                     var list1 = {};
-                    if (res[i]["active_status"] == 'Y') {
+                    if (res[i]["active_status"] == 'Y' && $("#cmbreconname").val() != res[i].recon_code) {
                         list1.value = res[i].recon_code;
                         list1.text = res[i].recon_name;
                         arr.push(list1);

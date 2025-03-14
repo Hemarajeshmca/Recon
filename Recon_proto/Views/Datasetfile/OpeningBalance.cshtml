@@ -240,6 +240,8 @@
 	}
 
 	function loadGrid(data) {
+			var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		try {
 			var formatdate = sessionStorage.getItem("kendate");
 			var formatdate1 = "{0:" + formatdate + "}";
@@ -255,7 +257,7 @@
 								dataset_name: { type: "string" },
 								tran_date: { type: "date" },
 								tran_date_fetch: { type: "string" },
-								bal_value: { type: "string" },
+								bal_value: { type: "number" },
 							}
 						},
 						parse: function (data) {

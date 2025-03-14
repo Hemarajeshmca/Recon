@@ -1,13 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Data;
-using System.Net;
-using static Recon_proto.Controllers.DataSetController;
+﻿using System.Data;
 using System.Net.Http.Headers;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Recon_proto.Models;
-using System.Data;
-using System.Net;
 namespace Recon_proto.Controllers
 {
     public class QCDmasterController : Controller

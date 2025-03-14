@@ -191,6 +191,8 @@
 	}
 
 	function fetchGrid(data) {
+		var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		try {
 			$("#grid_jobinprogress").kendoGrid({
 				dataSource: {
@@ -206,12 +208,18 @@
 								jobstatus_desc: { type: "string" },
 								jobtype_code: { type: "string" },
 								jobtype_desc: { type: "string" },
-								start_date: { type: "string" },
+								start_date: { type: "date" },
 								recon_code: { type: "string" },
 								recon_name: { type: "string" },
 								job_initiated_by: { type: "string" },
 							}
-						}
+						},
+					 parse: function (data) {
+							$.each(data, function (i, item) {
+								item.start_date = kendo.parseDate(item.start_date, formatdatetime);
+							});
+							return data;
+						} 
 					}
 				},
 				height: 400,
@@ -260,7 +268,11 @@
 				{
 					field: "start_date",
 					title: "Start Date",
-					width: 100
+					width: 100,
+                        format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},		   
 				},
 				{
 					field: "job_initiated_by",

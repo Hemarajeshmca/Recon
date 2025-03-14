@@ -491,7 +491,9 @@
 		}
 	}
 
-	function grid_dataset(data) {		
+	function grid_dataset(data) {	
+		var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";	
 		$("#dataset_grid").kendoGrid({
 			dataSource: {
 				data: data,
@@ -503,11 +505,17 @@
 							dataset_name: { type: "string" },
 							dataset_type_desc: { type: "string" },
 							parent_dataset_name: { type: "string" },
-							last_sync_date: { type: "string" },
+							last_sync_date: { type: "date" },
 							last_sync_status: { type: "string" },
 							active_status_desc: { type: "string" },
 						}
-					},					
+					},
+					 parse: function (data) {
+							$.each(data, function (i, item) {
+								item.last_sync_date = kendo.parseDate(item.last_sync_date, formatdatetime);
+							});
+							return data;
+						} 				
 				}
 			},
 			height: 250,
@@ -547,7 +555,11 @@
 				{
 					field: "last_sync_date",
 					title: "Last Sync Date",
-					width: 100,						
+					width: 100,
+					 format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},		 						
 				},
 				{
 					field: "last_sync_status",
