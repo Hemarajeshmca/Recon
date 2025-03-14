@@ -152,6 +152,8 @@
 		}
 	}
 	function undojob_grid(data) {
+	    var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		$("#undojob_grid").kendoGrid({
 			dataSource: {
 				data: data,
@@ -163,15 +165,22 @@
 							job_name: { type: "string" },
 							job_type: { type: "string" },
 							jobtype_desc: { type: "string" },
-							start_date: { type: "string" },
-							end_date: { type: "string" },
+							start_date: { type: "date" },
+							end_date: { type: "date" },
 							job_initiated_by: { type: "string" },
 							job_status: { type: "string" },
 							jobstatus_desc: { type: "string" },
 							job_remark: { type: "string" },
 							file_path: { type: "string" }
 						}
-					}
+					},
+					 parse: function (data) {
+							$.each(data, function (i, item) {
+								item.start_date = kendo.parseDate(item.start_date, formatdatetime);
+								item.end_date = kendo.parseDate(item.end_date, formatdatetime);
+							});
+							return data;
+						} 
 				}
 			},
 			height: 400,
@@ -205,7 +214,7 @@
 				{
 					field: "job_gid",
 					title: "Job Id",
-					width: 80,
+					width: 100,
 					attributes: { style: "text-align: right;" },
 					filterable: {
 						ui: "numeric",
@@ -232,17 +241,25 @@
 					field: "start_date",
 					title: "Initiated Date & Time",
 					width: 180,
+                        format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},		                 
 				},
 				{
 					field: "end_date",
 					title: "end_date",
 					width: 100,
 					hidden: true,
+                        format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},		                 
 				},
 				{
 					field: "job_initiated_by",
 					title: "Initiated By",
-					width: 180,
+					width: 180
 				},
 				{
 					field: "job_status",

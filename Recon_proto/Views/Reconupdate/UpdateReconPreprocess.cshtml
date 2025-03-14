@@ -19,6 +19,11 @@
 			margin-right: 28rem !important;
 		}
 
+		.k-popup .k-list .k-item, .k-fieldselector .k-list .k-item, .k-list-optionlabel, .k-popup > .k-static-header {
+			padding: 1px 1px 1px 1px;
+			line-height: 0.8em;
+			min-height: 0.5em;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -77,6 +82,7 @@
 								</select> *@
 								<input id="updatereconname" style="width:65%" />
 								<input class="form-control" type="hidden" id="selectedPreprocess">
+								<input class="form-control" type="hidden" id="selectedPreprocessdesc">
 							</div>
 						</div>
 						<div class="row" style="margin-top:15px;">
@@ -532,7 +538,7 @@
 		data.in_base_recon_code = $("#cmbreconname").val();
 		data.in_base_preprocess_code = $("#selectedPreprocess").val();
 		data.in_update_recon_code = "$" + arrString;
-		data.in_update_preprocess_code = "";
+		data.in_update_preprocess_code = $("selectedPreprocessdesc").val();
 		data.in_user_code = sessionStorage.getItem("usrname");
 		if (arrString != "") {
 			$.ajax({
@@ -597,10 +603,13 @@
 		var grid = $("#grid_preprocesslist").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
 		var data = {};
-		data.in_preprocess_name = selectedItem.preprocess_desc;
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
 		$.ajax({
 			type: "POST",
-			url: '../Reconupdate/ReconagainstPreProcess',
+			url: '../Recon/Reconlistfetch',
 			dataType: 'json',
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
@@ -614,7 +623,7 @@
 				arr.push(list2);
 				for (i = 0; res.length > i; i++) {
 					var list1 = {};
-					if (res[i]["active_status"] == 'Y') {
+					if (res[i]["active_status"] == 'Y' && $("#cmbreconname").val() != res[i].recon_code) {
 						list1.value = res[i].recon_code;
 						list1.text = res[i].recon_name;
 						arr.push(list1);
@@ -705,7 +714,6 @@
 			}
 		});
 	}
-
 
 	function griddataset(data) {
 		var source_field_desc_list = "";

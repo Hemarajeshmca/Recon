@@ -166,7 +166,6 @@ namespace Recon_proto.Controllers
 
         public ActionResult DownloadFile(string Subfolder, string Excelfiles)
         {
-            string Result = "";
             byte[] filebyte;
             // string filepath1 = @"D:\MonthEndReport\" + Subfolder + "\\" + Excelfiles + "";
             string filepath1 = @"D:\recon\Training.xlsx";

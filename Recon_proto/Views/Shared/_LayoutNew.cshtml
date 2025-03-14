@@ -258,7 +258,7 @@
 			</aside>
 			<footer class="footer">
 				<div>
-					<h2 style="color:#000;font-family:inherit;font-size:14px;margin-left:8%;float:left">Ver. 13</h2>
+					<h2 style="color:#000;font-family:inherit;font-size:14px;margin-left:8%;float:left">Ver. 14</h2>
 					<img src="../Assets/images/footerlogo_new.png" style="float: right;margin-right: 23px;margin-top: -10px; height: 31px;   object-fit: contain;">
 					<h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px;margin-left: 12%;">Copyright © Flexicode Technologies (P) Ltd </h6>
 					<img src="../Assets/images/footerlogo.png" style="float: left;margin-top: -39px;margin-left: 109px;height: 28px;visibility: hidden;">
@@ -470,6 +470,8 @@
 
 	<script>
 		$(document).ready(function () {
+         
+
 			$('.modal').attr('data-bs-backdrop', 'static');
 			$('.modal').attr('data-bs-keyboard', 'false');
 			var usergid = 0;
@@ -701,14 +703,274 @@
 				spinnerVisible = true;
 			}
 		}
-		function hideProgress() {
-			if (spinnerVisible) {
+			function hideProgress() {
+				if (spinnerVisible) {
+						var spinner = $("div#spinner");
+						spinner.stop();
+						spinner.fadeOut("fast");
+						spinnerVisible = false;
+								$("div.k-grid").each(function () {
+           
+								var grid = $(this).data("kendoGrid");
+								if (grid) {
+									var isSortable = grid.options.sortable;
+									var isFilterable = grid.options.filterable;
+
+									// Apply settings only if they are not already enabled
+									if (!isSortable || !isFilterable) {
+										grid.setOptions({
+										sortable: true,
+										filterable: true
+										});
+									}
+					
+								}
+							});
+					}
+		}
+function hideProgress_ver4() {
+    if (spinnerVisible) {
+        var spinner = $("div#spinner");
+        spinner.stop();
+        spinner.fadeOut("fast");
+        spinnerVisible = false;
+
+        var formatdatetimeGen = "dd-MM-yyyy"; 
+        var formatdatetime = sessionStorage.getItem("kendatetime") || formatdatetimeGen;
+        var formatdatetime1 = "{0:" + formatdatetime + "}";
+
+        $("div.k-grid").each(function () {
+            var grid = $(this).data("kendoGrid");
+            if (grid) {
+                var isSortable = grid.options.sortable;
+                var isFilterable = grid.options.filterable;
+
+                // Ensure sorting and filtering are enabled
+                if (!isSortable || !isFilterable) {
+                    grid.setOptions({
+                        sortable: true,
+                        filterable: true
+                    });
+                }
+
+                // Get the grid's data source
+                var dataSource = grid.dataSource;
+                var schemaFields = {};
+                var transformedData = [];
+
+                if (dataSource.data().length > 0) {
+                    var sampleData = dataSource.data()[0]; // Get the first row to analyze keys
+
+                    Object.keys(sampleData).forEach(function (key) {
+                        if (key.toLowerCase().includes("date")) {
+                            schemaFields[key] = { type: "date" };
+                        }
+                    });
+
+                    // Convert string dates into actual Date objects
+                    dataSource.data().forEach(function (item) {
+                        var newItem = { ...item }; // Clone the object
+                        Object.keys(schemaFields).forEach(function (dateKey) {
+                            if (newItem[dateKey] && typeof newItem[dateKey] === "string") {
+								
+								 newItem[dateKey] = kendo.parseDate(newItem[dateKey], "dd-MM-yyyy HH:mm:ss") || 
+													kendo.parseDate(newItem[dateKey], "yyyy-MM-dd") || 
+													new Date(newItem[dateKey]); 
+                            }
+                        });
+                        transformedData.push(newItem);
+                    });
+                    
+
+                    // Apply schema update with transformed data
+                    if (Object.keys(schemaFields).length > 0) {
+                        grid.setOptions({
+                            dataSource: {
+                                data: transformedData,
+                                schema: {
+                                    model: {
+                                        fields: schemaFields
+                                    },
+										parse: function (data) {
+										$.each(data, function (i, item) {
+													Object.keys(item).forEach(function (key) {
+														
+														if (key.toLowerCase().includes("date")) { // Check if the key contains 'date'
+														    alert(item[key]);
+															item[key] =  kendo.parseDate(item[key], formatdatetime);//item[key];//"16-01-2025 12:00:00 PM";
+															alert(item[key]);
+															
+														}
+													});
+										});
+										return data;
+									}
+                                }
+                            },
+                            columns: grid.columns.map(column => {
+                                if (schemaFields[column.field]) {
+                                    return {
+                                        ...column,
+                                        // format: "{0:dd-MM-yyyy}",  // Ensure proper display format
+										// template: "#= kendo.toString(" + column.field + ", 'dd-MM-yyyy') #",
+											format: formatdatetime1,
+											filterable: {
+												ui: "datetimepicker",
+												},        
+                                    };
+                                }
+                                return column;
+                            })
+                        });
+                    }
+                }
+            }
+				//grid.refresh();
+        });
+       
+    }
+}
+
+function hideProgress_ver2() {
+    if (spinnerVisible) {
+        var spinner = $("div#spinner");
+        spinner.stop();
+        spinner.fadeOut("fast");
+        spinnerVisible = false;
+
+        var formatdatetimeGen = "dd-MM-yyyy"; 
+        var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
+        $("div.k-grid").each(function () {
+            var grid = $(this).data("kendoGrid");
+            if (grid) {
+                var isSortable = grid.options.sortable;
+                var isFilterable = grid.options.filterable;
+
+                // Ensure sorting and filtering are enabled
+                if (!isSortable || !isFilterable) {
+                    grid.setOptions({
+                        sortable: true,
+                        filterable: true
+                    });
+                }
+
+                // Get the grid's data source
+                var dataSource = grid.dataSource;
+                var schemaFields = {};
+                var transformedData = [];
+
+                if (dataSource.data().length > 0) {
+                    var sampleData = dataSource.data()[0]; // Get the first row to analyze keys
+
+                    Object.keys(sampleData).forEach(function (key) {
+                        if (key.toLowerCase().includes("date")) {
+                            schemaFields[key] = { type: "date" };
+                        }
+                    });
+
+                    // Convert string dates into actual Date objects
+                    dataSource.data().forEach(function (item) {
+                        var newItem = { ...item }; // Clone the object
+                        Object.keys(schemaFields).forEach(function (dateKey) {
+                            if (newItem[dateKey] && typeof newItem[dateKey] === "string") {
+								
+                                newItem[dateKey] = kendo.parseDate(newItem[dateKey], "dd-MM-yyyy");//new Date(newItem[dateKey]);
+                            }
+                        });
+                        transformedData.push(newItem);
+                    });
+
+                    // Apply schema update with transformed data
+                    if (Object.keys(schemaFields).length > 0) {
+                        grid.setOptions({
+                            dataSource: {
+                                data: transformedData,
+                                schema: {
+                                    model: {
+                                        fields: schemaFields
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+}
+
+       function hideProgress_ver1() {
+		 var formatdatetimeGen = "dd-MM-yyyy"; 
+        var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
+				if (spinnerVisible) {
 				var spinner = $("div#spinner");
 				spinner.stop();
 				spinner.fadeOut("fast");
 				spinnerVisible = false;
+
+				$("div.k-grid").each(function () {
+					var grid = $(this).data("kendoGrid");
+					if (grid) {
+						var isSortable = grid.options.sortable;
+						var isFilterable = grid.options.filterable;
+
+						// Ensure sorting and filtering are enabled
+						if (!isSortable || !isFilterable) {
+							grid.setOptions({
+								sortable: true,
+								filterable: true
+							});
+						}
+
+						// Dynamically set data types based on key names
+						var dataSource = grid.dataSource;
+						var schemaFields = {};
+
+						if (dataSource.data().length > 0) {
+							var sampleData = dataSource.data()[0]; // Get the first row to analyze keys
+                    
+							Object.keys(sampleData).forEach(function (key) {
+								if (key.toLowerCase().includes("date")) {
+									schemaFields[key] = { type: "date" };
+								}
+							});
+
+							// Apply schema update if there are changes
+							if (Object.keys(schemaFields).length > 0) {
+								grid.setOptions({
+									dataSource: {
+										data: dataSource.data(),
+										schema: {
+											model: {
+												fields: schemaFields
+											},
+										parse: function (data) {
+										$.each(data, function (i, item) {
+													Object.keys(item).forEach(function (key) {
+														
+														if (key.toLowerCase().includes("date")) { // Check if the key contains 'date'
+														    alert(item[key]);alert(key);
+															item[key] =  kendo.parseDate(item[key], formatdatetime);//item[key];//"16-01-2025 12:00:00 PM";
+															alert(item[key]);
+															
+														}
+													});
+										});
+										return data;
+									}
+										}
+									}
+								});
+							}
+						}
+					}
+				});
 			}
 		}
+
+		
 		function kendodate_format() {
 			var kendate = getconfigvalue("kendo_date_format");
 			var kendatetime = getconfigvalue("kendo_datetime_format");
@@ -1239,5 +1501,9 @@
 			}
 		}
 	</script>
+
+
+
+</script>
 </body>
 </html>

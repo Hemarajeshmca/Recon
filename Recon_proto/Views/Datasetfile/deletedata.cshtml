@@ -144,6 +144,8 @@
 	}
 
 	function gridlistload(data) {
+		var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		try {
 			$("#scheduled_grid").kendoGrid({
 				dataSource: {
@@ -153,13 +155,19 @@
 						model: {
 							fields: {
 								scheduler_gid: { type: "string" },
-								scheduled_date: { type: "string" },
+								scheduled_date: { type: "date" },
 								scheduler_initiated_by: { type: "string" },
 								pipeline_name: { type: "string" },
 								file_name: { type: "string" },
 								dataset_code: { type: "string" },
 								dataset_name: { type: "string" }
 							}
+						},
+							parse: function (data) {
+							$.each(data, function (i, item) {
+								item.scheduled_date = kendo.parseDate(item.scheduled_date, formatdatetime);
+							});
+							return data;
 						}
 					}
 				},
@@ -201,6 +209,10 @@
 					field: "scheduled_date",
 					title: "Scheduled Date",
 					width: 80,
+					format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},
 				},
 				{
 					field: "scheduler_initiated_by",

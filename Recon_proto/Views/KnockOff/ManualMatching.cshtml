@@ -1,137 +1,140 @@
 ﻿@{
-    ViewBag.title = "Manual Matching and Posting";
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+	ViewBag.title = "Manual Matching and Posting";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
 <html>
 <head>
-    <title></title>
-    <style>
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 28rem !important;
-        }
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
 
-        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-            color: #fff !important;
-        }
+		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+			color: #fff !important;
+		}
 
-        .error_show {
-            color: red;
-            margin-left: 10px;
-        }
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
 
-        table {
-            border: 1px solid #C5C5C5 !important;
-        }
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
 
-        .k-grid-content {
-            overflow-x: hidden;
-        }
-        .k-grid.k-widget {
-            height: 360px;
-        }
+		.k-grid-content {
+			overflow-x: hidden;
+		}
 
-        /*       .k-grid-header th.k-header > .k-link {
-                    width: 100px;
-                }*/
+		.k-grid.k-widget {
+			height: 360px;
+		}
 
-        .k-grid-header {
-            font-weight: bold;
-        }
+		/*.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}*/
 
-        .k-state-active {
-            display: none;
-        }
+		.k-grid-header {
+			font-weight: bold;
+		}
 
-        .k-content {
-            font-weight: normal;
-            font-size: 13px;
-        }
+		.k-state-active {
+			display: none;
+		}
 
-        .k-widget.k-window {
-            padding-top: 35px;
-            min-width: 90px;
-            min-height: 50px;
-            width: 700px !important;
-            height: 300px !important;
-            top: 180.766px !important;
-            /*left: 120px !important;*/
-            z-index: 10003;
-            left: 300px !important;
-        }
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
 
-        .tooltip-container {
-            position: relative;
-            display: inline-block;
-        }
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
 
-        .info-icon {
-            cursor: pointer;
-        }
+		.tooltip-container {
+			position: relative;
+			display: inline-block;
+		}
 
-        .tooltip1 {
-            display: none;
-            position: absolute;
-            background-color: lightslategray;
-            color: #fff;
-            padding: 10px;
-            border-radius: 15px;
-            white-space: nowrap;
-            z-index: 1;
-            top: 100%;
-            margin-left: -142px;
-            transform: translateX(-50%);
-        }
+		.info-icon {
+			cursor: pointer;
+		}
 
-        .tooltip-container:hover .tooltip1 {
-            display: block;
-        }
-    </style>
+		.tooltip1 {
+			display: none;
+			position: absolute;
+			background-color: lightslategray;
+			color: #fff;
+			padding: 10px;
+			border-radius: 15px;
+			white-space: nowrap;
+			z-index: 1;
+			top: 100%;
+			margin-left: -142px;
+			transform: translateX(-50%);
+		}
+
+		.tooltip-container:hover .tooltip1 {
+			display: block;
+		}
+	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
-    <div class="content-wrapper">
-        <div class="container-xxl flex-grow-1 container-p-y">
-            <div class="card-body" style="margin-top:-1%;height: 84%;">
-                <div id="grid_maualmatch"></div>
-            </div>
-        </div>
-    </div>
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 84%;">
+				<div id="grid_maualmatch"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#navhead").text("Manual Matching and Posting");
-        kendodate_format();
-        grid_reload()
-    });
+	$(document).ready(function () {
+		$("#navhead").text("Manual Matching and Posting");
+		kendodate_format();
+		grid_reload()
+	});
 
-    function grid_reload() {
-        $.ajax({
-            type: "POST",
-            url: '../KnockOff/ManualMatchList',
-            dataType: 'json',
-            data: JSON.stringify({}),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                if (response != null) {
-                    var data = JSON.parse(response)
-                    grid_dataset_details(data);
-                }
-                else {
-                    grid_dataset_details([]);
-                }
-            },
-            error: function (er) {
-                alert(er)
-                console.log(er)
-            }
+	function grid_reload() {
+		$.ajax({
+			type: "POST",
+			url: '../KnockOff/ManualMatchList',
+			dataType: 'json',
+			data: JSON.stringify({}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var data = JSON.parse(response)
+					grid_dataset_details(data);
+				}
+				else {
+					grid_dataset_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
 
-        });
-    }
+		});
+	}
 
 	function grid_dataset_details(data) {
+		var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		try {
 			$("#grid_maualmatch").kendoGrid({
 				dataSource: {
@@ -141,23 +144,30 @@
 						model: {
 							fields: {
 								scheduler_gid: { type: "string" },
-								scheduled_date: { type: "string" },
+								scheduled_date: { type: "date" },
 								recon_name: { type: "string" },
-                                dataset_type: { type: "string" },
+								dataset_type: { type: "string" },
 								file_name: { type: "string" },
-								last_sync_date: { type: "string" },
+								last_sync_date: { type: "date" },
 								last_sync_status: { type: "string" }
 							}
+						},
+					 parse: function (data) {
+							$.each(data, function (i, item) {
+								item.last_sync_date = kendo.parseDate(item.last_sync_date, formatdatetime);
+								item.scheduled_date = kendo.parseDate(item.scheduled_date, formatdatetime);
+							});
+							return data;
 						}
 					}
 				},
 				height: 423,
 				groupable: false,
-                dataBound: function (e) {
-                    resultData = e.sender._data;
-                    var rows = $('#grid_maualmatch').data('kendoGrid').tbody.children();
-                    setColor(rows, resultData);
-                },
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_maualmatch').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
 				pageable: {
 					refresh: false,
 					pageSizes: true,
@@ -165,56 +175,69 @@
 				},
 				sortable: true,
 				selectable: true,
-                filterable: false,
+				filterable: true,
 				navigatable: true,
-                resizable: true,
-				columns: [
+				resizable: true,
+				columns: [{
+				command: [
 					{
-						field: "name",
-						title: "Action",
-						template: "<input id='scheduler_gid' onclick='rowselected(this)' name='scheduler_gid' type='radio'/>",
-						width: 50,
-						filterable: false,
-                        attributes: {
-                            style: "text-align: center;"
-                        }
+						name: "name",
+						id: "Action",
+						template: "&nbsp;&nbsp;&nbsp;<input id='scheduler_gid' onclick='rowselected(this)' name='scheduler_gid' type='radio' style='position: relative;top: 3px;'/>&nbsp;&nbsp;&nbsp;",
+
 					},
 					{
-                        field: "scheduler_gid",
-                        title: "scheduler_gid",
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;",
+
+					},
+					], title: "Action&nbsp;", width: "60px",
+					},
+					{
+						field: "scheduler_gid",
+						title: "scheduler_gid",
 						width: 100,
 						hidden: true,
 					},
 
 					{
-                        field: "scheduled_date",
-                        title: "Scheduled Date",
+						field: "scheduled_date",
+						title: "Scheduled Date",
 						width: 100,
+						format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},
 					},
 					{
-                        field: "recon_name",
+						field: "recon_name",
 						title: "Recon Name",
 						width: 200,
 					},
 					{
-                        field: "dataset_type",
+						field: "dataset_type",
 						title: "Type",
 						width: 100,
 					},
 					{
-                        field: "file_name",
+						field: "file_name",
 						title: "File Name",
 						width: 100,
 					},
 					{
-                        field: "last_sync_date",
+						field: "last_sync_date",
 						title: "Last sync Date",
-						width: 100
+						width: 100,
+						format: formatdatetime1,
+						filterable: {
+							ui: "datetimepicker",
+						},
 					},
 					{
-                        field: "last_sync_status",
-                        title: "Last sync Status",
-                        width: 100
+						field: "last_sync_status",
+						title: "Last sync Status",
+						width: 100
 					}],
 				editable: false,
 			});
@@ -226,10 +249,97 @@
 		}
 	}
 
-    function rowselected(){
-        var grid = $("#grid_maualmatch").data("kendoGrid");
-        var selectedItem = grid.dataItem($(event.target).closest("tr"));
-        setlocalStorage("manualMatch_schedulerid", selectedItem);
-        document.location = "../KnockOff/ManualMatchDetails";
-    }
+	function rowselected(){
+		var grid = $("#grid_maualmatch").data("kendoGrid");
+		var selectedItem = grid.dataItem($(event.target).closest("tr"));
+		setlocalStorage("manualMatch_schedulerid", selectedItem);
+		document.location = "../KnockOff/ManualMatchDetails";
+	}
+
+	function myDeleteJs() {
+		var grid = $("#grid_maualmatch").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var scheduler_gid = model.scheduler_gid;
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure do you want to delete this record!',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					$.confirm({
+						title: 'Delete Reason',
+						content: '' +
+							'<form action="" class="formName">' +
+							'<div class="form-group">' +
+							'<label>Reason</label>' +
+							'<input type="text" placeholder="Reason" class="name form-control" required />' +
+							'</div>' +
+							'</form>',
+						buttons: {
+							formSubmit: {
+								text: 'Submit',
+								btnClass: 'btn-blue',
+								action: function () {
+									var name = this.$content.find('.name').val();
+									if (!name) {
+										$.alert('Reason cannot be empty');
+										return false;
+									}
+									var in_scheduler_gid = scheduler_gid;
+									var in_remark = name;
+									var in_user_code = sessionStorage.getItem("usrname");
+									$.ajax({
+										type: "POST",
+										url: '../Datasetfile/deletescheduler',
+										dataType: 'json',
+										data: JSON.stringify({
+											in_scheduler_gid: in_scheduler_gid, in_remark, in_remark, in_user_code: in_user_code
+										}),
+										contentType: 'application/json; charset=utf-8',
+										success: function (response) {
+											if (response[0].out_result == "1") {
+												$.alert({
+													icon: 'fa fa-success',
+													title: 'Recon',
+													theme: 'dark',
+													content: response[0].out_msg,
+													type: 'green',
+													animationSpeed: 700,
+												});
+												grid_reload();
+											} else {
+												$.alert({
+													title: 'Recon',
+													content: response[0].out_msg,
+													type: 'red',
+												});
+											}
+										}
+									})
+								}
+							},
+							cancel: function () {
+								//close
+							},
+						},
+
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Delete Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
+	}
 </script>

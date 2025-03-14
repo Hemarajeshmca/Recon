@@ -213,7 +213,7 @@ namespace Recon_proto.Controllers
 
         #endregion
 
-        #region 
+        #region  deletescheduler
         public string deletescheduler([FromBody] deleteschedulerModel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -259,7 +259,6 @@ namespace Recon_proto.Controllers
             public string? in_user_code { get; set; }
         }
         #endregion
-
 
         #region datasetagainstRecon
         public string datasetAgainstRecon([FromBody] datasetAgainstReconModel context)

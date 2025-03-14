@@ -213,6 +213,12 @@
 											<select id="cmbFieldType" class="form-select form-control" onchange="fieldtype()">
 											</select>
 										</div>
+										<div class="col-sm-4">
+											<label for="" class="form-label">Seq No.&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<input class="form-control" id="seq_no" name="" onpaste="return false;" type="text" maxlength="16" onkeypress='return isNumberKey(event)' value=0>
+										</div>
+									</div>
+									<div class="row" style="padding-bottom:3px;padding-top:8px;">
 										<div class="col-sm-4" id="fielddataset">
 											<label for="" class="form-label">Field Length&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<input class="form-control" id="fieldlength" maxlength="7" onpaste="return false;" type="text" onkeypress='return isNumberKey(event)' style=" width:100%;">
@@ -226,8 +232,6 @@
 											</div>
 											<label for="" class="form-label">(Ex : 00000.00)</label>
 										</div>
-									</div>
-									<div class="row" style="padding-bottom:3px;padding-top:8px;">
 										<div class="col-sm-4">
 											<label for="" class="form-label">Mandatory&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<div style="margin-left:2px;margin-top:5px">
@@ -635,14 +639,15 @@
 				datasetdetail_id = 0;
 				action = "INSERT"
 			}
+			var seq_no = $("#seq_no").val();
 			var status = "Y";
 			var mandatory = $("input[name='mandatory']:checked").val();
-			console.log(`data`, { datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory });
+			
 			$.ajax({
 				type: "POST",
 				url: '../DataSet/Datasetdetail',
 				dataType: 'json',
-				data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory }),
+				data: JSON.stringify({ datasetCode: dataset_code, datasetdetail_id: datasetdetail_id, field_name: datasetfield, in_action: action, in_action_by: action_by, field_length: fieldlength, precision_length: precision_length, scale_length: scale_length, field_type: FieldType, field_mandatory: mandatory,seq_no: seq_no }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {
