@@ -171,6 +171,7 @@
 					sessionStorage.setItem("recon_userdetail", rs);
 					var txtusrname = sessionStorage.getItem("recon_userdetail");
 					var txtusername = JSON.parse(txtusrname);
+					sessionStorage.setItem("rolecode", txtusername.usergroup_code);
 					sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
 					sessionStorage.setItem("usrname", txtusername.user_code);
 					sessionStorage.setItem("passflag", txtusername.passwordreset);
@@ -183,6 +184,7 @@
 						var txtusrname = sessionStorage.getItem("recon_userdetail");
 						var txtusername = JSON.parse(txtusrname);
 						sessionStorage.setItem("lastlogindb", txtusername.lastlogin);
+						sessionStorage.setItem("rolecode", txtusername.usergroup_code);
 						sessionStorage.setItem("usrname", txtusername.user_code);
 						sessionStorage.setItem("passflag", txtusername.passwordreset);
 						window.location.href = '@Url.Action("Index", "Home")';

@@ -151,7 +151,13 @@ namespace Recon_proto.Controllers
 			Datasetdetailrmodel objList = new Datasetdetailrmodel();
 			DataTable result = new DataTable();
 			string post_data = "";
-			try
+            if (context == null)
+            {
+                objList.out_msg = "Falied";
+                objList.out_result = "0";
+                return Json(objList);
+            }
+            try
 			{
                 using (var client = new HttpClient())
                 {
@@ -193,7 +199,7 @@ namespace Recon_proto.Controllers
 			public int datasetdetail_id { get; set; }
 			public string? field_name { get; set; }
 			public string? field_length { get; set; }
-            public int? seq_no { get; set; }
+            public Decimal? seq_no { get; set; }
             public int? precision_length { get; set; }
             public int? scale_length { get; set; }
 			public string? field_type { get; set; }
@@ -388,6 +394,12 @@ namespace Recon_proto.Controllers
             Datasetindexmodel objList = new Datasetindexmodel();
             DataTable result = new DataTable();
             string post_data = "";
+            if (context == null)
+            {
+                objList.out_msg = "Falied";
+                objList.out_result = "0";
+                return Json(objList);
+            }
             try
             {
                 using (var client = new HttpClient())
@@ -431,7 +443,7 @@ namespace Recon_proto.Controllers
             public int in_datasetindex_gid { get; set; }
             public string? in_datasetindex_code { get; set; }
             public string? in_index_desc { get; set; }
-            public int? in_index_seqno { get; set; }  
+            public decimal? in_index_seqno { get; set; }  
             public string? in_dataset_field { get; set; }
             public string? in_active_status { get; set; }
             public string? in_action { get; set; }

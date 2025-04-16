@@ -60,9 +60,12 @@
 			background-color: green;
 		}
 
-			.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
-				background-color: red;
-			}
+		.datepicker table tr td.active:active:hover, .datepicker table tr td.active.highlighted:active:hover, .datepicker table tr td.active.active:hover, .datepicker table tr td.active.highlighted.active:hover, .datepicker table tr td.active:active:focus, .datepicker table tr td.active.highlighted:active:focus, .datepicker table tr td.active.active:focus, .datepicker table tr td.active.highlighted.active:focus, .datepicker table tr td.active:active.focus, .datepicker table tr td.active.highlighted:active.focus, .datepicker table tr td.active.active.focus, .datepicker table tr td.active.highlighted.active.focus {
+			background-color: red;
+		}
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -2035,8 +2038,8 @@
 							success: function (response) {
 								if (response != null) {
 									grid_recondatasetmapping(response);
-	@*$("#Reconfieldname").prop('disabled', true);*@
-										$("#cmbdatasetmap").prop('disabled', false);
+									@*$("#Reconfieldname").prop('disabled', true);*@
+									$("#cmbdatasetmap").prop('disabled', false);
 								}
 								else {
 									grid_recondatasetmapping([]);
@@ -2832,12 +2835,12 @@
 			{
 				field: "rule_name",
 				title: "Rule Name",
-				width: 150,
+				width: 120,
 			},
 			{
 				field: "rule_order",
 				title: "Rule Order",
-				width: 50,
+				width: 100,
 				attributes: { style: "text-align: right;" },
 			},
 			{
@@ -2861,12 +2864,14 @@
 			{
 				field: "active_status_desc",
 				title: "Status",
-				width: 40,
+				width: 80,
+				filterable: false,
 			}],
 			editable: false,
 
 		});
 	}
+
 
 	function openRuleModel(event) {
 		event.preventDefault();
@@ -2929,7 +2934,7 @@
 						id: "View",
 						template: "<a href=''onclick='openthemeModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
-				], title: "Action&nbsp;", width: "40px",
+				], title: "Action&nbsp;", width: "30px",
 			},
 			{
 				field: "theme_gid",
@@ -2940,7 +2945,7 @@
 			{
 				field: "theme_order",
 				title: "Theme Order",
-				width: 40,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				filterable: {
 					ui: "numericInput",
@@ -2950,23 +2955,23 @@
 			{
 				field: "theme_code",
 				title: "Theme Code",
-				width: 40,
+				width: 60,
 			},
 			{
 				field: "theme_desc",
 				title: "Theme Description",
-				width: 120,
+				width: 100,
 			},
 			{
 				field: "theme_type_code",
 				title: "Recon Name",
-				width: 120,
+				width: 30,
 				hidden: true,
 			},
 			{
 				field: "theme_type_desc",
 				title: "Theme Type",
-				width: 40,
+				width: 60,
 			},
 			{
 				field: "recon_code",
@@ -2983,7 +2988,7 @@
 			{
 				field: "hold_flag_desc",
 				title: "Hold Flag",
-				width: 40,
+				width: 60,
 			},
 			{
 				field: "active_status",
@@ -3001,7 +3006,8 @@
 			{
 				field: "active_status_desc",
 				title: "Status",
-				width: 40,
+				width: 60,
+				filterable: false,
 			}],
 			editable: false,
 
@@ -3065,7 +3071,7 @@
 						id: "View",
 						template: "<a href=''onclick='openpreprocessModel(event)' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
 					},
-				], title: "Action&nbsp;", width: "40px",
+				], title: "Action&nbsp;", width: "30px",
 			},
 			{
 				field: "preprocess_gid",
@@ -3076,7 +3082,7 @@
 			{
 				field: "preprocess_order",
 				title: "Preprocess Order",
-				width: 50,
+				width: 70,
 				attributes: { style: "text-align: right;" },
 				filterable: {
 					ui: "numeric",
@@ -3086,7 +3092,7 @@
 			{
 				field: "preprocess_code",
 				title: "Preprocess Code",
-				width: 50,
+				width: 60,
 			},
 			{
 				field: "preprocess_desc",
@@ -3096,12 +3102,12 @@
 			{
 				field: "process_method_desc",
 				title: "Preprocess Method",
-				width: 50,
+				width: 80,
 			},
 			{
 				field: "hold_flag_desc",
 				title: "Hold Flag",
-				width: 40,
+				width: 60,
 			},
 			{
 				field: "hold_flag",
@@ -3125,7 +3131,7 @@
 				field: "active_status_desc",
 				title: "Status",
 				width: 40,
-
+				filterable: false,
 			}],
 			editable: false,
 		});
@@ -3234,6 +3240,7 @@
 					field: "active_status_desc",
 					title: "Status",
 					width: 50,
+					filterable: false,
 				}],
 				editable: false,
 

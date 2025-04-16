@@ -1,0 +1,814 @@
+﻿@{
+	ViewBag.title = "Ko Sequence";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-filter.k-state-active {
+			background-color: initial !important;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.tab-content {
+			padding: 0.9rem;
+			border-radius: 0.375rem;
+			box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 9.12);
+		}
+
+		.selecteddataset {
+			font-size: 13px;
+			font-weight: 600;
+			color: brown;
+		}
+
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
+					<div class="col-sm-4" id="cmbversion">
+						<label for="" class="form-label">Recon Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" type="text" id="comreconversion">
+						@* <select id="comreconversion" class="form-select form-control" style=" width: 100%;">
+						</select> *@
+					</div>
+					<div class="col-xs-12">
+						<i data-bs-toggle="modal" onclick='getdetailSelectedRows(this)' id="datasetfieldadd" value='create' class="fa fa-plus cursor-pointer" style="color:green"></i>
+						<div id="gd_KoSequence">
+							<div id="grid_KoSequence"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="Koadd" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Ko Sequence</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="row" style="padding-bottom:2px;margin-top:5px;">
+						<div class="col-sm-4">
+							<label for="" class="form-label">KO Seq Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="cmbseqType" class="form-select form-control" onchange="seqtype()">
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label">KO Seq Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoModel()" data-bs-toggle="modal"><img src='../images/info.png' style="width: 39%;"></span></label>
+							<select id="cmbseqname" class="form-select form-control" onchange="seqname()">
+							</select>
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label">KO Seq Ref Code&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" id="koseqrefcode" type="text" style="width:100%;" readonly>
+							<input class="form-control" type="number" id="Koseq_gid" hidden>
+						</div>
+
+					</div>
+					<div class="row" style="padding-bottom:3px;padding-top:8px;">
+						<div class="col-sm-4">
+							<label for="" class="form-label">Seq No.&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" id="seq_no" name="" onpaste="return false;" type="text" maxlength="16" onkeypress='return isNumberKey(event)' value=0>
+						</div>
+						<div class="col-sm-4">
+							<label for="" class="form-label">Hold&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="mandatory1" name="mandatory" value="Y">&nbsp;&nbsp;Yes&nbsp;
+								<input type="radio" id="mandatory2" style="margin-left: 10px;" name="mandatory" checked value="N">&nbsp;&nbsp;No&nbsp;
+							</div>
+						</div>
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="margin-top:20px;float: right;">
+							<center>
+								<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+							</center>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="ReconRuledetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:585px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_koRuleviewdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="Reconthemedetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:549px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Theme Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_kothemeviewdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="Reconpreprocessdetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:550px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Preprocess Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_kopreprocessdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		gridlist();
+		$("#navhead").text("Ko Sequence");
+		setlocalStorage("ls_pageList", "");
+		seqlist();
+	});
+	function seqname(){
+		$("#koseqrefcode").val($("#cmbseqname").val());
+	}
+	function reconchangelist () {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		// var in_recon_code = $("#cmbreconname").val();
+		// var in_user_code = sessionStorage.getItem("usrname");
+		// $.ajax({
+		// 	type: "POST",
+		// 	url: '../Reconversion/ReconversionListfetch',
+		// 	dataType: 'json',
+		// 	data: JSON.stringify({ in_recon_code: in_recon_code, in_user_code: in_user_code }),
+		// 	contentType: 'application/json; charset=utf-8',
+		// 	success: function (response) {
+		// 		debugger;
+		// 		if (response != null) {
+		// 			var res = JSON.parse(response);
+		// 			$("#comreconversion").empty();
+		// 			$("#comreconversion").append($('<option>', {
+		// 				value: "",
+		// 				text: "  Select  "
+		// 			}));
+		// 			$.each(res.Reconversion, function (index, item) {
+		// 				$("#comreconversion").append($('<option>', {
+		// 					value: item.recon_rule_version,
+		// 					text: item.recon_rule_version
+		// 				}));
+		// 			});
+		// 		}
+		// 	}
+		// });
+		seqlist();
+	}
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+		var in_master_code = "QCD_ko_seqtype";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbseqType").empty();
+				$("#cmbseqType").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbseqType").append($('<option>', {
+						value: item.masterCode,
+						text: item.masterName
+					}));
+				});
+			}
+		});
+	}
+	function seqlist() {
+		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/seqlistfetch',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_code: in_recon_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					$("#gd_KoSequence").empty();
+					$("#gd_KoSequence").append("<div id='grid_KoSequence'></div>");
+					grid_KoSequence_details(result);
+					if(result.length > 0){
+					$("#comreconversion").val(result[0].recon_version);
+					}
+					}
+				else {
+					grid_KoSequence_details([]);
+				}
+			}
+		});
+	}
+	function seqtype(){
+		$("#cmbseqname").val("");
+		$("#koseqrefcode").val("");
+		var in_recon_code = $("#cmbreconname").val();
+		var in_seq_code = $("#cmbseqType").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/seqtypefetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code, in_seq_code: in_seq_code ,in_user_code:in_user_code}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbseqname").empty();
+				$("#cmbseqname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					$("#cmbseqname").append($('<option>', {
+						value: item.refcode,
+						text: item.refcodename,
+						code :item.gid
+					}));
+				});
+			}
+		});
+	}
+	var status_Priority = [];
+	function grid_KoSequence_details(data) {
+		try {
+			$.each(data, function (index, value) {
+				var flag = false;
+				$.each(status_Priority, function (sindex, svalue) {
+					if (svalue == value.active_status_desc) {
+						flag = true;
+					}
+				});
+				if (flag == false) {
+					status_Priority.push(value.active_status_desc);
+				}
+			});
+			$("#grid_KoSequence").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								koseq_gid: { type: "string" },
+								ko_seq_gid: { type: "string" },
+								ko_seqno:  { type: "number", defaultValue: 0 },
+								ko_seq_type: { type: "string" },
+								ko_seq_ref_code: { type: "string" },
+								recon_code: { type: "string" },
+								ko_seq_name: { type: "string" },
+								active_status: { type: "string" },
+								hold_flag: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 420,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_KoSequence').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('Ko_Seq')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				resizable: true,
+
+				columns: [{
+					command: [
+						{
+						name: "edit",
+						id: "Edit",
+						template: "<a href='' onclick='getdetailSelectedRows(this)' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../DataSet/DataSetForm'></a>&nbsp;&nbsp;&nbsp;"
+					},
+					], title: "Action&nbsp;", width: "30px",
+				},
+				{
+					field: "koseq_gid",
+					title: "Koseq_gid",
+					width: 50,
+					hidden: true,
+				},
+				{
+					field: "ko_seq_gid",
+					title: "ko_seq_gid",
+					width: 50,
+					hidden: true,
+				},
+				{
+					field: "ko_seqno",
+					title: "Seq No.",
+					width: 60,
+					attributes: { style: "text-align: right;" },
+					filterable: {
+						ui: "numericInput",
+						extra: false,
+					},
+				},
+				{
+					field: "ko_seq_type_desc",
+					title: "KO Seq Type",
+					width: 60,
+				},
+				{
+					field: "ko_seq_type",
+					title: "ko_seq_type",
+					width: 60,
+					hidden: true,
+				},
+				{
+					field: "recon_code",
+					title: "Recon Code",
+					width: 60,
+					hidden: true,
+				},
+				{
+					field: "ko_seq_name",
+					title: "KO Seq Name",
+					width: 100,
+				},
+				{
+					field: "ko_seq_ref_code",
+					title: "Seq Ref Code",
+					width: 80,
+				},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 60,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					width: 80,
+					hidden: true
+				},
+				{
+					field: "hold_flag",
+					title: "hold_flag",
+					width: 40,
+					hidden: true,
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 60,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
+				},
+
+				{
+					field: "In_mode_flag",
+					title: "Mode",
+					width: 50,
+					hidden: true
+				}],
+				editable: false,
+
+			});
+
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
+
+	}
+	function getdetailSelectedRows(mode) {
+			if ($(mode).attr('value') == "edit") {
+				var grid = $("#grid_KoSequence").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+				$("#cmbseqType").val(selectedItem.ko_seq_type);
+				jQuery('#cmbseqType').trigger("change");
+				$("#cmbseqname").val(selectedItem.ko_seq_ref_code);
+				$("#koseqrefcode").val(selectedItem.ko_seq_ref_code);
+				$("#seq_no").val(selectedItem.ko_seqno);
+				$("#Koseq_gid").val(selectedItem.koseq_gid);
+				$("#Koseq_gid").val(selectedItem.ko_seq_gid);
+				if (selectedItem.hold_flag == "Y") {
+					$("#mandatory1").prop("checked", true);
+				} else {
+					$("#mandatory2").prop("checked", true);
+				}
+				$("#Koadd").modal('show');
+			} else if ($(mode).attr('value') == "create")
+			{
+				$("#cmbseqType").val("");
+				$("#cmbseqname").val("");
+				$("#koseqrefcode").val("");
+				$("#seq_no").val("");
+				$("#Koseq_gid").val("");
+				jQuery('#cmbseqType').trigger("change");
+				$("#Koadd").modal('show');
+			}
+	}
+	function myDeleteJs() {
+		var grid = $("#grid_KoSequence").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		if (model.active_status != "N") {
+			var dataset_gid = model.theme_gid;
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							title: 'Delete Reason',
+							content: '' +
+								'<form action="" class="formName">' +
+								'<div class="form-group">' +
+								'<label>Reason</label>' +
+								'<input type="text" placeholder="Reason" class="name form-control" required />' +
+								'</div>' +
+								'</form>',
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var name = this.$content.find('.name').val();
+										if (!name) {
+											$.alert('Reason cannot be empty');
+											return false;
+										}
+										var reconcode = "";
+										var cmbseqname = "";
+										var koseqrefcode = "";
+										var koseq_no = 0;;
+										var seqType = "";
+										var comreconversion = "";
+										var mandatory = "";
+										var action = "DELETE";
+										var Koseq_gid = model.koseq_gid;
+										var action_by = sessionStorage.getItem("usrname");
+										var status = "Y";
+										$.ajax({
+												type: "POST",
+												url: '../KoSequence/koseqsave',
+												dataType: 'json',
+												data: JSON.stringify({
+															in_Koseq_gid: Koseq_gid, in_recon_code: reconcode, in_recon_version: comreconversion,
+															in_koseq_no: koseq_no, in_action: action, in_action_by: action_by,
+															in_koseq_type: seqType, in_koseq_ref_code: koseqrefcode, in_active_status: status,
+															in_hold_flag: mandatory
+												}),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												var data = response;
+												if (data.out_result == "1") {
+													$.alert({
+														icon: 'fa fa-success',
+														title: 'Recon',
+														theme: 'dark',
+														content: data.out_msg,
+														type: 'green',
+														animationSpeed: 700,
+													});
+													seqlist();
+												} else {
+													$.alert({
+														title: 'Recon',
+														content: data.out_msg,
+														type: 'red',
+													});
+												}
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
+							},
+
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	function savedetail() {
+		try {
+			var reconcode = $("#cmbreconname").val();
+			var cmbseqname = $("#cmbseqname").val();
+			var koseqrefcode = $("#koseqrefcode").val();
+			var koseq_no = $("#seq_no").val();
+			var seqType = $("#cmbseqType").val();
+			var comreconversion = $("#comreconversion").val();
+			var mandatory = $("input[name='mandatory']:checked").val();
+			var action = "";
+
+			var action_by = sessionStorage.getItem("usrname");
+			var Koseq_gid = $("#Koseq_gid").val();
+			if (Koseq_gid > 0) {
+				Koseq_gid = $("#Koseq_gid").val();
+				action = "UPDATE"
+			} else {
+				Koseq_gid = 0;
+				action = "INSERT"
+			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../KoSequence/koseqsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_Koseq_gid: Koseq_gid, in_recon_code: reconcode, in_recon_version: comreconversion,
+					in_koseq_no: koseq_no, in_action: action, in_action_by: action_by,
+					in_koseq_type: seqType, in_koseq_ref_code: koseqrefcode, in_active_status: status,
+					in_hold_flag: mandatory
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						$("#Koseq_gid").val(response.in_Koseq_gid);
+						$("#Koadd").modal('hide');
+						seqlist();
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function openInfoModel() {
+		if($("#cmbseqname").val() != ""){
+			if($("#cmbseqType").val() == "R")
+			{
+				$("#Koadd").modal('show');
+				var data = {};
+				data.rule_gid = $("#cmbseqname option:selected").attr("code");
+				data.rule_code = $("#koseqrefcode").val();
+				data.rule_name = $("#cmbseqname option:selected").text();
+				data.recon_code = $("#cmbreconname").val();
+				setlocalStorage("rule_detailsko", data);
+				getRuleGridComboList();
+				cmbsourcefield();
+				document.body.classList.add('modal-open');
+				var innerModal = new bootstrap.Modal(document.getElementById('ReconRuledetail'));
+				innerModal.show();
+			} else if($("#cmbseqType").val() == "T")
+			{
+				$("#Koadd").modal('show');
+				var data = {};
+				data.theme_gid = $("#cmbseqname option:selected").attr("code");
+				data.theme_code = $("#koseqrefcode").val();
+				data.theme_desc = $("#cmbseqname option:selected").text();
+				data.recon_code = $("#cmbreconname").val();
+				setlocalStorage("theme_details", data);
+				getGridthemeComboList();
+				document.body.classList.add('modal-open');
+				var innerModal = new bootstrap.Modal(document.getElementById('Reconthemedetail'));
+				innerModal.show();
+			} else if($("#cmbseqType").val() == "P")
+			{
+				$("#Koadd").modal('show');
+				var data = {};
+				data.preprocess_gid = $("#cmbseqname option:selected").attr("code");
+				data.preprocess_code = $("#koseqrefcode").val();
+				data.preprocess_desc = $("#cmbseqname option:selected").text();
+				data.recon_code = $("#cmbreconname").val();
+				setlocalStorage("preprocess_details", data);
+				getGridCombopreprocessList();
+				document.body.classList.add('modal-open');
+				var innerModal = new bootstrap.Modal(document.getElementById('Reconpreprocessdetail'));
+				innerModal.show();
+			}
+		}else 
+		{
+				$("#Koadd").modal('show');
+		}
+	}
+
+</script>

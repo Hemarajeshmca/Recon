@@ -54,10 +54,14 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
-
         //ManualMatchDetails
 
         public IActionResult ManualMatchDetails()
+        {
+            return View();
+        }
+
+        public IActionResult UndoIUTEntry()
         {
             return View();
         }
@@ -248,7 +252,7 @@ namespace Recon_proto.Controllers
         }
 
         [HttpPost]
-        public JsonResult ManualMatchList(ManualMatchListmodel context)
+        public JsonResult ManualMatchList([FromBody] ManualMatchListmodel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataSet result = new DataSet();
@@ -631,49 +635,111 @@ namespace Recon_proto.Controllers
         }
 
         [HttpPost]
+
         public JsonResult undomatchjob([FromBody] undomatchmodel context)
         {
-            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            undomatchmodel objList = new undomatchmodel();
-            DataTable result = new DataTable();
-            string post_data = "";
-            try
+            // ✅ Return response immediately
+            Task.Run(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    string Urlcon = "knockoff/";
-                    client.BaseAddress = new Uri(urlstring + Urlcon);
-                    // client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
-                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("undomatchjob", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
-                    result = JsonConvert.DeserializeObject<DataTable>(d2);
-                    for (int i = 0; i < result.Rows.Count; i++)
+                    string urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+                    using (var client = new HttpClient())
                     {
-                        objList.out_msg = result.Rows[i]["out_msg"].ToString();
-                        objList.out_result = result.Rows[i]["out_result"].ToString();
-                    }
-                    return Json(objList);
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "undomatchjob");
-                return Json(ex.Message);
-            }
+                        string Urlcon = "knockoff/";
+                        client.BaseAddress = new Uri(urlstring + Urlcon);
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.Timeout = Timeout.InfiniteTimeSpan;
+                        client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                        client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                        client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                        client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+                        HttpContent content = new StringContent(JsonConvert.SerializeObject(context), Encoding.UTF8, "application/json");
+
+                        // ✅ Fire-and-forget: Run the request in the background
+                        var response = await client.PostAsync("undomatchjob", content);
+
+                        string post_data = await response.Content.ReadAsStringAsync();
+                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                        DataTable result = JsonConvert.DeserializeObject<DataTable>(d2);
+
+                        undomatchmodel objList = new undomatchmodel();
+                        for (int i = 0; i < result.Rows.Count; i++)
+                        {
+                            objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                            objList.out_result = result.Rows[i]["out_result"].ToString();
+                        }
+
+                        // ✅ Log the response instead of returning it
+                        CommonController objcom = new CommonController(_configuration);
+                        objcom.errorlog("Undo Match Job Response: " + JsonConvert.SerializeObject(objList), "undomatchjob");
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    CommonController objcom = new CommonController(_configuration);
+                    objcom.errorlog(ex.Message, "undomatchjob");
+                }
+            });
+
+            // ✅ Return immediately without waiting for processing to finish
+            return Json(new { message = "Undo match job started successfully." });
         }
+
+        /*  public JsonResult undomatchjob([FromBody] undomatchmodel context)
+		  {
+			  urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			  undomatchmodel objList = new undomatchmodel();
+			  DataTable result = new DataTable();
+			  DataTable jobdt = new DataTable();
+			  string post_data = "";
+			  try
+			  {
+				  //jobdt = getJobids(context);
+
+				  using (var client = new HttpClient())
+				  {
+					  string Urlcon = "knockoff/";
+					  client.BaseAddress = new Uri(urlstring + Urlcon);
+					  // client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+					  client.DefaultRequestHeaders.Accept.Clear();
+					  client.Timeout = Timeout.InfiniteTimeSpan;
+					  client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+					  client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					  client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					  client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					  client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					  HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					  var response = client.PostAsync("undomatchjob", content).Result;
+					  Stream data = response.Content.ReadAsStreamAsync().Result;
+					  StreamReader reader = new StreamReader(data);
+					  post_data = reader.ReadToEnd();
+					  string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					  result = JsonConvert.DeserializeObject<DataTable>(d2);
+					  for (int i = 0; i < result.Rows.Count; i++)
+					  {
+						  objList.out_msg = result.Rows[i]["out_msg"].ToString();
+						  objList.out_result = result.Rows[i]["out_result"].ToString();
+					  }
+
+				  }
+
+				  return Json(objList);
+
+
+			  }
+			  catch (Exception ex)
+			  {
+				  CommonController objcom = new CommonController(_configuration);
+				  objcom.errorlog(ex.Message, "undomatchjob");
+				  return Json(ex.Message);
+			  }
+
+		  }*/
+
         public class undomatchmodel
         {
             public string? reconcode { get; set; }
@@ -735,7 +801,6 @@ namespace Recon_proto.Controllers
 
         }
         #endregion
-
 
         #region KObyRule
 
@@ -913,7 +978,6 @@ namespace Recon_proto.Controllers
 
         #endregion
 
-
         #region getRuleAgainstJob
         [HttpPost]
         public JsonResult getRuleAgainstJob([FromBody] getRuleAgainstJobmodel context)
@@ -961,7 +1025,6 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
-
 
         #region ThemeAgainstRecon
         [HttpPost]
@@ -1011,5 +1074,145 @@ namespace Recon_proto.Controllers
 
         #endregion
 
+        #region undoIUT
+        [HttpPost]
+        public JsonResult undoIUT([FromBody] undoIUTModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "knockoff/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("undoIUT", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "undoIUT");
+                return Json(ex.Message);
+            }
+        }
+
+        public class undoIUTModel
+        {
+            public String in_recon_code { get; set; }
+            public string in_iut_ref_no { get; set; }
+            public string in_undo_reason { get; set; }
+            public string in_user_code { get; set; }
+        }
+        #endregion
+
+        #region undoIUTfetch
+        [HttpPost]
+        public JsonResult undoIUTfetch([FromBody] undoIUTModelfetch context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "knockoff/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("undoIUTfetch", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "undoIUT");
+                return Json(ex.Message);
+            }
+        }
+
+        public class undoIUTModelfetch
+        {
+            public String in_recon_code { get; set; }
+            public string in_iut_ref_no { get; set; }
+            public string in_user_code { get; set; }
+        }
+        #endregion
+
+        #region undoJobids
+        [HttpPost]
+        public DataTable getJobids(undomatchmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            undomatchmodel objList = new undomatchmodel();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "knockoff/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    // client.BaseAddress = new Uri("https://localhost:44348/api/Dataset/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getJobids", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    //for (int i = 0; i < result.Rows.Count; i++)
+                    //{
+                    //    objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                    //    objList.out_result = result.Rows[i]["out_result"].ToString();
+                    //}
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getJobids");
+                return result;
+            }
+
+        }
+       
+        #endregion
     }
 }

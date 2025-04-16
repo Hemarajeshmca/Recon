@@ -1,0 +1,324 @@
+﻿@{
+	ViewBag.title = "Undo IUT Entry";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.table:not(.table-dark) th {
+			color: #fff !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;">
+				<div class="row" style="margin-top:-19px;margin-bottom: 2%;">
+					<div class="col-md-3">
+						<label for="organization" class="form-label">Recon Name &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="reconname" class="form-select form-control" onchange="reconchange()"> </select>
+					</div>
+					<div class="col-md-3">
+						<label for="" class="form-label">IUT Reference Number &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" id="iutrefno" name="ReconName" type="text" onchange="chgiutrefno()">
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" onclick="undoiutfetch()" id="iutprocess" class="btn btn-sm save_btn me-2" style="margin-top: 7px">
+							Process
+						</button> &nbsp;&nbsp;
+						<button type="button" onclick="undoiut()" id="iutsave" class="btn btn-sm save_btn me-2" style="margin-top: 7px">
+							Undo
+						</button> &nbsp;&nbsp;
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+					</div>
+				</div>
+				<div class="row" style="margin-top:20px;margin-bottom: 2%;">
+					<div id="maingrid">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var counter = 1;
+	var clicks = 0;
+	$(document).ready(function () {
+		$("#navhead").text("Reports");
+		kendodate_format();
+		getreconlist();
+		$("#iutsave").hide();
+	});
+
+
+	function getreconlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#reconname").empty();
+				$("#reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == 'Y') {
+						$("#reconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+					$("#reconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#reconname').trigger("change");
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function chgiutrefno() {
+		$("#iutsave").hide();
+		$("#iutprocess").show();	
+		dynamicgridiut([]);
+	}
+
+	function reconchange() {
+		if ($("#reconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#reconname").val());
+			sessionStorage.setItem("reconname", $("#reconname :selected").text());
+			setcon();
+		}
+		$("#report_name").val("");
+		$("#report_param").val("");
+	}
+	function undoiutfetch() {
+		var iutrefno = $("#iutrefno").val();
+			if (iutrefno == "") {
+				$.alert({
+					title: 'Recon',
+					content: "IUT Reference Number cannot be empty",
+					type: 'green',
+				});
+				return;
+			}
+		var data = {};
+		data.in_recon_code = $("#reconname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		data.in_iut_ref_no = $("#iutrefno").val();
+
+		$.ajax({
+			type: "POST",
+			url: '../KnockOff/undoIUTfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (res) {
+				var response = JSON.parse(res);
+				if(response.length > 0 ){
+				dynamicgridiut(response);
+				$("#iutsave").show();
+				$("#iutprocess").hide();
+				}
+			}
+		});
+	}
+	function dynamicgridiut(response) {
+			var columns = [];
+			var chkval = response;
+			var data = response;
+			var i = 0;
+			var entryIndex = "entries[" + i + "]";
+			for (var key in data[0]) {
+				var propType = typeof data[0][key];
+				var textalign = '';
+				if (propType == 'number') {
+					textalign = 'right';
+				}else {
+					textalign = 'left';
+         		}
+				if (key == "display_order" || key == "display_order") {
+					columns.push({
+							field: entryIndex,
+							title: key,
+							type: propType,
+							attributes: { style: "text-align:" + textalign },
+							filterable: true,
+					});
+				}
+				if (key != "" && key != "display_order") {
+					columns.push({
+							field: entryIndex,
+							title: key,
+							type: propType,
+							attributes: { style: "text-align:" + textalign },
+							filterable: true,
+							width: "150px",
+					});
+				}
+					i = i + 1;
+					entryIndex = "entries[" + i + "]";
+			}
+			var rows = [];
+			var data1 = response;
+			$.each(data1, function (i, e) {
+				var entryArray = [];
+				$.each(e, function (key, val) {
+					entryArray.push(val);
+				});
+			rows.push(kendo.observable({
+					entries: entryArray
+			   }));
+			});
+			var viewModel = kendo.observable({
+				gridRows: rows
+			});
+			var configuration = {
+					pageSize: 10,
+					height: 350,
+					navigatable: true,
+					groupable: false,
+					editable: false,
+					sortable: false,
+					scrollable: true,
+					filterable: true,
+					attributes: { style: "text-align: center;" },
+					pageable: true,
+					pageable: {
+							pageSize: 10,
+							buttonCount: 4
+					},
+					resizable: true,
+					persistSelection: true,
+					selectable: true,
+					columns: columns,
+					rows: viewModel
+			};
+			$("#example").remove();
+			$('#maingrid').append('<div id="example" style="position:relative;" class="k-content"><table id="grid1"  data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
+			var timeEditGrid = $("#grid1").kendoGrid(configuration).data("kendoGrid");
+			kendo.bind($("#grid1"), viewModel);
+			var grid = $("#grid1").data("kendoGrid");			
+	}
+
+	function undoiut() {
+		$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to undo this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							title: 'Delete Reason',
+							content: '' +
+								'<form action="" class="formName">' +
+								'<div class="form-group">' +
+								'<label>Reason</label>' +
+								'<input type="text" placeholder="Reason" class="name form-control" required />' +
+								'</div>' +
+								'</form>',
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var name = this.$content.find('.name').val();
+										if (!name) {
+											$.alert('Reason cannot be empty');
+											return false;
+										}
+										if (iutrefno == "") {
+											$.alert({
+												title: 'Recon',
+												content: "IUT Reference Number cannot be empty",
+												type: 'green',
+											});
+											return;
+										}
+										var data = {};
+										data.in_recon_code = $("#reconname").val();
+										data.in_user_code = sessionStorage.getItem("usrname");
+										data.in_iut_ref_no = $("#iutrefno").val();
+										data.in_undo_reason = name;
+										$.ajax({
+												type: "POST",
+												url: '../KnockOff/undoIUT',
+												dataType: 'json',
+												async: false,
+												data: JSON.stringify(data),
+												contentType: 'application/json; charset=utf-8',
+												success: function (response) {
+													var result = JSON.parse(response);
+													var data = result[0];
+													if (data.out_result == "1") {
+															$.alert({
+																icon: 'fa fa-success',
+																title: 'Recon',
+																theme: 'dark',
+																content: data.out_msg,
+																type: 'green',
+																animationSpeed: 700,
+															});
+															cleariut();
+													} else {
+														$.alert({
+															title: 'Recon',
+															content: data.out_msg,
+															type: 'red',
+														});
+													}
+												}
+										});
+									}
+								}
+							},
+						cancel: function () {
+									//close
+								},
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+		});
+	}
+	function cleariut() {
+		$("#iutrefno").val('');
+		$("#iutsave").hide();
+		$("#iutprocess").show();
+		
+	}
+</script>

@@ -24,9 +24,7 @@
 			height: 360px;
 		}
 
-		.k-grid-header th.k-header > .k-link {
-			width: 100px;
-		}
+		
 
 		.k-grid-header {
 			font-weight: bold;
@@ -81,21 +79,25 @@
 			color: white;
 		}
 
-			.accordion-label:hover {
-				background: rgb(135, 46, 123)
-			}
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
 
-			.accordion-label::after {
-				content: "\276F";
-				width: 16px;
-				height: 16px;
-				text-align: center;
-				-webkit-transition: all 0.3s;
-				transition: all 0.3s;
-			}
+		.accordion-label:hover {
+			background: rgb(135, 46, 123)
+		}
+
+		.accordion-label::after {
+			content: "\276F";
+			width: 16px;
+			height: 16px;
+			text-align: center;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
 
 		.accordion-content {
-			max-height: 0;
+			mcxmnmcen,jhw,e kṅṭṇ,ṅ/ṁ9 max-height: 0;
 			padding: 0 16px;
 			color: rgba(4, 57, 94, 1);
 			background: rgb(135 46 123 / 14%);
@@ -954,6 +956,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1021,6 +1024,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1337,7 +1341,7 @@
 			{
 				field: "filter_seqno",
 				title: "Seq No.",
-				width: 30,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1346,6 +1350,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1353,7 +1358,7 @@
 					} else {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 					}
-				}
+				},
 			},
 			{
 				field: "preprocessfilter_gid",
@@ -1413,6 +1418,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1721,7 +1727,7 @@
 			{
 				field: "lookup_seqno",
 				title: "Seq No.",
-				width: 40,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1984,7 +1990,7 @@
 			{
 				field: "condition_seqno",
 				title: "Seq No.",
-				width: 40,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1993,6 +1999,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -2076,6 +2083,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -2462,7 +2470,7 @@
 			{
 				field: "condition_seqno",
 				title: "Seq No.",
-				width: 40,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -2471,6 +2479,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -2556,6 +2565,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -3416,12 +3426,12 @@
 						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
 					}
 					if (result.header[0].recorderby_type == "ASC")
-					{	
+					{
 						$("#reconorderby1").prop("checked", true);
-					} 
-					else 
-					{ 
-						$("#reconorderby2").prop("checked", true);					
+					}
+					else
+					{
+						$("#reconorderby2").prop("checked", true);
 					}
 
 					if ($("#txtmode").val() == "View") {
@@ -4976,7 +4986,7 @@
 			//$("#check6").prop('checked', true);
 			//$("#check7").prop('checked', true);
 			$("#lookupgrid").hide();
-		} 
+		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 			$("#Cmbreconfield").val('');
 			$("#Cmbfunction").val('');
@@ -5005,7 +5015,7 @@
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			$("#validquery").val("false");
-		} 
+		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
 			$("#cmblookupdataset").val('');
 			$("#Cmblookupdatasetfield").val('');
@@ -5032,7 +5042,7 @@
 			$("#comdataset").prop('disabled', true);
 			$("#check8").prop('checked', true);
 			//$("#check1").prop('checked', true);
-		} 
+		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
 			$("#cmblookupdataset").val('');
 			$("#Cmblookupdatasetfield").val('');
@@ -5955,6 +5965,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
@@ -6037,6 +6048,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
@@ -6443,6 +6455,7 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
@@ -6517,6 +6530,7 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
@@ -6769,24 +6783,24 @@
 			var in_recon_code = $("#cmbrecon").val();
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
-			var identifiercriteria = model.ident_criteria;
-			if (model.ident_value_input != undefined) {
-				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value_input;
-			} else if (model.ident_value_code == "") {
-				var ident_value_flag = 'Y';
+			var identifiercriteria = model.filter_value;
+			if (model.filter_value_input != undefined) {
+				var filter_value_flag = 'Y';
+				var identifiervalue = model.filter_value_input;
+			} else if (model.filter_value_code == "") {
+				var filter_value_flag = 'Y';
 				if (model.ident_value == undefined) {
-					var identifiervalue = model.ident_value_code;
+					var identifiervalue = model.filter_value_code;
 				} else {
-					var identifiervalue = model.ident_value;
+					var identifiervalue = model.filter_value;
 				}
 			} else {
-				if (model.ident_value_flag == 'Y') {
-					var ident_value_flag = model.ident_value_flag;
-					var identifiervalue = model.ident_value_code;
+				if (model.filter_value_flag == 'Y') {
+					var filter_value_flag = model.filter_value_flag;
+					var identifiervalue = model.filter_value_code;
 				} else {
-					var ident_value_flag = 'N';
-					var identifiervalue = model.ident_value_code;
+					var filter_value_flag = 'N';
+					var identifiervalue = model.filter_value_code;
 				}
 			}
 			var in_filter_seqno = model.filter_seqno
@@ -6809,7 +6823,7 @@
 				url: '../Preprocess/filterdatasave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
+					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: filter_value_flag,
 					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
 					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
 				}),
@@ -7023,6 +7037,7 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
@@ -7097,6 +7112,7 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
@@ -7349,23 +7365,23 @@
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
-			if (model.ident_value_input != undefined) {
-				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value_input;
-			} else if (model.ident_value_code == "") {
-				var ident_value_flag = 'Y';
-				if (model.ident_value == undefined) {
-					var identifiervalue = model.ident_value_code;
+			if (model.filter_value_input != undefined) {
+				var filter_value_flag = 'Y';
+				var identifiervalue = model.filter_value_input;
+			} else if (model.filter_value_code == "") {
+				var filter_value_flag = 'Y';
+				if (model.filter_value == undefined) {
+					var identifiervalue = model.filter_value_code;
 				} else {
-					var identifiervalue = model.ident_value;
+					var identifiervalue = model.filter_value;
 				}
 			} else {
-				if (model.ident_value_flag == 'Y') {
-					var ident_value_flag = model.ident_value_flag;
-					var identifiervalue = model.ident_value_code;
+				if (model.filter_value_flag == 'Y') {
+					var filter_value_flag = model.filter_value_flag;
+					var identifiervalue = model.filter_value_code;
 				} else {
-					var ident_value_flag = 'N';
-					var identifiervalue = model.ident_value_code;
+					var filter_value_flag = 'N';
+					var identifiervalue = model.filter_value_code;
 				}
 			}
 			var in_filter_seqno = model.filter_seqno
@@ -7388,7 +7404,7 @@
 				url: '../Preprocess/filterdatasave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
+					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: filter_value_flag,
 					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
 					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
 				}),

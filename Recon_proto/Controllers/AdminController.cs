@@ -314,7 +314,13 @@ namespace Recon_proto.Controllers
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DataTable result = new DataTable();
 			string post_data = "";
-			var pass = Encrypt(clearText: context.user_password);
+			var pass = "";
+
+            if (context.user_password != "")
+			{
+                pass = Encrypt(clearText: context.user_password);
+			}
+						
 			usermodel usr = new usermodel();
 			usr.user_password = pass;
 			usr.user_code = context.user_code;
