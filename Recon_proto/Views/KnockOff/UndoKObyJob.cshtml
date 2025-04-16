@@ -90,9 +90,7 @@
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
-						<div id="gd_undojob">
-							<div id="undojob_grid"></div>
-						</div>
+						<div id="undojob_grid"></div>
 					</div>
 				</div>
 			</div>
@@ -152,7 +150,7 @@
 		}
 	}
 	function undojob_grid(data) {
-	    var formatdatetime = sessionStorage.getItem("kendatetime");
+		var formatdatetime = sessionStorage.getItem("kendatetime");
 		var formatdatetime1 = "{0:" + formatdatetime + "}";
 		$("#undojob_grid").kendoGrid({
 			dataSource: {
@@ -180,7 +178,7 @@
 								item.end_date = kendo.parseDate(item.end_date, formatdatetime);
 							});
 							return data;
-						} 
+						}
 				}
 			},
 			height: 400,
@@ -241,20 +239,20 @@
 					field: "start_date",
 					title: "Initiated Date & Time",
 					width: 180,
-                        format: formatdatetime1,
+						format: formatdatetime1,
 						filterable: {
 							ui: "datetimepicker",
-						},		                 
+						},
 				},
 				{
 					field: "end_date",
 					title: "end_date",
 					width: 100,
 					hidden: true,
-                        format: formatdatetime1,
+						format: formatdatetime1,
 						filterable: {
 							ui: "datetimepicker",
-						},		                 
+						},
 				},
 				{
 					field: "job_initiated_by",
@@ -311,9 +309,7 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
-					if (result != null) {
-						$("#gd_undojob").empty();
-						$("#gd_undojob").append("<div id='undojob_grid'></div>");
+					if (result != null) {						
 						undojob_grid(result);
 					}
 					else {
@@ -349,8 +345,9 @@
 		var jobgid = parseInt((model.job_gid));
 		$.confirm({
 			icon: 'fa fa-warning',
-			title: 'Job Undo Reason',
+			title: "Job ID-" + jobgid + "-" + 'Undo Reason',
 			animationSpeed: 700,
+			autoClose: 'cancel|10000',
 			content: '<input type="textarea" id="undoknockoff" style="margin-left:10px;width:297px;">',
 			type: 'green',
 			buttons: {
@@ -368,9 +365,9 @@
 							if (data.out_result == "1") {
 								$.alert({
 									icon: 'fa fa-success',
-									title: 'Impact',
+									title: 'Recon',
 									content: data.out_msg,
-									type: 'blue',
+									type: 'green',
 									animationSpeed: 700,
 								});
 								setTimeout(function () {
@@ -381,7 +378,7 @@
 							else {
 								$.alert({
 									icon: 'fa fa-success',
-									title: 'Impact',
+									title: 'Recon',
 									content: data.out_msg,
 									type: 'blue',
 									animationSpeed: 700,
@@ -394,7 +391,7 @@
 				cancel: function () {
 					$.alert({
 						icon: 'fa fa-success',
-						title: 'Impact',
+						title: 'Recon',
 						content: 'Delete cancelled !',
 						type: 'blue',
 						animationSpeed: 700,

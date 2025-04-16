@@ -109,11 +109,13 @@
 	});
 
 	function grid_reload() {
+		var data = {};		
+		data.in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
 			url: '../KnockOff/ManualMatchList',
 			dataType: 'json',
-			data: JSON.stringify({}),
+			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {

@@ -25,10 +25,12 @@
 			background-color: initial !important;
 		}		
 
-		.k-grid-header th.k-header > .k-link {
+		/* .k-grid-header th.k-header > .k-link {
 			width: 100px;
+		} */
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
 		}
-
 		.k-grid-header {
 			font-weight: bold;
 		}
@@ -1169,7 +1171,7 @@
 			{
 				field: "themecondition_seqno",
 				title: "Seq No.",
-				width: 50,
+				width: 100,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1178,6 +1180,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
@@ -1260,6 +1263,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
@@ -1275,7 +1279,7 @@
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_themecondition")
 				},
-				width: 40,
+				width: 80,
 			}],
 			editable: true,
 		});
@@ -1660,6 +1664,7 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
@@ -1734,6 +1739,7 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
@@ -1749,7 +1755,7 @@
 					editor: function (container, options) {
 						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_themefilterfield")
 					},
-					width: 40,
+					width: 60,
 				}],
 				editable: true,
 			});
@@ -2238,6 +2244,7 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
@@ -2312,6 +2319,7 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
+					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
@@ -3081,7 +3089,7 @@
 			{
 				field: "themeaggfield_seqno",
 				title: "Seq No.",
-				width: 40,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -3368,7 +3376,7 @@
 			{
 				field: "themeaggcondition_seqno",
 				title: "Seq No.",
-				width: 40,
+				width: 60,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -3377,6 +3385,7 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
+				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themeaggcondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
@@ -3422,6 +3431,7 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
+				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themeaggcondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';

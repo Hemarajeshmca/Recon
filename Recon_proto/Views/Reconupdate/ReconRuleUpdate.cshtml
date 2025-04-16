@@ -465,6 +465,7 @@
             var grid = $("#grid_rulelist").data("kendoGrid");
             var selectedItem = grid.dataItem(grid.select());
             $('#selected_rule_name').text('Selected Rule:' + selectedItem.rule_name);
+            $('#selectedRuledesc').val(selectedItem.rule_name);
             $('#selected_recon_name').text('Selected Recon:' + selectedItem.recon_name);
             if ($(mode).attr('value') == "edit") {
                 clearCheckboxes();
@@ -619,7 +620,8 @@
         var Context = data;
         $.ajax({
             type: "POST",
-            url: '../Recon/Reconlistfetch',
+           url: '../Reconupdate/Reconalllistfetch',
+           // url: '../Recon/Reconlistfetch',
             dataType: 'json',
             data: JSON.stringify(data),
             contentType: 'application/json; charset=utf-8',

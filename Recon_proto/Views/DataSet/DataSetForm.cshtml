@@ -240,6 +240,7 @@
 											</div>
 										</div>
 										<div class="col-sm-4"></div>
+										<div class="col-sm-4"></div>
 										<div class="col-sm-4" style="margin-top:20px;float: right;">
 											<center>
 												<button type="button" class="btn btn-sm save_btn me-2" onclick="savedetail()">Save</button>&nbsp;&nbsp;&nbsp;
@@ -261,7 +262,7 @@
 										<div class="col-sm-4">
 										</div>
 										<div class="col-sm-4">
-											<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Mapping</h4>
+											<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Dataset Index</h4>
 										</div>
 										<div class="col-sm-4">
 											<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
@@ -278,7 +279,7 @@
 										</div>
 
 										<div class="col-sm-4">
-											<label for="" class="form-label">index_seqno&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+											<label for="" class="form-label">Index Seqno&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 											<input class="form-control" type="text" onkeypress='return isNumberKey(event)' id="index_seqno">
 										</div>
 										<div class="col-sm-4">
@@ -320,6 +321,10 @@
 		grid_datasetfield([]);
 		grid_datasetindex([]);
 		$("#btncoll").hide();
+		var role = sessionStorage.getItem("rolecode");
+		if(role !='RC006'){
+			$("#datasetindex").hide();
+		}
 	});
 	function fieldtype() {
 		var FieldType = $("#cmbFieldType").val();
@@ -704,6 +709,7 @@
 					$("#fieldPrecision").val('');
 					$("#fieldscale").val('');
 				}
+				$("#seq_no").val(selectedItem.slno);
 				$("#fieldPrecision").val(selectedItem.precision_length);
 				$("#fieldscale").val(selectedItem.scale_length);
 				$("#newdebit").modal('show');
@@ -865,7 +871,6 @@
 		if ($("#txtmode").val() != "View") {
 			var grid = $("#grid_datasetfield").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
-
 			$.confirm({
 				icon: 'fa fa-warning',
 				title: 'Recon',

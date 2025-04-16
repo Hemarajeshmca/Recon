@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Data;
 using DocumentFormat.OpenXml.InkML;
+using static Recon_proto.Controllers.ReconController;
 
 namespace Recon_proto.Controllers
 {
@@ -435,5 +436,52 @@ namespace Recon_proto.Controllers
 			public string? in_target_recon_code { get; set; }
 
 		}
-	}
+
+        #region list
+        [HttpPost]
+        public JsonResult Reconalllistfetch([FromBody] Reconalllistmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            List<Reconlistmodel> objcat_lst = new List<Reconlistmodel>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "UpdateRecon/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("reconalllist", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Reconlistfetch");
+                return Json(ex.Message);
+            }
+        }
+
+        public class Reconalllistmodel
+        {
+
+            public string? in_user_code { get; set; }
+
+        }
+        #endregion
+    }
 }
