@@ -15,14 +15,7 @@
 		.k-grid-filter.k-state-active {
 			background-color: initial !important;
 		}
-
-		.k-grid.k-widget {
-			height: 360px;
-		}
-
-		.k-grid-header th.k-header > .k-link {
-			width: 100px;
-		}
+		
 
 		.k-grid-header {
 			font-weight: bold;
@@ -117,7 +110,7 @@
 
 		input:checked ~ .accordion-content {
 			max-height: 100vh;
-			padding: 16px;
+			/* padding: 16px; */
 		}
 
 		.validated1 {
@@ -173,22 +166,22 @@
 				<select id="cmbreconpre1" class="form-select form-control" onchange="reconcode()" disabled>
 				</select>
 			</div>
-			<div class="col-sm-2">
+			<div class="col-sm-1" style="width: 12%;">
 				<label class="form-label" for="">Preprocess Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<input class="form-control" type="number" id="preprocessorder" disabled>
 			</div>
-			<div class="col-md-2" style="width: 14%;">
+			<div class="col-md-1" style="width: 10%;">
 				<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<select id="holdflag11" class="form-select form-control" style=" width:100%;" disabled>
 				</select>
 			</div>
-			<div class="col-md-2" style="padding-left:0;margin-left: 15px;">
+			<div class="col-md-1" style="padding-left:0;width: 11%;">
 				<label for="" class="form-label">Post Process Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<select id="postprocessflag" class="form-select form-control" style=" width:100%;" disabled>
 				</select>
 			</div>
 		</div>
-		<div style="height:245px;overflow-x:auto;padding-top:10px;margin-top:10px">
+		<div style="height:300px;overflow-x:auto;padding-top:10px;margin-top:10px">
 			<div class="accordion-wrapper">
 				<div class="accordion" id="headingfunction">
 					<input type="checkbox" name="radio-a" id="check2" style="display:none">
@@ -261,11 +254,11 @@
 							</div>
 							<div class="col-sm-3">
 								<div>
-									<input type="checkbox" id="lookupflag" disabled disabled onclick="lookupflagjs()">
+									<input type="checkbox" id="lookupflag" disabled  onclick="lookupflagjs()">
 									<label for="vehicle1">Enable Mutiple Update Recon Field </label>
 								</div>
 								<div style="margin-top:10px" id="rflag">
-									<input type="checkbox" id="returnflag" disabled disabled onclick="returnflag()">
+									<input type="checkbox" id="returnflag" disabled  onclick="returnflag()">
 									<label for="vehicle1">Group Return Value</label>
 								</div>
 							</div>
@@ -357,6 +350,15 @@
 						@*<button type="button" id="validatequery" class="btn btn-sm btn btn-primary" onclick="validatequery1()">Validate</button>&nbsp;&nbsp;&nbsp;*@
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-top:16px">
+			<div class="col-sm-4">
+			</div>
+			<div class="col-sm-4" style="margin-left:-190px;">
+				<i class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" style="color: #000000;float:right">Cancel</i>				
+			</div>
+			<div class="col-sm-4">
 			</div>
 		</div>
 	</form>
@@ -2539,7 +2541,7 @@
 			$("#cumulativeflag").hide();
 			$("#headingfunction").show();
 			$("#headingfilter").show();
-			//$("#check1").prop('checked', true);
+			$("#check1").prop('checked', true);
 			$("#check2").prop('checked', true);
 
 		} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {

@@ -44,7 +44,7 @@ namespace Recon_proto.Controllers
 
         #region datasetfile
         [HttpPost]
-        public async Task<string> datasetfile(string pipeline_code, IFormFile file, string initiated_by)
+        public async Task<string> datasetfile(string pipeline_code, IFormFile file, string initiated_by, string dataset_code)
         {
             datasetfileModel objcontent = new datasetfileModel();
             objcontent.pipeline_code = pipeline_code;
@@ -72,6 +72,7 @@ namespace Recon_proto.Controllers
                         client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                         content1.Add(new StreamContent(fileStream), "file", file.FileName);
                         content1.Add(new StringContent(pipeline_code), "pipeline_code");
+                        content1.Add(new StringContent(dataset_code), "dataset_code");
                         content1.Add(new StringContent(initiated_by), "initiated_by");
                         HttpContent content = new StringContent(JsonConvert.SerializeObject(objcontent));
                         try

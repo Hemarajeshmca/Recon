@@ -25,6 +25,10 @@
 						<select id="cmbreconname" class="form-select form-control" onchange="gridlist()">
 						</select>
 					</div>
+					<div class="col-sm-4" style="margin-bottom:5px;" id="archivaldata">
+						<label for="" class="form-label">Archival Code&nbsp;</label>
+						<input class="form-control" type="text" id="archivecode" value="" disabled>
+					</div>
 				</div>
 				<div class="row">
 					<div class="col-xs-12">
@@ -43,7 +47,16 @@
 </html>
 <script type="text/javascript">
 	$(document).ready(function () {
-		$("#navhead").text("Report Generation");
+		const urlParams = new URLSearchParams(window.location.search);
+		const archivalCode = urlParams.get('archival_code');
+		$("#archivecode").val(archivalCode);
+		if($("#archivecode").val() != ''){
+			$("#navhead").text("Archival Report Generation");
+			$("#archivaldata").show();
+		}else {
+			$("#navhead").text("Report Generation");
+			$("#archivaldata").hide();
+		}		
 		kendodate_format();
 		grid_reportTemplist([]);
 		gridreconlist();
@@ -106,12 +119,12 @@
 		data.in_action_by = sessionStorage.getItem("usrname");
 		if (data.in_recon_code) {
 		$.ajax({
-				type: "POST",
-				url: '../Reports/reportTempletelist',
-				dataType: 'json',
-				contentType: 'application/json; charset=utf-8',
-				data: JSON.stringify(data),
-				success: function (response) {
+			type: "POST",
+			url: '../Reports/reportTempletelist',
+			dataType: 'json',
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(data),
+			success: function (response) {
 					if (response != " " && response != null && response != "{}" && response != "[]") {
 					var res = JSON.parse(response)
 					$("#gd_reporttemplist").empty();
@@ -261,15 +274,24 @@
 			var selectedItem = grid.dataItem(grid.select());
 			if (selectedItem.report_exec_type == 'C') {
 				reportgeneration();
-			} else {			
-			if ($(mode).attr('value') == "edit") {
-				btn_onClick("Edit");
-				document.location = '../Reports/ReportGeneration_newdetail';
-			}
+			} else 
+			{			
+				if ($(mode).attr('value') == "edit") {
+					btn_onClick("Edit");
+					if($("#archivecode").val() != ''){
+						document.location = '../Reports/ReportGeneration_newdetail?archival_code='+ $("#archivecode").val();
+					}else {
+						document.location = "../Reports/ReportGeneration_newdetail";
+					}				
+				}
 			else if (mode == "view") {
 				btn_onClick('View');
-				document.location = "../Reports/ReportGeneration_newdetail";
-			}
+				if($("#archivecode").val() != ''){
+					document.location = '../Reports/ReportGeneration_newdetail?archival_code='+ $("#archivecode").val();
+				}else {
+					document.location = "../Reports/ReportGeneration_newdetail";
+				}
+			}	
 			}
 		}
 		catch (err) {
@@ -416,7 +438,5 @@
 		} catch{
 
 		}
-
 	}
-
 </script>

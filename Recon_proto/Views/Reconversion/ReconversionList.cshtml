@@ -245,9 +245,10 @@
 			success: function (response) {
 				if (response != null) {
 					var res = JSON.parse(response);
+					$("#reconversion").val(res.Reconversion[0].recon_rule_version)
 					if (res.versionlist.length > 0) {
 						grid_ruleversion(res.versionlist);
-						$("#reconversion").val(res.versionlist[0].recon_rule_version)
+						
 					} else {
 						grid_ruleversion([]);
 					}
@@ -261,7 +262,6 @@
 					} else {
 						grid_preprocess([]);
 					}
-
 				}
 			},
 			error: function (er) {

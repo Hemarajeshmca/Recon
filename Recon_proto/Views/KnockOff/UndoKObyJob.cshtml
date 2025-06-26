@@ -360,34 +360,48 @@
 						dataType: 'json',
 						data: JSON.stringify({ reconcode: reconcode, job_id: jobgid, undo_job_reason: knockoff, in_ip_addr: ip_addr, in_user_code: user_code }),
 						contentType: 'application/json; charset=utf-8',
-						success: function (response) {
-							var data = response;
-							if (data.out_result == "1") {
-								$.alert({
-									icon: 'fa fa-success',
-									title: 'Recon',
-									content: data.out_msg,
-									type: 'green',
-									animationSpeed: 700,
-								});
-								setTimeout(function () {
-									window.location.reload(1);
-								}, 2000);
+						// success: function (response) {
+						// 	var data = response;
+						// 	if (data.out_result == "1") {
+						// 		$.alert({
+						// 			icon: 'fa fa-success',
+						// 			title: 'Recon',
+						// 			content: data.out_msg,
+						// 			type: 'green',
+						// 			animationSpeed: 700,
+						// 		});
+						// 		setTimeout(function () {
+						// 			window.location.reload(1);
+						// 		}, 2000);
 
-							}
-							else {
-								$.alert({
-									icon: 'fa fa-success',
-									title: 'Recon',
-									content: data.out_msg,
-									type: 'blue',
-									animationSpeed: 700,
-								});
-								preventCloseOnSave = true;
-							}
-						},
+						// 	}
+						// 	else {
+						// 		$.alert({
+						// 			icon: 'fa fa-success',
+						// 			title: 'Recon',
+						// 			content: data.out_msg,
+						// 			type: 'blue',
+						// 			animationSpeed: 700,
+						// 		});
+						// 		preventCloseOnSave = true;
+						// 	}
+						// },
 					});
+					// ✅ Immediately show success message without waiting
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						content: 'Undo process started!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+
+					// ✅ Optional: Reload after some time (but don't block execution)
+					setTimeout(function () {
+						window.location.reload();
+					}, 2000);
 				},
+			
 				cancel: function () {
 					$.alert({
 						icon: 'fa fa-success',

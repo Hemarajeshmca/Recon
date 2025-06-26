@@ -20,51 +20,14 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
-        #region Qcd combo
-        [HttpPost]
-        public JsonResult seqtypefetch([FromBody] koseqmodel context)
+        public IActionResult KoSequence()
         {
-            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            DataTable result = new DataTable();           
-            string post_data = "";
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    string Urlcon = "KoSequence/";
-                    client.BaseAddress = new Uri(urlstring + Urlcon);
-                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
-                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("seqtype", content).Result;
-                    Stream data = response.Content.ReadAsStreamAsync().Result;
-                    StreamReader reader = new StreamReader(data);
-                    post_data = reader.ReadToEnd();
-                    string d2 = JsonConvert.DeserializeObject<string>(post_data);                  
-                    return Json(d2);
-                }
-            }
-            catch (Exception ex)
-            {
-                CommonController objcom = new CommonController(_configuration);
-                objcom.errorlog(ex.Message, "Reconlistfetch");
-                return Json(ex.Message);
-            }
+            return View();
         }
-
-        public class koseqmodel
+        public IActionResult KoSequencedetail()
         {
-            public string? in_recon_code { get; set; }
-            public string? in_seq_code { get; set; }
-            public string? in_user_code { get; set; }
-        }
-        #endregion
+            return View();
+        }      
 
         #region save
         [HttpPost]
@@ -96,8 +59,7 @@ namespace Recon_proto.Controllers
                     string d2 = JsonConvert.DeserializeObject<string>(post_data);
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
                     for (int i = 0; i < result.Rows.Count; i++)
-                    {
-                        objList.in_Koseq_gid = Convert.ToInt16(result.Rows[i]["in_koseq_gid"]);                       
+                    {                                            
                         objList.out_msg = result.Rows[i]["out_msg"].ToString();
                         objList.out_result = Convert.ToInt16(result.Rows[i]["out_result"].ToString());
                     }
@@ -116,22 +78,18 @@ namespace Recon_proto.Controllers
         {
             public Int32? in_Koseq_gid { get; set; }
             public String in_recon_code { get; set; }
-            public String in_recon_version { get; set; }
-            public decimal in_koseq_no { get; set; }
-            public String? in_koseq_type { get; set; }
-            public String in_koseq_ref_code { get; set; }
-            public String in_hold_flag { get; set; }            
+            public String in_recon_version { get; set; }           
+            public String in_Koseq_recon { get; set; }            
             public String in_action { get; set; }
-            public String in_active_status { get; set; }
             public String? in_action_by { get; set; }
             public String? out_msg { get; set; }
             public Int32? out_result { get; set; }
         }
-        #endregion
-
-        #region list fetch
+        #endregion  
+        
+        #region list
         [HttpPost]
-        public JsonResult seqlistfetch([FromBody] koseqlistmodel context)
+        public JsonResult seqlist([FromBody] koseqlistmodel context)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
@@ -151,7 +109,7 @@ namespace Recon_proto.Controllers
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-                    var response = client.PostAsync("seqlistfetch", content).Result;
+                    var response = client.PostAsync("seqlist", content).Result;
                     Stream data = response.Content.ReadAsStreamAsync().Result;
                     StreamReader reader = new StreamReader(data);
                     post_data = reader.ReadToEnd();
@@ -168,6 +126,95 @@ namespace Recon_proto.Controllers
         }
 
         public class koseqlistmodel
+        {
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+
+        #region listtree
+        [HttpPost]
+        public JsonResult Reconkoseqtree([FromBody] Reconversiontreemodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "KoSequence/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Reconkoseqtree", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Reconkoseqtree");
+                return Json(ex.Message);
+            }
+
+        }
+
+        public class Reconversiontreemodel
+        {
+            public string in_recon_code { get; set; }
+            public string? in_user_code { get; set; }
+            public string? in_process_code { get; set; }
+        }
+        #endregion
+
+        #region cusseqlistfetch fetch
+        [HttpPost]
+        public JsonResult cusseqlistfetch([FromBody] cosseqlistmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "KoSequence/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("cusseqlistfetch", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "cusseqlistfetch");
+                return Json(ex.Message);
+            }
+        }
+
+        public class cosseqlistmodel
         {
             public string? in_recon_code { get; set; }
             public string? in_user_code { get; set; }

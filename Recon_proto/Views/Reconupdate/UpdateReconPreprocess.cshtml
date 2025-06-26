@@ -481,6 +481,7 @@
 			var selectedItem = grid.dataItem(grid.select());
 			$('#selected_preprocess_name').text('Selected PreProcess :' + selectedItem.preprocess_desc);
 			$('#selected_recon_name').text('Selected Recon:' + selectedItem.recon_name);
+			$('#selectedPreprocessdesc').val(selectedItem.preprocess_desc);
 			if ($(mode).attr('value') == "edit") {
 				clearCheckboxes();
 				getupdatePreProcessList();
@@ -538,7 +539,7 @@
 		data.in_base_recon_code = $("#cmbreconname").val();
 		data.in_base_preprocess_code = $("#selectedPreprocess").val();
 		data.in_update_recon_code = "$" + arrString;
-		data.in_update_preprocess_code = $("selectedPreprocessdesc").val();
+		data.in_update_preprocess_code = $("#selectedPreprocessdesc").val();
 		data.in_user_code = sessionStorage.getItem("usrname");
 		if (arrString != "") {
 			$.ajax({

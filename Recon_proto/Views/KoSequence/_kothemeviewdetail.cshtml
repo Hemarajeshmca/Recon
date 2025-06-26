@@ -22,14 +22,6 @@
 			background-color: initial !important;
 		}
 
-		.k-grid.k-widget {
-			height: 360px;
-		}
-
-		.k-grid-header th.k-header > .k-link {
-			width: 100px;
-		}
-
 		.k-grid-header {
 			font-weight: bold;
 		}
@@ -71,37 +63,35 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-5">
+			<div class="col-sm-6">
+				<div class="col-sm-4">
+					<label class="form-label" for="">Theme Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<input class="form-control" type="text" id="themename">
+					<input class="form-control" type="hidden" id="themegid" value=0>
+				</div>				
 			</div>
 		</div>
-		<div class="row" style="margin-bottom:5px;">
-			<div class="col-sm-3">
-				<label class="form-label" for="">Theme Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-				<input class="form-control" type="text" id="themename">
-				<input class="form-control" type="hidden" id="themegid" value=0>
-			</div>
+		<div class="row" style="margin-bottom:5px;">	
 			<div class="col-sm-3">
 				<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<select id="cmbrecon" class="form-select form-control" onchange="reconchangetheme()" disabled>
 				</select>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-2" style="width:11%">
 				<label class="form-label" style="width: 84px;" for="">Theme Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<input class="form-control" type="text" id="theme_order" value="0" onpaste="return false;" maxlength="5" onkeypress='return isNumberKey(event)'>
 			</div>
-			<div class="col-md-3">
+			<div class="col-md-2" style="width:16%">
 				<label for="" class="form-label">Theme Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<select id="themetype" class="form-select form-control" style=" width:100%;" onchange="fthemetype()" disabled>
 				</select>
 			</div>
-		</div>
-		<div class="row" style="margin-bottom:2px;">
-			<div class="col-sm-3">
+			<div class="col-sm-1" style="width:20%">
 				<label id="sourceparentdataset" class="form-label">Source Dataset&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 				<select id="sourcedatasettheme" class="form-select form-control" style=" width: 100%;" onchange="sourcefieldchange()" disabled>
 				</select>
 			</div>
-			<div class="col-sm-3">
+			<div class="col-sm-1" style="width:20%">
 				<label id=comsupdataset class="form-label">Comparison Dataset</label>
 				<select id="comdatasettheme" class="form-select form-control" style=" width: 100%;" disabled>
 				</select>
@@ -194,8 +184,10 @@
 							<div class="panel-body">
 								<div class="row" style="padding-bottom:3px;padding-right:5px;">
 									<div class="col-xs-12">
-										<div id="gd_themecondition">
-											<div id="grid_themecondition">
+										<div class="popup-dialog">
+											<div id="gd_themecondition">
+												<div id="grid_themecondition">
+												</div>
 											</div>
 										</div>
 									</div>
@@ -208,8 +200,10 @@
 							<div class="panel-body">
 								<div class="row" style="margin-top:5px;">
 									<div class="col-xs-12">
-										<div id="gd_themefilter">
-											<div id="grid_themefilterfield">
+										<div class="popup-dialog">
+											<div id="gd_themefilter">
+												<div id="grid_themefilterfield">
+												</div>
 											</div>
 										</div>
 									</div>
@@ -222,8 +216,10 @@
 							<div class="panel-body">
 								<div class="row" style="margin-top:5px;">
 									<div class="col-xs-12">
-										<div id="gd_comparisionfilter">
-											<div id="grid_comparisionfilter">
+										<div class="popup-dialog">
+											<div id="gd_comparisionfilter">
+												<div id="grid_comparisionfilter">
+												</div>
 											</div>
 										</div>
 									</div>
@@ -235,8 +231,10 @@
 						<div class="panel panel-default">
 							<div class="row" style="padding-bottom:3px;padding-right:5px;">
 								<div class="col-xs-12">
-									<div id="gd_grouping">
-										<div id="grid_themegrouping">
+									<div class="popup-dialog">
+										<div id="gd_grouping">
+											<div id="grid_themegrouping">
+											</div>
 										</div>
 									</div>
 								</div>
@@ -247,8 +245,10 @@
 						<div class="panel panel-default">
 							<div class="row" style="padding-bottom:3px;padding-right:5px;">
 								<div class="col-xs-12">
-									<div id="gd_aggfunction1">
-										<div id="grid_aggfunction1">
+									<div class="popup-dialog">
+										<div id="gd_aggfunction1">
+											<div id="grid_aggfunction1">
+											</div>
 										</div>
 									</div>
 								</div>
@@ -259,8 +259,10 @@
 						<div class="panel panel-default">
 							<div class="row" style="padding-bottom:3px;padding-right:5px;">
 								<div class="col-xs-12">
-									<div id="gd_aggcondition1">
-										<div id="grid_aggcondition1">
+									<div class="popup-dialog">
+										<div id="gd_aggcondition1">
+											<div id="grid_aggcondition1">
+											</div>
 										</div>
 									</div>
 								</div>
@@ -278,7 +280,16 @@
 						</div>
 					</div>
 				</div>
-			</div>			
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">
+			</div>
+			<div class="col-sm-4" style="margin-left:-190px;margin-top: 9px">
+				<i class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal" style="color: #000000;float:right">Cancel</i>
+			</div>
+			<div class="col-sm-4">
+			</div>
 		</div>
 	</form>
 
@@ -288,7 +299,7 @@
 
 	function getGridthemeComboList() {
 		//recon name
-		var data = {};		
+		var data = {};
 		data.in_user_gid = 0;
 		data.in_active_status = '';
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -722,7 +733,7 @@
 			detailsfetchtheme(data.theme_code);
 			$("#savesubmit").hide();
 			$("#adddataset").hide();
-			$("#datasetfieldadd").hide();				
+			$("#datasetfieldadd").hide();
 			$("#grid_themefilterfield .k-grid-toolbar").hide();
 			$("#themename").prop('disabled', true);
 			$("#theme_order").prop('disabled', true);
@@ -795,7 +806,7 @@
 						$("#Cmbclone").prop('disabled', true)
 						$("#btnclone").prop('disabled', true)
 					}
-					
+
 						$("#sourcedatasettheme").prop('disabled', true);
 						$("#comdatasettheme").prop('disabled', true);
 						$("#themetype").prop('disabled', true);
@@ -805,7 +816,7 @@
 						$("#grid_themegrouping .k-grid-toolbar").hide();
 						$("#grid_aggfunction1 .k-grid-toolbar").hide();
 						$("#grid_aggcondition1 .k-grid-toolbar").hide();
-					
+
 				}
 				else {
 					grid_themefilter([]);
@@ -1131,7 +1142,7 @@
 				dataBound: function (e) {
 					resultData = e.sender._data;
 					var rows = $('#grid_themefilterfield').data('kendoGrid').tbody.children();
-					setColor(rows, resultData);					
+					setColor(rows, resultData);
 
 				},
 				sortable: false,
@@ -1413,7 +1424,7 @@
 					resultData = e.sender._data;
 					var rows = $('#grid_comparisionfilter').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					
+
 
 				},
 				sortable: false,
@@ -1683,7 +1694,7 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_themegrouping').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
-				
+
 			},
 			sortable: false,
 			selectable: true,
@@ -1810,7 +1821,7 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_aggfunction1').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
-				
+
 			},
 			sortable: false,
 			selectable: true,
@@ -1957,7 +1968,7 @@
 				resultData = e.sender._data;
 				var rows = $('#grid_aggcondition1').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
-				
+
 			},
 			sortable: false,
 			selectable: true,
@@ -2221,5 +2232,5 @@
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
 	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
-	
+
 </script>

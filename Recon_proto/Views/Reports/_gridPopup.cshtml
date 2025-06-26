@@ -1,0 +1,101 @@
+﻿<div class="row">
+<div class="col-md-5">
+    <lable id="dynamic_label"></lable>
+        <textarea id="pasteArea" style="width:100%; height:380px;" placeholder="Paste Excel data here..."></textarea>
+</div>
+    <div class="col-md-7">
+        <div id="grid"></div>
+    </div>
+</div>
+<div class="row" style="float:right; margin-top:20px;">
+  <button style="width: 100px !important;" type="button" id="popupSaveBtn" class="btn btn-sm save_btn me-2">Save</button>
+  <button style="width: 100px !important;color: red !important; background: white !important;" type="button" id="popupClearBtn" class="btn btn-sm cancel_btn me-2">Clear</button>
+  <button style="width: 100px !important;" onclick="closePopup()" type="button" id="popupCancelBtn" class="btn btn-sm cancel_btn me-2">Cancel</button>
+</div>
+<script>
+    $(document).ready(function () {
+        var grid = $("#grid").kendoGrid({
+            dataSource: {
+                data: [],
+                schema: {
+                    model: {
+                        fields: {
+                            pasted_value: { type: "string" }
+                        }
+                    }
+                },
+                pageSize: 1000
+            },
+            height: 400,
+            pageable: {
+                    refresh: false,
+                    pageSizes: [1000, 1500, 2000, 2500, 5000],
+                    buttonCount: 3
+                },
+            columns: [
+                { field: "pasted_value", title: "Pasted Value" }
+            ]
+        }).data("kendoGrid");
+
+        $("#pasteArea").on("paste", function (e) {
+            var element = this;
+            setTimeout(function () {
+                var pastedData = $(element).val();
+                var rows = pastedData.split(/\r?\n/).filter(r => r.trim() !== "");
+                var parsed = rows.map(row => ({ pasted_value: row.split('\t').join(" ") }));
+                var grid = $("#grid").data("kendoGrid");
+                grid.dataSource.data(parsed);
+            }, 100);
+        });
+    });
+
+        $("#pasteArea").on("blur", function () {
+        var pastedData = $(this).val();
+        var rows = pastedData.split(/\r?\n/).filter(r => r.trim() !== "");
+        var parsed = rows.map(row => ({ pasted_value: row.split('\t').join(" ") }));
+        var grid = $("#grid").data("kendoGrid");
+        grid.dataSource.data(parsed);
+    });
+
+    function closePopup(){
+        $("#setValue").modal('hide');
+    }
+
+    $("#popupClearBtn").on("click", function () {
+        var grid = $("#grid").data("kendoGrid");
+        $("#pasteArea").val("").prop("readonly", false);
+        grid.dataSource.data([]);
+        if (selectedFilterRow) {
+            delete pastedDataMap[selectedFilterRow.uid];
+        }
+    });
+
+    $("#popupSaveBtn").on("click", function () {
+        if (!selectedFilterRow) return;
+        var grid = $("#grid").data("kendoGrid");
+        var data = grid.dataSource.data();
+        var rowUid = selectedFilterRow.uid;
+        var isInt = selectedFilterRow.reportparam_value?.toUpperCase().includes("INTEGER");
+        var finalValue = data.map(function (item) {
+            var val = item.pasted_value;
+            /*if (!isInt) {
+                val = val.trim();
+                if (!(val.startsWith('"') && val.endsWith('"'))) {
+                    val = `"${val}"`;
+                }
+            }*/
+            return val;
+        }).join(",");
+        selectedFilterRow.set("filter_value", finalValue);
+        pastedDataMap[rowUid] = {
+            textarea: $("#pasteArea").val(),
+            gridData: data.toJSON() 
+        };
+        selectedFilterRow = null;
+        $("#setValue").modal("hide");
+    });
+
+</script>
+
+
+

@@ -23,14 +23,12 @@
 
 		.k-grid-filter.k-state-active {
 			background-color: initial !important;
-		}		
+		}
 
-		/* .k-grid-header th.k-header > .k-link {
-			width: 100px;
-		} */
 		.k-grid-header th.k-header > .k-link {
 			color: white !important;
 		}
+
 		.k-grid-header {
 			font-weight: bold;
 		}
@@ -123,12 +121,14 @@
 					<div class="row" style="margin-bottom:2px;">
 						<div class="col-sm-3">
 							<label id="lblsourcedataset" class="form-label">Source Dataset</label>
-							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;">
+							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;" onchange="sourcedatasetChange()">
+								@* <select id="sourcedataset" class="form-select form-control" style=" width: 100%;" > *@
 							</select>
 						</div>
 						<div class="col-sm-3">
 							<label id=lblcomdataset class="form-label">Comparison Dataset</label>
-							<select id="comdataset" class="form-select form-control" style=" width: 100%;">
+							<select id="comdataset" class="form-select form-control" style=" width: 100%;" onchange="compdatasetChange()">
+								@* <select id="comdataset" class="form-select form-control" style=" width: 100%;" onchange="compdatasetChange()"> *@
 							</select>
 						</div>
 						<div class="col-sm-3">
@@ -550,7 +550,7 @@
 				$("#aggregatecondition").hide();
 				$("#themequery").hide();
 				$("#lblsourcedataset").text("Source Dataset").append("&nbsp;");
-				$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;");			
+				$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;");
 		} else if (themetype == "QCD_THEME_QUERY") {
 			if ($('#sourcefilter').attr('class') == 'nav-link active') {
 				$("#sourcefilter").removeClass('nav-link active');
@@ -610,6 +610,7 @@
 			$("#lblsourcedataset").text("Source Dataset").append("&nbsp;");
 			$("#lblcomdataset").text("Comparison Dataset").append("&nbsp;");
 		} else if (themetype == "QCD_THEME_COMPARE") {
+			source_field_desc_list = cmbsourcefield();
 			if ($('#sourcefilter').attr('class') == 'nav-link active') {
 				$("#sourcefilter").removeClass('nav-link active');
 				$("#sourcefilter").toggleClass('nav-link');
@@ -1087,11 +1088,25 @@
 
 		});
 	}
+	var source_field_desc_list = "";
+	var comparison_criteria_list = "";
+	function sourcedatasetChange()
+	{
+		source_field_desc_list = cmbsourcefield();
+		$("#grid_themecondition").data("kendoGrid").dataSource.read();
+	}
+	function compdatasetChange()
+	{
+		comparison_field_desc_list = cmbsourcefield();
+		$("#grid_themecondition").data("kendoGrid").dataSource.read();
+		$("#grid_themegrouping").data("kendoGrid").dataSource.read();
+
+	}
 	//-----------------------------------------------------   theme condition  ----------------------------------------------------------------
 	function grid_themecondition(data) {
-		var source_field_desc_list = "";
+		//var source_field_desc_list = "";
 		var extraction_criteria_list = "";
-		var comparison_criteria_list = "";
+		//var comparison_criteria_list = "";
 		$("#grid_themecondition").kendoGrid({
 			dataSource: {
 				data: data,
@@ -1171,7 +1186,7 @@
 			{
 				field: "themecondition_seqno",
 				title: "Seq No.",
-				width: 100,
+				width: 70,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1179,8 +1194,7 @@
 			},
 			{
 				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				filterable: false,
+				title: "(", width: 20,filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
@@ -1262,8 +1276,7 @@
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				filterable: false,
+				title: ")", width: 20,filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themecondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
@@ -1279,7 +1292,7 @@
 				editor: function (container, options) {
 					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_themecondition")
 				},
-				width: 80,
+				width: 60,
 			}],
 			editable: true,
 		});
@@ -1365,12 +1378,14 @@
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
 		var in_user_code = sessionStorage.getItem("usrname");
+		var dataset_code = $("#sourcedataset").val();
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/FieldAgainstRecon',
+			//url: '../Rulesetup/FieldAgainstRecon',
+			url: '../Rulesetup/getdatasetField',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_dataset_code: dataset_code,in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1663,8 +1678,7 @@
 				},
 				{
 					field: "open_parentheses_flag",
-					title: "(", width: 20,
-					filterable: false,
+					title: "(", width: 20,filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
@@ -1714,8 +1728,15 @@
 				},
 				{
 					field: "filter_value_flag",
-					title: "filter_value_flag",
-					hidden: true,
+					title: "Value",filterable: false,
+							template: function (dataItem) {
+						if (dataItem.themefilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+						}
+					},
+					width: 50,
 				},
 				{
 					field: "filter_value",
@@ -1738,8 +1759,7 @@
 				},
 				{
 					field: "close_parentheses_flag",
-					title: ")", width: 20,
-					filterable: false,
+					title: ")", width: 20,filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
@@ -1755,7 +1775,7 @@
 					editor: function (container, options) {
 						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_themefilterfield")
 					},
-					width: 60,
+					width: 40,
 				}],
 				editable: true,
 			});
@@ -1806,7 +1826,7 @@
 			});
 		});
 	}
-	
+
 	function addRowsource() {
 		var grid = $("#grid_themefilterfield").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -1890,13 +1910,15 @@
 	function combo_editor_man_theme(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var dataset_code = $("#sourcedataset").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/FieldAgainstRecon',
+			//url: '../Rulesetup/FieldAgainstRecon',
+			url: '../Rulesetup/getdatasetField',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_dataset_code: dataset_code,in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1938,13 +1960,14 @@
 	function combo_editor_filtervalues(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var dataset_code = $("#sourcedataset").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/FieldAgainstRecon',
+			url: '../Rulesetup/getdatasetField',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_dataset_code: dataset_code,in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -1975,10 +1998,15 @@
 					if (datafield == "filter_value" && selectedItem.filter_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.filter_value_input;
 						selectedItem[code_flag] = 'Y';
+						 var checkbox = $(container).closest("tr").find(".chkbx9");
+						 checkbox.prop("checked", true);
+
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
 						selectedItem[code_flag] = 'N';
+						var checkbox = $(container).closest("tr").find(".chkbx9");
+						 checkbox.prop("checked", false);
 					}
 				}
 			}
@@ -2174,7 +2202,7 @@
 								filter_criteria: { type: "string", defaultValue: "" },
 								themefilter_seqno: { type: "string", defaultValue: 0 },
 								filter_value: { type: "string" },
-								filter_value_flag: { type: "string" },
+								filter_value_flag: { type: "string" ,editable: false},
 								filter_value_code: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
@@ -2243,8 +2271,7 @@
 				},
 				{
 					field: "open_parentheses_flag",
-					title: "(", width: 20,
-					filterable: false,
+					title: "(", width: 20,filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
@@ -2294,8 +2321,15 @@
 				},
 				{
 					field: "filter_value_flag",
-					title: "filter_value_flag",
-					hidden: true,
+					title: "Value",filterable: false,
+					template: function (dataItem) {
+						if (dataItem.themefilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+						}
+					},
+					width:50
 				},
 				{
 					field: "filter_value",
@@ -2318,8 +2352,7 @@
 				},
 				{
 					field: "close_parentheses_flag",
-					title: ")", width: 20,
-					filterable: false,
+					title: ")", width: 20,filterable: false,
 					template: function (dataItem) {
 						if (dataItem.themefilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
@@ -2384,7 +2417,7 @@
 			})
 		})
 	}
-	
+
 	function addRowcomparision() {
 		var grid = $("#grid_comparisionfilter").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -2468,13 +2501,15 @@
 	function combo_editor_man_comparision(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var dataset_code = $("#comdataset").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/FieldAgainstRecon',
+			//url: '../Rulesetup/FieldAgainstRecon',
+			url: '../Rulesetup/getdatasetField',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_dataset_code: dataset_code,in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2517,13 +2552,15 @@
 	function combo_editor_filtervaluec(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
+		var dataset_code = $("#comdataset").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
-			url: '../Rulesetup/FieldAgainstRecon',
+			//url: '../Rulesetup/FieldAgainstRecon',
+			url: '../Rulesetup/getdatasetField',
 			dataType: 'json',
 			async: false,
-			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			data: JSON.stringify({ in_dataset_code: dataset_code, in_recon_code: reconcode, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != null) {
@@ -2554,10 +2591,14 @@
 					if (datafield == "filter_value" && selectedItem.filter_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.filter_value_input;
 						selectedItem[code_flag] = 'Y';
+						 var checkbox = $(container).closest("tr").find(".chkbx9");
+						 checkbox.prop("checked", true);
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
 						selectedItem[code_flag] = 'N';
+						 var checkbox = $(container).closest("tr").find(".chkbx9");
+						 checkbox.prop("checked", false);
 					}
 				}
 			}
@@ -3376,7 +3417,7 @@
 			{
 				field: "themeaggcondition_seqno",
 				title: "Seq No.",
-				width: 60,
+				width: 50,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -3384,8 +3425,7 @@
 			},
 			{
 				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				filterable: false,
+				title: "(", width: 20,filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themeaggcondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
@@ -3430,8 +3470,7 @@
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				filterable: false,
+				title: ")", width: 20,filterable: false,
 				template: function (dataItem) {
 					if (dataItem.themeaggcondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
@@ -4009,8 +4048,8 @@
 				comparedataset = "";
 				themequery = $("#querydata").val();
 				status = "Y";
-			}		
-			
+			}
+
 			var holdflag = $("#holdflag").val();
 			var action_by = sessionStorage.getItem("usrname");
 			var inactive_reason = "";
