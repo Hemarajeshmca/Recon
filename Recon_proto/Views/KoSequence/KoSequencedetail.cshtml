@@ -1,0 +1,1144 @@
+﻿@{
+	ViewData["Title"] = "KoSequencefrom";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.base-page .k-grid-content {
+			overflow-x: hidden;
+			/* height: 380px !important; */
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 397px !important;
+			height: 370px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 164px !important;
+		}
+
+		.k-treeview .k-minus {
+			background: url('../../images/math-minus-icon.png')center center;
+		}
+
+		.k-treeview .k-plus {
+			background: url('../../images/math-add-icon.png')center center;
+		}
+
+		div.k-treeview {
+			height: 393px !important;
+			width: 420px !important;
+			padding-left: 30px;
+			border-width: 2px;
+			padding-top: 10px !important;
+		}
+
+		.k-treeview.k-group {
+			margin-right: 57px;
+			overflow: auto;
+			height: 216px;
+			padding: 10px;
+		}
+
+		span.k-icon.k-i-close {
+			display: none;
+		}
+
+		.held-flag {
+			font-weight: bold;
+			color: orange;
+		}
+
+		.row-Preprocess {
+			background-color: #e0ffe0;
+		}
+
+		.row-Rule {
+			background-color: #e0f0ff;
+		}
+
+		.row-Postprocess {
+			background-color: #fff5e0;
+		}
+
+		.row-Theme {
+			/* background-color: #f0e0ff; */
+			background-color: darkgreen;
+		}
+
+		.row-Process {
+			background-color: #e0ffe0;
+		}
+
+		.new-row {
+			background-color: #fffae6 !important; /* light yellow */
+		}
+
+		.k-icon, .k-tool-icon, .k-grouping-dropclue, .k-drop-hint, .k-column-menu .k-sprite, .k-grid-mobile .k-resize-handle-inner:before, .k-grid-mobile .k-resize-handle-inner:after, .k-pager-numbers .k-current-page .k-link:after, .k-scheduler-toolbar > ul.k-scheduler-views > li.k-current-view > .k-link:after {
+			border-color: transparent;
+			background-image: url('../images/sprite.png');
+		}
+
+		.moved-row {
+			background-color: #fffae6 !important; /* Light yellow for moved rows */
+		}
+
+		.row-check1 input[type="checkbox"] {
+			margin-right: 8px;
+		}
+
+		.row-checked {
+			color: darkorange;
+			font-weight: bold;
+			padding: 4px;
+			border-radius: 4px;
+		}
+
+		.highlight-temp {
+			background-color: #e6f7ff !important;
+			font-weight: bold;
+			transition: background-color 0.3s ease;
+		}
+
+
+		.icon-btn {
+			padding: 6px 10px;
+			border-radius: 4px;
+			transition: background-color 0.2s;
+		}
+
+			.icon-btn:hover {
+				background-color: #e0e0e0; /* Light gray on hover */
+			}
+
+			.icon-btn.active {
+				background-color: #007bff; /* Blue when active */
+				color: white;
+			}
+
+		/* Rows that were moved */
+		.moved-row {
+			background-color: #ffe6cc !important; /* light orange */
+		}
+
+		/* Selected + moved */
+		.k-state-selected.moved-row {
+			background-color: #ffd6e0 !important; /* different color for both */
+		}
+
+		.k-treelist .checked-row {
+			background-color: #fff3cd !important; /* light yellow */
+		}
+
+		.checked-row {
+			background-color: #d0f0c0 !important; /* light green */
+		}
+
+		.k-icon.k-filter {
+			background-image: url(http://kendo.cdn.telerik.com/2016.3.914/styles/Black/sprite.png);
+			border-color: transparent;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-3" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()" disabled>
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<label for="" class="form-label">Recon Version&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" type="text" id="comreconversion">
+						<input class="form-control" type="hidden" id="oldcomreconversion">
+						<input class="form-control" type="hidden" id="checkn">
+					</div>
+					<div class="col-sm-3">
+						<label for="" class="form-label">Processing Method&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<input class="form-control" type="text" id="promethod" disabled>
+						<input class="form-control" type="hidden" id="promethodcode" disabled>
+					</div>
+					<div class="col-sm-3" style="display:none">
+						<button type="button" id="promap" class="btn btn-sm save_btn me-2" style="margin-top:30px;display:none" onclick="map()">Process Map</button>&nbsp;&nbsp;&nbsp;
+						<button type="button" id="" class="btn btn-sm save_btn me-2" style="margin-top:30px;display:none" onclick="dublicates()">Save</button>&nbsp;&nbsp;&nbsp;
+					</div>
+					<div class="col-sm-2" style="margin-top:32px;">
+						<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="save()">Create Version</button>&nbsp;&nbsp;&nbsp;
+					</div>
+					<div class="col-sm-1" style="margin-top:32px;">
+						<center>
+							<a href="../KoSequence/KoSequence"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+						</center>
+					</div>
+				</div>
+				<div class="row" style="margin-top:10px" id="System">
+					<div class="col-sm-12">
+						<label for="" class="form-label">Default Matching&nbsp;</label>
+						<div class="base-page">
+							<div id="treeviewsystem"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:10px" id="custom">
+					<div class="col-sm-3">
+						<label for="" class="form-label">Default Matching&nbsp;</label>
+						<i class="fa fa-eraser icon-btn" id="btnClearCheckboxes" style="cursor:pointer;color: purple;" title="Clear"></i>&nbsp;&nbsp;
+						<div class="base-page">
+							<div id="treeviewcus" style="width: 159%;"></div>
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<i class='fas fa-arrow-right' onclick="move()" style="font-size:24px;margin-left: 151px;margin-top: 204px;color: darkblue;position: relative"></i>
+					</div>
+					<div class="col-sm-8" style="padding-left: 102px;">
+						<label for="" class="form-label">Custom Matching&nbsp;</label>
+						<div class="btn-group my-2" style="float:right;margin-top: -5px !important">
+							<i class="fa fa-eraser icon-btn" id="btnClearcustomCheckboxes" style="cursor:pointer;color: purple;" title="Clear"></i>&nbsp;&nbsp;
+							<i class="fa fa-arrow-up icon-btn" id="moveUpBtn" style="cursor:pointer;color: darkmagenta;" title="Move Up"></i>&nbsp;&nbsp;
+							<i class="fa fa-arrow-down icon-btn" id="moveDownBtn" style="cursor:pointer;color: darkmagenta;" title="Move Down"></i>&nbsp;&nbsp;
+							<i class="fa fa-trash icon-btn" id="deleteBtn" style="cursor:pointer;color: red;" title="Delete"></i>
+						</div>
+						<div class="base-page">
+							<div id="treeviewcustom"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="ReconRuledetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content" style="height:578px;">
+					<div class="modal-header">
+					</div>
+					<div class="modal-body" style="margin-top: -44px;">
+						<div class="row">
+							<div class="col-sm-4">
+							</div>
+							<div class="col-sm-4">
+								<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
+							</div>
+							<div class="col-sm-4">
+								<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+							</div>
+						</div>
+						<hr style="margin-top:-1px; width:100%;">
+						<div class="container" style="padding:0px !important;">
+							@await Html.PartialAsync("_koRuleviewdetail")
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="Reconthemedetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content" style="height:506px;">
+					<div class="modal-header">
+					</div>
+					<div class="modal-body" style="margin-top: -26px;">
+						<div class="row">
+							<div class="col-sm-4">
+							</div>
+							<div class="col-sm-4">
+								<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Theme Detail</h4>
+							</div>
+							<div class="col-sm-4">
+								<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+							</div>
+						</div>
+						<hr style="margin-top:-1px; width:100%;">
+						<div class="container" style="padding:0px !important;">
+							@await Html.PartialAsync("_kothemeviewdetail")
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal" id="Reconpreprocessdetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content" style="height:550px;">
+					<div class="modal-header">
+					</div>
+					<div class="modal-body" style="margin-top: -26px;">
+						<div class="row">
+							<div class="col-sm-4">
+							</div>
+							<div class="col-sm-4">
+								<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Preprocess Detail</h4>
+							</div>
+							<div class="col-sm-4">
+								<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+							</div>
+						</div>
+						<hr style="margin-top:-1px; width:100%;">
+						<div class="container" style="padding:0px !important;">
+							@await Html.PartialAsync("_kopreprocessdetail")
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Recon Processing Sequence");
+		gridlist();
+		load();
+	});
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function versionchange() {
+		 $("#comreconversion").prop("disabled", false);
+	}
+	function load() {
+		var data = getlocalStorage("ls_pageList");
+		$("#cmbreconname").val(data.recon_code);
+		$("#comreconversion").val(data.recon_rule_version);
+		$("#oldcomreconversion").val(data.recon_rule_version);
+		$("#promethod").val(data.processing_method_desc);
+		$("#promethodcode").val(data.processing_method);
+		if($("#promethodcode").val() == "S" ){
+			$("#System").show();
+			$("#custom").hide();
+			$("#treeview-menu").show();
+			fetchlist();
+		}else {
+			$("#System").hide();
+			$("#custom").show();
+			$("#treeview-menu").hide();
+			fetchlistcustom();
+		}
+	}
+	function fetchlist() {
+		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		var process_code = $("#promethodcode").val();
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/Reconkoseqtree',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code,in_user_code: in_user_code ,in_process_code: process_code}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+
+			$("#treeviewsystem").kendoTreeList({
+				dataSource: {
+					data: result,
+					schema: {
+						model: {
+							id: "id",
+							parentId: "parentId",
+							fields: {
+								id: { type: "number" },
+								parentId: { type: "number", nullable: true },
+								seqno : { type: "string" },
+								name: { type: "string" },
+								code: { type: "string" },
+								type: { type: "string" }
+							},
+							expanded: true
+						}
+					}
+			},
+			selectable: true,
+			height: 404,
+			columns: [
+				{ field: "name", title: "Name", expandable: true,width: 200,
+				template: function(item) {
+					const icon = {
+						Preprocess: "🟢",
+						Rule: "🔵",
+						Postprocess: "🟠",
+						Theme: "🟣"
+					}[item.type] || "";
+
+					return `${icon} ${item.name}`;
+				}
+			},
+				{ field: "code", title: "Code", width: 50,hidden :true },
+				{ field: "master_code", title: "master_code", width: 50,hidden :true },
+				{ field: "gid", title: "gid", width: 50,hidden :true },
+				{
+					field: "seqno",
+					title: "Seq. No.",
+					width: 30,
+					attributes:	{ style: "text-align: Right" },
+					// filterable: false,
+					// template: '#=sel_textbox1(data)#'
+				},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 30,
+					attributes: { style: "text-align: center" },
+					filterable: false,
+					template: '#=sel_checkbox(data)#'
+				},
+				{
+					field: "Info",
+					title: "Info",
+					width: 30,
+					filterable: false,
+					attributes: {
+						style: "text-align: center;"
+					},
+					template: function (dataItem) {
+					if (dataItem.parentId != null) {
+						return `<a href="#" style="cursor:pointer;"
+							onclick="showNodeInfo('${dataItem.master_code}', '${dataItem.name}', '${dataItem.gid}', '${dataItem.type}')"
+							data-bs-toggle="modal">
+							<img style="width:17px;height:17px;" src="../Assets/images/topnotes.png" />
+						</a>`;
+					} else {
+						return '';
+					}
+					},
+				},
+			],
+				rowTemplate: function(item) {
+				const typeClass = `row-${item.type}`;
+				return `<tr class="${typeClass}">
+						<td>${item.name}</td>
+						<td>${item.type}</td>
+						<td>${item.code}</td>
+					</tr>`;
+				}
+			});
+			}
+		});
+	}
+	function sel_textbox1(data){
+		var isvalue = data.seqno;
+		if (isvalue > 0) {
+			return '<input id="seqno_' + data.id + '" value=' + isvalue + ' disabled name="seqno" style="width: 100%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" onkeypress="return isNumberKey(event)" type="text"/> ';
+		}else {
+			return '';
+		}
+	}
+	function sel_checkbox(data) {
+		var isChecked1 = data.parentId;
+		var con1 = "";
+		if (isChecked1 != null) {
+			return '<input id="chk_sel1_' + data.id + '"  name = "hold_flag_desc" type="checkbox"/> ';
+		}else {
+			return '<input id="chk_sel1_' + data.id + '"  style="display:none" name = "hold_flag_desc" type="checkbox"/> ';
+		}
+	}
+	function sel_info(data) {
+		var isChecked1 = data.parentId;
+		var con1 = "";
+		if (isChecked1 != null) {
+			return "<a href='' style='cursor:pointer;' id='info'" + data.id + "' onclick='showNodeInfo('" + data + ")' value='edit' data-bs-toggle='modal'><img style='height:17px;width:17px' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;"
+		   }else {
+			return ""
+		}
+	}
+	function showNodeInfo(code,name,gid,depend_code) {
+		showProgress();
+		if(depend_code == "Preprocess" || depend_code == "Postprocess" || depend_code == "Process") {
+			var data = {};
+			data.preprocess_gid = gid;
+			data.preprocess_code = code;
+			data.preprocess_desc = name;
+			data.recon_code = $("#cmbreconname").val();
+			setlocalStorage("preprocess_details", data);
+			getGridCombopreprocessList();
+			document.body.classList.add('modal-open');
+			var innerModal = new bootstrap.Modal(document.getElementById('Reconpreprocessdetail'));
+			innerModal.show();
+		}else if (depend_code == "Rule") {
+			var data = {};
+			data.rule_gid = gid;
+			data.rule_code = code;
+			data.rule_name = name;
+			data.recon_code = $("#cmbreconname").val();
+			setlocalStorage("rule_detailsko", data);
+			getRuleGridComboList();
+			cmbsourcefield();
+			document.body.classList.add('modal-open');
+			var innerModal = new bootstrap.Modal(document.getElementById('ReconRuledetail'));
+			innerModal.show();
+		}else if (depend_code == "Theme") {
+			var data = {};
+			data.theme_gid = gid;
+			data.theme_code = code;
+			data.theme_desc = name;
+			data.recon_code = $("#cmbreconname").val();
+			setlocalStorage("theme_details", data);
+			getGridthemeComboList();
+			document.body.classList.add('modal-open');
+			var innerModal = new bootstrap.Modal(document.getElementById('Reconthemedetail'));
+			innerModal.show();
+		}
+	}
+	function onSelect(e) {
+	  var treeview1 = $("#treeviewsystem").data("kendoTreeView");
+	  var dataItem = treeview1.dataItem(e.node);
+	}
+	function fetchlistcustom() {
+		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		var process_code = "C";
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/Reconkoseqtree',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code,in_user_code: in_user_code ,in_process_code: process_code}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				 var result = JSON.parse(response);
+
+			$("#treeviewcus").kendoTreeList({
+			dataSource: {
+				data: result,
+					schema: {
+						model: {
+							id: "id",
+							parentId: "parentId",
+							fields: {
+								id: { type: "number" },
+								parentId: { type: "number", nullable: true },
+								name: { type: "string" },
+								code: { type: "string" },
+								type: { type: "string" },
+								master_code: { type: "string" },
+								gid: { type: "number" },
+								moved: { type: "boolean" },
+								checked: { type: "boolean", defaultValue: false }
+							},
+							expanded: true
+						}
+					}
+			},
+			height: 404,
+			filterable: true,
+			columns: [
+				{
+					field: "name",
+					title: "Name",
+					expandable: true,
+					template: function(dataItem) {
+						let icons = {
+								Preprocess: "🟢",
+								Rule: "🔵",
+								Postprocess: "🟠",
+								Theme: "🟣"
+							};
+						const checked = dataItem.checked ? "checked" : "";
+						const icon = icons[dataItem.type] || "📁";
+
+						// Include the info button only if it's not a root node
+						let infoButton = "";
+						if (dataItem.parentId != null) {
+								infoButton = `<a href="#" style="cursor:pointer; margin-left: 8px;"
+										onclick="showNodeInfo('${dataItem.master_code}', '${dataItem.name}', '${dataItem.gid}', '${dataItem.type}')"
+										data-bs-toggle="modal">
+										<img style="width:17px;height:17px;" src="../Assets/images/topnotes.png" />
+								</a>`;
+						}
+						return `<input type='checkbox' class='row-check' data-id='${dataItem.id}' ${checked} />
+								&nbsp;&nbsp;${icon}&nbsp;&nbsp; ${dataItem.name} ${infoButton}`;
+						},
+						filterable: true,
+					width: 300
+				},
+				{ field: "code", title: "Code", width: 100,hidden :true },
+				{ field: "gid", title: "gid", width: 100,hidden :true },
+				{ field: "master_code", title: "master_code", width: 50,hidden :true },
+				{ field: "type", title: "Type", width: 100,hidden :true }
+			],
+			});
+			}
+		});
+		$(document).on("change", ".row-check", function () {
+			const isChecked = this.checked;
+			const currentId = parseInt($(this).data("id"));
+			const treeList = $("#treeviewcus").data("kendoTreeList");
+			const ds = treeList.dataSource;
+
+			// Find current item
+			const currentItem = ds.get(currentId);
+			if (currentItem) {
+				currentItem.set("checked", isChecked);
+			}
+
+			// Set all children recursively
+			function setChildrenChecked(parentId) {
+				const children = ds.data().filter(item => item.parentId === parentId);
+				children.forEach(child => {
+					child.set("checked", isChecked);
+					$(`.row-check[data-id='${child.id}']`).prop("checked", isChecked).prop("indeterminate", false);
+					setChildrenChecked(child.id);
+				});
+			}
+
+			setChildrenChecked(currentId);
+
+			// Update parent recursively (on uncheck only)
+			function updateParentCheckStatus(childId) {
+				const child = ds.get(childId);
+				if (!child || child.parentId == null) return;
+
+				const parent = ds.get(child.parentId);
+				const siblings = ds.data().filter(item => item.parentId === parent.id);
+
+				const allChecked = siblings.every(s => s.checked);
+				const someChecked = siblings.some(s => s.checked);
+
+				parent.set("checked", allChecked);
+
+				const $parentCheckbox = $(`.row-check[data-id='${parent.id}']`);
+				$parentCheckbox.prop("checked", allChecked);
+				$parentCheckbox.prop("indeterminate", !allChecked && someChecked);
+
+				updateParentCheckStatus(parent.id);
+			}
+
+			updateParentCheckStatus(currentId);
+		});
+		$("#btnClearCheckboxes").on("click", function () {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to Uncheck Selected Item!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						const treeList = $("#treeviewcus").data("kendoTreeList");
+						const ds = treeList.dataSource;
+
+						// Clear all flat-level items (parents and children)
+						ds.data().forEach(item => {
+							item.set("checked", false); // model update
+							$(`.row-check[data-id='${item.id}']`)
+								.prop("checked", false)
+								.prop("indeterminate", false); // clear indeterminate state too
+						});
+						treeList.refresh();
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		});
+		var in_recon_code = $("#cmbreconname").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/cusseqlistfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: in_recon_code,in_user_code: in_user_code}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				 var data = JSON.parse(response);
+				
+			$("#treeviewcustom").kendoTreeList({
+				dataSource: {
+					data: data,
+					sort: { field: "seqno", dir: "asc" },
+				schema: {
+					model: {
+						id: "id",
+						parentId: "parentId",
+						fields: {
+							id: { type: "number" },
+							parentId: { type: "number", nullable: true },
+							seqno: { type: "number", editable: true },
+							name: { type: "string" },
+							code: { type: "string" },
+							master_code: { type: "string" },
+							gid: { type: "number" },
+							type: { type: "string" },
+							moved: { type: "boolean" },
+							checked: { type: "boolean", defaultValue: false },
+							hold_flag_desc: { type: "string" },
+						},
+						expanded: true
+					}
+				}
+			},
+			rowClass: function(e) {
+				return e.data.isNew ? "new-row" : "";
+			},
+			selectable: {
+				mode: "multiple",
+				cell: false
+			},
+			filterable: true,
+			navigatable: true,
+			resizable: true,
+			height: 404,
+			columns: [
+				{ field: "name", title: "Name", expandable: true,width: 200,
+					template: function(item) {
+						const icon = {
+							Preprocess: "🟢",
+							Rule: "🔵",
+							Postprocess: "🟠",
+							Theme: "🟣"
+						}[item.type] || "📁";
+						const checked = item.checked ? "checked" : "";
+						if (item.parentId != null) {
+							return `<input type='checkbox' class='rows-checks' data-id='${item.id}' ${checked} />&nbsp;&nbsp;${icon}&nbsp;&nbsp; ${item.name}`;
+						}
+						else {
+							return `${icon}&nbsp;&nbsp; ${item.name}`;
+						}
+					},
+					filterable: true,
+				},
+				{ field: "code", title: "Code", width: 50,hidden :true },
+				{ field: "gid", title: "gid", width: 100,hidden :true },
+				{ field: "master_code", title: "master_code", width: 50,hidden :true },
+				{
+					field: "seqno",
+					title: "Seq No",
+					width: 40,
+					attributes:	{ style: "text-align: Right" },
+					filterable: false,
+					template: '#=sel_textbox(data)#'
+				},
+				{ field: "type", title: "Type", width: 60,filterable: false},
+				{
+					field: "hold_flag_desc",
+					title: "Hold Flag",
+					width: 40,
+					attributes: { style: "text-align: center" },
+					filterable: false,
+					template: function (dataItem) {
+						const checked = dataItem.hold_flag_desc ? "checked" : "";
+						if (dataItem.parentId != null) {
+							return `<input type="checkbox" class="hold-flag" data-id="${dataItem.id}" ${checked} />`;
+						}
+						else {
+							return '';
+						}
+					}
+					// template: '#=sel_checkbox1(data)#'
+				},
+				{
+					field: "Info",
+					title: "Info",
+					width: 30,
+					filterable: false,
+					attributes: {
+						style: "text-align: center;"
+					},
+					template: function (dataItem) {
+						if (dataItem.parentId != null) {
+							return `<a href="#" style="cursor:pointer;"
+									onclick="showNodeInfo('${dataItem.master_code}', '${dataItem.name}', '${dataItem.gid}', '${dataItem.type}')"
+									data-bs-toggle="modal">
+									<img style="width:17px;height:17px;" src="../Assets/images/topnotes.png" />
+							</a>`;
+						} 
+						else {
+							return '';
+						}
+					},
+				},
+			],
+			}).data("kendoTreeList");
+			}
+		});
+
+		$("#treeviewcustom").on("change", ".rows-checks", function () {
+			const treeList = $("#treeviewcustom").data("kendoTreeList");
+			const id = $(this).data("id");
+			const checked = $(this).is(":checked");
+
+			const item = treeList.dataSource.get(id);
+			if (item) {
+				item.set("checked", checked);
+			}
+		});
+
+		$("#treeviewcustom").on("change", ".hold-flag", function () {
+			const treeList = $("#treeviewcustom").data("kendoTreeList");
+			const id = $(this).data("id");
+			const isChecked = $(this).is(":checked");
+			const item = treeList.dataSource.get(id);
+			if (item) {
+				item.set("hold_flag_desc", isChecked);  // persist value in model
+			}
+		});
+		$("#btnClearcustomCheckboxes").on("click", function () {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to Uncheck Selected Item!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						const treeList1 = $("#treeviewcustom").data("kendoTreeList");
+						const dataItems = treeList1.dataSource.view();
+
+						// Recursive function to clear checkboxes in hierarchy
+						function clearChecked1(items) {
+							items.forEach(item => {
+								item.set("checked", false); // update the data model
+								const checkbox = $(`.row-checks[data-id='${item.id}']`);
+								checkbox.prop("checked", false); // update the UI checkbox
+
+								if (item.hasChildren && item.children && item.children.length > 0) {
+									clearChecked1(item.children.data());
+								}
+							});
+						}
+						clearChecked1(dataItems);
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		});
+	
+		function getCheckedItems(treeList) {
+			return treeList.dataSource.view().filter(item => item.checked && item.parentId != null);
+		}
+
+		function getCheckedItem(treeList) {
+			const checkedItems = getCheckedItems(treeList);
+			if (checkedItems.length === 0) return null;
+			if (checkedItems.length > 1) {
+				$.alert({
+					title: 'Recon',
+					content: "Please select only one row to move at a time.",
+					type: 'green',
+				});
+				return null;
+			}
+			return checkedItems[0];
+		}
+		$("#moveUpBtn").click(function () {
+			const treeList = $("#treeviewcustom").data("kendoTreeList");
+			const item = getCheckedItem(treeList);
+			if (!item) return;
+
+			const parentId = item.parentId;
+			const siblings = treeList.dataSource.view()
+				.filter(x => x.parentId === parentId)
+				.sort((a, b) => a.seqno - b.seqno);
+
+			const index = siblings.findIndex(x => x.id === item.id);
+			if (index > 0) {
+				const prev = siblings[index - 1];
+				const temp = prev.seqno;
+				prev.set("seqno", item.seqno);
+				item.set("seqno", temp);
+				treeList.refresh();
+			}
+		});
+
+		$("#moveDownBtn").click(function () {
+			const treeList = $("#treeviewcustom").data("kendoTreeList");
+			const item = getCheckedItem(treeList);
+			if (!item) return;
+
+			const parentId = item.parentId;
+			const siblings = treeList.dataSource.view()
+				.filter(x => x.parentId === parentId)
+				.sort((a, b) => a.seqno - b.seqno);
+
+			const index = siblings.findIndex(x => x.id === item.id);
+			if (index < siblings.length - 1) {
+				const next = siblings[index + 1];
+				const temp = next.seqno;
+				next.set("seqno", item.seqno);
+				item.set("seqno", temp);
+				treeList.refresh();
+			}
+		});
+
+		$("#deleteBtn").click(function () {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						const treeList = $("#treeviewcustom").data("kendoTreeList");
+						const checkedItems = getCheckedItems(treeList);
+						checkedItems.forEach(item => {
+							treeList.dataSource.remove(item);
+						});
+						treeList.refresh();
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		});
+	}
+	function move() {
+		var sourceTreeList = $("#treeviewcus").data("kendoTreeList");
+		var checkedItems = sourceTreeList.dataSource.data().filter(item => item.checked);
+		var destTreeList = $("#treeviewcustom").data("kendoTreeList");
+		var destDS = destTreeList.dataSource;
+		var max = 0;
+
+		checkedItems.forEach(item => {
+			var uniqueid = destDS._data.length + 1
+			for (var i = 0; i < destDS._data.length; i++) {
+			if (destDS._data[i].seqno > max) {
+				max = destDS._data[i].seqno;
+			}
+		}
+		if(item.parentId > 0) {
+		// Avoid duplicates in destination
+			destDS._data.push({
+				id : uniqueid,
+				seqno: max + 1,
+				parentId: 1,
+				name: item.name,
+				type: item.type,
+				master_code: item.master_code,
+				gid: item.gid,
+				checked: "",
+				moved: true
+			});
+		}
+			 item.checked = false;
+			 item.moved = true;
+		});
+			destTreeList.refresh();
+
+	// Highlight rows manually
+	destDS._data.forEach(item => {
+		if (item.moved) {
+			const row = destTreeList.tbody.find(`tr[data-uid='${item.uid}']`);
+			row.css({
+				fontWeight: 'bold',
+				color: 'chocolate'
+			});
+		}
+	});
+	
+		const ds = sourceTreeList.dataSource;
+
+		// Clear all flat-level items (parents and children)
+			ds.data().forEach(item => {
+				item.set("checked", false); // model update
+					$(`.row-check[data-id='${item.id}']`)
+							.prop("checked", false)
+							.prop("indeterminate", false); // clear indeterminate state too
+					});
+		sourceTreeList.refresh();
+		// checkedItems.forEach(item => {
+		// 	sourceTreeList.dataSource.remove(item);
+		// });
+	}
+
+	function sel_textbox(data){
+		var isvalue = data.seqno;
+		if (isvalue > 0) {
+			return '<input id="seqno_' + data.id + '" value=' + isvalue + ' name="seqno" style="width: 83%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" onkeypress="return isNumberKey(event)" type="text"/> ';
+		}else {
+			return '';
+		}
+	}
+
+	function save() {
+		var in_Koseq_gid = 0;
+		var in_recon_code = $("#cmbreconname").val();
+		var in_recon_version = $("#comreconversion").val();
+		var in_recon_versionold = $("#oldcomreconversion").val();
+			if (in_recon_version == in_recon_versionold) {
+				$.alert({
+					title: 'Recon',
+					content: "Need to Change Recon Verion",
+					type: 'green',
+				});
+				return;
+			}
+		var in_action = "INSERT"
+		var action_by = sessionStorage.getItem("usrname");
+		var concatstring2 = "";
+		if( $("#promethodcode").val() == "S"){
+		var treeList = $("#treeviewsystem").data("kendoTreeList");
+		var dataItems = treeList.dataSource.data(); // all flat data
+		var concatstring2 = "";
+		var flag = "";
+		$.each(dataItems, function (index, item) {
+			if (item.parentId != null) {
+			var row_id = item.id;
+			var ko_seq_ref_code = item.master_code;
+			var ko_seq_type =item.type;
+			var in_koseq_hold = "";
+			if ($('#chk_sel1_' + item.id).is(":checked")) {
+				in_koseq_hold = "Y";
+			} else {
+				in_koseq_hold = "N";
+			}
+			if (concatstring2 != "") {
+				flag = "$"
+			}
+			concatstring2 = concatstring2 + flag + ko_seq_ref_code + "#" + row_id + "#" + in_koseq_hold+ "#" + ko_seq_type }
+		});
+		} else {
+			var treeList = $("#treeviewcustom").data("kendoTreeList");
+			var dataItems = treeList.dataSource.data(); // all flat data
+			var concatstring2 = "";
+			var flag = "";
+			$.each(dataItems, function (index, item) {
+			if (item.parentId != null) {
+			var row_id = item.seqno;
+			var ko_seq_ref_code = item.master_code;
+			var ko_seq_type =item.type;
+			var in_koseq_hold = "";
+			if (item.hold_flag_desc == "true") {
+				in_koseq_hold = "Y";
+			} else {
+				in_koseq_hold = "N";
+			}
+			if (concatstring2 != "") {
+				flag = "$"
+			}
+			concatstring2 = concatstring2 + flag + ko_seq_ref_code + "#" + row_id + "#" + in_koseq_hold+ "#" + ko_seq_type }
+		});
+		}
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/koseqsave',
+			dataType: 'json',
+			data: JSON.stringify({
+				in_Koseq_gid: in_Koseq_gid, in_recon_code: in_recon_code, in_recon_version:in_recon_version,in_Koseq_recon: concatstring2, in_action_by: action_by,in_action: in_action
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = response;
+				if (response != null) {
+					$.alert({
+						title: 'Recon',
+						content: res.out_msg,
+						type: 'green',
+					});
+				}
+				else {
+					$.alert({
+						title: 'Recon',
+						content: res.out_msg,
+						type: 'green',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+</script>
+

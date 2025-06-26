@@ -831,6 +831,126 @@ namespace Recon_proto.Controllers
 				return Json(d2);
 			}
 		}
-		#endregion
-	}
+        #endregion
+
+        //Hema Changes
+
+        //getdatasetField
+        [HttpPost]
+        public JsonResult getdatasetField([FromBody] getdatasetFieldModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Rulesetup/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getdatasetField", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "cloneReconRule");
+                return Json(ex.Message);
+            }
+        }
+
+        public class getdatasetFieldModel
+        {
+            public string in_dataset_code { get; set; }
+            public string in_recon_code { get; set; }
+            public string in_user_code { get; set; }
+        }
+
+        //getDSCondition
+
+        public class getDSConditionModel
+        {
+            public String? in_condition_type { get; set; }
+            public String? in_field_type { get; set; }
+            public String? in_dataset_code { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        [HttpPost]
+        public JsonResult getDSCondition([FromBody] getDSConditionModel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Rulesetup/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("getDSCondition", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                return Json(d2);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult rulefetch_new([FromBody] fetchRule context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Rulesetup/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("fetchrule_new", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataSet>(d2);
+                var rr = result.Tables.Count;
+                if (rr <= 0)
+                {
+                    d2 = "";
+                }
+                return Json(d2);
+            }
+        }
+
+
+    }
 }

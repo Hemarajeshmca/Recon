@@ -1,5 +1,5 @@
 ﻿@{
-	ViewBag.title = "Archive Recon"; 
+	ViewBag.title = "Archive Recon";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -22,8 +22,6 @@
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-1%;">
 				<div class="row" style="margin-top:-19px;margin-bottom: 2%;">
-
-
 					<div class="col-md-3">
 						<label for="organization" class="form-label">Recon Name</label><br>
 						<select id="reconname" class="form-select form-control" onchange="reconchange()"> </select>
@@ -37,7 +35,11 @@
 					</div>
 					<div class="col-md-3">
 					</div>
-
+				</div>
+				<div class="col-xs-12">
+					<div id="gd_Archive">
+						<div id="grid_Archive"> </div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -83,6 +85,7 @@
 					$("#reconname").val(sessionStorage.getItem("reconcode"));
 					jQuery('#reconname').trigger("change");
 				});
+				gridArcheivelist();
 			},
 			error: function (er) {
 				alert(er)
@@ -91,17 +94,50 @@
 		});
 	}
 
+	function gridArcheivelist() {
+		var data = {};
+		data.in_recon_code = $("#reconname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../ArchieveRecon/ArcheiveReconlist',
+			dataType: 'json',
+			data: JSON.stringify({ in_recon_code: Context.in_recon_code, in_user_code: Context.in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {
+					$("#gd_Archive").empty();
+					$("#gd_Archive").append("<div id='grid_Archive' style='width:100%'></div>");
+					grid_Archive_details(result);
+				}
+				else {
+					grid_Archive_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+
+	}
+
 	function reconchange() {
 		if ($("#reconname").val() != '') {
+			gridArcheivelist();
 			sessionStorage.setItem("reconcode", $("#reconname").val());
 			sessionStorage.setItem("reconname", $("#reconname :selected").text());
 			setcon();
 		}
 		$("#report_name").val("");
 		$("#report_param").val("");
+
 	}
 
-	function archeiveRecon(){
+	function archeiveRecon() {
 		var data = {};
 		data.in_recon_code = $("#reconname").val();
 		data.in_user_code = sessionStorage.getItem("usrname");
@@ -132,7 +168,7 @@
 				//                content: data.out_msg,
 				//                type: 'red',
 				//            });
-				// 	} 
+				// 	}
 				// },error: function (er) {
 				//    alert(er)
 				//    console.log(er)
@@ -144,6 +180,97 @@
 				content: 'Please choose Recon',
 				type: 'red',
 			});
+		}
+	}
+	function grid_Archive_details(data) {
+		try {
+			var formatdatetime = sessionStorage.getItem("kendatetime");
+			var formatdatetime1 = "{0:" + formatdatetime + "}";
+			$("#grid_Archive").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								reconarchival_gid: { type: "string" },
+								archival_code: { type: "string" },
+								archival_date:  { type: "date" },
+								archival_by: { type: "string" },
+								archival_db_name: { type: "string" }
+							}
+						},
+						parse: function (data) {
+							$.each(data, function (i, item) {
+								item.archival_date = kendo.parseDate(item.archival_date, formatdatetime);
+							});
+							return data;
+						}
+					}
+				},
+				height: 320,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_Archive').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				resizable: true,
+
+				columns: [
+				{
+					field: "",
+					title: "Action",
+					template: "<a href='../Reports/ReportGeneration_newlist?archival_code=#= archival_code #'>Link</a>",
+					width: 40
+				},
+				{
+					field: "reconarchival_gid",
+					title: "reconarchival_gid",
+					width: 50,
+					hidden: true,
+				},
+				{
+					field: "archival_code",
+					title: "Archival Code",
+					width: 60
+				},
+				{
+					field: "archival_date",
+					title: "Archival Date",
+					width: 60,
+					format: formatdatetime1,
+					 filterable: {
+						ui: "datetimepicker",
+					 },
+				},
+				{
+					field: "archival_by",
+					title: "Archival By",
+					width: 60
+				},
+				{
+					field: "archival_db_name",
+					title: "archival_db_name",
+					width: 60,
+					hidden: true,
+				}],
+				editable: false,
+			});
+		}
+		catch (err) {
+			console.log(err)
+
 		}
 	}
 </script>

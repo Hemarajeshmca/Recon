@@ -24,7 +24,9 @@
 			height: 360px;
 		}
 
-		
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
 
 		.k-grid-header {
 			font-weight: bold;
@@ -79,25 +81,21 @@
 			color: white;
 		}
 
-		.k-grid-header th.k-header > .k-link {
-			color: white !important;
-		}
+			.accordion-label:hover {
+				background: rgb(135, 46, 123)
+			}
 
-		.accordion-label:hover {
-			background: rgb(135, 46, 123)
-		}
-
-		.accordion-label::after {
-			content: "\276F";
-			width: 16px;
-			height: 16px;
-			text-align: center;
-			-webkit-transition: all 0.3s;
-			transition: all 0.3s;
-		}
+			.accordion-label::after {
+				content: "\276F";
+				width: 16px;
+				height: 16px;
+				text-align: center;
+				-webkit-transition: all 0.3s;
+				transition: all 0.3s;
+			}
 
 		.accordion-content {
-			mcxmnmcen,jhw,e kṅṭṇ,ṅ/ṁ9 max-height: 0;
+			max-height: 0;
 			padding: 0 16px;
 			color: rgba(4, 57, 94, 1);
 			background: rgb(135 46 123 / 14%);
@@ -955,8 +953,7 @@
 			},
 			{
 				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				filterable: false,
+				title: "(", width: 20,filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1023,8 +1020,7 @@
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				filterable: false,
+				title: ")", width: 20,filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1341,7 +1337,7 @@
 			{
 				field: "filter_seqno",
 				title: "Seq No.",
-				width: 60,
+				width: 30,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1349,8 +1345,7 @@
 			},
 			{
 				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				filterable: false,
+				title: "(", width: 20,filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1358,7 +1353,7 @@
 					} else {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
 					}
-				},
+				}
 			},
 			{
 				field: "preprocessfilter_gid",
@@ -1417,8 +1412,7 @@
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				filterable: false,
+				title: ")", width: 20,filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocessfilter_gid > 0) {
@@ -1727,7 +1721,7 @@
 			{
 				field: "lookup_seqno",
 				title: "Seq No.",
-				width: 60,
+				width: 40,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1990,7 +1984,7 @@
 			{
 				field: "condition_seqno",
 				title: "Seq No.",
-				width: 60,
+				width: 40,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -1998,8 +1992,7 @@
 			},
 			{
 				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				filterable: false,
+				title: "(", width: 20,filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -2082,8 +2075,7 @@
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				filterable: false,
+				title: ")", width: 20,filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -2470,7 +2462,7 @@
 			{
 				field: "condition_seqno",
 				title: "Seq No.",
-				width: 60,
+				width: 40,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
@@ -2478,8 +2470,7 @@
 			},
 			{
 				field: "open_parentheses_flag",
-				title: "(", width: 20,
-				filterable: false,
+				title: "(", width: 20,filterable: false,
 				//template: '#=sel_checkbox(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -2564,8 +2555,7 @@
 			},
 			{
 				field: "close_parentheses_flag",
-				title: ")", width: 20,
-				filterable: false,
+				title: ")", width: 20,filterable: false,
 				//template: '#=sel_checkbox1(data)#'
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
@@ -5965,7 +5955,6 @@
 			{
 				field: "open_parentheses_flag",
 				title: "(", width: 20,
-				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
@@ -5989,7 +5978,8 @@
 				field: "source_field_desc",
 				title: "Source Field",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_preprocesscondition")
+					//combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_preprocesscondition")
+					combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field_code", "grid_preprocesscondition","SOURCE")
 				},
 				width: 120,
 			},
@@ -6017,7 +6007,8 @@
 				field: "comparison_field_desc",
 				title: "Comparison Field",
 				editor: function (container, options) {
-					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_preprocesscondition")
+					//combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_preprocesscondition")
+				combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_preprocesscondition","Comparison")
 				},
 				width: 120,
 			},
@@ -6048,7 +6039,6 @@
 			{
 				field: "close_parentheses_flag",
 				title: ")", width: 20,
-				filterable: false,
 				template: function (dataItem) {
 					if (dataItem.preprocesscondition_gid > 0) {
 						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx2">';
@@ -6068,8 +6058,8 @@
 			}],
 			editable: true,
 		});
-		source_field_desc_list = cmbsourcefield();
-		comparison_field_desc_list = cmbsourcefield();
+		//source_field_desc_list = cmbsourcefield();
+		//comparison_field_desc_list = cmbsourcefield();
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 	}
 	function OnEdit(e) {
@@ -6170,6 +6160,69 @@
 			}
 		});
 		return arr1;
+	}
+	function combo_editor_new(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+			var arr = [];
+			var cmb_var = $("#" + grid_id).data("kendoGrid");
+			var selectedItem = cmb_var.dataItem(cmb_var.select());
+			var sourcedata = Sdata;
+				if (Sdata == "SOURCE") {
+					var dataset_code = $("#sourcedataset").val();
+			} else {
+					var dataset_code = $("#comdataset").val();
+			}
+			var in_recon_code = $("#cmbrecon").val();
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+			type: "POST",
+			url: '../Rulesetup/getdatasetField',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_dataset_code: dataset_code, in_recon_code: in_recon_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+			if (response != null) {
+			var res = JSON.parse(response);
+			for (i = 0; res.length > i; i++) {
+				var list = {};
+				list.code = res[i].recon_field_name;
+				list.desc = res[i].recon_field_desc;
+				arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				}
+			});
+			$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+			var cmb_value = this.value();
+			if (cmb_value && this.selectedIndex == -1) {
+				this.value("");
+			}
+			var cmb_var = $("#" + grid_id).data("kendoGrid");
+			var selectedItem = cmb_var.dataItem(cmb_var.select());
+			var combobox_data = $("#" + cmbid).data("kendoComboBox");
+			if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+				selectedItem[datafield] = "";
+				selectedItem[code_datafield] = "";
+			}
+			else {
+				selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+				selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+		  if(datafield == "filter_value")
+		  {
+			var combo = $("#" + cmbid).data("kendoComboBox");
+			combo.input.attr("readonly", true); // stop typing
+		  }
 	}
 	function addRowcondition() {
 		var grid = $("#grid_preprocesscondition").data("kendoGrid");
@@ -6455,7 +6508,6 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
@@ -6487,7 +6539,8 @@
 					title: "Filter Field",
 					width: 100,
 					editor: function (container, options) {
-						combo_editor_man_theme(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourcefilter")
+						//combo_editor_man_theme(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourcefilter")
+						combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourcefilter","SOURCE")
 					},
 				},
 				{
@@ -6502,18 +6555,30 @@
 					field: "filter_value_code",
 					title: "filter_value_code",
 					hidden: true,
+					width:50
 				},
 				{
 					field: "filter_value_flag",
-					title: "filter_value_flag",
-					hidden: true,
+					title: "Value",
+							template: function (dataItem) {
+							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+					},
+					width: 50,
 				},
 				{
 					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
 					editor: function (container, options) {
-						combo_editor_filtervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "filter_value_flag", "grid_sourcefilter")
+						//combo_editor_filtervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "filter_value_flag", "grid_sourcefilter")
+						//combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_sourcefilter","SOURCE")
+						if (options.model.filter_value_flag === "Y") {
+
+							$('<input name="' + options.field + '" class="k-input k-textbox" />')
+							.appendTo(container);
+						} else {
+						combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_sourcefilter","SOURCE")
+						}
 					},
 				},
 				{
@@ -6530,7 +6595,6 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
@@ -6593,6 +6657,39 @@
 				}
 				else {
 					dataItem._set('close_parentheses_flag', 'N');
+				}
+			});
+		});
+		$(function () {
+			debugger;
+			$('#grid_sourcefilter').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_sourcefilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('filter_value_flag', 'Y');
+					dataItem._set('filter_value', '');
+					dataItem._set('filter_value_code', '');
+					var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						grid.refresh();
+						setTimeout(function() {
+							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+							grid.select(editedRow);
+							grid.content.scrollTop(editedRow.position().top);
+						}, 100);
+				}
+				else {
+					dataItem._set('filter_value_flag', 'N');
+					dataItem._set('filter_value', '');
+					dataItem._set('filter_value_code', '');
+					var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						grid.refresh();
+						setTimeout(function() {
+							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+							grid.select(editedRow);
+							grid.content.scrollTop(editedRow.position().top);
+						}, 100);
 				}
 			});
 		});
@@ -6725,6 +6822,7 @@
 		});
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
+
 	function combo_editor_filtervalues(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
 		var reconcode = $("#cmbrecon").val();
@@ -6779,29 +6877,25 @@
 		try {
 			var grid = $("#grid_sourcefilter").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
+			if(model.filter_value =='' && model.filter_value_flag=='N')
+		{
+				$.alert({
+					title: 'Recon',
+					content: 'Filter value not selected',
+					type: 'red',
+				});
+				return false;
+		}
 			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
 			var in_recon_code = $("#cmbrecon").val();
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
-			var identifiercriteria = model.filter_value;
-			if (model.filter_value_input != undefined) {
-				var filter_value_flag = 'Y';
-				var identifiervalue = model.filter_value_input;
-			} else if (model.filter_value_code == "") {
-				var filter_value_flag = 'Y';
-				if (model.ident_value == undefined) {
-					var identifiervalue = model.filter_value_code;
-				} else {
-					var identifiervalue = model.filter_value;
-				}
-			} else {
-				if (model.filter_value_flag == 'Y') {
-					var filter_value_flag = model.filter_value_flag;
-					var identifiervalue = model.filter_value_code;
-				} else {
-					var filter_value_flag = 'N';
-					var identifiervalue = model.filter_value_code;
-				}
+			var identifiercriteria = model.ident_criteria;
+			var filter_value=model.filter_value;
+			var filter_value_flag = model.filter_value_flag;
+			if(filter_value_flag == 'N')
+			{
+				filter_value=model.filter_value_code;
 			}
 			var in_filter_seqno = model.filter_seqno
 			var action = "";
@@ -6824,7 +6918,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: filter_value_flag,
-					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+					in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: filter_value, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
 					in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -6967,7 +7061,7 @@
 								filter_criteria: { type: "string", defaultValue: "" },
 								filter_seqno: { type: "string", defaultValue: 0 },
 								filter_value: { type: "string" },
-								filter_value_flag: { type: "string" },
+								filter_value_flag: { type: "string" , editable: false},
 								filter_value_code: { type: "string" },
 								active_status: { type: "string" },
 								active_status_desc: { type: "string" },
@@ -7037,7 +7131,6 @@
 				{
 					field: "open_parentheses_flag",
 					title: "(", width: 20,
-					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx5">';
@@ -7069,7 +7162,8 @@
 					title: "Filter Field",
 					width: 100,
 					editor: function (container, options) {
-						combo_editor_man_comparision(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionfilter")
+						//combo_editor_man_comparision(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionfilter")
+						combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_comparisionfilter","COMPARISON")
 					},
 				},
 				{
@@ -7087,15 +7181,26 @@
 				},
 				{
 					field: "filter_value_flag",
-					title: "filter_value_flag",
-					hidden: true,
+					title: "Value",
+							template: function (dataItem) {
+							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+					},
+					width: 50,
 				},
 				{
 					field: "filter_value",
 					title: "Filter Value",
 					width: 100,
 					editor: function (container, options) {
-						combo_editor_filtervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "filter_value_flag", "grid_comparisionfilter")
+						//combo_editor_filtervaluec(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "filter_value_flag", "grid_comparisionfilter")
+
+						if (options.model.filter_value_flag === "Y") {
+
+							$('<input name="' + options.field + '" class="k-input k-textbox" />')
+							.appendTo(container);
+						} else {
+						combo_editor_new(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_comparisionfilter","COMPARISON")
+						}
 					},
 				},
 				{
@@ -7112,7 +7217,6 @@
 				{
 					field: "close_parentheses_flag",
 					title: ")", width: 20,
-					filterable: false,
 					template: function (dataItem) {
 						if (dataItem.preprocessfilter_gid > 0) {
 							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx6">';
@@ -7176,6 +7280,39 @@
 				}
 			})
 		})
+		$(function () {
+			debugger;
+			$('#grid_comparisionfilter').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_comparisionfilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('filter_value_flag', 'Y');
+					dataItem._set('filter_value', '');
+					dataItem._set('filter_value_code', '');
+					var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						grid.refresh();
+						setTimeout(function() {
+							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+							grid.select(editedRow);
+							grid.content.scrollTop(editedRow.position().top);
+						}, 100);
+				}
+				else {
+					dataItem._set('filter_value_flag', 'N');
+					dataItem._set('filter_value', '');
+					dataItem._set('filter_value_code', '');
+					var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						grid.refresh();
+						setTimeout(function() {
+							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+							grid.select(editedRow);
+							grid.content.scrollTop(editedRow.position().top);
+						}, 100);
+				}
+			});
+		});
 	}
 	function addRowcomparision() {
 		var grid = $("#grid_comparisionfilter").data("kendoGrid");
@@ -7360,29 +7497,25 @@
 		try {
 			var grid = $("#grid_comparisionfilter").data("kendoGrid");
 			var model = grid.dataItem($(event.target).closest("tr"));
+			if(model.filter_value =='' && model.filter_value_flag=='N')
+		{
+				$.alert({
+					title: 'Recon',
+					content: 'Filter value not selected',
+					type: 'red',
+				});
+				return false;
+		}
 			var in_txtpreprocesscode = $("#txtpreprocesscode").val();
 			var in_recon_code = $("#cmbrecon").val();
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
-			if (model.filter_value_input != undefined) {
-				var filter_value_flag = 'Y';
-				var identifiervalue = model.filter_value_input;
-			} else if (model.filter_value_code == "") {
-				var filter_value_flag = 'Y';
-				if (model.filter_value == undefined) {
-					var identifiervalue = model.filter_value_code;
-				} else {
-					var identifiervalue = model.filter_value;
-				}
-			} else {
-				if (model.filter_value_flag == 'Y') {
-					var filter_value_flag = model.filter_value_flag;
-					var identifiervalue = model.filter_value_code;
-				} else {
-					var filter_value_flag = 'N';
-					var identifiervalue = model.filter_value_code;
-				}
+			var identifiervalue=model.filter_value;
+			var filter_value_flag = model.filter_value_flag;
+			if(filter_value_flag == 'N')
+			{
+				identifiervalue=model.filter_value_code;
 			}
 			var in_filter_seqno = model.filter_seqno
 			var action = "";

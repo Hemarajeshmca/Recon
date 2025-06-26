@@ -1432,6 +1432,7 @@ namespace Recon_proto.Controllers
 
         public ActionResult Report_Runpagereport([FromBody] runPageReportModel context)
         {   //first sp call
+            CommonController objcom = new CommonController(_configuration);           
             try
             {
                 urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -1456,25 +1457,26 @@ namespace Recon_proto.Controllers
                             var response = client.PostAsync("runPageReport", content).Result;
                             Stream data = response.Content.ReadAsStreamAsync().Result;
                             StreamReader reader = new StreamReader(data);
-                            post_data = reader.ReadToEnd();
+                            post_data = reader.ReadToEnd();                           
                             string d2 = JsonConvert.DeserializeObject<string>(post_data);
                             return Json(d2);
                         }
                         catch (HttpRequestException ex)
-                        {
+                        {                           
+                            objcom.errorlog(ex.Message, "ExectionReport");
                             return Json(ex);
                         }
                     }
                 }
                 catch (Exception ex)
-                {
-                    CommonController objcom = new CommonController(_configuration);
+                {                   
                     objcom.errorlog(ex.Message, "runPageReport");
                     return Json(ex.Message);
                 }
             }
             catch (Exception ex)
-            {
+            {               
+                objcom.errorlog(ex.Message, "ExectionReport");
                 string control = this.ControllerContext.RouteData.Values["controller"].ToString();
             }
             return View();
@@ -1482,6 +1484,7 @@ namespace Recon_proto.Controllers
 
         public class runPageReportModel
         {
+            public string? in_archival_code { get; set; }
             public string? in_reporttemplate_code { get; set; }
             public string? in_report_condition { get; set; }
             public string? in_recon_code { get; set; }
@@ -1606,7 +1609,7 @@ namespace Recon_proto.Controllers
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
-            string post_data = "";
+            string post_data = "";            
             try
             {
                 using (var client = new HttpClient())
@@ -1632,6 +1635,8 @@ namespace Recon_proto.Controllers
                     }
                     catch (HttpRequestException ex)
                     {
+                        CommonController objcom = new CommonController(_configuration);
+                        objcom.errorlog(ex.Message, "ExectionReport");
                         return Json(ex);
                     }
                 }
@@ -2146,7 +2151,7 @@ namespace Recon_proto.Controllers
 
         public class generatedynamicReportmodel
         {
-
+            public String? in_archival_code { get; set; }
             public String? in_reporttemplate_code { get; set; }
             public String? in_recon_code { get; set; }
             public String? in_report_code { get; set; }
@@ -2294,6 +2299,7 @@ namespace Recon_proto.Controllers
                     }
                     catch (HttpRequestException ex)
                     {
+                        var rr = ex.Message;
                         return "";
                     }
                 }
@@ -2770,7 +2776,74 @@ namespace Recon_proto.Controllers
         {
             public string in_action_by { get; set; }
         }
+        //checkquery
 
-	}
+        public ActionResult checkquery([FromBody] queryValidationModel objqueryValidation)
+        {
+
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataSet result = new DataSet();
+            DataTable Table1 = new DataTable();
+            string post_data = "";
+            var userCode = objqueryValidation.in_user_code;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", userCode);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(objqueryValidation), UTF8Encoding.UTF8, "application/json");
+                    try
+                    {
+                        var response = client.PostAsync("checkQuery", content).Result;
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        post_data = reader.ReadToEnd();
+                        string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                        return Json(d2);
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        return Json(ex);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(e.Message);
+            }
+        }
+
+        public class queryValidationModel
+        {
+            public string in_recon_code { get; set; }
+            public string in_report_code { get; set; }
+            public string in_report_condition { get; set; }
+            public string in_user_code { get; set; }
+        }
+
+        [HttpPost]
+        public IActionResult SubmitHandsontableData(string excelData)
+        {
+            // Parse JSON array of arrays
+            var parsedData = System.Text.Json.JsonSerializer.Deserialize<List<List<string>>>(excelData);
+
+            // Example: log the rows
+            foreach (var row in parsedData)
+            {
+                Console.WriteLine(string.Join(", ", row));
+            }
+
+            ViewBag.Message = "Handsontable data received.";
+            return View("Index");
+        }
+    }
 }
 

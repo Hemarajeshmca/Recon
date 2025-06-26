@@ -118,6 +118,7 @@
 		.k-grid-pager {
 			flex-shrink: 0;
 		}
+
 		.tooltip-container:hover .tooltip1 {
 			display: block;
 		}
@@ -209,7 +210,7 @@
 												<progress id="progressBar" value="0" max="100"></progress>
 											</div>
 										</div>
-										
+
 									</div>
 								</div>
 								<input type="button" name="previous" class="previous action-button-previous" value="Previous" onclick="validatePrevdp();" />
@@ -262,7 +263,7 @@
 							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Job Remark </strong></p></div>
 							<div class="col-md-1">  <strong>:</strong> </div>
 							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="remarks"></span></p></div>
-						</div>						
+						</div>
 					</div>
 					<div class="col-xs-12">
 						<div id="gd_jobhistory">
@@ -672,12 +673,13 @@
 		fileInput = document.getElementById('File_Import');
 		var formData = new FormData();
 		formData.append('pipeline_code', pipeline_code);
-
+		var dataset_code = selected_dataset.dataset_code;
 		if (fileInput.files.length > 0) {
 			formData.append('file', fileInput.files[0]);
 			fileType = fileInput.files[0].name;
 		}
 		formData.append('initiated_by', sessionStorage.getItem("usrname"));
+		formData.append('dataset_code', dataset_code);
 		if (pipeline_code && filepath && fileInput) {
 			$.ajax({
 				url: '../Datasetfile/datasetfile',
@@ -701,7 +703,7 @@
 							//	$("#File_Import").val("");
 							//	$("#FileName").val("");
 							//	$('#progressBar').val("0");
-							//} 
+							//}
 						}
 					};
 					return xhr;
@@ -762,7 +764,7 @@
 				content: "File is missing",
 				type: 'red',
 			});
-		} 
+		}
 		//else if (!fileType.endsWith('.xlsx')) {
 		//	$.alert({
 		//		title: 'Recon',
@@ -775,7 +777,7 @@
 		//}
 	}
 
-	
+
 	function openInfoModel() {
 		var grid = $("#grid_dataset").data("kendoGrid");
 		var selectedItem = grid.dataItem(grid.select());
@@ -788,7 +790,7 @@
 			data: JSON.stringify(data),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				if (response != "[]") {					
+				if (response != "[]") {
 					grid_jobhistory(response);
 				} else {
 					grid_jobhistory([]);
@@ -825,7 +827,7 @@
 					}
 				}
 			},
-			height: 250,			
+			height: 250,
 			pageable: true,
 			selectable: "row",
 			dataBound: function (e) {

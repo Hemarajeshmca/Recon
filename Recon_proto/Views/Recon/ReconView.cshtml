@@ -125,6 +125,10 @@
 										<input class="cusDate" #datepicker data-role='datepicker' id="period_to" style="height:25px;width: 100%;" data-bind="value:period_to" onkeypress="return date_validate(event)" /><span data-for='valid' class='k-invalid-msg'></span>
 									</div>
 								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Processing Method&nbsp;</label>															
+									<select id="cmbkoprocessmethod" class="form-select form-control" style=" width:97%;"></select>															
+								</div>
 							</div>
 
 							<div class="row">
@@ -268,7 +272,7 @@
 															<label for="" class="form-label">Applied On&nbsp;</label>
 															<select id="cmbthersholdvalue" class="form-select form-control">
 															</select>
-														</div>
+														</div>														
 													</div>
 													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 														<div class="col-sm-2">
@@ -630,6 +634,8 @@
 		grid_datasetrecon([]);
 		grid_recondatasetmapping([]);
 		$("#btncoll").hide();
+		$("#cmbkoprocessmethod").val('S');
+		
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
@@ -841,7 +847,7 @@
 							recontypeconfig();
 							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
-
+							$("#cmbkoprocessmethod").val(res.ReconHeader[0].processing_method);
 						}
 						else {
 							grid_datasetrecon([]);
@@ -964,7 +970,7 @@
 							recontypeconfig();
 							$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 							$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
-
+							$("#cmbkoprocessmethod").val(res.ReconHeader[0].processing_method);
 						}
 						else {
 							grid_datasetrecon([]);
@@ -1104,7 +1110,7 @@
 						recontypeconfig();
 						$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 						$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
-
+						$("#cmbkoprocessmethod").val(res.ReconHeader[0].processing_method);
 					}
 					else {
 						grid_datasetrecon([]);
@@ -1166,7 +1172,7 @@
 					}));
 				});
 			}
-		});
+		});		
 	}
 	function fieldtype() {
 		var FieldType = $("#cmbFieldType").val();
@@ -1295,6 +1301,7 @@
 					$("#cmbreconvaluefield").val(res.ReconHeader[0].recon_value_field);
 					$("#cmbrecondatefield").val(res.ReconHeader[0].recon_date_field);
 					recontypeconfig();
+					$("#cmbkoprocessmethod").val(res.ReconHeader[0].processing_method);
 				}
 				else {
 					grid_datasetrecon([]);
@@ -1405,7 +1412,29 @@
 				});
 			}
 		});
-
+		var in_master_code = "QCD_komethod";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbkoprocessmethod").empty();
+				$("#cmbkoprocessmethod").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					$("#cmbkoprocessmethod").append($('<option>', {
+						value: item.masterCode,
+						text: item.masterName
+					}));
+				});
+			}
+		});		
 	}
 
 	function saveheader() {
@@ -1486,6 +1515,7 @@
 			if (in_recon_value_field == null) {
 				in_recon_value_field = '';
 			}
+			var in_processing_method = $("#cmbkoprocessmethod").val();
 			var in_active_reason = "";
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
@@ -1495,7 +1525,7 @@
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4,cycle_date: pr5
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4,cycle_date: pr5,in_processing_method: in_processing_method
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2697,7 +2727,7 @@
 			if (in_recon_value_flag == undefined) {
 				in_recon_value_flag = "";
 			}
-
+			var in_processing_method = $("#cmbkoprocessmethod").val();
 			var in_threshold_plus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
 			var in_threshold_minus_value = parseFloat($("#thersholdplus").val() ? $("#thersholdplus").val() : 0).toFixed(2);
 			var in_threshold_code = $("#cmbthersholdvalue").val();
@@ -2706,7 +2736,7 @@
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 ,cycle_date: pr5}),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 ,cycle_date: pr5,in_processing_method: in_processing_method}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {

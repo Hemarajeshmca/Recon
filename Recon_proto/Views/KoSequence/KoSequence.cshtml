@@ -1,0 +1,258 @@
+﻿
+@{
+    ViewData["Title"] = "KoSequence";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;min-height:82%;">
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="gd_ko">
+							<div id="grid_Ko">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+
+	$(document).ready(function () {
+		$("#navhead").text("Recon Processing Sequence");
+		grid_seqlist_details([]);		
+		list()
+	});
+
+	function grid_seqlist_details(data) {		
+			$("#grid_Ko").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								recon_gid: { type: "string" },
+								recon_code: { type: "string" },								
+								recon_name: { type: "string" },
+								processing_method: { type: "string" },	
+								processing_method_desc: { type: "string" },
+								recon_rule_version: { type: "string" },
+							}
+						}
+					}
+				},
+				height: 470,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_Ko').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('rule_setup')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();						
+					}
+					if (screen_code[0].edit == "N") {
+						$(".k-grid-edit").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
+				},
+				pageable: true,
+				serverPaging: false,
+				pageable: {
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5,
+					change: function (e) {
+						console.log("Page changed to: " + (e.index + 1));
+					}
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				resizable: true,
+				change: selectRow,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-edit' value='edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' class='k-grid-view' value='view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						
+					], title: "Action&nbsp;", width: "70px",
+				},
+				{
+					field: "recon_gid",
+					title: "recon_gid",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "recon_code",
+					title: "Recon Code",
+					width: 80,
+				},				
+				{
+					field: "recon_name",
+					title: "Recon Name",
+					width: 100,
+				},
+				{
+					field: "recon_rule_version",
+					title: "Recon Version",
+					width: 100,
+				},				
+				{
+					field: "processing_method_desc",
+					title: "Processing Method",
+					width: 100,
+				},
+				{
+					field: "processing_method",
+					title: "Processing Method",
+					width: 100,
+					hidden: true
+				}],
+				editable: false,
+			});
+	}			
+
+	function getSerializedSelectedRows(mode) {
+		try {
+			if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {
+				var items = getlocalStorage("ls_pageList");
+				if (items.length == 0) {
+					kendoAlert("Please select records");
+				}
+				else {
+					if ($(mode).attr('value') == "edit") {
+						if (items.active_status != "N") {
+							btn_onClick("Edit");
+							document.location = '../KoSequence/KoSequencedetail';
+						}
+					}
+					else if ($(mode).attr('value') == "view") {
+						btn_onClick('View');
+						document.location = "../KoSequence/KoSequencedetail";
+					}
+				}
+			}
+		}
+		catch (err) {
+
+		}
+	}
+
+	function selectRow() {
+		try {
+			var grid = $("#grid_Ko").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem);
+		}
+		catch (err) {
+
+		}
+	}
+
+	function list() {
+		var data = {};
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/seqlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: Context.in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				if (res != null) {
+					$("#gd_ko").empty();
+					$("#gd_ko").append("<div id='grid_Ko'></div>");
+					grid_seqlist_details(res);
+				}
+				else {
+					grid_seqlist_details([]);
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+	
+</script>
+
