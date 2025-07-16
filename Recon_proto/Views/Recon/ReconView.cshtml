@@ -1422,11 +1422,6 @@
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				$("#cmbkoprocessmethod").empty();
-				$("#cmbkoprocessmethod").append($('<option>', {
-					value: "",
-					text: "  Select  "
-				}));
 				$.each(response, function (index, item) {
 					$("#cmbkoprocessmethod").append($('<option>', {
 						value: item.masterCode,

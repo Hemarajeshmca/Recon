@@ -1,0 +1,673 @@
+﻿
+@{
+	ViewBag.title = "Updatecustomreport";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+
+	<style>
+		.selectedRule {
+			font-size: 13px;
+			font-weight: 600;
+			color: brown;
+		}
+
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 28rem !important;
+		}
+
+		.k-popup .k-list .k-item, .k-fieldselector .k-list .k-item, .k-list-optionlabel, .k-popup > .k-static-header {
+			padding: 1px 1px 1px 1px;
+			line-height: 0.8em;
+			min-height: 0.5em;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 82%;">
+
+				<div class="row" style="margin-top:-19px">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Base Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="gridlist()">
+						</select>
+					</div>					
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<div id="gd_cusrptlist">
+							<div id="grid_cusrptlist"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-xl" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Recon Custom Report Update</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container">
+						<div class="row">
+							<div class="selectedRule col-md-6" id="selected_cus_name"></div>
+							<div class="selectedRule col-md-6" id="selected_recon_name"></div>
+						</div>
+						<div class="row" style="margin-top: 20px;">
+							<div class="col-md-6">
+								<label for="" class="form-label">Update Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								@* <select id="cmbupdatereconname" class="form-select form-control" onchange="updatedatasetRecon()">
+								</select> *@ 
+								<input id="updatereconname" style="width:65%" />
+								<input class="form-control" type="hidden" id="selectedcusrpt">
+								<input class="form-control" type="hidden" id="selectedcusrptname">
+							</div>
+							<div class="col-sm-4" >
+								<label for="" class="form-label">Clone Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+								<input class="form-control" type="text" id="reportname">
+							</div>
+						</div>						
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-4"> </div>
+					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
+						<center>
+							<button type="button" class="btn btn-sm btn-success me-2" onclick="updateRecon()" style="padding: 4px 25px;"> Update</button>
+							<button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:27%" onclick="rr1()">Close</button>
+						</center>
+					</div>
+					<div class="col-sm-4"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var themeList = [];
+	var reconarray = [];
+	$(document).ready(function () {
+		$("#navhead").text("Recon Custom Report Update");
+		kendodate_format();
+		grid_cusrptlist([]);
+		gridreconlist();
+		gridlist();
+	});
+
+	function gridreconlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+
+								// target dataset
+				$("#target_reconname").empty();
+				$("#target_reconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#target_reconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				// selected Recon
+				$("#selected_reconName").empty();
+				$("#selected_reconName").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#selected_reconName").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+
+				// update Recon
+				$("#cmbupdatereconname").empty();
+				$("#cmbupdatereconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbupdatereconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});
+	}
+
+	function gridlist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}		
+		var data = {};
+		data.in_recon_code = $("#cmbreconname").val();
+		data.in_custom_flag = true;
+		data.in_action_by = sessionStorage.getItem("usrname");
+		if (data.in_recon_code) {
+			$.ajax({
+				type: "POST",
+				url: '../Reports/reportTempletelist',
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(data),
+				success: function (response) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
+						var res = JSON.parse(response)
+						$("#gd_cusrptlist").empty();
+						$("#gd_cusrptlist").append("<div id='grid_cusrptlist'></div>");
+						var activeItems = res.filter(item => item.active_status == 'Y');
+						grid_cusrptlist(activeItems);
+					}
+					else {
+						grid_cusrptlist([]);
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else {
+			grid_cusrptlist([]);
+		}
+	}
+
+	function getSerializedSelectedRows(mode) {
+		try {
+			var grid = $("#grid_cusrptlist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$('#selected_cus_name').text('Selected Report :' + selectedItem.reporttemplate_name);
+			$('#selected_recon_name').text('Selected Recon :' + $('#cmbreconname').find(":selected").text());
+			$('#selectedcusrptname').val(selectedItem.reporttemplate_name);
+			$('#selectedcusrpt').val(selectedItem.reporttemplate_code);
+			if ($(mode).attr('value') == "edit") {
+				clearCheckboxes();
+				getupdateThemeList();
+				//getdatasetagainstrecon();
+				$("#updatereconname").val("");
+				$("#updatetemename").val("");
+				$("#infomodal").modal("show");
+			} else if ($(mode).attr('value') == "view") {
+				var grid = $("#grid_themelist").data("kendoGrid");
+				var selectedItem = grid.dataItem(grid.select());
+				setlocalStorage("theme_details", selectedItem);
+				btn_onClick('Edit');
+				getGridthemeComboList();
+				$("#ReconThemedetail").on("click", function (event) {
+					event.stopPropagation();
+				});
+				$("#ReconThemedetail").modal('show');
+			}
+		}
+		catch (err) {
+
+		}
+	}
+
+	function grid_cusrptlist(data) {
+		try {
+			$("#grid_cusrptlist").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								reporttemplate_gid: { type: "string" },
+								reporttemplate_code: { type: "string" },
+								reporttemplate_name: { type: "string" },
+								report_code: { type: "string" },
+								report_desc: { type: "string" },
+								system_flag: {type: "string"},
+								system_flag_desc: {type: "string"},
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 420,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_cusrptlist').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				change: selectRow,
+				resizable: true,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedSelectedRows(this)' class='k-grid-process' value='edit' data-bs-toggle='modal'><img style='height: 16px;width: 16px; cursor: pointer;' src = '../Assets/images/login-refresh.png' title='Update'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedSelectedRows(this)' class='k-grid-view' value='view' data-bs-toggle='modal'><img title='View' style='cursor: pointer;' src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					],
+					title: "Action&nbsp;",
+					width: "40px",
+					attributes: { style: "text-align: center;" },
+				},
+				{
+					field: "reporttemplate_gid",
+					title: "reporttemplate_gid",
+					width: 10,
+					hidden: true,
+				},
+				{
+					field: "reporttemplate_code",
+					title: "Custom Report Code",
+					width: 70,
+				},
+				{
+					field: "reporttemplate_name",
+					title: "Custom Report Name",
+					width: 100,
+				},
+				{
+					field: "report_code",
+					title: "report_code",
+					width: 10,
+					hidden: true,
+				},
+				{
+					field: "report_desc",
+					title: "Standard Report Name",
+					width: 90,
+				},
+				{
+					field: "system_flag_desc",
+					title: "Report Type",
+					width: 60,
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					width: 100,
+					hidden: true
+				},				
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 40,
+					resizable: false,
+					filterable: {
+						ui: priorityFilter,
+						extra: false,
+						operators: {
+							string: {
+								eq: "Is equal to",
+								neq: "Not equal to"
+							}
+						},
+					},
+				}],
+				editable: false,
+			});
+		}
+		catch (err) {
+			console.log(err)
+		}
+	}
+
+	function selectRow() {
+		try {
+			var grid = $("#grid_cusrptlist").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#selectedTheme").val(selectedItem.theme_code);
+		}
+		catch (err) {
+		}
+	}
+
+	function priorityFilter(element) {
+		element.kendoDropDownList({
+			dataSource: status_Priority,
+			optionLabel: "--Select Value--"
+		});
+	}		
+
+	function rr1() {
+		$("#updatereconname").val("");
+		$("#updatethemename").val("");
+		$("#selectedTheme").val("");
+		$("#infomodal").modal("hide");
+	}
+
+	function updateRecon() {		
+		var Attribid = [];
+		var arrstring = "";
+		var cbs = document.getElementsByName("cb");
+		for (var i = 0; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				var item = cbs[i].value;
+				Attribid.push(item);
+			}
+		}
+		arrString = Attribid.join("$");
+		if (arrString == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Update Recon .!",
+				type: 'red',
+			});
+			return;
+		}
+		var data = {};
+		data.in_base_recon_code = $("#selectedcusrptname").val();
+		data.in_base_report_code = $("#selectedcusrpt").val();
+		data.in_update_recon_code =arrString;
+		data.in_update_report_name = $("#reportname").val();
+		data.in_user_code = sessionStorage.getItem("usrname");
+		if (arrString != "") {
+			$.ajax({
+				type: "POST",
+				url: '../Reconupdate/ReconUpdatecusrpt',
+				dataType: 'json',
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(data),
+				success: function (response) {
+					if (response != " " && response != null && response != "{}" && response != "[]") {
+						var res = JSON.parse(response);
+						if (res[0]["out_result"] == 1) {
+							$.alert({
+								title: 'Recon',
+								content: res[0]["out_msg"],
+								type: 'green',
+							});
+							rr1();
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: res[0]["out_msg"],
+								type: 'red',
+							});
+						}
+					} else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		} else if (arrString == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Update Recon .!",
+				type: 'red',
+			});
+
+		} 
+	}
+
+	function clearCheckboxes() {
+		var checkboxes = document.getElementsByName("cb");
+		// Iterate through the NodeList and uncheck each checkbox
+		for (var i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].checked = false; // Uncheck the checkbox
+		}
+	}
+
+	
+	function getupdateThemeList() {
+		var grid = $("#grid_cusrptlist").data("kendoGrid");
+		var selectedItem = grid.dataItem(grid.select());
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Reconupdate/Reconalllistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				reconarray = res;
+				var arr = [];
+				var list2 = {};
+				list2.value = "";
+				list2.text = "ALL";
+				arr.push(list2);
+				for (i = 0; res.length > i; i++) {
+					var list1 = {};
+					if (res[i]["active_status"] == 'Y'&& $("#cmbreconname").val() != res[i].recon_code) {
+						list1.value = res[i].recon_code;
+						list1.text = res[i].recon_name;
+						arr.push(list1);
+					}
+				}
+				dropdown = $("#updatereconname").kendoDropDownList({
+					dataTextField: "text",
+					dataValueField: "value",
+					template: $("#CheckboxTemplate").html(),
+					dataSource: arr,
+					placeholder: "Select...",
+					select: function (e) {
+						e.preventDefault();
+					}
+				}).data("kendoDropDownList");
+
+				dropdown.list.find(".check-input,.check-item").bind("click", function (e) {
+					var $item = $(this);
+					var $input;
+
+					if ($item.hasClass("check-item")) {
+						// Text was clicked
+						$input = $item.children(".check-input");
+						$input.prop("checked", !$input.is(':checked'));
+					}
+					else
+						// Checkbox was clicked
+						$input = $item;
+
+					// Check all clicked?
+					if ($input.val() == "")
+						dropdown.list.find(".check-input").prop("checked", $input.is(':checked'));
+
+					updateDropDown()
+
+					e.stopImmediatePropagation();
+				});
+				updateDropDown();
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function updateDropDown() {
+		var items = [];
+		dropdown.list.find(".check-input").each(function () {
+			var $input = $(this);
+			if ($input.val() != "" && $input.is(':checked'))
+				items.push($input.next().text());
+		});
+		dropdown.text(items.toString());
+	}
+
+	function newClone() {
+		if ($("#cmbreconname").val()) {
+			getdatasetagainstrecon();
+			$("#selected_reconName").val(sessionStorage.getItem("reconcode"));
+			jQuery('#selected_reconName').trigger("change");
+			$("#addNewRuleClone").modal('show');
+		} else {
+			$.alert({
+				title: 'Recon',
+				content: 'Please Select Recon ..!',
+				type: 'red',
+			});
+		}
+	}
+	
+	function closeModel()
+	{
+		$("#addNewRuleClone").modal('hide');
+		$("#target_reconname").val("");
+	}
+</script>
+
+<script type="text/x-kendo-template" id="CheckboxTemplate">
+	<li unselectable="on" class="k-item nowrap check-item">
+		<input type="checkbox"  name="cb" value="#= value #" class="check-input"  />
+		<span >#= text #</span>
+	</li>
+</script>
+
+<script>
+	var dataone = [];
+
+	(function ($) {
+		var MultiSelectBox = window.kendo.ui.DropDownList.extend({
+			_select: function (li) { },//Prevents highlighting
+			_blur: function () { },//Prevents auto close
+		});
+
+		window.kendo.ui.plugin(MultiSelectBox);
+	})(jQuery);
+
+	function onSelect(e) {
+		var cbs = document.getElementsByName("cb");
+		var checkboxes = document.getElementsByTagName('input');
+		var ddl = $("#ReconName_id").data("kendoDropDownList");
+		var id = ddl.element.attr("ReconName_id");
+		multiselect();
+		var item = e.item;
+		var index = item.index();
+		if (index == 0) {
+			for (var i = 1; i < cbs.length; i++) {
+				var selectAll = cbs[0].checked;
+				if (cbs[0].checked) {
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].type == 'checkbox') {
+							checkboxes[i].checked = true;
+						}
+					}
+					multiselect();
+				}
+
+				else {
+					for (var i = 0; i < checkboxes.length; i++) {
+						if (checkboxes[i].type == 'checkbox') {
+							checkboxes[i].checked = false;
+						}
+					}
+					multiselect();
+				}
+			}
+		}
+
+	}
+
+	function multiselect() {
+		var ddl = $("#ReconName_id").data("kendoDropDownList");
+		var isAllChecked = $('#cb').prop("checked");
+		var cbs = document.getElementsByName("cb");
+		var display;
+
+		var list = [];
+		for (var i = 1; i < cbs.length; i++) {
+			if (cbs[i].checked) {
+				list.push(cbs[i].value);
+			}
+		}
+
+		if (list.length == 0) {
+			display = "-- SelectAll --";
+			$("#ReconAttr").html("Recon - All");
+		}
+		else {
+			display = list.join(", ");
+			$("#ReconAttr").html("Recon - " + display + "");
+		}
+		ddl.text(display);
+
+	}
+</script>
+

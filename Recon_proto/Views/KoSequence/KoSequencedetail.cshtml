@@ -228,11 +228,11 @@
 						</div>
 					</div>
 					<div class="col-sm-1">
-						<i class='fas fa-arrow-right' onclick="move()" style="font-size:24px;margin-left: 151px;margin-top: 204px;color: darkblue;position: relative"></i>
+						<i class='fas fa-arrow-right' id="moveview" onclick="move()" style="font-size:24px;margin-left: 151px;margin-top: 204px;color: darkblue;position: relative"></i>
 					</div>
 					<div class="col-sm-8" style="padding-left: 102px;">
 						<label for="" class="form-label">Custom Matching&nbsp;</label>
-						<div class="btn-group my-2" style="float:right;margin-top: -5px !important">
+						<div class="btn-group my-2" id="btnmv" style="float:right;margin-top: -5px !important">
 							<i class="fa fa-eraser icon-btn" id="btnClearcustomCheckboxes" style="cursor:pointer;color: purple;" title="Clear"></i>&nbsp;&nbsp;
 							<i class="fa fa-arrow-up icon-btn" id="moveUpBtn" style="cursor:pointer;color: darkmagenta;" title="Move Up"></i>&nbsp;&nbsp;
 							<i class="fa fa-arrow-down icon-btn" id="moveDownBtn" style="cursor:pointer;color: darkmagenta;" title="Move Down"></i>&nbsp;&nbsp;
@@ -365,22 +365,51 @@
 		 $("#comreconversion").prop("disabled", false);
 	}
 	function load() {
-		var data = getlocalStorage("ls_pageList");
-		$("#cmbreconname").val(data.recon_code);
-		$("#comreconversion").val(data.recon_rule_version);
-		$("#oldcomreconversion").val(data.recon_rule_version);
-		$("#promethod").val(data.processing_method_desc);
-		$("#promethodcode").val(data.processing_method);
-		if($("#promethodcode").val() == "S" ){
-			$("#System").show();
-			$("#custom").hide();
-			$("#treeview-menu").show();
-			fetchlist();
-		}else {
-			$("#System").hide();
-			$("#custom").show();
-			$("#treeview-menu").hide();
-			fetchlistcustom();
+		if (getlocalStorage('btn_clk_val') == "Edit") {
+			var data = getlocalStorage("ls_pageList");
+			$("#cmbreconname").val(data.recon_code);
+			$("#comreconversion").val(data.recon_rule_version);
+			$("#oldcomreconversion").val(data.recon_rule_version);
+			$("#promethod").val(data.processing_method_desc);
+			$("#promethodcode").val(data.processing_method);
+			if($("#promethodcode").val() == "S" )
+			{
+				$("#System").show();
+				$("#custom").hide();
+				$("#treeview-menu").show();
+				fetchlist();
+			}
+			else
+			{
+				$("#System").hide();
+				$("#custom").show();
+				$("#treeview-menu").hide();
+				fetchlistcustom();
+			}
+		} else if (getlocalStorage('btn_clk_val') == "View") {
+				var data = getlocalStorage("ls_pageList");
+				$("#cmbreconname").val(data.recon_code);
+				$("#comreconversion").val(data.recon_rule_version);
+				$("#oldcomreconversion").val(data.recon_rule_version);
+				$("#promethod").val(data.processing_method_desc);
+				$("#promethodcode").val(data.processing_method);
+				$("#btnsubmit").hide();
+				$("#moveview").hide();
+				$("#btnmv").hide();
+				if($("#promethodcode").val() == "S" )
+				{
+					$("#System").show();
+					$("#custom").hide();
+					$("#treeview-menu").show();
+					fetchlist();
+				}
+				else
+				{
+					$("#System").hide();
+					$("#custom").show();
+					$("#treeview-menu").hide();
+					fetchlistcustom();
+				}
 		}
 	}
 	function fetchlist() {
@@ -720,7 +749,7 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				 var data = JSON.parse(response);
-				
+
 			$("#treeviewcustom").kendoTreeList({
 				dataSource: {
 					data: data,
@@ -820,7 +849,7 @@
 									data-bs-toggle="modal">
 									<img style="width:17px;height:17px;" src="../Assets/images/topnotes.png" />
 							</a>`;
-						} 
+						}
 						else {
 							return '';
 						}
@@ -892,7 +921,7 @@
 				}
 			});
 		});
-	
+
 		function getCheckedItems(treeList) {
 			return treeList.dataSource.view().filter(item => item.checked && item.parentId != null);
 		}
@@ -1025,7 +1054,7 @@
 			});
 		}
 	});
-	
+
 		const ds = sourceTreeList.dataSource;
 
 		// Clear all flat-level items (parents and children)
@@ -1058,7 +1087,7 @@
 			if (in_recon_version == in_recon_versionold) {
 				$.alert({
 					title: 'Recon',
-					content: "Need to Change Recon Verion",
+					content: "Need to Change Recon Version",
 					type: 'green',
 				});
 				return;

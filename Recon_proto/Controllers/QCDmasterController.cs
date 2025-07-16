@@ -194,7 +194,8 @@ namespace Recon_proto.Controllers
 						objcat.master_multiple_name = result.Rows[i]["master_multiple_name"].ToString();
 						objcat.parent_master_syscode_desc = result.Rows[i]["parent_master_syscode_desc"].ToString();
 						objcat.depend_flag = result.Rows[i]["depend_flag"].ToString();
-						objcat.depend_parent_master_syscode_desc = result.Rows[i]["depend_parent_master_syscode_desc"].ToString();
+                        objcat.system_flag = result.Rows[i]["system_flag"].ToString();
+                        objcat.depend_parent_master_syscode_desc = result.Rows[i]["depend_parent_master_syscode_desc"].ToString();
 						objcat.depend_parent_master_syscode = result.Rows[i]["depend_parent_master_syscode"].ToString();
 						objcat.depend_master_syscode = result.Rows[i]["depend_master_syscode"].ToString();
 						objcat_lst.Add(objcat);

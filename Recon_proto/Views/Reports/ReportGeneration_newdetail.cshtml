@@ -280,7 +280,9 @@
 			/* padding: 2px 10px;*/
 		}
 
-		.next {		
+		.next {
+			/*            background-color: #367fa9;
+																				*/
 			border: 1px solid #fff;
 			color: white;
 			text-decoration: none;
@@ -322,7 +324,7 @@
 									<input class="form-control" id="rt_name" name="ReportTemplate" type="text" disabled>
 									<input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
 									<input class="form-control" id="file_name" type="text" hidden>
-									<input class="form-control" type="hidden" id="archivecode" value="">
+
 								</div>
 								<div class="col-sm-3">
 									<label for="" class="form-label">Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -334,7 +336,7 @@
 									<select id="reconname" class="form-select form-control"> </select>
 								</div>
 								<div class="col-sm-3" style="padding-top: 2.5%;">
-									<img onclick="checkquery()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
+									<img onclick="checkquery()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" src="~/Assets/images/check_query2.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
 									<img id="img_csv" onclick="generateReport()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/csv.png" title="CSV Report">&nbsp;&nbsp;&nbsp;&nbsp;
 									<img id="img_xlsx" onclick="generateXlsxdynamic()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/xlsx.png" title="Excel Report">&nbsp;&nbsp;&nbsp;&nbsp;
 									<img id="img_preview" onclick="preview()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -423,19 +425,10 @@
 		var getreconid = [];
 		var selectedFilterRow = null;
 		var pastedDataMap = {};
+		var screen_code = "";
 		$(document).ready(function () {
+			screen_code = rolevalidatescreen('rpt_generation_w');
 			var gridcopy = [];
-			const urlParams = new URLSearchParams(window.location.search);
-			const archivalCode = urlParams.get('archival_code');
-			$("#archivecode").val(archivalCode);
-			if($("#archivecode").val() != ''){
-				$("#navhead").text("Archival Report Generation");
-				 document.getElementById("myLabel").innerText = archivalCode;
-			}else {
-				$("#navhead").text("Report Generation");
-				$("#archivecode").val('');
-				$("#archivelabel").hide();
-			}
 			$("#navhead").text("Report Generation");
 			kendodate_format();
 			//getreconlist();
@@ -469,14 +462,6 @@
 				}
 			}).data("kendoComboBox");
 		});
-		function goToReportPage() {
-			if($("#archivecode").val() != '') {
-				window.location.href = '../Reports/ReportGeneration_newlist?archival_code='+ $("#archivecode").val();
-			}
-			else {
-				window.location.href = "../Reports/ReportGeneration_newlist";
-			}
-		}
 		function detailfetch() {
 			// recon list
 			var data = {};
@@ -1117,9 +1102,7 @@
 			var selected_template = getlocalStorage("selectedTemplate");
 			var str = $("#rt_name").val();
 			var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
-			var archival_code = $("#archivecode").val();
 			var data = {
-				"in_archival_code":archival_code ? archival_code : '',
 				"in_reporttemplate_code": template_code ? template_code : '',
 				"in_report_code": selected_template.report_code,
 				"in_recon_code": selected_template.recon_code,
@@ -1272,11 +1255,9 @@
 			// } else {
 			// 	condition = rpt_cond;
 			// }
-				var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
+					var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 				var template_code = getlocalStorage("ls_pageList");
-				var archival_code = $("#archivecode").val();
 				var data = {
-					"in_archival_code": archival_code ? archival_code : '',
 					"in_reporttemplate_code": template_code,
 					"in_recon_code": $("#reconname").val(),
 					"in_report_code": $("#cmbreporttype").val(),
@@ -1838,8 +1819,9 @@
 			function openlistpopUp(options) {
 				selectedFilterRow = options.model;
 				var rowUid = options.model.uid;
-				var grid = $("#grid").data("kendoGrid");
-				var fieldTitle = selectedFilterRow.reportparam_value || selectedFilterRow.reportparam_value || "Select Values";
+				//var grid = $("#grid").data("kendoGrid");
+					var popupGrid = $("#popupGrid").data("kendoGrid");
+					var fieldTitle = selectedFilterRow.reportparam_value || selectedFilterRow.reportparam_value || "Select Values";
 				$("#dynamic_label").text(fieldTitle);
 				// grid.setOptions({
 				// 	columns: [
@@ -1850,10 +1832,10 @@
 					var saved = pastedDataMap[rowUid];
 					$("#pasteArea").val(saved.textarea);
 					// $("#pasteArea").val(saved.textarea).prop("readonly", true);
-					grid.dataSource.data(saved.gridData);
+						popupGrid.dataSource.data(saved.gridData);
 				} else {
 					$("#pasteArea").val("");
-					grid.dataSource.data([]);
+						popupGrid.dataSource.data([]);
 				}
 				$("#setValue").modal("show");
 			}
@@ -1887,11 +1869,13 @@
 									content: res[0]["out_msg"],
 									type: 'green',
 								});
+								if (screen_code[0].download == "Y") {
+									const img_xlsx = document.getElementById("img_xlsx");
+									img_xlsx.classList.remove("img_disable");
+								}
 								const img_csv = document.getElementById("img_csv");
-								const img_xlsx = document.getElementById("img_xlsx");
 								const img_preview = document.getElementById("img_preview");
 								img_csv.classList.remove("img_disable");
-								img_xlsx.classList.remove("img_disable");
 								img_preview.classList.remove("img_disable");
 							} else {
 								$.alert({
@@ -1910,11 +1894,11 @@
 
 
 		function addcss(){
-			const img_csv = document.getElementById("img_csv");
 			const img_xlsx = document.getElementById("img_xlsx");
-			const img_preview = document.getElementById("img_preview");
-			img_csv.classList.add("img_disable");
 			img_xlsx.classList.add("img_disable");
+			const img_csv = document.getElementById("img_csv");
+			img_csv.classList.add("img_disable");
+			const img_preview = document.getElementById("img_preview");
 			img_preview.classList.add("img_disable");
 		}
 
