@@ -1,20 +1,20 @@
 ﻿<div class="row">
-<div class="col-md-5">
-    <lable id="dynamic_label"></lable>
+    <div class="col-md-5">
+        <lable id="dynamic_label"></lable>
         <textarea id="pasteArea" style="width:100%; height:380px;" placeholder="Paste Excel data here..."></textarea>
-</div>
+    </div>
     <div class="col-md-7">
-        <div id="grid"></div>
+        <div id="popupGrid"></div>
     </div>
 </div>
 <div class="row" style="float:right; margin-top:20px;">
-  <button style="width: 100px !important;" type="button" id="popupSaveBtn" class="btn btn-sm save_btn me-2">Save</button>
-  <button style="width: 100px !important;color: red !important; background: white !important;" type="button" id="popupClearBtn" class="btn btn-sm cancel_btn me-2">Clear</button>
-  <button style="width: 100px !important;" onclick="closePopup()" type="button" id="popupCancelBtn" class="btn btn-sm cancel_btn me-2">Cancel</button>
+    <button style="width: 100px !important;" type="button" id="popupSaveBtn" class="btn btn-sm save_btn me-2">Save</button>
+    <button style="width: 100px !important;color: red !important; background: white !important;" type="button" id="popupClearBtn" class="btn btn-sm cancel_btn me-2">Clear</button>
+    <button style="width: 100px !important;" onclick="closePopup()" type="button" id="popupCancelBtn" class="btn btn-sm cancel_btn me-2">Cancel</button>
 </div>
 <script>
     $(document).ready(function () {
-        var grid = $("#grid").kendoGrid({
+        var grid = $("#popupGrid").kendoGrid({
             dataSource: {
                 data: [],
                 schema: {
@@ -43,7 +43,7 @@
                 var pastedData = $(element).val();
                 var rows = pastedData.split(/\r?\n/).filter(r => r.trim() !== "");
                 var parsed = rows.map(row => ({ pasted_value: row.split('\t').join(" ") }));
-                var grid = $("#grid").data("kendoGrid");
+                var grid = $("#popupGrid").data("kendoGrid");
                 grid.dataSource.data(parsed);
             }, 100);
         });
@@ -53,7 +53,7 @@
         var pastedData = $(this).val();
         var rows = pastedData.split(/\r?\n/).filter(r => r.trim() !== "");
         var parsed = rows.map(row => ({ pasted_value: row.split('\t').join(" ") }));
-        var grid = $("#grid").data("kendoGrid");
+        var grid = $("#popupGrid").data("kendoGrid");
         grid.dataSource.data(parsed);
     });
 
@@ -62,34 +62,35 @@
     }
 
     $("#popupClearBtn").on("click", function () {
-        var grid = $("#grid").data("kendoGrid");
+        var grid = $("#popupGrid").data("kendoGrid");
         $("#pasteArea").val("").prop("readonly", false);
         grid.dataSource.data([]);
-        if (selectedFilterRow) {
-            delete pastedDataMap[selectedFilterRow.uid];
-        }
+        // Clear the selected row data
+    if (selectedFilterRow) {
+        var rowUid = selectedFilterRow.uid;
+
+        // Clear the grid cell value (like Save does)
+        selectedFilterRow.set("filter_value", "");
+
+        // Remove saved pasted data
+        delete pastedDataMap[rowUid];
+    }
     });
 
     $("#popupSaveBtn").on("click", function () {
         if (!selectedFilterRow) return;
-        var grid = $("#grid").data("kendoGrid");
+        var grid = $("#popupGrid").data("kendoGrid");
         var data = grid.dataSource.data();
         var rowUid = selectedFilterRow.uid;
         var isInt = selectedFilterRow.reportparam_value?.toUpperCase().includes("INTEGER");
         var finalValue = data.map(function (item) {
             var val = item.pasted_value;
-            /*if (!isInt) {
-                val = val.trim();
-                if (!(val.startsWith('"') && val.endsWith('"'))) {
-                    val = `"${val}"`;
-                }
-            }*/
             return val;
         }).join(",");
         selectedFilterRow.set("filter_value", finalValue);
         pastedDataMap[rowUid] = {
             textarea: $("#pasteArea").val(),
-            gridData: data.toJSON() 
+            gridData: data.toJSON()
         };
         selectedFilterRow = null;
         $("#setValue").modal("hide");

@@ -524,6 +524,7 @@ namespace Recon_proto.Controllers
 			public string? in_action { get; set; }
 			public string? in_user_code { get; set; }
             public string? reverse_update_flag { get; set; }
+            public string? in_value_flag { get; set; }
             public string? out_msg { get; set; }
 			public string? out_result { get; set; }
 		}

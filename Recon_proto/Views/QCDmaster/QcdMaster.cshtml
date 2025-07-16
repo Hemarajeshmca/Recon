@@ -59,6 +59,7 @@
 						</select>
 						<input class="form-control" id="parentdesc" type="text" value="" hidden>
 						<input class="form-control" id="depend_flag" type="text" value="" hidden>
+						<input class="form-control" id="system_flag" type="text" value="" hidden>
 					</div>
 					<div class="col-sm-4" hidden>
 						<form id="theuploadformempff">
@@ -205,7 +206,8 @@
 						$("#qcdcode").append($('<option>', {
 							value: item.master_syscode,
 							text: item.master_name,
-							'data-code': item.depend_flag
+							'data-code': item.depend_flag,
+							'data-system': item.system_flag
 						}));
 					});
 					getQcdlist($("#qcdcode").val());
@@ -227,7 +229,9 @@
 	function getQcdlist(master_code) {
 		var selectedOption = $('#qcdcode option:selected');
 		var codeValue = selectedOption.attr('data-code');
+		var codesystem = selectedOption.attr('data-system');
 		$("#depend_flag").val(codeValue);
+		$("#system_flag").val(codesystem);
 		//grid_dataset_details([]);
 		$("#grid").remove();
 		$('#maingrid').append('<div id="grid" style="margin-top: 6px;margin-left: 4px;"></div>');
@@ -299,7 +303,7 @@
 					resultData = e.sender._data;
 					var rows = $('#grid').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					if ($("#depend_flag").val() == "Y") {
+					if ($("#system_flag").val() == "Y") {
 						$(".k-grid-edit").hide();
 						$(".k-grid-delete").hide();
 					}
@@ -452,6 +456,12 @@
 	function openNewModel() {
 		clearModal();
 		$("#newQcd").show();
+		$("#MasterSysCode").prop("disabled", false);
+		$("#MasterShortCode").prop("disabled", false);
+		$("#MasterCode").prop("disabled", false);
+		$("#MasterName").prop("disabled", false);
+		$("#MasterMultipleName").prop("disabled", false);
+		$("#dependMasterCode").prop("disabled", false);
 		$("#master_gid").val(0);
 		$("#mode").val("INSERT");
 		var selectedOption = $('#qcdcode option:selected');
