@@ -292,7 +292,8 @@
                                 <div class="col-sm-3">
                                     <label for="" class="form-label">Custom Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <input class="form-control" id="rt_name" name="ReportTemplate" type="text">
-                                    <input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
+                                    <input class="form-control" type="hidden" id="reporttemplate_gid" value=0
+                                    <input class="form-control" type="hidden" id="recon_code" value="">
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="" class="form-label">Standard Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -485,7 +486,7 @@
         $("#navhead").text("Custom Report");
         kendodate_format();
         detailfetch();
-        $("#cmbreporttype").prop("disabled", false);
+        $("#cmbreporttype").prop("disabled", false);      
     });
 
     function filechange(val) {
@@ -569,36 +570,36 @@
         });
 
 
-        var data = getlocalStorage("ls_pageList");
-        var in_user_code = sessionStorage.getItem("usrname");
-
-        $.ajax({
-            type: "POST",
-            url: '../Reports/ReportList',
-            dataType: 'json',
-            data: JSON.stringify({ in_action_by: in_user_code }),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                $("#cmbreporttype").empty();
-                $("#cmbreporttype").append($('<option>', {
-                    value: "",
-                    text: "  Select  "
-                }));
-                $.each(response, function (index, item) {
-                    $("#cmbreporttype").append($('<option>', {
-                        value: item.report_code,
-                        text: item.report_desc
+            var reconcode = sessionStorage.getItem("reconcode");
+            var in_user_code = sessionStorage.getItem("usrname");
+            $.ajax({
+                type: "POST",
+                url: '../Reports/StandardReportList',
+                dataType: 'json',
+                async: false,
+                data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    $("#cmbreporttype").empty();
+                     $("#cmbreporttype").append($('<option>', {
+                        value: "",
+                        text: "  Select  "
                     }));
-                });
-            },
-            error: function (er) {
-                $.alert({
-                    title: 'Recon',
-                    content: er.statusText,
-                    type: 'red',
-                });
-            }
-        });
+                     $.each(response, function (index, item) {
+                         $("#cmbreporttype").append($('<option>', {
+                                value: item.report_code,
+                                text: item.report_desc
+                           }));
+                    });
+                },
+                error: function (er) {
+                  $.alert({
+                     title: 'Recon',
+                     content: er.statusText,
+                     type: 'red',
+                  });
+                }
+            });
 
         // system flag
         var in_master_code = "QCD_YN";

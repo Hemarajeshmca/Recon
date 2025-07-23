@@ -1495,8 +1495,6 @@ namespace Recon_proto.Controllers
 
         #endregion
 
-
-
         #region RemarkReson
         public ActionResult RemarkReason(remarkResonModel context)
         {
@@ -1603,7 +1601,6 @@ namespace Recon_proto.Controllers
         }
         #endregion
 
-
         #region getPageNoReport
         public ActionResult getPageNoReport([FromBody] getPageNoReportModel context)
         {
@@ -1665,7 +1662,6 @@ namespace Recon_proto.Controllers
 
         #endregion
 
-
         #region viewreportGenerate
         [HttpPost]
         public JsonResult viewReportGenerate([FromBody] viewReportGenerateModel context)
@@ -1715,7 +1711,6 @@ namespace Recon_proto.Controllers
 			public String? in_action_by { get; set; }
 		}
         #endregion
-
 
         #region getreportparamwithrecon
         public JsonResult getreportparamrecon([FromBody] Reconparamreconlistmodel context)
@@ -1938,7 +1933,6 @@ namespace Recon_proto.Controllers
 
         #endregion
 
-
         #region uploadreporttempletefile
 
         public async Task<JsonResult> uploadreporttempletefile(string in_reporttemplate_code, IFormFile file, string in_action_by, string in_file_name)
@@ -2043,7 +2037,6 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
-
 
         public JsonResult getuploadfolderpath(string in_action_by)
         {
@@ -2167,8 +2160,6 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
-
-
 
         #region generatedynamicXLSX
         public JsonResult getfilepath()
@@ -2318,7 +2309,6 @@ namespace Recon_proto.Controllers
             public string? out_msg { get; set; }
             public string? out_result { get; set; }
         }
-
 
         public ActionResult generateReportXLSXdynamic_new([FromBody] DataModel objdata)
         {
@@ -2844,6 +2834,68 @@ namespace Recon_proto.Controllers
             ViewBag.Message = "Handsontable data received.";
             return View("Index");
         }
+
+
+        #region StandardReportList
+        [HttpPost]
+        public JsonResult StandardReportList([FromBody] getsreport context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result1 = new DataTable();
+            List<getstandardreportlist> objcat_lst = new List<getstandardreportlist>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getstandardreportlist", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result1 = JsonConvert.DeserializeObject<DataTable>(d2);
+                        for (int i = 0; i < result1.Rows.Count; i++)
+                        {
+                            getstandardreportlist objcat = new getstandardreportlist();                         
+                            objcat.report_code = result1.Rows[i]["report_code"].ToString();
+                            objcat.report_desc = result1.Rows[i]["report_desc"].ToString();
+                            objcat_lst.Add(objcat);
+                        }
+                        return Json(objcat_lst);
+                }
+            }
+            catch (Exception ex)
+            
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getstandardreportlist");
+                return Json(ex.Message);
+            }
+        }
+
+        public class getsreport
+        {
+            public String? in_recon_code { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        public class getstandardreportlist
+        {         
+            public String? report_code { get; set; }
+            public String? report_desc { get; set; }
+        }
+        #endregion
     }
 }
 
