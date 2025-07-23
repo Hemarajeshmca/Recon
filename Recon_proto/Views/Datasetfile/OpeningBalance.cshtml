@@ -50,12 +50,11 @@
 						</button> 
 					</div>
 					</div>
-				<div class="col-md-12" style="margin-top: 2%;">
+				<div class="col-md-12" style="margin-top: 1%;">
 					<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
 						<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 					</a>
 					<div id="grid_dataset">
-
 					</div>
 				</div>
 			</div>
@@ -87,7 +86,6 @@
 							<input class="form-control" id="dataset_code" type="text" hidden />
 							<input class="form-control" id="accbal_gid" type="text" hidden />
 							<input class="form-control" id="dataset_name" type="text" disabled />
-
 						</div>
 						<div class="col-md-3">
 							<label>Tran Date</label>
@@ -112,9 +110,7 @@
 							</center>
 						</div>
 						<div class="col-sm-4"></div>
-
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -248,7 +244,7 @@
 			$("#grid_dataset").kendoGrid({
 				dataSource: {
 					data: data,
-					pageSize: 20,
+					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
@@ -288,7 +284,11 @@
 						$(".k-grid-delete").hide();
 					}
 				},
-				pageable: false,
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},				
 				sortable: false,
 				selectable: true,
 				filterable: false,
@@ -352,9 +352,7 @@
 						width: 100,
 						attributes: { style: "text-align: right;" },
 					}],
-
 				editable: false,
-
 			});
 		}
 		catch (err) {

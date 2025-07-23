@@ -322,6 +322,7 @@
 			setlocalStorage("ls_pageList", selectedItem.reporttemplate_code);
 			setlocalStorage("temp_gid", selectedItem.reporttemplate_gid);
 			setlocalStorage("selectedTemplate", selectedItem);
+			setlocalStorage("selectedreconcode", $("#cmbreconname").val());
 		}
 		catch (err) {
 
@@ -368,6 +369,7 @@
 	}
 
 	function getSerializedSelectedRows(mode){
+		setlocalStorage("selectedreconcode", $("#cmbreconname").val());
 		try {
 			if ($(mode).attr('value') == "edit") {
 				btn_onClick("Edit");

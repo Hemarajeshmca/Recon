@@ -324,7 +324,7 @@
 									<input class="form-control" id="rt_name" name="ReportTemplate" type="text" disabled>
 									<input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
 									<input class="form-control" id="file_name" type="text" hidden>
-
+									<input class="form-control" type="hidden" id="archivecode" value="">
 								</div>
 								<div class="col-sm-3">
 									<label for="" class="form-label">Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -428,6 +428,17 @@
 		var screen_code = "";
 		$(document).ready(function () {
 			screen_code = rolevalidatescreen('rpt_generation_w');
+			const urlParams = new URLSearchParams(window.location.search);
+			const archivalCode = urlParams.get('archival_code');
+			$("#archivecode").val(archivalCode);
+			if($("#archivecode").val() != '') {
+				$("#navhead").text("Archival Report Generation");
+				document.getElementById("myLabel").innerText = archivalCode;
+			} else {
+				$("#navhead").text("Report Generation");
+				$("#archivecode").val('');
+				$("#archivelabel").hide();
+			}
 			var gridcopy = [];
 			$("#navhead").text("Report Generation");
 			kendodate_format();
@@ -462,6 +473,14 @@
 				}
 			}).data("kendoComboBox");
 		});
+		function goToReportPage() {
+			if($("#archivecode").val() != '') {
+				window.location.href = '../Reports/ReportGeneration_newlist?archival_code='+ $("#archivecode").val();
+			}
+			else {
+				window.location.href = "../Reports/ReportGeneration_newlist";
+			}
+		}
 		function detailfetch() {
 			// recon list
 			var data = {};
@@ -1014,95 +1033,15 @@
 			}
 		}
 
-		function generateReport() {
-			// hideProgress();
-			// var grid = $("#grid_tempfilter").data("kendoGrid");
-			// var objpplmapupdlist = [];
-			// var rpt_cond = "";
-			// var value = "";
-			// var open_braces = "";
-			// var close_braces = "";
-			// var joins = "";
-			// var joins1 = "";
-
-			// for (var i = 0; i < grid._data.length; i++) {
-			// 	if (grid._data[i].filter_criteria && grid._data[i].report_field) {
-			// 	value = "";
-			// 	open_braces = "";
-			// 	close_braces = "";
-			// 	joins = "";
-			// 	joins1 = "";
-
-			// 	if (i == 0) {
-			// 		joins1 = 'AND ';
-			// 	}
-
-			// 	if (i == grid._data.length - 1) {
-			// 		joins = " ";
-			// 	}
-			// 	else {
-			// 		if (grid._data[i].join_condition) {
-			// 			joins = grid._data[i].join_condition + " ";
-			// 		} else {
-			// 			joins = 'AND '
-			// 		}
-			// 	}
-
-			// 	// close braces assigning
-			// 	if ($('#chk_sel1_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
-			// 		close_braces = " ) ";
-			// 	}
-
-			// 	// open braces assigning
-			// 	if ($('#chk_sel_' + grid._data[i].reporttemplatefilter_gid).is(":checked")) {
-			// 		open_braces = "(";
-			// 	}
-
-			// 	// Condition based value assigning
-			// 	if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO" && grid._data[i].filter_value == 'null') {
-			// 		value = " is not null ";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO" && grid._data[i].filter_value == 'null') {
-			// 		value = " is null ";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
-			// 		value = " != '" + grid._data[i].filter_value + "'";
-			// 	}
-			// 	else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
-			// 		value = " like '%" + grid._data[i].filter_value + "'";
-			// 	}
-			// 	else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
-			// 		value = " like '" + grid._data[i].filter_value + "%'";
-			// 	}
-			// 	else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
-			// 		value = " = '" + grid._data[i].filter_value + "'";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-			// 		value = " like '%" + grid._data[i].filter_value + "%'";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
-			// 		value = " > '" + grid._data[i].filter_value + "'";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
-			// 		value = " < '" + grid._data[i].filter_value + "'";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
-			// 		value = " <= '" + grid._data[i].filter_value + "'";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
-			// 		value = " >= '" + grid._data[i].filter_value + "'";
-			// 	} else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-			// 		value = " not like '%" + grid._data[i].filter_value + "%'";
-			// 	}
-
-			// 	rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
-			// }
-			// }
-			// var condition;
-			// if (rpt_cond.endsWith('AND ')) {
-			// 	condition = rpt_cond.slice(0, -4);
-			// } else {
-			// 	condition = rpt_cond;
-			// }
+		function generateReport() {			
 			var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 			var template_code = getlocalStorage("ls_pageList");
 			var selected_template = getlocalStorage("selectedTemplate");
 			var str = $("#rt_name").val();
 			var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
+			var archival_code = $("#archivecode").val();
 			var data = {
+				"in_archival_code":archival_code ? archival_code : '',
 				"in_reporttemplate_code": template_code ? template_code : '',
 				"in_report_code": selected_template.report_code,
 				"in_recon_code": selected_template.recon_code,
@@ -1257,7 +1196,9 @@
 			// }
 					var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 				var template_code = getlocalStorage("ls_pageList");
+				var archival_code = $("#archivecode").val();
 				var data = {
+					"in_archival_code":archival_code ? archival_code : '',
 					"in_reporttemplate_code": template_code,
 					"in_recon_code": $("#reconname").val(),
 					"in_report_code": $("#cmbreporttype").val(),
@@ -1351,88 +1292,8 @@
 				});
 				return false;
 			}
-
-			var grid = $("#grid_tempfilter").data("kendoGrid");
-			var objpplmapupdlist = [];
-			var rpt_cond = "";
-			var value = "";
-			var open_braces = "";
-			var close_braces = "";
-			var joins = "";
-			var joins1 = "";
-
-			for (var i = 0; i < grid._data.length; i++) {
-				if (grid._data[i].filter_criteria && grid._data[i].report_field) {
-				value = "";
-				open_braces = "";
-				close_braces = "";
-				joins = "";
-				joins1 = "";
-
-				if (i == 0) {
-					joins1 = 'AND ';
-				}
-
-				if (i == grid._data.length - 1) {
-					joins = " ";
-				}
-				else {
-					if (grid._data[i].join_condition) {
-						joins = grid._data[i].join_condition + " ";
-					} else {
-						joins = 'AND '
-					}
-				}
-
-				// close braces assigning
-				if (grid._data[i].close_parentheses_flag == 'Y') {
-					close_braces = " ) ";
-				}
-
-				// open braces assigning
-				if (grid._data[i].open_parentheses_flag == 'Y') {
-					open_braces = "(";
-				}
-
-				// Condition based value assigning
-				if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO" && grid._data[i].filter_value == 'null') {
-					value = " is not null ";
-				} else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO" && grid._data[i].filter_value == 'null') {
-					value = " is null ";
-				} else if (grid._data[i].filter_criteria == "QCD_ISNOT_EQUAL_TO") {
-					value = " != '" + grid._data[i].filter_value + "'";
-				}
-				else if (grid._data[i].filter_criteria == "QCD_ENDS_WITH") {
-					value = " like '%" + grid._data[i].filter_value + "'";
-				}
-				else if (grid._data[i].filter_criteria == "QCD_BEGINS_WITH") {
-					value = " like '" + grid._data[i].filter_value + "%'";
-				}
-				else if (grid._data[i].filter_criteria == "QCD_IS_EQUAL_TO") {
-					value = " = '" + grid._data[i].filter_value + "'";
-				} else if (grid._data[i].filter_criteria == "QCD_CONTAINS") {
-					value = " like '%" + grid._data[i].filter_value + "%'";
-				} else if (grid._data[i].filter_criteria == "QCD_IS_GREATER_THAN") {
-					value = " > '" + grid._data[i].filter_value + "'";
-				} else if (grid._data[i].filter_criteria == "QCD_IS_LESS_THAN") {
-					value = " < '" + grid._data[i].filter_value + "'";
-				} else if (grid._data[i].filter_criteria == "QCD_LESSTHAN_EQUALTO") {
-					value = " <= '" + grid._data[i].filter_value + "'";
-				} else if (grid._data[i].filter_criteria == "QCD_GREATERTHAN_EQUALTO") {
-					value = " >= '" + grid._data[i].filter_value + "'";
-				} else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
-					value = " not like '%" + grid._data[i].filter_value + "%'";
-				}
-
-				rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
-			}
-			}
-			var condition;
-			if (rpt_cond.endsWith('AND ')) {
-				condition = rpt_cond.slice(0, -4);
-			} else {
-				condition = rpt_cond;
-			}
+			//hema changes
+			var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 
 			$("#Dynamic_grid").show();
 			$("#framevalue").show();

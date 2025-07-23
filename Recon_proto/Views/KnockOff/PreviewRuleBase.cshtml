@@ -9,14 +9,10 @@
 	<title></title>
 	<style>
 		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-			color: transparent;
-		}
-
-		.k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
 			color: white !important;
 		}
 
-		.k-header, .k-grid-header {
+		.k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
 			color: white !important;
 		}
 
@@ -26,10 +22,44 @@
 
 		.k-grid-content {
 			overflow-x: hidden;
+			height: 325px !important;
 		}
 
-		.k-grid-content {
-			height:174px;
+		.k-header, .k-grid-header {
+			color: white !important;
+		}
+
+		.k-treeview .k-minus {
+			background: url('../../images/math-minus-icon.png')center center;
+		}
+
+		.k-treeview .k-plus {
+			background: url('../../images/math-add-icon.png')center center;
+		}
+
+		div.k-treeview {
+			height: 393px !important;
+			width: 420px !important;
+			padding-left: 30px;
+			border-width: 2px;
+			padding-top: 10px !important;
+		}
+
+		.k-treeview.k-group {
+			margin-right: 57px;
+			overflow: auto;
+			height: 216px;
+			padding: 10px;
+		}
+
+		.k-icon.k-i-expand {
+			border-color: transparent;
+			background-image: url('../images/sprite.png');
+		}
+
+		.k-icon.k-i-collapse {
+			border-color: transparent;
+			background-image: url('../images/sprite.png');
 		}
 	</style>
 
@@ -60,6 +90,18 @@
 						KnockOff
 						</button>*@
 					</div>
+					<div class="col-md-3">
+						<label class="form-label">Date To <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<div>
+							<input class="cusDate" data-role='datepicker2' id="initiated_to" name="initiated_to" data-value="2022-12-21" style="width:100%" />
+							<span data-for='valid' class='k-invalid-msg'></span>
+						</div>
+					</div>
+					<div class="col-md-3" style="margin-top: 2%;">
+						<button type="button" onclick="showPreview()" id="btnpreview" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
+							Preview
+						</button> &nbsp;&nbsp;&nbsp;
+					</div>
 				</div>
 
 				<div class="row">
@@ -73,7 +115,7 @@
 										data-bs-target="#navs-pills-top-Rule"
 										aria-controls="navs-pills-top-Rule"
 										aria-selected="true">
-									Rule
+									Process
 								</button>
 							</li>
 
@@ -126,92 +168,81 @@
 							<input class="cusDate" data-role='datepicker' id="initiated_from" name="initiated_from" data-value="1999-01-01" style="width:100%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
-					</div>
-					<div class="col-md-3">
-						<label class="form-label">Date To <span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-						<div>
-							<input class="cusDate" data-role='datepicker2' id="initiated_to" name="initiated_to" data-value="2022-12-21" style="width:100%" />
-							<span data-for='valid' class='k-invalid-msg'></span>
-						</div>
-					</div>
-					<div class="col-md-3" style="margin-top: 2%;">
-						<button type="button" onclick="showPreview()" id="btnpreview" class="btn btn-sm save_btn me-2" style="width:40%;margin-top: 7px">
-							Preview
-						</button> &nbsp;&nbsp;&nbsp;
-					</div>
+					</div>					
 				</div>
 
 			</div>
 		</div>
 	</div>
 
-	<div class="modal fade" id="infomodal" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content" style="width: 75%;left: 18%;">
+	<div class="modal fade" id="ReconRuledetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:578px;">
 				<div class="modal-header">
 				</div>
-				<div class="modal-body" style="margin-top: -26px;margin-bottom:10px">
+				<div class="modal-body" style="margin-top: -44px;">
 					<div class="row">
 						<div class="col-sm-4">
 						</div>
 						<div class="col-sm-4">
-							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Info</h4>
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Rule Detail</h4>
 						</div>
 						<div class="col-sm-4">
 							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
 						</div>
 					</div>
 					<hr style="margin-top:-1px; width:100%;">
-
-					<div class="container">
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Name </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7"> <p><span id="rule_code"> </span> <strong><span>&nbsp; - </span></strong> <span id="rule_name"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Applied On </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_apply_on_desc"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Order </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_order"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Version </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="rule_version"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Group Flag </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="group_flag"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Source Dataset </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="source_dataset"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Comparision Dataset </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="comparision_dataset"></span></p></div>
-						</div>
-						<div class="row">
-							<div class="col-md-4" style="white-space: nowrap;"> <p><strong>Rule Status </strong></p></div>
-							<div class="col-md-1">  <strong>:</strong> </div>
-							<div class="col-md-7" style="white-space: nowrap;"> <p><span id="active_status_desc"></span></p></div>
-						</div>
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_koRuleviewdetail")
 					</div>
 				</div>
-				<div class="row" style="margin-top: -27px;margin-bottom: -12px;">
-					<div class="col-sm-4"> </div>
-					<div class="col-sm-4" style="margin-bottom:30px;float: right;">
-						<center><button type="submit" class="btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%" onclick="rr1()">Close</button></center>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="Reconthemedetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:506px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Theme Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
 					</div>
-					<div class="col-sm-4"> </div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_kothemeviewdetail")
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="Reconpreprocessdetail" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="height:550px;">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -26px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Preprocess Detail</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="container" style="padding:0px !important;">
+						@await Html.PartialAsync("_kopreprocessdetail")
+					</div>
 				</div>
 			</div>
 		</div>
@@ -457,20 +488,21 @@
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
-					if (result.ReconRule.length > 0 && result.ReconDataSet.length > 0) {
+					if (result.ReconRule.length > 1 && result.ReconDataSet.length > 0) {
 						$("#gd_preview").empty();
 						$("#gd_preview").append("<div id='grid_preview'></div>");
 						grid_rule(result.ReconRule);
-						$("#reconversion").val(result.ReconRule[0].recon_rule_version)
+						$("#reconversion").val(result.Reconversion[0].recon_rule_version);
+						$("#promethod").val(result.Reconversion[0].processing_method);
 						$("#gd_dataset_grid").empty();
 						$("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
 						grid_dataset(result.ReconDataSet);
-					} else if (result.ReconDataSet.length > 0 && result.ReconRule.length == 0) {
+					} else if (result.ReconDataSet.length > 1 && result.ReconRule.length == 0) {
 						$("#gd_dataset_grid").empty();
 						$("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
 						grid_dataset(result.ReconDataSet);
 						grid_rule([]);
-					} else if (result.ReconDataSet.length == 0 && result.ReconRule.length > 0) {
+					} else if (result.ReconDataSet.length == 1 && result.ReconRule.length > 0) {
 						grid_dataset([]);
 						$("#gd_preview").empty();
 						$("#gd_preview").append("<div id='grid_preview'></div>");
@@ -593,180 +625,120 @@
 	}
 	
 	function grid_rule(data) {
-		$("#grid_preview").kendoGrid({
+		$("#grid_preview").kendoTreeList({
 			dataSource: {
-				data: data,
-				pageSize: 5,
-				schema: {
-					model: {
-						fields: {
-							rule_gid: { type: "string" },
-							rule_code: { type: "string" },
-							rule_name: { type: "string" },
-							rule_order: { type: "number" },
-							recon_rule_version: { type: "string" },
-							source_dataset_code: { type: "string" },
-							comparison_dataset_code: { type: "string" },
-							source_dataset_desc: { type: "string" },
-							comparison_dataset_desc: { type: "string" },
-							rule_apply_on_desc: { type: "string" },
-							group_flag: { type: "string" },
-							group_flag_desc: { type: "string" },
-							active_status_desc: { type: "string" }
+					data: data,
+					schema: {
+						model: {
+							id: "id",
+							parentId: "parentId",
+							fields: {
+								id: { type: "number" },
+								parentId: { type: "number", nullable: true },
+								seqno : { type: "string" },
+								name: { type: "string" },
+								code: { type: "string" },
+								type: { type: "string" }
+							},
+							expanded: true
 						}
 					}
+			},
+			selectable: true,
+			height: 355,
+			columns: [
+				{ field: "name", title: "Ko Sequence", expandable: true,width: 200,
+				template: function(item) {
+					const icon = {
+						Preprocess: "🟢",
+						Rule: "🔵",
+						Postprocess: "🟠",
+						Theme: "🟣"
+					}[item.type] || "";
+
+					return `${icon} ${item.name}`;
 				}
 			},
-			height: 250,
-			groupable: false,
-			dataBound: function (e) {
-				resultData = e.sender._data;
-				var rows = $('#grid_preview').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);
-			},
-			sortable: true,
-			selectable: true,
-			filterable: true,
-			navigatable: true,
-			pageable: true,
-			resizable: true,
-			pageable: {
-				refresh: false,
-				pageSizes: [5, 10, 15, 20, 25],
-				buttonCount: 5
-			},
-			columns: [
+				{ field: "code", title: "Code", width: 50,hidden :true },
+				{ field: "master_code", title: "master_code", width: 50,hidden :true },
+				{ field: "gid", title: "gid", width: 50,hidden :true },
+				{ field: "type", title: "Type", width: 60,filterable: false},
 				{
-					field: "rule_gid",
-					title: "rule_gid",
-					hidden: true,
-				},
-				{
-					field: "name",
-					title: "Action",
-					template: "<input id='preview_checkbox' type='checkbox' />",
-					width: 80,
-					hidden: true,
-				},
-				{
-					field: "rule_code",
-					title: "Rule Code",
-					width: 50,
-				},
-
-				{
-					field: "rule_name",
-					title: "Rule Name",
-					width: 100,
-				},
-				{
-					field: "rule_apply_on_desc",
-					title: "Rule Applied On",
-					width: 80,
-				},
-				{
-					field: "rule_order",
-					title: "Rule Order",
-					width: 50,
-					attributes: { style: "text-align: right;" },
-					filterable: {
-						ui: "numericInput",
-						extra: false,
-					},
-				},
-				{
-					field: "recon_rule_version",
-					title: "Rule Version",
-					width: 60,
-					hidden: true,
-				},
-				{
-					field: "group_flag_desc",
-					title: "Group Flag",
-					width: 60,
-				},
-				{
-					field: "active_status_desc",
-					title: "Status",
-					width: 50,
-					hidden: true
-				},
-				{
-					field: "source_dataset_desc",
-					title: "Source Dataset",
-					width: 150,
-					hidden: true
-				},
-				{
-					field: "comparison_dataset_desc",
-					title: "Comparision Dataset",
-					width: 150,
-					hidden: true
-				},
-				{
-					field: "source_dataset_code",
-					title: "Source Dataset",
-					width: 100,
-					hidden: true
-				},
-				{
-					field: "comparison_dataset_code",
-					title: "Comparision Dataset",
-					width: 100,
-					hidden: true
-
-				},
-				{
-					field: "probable_match_desc",
-					title: "Probable Matchoff",
-					width: 70,
-					attributes: { style: "text-align: center" },
-					filterable: false,
-					template: '#=sel_checkbox2(data)#'
+					field: "seqno",
+					title: "Seq. No.",
+					width: 30,
+					attributes:	{ style: "text-align: Right" },
+					// filterable: false,
+					// template: '#=sel_textbox1(data)#'
 				},
 				{
 					field: "hold_flag_desc",
-					title: "Hold Flag",
-					width: 50,
+					title: "Hold",
+					width: 30,
+					attributes: { style: "text-align: center" },
 					filterable: false,
-					attributes: { style: "text-align: center" },				
-					template: '#=sel_checkbox1(data)#'
+					template: '#=sel_checkbox(data)#'
 				},
 				{
 					field: "Info",
 					title: "Info",
-					template: "<a href='' style='cursor:pointer;' onclick='openInfoModel(this)' value='edit' data-bs-toggle='modal'><img style='height:17px;width:17px' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;",
 					width: 30,
 					filterable: false,
 					attributes: {
 						style: "text-align: center;"
+					},
+					template: function (dataItem) {
+					if (dataItem.parentId != null) {
+						return `<a href="#" style="cursor:pointer;"
+							onclick="showNodeInfo('${dataItem.master_code}', '${dataItem.name}', '${dataItem.gid}', '${dataItem.type}')"
+							data-bs-toggle="modal">
+							<img style="width:17px;height:17px;" src="../Assets/images/topnotes.png" />
+						</a>`;
+					} else {
+						return '';
 					}
-
-				}],
-			editable: false,
-		});
+					},
+				},
+			],
+				rowTemplate: function(item) {
+				const typeClass = `row-${item.type}`;
+				return `<tr class="${typeClass}">
+						<td>${item.name}</td>
+						<td>${item.type}</td>
+						<td>${item.code}</td>
+					</tr>`;
+				}
+			});
 	}
-	function sel_checkbox1(data) {
-		var isChecked1 = data.hold_flag_desc;
-		var con1 = "";
-		if (isChecked1 == "YES") {
-			con1 = 'checked=checked';
-			return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox" disabled/> ';
-		} else {
-			return '<input id="chk_sel1_' + data.rule_gid + '"  name = "hold_flag_desc" type="checkbox" disabled/> ';
-
+	function sel_textbox1(data){
+		var isvalue = data.seqno;
+		if (isvalue > 0) {
+			return '<input id="seqno_' + data.id + '" value=' + isvalue + ' disabled name="seqno" style="width: 100%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" onkeypress="return isNumberKey(event)" type="text"/> ';
+		}else {
+			return '';
 		}
 	}
-	function sel_checkbox2(data) {
-		var isChecked2 = data.probable_match_desc;
+	function sel_checkbox(data) {
+		var isChecked1 = data.parentId;
 		var con1 = "";
-		if (isChecked2 == "YES") {
-			con1 = 'checked=checked';
-			return '<input id="chk_sel2_' + data.rule_gid + '" checked  name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
-		} else {
-			return '<input id="chk_sel2_' + data.rule_gid + '" disabled name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
-
+		if (isChecked1 != null) {
+			return '<input id="chk_sel1_' + data.id + '"  name = "hold_flag_desc" disabled type="checkbox"/> ';
+		}else {
+			return '<input id="chk_sel1_' + data.id + '"  style="display:none" disabled name = "hold_flag_desc" type="checkbox"/> ';
 		}
+	}
+	function sel_info(data) {
+		var isChecked1 = data.parentId;
+		var con1 = "";
+		if (isChecked1 != null) {
+			return "<a href='' style='cursor:pointer;' id='info'" + data.id + "' onclick='showNodeInfo('" + data + ")' value='edit' data-bs-toggle='modal'><img style='height:17px;width:17px' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;"
+		   }else {
+			return ""
+		}
+	}
+	function onSelect(e) {
+	  var treeview1 = $("#grid_preview").data("kendoTreeView");
+	  var dataItem = treeview1.dataItem(e.node);
 	}
 
 	function showPreview() {
@@ -781,18 +753,7 @@
 			var pr = ts[2] + "-" + ts[1] + "-" + ts[0];
 			var period_to = $("#initiated_to").val();
 			var ts1 = period_to.split("/");
-			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];
-			var grid = $("#grid_preview").data("kendoGrid");
-			var dataItems = grid.dataSource.data();
-			var firstColumnValues = "";
-			for (var i = 0; i < dataItems.length; i++) {
-				var firstColumnValue = dataItems[i].rule_code + "#";
-				firstColumnValues = firstColumnValues + firstColumnValue;
-			}
-			if (firstColumnValues != "") {
-				firstColumnValues = firstColumnValues.slice(0, -1);
-			}
-			//if (in_recon_code && period_from && period_to && firstColumnValues) {
+			var pr1 = ts1[2] + "-" + ts1[1] + "-" + ts1[0];				
 			if (in_recon_code && period_from && period_to ) {
 				$.alert({
 					title: 'Recon',
@@ -811,23 +772,7 @@
 						in_ip_addr: '',
 						in_user_code: sessionStorage.getItem("usrname")
 					}),
-					contentType: 'application/json; charset=utf-8',
-					//success: function (response) {
-					//    if (!response) {
-					//        $.alert({
-					//            title: 'Recon',
-					//            content: "Something went wrong",
-					//            type: 'red',
-					//        });
-					//    } else {
-					//        var res = JSON.parse(response)
-					//        $.alert({
-					//            title: 'Recon',
-					//            content: res[0].out_msg,
-					//            type: 'green',
-					//        });
-					//    }
-					//}
+					contentType: 'application/json; charset=utf-8',					
 				});
 			} else if (!period_from) {
 				$.alert({
@@ -841,14 +786,7 @@
 					content: 'Please select Preiod To',
 					type: 'red',
 				});
-			} 
-			//else if (!firstColumnValues) {
-			//	$.alert({
-			//		title: 'Recon',
-			//		content: 'Please select Rules',
-			//		type: 'red',
-			//	});
-			//}
+			} 			
 			hideProgress();
 		} else if (!in_recon_code) {
 			$.alert({

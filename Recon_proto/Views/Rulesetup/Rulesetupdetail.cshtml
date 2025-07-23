@@ -251,6 +251,51 @@
 		.k-grid-content {
 			height: 90px !important;
 		}
+
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 34px;
+			height: 18px;
+		}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			background-color: #ccc;
+			transition: 0.4s;
+			border-radius: 34px;
+			top: 4px;
+			left: -2px;
+			right: 0;
+			bottom: 0;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 14px;
+			width: 14px;
+			left: 2px;
+			bottom: 2px;
+			background-color: white;
+			transition: 0.4s;
+			border-radius: 50%;
+		}
+
+		input:checked + .slider {
+			background-color: rgb(135,46,123);
+		}
+
+		input:checked + .slider:before {
+			transform: translateX(16px);
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -2568,7 +2613,7 @@
 				close_parentheses_flag: { type: "string", editable: false },
 				ident_criteria: { type: "string" },
 				ident_value: { type: "string" },
-						ident_value_flag: { type: "string", editable: false  },//ident_flag_change
+				ident_value_flag: { type: "string", editable: false  },//ident_flag_change
 				ident_value_code: { type: "string" },
 				active_status: { type: "string" },
 				active_status_desc: { type: "string" },
@@ -2704,13 +2749,23 @@
 		// title: "as Value",
 		title: "Value",
 		width: 60,
-			template: function (dataItem) {
-			if (dataItem.ruleselefilter_gid > 0) {
-							return '<center><input type="checkbox" ' + (dataItem.ident_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9"></center>';
-			} else {
-							return '<center><input type="checkbox" ' + (dataItem.ident_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9"></center>';
-			}
-			},
+		 template: function (dataItem) {
+		var isChecked = dataItem.ident_value_flag == "Y" ? 'checked' : '';
+		return `
+		<center>
+			<label class="switch">
+				<input type="checkbox" class="chkbx9" ${isChecked}>
+				<span class="slider round"></span>
+			</label>
+		</center>`;
+	},
+			// template: function (dataItem) {
+			// if (dataItem.ruleselefilter_gid > 0) {
+			// 				return '<center><input type="checkbox" ' + (dataItem.ident_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9"></center>';
+			// } else {
+			// 				return '<center><input type="checkbox" ' + (dataItem.ident_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9"></center>';
+			// }
+			// },
 			//ident_flag_change ends
 		},
 		{
@@ -3162,12 +3217,16 @@
 			title: "Value",
 			width: 50,
 			template: function (dataItem) {
-			if (dataItem.ruleselefilter_gid > 0) {
-					return '<center><input type="checkbox"' + (dataItem.ident_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9"></center>';
-			} else {
-						return '<center><input type="checkbox" ' + (dataItem.ident_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9"></center>';
-			}
-			}
+		var isChecked = dataItem.ident_value_flag == "Y" ? 'checked' : '';
+		return `
+		<center>
+			<label class="switch">
+				<input type="checkbox" class="chkbx9" ${isChecked}>
+				<span class="slider round"></span>
+			</label>
+		</center>`;
+	},
+			
 			//ident_flag_change ends
 		//hidden: true,
 		},
