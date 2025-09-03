@@ -412,8 +412,7 @@
 		$("#navhead").text("Automatic Posting & Knockoff");
 		kendodate_format();
 		$("#initiated_from").data("kendoDatePicker").value(new Date("1999-01-01"));
-		getreconlist();
-		grid_rule([]);
+		getreconlist();		
 		grid_dataset([]);
 	});
 
@@ -464,7 +463,12 @@
 		}
 		try {
 			$("#reconversion").val("");
-			grid_rule([]);
+			var treeList = $("#grid_preview").data("kendoTreeList");
+			if (treeList)
+			{
+                 treeList.destroy();
+                 $("#grid_preview").empty(); 
+			}
 			grid_dataset([]);
 			var in_recon_code = $("#reconname").val();
 			var in_user_code = sessionStorage.getItem("usrname");
@@ -482,12 +486,20 @@
 						grid_rule(result.ReconRule);
 						$("#reconversion").val(result.Reconversion[0].recon_rule_version);
 						$("#promethod").val(result.Reconversion[0].processing_method);
-					} if (result.ReconDataSet.length > 0) {
+					} 
+					else {
+						var treeList = $("#grid_preview").data("kendoTreeList");
+						if (treeList)
+						{
+							treeList.destroy();
+							$("#grid_preview").empty(); 
+						}
+					}
+					if (result.ReconDataSet.length > 0) {
 						$("#gd_dataset_grid").empty();
 						$("#gd_dataset_grid").append("<div id='dataset_grid'></div>");
 						grid_dataset(result.ReconDataSet);
 					} else {
-						grid_rule([]);
 						grid_dataset([]);
 					}
 				},
@@ -650,7 +662,15 @@
 					width: 30,
 					attributes: { style: "text-align: center" },
 					filterable: false,
-					template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						const checked = dataItem.hold_flag_desc ? "checked" : "";
+						if (dataItem.parentId != null) {
+							return `<input type="checkbox" class="hold-flag" disabled data-id="${dataItem.id}" ${checked} />`;
+						}
+						else {
+							return '';
+						}
+					},
 				},
 				{
 					field: "Info",
@@ -820,16 +840,15 @@
 		$("infoDatamodal").hide();
 	}
 
-	function showNodeInfo(code,name,gid,depend_code) {
-		showProgress();
+	function showNodeInfo(code,name,gid,depend_code) {		
 		if(depend_code == "Preprocess" || depend_code == "Postprocess" || depend_code == "Process") {
 			var data = {};
 			data.preprocess_gid = gid;
 			data.preprocess_code = code;
 			data.preprocess_desc = name;
 			data.recon_code = $("#cmbreconname").val();
-			setlocalStorage("preprocess_details", data);
-			getGridCombopreprocessList();
+			setlocalStorage("preprocess_details", data);			
+			getGridCombopreprocessList();			
 			document.body.classList.add('modal-open');
 			var innerModal = new bootstrap.Modal(document.getElementById('Reconpreprocessdetail'));
 			innerModal.show();

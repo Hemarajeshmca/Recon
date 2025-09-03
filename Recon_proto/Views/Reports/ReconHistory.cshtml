@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.title = "Recon Rule Version History";
+    ViewBag.title = "Recon Version History";
     Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <!Doctype html>
@@ -7,21 +7,12 @@
 <head>
     <title></title>
     <style>
-        .nav-item.me-2.me-xl-50 {
-            margin-right: 33rem !important;
-        }
-
-        .error_show {
-            color: red;
-            margin-left: 10px;
-        }
-
-        .k-grid-header th.k-header > .k-link {
+        .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
             color: white !important;
         }
 
-        .k-grid.k-widget {
-            height: 360px;
+        .k-header, .k-treemap-title, .k-grid-header .k-header > .k-link {
+            color: white !important;
         }
 
         table {
@@ -30,47 +21,43 @@
 
         .k-grid-content {
             overflow-x: hidden;
-            height: 347px !important;
+            height: 325px !important;
         }
 
-        .k-grid-header {
-            font-weight: bold;
+        .k-header, .k-grid-header {
+            color: white !important;
+        }
+        .k-treeview .k-minus {
+            background: url('../../images/math-minus-icon.png')center center;
         }
 
-        .k-content {
-            font-weight: normal;
-            font-size: 13px;
+        .k-treeview .k-plus {
+            background: url('../../images/math-add-icon.png')center center;
         }
 
-        .k-widget.k-window {
-            padding-top: 35px;
-            min-width: 90px;
-            min-height: 50px;
-            width: 700px !important;
-            height: 300px !important;
-            top: 180.766px !important;
-            /*left: 120px !important;*/
-            z-index: 10003;
-            left: 300px !important;
+        div.k-treeview {
+            height: 393px !important;
+            width: 420px !important;
+            padding-left: 30px;
+            border-width: 2px;
+            padding-top: 10px !important;
         }
 
-        .km-switch.km-widget.km-switch-off {
-            background-color: aqua;
-            font-size: 14px;
-            border-radius: 0.375rem;
-            height: 23px;
+        .k-treeview.k-group {
+            margin-right: 57px;
+            overflow: auto;
+            height: 216px;
+            padding: 10px;
         }
 
-        .km-switch.km-widget.km-switch-on {
-            background-color: lightblue;
-            font-size: 14px;
-            border-radius: 0.375rem;
-            height: 23px;
+        .k-icon.k-i-expand {
+            border-color: transparent;
+            background-image: url('../images/sprite.png');
         }
 
-        .km-switch-label-on {
-            left: -159%;
-            text-shadow: 0 -1px 0 rgba(0,0,0,0.3);
+        .k-icon.k-i-collapse {
+            border-color: transparent;
+            background-image: url('../images/sprite.png');
         }
     </style>
 </head>
@@ -112,74 +99,24 @@
                                             data-bs-target="#navs-pills-top-Rule"
                                             aria-controls="navs-pills-top-Rule"
                                             aria-selected="true">
-                                        Rule
-                                    </button>
-                                </li>
-
-                                <li class="nav-item">
-                                    <button type="button"
-                                            class="nav-link"
-                                            role="tab"
-                                            data-bs-toggle="tab"
-                                            data-bs-target="#navs-pills-top-Theme"
-                                            aria-controls="navs-pills-top-Theme"
-                                            aria-selected="true">
-                                        Theme
-                                    </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button type="button"
-                                            class="nav-link"
-                                            role="tab"
-                                            data-bs-toggle="tab"
-                                            data-bs-target="#navs-pills-top-preprocess"
-                                            aria-controls="navs-pills-top-preprocess"
-                                            aria-selected="true">
-                                        Preprocess
+                                       Process
                                     </button>
                                 </li>
                             </ul>
                             <div class="tab-content" style="box-shadow:none !important;padding: 20px 0px;">
-                                @*Rule*@
-                                <div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
+                                 <div class="tab-pane fade show active" id="navs-pills-top-Rule" role="tabpanel" style="margin-top:-25px;">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
-                                            <div class="col-xs-12">
-                                                <div id="gd_reconverion">
-                                                    <div id="grid_reconverion">
-                                                    </div>
+                                            <div class="col-xs-12">                                               
+                                                    <div id="grid_reconverion">                                                 
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                @*Theme*@
-                                <div class="tab-pane fade" id="navs-pills-top-Theme" role="tabpanel" style="margin-top:-25px;">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <div class="col-xs-12">
-                                                <div id="gd_themerecon">
-                                                    <div id="themerecon_grid"> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="navs-pills-top-preprocess" role="tabpanel" style="margin-top:-25px;">
-                                    <div class="panel panel-default">
-                                        <div class="panel-body">
-                                            <div class="col-xs-12">
-                                                <div id="gd_preprocess">
-                                                    <div id="preprocess_grid"> </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div>                             
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -187,10 +124,7 @@
 </body>
 </html>
 <script>
-    $(document).ready(function () {
-        grid_reconverion([]);
-        theme_grid([]);
-        grid_preprocess([]);
+    $(document).ready(function () {       
         $("#navhead").text("Recon Version History");
         gridlist();
     });
@@ -240,9 +174,7 @@
         });
     }
     function reconchange() {
-        grid_reconverion([]);
-        theme_grid([]);
-        grid_preprocess([]);
+        $(".save_btn").prop("disabled", false);
         if ($("#cmbreconname").val() != '') {
             sessionStorage.setItem("reconcode", $("#cmbreconname").val());
             sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
@@ -275,149 +207,16 @@
             }
         });
     }
-
-    function grid_reconverion(data) {
-        $("#grid_reconverion").kendoGrid({
-            dataSource: {
-                data: data,
-                schema: {
-                    model: {
-                        fields: {
-                            rule_gid: { type: "string" },
-                            rule_name: { type: "string" },
-                            rule_order: { type: "number" },
-                            source_dataset_name: { type: "string" },
-                            comparsion_dataset_name: { type: "string" },
-                            system_match_flag_desc: { type: "string" },
-                            hold_flag_desc: { type: "string" },
-                            rule_code: { type: "string" },
-                        }
-                    }
-                }
-            },
-            height: 380,
-            groupable: false,
-            sortable: true,
-            selectable: true,
-            filterable: true,
-            navigatable: true,
-            resizable: true,
-            pageable: false,
-            columns: [
-                {
-                    field: "rule_gid",
-                    title: "rule_gid",
-                    width: 100,
-                    hidden: true,
-                },
-                {
-                    field: "rule_code",
-                    title: "rule_code",
-                    width: 100,
-                    hidden: true,
-                },
-                {
-                    field: "rule_name",
-                    title: "Rule Name",
-                    width: 100,
-                },
-                {
-                    field: "rule_order",
-                    title: "Rule Order",
-                    attributes: { style: "text-align: right" },
-                    width: 60,                  
-                },
-                {
-                    field: "source_dataset_code",
-                    title: "source_dataset_code",
-                    width: 100,
-                    hidden: true,
-                },
-                {
-                    field: "source_dataset_desc",
-                    title: "Source Dataset Name",
-                    width: 100,
-                },
-                {
-                    field: "comparison_dataset_code",
-                    title: "comparison_dataset_code",
-                    width: 100,
-                    hidden: true,
-                },
-                {
-                    field: "comparison_dataset_desc",
-                    title: "Comparsion Dataset Name",
-                    width: 100,
-                },
-                {
-                    field: "system_match_flag_desc",
-                    title: "System Matchoff Flag",
-                    width: 70,
-                    attributes: { style: "text-align: center" },
-                    filterable: false,
-                    template: '#=sel_checkbox(data)#'
-                },
-                {
-                    field: "hold_flag_desc",
-                    title: "Hold Flag",
-                    width: 70,
-                    attributes: { style: "text-align: center" },
-                    filterable: false,
-                    template: '#=sel_checkbox2(data)#'
-                },
-                {
-                    field: "probable_match_desc",
-                    title: "Probable Flag",
-                    width: 50,
-                    filterable: false,
-                    attributes: { style: "text-align: center" },
-                    //template: "<input id='scheduler_gid1' onclick='rowselected(this)' name='hold_flag_desc' type='checkbox'/>"
-                    template: '#=sel_checkbox1(data)#'
-                },
-            ],
-            editable: false,
-        });
-    }
-    function sel_checkbox(data) {
-        debugger;
-        var isChecked = data.system_match_flag_desc;
-        var con = "";
-        if (isChecked == "YES") {
-            con = 'checked=checked';
-            return '<input id="chk_sel_' + data.rule_gid + '" checked name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
-
-        } else {
-            return '<input id="chk_sel_' + data.rule_gid + '" name = "system_match_flag_desc" type = "checkbox" onchange="onChange1(event)" disabled />'
-
-        }
-    }
-    function sel_checkbox2(data) {
-        var isChecked1 = data.hold_flag_desc;
-        var con1 = "";
-        if (isChecked1 == "YES") {
-            con1 = 'checked=checked';
-            return '<input id="chk_sel1_' + data.rule_gid + '" checked name = "hold_flag_desc" type="checkbox" disabled /> ';
-        } else {
-            return '<input id="chk_sel1_' + data.rule_gid + '"  name = "hold_flag_desc" type="checkbox" disabled/> ';
-
-        }
-    }
-    function sel_checkbox1(data) {
-        var isChecked2 = data.probable_match_desc;
-        var con1 = "";
-        if (isChecked2 == "YES") {
-            con1 = 'checked=checked';
-            return '<input id="chk_sel2_' + data.rule_gid + '" checked  name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
-        } else {
-            return '<input id="chk_sel2_' + data.rule_gid + '" disabled name = "probable_match_desc" type="checkbox" onchange="onChange2(event)" disabled/> ';
-
-        }
-    }
     function reconversionhistory() {
+        var treeList = $("#grid_reconverion").data("kendoTreeList");
+        if (treeList)
+        {
+                 treeList.destroy();
+                 $("#grid_reconverion").empty(); 
+        }
         var in_recon_code = $("#cmbreconname").val();
         var in_version_code = $("#comreconversion").val();
         var in_user_code = sessionStorage.getItem("usrname");
-
         $.ajax({
             type: "POST",
             url: '../Reports/Reconversionhistoryfetch',
@@ -428,19 +227,9 @@
                 if (response != null) {
                     var res = JSON.parse(response);
                     if (res.versionlist.length > 0) {
-                        grid_reconverion(res.versionlist);
+                        grid_reconverion(res.versionlist);                        
                     } else {
                         grid_reconverion([]);
-                    }
-                    if (res.theme.length > 0) {
-                        theme_grid(res.theme);
-                    } else {
-                        theme_grid([]);
-                    }
-                    if (res.preprocess.length > 0) {
-                        grid_preprocess(res.preprocess);
-                    } else {
-                        grid_preprocess([]);
                     }
                 }
             },
@@ -450,159 +239,132 @@
             }
         });
     }
-    function theme_grid(data) {
-        $("#themerecon_grid").kendoGrid({
+    function grid_reconverion(data) {
+        $("#grid_reconverion").kendoTreeList({
             dataSource: {
-                data: data,               
-                schema: {
-                    model: {
-                        fields: {
-                            themehistory_gid: { type: "string" },
-                            theme_code: { type: "string" },
-                            theme_desc: { type: "string" },
-                            theme_order: { type: "number" },
-                            hold_flag_desc: { type: "string" }
+                  data: data,
+                   schema: {
+                        model: {
+                            id: "id",
+                            parentId: "parentId",
+                            fields: {
+                                id: { type: "number" },
+                                parentId: { type: "number", nullable: true },
+                                seqno : { type: "string" },
+                                name: { type: "string" },
+                                code: { type: "string" },
+                                type: { type: "string" }
+                            },
+                            expanded: true
                         }
-                    }
-                }
+                   }
             },
-            height: 380,
-            groupable: false,
-            sortable: true,
             selectable: true,
-            filterable: true,
-            navigatable: true,
-            resizable: true,
-            pageable: false,
+            height: 355,
             columns: [
+                { field: "name", title: "Ko Sequence", expandable: true,width: 200,
+                template: function(item) {
+                    const icon = {
+                        Preprocess: "🟢",
+                        Rule: "🔵",
+                        Postprocess: "🟠",
+                        Theme: "🟣"
+                    }[item.type] || "";
+
+                    return `${icon} ${item.name}`;
+                }
+            },
+                { field: "code", title: "Code", width: 50,hidden :true },
+                { field: "master_code", title: "master_code", width: 50,hidden :true },
+                { field: "gid", title: "gid", width: 50,hidden :true },
+                { field: "type", title: "Type", width: 60,filterable: false},
                 {
-                    field: "themehistory_gid",
-                    title: "Row id",
-                    width: 50,
-                    hidden: true,
-                },
-                {
-                    field: "theme_order",
-                    title: "Theme Order",
+                    field: "seqno",
+                    title: "Seq. No.",
                     width: 30,
-                    attributes: { style: "text-align: right;" },
-                    filterable: {
-                        ui: "numericInput",
-                        extra: false,
-                    },
-                },
-                {
-                    field: "theme_code",
-                    title: "Theme Code",
-                    width: 40,
-                },
-                {
-                    field: "theme_desc",
-                    title: "Theme Description",
-                    width: 150,
+                    attributes:	{ style: "text-align: Right" },
+                    // filterable: false,
+                    // template: '#=sel_textbox1(data)#'
                 },
                 {
                     field: "hold_flag_desc",
-                    title: "Hold Flag",
+                    title: "Hold",
                     width: 30,
-                    filterable: false,
                     attributes: { style: "text-align: center" },
-                    template: '#=sel_checkbox5(data)#'
-                }
-            ],
-            editable: false,
-        });
-    }
-    function sel_checkbox5(data) {
-        var isChecked5 = data.hold_flag_desc;
-        var con1 = "";
-        if (isChecked5 == "YES") {
-            con1 = 'checked=checked';
-            return '<input id="chk_sel5_' + data.theme_gid + '" checked  name = "hold_flag_desc" type="checkbox" disabled /> ';
-        } else {
-            return '<input id="chk_sel5_' + data.theme_gid + '" name = "hold_flag_desc" type="checkbox" disabled /> ';
-
-        }
-    }
-    function grid_preprocess(data) {
-        $("#preprocess_grid").kendoGrid({
-            dataSource: {
-                data: data,               
-                schema: {
-                    model: {
-                        fields: {
-                            preprocesshistory_gid: { type: "string" },
-                            preprocess_code: { type: "string" },
-                            preprocess_desc: { type: "string" },
-                            preprocess_order: { type: "number" },
-                            hold_flag_desc: { type: "string" }
+                    filterable: false,
+                    template: function (dataItem) {
+                        const checked = dataItem.hold_flag_desc ? "checked" : "";
+                        if (dataItem.parentId != null) {
+                            return `<input type="checkbox" class="hold-flag" disabled data-id="${dataItem.id}" ${checked} />`;
                         }
-                    }
-                }
-            },
-            height: 380,
-            groupable: false,
-            dataBound: function (e) {
-
-            },
-            sortable: true,
-            selectable: false,
-            filterable: true,
-            navigatable: true,
-            pageable: false,
-            resizable: true,
-            columns: [
-                {
-                    field: "preprocesshistory_gid",
-                    title: "Row id",
-                    width: 100,
-                    hidden: true,
-                },
-                {
-                    field: "preprocess_order",
-                    title: "Preprocess Order",
-                    width: 40,
-                    attributes: { style: "text-align: right;" },
-                    filterable: {
-                        ui: "numeric",
-                        extra: false,
+                        else {
+                            return '';
+                        }
                     },
                 },
-                {
-                    field: "preprocess_code",
-                    title: "Preprocess Code",
-                    width: 50,
-                },
-                {
-                    field: "preprocess_desc",
-                    title: "Preprocess Name",
-                    width: 130,
-                },
-                {
-                    field: "hold_flag_desc",
-                    title: "Hold Flag",
-                    width: 30,
-                    filterable: false,
-                    attributes: { style: "text-align: center" },
-                    template: '#=sel_checkbox6(data)#'
-                }
+                // {
+                //     field: "Info",
+                //     title: "Info",
+                //     width: 30,
+                //     filterable: false,
+                //     attributes: {
+                //         style: "text-align: center;"
+                //     },
+                //     template: function (dataItem) {
+                //     if (dataItem.parentId != null) {
+                //         return `<a href="#" style="cursor:pointer;"
+                //             onclick="showNodeInfo('${dataItem.master_code}', '${dataItem.name}', '${dataItem.gid}', '${dataItem.type}')"
+                //             data-bs-toggle="modal">
+                //             <img style="width:17px;height:17px;" src="../Assets/images/topnotes.png" />
+                //         </a>`;
+                //     } else {
+                //         return '';
+                //     }
+                //     },
+                // },
             ],
-            editable: false,
-
-        });
+                rowTemplate: function(item) {
+                const typeClass = `row-${item.type}`;
+                return `<tr class="${typeClass}">
+                        <td>${item.name}</td>
+                        <td>${item.type}</td>
+                        <td>${item.code}</td>
+                    </tr>`;
+                }
+            });
     }
-    function sel_checkbox6(data) {
-        var isChecked6 = data.hold_flag_desc;
-        var con1 = "";
-        if (isChecked6 == "YES") {
-            con1 = 'checked=checked';
-            return '<input id="chk_sel6_' + data.preprocess_gid + '" checked  name = "hold_flag_desc" type="checkbox" disabled /> ';
-        } else {
-            return '<input id="chk_sel6_' + data.preprocess_gid + '" name = "hold_flag_desc" type="checkbox" disabled /> ';
+    function sel_textbox1(data){
+        var isvalue = data.seqno;
+        if (isvalue > 0) {
+            return '<input id="seqno_' + data.id + '" value=' + isvalue + ' disabled name="seqno" style="width: 100%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" onkeypress="return isNumberKey(event)" type="text"/> ';
+        }else {
+            return '';
         }
     }
-    $('#pdf_gen').click(function () {
-        
+    function sel_checkbox(data) {
+        var isChecked1 = data.parentId;
+        var con1 = "";
+        if (isChecked1 != null) {
+            return '<input id="chk_sel1_' + data.id + '"  name = "hold_flag_desc" disabled type="checkbox"/> ';
+        }else {
+            return '<input id="chk_sel1_' + data.id + '"  style="display:none" disabled name = "hold_flag_desc" type="checkbox"/> ';
+        }
+    }
+    function sel_info(data) {
+        var isChecked1 = data.parentId;
+        var con1 = "";
+        if (isChecked1 != null) {
+            return "<a href='' style='cursor:pointer;' id='info'" + data.id + "' onclick='showNodeInfo('" + data + ")' value='edit' data-bs-toggle='modal'><img style='height:17px;width:17px' src = '../Assets/images/topnotes.png'></a>&nbsp;&nbsp;&nbsp;"
+           }else {
+            return ""
+        }
+    }
+    function onSelect(e) {
+      var treeview1 = $("#grid_reconverion").data("kendoTreeView");
+      var dataItem = treeview1.dataItem(e.node);
+    } 
+    
+    $('#pdf_gen').click(function () {        
         var in_recon_name = $("#cmbreconname").find(":selected").text();
         var in_recon_code = $("#cmbreconname").val();
         var in_version_code = $("#comreconversion").val();
@@ -624,7 +386,6 @@
                 type: 'red',
             });
         }
-
         //var exportURL = getRootUrl() + "Reports/GeneratePdf";
         //window.location.href = exportURL;
     });
@@ -638,8 +399,7 @@
         var in_recon_code = $("#cmbreconname").val();
         var in_version_code = $("#comreconversion").val();
         var slice_recon_name = in_recon_name.slice(0, 20);
-        var data = {};
-        
+        var data = {};        
     }
 </script>
 

@@ -677,7 +677,15 @@
 					width: 30,
 					attributes: { style: "text-align: center" },
 					filterable: false,
-					template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						const checked = dataItem.hold_flag_desc ? "checked" : "";
+						if (dataItem.parentId != null) {
+							return `<input type="checkbox" class="hold-flag" disabled data-id="${dataItem.id}" ${checked} />`;
+						}
+						else {
+							return '';
+						}
+					},
 				},
 				{
 					field: "Info",

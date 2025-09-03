@@ -20,6 +20,10 @@
 			color: #000 !important;
 		}
 
+		.k-link:visited {
+			color: #fff !important;
+		}
+
 		.form-select {
 			color: #000 !important;
 		}
@@ -58,7 +62,7 @@
 		.k-calendar .k-link.k-nav-fast {
 			color: #fff !important;
 		}
-
+				
 		.k-grid td {
 			border-style: solid;
 			border-width: 0 0 0 1px;
@@ -261,7 +265,7 @@
 			</aside>
 			<footer class="footer">
 				<div>
-					<h2 style="color:#000;font-family:inherit;font-size:14px;margin-left:8%;float:left">Ver. 16</h2>
+					<h2 style="color:#000;font-family:inherit;font-size:14px;margin-left:8%;float:left">Ver. 17</h2>
 					<img src="../Assets/images/footerlogo_new.png" style="float: right;margin-right: 23px;margin-top: -10px; height: 31px;   object-fit: contain;">
 					<h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px;margin-left: 12%;">Copyright © Flexicode Technologies (P) Ltd </h6>
 					<img src="../Assets/images/footerlogo_new.png" style="float: left;margin-top: -39px;margin-left: 109px;height: 28px;visibility: hidden;">
@@ -291,7 +295,7 @@
 									<i class="bx bxs-cog" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="Settings" aria-label="Settings" aria-describedby="tooltip32655"></i>
 								</a>
 
-								<ul class="dropdown-menu dropdown-menu-end" id="menusmaintance" style="height: 525px;overflow-y: auto;">
+								<ul class="dropdown-menu dropdown-menu-end" id="menusmaintance" style="overflow-y: auto;">
 								</ul>
 							</li>
 							<li class="nav-item dropdown-language dropdown lh-1 me-1">
@@ -437,10 +441,8 @@
 				</div>
 				<div class="content-wrapper">
 					@RenderBody()
-
 				</div>
 			</div>
-
 		</div>
 
 		<div class="layout-overlay layout-menu-toggle"></div>
@@ -523,24 +525,23 @@
 					var maintancemenu = "";
 					strmenu = ' <li class="menu-item">';
 					$.each(main_menu, function (mkey, mvalue) {
-						if (mvalue.menu_gid > 2) {
-							strmenu += '<li class="menu-item"><a class="menu-link menu-toggle" title="' + mvalue.menu_name + '"> <i class="' + mvalue.icon_path + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="' + mvalue.menu_name + '"></i> <span>' + mvalue.menu_name + '</span></a>';
-							strmenu += '<ul class="menu-sub">';
-							$.each(sub_menu, function (skey, svalue) {
-								if (mvalue.menu_gid == svalue.parent_menu_code) {
-									if (svalue.menu_code != "" && svalue.menu_url != "") {
-										strmenu += '<li class="menu-item"><a class="menu-link" href="' + svalue.menu_url + '" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span> </a></li>';
-									}
-									else {
-										if (svalue.menu_code == "" && svalue.menu_url == "") {
-											strmenu += '<li class="dropdown-item"><a href="#" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span><i class="fa fa-angle-left  pull-right"></i> </a>';
+						if (mvalue.menu_gid > 2) {							
+							  strmenu += '<li class="menu-item"><a class="menu-link menu-toggle" title="' + mvalue.menu_name + '"> <i class="' + mvalue.icon_path + '" data-bs-toggle="tooltip" data-bs-placement="bottom" title="' + mvalue.menu_name + '"></i> <span>' + mvalue.menu_name + '</span></a>';
+							  strmenu += '<ul class="menu-sub">';
+								$.each(sub_menu, function (skey, svalue) {
+									if (mvalue.menu_gid == svalue.parent_menu_code) {
+										if (svalue.menu_code != "" && svalue.menu_url != "") {
+											strmenu += '<li class="menu-item"><a class="menu-link" href="' + svalue.menu_url + '" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span> </a></li>';
+										}
+										else {
+											if (svalue.menu_code == "" && svalue.menu_url == "") {
+												strmenu += '<li class="dropdown-item"><a href="#" onclick="header_title(\'' + svalue.menu_name + '\',\'' + svalue.menu_code + '\',\'' + svalue.menu_code + '\');" title="' + svalue.menu_name + '"> <i class="' + svalue.UrlIcon + '"></i> <span>' + svalue.menu_name + '</span><i class="fa fa-angle-left  pull-right"></i> </a>';
 
+											}
 										}
 									}
-								}
-							});
-
-							strmenu += '</ul></li>';
+								});
+							strmenu += '</ul></li>';							
 						}
 						if (mvalue.menu_gid == 1) {
 							$.each(sub_menu, function (skey, svalue) {
@@ -560,8 +561,7 @@
 										maintancemenu += '<li class="menu-item"><a class="dropdown-item"  data-language="fr" href="' + svalue.menu_url + '" ><span> ' + svalue.menu_name + ' </span></a>';
 									}
 								}
-							});
-
+							});								
 							maintancemenu += '</ul></li>';
 						}
 					});
@@ -571,11 +571,6 @@
 					strmenu = "";
 				}
 			});
-			//if (sessionStorage.getItem("level1txt") != null) {
-			//	var myLabel = document.getElementById("orglvlNavigate");
-			//	myLabel.innerHTML = sessionStorage.getItem("level1txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level2txt") + "&nbsp;&nbsp;/&nbsp;&nbsp;" + sessionStorage.getItem("level3txt");
-			//}
-
 		});
 		var maxorglvl;
 		$(document).ajaxStart(function () {
@@ -705,269 +700,24 @@
 			}
 		}
 		function hideProgress() {
-				if (spinnerVisible) {
-						var spinner = $("div#spinner");
-						spinner.stop();
-						spinner.fadeOut("fast");
-						spinnerVisible = false;
-								$("div.k-grid").each(function () {
-
-								var grid = $(this).data("kendoGrid");
-								if (grid) {
-									var isSortable = grid.options.sortable;
-									var isFilterable = grid.options.filterable;
-
-									// Apply settings only if they are not already enabled
-									if (!isSortable || !isFilterable) {
-										grid.setOptions({
-										sortable: true,
-										filterable: true
-										});
-									}
-
-								}
-							});
-					}
-		}
-		function hideProgress_ver4() {
-	if (spinnerVisible) {
-		var spinner = $("div#spinner");
-		spinner.stop();
-		spinner.fadeOut("fast");
-		spinnerVisible = false;
-
-		var formatdatetimeGen = "dd-MM-yyyy"; 
-		var formatdatetime = sessionStorage.getItem("kendatetime") || formatdatetimeGen;
-		var formatdatetime1 = "{0:" + formatdatetime + "}";
-
-		$("div.k-grid").each(function () {
-			var grid = $(this).data("kendoGrid");
-			if (grid) {
-				var isSortable = grid.options.sortable;
-				var isFilterable = grid.options.filterable;
-
-				// Ensure sorting and filtering are enabled
-				if (!isSortable || !isFilterable) {
-					grid.setOptions({
-						sortable: true,
-						filterable: true
-					});
-				}
-
-				// Get the grid's data source
-				var dataSource = grid.dataSource;
-				var schemaFields = {};
-				var transformedData = [];
-
-				if (dataSource.data().length > 0) {
-					var sampleData = dataSource.data()[0]; // Get the first row to analyze keys
-
-					Object.keys(sampleData).forEach(function (key) {
-						if (key.toLowerCase().includes("date")) {
-							schemaFields[key] = { type: "date" };
-						}
-					});
-
-					// Convert string dates into actual Date objects
-					dataSource.data().forEach(function (item) {
-						var newItem = { ...item }; // Clone the object
-						Object.keys(schemaFields).forEach(function (dateKey) {
-							if (newItem[dateKey] && typeof newItem[dateKey] === "string") {
-
-								 newItem[dateKey] = kendo.parseDate(newItem[dateKey], "dd-MM-yyyy HH:mm:ss") || 
-													kendo.parseDate(newItem[dateKey], "yyyy-MM-dd") || 
-													new Date(newItem[dateKey]); 
-							}
-						});
-						transformedData.push(newItem);
-					});
-
-
-					// Apply schema update with transformed data
-					if (Object.keys(schemaFields).length > 0) {
-						grid.setOptions({
-							dataSource: {
-								data: transformedData,
-								schema: {
-									model: {
-										fields: schemaFields
-									},
-										parse: function (data) {
-										$.each(data, function (i, item) {
-													Object.keys(item).forEach(function (key) {
-
-														if (key.toLowerCase().includes("date")) { // Check if the key contains 'date'
-															alert(item[key]);
-															item[key] =  kendo.parseDate(item[key], formatdatetime);//item[key];//"16-01-2025 12:00:00 PM";
-															alert(item[key]);
-
-														}
-													});
-										});
-										return data;
-									}
-								}
-							},
-							columns: grid.columns.map(column => {
-								if (schemaFields[column.field]) {
-									return {
-										...column,
-										// format: "{0:dd-MM-yyyy}",  // Ensure proper display format
-										// template: "#= kendo.toString(" + column.field + ", 'dd-MM-yyyy') #",
-											format: formatdatetime1,
-											filterable: {
-												ui: "datetimepicker",
-												},        
-									};
-								}
-								return column;
-							})
-						});
-					}
-				}
-			}
-				//grid.refresh();
-		});
-
-	}
-}
-
-		function hideProgress_ver2() {
-	if (spinnerVisible) {
-		var spinner = $("div#spinner");
-		spinner.stop();
-		spinner.fadeOut("fast");
-		spinnerVisible = false;
-
-		var formatdatetimeGen = "dd-MM-yyyy"; 
-		var formatdatetime = sessionStorage.getItem("kendatetime");
-		var formatdatetime1 = "{0:" + formatdatetime + "}";
-		$("div.k-grid").each(function () {
-			var grid = $(this).data("kendoGrid");
-			if (grid) {
-				var isSortable = grid.options.sortable;
-				var isFilterable = grid.options.filterable;
-
-				// Ensure sorting and filtering are enabled
-				if (!isSortable || !isFilterable) {
-					grid.setOptions({
-						sortable: true,
-						filterable: true
-					});
-				}
-
-				// Get the grid's data source
-				var dataSource = grid.dataSource;
-				var schemaFields = {};
-				var transformedData = [];
-
-				if (dataSource.data().length > 0) {
-					var sampleData = dataSource.data()[0]; // Get the first row to analyze keys
-
-					Object.keys(sampleData).forEach(function (key) {
-						if (key.toLowerCase().includes("date")) {
-							schemaFields[key] = { type: "date" };
-						}
-					});
-
-					// Convert string dates into actual Date objects
-					dataSource.data().forEach(function (item) {
-						var newItem = { ...item }; // Clone the object
-						Object.keys(schemaFields).forEach(function (dateKey) {
-							if (newItem[dateKey] && typeof newItem[dateKey] === "string") {
-
-								newItem[dateKey] = kendo.parseDate(newItem[dateKey], "dd-MM-yyyy");//new Date(newItem[dateKey]);
-							}
-						});
-						transformedData.push(newItem);
-					});
-
-					// Apply schema update with transformed data
-					if (Object.keys(schemaFields).length > 0) {
-						grid.setOptions({
-							dataSource: {
-								data: transformedData,
-								schema: {
-									model: {
-										fields: schemaFields
-									}
-								}
-							}
-						});
-					}
-				}
-			}
-		});
-	}
-}
-
-	   function hideProgress_ver1() {
-		 var formatdatetimeGen = "dd-MM-yyyy"; 
-		var formatdatetime = sessionStorage.getItem("kendatetime");
-		var formatdatetime1 = "{0:" + formatdatetime + "}";
-				if (spinnerVisible) {
-				var spinner = $("div#spinner");
-				spinner.stop();
-				spinner.fadeOut("fast");
-				spinnerVisible = false;
-
-				$("div.k-grid").each(function () {
+			if (spinnerVisible) {
+				 var spinner = $("div#spinner");
+				 spinner.stop();
+				 spinner.fadeOut("fast");
+				 spinnerVisible = false;
+				 $("div.k-grid").each(function () {
 					var grid = $(this).data("kendoGrid");
 					if (grid) {
 						var isSortable = grid.options.sortable;
 						var isFilterable = grid.options.filterable;
-
-						// Ensure sorting and filtering are enabled
 						if (!isSortable || !isFilterable) {
-							grid.setOptions({
+				  		   	grid.setOptions ({
 								sortable: true,
 								filterable: true
 							});
 						}
-
-						// Dynamically set data types based on key names
-						var dataSource = grid.dataSource;
-						var schemaFields = {};
-
-						if (dataSource.data().length > 0) {
-							var sampleData = dataSource.data()[0]; // Get the first row to analyze keys
-
-							Object.keys(sampleData).forEach(function (key) {
-								if (key.toLowerCase().includes("date")) {
-									schemaFields[key] = { type: "date" };
-								}
-							});
-
-							// Apply schema update if there are changes
-							if (Object.keys(schemaFields).length > 0) {
-								grid.setOptions({
-									dataSource: {
-										data: dataSource.data(),
-										schema: {
-											model: {
-												fields: schemaFields
-											},
-										parse: function (data) {
-										$.each(data, function (i, item) {
-													Object.keys(item).forEach(function (key) {
-
-														if (key.toLowerCase().includes("date")) { // Check if the key contains 'date'
-															alert(item[key]);alert(key);
-															item[key] =  kendo.parseDate(item[key], formatdatetime);//item[key];//"16-01-2025 12:00:00 PM";
-															alert(item[key]);
-
-														}
-													});
-										});
-										return data;
-									}
-										}
-									}
-								});
-							}
-						}
 					}
-				});
+				 });
 			}
 		}
 
@@ -984,7 +734,6 @@
 				value: new Date(),
 				format: "yyyy-MM-dd"
 			});
-
 		}
 
 		function Signout() {
@@ -1107,13 +856,10 @@
 					}
 				}
 			});
-
 			$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 		}
 		function setDefaultValues(e) {
-
 			if (e.type != "click" || e.type == undefined) {
-
 				if (e.action == "" || e.action == undefined) {
 					for (var i = 0; i < e.sender._data.length; i++) {
 						var rows = e.sender.tbody.children();
@@ -1149,7 +895,6 @@
 		function getlocalStorage(key) {
 			if (key == "getlocalStorage") {
 				var data = localStorage.getItem(key);
-
 				return JSON.parse(data)
 			} else {
 				var guid = localStorage.getItem(key);
@@ -1428,30 +1173,6 @@
 		document.addEventListener("mousemove", resetSessionTimer);
 		document.addEventListener("keypress", resetSessionTimer);
 		resetSessionTimer();
-
-		//window.addEventListener('load', function () {
-		//	// Set a flag in sessionStorage indicating the page has loaded
-		//	sessionStorage.setItem('isPageLoaded', 'true');
-
-		//	// Check if the window was reloaded (optional, for more precise control)
-		//	if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-		//		// Page was reloaded, clear the flag
-		//		sessionStorage.removeItem('isPageLoaded');
-		//	}
-		//});
-
-		//// Handle beforeunload event
-		//window.addEventListener('beforeunload', function (e) {
-		//	if (sessionStorage.getItem('isPageLoaded')) {
-		//		// Page is being closed, not just navigated away or reloaded
-		//		lastloginsession("logout");
-		//		// Clear the flag to prevent multiple calls
-		//		sessionStorage.removeItem('isPageLoaded');
-		//	} else {
-		//		// Page is being reloaded or navigated away from
-		//		sessionStorage.removeItem('isPageLoaded');
-		//	}
-		//});
 
 		function isNumberKey(evt) {
 			var charCode = (evt.which) ? evt.which : event.keyCode
