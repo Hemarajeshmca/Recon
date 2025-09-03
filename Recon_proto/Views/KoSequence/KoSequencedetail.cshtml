@@ -477,7 +477,15 @@
 					width: 30,
 					attributes: { style: "text-align: center" },
 					filterable: false,
-					template: '#=sel_checkbox(data)#'
+					template: function (dataItem) {
+						const checked = dataItem.hold_flag_desc ? "checked" : "";
+						if (dataItem.parentId != null) {
+							return `<input type="checkbox" class="hold-flag" data-id="${dataItem.id}" ${checked} />`;
+						}
+						else {
+							return '';
+						}
+					}
 				},
 				{
 					field: "Info",
@@ -520,15 +528,14 @@
 			return '';
 		}
 	}
-	function sel_checkbox(data) {
-		var isChecked1 = data.parentId;
-		var con1 = "";
-		if (isChecked1 != null) {
-			return '<input id="chk_sel1_' + data.id + '"  name = "hold_flag_desc" type="checkbox"/> ';
-		}else {
-			return '<input id="chk_sel1_' + data.id + '"  style="display:none" name = "hold_flag_desc" type="checkbox"/> ';
-		}
-	}
+	$(document).on("change", ".hold-flag", function () {
+		const treeList = $("#treeviewsystem").data("kendoTreeList");
+		const row = $(this).closest("tr");         // row element
+		const dataItem = treeList.dataItem(row);   // row data object
+
+		dataItem.set("hold_flag_desc", $(this).is(":checked")); // update field
+	});
+	
 	function sel_info(data) {
 		var isChecked1 = data.parentId;
 		var con1 = "";
@@ -1106,7 +1113,7 @@
 			var ko_seq_ref_code = item.master_code;
 			var ko_seq_type =item.type;
 			var in_koseq_hold = "";
-			if ($('#chk_sel1_' + item.id).is(":checked")) {
+			if (item.hold_flag_desc == true) {
 				in_koseq_hold = "Y";
 			} else {
 				in_koseq_hold = "N";

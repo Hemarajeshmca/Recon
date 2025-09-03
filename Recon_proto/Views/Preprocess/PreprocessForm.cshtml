@@ -64,9 +64,9 @@
 			margin-bottom: 9px;
 		}
 
-			.accordion:last-child {
-				margin-bottom: 0;
-			}
+		.accordion:last-child {
+			margin-bottom: 0;
+		}
 
 		.accordion-label {
 			display: flex;
@@ -81,18 +81,18 @@
 			color: white;
 		}
 
-			.accordion-label:hover {
-				background: rgb(135, 46, 123)
-			}
+		.accordion-label:hover {
+			background: rgb(135, 46, 123)
+		}
 
-			.accordion-label::after {
-				content: "\276F";
-				width: 16px;
-				height: 16px;
-				text-align: center;
-				-webkit-transition: all 0.3s;
-				transition: all 0.3s;
-			}
+		.accordion-label::after {
+			content: "\276F";
+			width: 16px;
+			height: 16px;
+			text-align: center;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
 
 		.accordion-content {
 			max-height: 0;
@@ -103,20 +103,20 @@
 			transition: all 0.3s;
 		}
 
-			.accordion-content p {
-				margin: 0;
-				color: rgba(4,57,94,.7);
-				font-size: 18px;
-			}
+		.accordion-content p {
+			margin: 0;
+			color: rgba(4,57,94,.7);
+			font-size: 18px;
+		}
 
 		input:checked + .accordion-label {
 			background: rgba(4,57,94,1);
 		}
 
-			input:checked + .accordion-label::after {
-				-webkit-transform: rotate(90deg);
-				transform: rotate(90deg);
-			}
+		input:checked + .accordion-label::after {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
 
 		input:checked ~ .accordion-content {
 			max-height: 100vh;
@@ -131,6 +131,51 @@
 		.validated {
 			background-color: red; /* Change to desired color */
 			color: white; /* Change to desired text color */
+		}
+
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 34px;
+			height: 18px;
+		}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			background-color: #ccc;
+			transition: 0.4s;
+			border-radius: 34px;
+			top: 4px;
+			left: -2px;
+			right: 0;
+			bottom: 0;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 14px;
+			width: 14px;
+			left: 2px;
+			bottom: 2px;
+			background-color: white;
+			transition: 0.4s;
+			border-radius: 50%;
+		}
+
+		input:checked + .slider {
+			background-color: rgb(135,46,123);
+		}
+
+		input:checked + .slider:before {
+			transform: translateX(16px);
 		}
 	</style>
 </head>
@@ -259,12 +304,28 @@
 											<div class="col-sm-8">
 												<label for="organization" class="form-label">
 													<span>Expression</span>&nbsp;&nbsp;&nbsp;&nbsp;
-													<input class="form-check-input" style="margin: 0px;" type="checkbox" onclick="cumulativeflagjs()" value="false" name="cumulativeflag" id="cumulativeflag" />&nbsp;&nbsp;
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="cumulativeflag" id="cumulativeflag" />&nbsp;&nbsp;
 													<span id="lblcumulativeflag" style="font-size:12px;">Cumulative Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
 													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="openingflag" id="openingflag" />&nbsp;&nbsp;
 													<span id="lblopeningflag" style="font-size:12px;">Opening Flag</span>
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="groupflag" id="groupflag" />&nbsp;&nbsp;
+													<span id="lblgroupflag" style="font-size:12px;">Group Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="aggflag" id="aggflag" />&nbsp;&nbsp;
+													<span id="lblaggflag" style="font-size:12px;">Agg Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
 												</label>
 												<textarea id="CmbExpression" name="CmbExpression" rows="4" style="height: 32px;width: 818px;border-radius: 0.375rem;"></textarea>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headingexpressiongrid">
+								<input type="checkbox" name="radio-a" id="check18" style="display:none">
+								<label class="accordion-label" for="check18">&nbsp;&nbsp;&nbsp;Expression</label>
+								<div id="headingexpressiongrid" class="accordion-content">
+									<div class="row" style="margin-bottom:5px;">
+										<div class="col-xs-12" style="margin-top:5px;">
+											<div id="grid_expression">
 											</div>
 										</div>
 									</div>
@@ -275,11 +336,44 @@
 								<label class="accordion-label" for="check14">&nbsp;&nbsp;&nbsp;Lookup Expression</label>
 								<div id="headingexpressionlookup" class="accordion-content">
 									<div class="accordion-body" style="padding-left:15px;">
+										<div class="row" style="padding-bottom:2px">
+											<div class="col-sm-6" style="margin-top:-17px;">
+												<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+												<select id="cmblookupdataset1" class="form-select form-control">
+												</select>
+											</div>											
+										</div>
+										<div class="row" style="margin-bottom:5px;">
+											<div class="col-xs-12" style="margin-top:5px;">
+												<div id="grid_expression1">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headingexpressionlookupAgg">
+								<input type="checkbox" name="radio-a" id="check19" style="display:none">
+								<label class="accordion-label" for="check19">&nbsp;&nbsp;&nbsp;Lookup Expression</label>
+								<div id="headingexpressionlookupAgg" class="accordion-content">
+									<div class="accordion-body" style="padding-left:15px;">
 										<div class="row" style="padding-bottom:10px">
 											<div class="col-sm-6">
 												<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-												<select id="cmblookupdataset1" class="form-select form-control" onchange="lookupchange1()">
+												<select id="cmblookupdataset2" class="form-select form-control" onchange="lookupchange1()">
 												</select>
+											</div>
+											<div class="col-sm-6" style="margin-top:34px;">
+												<label for="organization" class="form-label">
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="cumulativeflag1" id="cumulativeflag1" />&nbsp;&nbsp;
+													<span id="lblcumulativeflag1" style="font-size:12px;">Cumulative Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="openingflag1" id="openingflag1" />&nbsp;&nbsp;
+													<span id="lblopeningflag1" style="font-size:12px;">Opening Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="groupflag1" id="groupflag1" />&nbsp;&nbsp;
+													<span id="lblgroupflag1" style="font-size:12px;">Group Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+													<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="aggflag1" id="aggflag1" />&nbsp;&nbsp;
+													<span id="lblaggflag1" style="font-size:12px;">Agg Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+												</label>
 											</div>
 										</div>
 										<div class="row">
@@ -367,6 +461,37 @@
 									<div class="col-xs-12" style="margin-top:5px;">
 										<div id="gd_lookupfilter">
 											<div id="grid_lookupfilter">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headinglookupaggexp">
+								<input type="checkbox" name="radio-a" id="check16" style="display:none">
+								<label class="accordion-label" for="check16">&nbsp;&nbsp;&nbsp;Aggregation Lookup Grouping</label>
+								<div class="accordion-content" id="headinglookupaggexp">
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_aggexplookup">
+											<div id="grid_aggexplookup">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headinglookuporder">
+								<input type="checkbox" name="radio-a" id="check17" style="display:none">
+								<label class="accordion-label" for="check17">&nbsp;&nbsp;&nbsp;Lookup Order</label>
+								<div class="accordion-content" id="headinglookuporder">
+									<div class="col-sm-6">
+										<label for="" class="form-label">Lookup Order By&nbsp;</label>
+										<div style="margin-left:2px;margin-top:5px">
+											<input type="radio" id="reconorderby1" name="reconorderby" value="ASC">&nbsp;Ascending &nbsp;
+											<input type="radio" id="reconorderby2" name="reconorderby" value="DESC" style="margin-left: 10px;">&nbsp;Descending&nbsp;
+										</div>
+									</div>
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_lookuporder">
+											<div id="grid_lookuporder">
 											</div>
 										</div>
 									</div>
@@ -503,11 +628,15 @@
 		$("#headinglookupfilterExp").hide();
 		$("#headingexpression").hide();
 		$("#headingexpressionlookup").hide();
+		$("#headingexpressiongrid").hide();
 		$("#headingcumexp").hide();
 		$("#headingaggexp").hide();
 		$("#headingcomparsion").hide();
 		$("#headingsourcefilter").hide();
 		$("#headingcomparisionfilter").hide();
+		$("#headinglookupaggexp").hide();
+		$("#headinglookuporder").hide();
+		$("#headingexpressionlookupAgg").hide();
 		getGridComboList();
 		$("#btncoll").hide();
 	});
@@ -590,7 +719,6 @@
 						text: item.masterName
 					}));
 				});
-
 			}
 		});
 		// postprocessflag flag
@@ -638,7 +766,11 @@
 			grid_lookupfilter([]);
 			grid_lookupfilterexp([]);
 			grid_cumexporder([]);
+			grid_lookuporder([]);
 			grid_aggexp([]);
+			grid_aggexplookup([]);
+			grid_expression([]);
+			grid_expression1([]);
 			grid_preprocesscondition([]);
 			grid_sourcefilter([]);
 			grid_comparisionfilter([]);
@@ -712,6 +844,8 @@
 			}
 		}
 	}
+</script>
+<script>
 	function reconcode() {
 		//dataset combo
 		var reconcode = $("#cmbrecon").val();
@@ -746,6 +880,19 @@
 				$.each(res, function (index, item) {
 					if (item.dataset_type == "L") {
 						$("#cmblookupdataset1").append($('<option>', {
+							value: item.dataset_code,
+							text: item.dataset_name
+						}));
+					}
+				});
+				$("#cmblookupdataset2").empty();
+				$("#cmblookupdataset2").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.dataset_type == "L") {
+						$("#cmblookupdataset2").append($('<option>', {
 							value: item.dataset_code,
 							text: item.dataset_name
 						}));
@@ -937,7 +1084,7 @@
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
-							ident_value_flag: { type: "string" },
+							ident_value_flag: { type: "string", editable: false },
 							ident_value: { type: "string" },
 							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
@@ -1052,8 +1199,18 @@
 			},
 			{
 				field: "ident_value_flag",
-				title: "ident_value_flag",
-				hidden: true,
+				title: "Value",
+				width: 60,
+				template: function (dataItem) {
+					var isChecked = dataItem.ident_value_flag == "Y" ? 'checked' : '';
+					return `
+					<center>
+						<label class="switch">
+							<input type="checkbox" class="chkbx9" ${isChecked}>
+							<span class="slider round"></span>
+						</label>
+					</center>`;
+				},
 			},
 			{
 				field: "ident_value",
@@ -1126,6 +1283,20 @@
 				}
 			})
 		})
+		$(function () {
+			$('#grid_filter').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_filter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('ident_value_flag', 'Y');
+				}
+				else {
+					dataItem._set('ident_value_flag', 'N');
+				}
+			})
+		})
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
@@ -1174,11 +1345,9 @@
 				if (datafield == "ident_value") {
 					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.ident_value_input;
-						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
-						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -1305,7 +1474,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '' });
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '',ident_value_flag:"Y" });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -1329,7 +1498,7 @@
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
-							ident_value_flag: { type: "string" },
+							ident_value_flag: { type: "string", editable: false },
 							ident_value: { type: "string" },
 							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
@@ -1383,7 +1552,7 @@
 							if ($("#txtmode").val() == "View") {
 								return "";
 							} else {
-								return "<a href='' onclick='myDeleteJsfilterlookup()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+								return "<a href='' onclick='myDeleteJsfilterlookup1()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
 							}
 						}
 						//template: "<a href='' onclick='myDeleteJsfilter()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
@@ -1444,8 +1613,18 @@
 			},
 			{
 				field: "ident_value_flag",
-				title: "ident_value_flag",
-				hidden: true,
+				title: "Value",
+				width: 60,
+				template: function (dataItem) {
+					var isChecked = dataItem.ident_value_flag == "Y" ? 'checked' : '';
+					return `
+					<center>
+						<label class="switch">
+							<input type="checkbox" class="chkbx9" ${isChecked}>
+							<span class="slider round"></span>
+						</label>
+					</center>`;
+				},
 			},
 			{
 				field: "ident_value",
@@ -1518,6 +1697,20 @@
 				}
 			})
 		})
+		$(function () {
+			$('#grid_lookupfilter').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_lookupfilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('ident_value_flag', 'Y');
+				}
+				else {
+					dataItem._set('ident_value_flag', 'N');
+				}
+			})
+		})
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
@@ -1567,11 +1760,9 @@
 				if (datafield == "ident_value") {
 					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.ident_value_input;
-						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
-						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -1697,9 +1888,97 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '' });
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '',ident_value_flag: "Y" });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
+	}
+	function myDeleteJsfilterlookup1() {
+		var grid = $("#grid_lookupfilter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessfilter_gid = parseInt(model.preprocessfilter_gid);
+		if (preprocessfilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_recon_code = $("#cmbrecon").val();
+						var cmbfiltername = model.filter_field_code;
+						var extractcriteria = model.filter_criteria;
+						var identifiercriteria = model.ident_criteria;
+						var identifiervalue = model.ident_value;
+						var in_filter_seqno = model.filter_seqno
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var ident_value_flag = "";
+						var preprocessfilter_gid = model.preprocessfilter_gid;
+						var status = "Y";
+						var in_open_flag = "";
+						if ($('#chk_sel_' + model.preprocessfilter_gid).is(":checked")) {
+							in_open_flag = "Y";
+						} else {
+							in_open_flag = "N";
+						}
+						var in_close_flag = "";
+						if ($('#chk_sel1_' + model.preprocessfilter_gid).is(":checked")) {
+							in_close_flag = "Y";
+						} else {
+							in_close_flag = "N";
+						}
+						var in_join_condition = model.join_condition;
+						var in_filter_applied_on = "LOOKUP";
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/filterdatasave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
+								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+								in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
 	}
 	//----lookup filter exp----------
 	function grid_lookupfilterexp(data) {
@@ -1721,7 +2000,7 @@
 							filter_field: { type: "string" },
 							filter_criteria: { type: "string" },
 							ident_criteria: { type: "string" },
-							ident_value_flag: { type: "string" },
+							ident_value_flag: { type: "string", editable: false },
 							ident_value: { type: "string" },
 							ident_value_code: { type: "string" },
 							active_status: { type: "string" },
@@ -1836,8 +2115,18 @@
 			},
 			{
 				field: "ident_value_flag",
-				title: "ident_value_flag",
-				hidden: true,
+				title: "Value",
+				width: 60,
+				template: function (dataItem) {
+					var isChecked = dataItem.ident_value_flag == "Y" ? 'checked' : '';
+					return `
+					<center>
+						<label class="switch">
+							<input type="checkbox" class="chkbx9" ${isChecked}>
+							<span class="slider round"></span>
+						</label>
+					</center>`;
+				},
 			},
 			{
 				field: "ident_value",
@@ -1910,6 +2199,20 @@
 				}
 			})
 		})
+		$(function () {
+			$('#grid_lookupfilterexp').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_lookupfilterexp').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('ident_value_flag', 'Y');
+				}
+				else {
+					dataItem._set('ident_value_flag', 'N');
+				}
+			})
+		})
 		function OnEdit(e) {
 			try {
 				setDefaultValues(e);
@@ -1921,7 +2224,12 @@
 	}
 	function combo_editor_identifiervaluec2(container, cmbid, datasource, datafield, code_datafield, code_flag, grid_id) {
 		var arr1 = [];
-		var datasetcode = $("#cmblookupdataset1").val();
+		if($("#Cmbprocessmethod").val() == "QCD_LOOKUP_EXPRESSION"){
+			var datasetcode = $("#cmblookupdataset1").val();
+		} else {
+			var datasetcode = $("#cmblookupdataset2").val();
+		}
+		
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
@@ -1959,11 +2267,9 @@
 				if (datafield == "ident_value") {
 					if (datafield == "ident_value" && selectedItem.ident_value_input != undefined) {
 						selectedItem[datafield] = selectedItem.ident_value_input;
-						selectedItem[code_flag] = 'Y';
 					} else {
 						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
-						selectedItem[code_flag] = 'N';
 					}
 				}
 			}
@@ -1972,7 +2278,11 @@
 	}
 	function combo_editor_man_process2(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
-		var datasetcode = $("#cmblookupdataset1").val();
+		if($("#Cmbprocessmethod").val() == "QCD_LOOKUP_EXPRESSION"){
+			var datasetcode = $("#cmblookupdataset1").val();
+		} else {
+			var datasetcode = $("#cmblookupdataset2").val();
+		}
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
@@ -2076,7 +2386,7 @@
 			}
 		});
 	}
-	function addRowlookupfilter() {
+	function addRowlookupfilter1() {
 		var grid = $("#grid_lookupfilterexp").data("kendoGrid");
 		var dataSource = grid.dataSource;
 		var max = 0;
@@ -2089,7 +2399,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '' });
+		dataSource.add({ filter_seqno: newSeqNo, preprocessfilter_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N", ident_value_code: '',ident_value_flag: "Y" });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -2250,7 +2560,7 @@
 			}],
 			editable: true,
 		});
-		
+
 	}
 	$(function () {
 		$('#grid_lookupfield').on('click', '.chkbx1', function () {
@@ -2324,7 +2634,7 @@
 			filter: "contains",
 			dataSource: arr4,
 			change: function (e) {
-				var cmb_value = this.value();				
+				var cmb_value = this.value();
 				var cmb_var = $("#" + grid_id).data("kendoGrid");
 				var selectedItem = cmb_var.dataItem(cmb_var.select());
 				var combobox_data = $("#" + cmbid).data("kendoComboBox");
@@ -2411,7 +2721,6 @@
 		});
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
-	
 	function addRowlookup() {
 		var grid = $("#grid_lookupfield").data("kendoGrid");
 		var dataSource = grid.dataSource;
@@ -3429,7 +3738,7 @@
 								preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
 								lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 								set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
-									in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+								in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
 								in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
 								postprocessflag: postprocessflag
 							}),
@@ -3480,25 +3789,23 @@
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
-			if (model.ident_value_input != undefined) {
-				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value_input;
-			} else if (model.ident_value_code == "") {
-				var ident_value_flag = 'Y';
-				if (model.ident_value == undefined) {
-					var identifiervalue = model.ident_value_code;
-				} else {
-					var identifiervalue = model.ident_value;
-				}
-			} else {
 				if (model.ident_value_flag == 'Y') {
 					var ident_value_flag = model.ident_value_flag;
-					var identifiervalue = model.ident_value_code;
+					var identifiervalue = model.ident_value;
 				} else {
 					var ident_value_flag = 'N';
+					if( model.ident_value_code =='')
+						{
+							$.alert({
+								title: 'Recon',
+								content: 'Filter value not selected',
+								type: 'red',
+							});
+						return false;
+						}
 					var identifiervalue = model.ident_value_code;
 				}
-			}
+
 			var in_filter_seqno = model.filter_seqno
 			var action = "";
 			var action_by = sessionStorage.getItem("usrname");
@@ -3554,10 +3861,10 @@
 	}
 	function savefilterlookup() {
 		try {
-			if($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION'){
+			if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION' || $("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
 				var grid = $("#grid_lookupfilterexp").data("kendoGrid");
 				var model = grid.dataItem($(event.target).closest("tr"));
-			}else{
+			} else {
 				var grid = $("#grid_lookupfilter").data("kendoGrid");
 				var model = grid.dataItem($(event.target).closest("tr"));
 			}
@@ -3567,25 +3874,22 @@
 			var cmbfiltername = model.filter_field_code;
 			var extractcriteria = model.filter_criteria;
 			var identifiercriteria = model.ident_criteria;
-			if (model.ident_value_input != undefined) {
-				var ident_value_flag = 'Y';
-				var identifiervalue = model.ident_value_input;
-			} else if (model.ident_value_code == "") {
-				var ident_value_flag = 'Y';
-				if (model.ident_value == undefined) {
-					var identifiervalue = model.ident_value_code;
-				} else {
-					var identifiervalue = model.ident_value;
-				}
-			} else {
-				if (model.ident_value_flag == 'Y') {
+			if (model.ident_value_flag == 'Y') {
 					var ident_value_flag = model.ident_value_flag;
-					var identifiervalue = model.ident_value_code;
+					var identifiervalue = model.ident_value;
 				} else {
 					var ident_value_flag = 'N';
+					if( model.ident_value_code =='')
+						{
+							$.alert({
+								title: 'Recon',
+								content: 'Filter value not selected',
+								type: 'red',
+							});
+						return false;
+						}
 					var identifiervalue = model.ident_value_code;
 				}
-			}
 			var in_filter_seqno = model.filter_seqno
 			var action = "";
 			var action_by = sessionStorage.getItem("usrname");
@@ -3727,9 +4031,9 @@
 		}
 	}
 	function myDeleteJsfilterlookup() {
-		var grid = $("#grid_lookupfilter").data("kendoGrid");
-		var model = grid.dataItem($(event.target).closest("tr"));
-		var preprocessfilter_gid = parseInt(model.preprocessfilter_gid);
+			var grid = $("#grid_lookupfilterexp").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var preprocessfilter_gid = parseInt(model.preprocessfilter_gid);
 		if (preprocessfilter_gid == 0) {
 			grid.dataSource.remove(model);
 		} else {
@@ -3829,8 +4133,8 @@
 			data: JSON.stringify({ preprocess_code: cmbpreprocess_code, in_user_code: in_user_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
-				var result = JSON.parse(response);
-				if (result != null) {
+				 var result = JSON.parse(response);
+				 if (result != null) {
 					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
 					$("#preprocessgid").val(result.header[0].preprocess_gid)
 					$("#cmbrecon").val(result.header[0].recon_code);
@@ -3844,14 +4148,18 @@
 					$("#cmbgetrecon").val(result.header[0].get_recon_field);
 					jQuery('#cmbgetrecon').trigger("change");
 					$("#Cmbfunction").val(result.header[0].process_function);
-					if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+					if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION')
+					{
 						$("#Cmbreconfield").val(result.header[0].set_recon_field);
 					} else {
 						$("#Cmbreconfield1").val(result.header[0].set_recon_field);
 					}
 					if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
-						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
-						$("#CmbExpression").val(result.header[0].process_expression)
+						if (result.reconexp.length > 0) {
+							grid_expression(result.reconexp)
+						} else {
+							grid_expression([])
+						}
 					}
 					if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
 						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
@@ -3860,13 +4168,20 @@
 					if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
 						$("#CmbExpression").val(result.header[0].process_expression);
 						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
+							if (result.header[0].cumulative_flag == "Y") {
+								$('#cumulativeflag').attr('checked', true);
+							}
+							if (result.header[0].opening_flag == "Y") {
+								$('#openingflag').attr('checked', true);
+							}
+							if (result.header[0].group_flag == "Y") {
+								$('#groupflag').attr('checked', true);
+							}
+							if (result.header[0].agg_flag == "Y") {
+								$('#aggflag').attr('checked', true);
+							}
 					}
-					if (result.header[0].cumulative_flag == "Y") {
-						$('#cumulativeflag').attr('checked', true);
-					}
-					if (result.header[0].opening_flag == "Y") {
-						$('#openingflag').attr('checked', true);
-					}
+					
 					$("#postprocessflag").val(result.header[0].postprocess_flag)
 					$("#querydata").val(result.header[0].process_query);
 					$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
@@ -3904,7 +4219,7 @@
 					else {
 						grid_lookupfilter([]);
 					}
-					if (result.condition.length > 0) {
+					if (result.condition.length > 0){
 						grid_lookup(result.condition)
 					} else {
 						grid_lookup([]);
@@ -3946,7 +4261,8 @@
 						grid_comparisionfilter([]);
 					}
 
-					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP')
+					{
 						$("#CmbExpression").val(result.header[0].process_expression);
 						$("#sourcedataset").val(result.header[0].source_dataset_code);
 						$("#comdataset").val(result.header[0].comparison_dataset_code);
@@ -3955,33 +4271,89 @@
 					if (result.header[0].recorderby_type == "ASC")
 					{
 						$("#reconorderby1").prop("checked", true);
-					}
-					else
-					{
+					}else {
 						$("#reconorderby2").prop("checked", true);
 					}
-					if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+					if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION')
+					{
 						$("#CmbExpression1").val(result.header[0].process_expression);
 						$("#cmblookupdataset1").val(result.header[0].lookup_dataset_code);
 						jQuery('#cmblookupdataset1').trigger("change");
 						$("#Cmblookupdatasetfield1").val(result.header[0].lookup_return_field);
-						if (result.filterlookup.length > 0) {
+						if (result.filterlookup.length > 0)
+						{
 							grid_lookupfilterexp(result.filterlookup)
-						} else {
+						}
+						else
+						{
 							grid_lookupfilterexp([]);
 						}
+						if (result.lookupexp.length > 0) {
+							grid_expression1(result.lookupexp)
+						} else {
+							grid_expression1([])
+						}
 					}
-					if ($("#txtmode").val() == "View") {
+					if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG')
+					{
+						$("#CmbExpression1").val(result.header[0].process_expression);
+						$("#cmblookupdataset2").val(result.header[0].lookup_dataset_code);
+						jQuery('#cmblookupdataset2').trigger("change");
+						$("#Cmblookupdatasetfield1").val(result.header[0].lookup_return_field);
+						if (result.lookupaggexp.length > 0)
+						{
+							grid_aggexplookup(result.lookupaggexp)
+						} else
+						{
+							grid_aggexplookup([]);
+						}
+						if (result.filterlookup.length > 0)
+						{
+							grid_lookupfilterexp(result.filterlookup)
+						} else
+						{
+							grid_lookupfilterexp([]);
+						}
+						if (result.lookuporder.length > 0)
+						{
+							grid_lookuporder(result.lookuporder)
+						} else {
+							grid_lookuporder([]);
+						}
+						if (result.header[0].recorderby_type == "ASC")
+						{
+							$("#reconorderby1").prop("checked", true);
+						}else {
+							$("#reconorderby2").prop("checked", true);
+						}	
+						if (result.header[0].cumulative_flag == "Y") {
+							$('#cumulativeflag1').attr('checked', true);
+						}
+						if (result.header[0].opening_flag == "Y") {
+							$('#openingflag1').attr('checked', true);
+						}
+						if (result.header[0].group_flag == "Y") {
+							$('#groupflag1').attr('checked', true);
+						}
+						if (result.header[0].agg_flag == "Y") {
+							$('#aggflag1').attr('checked', true);
+						}
+					}
+					if ($("#txtmode").val() == "View")
+					{
 						$("#grid_filter .k-grid-toolbar").hide();
 						$("#grid_lookup .k-grid-toolbar").hide();
 						$("#grid_lookuprecon .k-grid-toolbar").hide();
 						$("#grid_lookupfilter .k-grid-toolbar").hide();
-						$("#grid_lookupfield .k-grid-toolbar").hide
+						$("#grid_lookupfield .k-grid-toolbar").hide();
 						$("#grid_cumexporder .k-grid-toolbar").hide();
 						$("#grid_aggexp .k-grid-toolbar").hide();
 						$("#grid_preprocesscondition .k-grid-toolbar").hide();
 						$("#grid_sourcefilter .k-grid-toolbar").hide();
 						$("#grid_comparisionfilter .k-grid-toolbar").hide();
+						$("#grid_lookuporder .k-grid-toolbar").hide();
+						$("#grid_aggexplookup .k-grid-toolbar").hide();
+						$("#grid_lookupfilterexp .k-grid-toolbar").hide();
 					}
 				}
 				else {
@@ -3991,7 +4363,11 @@
 					grid_lookupfield([]);
 					grid_lookupfilter([]);
 					grid_cumexporder([]);
+					grid_lookuporder([]);
 					grid_aggexp([]);
+					grid_aggexplookup([]);
+					grid_expression([]);
+					grid_expression1([]);
 					grid_preprocesscondition([]);
 					grid_sourcefilter([]);
 					grid_comparisionfilter([]);
@@ -4001,7 +4377,6 @@
 				alert(er)
 				console.log(er)
 			}
-
 		});
 	}
 	function lookupchange() {
@@ -4040,7 +4415,7 @@
 		});
 	}
 	function lookupchange1() {
-		var datasetcode = $("#cmblookupdataset1").val();
+		var datasetcode = $("#cmblookupdataset2").val();
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
@@ -4570,12 +4945,32 @@
 			var muti_lookup_flag = "";
 			var in_cumulative_flag = "";
 			var in_opening_flag = "";
+			var in_group_flag = "";
+			var in_agg_flag = "";
 			var recorderby_type="";
 			if ($('#cumulativeflag').is(":checked")) {
 				in_cumulative_flag = "Y";
 			}
 			if ($('#openingflag').is(":checked")) {
 				in_opening_flag = "Y";
+			}
+			if ($('#groupflag').is(":checked")) {
+				in_group_flag = "Y";
+			}
+			if ($('#aggflag').is(":checked")) {
+				in_agg_flag = "Y";
+			}
+			if ($('#cumulativeflag1').is(":checked")) {
+				in_cumulative_flag = "Y";
+			}
+			if ($('#openingflag1').is(":checked")) {
+				in_opening_flag = "Y";
+			}
+			if ($('#groupflag1').is(":checked")) {
+				in_group_flag = "Y";
+			}
+			if ($('#aggflag1').is(":checked")) {
+				in_agg_flag = "Y";
 			}
 			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 				get_recon_field = $("#cmbgetrecon").val();
@@ -4635,14 +5030,12 @@
 				//	});
 				//	return;
 				//}
-			} else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
-				expression = $("#CmbExpression").val();
-				set_recon_field = $("#Cmbreconfield2").val();
-			}
-			else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
 				recorderby_type = $("input[name='reconorderby']:checked").val();
 				expression = $("#CmbExpression").val();
 				set_recon_field = $("#Cmbreconfield2").val();
+			}else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+				lookup_dataset_code = $("#cmblookupdataset1").val();				
 			}
 			else if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
 				expression = $("#CmbExpression").val();
@@ -4666,7 +5059,7 @@
 					return;
 				}
 				source_dataset_code = $("#sourcedataset").val();
-			comparison_dataset_code = $("#comdataset").val();
+				comparison_dataset_code = $("#comdataset").val();
 			}
 			var in_cumulative_flag = "";
 			var in_opening_flag = "";
@@ -4688,6 +5081,9 @@
 				if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
 				addRowcondition();
 				}
+				if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
+				addexp()
+				}
 				return;
 			} else {
 				preprocess_gid = 0;
@@ -4708,7 +5104,7 @@
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, in_action: action, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
-					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
 					in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression, postprocessflag: postprocessflag
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -4831,7 +5227,7 @@
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
-					in_cumulative_flag: in_cumulative_flag,in_opening_flag:in_opening_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
 					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
 					postprocessflag: postprocessflag
 				}),
@@ -5020,7 +5416,7 @@
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
-					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
 					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
 					postprocessflag: postprocessflag
 				}),
@@ -5173,15 +5569,39 @@
 				lookup_dataset_code = $("#cmblookupdataset1").val();
 				lookup_return_field = $("#Cmblookupdatasetfield1").val();
 				expression = $("#CmbExpression1").val();
+			}else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+				lookup_dataset_code = $("#cmblookupdataset2").val();
+				lookup_return_field = $("#Cmblookupdatasetfield1").val();
+				expression = $("#CmbExpression1").val();
 			}
 
 			var in_cumulative_flag = "";
-			var in_opening_flag= "";
+			var in_opening_flag = "";
+			var in_group_flag = "";
+			var in_agg_flag = "";
 			if ($('#cumulativeflag').is(":checked")) {
 				in_cumulative_flag = "Y";
 			}
 			if ($('#openingflag').is(":checked")) {
 				in_opening_flag = "Y";
+			}
+			if ($('#groupflag').is(":checked")) {
+				in_group_flag = "Y";
+			}
+			if ($('#aggflag').is(":checked")) {
+				in_agg_flag = "Y";
+			}
+			if ($('#cumulativeflag1').is(":checked")) {
+				in_cumulative_flag = "Y";
+			}
+			if ($('#openingflag1').is(":checked")) {
+				in_opening_flag = "Y";
+			}
+			if ($('#groupflag1').is(":checked")) {
+				in_group_flag = "Y";
+			}
+			if ($('#aggflag1').is(":checked")) {
+				in_agg_flag = "Y";
 			}
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
@@ -5190,6 +5610,8 @@
 			if (preprocess_gid > 0) {
 				preprocess_gid = $("#preprocessgid").val();
 				addRowlookupfilter();
+				addRowlookupfilter1();
+				addrowaggexplookup();
 				return;
 			} else {
 				preprocess_gid = 0;
@@ -5210,7 +5632,7 @@
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
-					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
 					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
 					postprocessflag: postprocessflag
 				}),
@@ -5222,6 +5644,8 @@
 						$("#preprocessgid").val(data.in_preprocess_gid);
 						$("#txtpreprocesscode").val(data.in_preprocess_code);
 						addRowlookupfilter();
+						addRowlookupfilter1();
+						addrowaggexplookup();
 					} else {
 						$.alert({
 							title: 'Recon',
@@ -5370,17 +5794,71 @@
 				source_dataset_code = $("#sourcedataset").val();
 				comparison_dataset_code = $("#comdataset").val();
 			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
-				lookup_dataset_code = $("#cmblookupdataset1").val();
+				lookup_dataset_code = $("#cmblookupdataset1").val();			
+				if ($("#cmblookupdataset1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}	
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+				lookup_dataset_code = $("#cmblookupdataset2").val();
 				lookup_return_field = $("#Cmblookupdatasetfield1").val();
 				expression = $("#CmbExpression1").val();
+				if ($("#cmblookupdataset2").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#CmbExpression1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Experssion cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield1").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Lookup Field cannot be empty",
+							type: 'green',
+						});
+						return;
+				}
 			}
 			var in_cumulative_flag = "";
 			var in_opening_flag="";
+			var in_group_flag = "";
+			var in_agg_flag = "";
 			if ($('#cumulativeflag').is(":checked")) {
 				in_cumulative_flag = "Y";
 			}
 			if ($('#openingflag').is(":checked")) {
 				in_opening_flag = "Y";
+			}
+			if ($('#groupflag').is(":checked")) {
+				in_group_flag = "Y";
+			}
+			if ($('#aggflag').is(":checked")) {
+				in_agg_flag = "Y";
+			}
+			if ($('#cumulativeflag1').is(":checked")) {
+				in_cumulative_flag = "Y";
+			}
+			if ($('#openingflag1').is(":checked")) {
+				in_opening_flag = "Y";
+			}
+			if ($('#groupflag1').is(":checked")) {
+				in_group_flag = "Y";
+			}
+			if ($('#aggflag1').is(":checked")) {
+				in_agg_flag = "Y";
 			}
 			var preprocess_order = $("#preprocessorder").val();
 			var action = "";
@@ -5408,7 +5886,7 @@
 					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
 					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
 					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
-						in_cumulative_flag: in_cumulative_flag,in_opening_flag:in_opening_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
 					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
 					postprocessflag: postprocessflag
 				}),
@@ -5502,6 +5980,7 @@
 						animationSpeed: 700,
 					});
 					$("#Cmbclone").val("");
+
 				},
 			},
 		});
@@ -5519,21 +5998,28 @@
 			$("#headinglookupfilter").hide();
 			$("#headinglookupfilterExp").hide();
 			$("#headingexpression").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingcumexp").hide();
 			$("#headingaggexp").hide();
+			$("#headinglookupaggexp").hide();
 			$("#lblcumulativeflag").hide();
 			$("#cumulativeflag").hide();
+			$("#headinglookuporder").hide();
 			$("#lblopeningflag").hide();
 			$("#openingflag").hide();
 			$("#headingfunction").show();
 			$("#headingcomparsion").hide();
 			$("#headingsourcefilter").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").hide();
 			$("#headingcomparisionfilter").hide();
 			$("#headingfilter").show();
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			//$("#check1").prop('checked', true);
 			$("#check2").prop('checked', true);
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
 			$("#Cmbreconfield").val('');
@@ -5549,8 +6035,10 @@
 			$("#headinglookuprecon").show();
 			$("#headinglookupfilter").show();
 			$("#headinglookupfilterExp").hide();
+			$("#headinglookupaggexp").hide();
 			$("#headingfunction").hide();
-			$("#cumulativeflag").hide()
+			$("#cumulativeflag").hide();
+			$("#headinglookuporder").hide();
 			$("#lblcumulativeflag").hide()
 			$("#lblopeningflag").hide();
 			$("#openingflag").hide();
@@ -5559,6 +6047,9 @@
 			$("#headingexpression").hide();
 			$("#headingsourcefilter").hide();
 			$("#headingcomparisionfilter").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingcomparsion").hide();
 			$("#headingfilter").show();
 			$("#check3").prop('checked', true);
@@ -5569,6 +6060,8 @@
 			//$("#check6").prop('checked', true);
 			//$("#check7").prop('checked', true);
 			$("#lookupgrid").hide();
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
 			$("#Cmbreconfield").val('');
@@ -5583,7 +6076,10 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headinglookupfilterExp").hide();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headinglookupaggexp").hide();
 			$("#headingfunction").hide();
+			$("#headinglookuporder").hide();
 			$("#headingcumexp").hide();
 			$("#headingaggexp").hide();
 			$("#cumulativeflag").hide();
@@ -5593,12 +6089,16 @@
 			$("#headingexpression").hide();
 			$("#headingsourcefilter").hide();
 			$("#headingcomparisionfilter").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingcomparsion").hide();
 			$("#headingfilter").hide();
 			$("#check6").prop('checked', true);
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			$("#validquery").val("false");
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
 			$("#cmblookupdataset").val('');
@@ -5611,9 +6111,11 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headinglookupfilterExp").hide();
+			$("#headinglookupaggexp").hide();
 			$("#headingfunction").hide();
 			$("#cumulativeflag").hide();
 			$("#lblcumulativeflag").hide();
+			$("#headinglookuporder").hide();
 			$("#lblopeningflag").hide();
 			$("#openingflag").hide();
 			$("#headingcumexp").hide();
@@ -5621,12 +6123,17 @@
 			$("#headingcomparsion").hide();
 			$("#headingsourcefilter").hide();
 			$("#headingcomparisionfilter").hide();
-			$("#headingexpression").show();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headingexpression").hide();
+			$("#headingexpressiongrid").show();
 			$("#headingfilter").show();
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
-			$("#check8").prop('checked', true);
+			$("#check18").prop('checked', true);
 			//$("#check1").prop('checked', true);
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
 			$("#cmblookupdataset").val('');
@@ -5639,22 +6146,34 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headinglookupfilterExp").hide();
+			$("#headinglookuporder").hide();
 			$("#headingfunction").hide();
 			$("#headingexpression").show();
+			$("#headingexpressiongrid").hide();
+			$("#headinglookupaggexp").hide();
 			$("#cumulativeflag").hide();
 			$("#lblcumulativeflag").hide();
 			$("#lblopeningflag").hide();
 			$("#openingflag").hide();
+			$("#lblgroupflag").hide();
+			$("#groupflag").hide();
+			$("#lblaggflag").hide();
+			$("#aggflag").hide();
 			$("#headingcumexp").show();
 			$("#headingaggexp").hide();
 			$("#headingcomparsion").hide();
 			$("#headingsourcefilter").hide();
 			$("#headingcomparisionfilter").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingfilter").show();
 			$("#check8").prop('checked', true);
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			//$("#check1").prop('checked', true);
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
 			$("#cmblookupdataset").val('');
@@ -5667,22 +6186,34 @@
 			$("#headinglookuprecon").hide();
 			$("#headinglookupfilter").hide();
 			$("#headinglookupfilterExp").hide();
+			$("#headinglookuporder").hide();
 			$("#headingfunction").hide();
 			$("#headingexpression").show();
+			$("#headingexpressiongrid").hide();
 			$("#cumulativeflag").show();
 			$("#lblcumulativeflag").show();
-			$("#lblopeningflag").hide();
-			$("#openingflag").hide();
+			$("#lblopeningflag").show();
+			$("#openingflag").show();
+			$("#groupflag").show();
+			$("#lblgroupflag").show();
+			$("#aggflag").show();
+			$("#lblaggflag").show();
 			$("#headingcumexp").hide();
 			$("#headingaggexp").show();
+			$("#headinglookupaggexp").hide();
 			$("#headingcomparsion").hide();
 			$("#headingsourcefilter").hide();
 			$("#headingcomparisionfilter").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingfilter").show();
 			$("#check8").prop('checked', true);
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			//$("#check1").prop('checked', true);
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
 			$("#cmblookupdataset").val('');
@@ -5696,18 +6227,29 @@
 			$("#headinglookupfilter").hide();
 			$("#headinglookupfilterExp").hide();
 			$("#headingfunction").hide();
+			$("#headinglookuporder").hide();
 			$("#cumulativeflag").hide();
 			$("#lblcumulativeflag").hide();
 			$("#lblopeningflag").hide();
 			$("#openingflag").hide();
+			$("#groupflag").hide();
+			$("#lblgroupflag").hide();
+			$("#aggflag").hide();
+			$("#lblaggflag").hide();
 			$("#headingcumexp").hide();
 			$("#headingaggexp").hide();
+			$("#headinglookupaggexp").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingexpression").show();
 			$("#headingcomparsion").show();
 			$("#headingsourcefilter").show();
 			$("#headingcomparisionfilter").show();
 			$("#headingfilter").show();
 			$("#check8").prop('checked', true);
+			$("#sourcedataset").prop('disabled', false);
+			$("#comdataset").prop('disabled', false);
 			//$("#check1").prop('checked', true);
 		}
 		else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
@@ -5726,21 +6268,69 @@
 			$("#headinglookupfilterExp").show();
 			$("#headingfunction").hide();
 			$("#cumulativeflag").hide()
-			$("#lblcumulativeflag").hide()
+			$("#lblcumulativeflag").hide();
+			$("#headinglookuporder").hide();
 			$("#lblopeningflag").hide();
 			$("#openingflag").hide();
 			$("#headingcumexp").hide();
 			$("#headingaggexp").hide();
 			$("#headingexpression").hide();
+			$("#headingexpressiongrid").hide();
 			$("#headingsourcefilter").hide();
 			$("#headingcomparisionfilter").hide();
 			$("#headingexpressionlookup").show();
+			$("#headingexpressionlookupAgg").hide();
+			$("#headingcomparsion").hide();
+			$("#headingfilter").hide();
+			$("#headinglookupaggexp").hide();
+			$("#sourcedataset").prop('disabled', true);
+			$("#comdataset").prop('disabled', true);
+			$("#lookupgrid").hide();
+			$("#check14").prop('checked', true);
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
+		}
+		else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+			$("#Cmbreconfield").val('');
+			$("#Cmbfunction").val('');
+			$("#cmbgetrecon").val('');
+			$("#cmblookupdataset").val('');
+			$("#Cmblookupdatasetfield").val('');
+			$("#Cmbreconfield1").val('');
+			$("#querydata").val('');
+			$("#headingquery").hide();
+			$("#headinglookupdataset").hide();
+			$("#headinglookup").hide();
+			$("#headinglookuprecon").hide();
+			$("#headinglookupfilter").hide();
+			$("#headinglookupfilterExp").show();
+			$("#headingfunction").hide();
+			$("#cumulativeflag1").show();
+			$("#lblcumulativeflag1").show();
+			$("#lblopeningflag1").show();
+			$("#openingflag1").show();
+			$("#groupflag1").show();
+			$("#lblgroupflag1").show();
+			$("#aggflag1").show();
+			$("#lblaggflag1").show();
+			$("#headingcumexp").hide();
+			$("#headingaggexp").hide();
+			$("#headinglookupaggexp").show();
+			$("#headinglookuporder").show();
+			$("#headingexpression").hide();
+			$("#headingexpressiongrid").hide();
+			$("#headingsourcefilter").hide();
+			$("#headingcomparisionfilter").hide();
+			$("#headingexpressionlookup").hide();
+			$("#headingexpressionlookupAgg").show();
 			$("#headingcomparsion").hide();
 			$("#headingfilter").hide();
 			$("#sourcedataset").prop('disabled', true);
 			$("#comdataset").prop('disabled', true);
 			$("#lookupgrid").hide();
-			$("#check14").prop('checked', true);
+			$("#check19").prop('checked', true);
+			$("#sourcedataset").val("");
+			$("#comdataset").val("");
 		}
 	}
 	function savelookupfield() {
@@ -5753,7 +6343,7 @@
 		var reverse_update_flag = model.reverse_update_flag;
 		var value_flag = model.value_flag;
 		if (value_flag == "Y" && reverse_update_flag == 'N')
-		{ 
+		{
 			if(model.lookup_return_field_desc != ''){
 				var lookup_return_field = model.lookup_return_field_desc;
 			}else {
@@ -5776,7 +6366,7 @@
 				var set_recon_field = model.set_recon_field_desc;
 			}else {
 				var set_recon_field = model.set_recon_field_input;
-			}			
+			}
 		} else {
 			if(model.set_recon_field =='')
 			{
@@ -5998,20 +6588,20 @@
 				hidden: true,
 			},
 			{
-				field: "recorder_field",
-				title: "Recon Field",
-				width: 100,
-				editor: function (container, options) {
-					combo_editor_manreorder(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_cumexporder")
-				},
-			},
-			{
 				field: "recorder_seqno",
 				title: "Order Seq No.",
 				width: 30,
 				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "recorder_field",
+				title: "Recon Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_manreorder(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_cumexporder")
 				},
 			},
 			{
@@ -6069,11 +6659,11 @@
 						list1.code = result[i].recon_field_name;
 						list1.desc = result[i].recon_field_desc;
 						arr1.push(list1);
+						}
 					}
 				}
-			}
-		});
-		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			});
+		 $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
 			dataSource: arr1,
@@ -6093,7 +6683,6 @@
 				else {
 					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
 					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
-
 				}
 			}
 		});
@@ -6107,6 +6696,8 @@
 			var in_preprocess_code = $("#txtpreprocesscode").val();
 			var in_recorder_seqno = model.recorder_seqno;
 			var in_recorder_field = model.recorder_field_code;
+			var in_recorderby_type = $("input[name='reconorderby']:checked").val();
+			var in_recorder_on = "RECON";
 			var action = "INSERT";
 			var action_by = sessionStorage.getItem("usrname");
 			var in_preprocessrecorder_gid = model.preprocessrecorder_gid;
@@ -6124,7 +6715,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_preprocessrecorder_gid: in_preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
-					in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,
+					in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,in_recorder_on: in_recorder_on,in_recorderby_type: in_recorderby_type,
 					in_action: action, in_user_code: action_by, in_active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -6171,6 +6762,8 @@
 						var in_preprocess_code = "";
 						var in_recorder_seqno = 0;
 						var in_recorder_field = "";
+						var in_recorder_on = "";
+						var in_recorderby_type = "";
 						var action = "DELETE";
 						var action_by = sessionStorage.getItem("usrname");
 						var status = ""
@@ -6180,7 +6773,7 @@
 							dataType: 'json',
 							data: JSON.stringify({
 								in_preprocessrecorder_gid: preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
-								in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,
+								in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,in_recorder_on: in_recorder_on,in_recorderby_type: in_recorderby_type,
 								in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -6194,6 +6787,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
+									preprocessfetch($("#txtpreprocesscode").val());
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -6301,14 +6895,6 @@
 				hidden: true,
 			},
 			{
-				field: "grp_field",
-				title: "Group Field",
-				width: 100,
-				editor: function (container, options) {
-					combo_editor_managgexp(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "grp_field_code", "grid_aggexp")
-				},
-			},
-			{
 				field: "grpfield_seqno",
 				title: "Group Field Seq No.",
 				width: 30,
@@ -6317,6 +6903,15 @@
 					item_rate(container, options.field, '9', '2');
 				},
 			},
+			{
+				field: "grp_field",
+				title: "Group Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_managgexp(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "grp_field_code", "grid_aggexp")
+				},
+			},
+
 			{
 				field: "active_status",
 				title: "Status",
@@ -6409,6 +7004,7 @@
 			var in_preprocess_code = $("#txtpreprocesscode").val();
 			var in_grpfield_seqno = model.grpfield_seqno;
 			var in_grp_field = model.grp_field_code;
+			var in_grpfield_on = "RECON";
 			var action = "INSERT";
 			var action_by = sessionStorage.getItem("usrname");
 			var in_preprocessgrpfield_gid = model.preprocessgrpfield_gid;
@@ -6426,7 +7022,7 @@
 				dataType: 'json',
 				data: JSON.stringify({
 					in_preprocessgrpfield_gid: in_preprocessgrpfield_gid, in_preprocess_code: in_preprocess_code,
-					in_grpfield_seqno: in_grpfield_seqno, in_grp_field: in_grp_field,
+					in_grpfield_seqno: in_grpfield_seqno, in_grp_field: in_grp_field,in_grpfield_on: in_grpfield_on,
 					in_action: action, in_user_code: action_by, in_active_status: status
 				}),
 				contentType: 'application/json; charset=utf-8',
@@ -6456,7 +7052,7 @@
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var model = grid.dataItem($(event.target).closest("tr"));
 		var preprocessgrpfield_gid = parseInt(model.preprocessgrpfield_gid);
-		if (preprocessrecorder_gid == 0) {
+		if (preprocessgrpfield_gid == 0) {
 			grid.dataSource.remove(model);
 			grid.dataSource.remove(model);
 		} else {
@@ -6473,6 +7069,7 @@
 						var in_preprocess_code = "";
 						var in_grpfield_seqno = 0;
 						var in_grp_field = "";
+						var in_grpfield_on = "";
 						var action = "DELETE";
 						var action_by = sessionStorage.getItem("usrname");
 						var status = ""
@@ -6481,8 +7078,8 @@
 							url: '../Preprocess/aggexpmodelsave',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_preprocessgrpfield_gid: in_preprocessgrpfield_gid, in_preprocess_code: in_preprocess_code,
-								in_grpfield_seqno: in_grpfield_seqno, in_grp_field: in_grp_field,
+								in_preprocessgrpfield_gid: preprocessgrpfield_gid, in_preprocess_code: in_preprocess_code,
+								in_grpfield_seqno: in_grpfield_seqno, in_grp_field: in_grp_field,in_grpfield_on: in_grpfield_on,
 								in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
@@ -6496,6 +7093,7 @@
 										type: 'green',
 										animationSpeed: 700,
 									});
+									preprocessfetch($("#txtpreprocesscode").val());
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -6520,16 +7118,7 @@
 			});
 		}
 	}
-	function cumulativeflagjs(){
-		var checkbox = document.getElementById("cumulativeflag");
-		if (checkbox.checked) {
-			$("#openingflag").show();
-			$("#lblopeningflag").show();
-		}else{
-			$("#openingflag").hide();
-			$("#lblopeningflag").hide();
-		}
-	}
+	
 	//-----------------------------------------------------   preprocess condition  ----------------------------------------------------------------
 	function grid_preprocesscondition(data) {
 		var source_field_desc_list = "";
@@ -7228,8 +7817,16 @@
 				{
 					field: "filter_value_flag",
 					title: "Value",
-							template: function (dataItem) {
-							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+					width: 60,
+					template: function (dataItem) {
+						var isChecked = dataItem.filter_value_flag == "Y" ? 'checked' : '';
+						return `
+						<center>
+							<label class="switch">
+								<input type="checkbox" class="chkbx9" ${isChecked}>
+								<span class="slider round"></span>
+							</label>
+						</center>`;
 					},
 					width: 50,
 				},
@@ -7348,18 +7945,18 @@
 						}, 100);
 				}
 				else {
-					dataItem._set('filter_value_flag', 'N');
-					dataItem._set('filter_value', '');
-					dataItem._set('filter_value_code', '');
-					var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						dataItem._set('filter_value_flag', 'N');
+						dataItem._set('filter_value', '');
+						dataItem._set('filter_value_code', '');
+						var uid = dataItem.uid; // store the edited dataItem UID before refresh
 						grid.refresh();
 						setTimeout(function() {
 							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
 							grid.select(editedRow);
 							grid.content.scrollTop(editedRow.position().top);
 						}, 100);
-				}
-			});
+					}
+			 });
 		});
 	}
 	function addRowsource() {
@@ -7375,7 +7972,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", preprocessfilter_gid: 0, filter_value_code: '' });
+		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", preprocessfilter_gid: 0, filter_value_code: '',filter_value_flag: "Y" });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -7849,8 +8446,15 @@
 				{
 					field: "filter_value_flag",
 					title: "Value",
-							template: function (dataItem) {
-							return '<input type="checkbox" ' + (dataItem.filter_value_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx9">';
+					template: function (dataItem) {
+						var isChecked = dataItem.filter_value_flag == "Y" ? 'checked' : '';
+						return `
+						<center>
+							<label class="switch">
+								<input type="checkbox" class="chkbx9" ${isChecked}>
+								<span class="slider round"></span>
+							</label>
+						</center>`;
 					},
 					width: 50,
 				},
@@ -7994,7 +8598,7 @@
 		}
 		var newSeqNo = parseInt(max) + 1;
 		// Add a new row with the incremented sequence number
-		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", preprocessfilter_gid: 0, filter_value_code: '' });
+		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", preprocessfilter_gid: 0, filter_value_code: '',filter_value_flag: "Y" });
 		var lastRow = grid.tbody.children().last();
 		grid.content.scrollTop(lastRow.position().top);
 	}
@@ -8326,5 +8930,1118 @@
 		}
 	}
 	//-----------------------------------------------------  comparisionfilter ----------------------------------------------------------------
+	//-----------------------------------------------------  lookup export agg ----------------------------------------------------------------
+	function grid_aggexplookup(data) {
+		var grp_field_list = "";
+		$("#grid_aggexplookup").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "grpfield_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessgrpfield_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							grpfield_seqno: { type: "string" },
+							grp_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			toolbar: "<a onclick=savefilterheader1()  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggexplookup').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveaggexplookup()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsaggexplookup()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "10px",
+			},
+			{
+				field: "preprocessgrpfield_gid",
+				title: "preprocessgrpfield_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocess_code",
+				title: "preprocess_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "grp_field_code",
+				title: "recorder_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "grpfield_seqno",
+				title: "Group Field Seq No.",
+				width: 20,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "grp_field",
+				title: "Group Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_managgexp1(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "grp_field_code", "grid_aggexplookup")
+				},
+			},
+
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+
+		});
+	}
+	function addrowaggexplookup() {
+		if ($("#txtpreprocesscode").val() != '') {
+			var grid = $("#grid_aggexplookup").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var max = 0;
+			var lastSeqNo = grid.dataSource._data.length;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].grpfield_seqno > max) {
+					max = grid.dataSource._data[i].grpfield_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
+
+			// Add a new row with the incremented sequence number
+			dataSource.add({ grpfield_seqno: newSeqNo, preprocessgrpfield_gid: 0 });
+			var lastRow = grid.tbody.children().last();
+			grid.content.scrollTop(lastRow.position().top);
+		} else {
+			saveheader();
+		}
+	}
+	function combo_editor_managgexp1(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var datasetcode = $("#cmblookupdataset2").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.DataSet.length > i; i++) {
+						var list1 = {};
+						list1.code = result.DataSet[i].dataset_table_field;
+						list1.desc = result.DataSet[i].field_name;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function saveaggexplookup() {
+		try {
+			var grid = $("#grid_aggexplookup").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_preprocess_code = $("#txtpreprocesscode").val();
+			var in_grpfield_seqno = model.grpfield_seqno;
+			var in_grp_field = model.grp_field_code;
+			var in_grpfield_on = "LOOKUP";
+			var action = "INSERT";
+			var action_by = sessionStorage.getItem("usrname");
+			var in_preprocessgrpfield_gid = model.preprocessgrpfield_gid;
+			if (in_preprocessgrpfield_gid == "0") {
+				in_preprocessgrpfield_gid = 0;
+				action = "INSERT"
+			} else {
+				in_preprocessgrpfield_gid = model.preprocessgrpfield_gid
+				action = "UPDATE"
+			}
+			var status = "Y"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/aggexpmodelsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocessgrpfield_gid: in_preprocessgrpfield_gid, in_preprocess_code: in_preprocess_code,
+					in_grpfield_seqno: in_grpfield_seqno, in_grp_field: in_grp_field,in_grpfield_on: in_grpfield_on,
+					in_action: action, in_user_code: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}
+				},
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJsaggexplookup() {
+		var grid = $("#grid_aggexplookup").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessgrpfield_gid = parseInt(model.preprocessgrpfield_gid);
+		if (preprocessgrpfield_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_preprocess_code = "";
+						var in_grpfield_seqno = 0;
+						var in_grp_field = "";
+						var in_grpfield_on = "";
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var status = ""
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/aggexpmodelsave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessgrpfield_gid: preprocessgrpfield_gid, in_preprocess_code: in_preprocess_code,
+								in_grpfield_seqno: in_grpfield_seqno, in_grp_field: in_grp_field,in_grpfield_on: in_grpfield_on,
+								in_action: action, in_user_code: action_by, in_active_status: status
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+
+	function grid_lookuporder(data) {
+		var recorder_field_list = "";
+		$("#grid_lookuporder").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "recorder_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessrecorder_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							recorder_seqno: { type: "string" },
+							recorder_field: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			toolbar: "<a onclick=addlookuporder()  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_lookuporder').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='savelookuporder()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJslookuporder()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "10px",
+			},
+			{
+				field: "preprocessrecorder_gid",
+				title: "preprocessrecorder_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocess_code",
+				title: "preprocess_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_field_code",
+				title: "recorder_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "recorder_seqno",
+				title: "Order Seq No.",
+				width: 20,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "recorder_field",
+				title: "Lookup Field",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_manreorder(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recorder_field_code", "grid_lookuporder")
+				},
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+
+		});
+	}
+	function addlookuporder() {
+		if ($("#txtpreprocesscode").val() != '') {
+			var grid = $("#grid_lookuporder").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var max = 0;
+			var lastSeqNo = grid.dataSource._data.length;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].recorder_seqno > max) {
+					max = grid.dataSource._data[i].recorder_seqno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
+
+			// Add a new row with the incremented sequence number
+			dataSource.add({ recorder_seqno: newSeqNo, preprocessrecorder_gid: 0 });
+			var lastRow = grid.tbody.children().last();
+			grid.content.scrollTop(lastRow.position().top);
+		} else {
+			saveheader();
+		}
+	}
+	function combo_editor_manreorder(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		var datasetcode = $("#cmblookupdataset2").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.DataSet.length > i; i++) {
+						var list1 = {};
+						list1.code = result.DataSet[i].dataset_table_field;
+						list1.desc = result.DataSet[i].field_name;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function savelookuporder() {
+		try {
+			var grid = $("#grid_lookuporder").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_preprocess_code = $("#txtpreprocesscode").val();
+			var in_recorder_seqno = model.recorder_seqno;
+			var in_recorder_field = model.recorder_field_code;
+			var in_recorderby_type = $("input[name='reconorderby']:checked").val();
+			var in_recorder_on = "LOOKUP";
+			var action = "INSERT";
+			var action_by = sessionStorage.getItem("usrname");
+			var in_preprocessrecorder_gid = model.preprocessrecorder_gid;
+			if (in_preprocessrecorder_gid == "0") {
+				in_preprocessrecorder_gid = 0;
+				action = "INSERT"
+			} else {
+				in_preprocessrecorder_gid = model.preprocessrecorder_gid
+				action = "UPDATE"
+			}
+			var status = "Y"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/reconfieldordersave',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocessrecorder_gid: in_preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
+					in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,in_recorder_on: in_recorder_on,in_recorderby_type: in_recorderby_type,
+					in_action: action, in_user_code: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}
+				},
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJslookuporder() {
+		var grid = $("#grid_lookuporder").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessrecorder_gid = parseInt(model.preprocessrecorder_gid);
+		if (preprocessrecorder_gid == 0) {
+			grid.dataSource.remove(model);
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_preprocess_code = "";
+						var in_recorder_seqno = 0;
+						var in_recorder_field = "";
+						var in_recorder_on = "";
+						var in_recorderby_type = "";
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var status = ""
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/reconfieldordersave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessrecorder_gid: preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
+								in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,in_recorder_on: in_recorder_on,in_recorderby_type: in_recorderby_type,
+								in_action: action, in_user_code: action_by, in_active_status: status
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	//-----------------------------------------------------  lookup exp ----------------------------------------------------------------
+	function grid_expression(data) {
+		var preprocessexp_update_field_list = "";
+		$("#grid_expression").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "recorder_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessexp_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							preprocessexp_sno: { type: "string" },
+							preprocessexp_update_field: { type: "string" },
+							preprocess_expression: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			toolbar: "<a onclick=addexp()  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_expression').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveexp()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsexp()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "20px",
+			},
+			{
+				field: "preprocessexp_gid",
+				title: "preprocessexp_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocess_code",
+				title: "preprocess_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "preprocessexp_update_field_code",
+				title: "preprocessexp_update_field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "preprocessexp_sno",
+				title: "Seq No.",
+				width: 30,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "preprocessexp_update_field",
+				title: "Recon Field",
+				width: 40,
+				editor: function (container, options) {
+					combo_editor_exp(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "preprocessexp_update_field_code", "grid_expression")
+				},
+			},
+			{
+				field: "preprocess_expression",
+				title: "Expression",
+				width: 150,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+
+		});
+	}
+	function addexp() {
+		if ($("#txtpreprocesscode").val() != '') {
+			var grid = $("#grid_expression").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var max = 0;
+			var lastSeqNo = grid.dataSource._data.length;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].preprocessexp_sno > max) {
+					max = grid.dataSource._data[i].preprocessexp_sno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
+
+			// Add a new row with the incremented sequence number
+			dataSource.add({ preprocessexp_sno: newSeqNo, preprocessexp_gid: 0,preprocessexp_update_field: "",preprocess_expression: "" });
+			var lastRow = grid.tbody.children().last();
+			grid.content.scrollTop(lastRow.position().top);
+		} else {
+			saveheader();
+		}
+	}
+	function combo_editor_exp(container, cmbid, datasource, datafield, code_datafield, grid_id) {
+		var arr1 = [];
+		if($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION") {
+			var reconcode = $("#cmbrecon").val();
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/FieldAgainstRecon',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+						}
+					}
+				}
+			});
+			} else {
+					var datasetcode = $("#cmblookupdataset1").val();
+					var in_user_code = sessionStorage.getItem("usrname");
+					$.ajax({
+							type: "POST",
+							url: '../Recon/Datasetfieldlist',
+							dataType: 'json',
+							async: false,
+							data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+							if (response != null) {
+							var result = JSON.parse(response);
+								for (i = 0; result.DataSet.length > i; i++) {
+										var list1 = {};
+										list1.code = result.DataSet[i].dataset_table_field;
+										list1.desc = result.DataSet[i].field_name;
+										arr1.push(list1);
+									}
+				}
+			}
+		});
+		}
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function saveexp() {
+		try {
+			if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION") {
+				var grid = $("#grid_expression").data("kendoGrid");
+				var model = grid.dataItem($(event.target).closest("tr"));
+				var in_preprocess_code = $("#txtpreprocesscode").val();
+				var in_preprocessexp_sno = model.preprocessexp_sno;
+				var in_preprocessexp_on = "RECON";
+				var in_preprocessexp_update_field = model.preprocessexp_update_field_code;
+				var in_preprocess_expression = model.preprocess_expression;
+			} else {
+				var grid = $("#grid_expression1").data("kendoGrid");
+				var model = grid.dataItem($(event.target).closest("tr"));
+				var in_preprocess_code = $("#txtpreprocesscode").val();
+				var in_preprocessexp_sno = model.preprocessexp_sno;
+				var in_preprocessexp_on = "LOOKUP";
+				var in_preprocessexp_update_field = model.preprocessexp_update_field_code;
+				var in_preprocess_expression = model.preprocess_expression;
+			}
+			var action = "INSERT";
+			var action_by = sessionStorage.getItem("usrname");
+			var in_preprocessexp_gid = model.preprocessexp_gid;
+			if (in_preprocessexp_gid == "0") {
+				in_preprocessexp_gid = 0;
+				action = "INSERT"
+			} else {
+				in_preprocessexp_gid = model.preprocessexp_gid
+				action = "UPDATE"
+			}
+			var status = "Y"
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessexp',
+				dataType: 'json',
+				data: JSON.stringify({
+					in_preprocessexp_gid: in_preprocessexp_gid, in_preprocess_code: in_preprocess_code,
+					in_preprocessexp_sno: in_preprocessexp_sno, in_preprocessexp_on: in_preprocessexp_on,in_preprocessexp_update_field: in_preprocessexp_update_field,in_preprocess_expression: in_preprocess_expression,
+					in_action: action, in_user_code: action_by, in_active_status: status
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						preprocessfetch($("#txtpreprocesscode").val());
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'red',
+						});
+					}
+				},
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJsexp() {
+		var grid = $("#grid_expression").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessrecorder_gid = parseInt(model.preprocessrecorder_gid);
+		if (preprocessrecorder_gid == 0) {
+			grid.dataSource.remove(model);
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_preprocess_code = "";
+						var in_recorder_seqno = 0;
+						var in_recorder_field = "";
+						var in_recorder_on = "";
+						var in_recorderby_type = "";
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var status = ""
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/reconfieldordersave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessrecorder_gid: preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
+								in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,in_recorder_on: in_recorder_on,in_recorderby_type: in_recorderby_type,
+								in_action: action, in_user_code: action_by, in_active_status: status
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	function grid_expression1(data) {
+		var preprocessexp_update_field_list = "";
+		$("#grid_expression1").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "recorder_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessexp_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							preprocessexp_sno: { type: "string" },
+							preprocessexp_update_field: { type: "string" },
+							preprocess_expression: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			toolbar: "<a onclick=addexp1()  href='javascript:void(0)' ><span class='fa fa-plus' style='color:white'></span></a>",
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_expression1').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveexp()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:18%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsexp()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "20px",
+			},
+			{
+				field: "preprocessexp_gid",
+				title: "preprocessexp_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocess_code",
+				title: "preprocess_code",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "preprocessexp_update_field_code",
+				title: "preprocessexp_update_field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "preprocessexp_sno",
+				title: "Seq No.",
+				width: 30,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '2');
+				},
+			},
+			{
+				field: "preprocessexp_update_field",
+				title: "Lookup Field",
+				width: 40,
+				editor: function (container, options) {
+					combo_editor_exp(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "preprocessexp_update_field_code", "grid_expression1")
+				},
+			},
+			{
+				field: "preprocess_expression",
+				title: "Expression",
+				width: 150,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+		});
+	}
+	function addexp1() {
+		if ($("#txtpreprocesscode").val() != '') {
+			if ($("#cmblookupdataset1").val() == "") {
+				$.alert({
+					title: 'Recon',
+					content: "Lookup Dataset cannot be empty",
+					type: 'green',
+				});
+				return;
+			}			
+			var grid = $("#grid_expression1").data("kendoGrid");
+			var dataSource = grid.dataSource;
+			var max = 0;
+			var lastSeqNo = grid.dataSource._data.length;
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].preprocessexp_sno > max) {
+					max = grid.dataSource._data[i].preprocessexp_sno;
+				}
+			}
+			var newSeqNo = parseInt(max) + 1;
+
+			// Add a new row with the incremented sequence number
+			dataSource.add({ preprocessexp_sno: newSeqNo, preprocessexp_gid: 0,preprocessexp_update_field: "",preprocess_expression: "" });
+			var lastRow = grid.tbody.children().last();
+			grid.content.scrollTop(lastRow.position().top);
+		} else {
+			saveheader();
+		}
+	}
+	//-----------------------------------------------------  exp ----------------------------------------------------------------
 </script>
 

@@ -206,7 +206,7 @@
 						parse: function (data) {
 							$.each(data, function (i, item) {
 								item.period_from = kendo.parseDate(item.period_from, "yyyy-MM-dd");
-								item.period_to = kendo.parseDate(item.period_to, "yyyy-MM-dd");
+								item.period_to = kendo.parseDate(item.period_to, "yyyy-MM-dd");								
 							});
 							return data;
 						}
@@ -232,6 +232,14 @@
 					if (screen_code[0].delete == "N") {
 						$(".k-grid-delete").hide();
 					}
+					$.each(resultData, function (index, item) {
+						if (item.active_status == "N")
+						{
+							$(".k-grid-clone").hide();
+							$(".k-grid-edit").hide();
+							$(".k-grid-delete").hide();
+						}
+					});
 				},
 				pageable: {
 					refresh: false,

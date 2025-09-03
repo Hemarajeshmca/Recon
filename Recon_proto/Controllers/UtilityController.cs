@@ -443,10 +443,15 @@ namespace Recon_proto.Controllers
                         }
 						string filePath = Path.Combine(out_filepath, fileName);
 
-						if (!System.IO.File.Exists(filePath))
-						{
-							return NotFound(); 
-						}
+                        if (!System.IO.File.Exists(filePath))
+                        {
+                            fileName = file_name + ".xlsm";
+                            filePath = Path.Combine(out_filepath, fileName);
+                            if (!System.IO.File.Exists(filePath))
+                            {
+                                return NotFound();
+                            }
+                        }
 						
 						using (var memoryStream = new MemoryStream())
 						{
