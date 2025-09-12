@@ -266,7 +266,7 @@ namespace Recon_proto.Controllers
                         objcat.koqueue_status = result.Rows[i]["koqueue_status"].ToString();
                         objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
                         objcat.scheduled_by = result.Rows[i]["scheduled_by"].ToString();
-                        objcat.queue_type = result.Rows[i]["queue_type"].ToString();
+                        objcat.queue_type = "Knock Off"; // result.Rows[i]["queue_type"].ToString();
                         objcat_lst.Add(objcat);
                     }
 					return Json(objcat_lst);
@@ -538,6 +538,7 @@ namespace Recon_proto.Controllers
             }
 
 		}
+
 
 	}
 }
