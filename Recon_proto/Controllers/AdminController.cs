@@ -35,6 +35,7 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
+    
 
 		#region rolesave
 		[HttpPost]
@@ -609,6 +610,7 @@ namespace Recon_proto.Controllers
 					string d2 = JsonConvert.DeserializeObject<string>(post_data);
 					return Json(d2);
 				}
+
 			}
 			catch (Exception ex)
 			{
@@ -753,6 +755,90 @@ namespace Recon_proto.Controllers
 			public string user_code { get; set; }
 		}
 		#endregion
+		#region
+		public IActionResult ReportPermissions()
+		{
+			return View();
+		}
+		public IActionResult ReportPermissionsmapping()
+		{
+			return View();
+		}
+        #endregion
+
+
+        [HttpPost]
+        public JsonResult rolereconfetch([FromBody] rolefetchModel objrolefetch)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Report/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", objrolefetch.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("in_role_code", objrolefetch.in_role_code);
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(objrolefetch), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getRoleReportTemplateList", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "RoleReconfetch");
+                return Json(ex.Message);
+            }
+        }
+
+		public IActionResult saveRolePermissionsAccess([FromBody] saveroleAccessModel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Roles/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("saveRolePermissionAccess", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					return Json(d2);
+				}
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "saveRoleAccess");
+				return Json(ex.Message);
+			}
+		}
+		 
+
 	}
 
 }

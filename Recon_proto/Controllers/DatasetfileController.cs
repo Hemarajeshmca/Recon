@@ -11,6 +11,7 @@ using System.Reflection.PortableExecutable;
 using System.Net;
 using static Recon_proto.Controllers.DatasettoReconController;
 using System.Net.Http;
+using static Recon_proto.Controllers.DataSetController;
 
 namespace Recon_proto.Controllers
 {
@@ -39,7 +40,10 @@ namespace Recon_proto.Controllers
         public IActionResult Datasetconversion()
         {
             ViewBag.baseurl = _configuration.GetSection("Appsettings")["connectorUrl"].ToString();
-            return View();
+			//ViewBag.Pipelinelist = _configuration.GetSection("Appsettings")["pipelineupload"].ToString();
+			var docBaseUrl = _configuration["pipelineDocsfiles"]; // read from appsettings.json
+			ViewBag.PipelineDocsUrl = docBaseUrl;
+			return View();
         }
 
         #region datasetfile
@@ -598,7 +602,74 @@ namespace Recon_proto.Controllers
         }
 
 
-        #endregion
-    }
+		#endregion
+
+		#region
+		[HttpGet]
+		public async Task<IActionResult> GetSupportDocs(string pipeline_code)
+		{
+			//         string Pipelinelisturls = _configuration.GetSection("Appsettings")["pipelineupload"].ToString();
+			//DatasetfileController _api = new DatasetfileController(_configuration); 
+			//using var http = new HttpClient(); 
+			////var response = await http.GetAsync($"{Pipelinelisturls}GetSupportDocuments?pipeline_code={pipeline_code}");
+			//         var response = await http.GetAsync($"{Pipelinelisturls}GetSupportDocs?pipeline_code={pipeline_code}");
+			//var result = await response.Content.ReadAsStringAsync();
+			//return Content(result, "application/json");
+
+			string baseUrl = _configuration.GetSection("Appsettings")["connectorUrl"]; 
+			using var http = new HttpClient { BaseAddress = new Uri(baseUrl) }; 
+			var response = await http.GetAsync($"Pipeline/GetSupportDocs?pipeline_code={pipeline_code}");
+			response.EnsureSuccessStatusCode(); 
+			var result = await response.Content.ReadAsStringAsync(); 
+			return Content(result, "application/json"); 
+		} 
+        [HttpGet]
+        public IActionResult SupportDocsDownload_old(string dbfileName, string filename)
+		{
+			var docBaseUrl = _configuration.GetSection("Appsettings")["pipelineDocsfiles"].ToString();    
+			//ViewBag.PipelineDocsUrl = docBaseUrl;
+			var path = Path.Combine(docBaseUrl, "SupportingDocs", dbfileName);
+			path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "SupportingDocs", dbfileName);
+			if (!System.IO.File.Exists(path))
+				return NotFound();
+
+			var fileBytes = System.IO.File.ReadAllBytes(path);
+			return File(fileBytes, "application/octet-stream", filename);
+		}
+
+		public IActionResult SupportDocsDownload(string pipeline_code, string filedoc_name, string username)
+		{
+			var out_result = getfilepath("ppl_SupportDocs_Download", username);
+			List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
+			var folderPath = _configuration.GetSection("Appsettings")["ppl_SupportDocs_Download"].ToString();
+			string filepath = "";
+			if (myObjects.Count > 0)
+			{
+				filepath = myObjects[0].out_config_value;
+			}
+			try
+			{
+				string fileName = pipeline_code; 
+				string filePath = Path.Combine(filepath, fileName); 
+				if (!System.IO.File.Exists(filePath))
+				{
+					return NotFound("File not found.");
+				} 
+				var fileBytes = System.IO.File.ReadAllBytes(filePath); 
+				return File(fileBytes, "application/octet-stream", filedoc_name);
+
+			 
+			}
+			catch (Exception ex)
+			{
+				CommonController objcom = new CommonController(_configuration);
+				objcom.errorlog(ex.Message, "ppl_SupportDocs_Download_controller");
+				return Json(ex.Message);
+			}
+		}
+
+
+		#endregion
+	}
 
 }

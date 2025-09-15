@@ -768,7 +768,7 @@
 						fields: {
 							id: { type: "number" },
 							parentId: { type: "number", nullable: true },
-							seqno: { type: "number", editable: true },
+							seqno: { type: "Decimal", editable: true },
 							name: { type: "string" },
 							code: { type: "string" },
 							master_code: { type: "string" },
@@ -1080,7 +1080,7 @@
 	function sel_textbox(data){
 		var isvalue = data.seqno;
 		if (isvalue > 0) {
-			return '<input id="seqno_' + data.id + '" value=' + isvalue + ' name="seqno" style="width: 83%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" onkeypress="return isNumberKey(event)" type="text"/> ';
+			return '<input id="seqno_' + data.id + '" value=' + isvalue + ' name="seqno" style="width: 83%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" type="text"/> ';
 		}else {
 			return '';
 		}

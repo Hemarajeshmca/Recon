@@ -352,6 +352,74 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-        #endregion
-    }
+		#endregion
+
+		#region reportpermission
+		[HttpPost]
+		public JsonResult reportpermission([FromBody] reportpermissionmodel context)
+		{
+			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+			DataTable result = new DataTable();
+			reportpermissionmodel role = new reportpermissionmodel();
+			role.in_user_code = context.in_user_code;
+			role.in_template_code = context.in_template_code;
+			role.in_recon_code = context.in_recon_code;
+			role.exceldownload = "";
+			role.csvdownload = "";
+			role.preview = "";
+			role.deny = ""; 
+			List<reportpermissionmodel> objcat_lst = new List<reportpermissionmodel>();
+			string post_data = "";
+			try
+			{
+				using (var client = new HttpClient())
+				{
+					string Urlcon = "Common/";
+					client.BaseAddress = new Uri(urlstring + Urlcon);
+					client.DefaultRequestHeaders.Accept.Clear();
+					client.Timeout = Timeout.InfiniteTimeSpan;
+					//client.DefaultRequestHeaders.Add("in_user_code", context.in_user_code);
+					//client.DefaultRequestHeaders.Add("in_recon_code", context.in_recon_code);
+					//client.DefaultRequestHeaders.Add("in_template_code", context.in_template_code);
+					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString()); 
+					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					HttpContent content = new StringContent(JsonConvert.SerializeObject(role), UTF8Encoding.UTF8, "application/json");
+					var response = client.PostAsync("reportpermissionconfig", content).Result;
+					Stream data = response.Content.ReadAsStreamAsync().Result;
+					StreamReader reader = new StreamReader(data);
+					post_data = reader.ReadToEnd();
+					string d2 = JsonConvert.DeserializeObject<string>(post_data);
+					result = JsonConvert.DeserializeObject<DataTable>(d2);
+					for (int i = 0; i < result.Rows.Count; i++)
+					{
+						reportpermissionmodel objcat = new reportpermissionmodel();
+						objcat.csvdownload = result.Rows[i]["CSVDownload"].ToString();
+						objcat.exceldownload = result.Rows[i]["ExcelDownload"].ToString();
+						objcat.preview = result.Rows[i]["Preview"].ToString(); 
+						objcat.deny = result.Rows[i]["Deny"].ToString();
+						objcat_lst.Add(objcat);
+					}
+					return Json(objcat_lst);
+				}
+			}
+			catch (Exception ex)
+			{
+				errorlog(ex.Message, "Report Permission");
+				return Json(ex);
+			}
+		}
+		public class reportpermissionmodel
+		{ 
+			public string in_recon_code { get; set; }
+			public string in_template_code { get; set; }
+			public string exceldownload { get; set; }
+			public string csvdownload { get; set; }
+			public string preview { get; set; } 
+			public string deny { get; set; }
+			public string in_user_code { get; set; }
+		}
+		#endregion 
+	}
 }

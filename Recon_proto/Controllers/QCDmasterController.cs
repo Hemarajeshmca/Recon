@@ -19,6 +19,11 @@ namespace Recon_proto.Controllers
             return View();
         }
 
+        public IActionResult manualtheme()
+        {
+            return View();
+        }
+
         #region QcdMasterGridRead
         [HttpPost]
         public JsonResult QcdMasterGridRead([FromBody] QcdlistModal context)
@@ -217,7 +222,101 @@ namespace Recon_proto.Controllers
 			public string in_user_code { get; set; }
 			public string in_master_code { get; set; }
 		}
-		#endregion
+        #endregion
 
-	}
+        #region manualthemesave
+        [HttpPost]
+        public JsonResult manualthemesave([FromBody] manualthememodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            List<QcdMasterModel> objcat_lst = new List<QcdMasterModel>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Qcdmaster/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("manualthemesave", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "manualthemesave");
+                return Json(ex.Message);
+            }
+        }
+
+
+        public class manualthememodel
+        {
+            public string? recon_code { get; set; }
+            public string? manualtheme_desc { get; set; }
+            public Int32 manualtheme_id { get; set; }
+            public string? in_action { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+        #region getmanualtheme
+        [HttpPost]
+        public JsonResult getmanualtheme([FromBody] manualthememodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            List<QcdMasterModel> objcat_lst = new List<QcdMasterModel>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Qcdmaster/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getmanualtheme", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getmanualtheme");
+                return Json(ex.Message);
+            }
+        }
+
+        public class getmanualthememodel
+        {
+            public string? recon_code { get; set; }          
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+    }
 }
