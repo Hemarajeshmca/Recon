@@ -344,10 +344,6 @@ namespace Recon_proto.Controllers
         #endregion
         #region Downloads
 
-        public JsonResult getfilepath(string confing_val,string username)
-        {
-            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-            fileconfigmodel FileDownload = new fileconfigmodel();
 
         public JsonResult getfilepath(string confing_val,string username)
         {
