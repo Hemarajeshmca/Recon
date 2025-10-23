@@ -1209,6 +1209,7 @@ namespace Recon_proto.Controllers
             public string? in_recon_code { get; set; }
             public string? in_report_code { get; set; }
             public String? in_action_by { get; set; }
+            public String? in_reporttemplateresultset_code { get; set; }
 
         }
         #region reportfilter
@@ -1259,6 +1260,7 @@ namespace Recon_proto.Controllers
         {
             public Int32? in_reporttemplatefilter_gid { get; set; }
             public String? in_reporttemplate_code { get; set; }
+            public String? in_reporttemplateresultset_code { get; set; }
             public Decimal? in_filter_seqno { get; set; }
             public string? in_report_field { get; set; }
             public string? in_report_code { get; set; }
@@ -1369,6 +1371,7 @@ namespace Recon_proto.Controllers
 
         public class ResultSetModel
         {
+            public string? reporttemplate_code { get; set; } // hari changes 08-09-25
             public Int64? reportresultset_gid { get; set; }
             public string? report_code { get; set; }
             public string? resultset_name { get; set; }
@@ -1998,6 +2001,7 @@ namespace Recon_proto.Controllers
             public string? in_reporttemplate_code { get; set; }
             public string? in_report_code { get; set; }
             public String? in_action_by { get; set; }
+            public string? in_reporttemplateresultset_code { get; set; }
         }
 
         #endregion
@@ -2057,6 +2061,7 @@ namespace Recon_proto.Controllers
             public string? in_sort_type { get; set; }
             public string? in_action_by { get; set; }
             public string? in_delete_flag { get; set; }
+            public string? in_reporttemplateresultset_code { get; set; }
         }
 
         #endregion

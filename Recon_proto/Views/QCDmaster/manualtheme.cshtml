@@ -1,0 +1,446 @@
+﻿@{
+	ViewData["Title"] = "manualtheme";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+			height: 227px;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-1%;height: 82%;">
+				<div class="row" style="margin-top:-15px;">
+					<div class="col-sm-4" style="margin-bottom:5px;">
+						<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+						</select>
+					</div>
+					<div class="col-xs-12">
+						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
+							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
+						</a>
+						<div id="gd_manualtheme">
+							<div id="grid_manualtheme"> </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="manual_theme" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				</div>
+				<div class="modal-body" style="margin-top: -36px;">
+					<div class="row">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4">
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Manual Theme</h4>
+						</div>
+						<div class="col-sm-4">
+							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
+						</div>
+					</div>
+					<hr style="margin-top:-1px; width:100%;">
+					<div class="row">
+						<div class="col-md-12">
+							<label>Manual Theme Description</label>
+							<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+							<input class="form-control" id="manualthemedesc" type="text" />
+							<input class="form-control" type="number" id="manualtheme_id" hidden>
+						</div>
+					</div>
+					<div class="row" style="margin-top: 1%;">
+						<div class="col-sm-4"></div>
+						<div class="col-sm-4" style="float: right;">
+							<center>
+								<button type="button" id="savebtn" class="btn btn-sm save_btn me-2" onclick="save()">Save</button>&nbsp;&nbsp;&nbsp;
+								<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
+							</center>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script>
+	$(document).ready(function () {
+		$('[data-bs-toggle="tooltip"]').tooltip();
+		$("#navhead").text("Manual Theme");
+		setlocalStorage("ls_pageList", "");
+		grid_manualtheme_details([]);
+		gridlist();
+	});
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	var status_Priority = [];
+	function grid_manualtheme_details(data) {
+		try {
+			$("#grid_manualtheme").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 15,
+					schema: {
+						model: {
+							fields: {
+								manualtheme_gid : { type: "string" },
+								recon_code : { type: "string" },
+								manualtheme_desc : { type: "string" },
+							}
+						},
+					}
+				},
+				height: 400,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_manualtheme').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					var screen_code = rolevalidatescreen('manualtheme')
+					if (screen_code[0].add == "N") {
+						$("#btn_new").hide();
+					}
+					if (screen_code[0].view == "N") {
+						$(".k-grid-view").hide();
+					}
+					if (screen_code[0].delete == "N") {
+						$(".k-grid-delete").hide();
+					}
+					$.each(resultData, function (index, item) {
+						if (item.active_status == "N")
+						{
+							$(".k-grid-edit").hide();
+							$(".k-grid-delete").hide();
+						}
+					});
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: [10, 15, 20, 25, 50],
+					buttonCount: 5
+				},
+				pageable: true,
+				serverPaging: false,
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				resizable: true,
+				change: selectRow,
+				columns: [{
+					command: [
+						{
+							name: "edit",
+							id: "btn_Edit",
+							template: "<a href='' onclick='getSerializedRows(this)' value='edit' class='k-grid-edit' data-bs-toggle='modal'><img src = '../Assets/images/editicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "view",
+							id: "View",
+							template: "<a href=''onclick='getSerializedRows(this)' value='view' class='k-grid-view' data-bs-toggle='modal'><img src = '../Assets/images/viewicons.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+						{
+							name: "Delete",
+							id: "Delete",
+							template: "<a href='' onclick='myDeleteJs()' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+						},
+					],
+					title: "Action&nbsp;",
+					width: 15,
+				},
+				{
+					field: "manualtheme_gid",
+					title: "Row id",
+					width: 10,
+					hidden: true
+				},
+
+				{
+					field: "recon_code",
+					title: "Recon Code",
+					width: 60,
+					hidden: true
+				},
+				{
+					field: "manualtheme_desc",
+					title: "Manual Theme Descripition",
+					width: 150
+				},
+				],
+				editable: false,
+			});
+		}
+		catch (err) {
+			console.log(err)
+
+		}
+	}
+	function getSerializedRows(mode) {
+		if ($(mode).attr('value') == "edit") {
+			var grid = $("#grid_manualtheme").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#manualthemedesc").val(selectedItem.manualtheme_desc);
+			$("#manualtheme_id").val(selectedItem.manualtheme_gid);
+			$("#manual_theme").modal('show');
+			$("#savebtn").show();
+		}else if ($(mode).attr('value') == "view") {
+			var grid = $("#grid_manualtheme").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			$("#manualthemedesc").val(selectedItem.manualtheme_desc);
+			$("#manualtheme_id").val(selectedItem.manualtheme_gid);
+			$("#manual_theme").modal('show');
+			$("#savebtn").hide();
+		}else {
+			$("#manualthemedesc").val("");
+			$("#manualtheme_id").val("");
+			$("#manual_theme").modal('show');
+		}
+	}
+	function selectRow() {
+		try {
+			var grid = $("#grid_manualtheme").data("kendoGrid");
+			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("ls_pageList", selectedItem);
+		}
+		catch (err) {
+
+		}
+	}
+	function myDeleteJs() {
+		var grid = $("#grid_manualtheme").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var manualtheme_id = model.manualtheme_gid;
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						$.confirm({
+							title: 'Delete Reason',
+							content: '' +
+								'<form action="" class="formName">' +
+								'<div class="form-group">' +
+								'<label>Reason</label>' +
+								'<input type="text" placeholder="Reason" class="name form-control" required />' +
+								'</div>' +
+								'</form>',
+							buttons: {
+								formSubmit: {
+									text: 'Submit',
+									btnClass: 'btn-blue',
+									action: function () {
+										var name = this.$content.find('.name').val();
+										if (!name) {
+											$.alert('Reason cannot be empty');
+											return false;
+										}
+										var recon_code = "";
+										var manualtheme_desc = "";
+										var action = "DELETE";
+										var action_by = sessionStorage.getItem("usrname");
+										$.ajax({
+											type: "POST",
+											url: '../QCDmaster/manualthemesave',
+											dataType: 'json',
+											data: JSON.stringify({ recon_code: recon_code, manualtheme_desc: manualtheme_desc, in_action: action, in_user_code: action_by, manualtheme_id: manualtheme_id }),
+											contentType: 'application/json; charset=utf-8',
+											success: function (response) {
+												var result = JSON.parse(response);
+												var data = result[0];
+												$.alert({
+													icon: 'fa fa-success',
+													title: 'Recon',
+													theme: 'dark',
+													content: data.out_msg,
+													type: 'green',
+													animationSpeed: 700,
+												});
+												detailsfetch($("#cmbreconname").val());
+											}
+										})
+									}
+								},
+								cancel: function () {
+									//close
+								},
+							},
+
+						});
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});	
+	}
+	function save() {
+		var recon_code = $("#cmbreconname").val();
+		var manualtheme_desc = $("#manualthemedesc").val();
+		var action = "";
+		var action_by = sessionStorage.getItem("usrname");
+		var manualtheme_id = $("#manualtheme_id").val();
+		if (manualtheme_id > 0) {
+			manualtheme_id = $("#manualtheme_id").val();
+			action = "UPDATE"
+		} else {
+			manualtheme_id = 0;
+			action = "INSERT"
+		}
+		var status = "Y";
+		$.ajax({
+			type: "POST",
+			url: '../QCDmaster/manualthemesave',
+			dataType: 'json',
+			data: JSON.stringify({ recon_code: recon_code, manualtheme_desc: manualtheme_desc, in_action: action, in_user_code: action_by, manualtheme_id: manualtheme_id }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				var data = result[0];
+				if (data.out_result == "1") {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'green',
+					});
+					detailsfetch($("#cmbreconname").val());
+					$("#manual_theme").modal('hide');
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: data.out_msg,
+						type: 'red',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function detailsfetch(reconcode) {
+		var action_by = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../QCDmaster/getmanualtheme',
+			dataType: 'json',
+			data: JSON.stringify({ recon_code: reconcode,in_user_code: action_by }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				grid_manualtheme_details(result);
+			}
+		});
+	}
+	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		var reconcode=$("#cmbreconname").val();
+		detailsfetch(reconcode);
+	}
+</script>
+
+

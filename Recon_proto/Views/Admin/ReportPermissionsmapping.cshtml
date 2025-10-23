@@ -1,0 +1,561 @@
+﻿@{
+	ViewBag.title = "Role Permissions Mapping";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
+		/* Pandiaraj 02-09-2025  Grid checkbox*/
+		.big-checkbox {
+			accent-color: #007bff; /* modern browsers: makes checkmark blue */
+			border: 1px solid #333 !important; /* darker border */
+			box-shadow: 0 0 2px rgba(0,0,0,0.6); /* subtle outline */
+		}
+
+		.big-checkbox:checked {
+			accent-color: #28a745; /* green when checked */
+		}
+		/* Pandiaraj 02-09-2025 */
+	</style>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 82%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="lbldatasetcode" class="form-label">Role Code</label>
+									<input class="form-control" type="text" id="txtrolecode" disabled>
+									<input class="form-control" type="text" id="txtrolegid" hidden>
+								</div>
+
+								<div class="col-sm-4">
+									<label for="lblmode" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Update" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblstatus" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-sm-4"> </div>
+						 <div class="col-sm-1" style="margin-top:20px;">
+							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveRoleRptPermissions()">Save</button>&nbsp;&nbsp;&nbsp;
+						</div> 
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="~/Admin/ReportPermissions"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<label for="lblstatus" class="form-label">Role Name</label><br>
+							<input class="form-control" type="text" id="txtrolename" value="Active" disabled>
+						</div>
+						<div class="col-sm-2">
+							<label for="" class="form-label">Report based On &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="reconbasedon1" name="reconbasedon" value="S" onclick="reporton()">&nbsp;System&nbsp;
+								<input type="radio" id="reconbasedon2" name="reconbasedon" value="R" onclick="reporton()" style="margin-left: 10px;">&nbsp;Recon &nbsp;							
+							</div>
+						</div>
+						<div class="col-sm-4" id="recon">
+							<label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="cmbreconname" class="form-select form-control" onchange="reconchangelist()">
+							</select>
+						</div>						
+					</div>
+					<div class="row" style="margin-top:20px;">
+						<div class="col-xs-12">
+							<div id="Maingrid">
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
+<script>
+	var checkedIds = {};
+	$(document).ready(function () {
+		$("#txtrolecode").val("0");
+		$("#txtrolegid").val("0");
+		$("#navhead").text("Role Permissions Mapping");
+		gridlist();
+		$('#reconbasedon1').prop('checked', true);
+		fetchroleaccess();
+		$("#recon").hide();
+	});
+	function reporton() {
+		if ($("input[name='reconbasedon']:checked").val() == "R") {
+			$("#recon").show();
+		}else{
+			$("#recon").hide();
+			fetchroleaccess();
+		}
+	}
+	function gridlist() {
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		data.in_user_code = sessionStorage.getItem("usrname");
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Reconlistfetch',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				$("#cmbreconname").empty();
+				$("#cmbreconname").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					if (item.active_status == "Y") {
+						$("#cmbreconname").append($('<option>', {
+							value: item.recon_code,
+							text: item.recon_name
+						}));
+					}
+				});
+				if (sessionStorage.getItem("reconcode") != null) {
+					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
+					jQuery('#cmbreconname').trigger("change");
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+
+		});	
+		var data = getlocalStorage("ls_pageList");		
+		$("#txtrolecode").val(data.role_code);
+		$("#txtrolename").val(data.role_name);
+	}
+	function reconchangelist() {
+		if ($("#cmbreconname").val() != '') {
+			sessionStorage.setItem("reconcode", $("#cmbreconname").val());
+			sessionStorage.setItem("reconname", $("#cmbreconname :selected").text());
+			setcon();
+		}
+		fetchroleaccess();
+	}
+	function fetchroleaccess() {	
+		var in_role_code = $("#txtrolecode").val();
+		var in_recon_code = $("#cmbreconname").val();
+		var in_report_flag = $("input[name='reconbasedon']:checked").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Admin/rolereconfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_role_code: in_role_code, in_user_code: in_user_code,in_recon_code: in_recon_code ,in_report_flag: in_report_flag}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var data = JSON.parse(response)
+				if (data.length > 0) {
+					//loadGrid(data);
+					grid_datasetfield(data);					
+				}
+			},
+			error: function (er) {
+				console.log(er)
+			}
+		});
+	}
+
+	function grid_datasetfield(data) {
+		var columns = [];
+		var chkval = data;
+		var arr = [];
+		$.each(chkval, function (i, e) {
+			$.each(e, function (key, val) {
+				arr.push(val);
+			});
+
+		});
+
+		if (arr == "No Records Found!" || arr == "Error in Data!") {
+			$.alert({
+				title: ' ',
+				content: 'No Records found..!',
+				type: 'blue',
+			});
+			return false;
+		}
+
+		var i = 0;
+		var entryIndex = "entries[" + i + "]";
+		var m = 0;
+		var disabledflag = "";
+		if ("@ViewBag.mode_flag" == "V") {
+			disabledflag = "disabled";
+		}
+		 
+
+		for (var key in data[0]) {
+			try {	
+				if (key == "CSV" || key == "Excel" || key == "Preview" || key == "Deny") {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						attributes: { style: "text-align: center" },
+						template: '<input type="checkbox"  class= "form-check-input big-checkbox ' + key + '" name="checkbox" id="attributecheckbox_' + key + '" value="Y"  onchange = "selectRowchild(this,' + m + ')"  ' + disabledflag + '/> ',
+						width: "100px",
+						filterable: false,
+						// lockable: false
+					});
+				} 				
+				else if (key == "Report Code") {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						type: 'string',
+						width: 80,
+					});
+				}
+				else if (key == "exec_type") {
+					columns.push({
+						field: entryIndex,
+						title: key,
+						type: 'string',
+						width: 80,
+						hidden: true
+					});
+				}
+				else {
+					 
+					columns.push({
+						field: entryIndex,
+						title: key,
+						type: 'string',
+						width: 150,
+					});
+				}
+			}
+			catch (e) {
+				columns.push({
+					field: entryIndex,
+					title: key,
+					width: "150px",
+					type: 'string'
+				});
+			}
+
+			i = i + 1;
+			m = m + 1;
+			entryIndex = "entries[" + i + "]";
+		}
+		var rows = [];
+		var data1 = data;
+		$.each(data1, function (i, e) {
+			var entryArray = [];
+			$.each(e, function (key, val) {
+				entryArray.push(val);
+			});
+			rows.push(kendo.observable({
+				entries: entryArray
+			}));
+		});
+
+		var viewModel = kendo.observable({
+			gridRows: rows
+		});
+		var dataSource = new kendo.data.DataSource({
+			data: rows,
+			schema: {
+				model: {
+					fields: {
+						entries: { type: "object" }
+					}
+				}
+			}
+		});
+		var configuration = {
+			height: "343px",
+			dataSource: dataSource,
+			dataBound: onDataBound,
+			editable: false,
+			sortable: true,
+			scrollable: true, 
+			pagable: false,
+			resizable: true,
+			filterable: true,
+			selectable: "false",
+			columns: columns,
+			// rows: viewModel
+		};
+
+		$("#example").remove();
+		$('#Maingrid').append('<div id="example" class="table-responsive text-nowrap" id="chk1"><table id="grid" data-bind="source: gridRows" class="table table-sm" style="width:100%;height:auto;line-height:1em;font-size:12px;"></table></div>');
+		var timeEditGrid = $("#grid").kendoGrid(configuration).data("kendoGrid");
+		kendo.bind($("#grid"), viewModel);
+		var grid = $("#grid").data("kendoGrid");
+	}
+	
+	function selectRowchild(tog_, sel_) {
+		var grid1 = $("#grid").data("kendoGrid");
+		var checked = tog_.checked,
+			row = $(tog_).closest("tr"),
+			gridss = $("#grid").data("kendoGrid"),
+			dataItem = gridss.dataItem(row);
+		if (checked) {
+			dataItem.entries[sel_] = "Y";
+			if (sel_ == "5") {
+				dataItem.entries[2] = "N";
+				dataItem.entries[3] = "N";
+				dataItem.entries[4] = "N";
+				denyAll("Deny", dataItem.entries[0]);
+			}
+			else {
+				dataItem.entries[5] = "N";
+				denyAll("Allow", dataItem.entries[0]);
+			}
+		}
+		else {
+			dataItem.entries[sel_] = "N";
+			dataItem.entries[5] = "Y";
+			var view = $("#grid").data("kendoGrid").dataSource.view();
+			var $grid = $("#grid");
+			for (var i = 0; i < view.length; i++) {
+				if (view[i].entries[0] == dataItem.entries[0]) {
+					if (view[i].entries[2] == "N" && view[i].entries[3] == "N" && view[i].entries[4] == "N") {
+						$grid.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Deny")
+							.prop("checked", "checked");
+					}
+				}
+			}
+		}
+	}
+
+	function onDataBound(e) {
+		var checked = [];
+		for (var i in checkedIds) {
+			if (checkedIds[i]) {
+				checked.push(i);
+			}
+		}
+	
+		var view = this.dataSource.view();
+		for (var i = 0; i < view.length; i++) {
+			if (view[i].entries[2] == "Y") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.CSV")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[3] == "Y") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Excel")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[4] == "Y") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Preview")
+					.attr("checked", "checked");
+			}
+			if (view[i].entries[5] == "y" || view[i].entries[5] == "Y") {
+				this.tbody.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Deny")
+					.attr("checked", "checked");
+			}
+		}
+	}	//if (key == "CSVDownload" || key == "ExcelDownload" || key == "Preview") {
+	function denyAll(perm, menugid) {
+		var view = $("#grid").data("kendoGrid").dataSource.view();
+		var $grid = $("#grid"); // Define the $grid variable here to access the Kendo UI Grid
+		if (perm == "Deny") {
+			for (var i = 0; i < view.length; i++) {
+				if (view[i].entries[5] == "Y") {
+					$grid.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Deny")
+						.prop("checked", true);
+
+					// Reset other checkboxes to "false" in the same row
+					$grid.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.CSV")
+						.prop("checked", false);
+
+					$grid.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Excel")
+						.attr("checked", false);
+
+					$grid.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Preview")
+						.attr("checked", false); 
+				}
+
+			}
+		}
+		else {
+
+			for (var i = 0; i < view.length; i++) {
+				//menugid
+				if (view[i].entries[0] == menugid) {
+					if (view[i].entries[2] == "Y" || view[i].entries[3] == "Y" || view[i].entries[4] == "Y") {
+						$grid.find("tr[data-uid='" + view[i].uid + "']").find(".form-check-input.Deny")
+							.prop("checked", false);
+					}
+				}
+			}
+		}
+	}
+	
+	function saveRoleRptPermissions() {
+		var modelobj = {};
+		var modelArr = [];
+		var getData = $("#grid").data().kendoGrid.dataSource.view();
+		if ($("#txtmode").val() == 'Create' && $("#txtrolename").val() == "") {
+			$.alert({
+				title: 'Recon',
+				content: 'Role Name is missing',
+				type: 'red',
+			});
+		} else if ($("#txtmode").val() != 'Create' && ($("#txtrolename").val() == "" || $("#txtrolecode").val() == "")) {
+			$.alert({
+				title: 'Recon',
+				content: 'Role Name is missing',
+				type: 'red',
+			});
+		}
+
+		try {
+			var in_recon_code = $("#cmbreconname").val();
+			var displayedData = getData;
+			if (displayedData.length > 0) {
+				for (var i = 0; i < displayedData.length; i++) {
+					if (displayedData[i].entries[6] == 'M')
+					{
+						var reporttemplate_code = displayedData[i].entries[0];
+						var report_code = '';
+					}else{
+						var reporttemplate_code = '';
+						var report_code = displayedData[i].entries[0];
+					}
+					
+					modelobj = {						
+						in_Role_code: $("#txtrolecode").val(),
+						in_report_code: report_code,
+						in_reporttemplate_code: reporttemplate_code,
+						in_exec_type: displayedData[i].entries[6],						
+						in_CSV_flag: displayedData[i].entries[2],
+						in_Excel_flag: displayedData[i].entries[3],
+						in_Preview_flag: displayedData[i].entries[4],
+						in_deny_flag: displayedData[i].entries[5]
+					}
+					modelArr.push(modelobj);
+				}
+				var out_msg = "";
+				var displayedDataAsJSON = JSON.stringify(modelArr);
+				var in_user_code = sessionStorage.getItem("usrname");
+				$.ajax({
+					url: '@Url.Action("saverolepermissionsaccess", "Admin")',
+					type: "post",
+					data: JSON.stringify({ roledetails: displayedDataAsJSON, in_user_code: in_user_code,in_recon_code: in_recon_code,out_msg: out_msg }),
+					contentType: "application/json",
+					success: function (data) {
+						var result = JSON.parse(data);
+						if (result[0].out_result == 1 || result[0].out_result == "1") {
+							$.alert({
+								title: 'Recon',
+								content: result[0].out_msg,
+								type: 'green',
+							});
+							if ($("#txtmode").val() == 'Create' && $("#txtrolegid") != '0') {
+								$("#txtmode").val('Edit');
+								$("#txtstatus").val("Active");
+								fetchroleaccess();
+							}
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: 'Something went wrong..! Please try after sometime..!',
+								type: 'red',
+							});
+						}
+					},
+					error: function (er) {
+						$.alert({
+							title: 'Recon',
+							content: 'Role Mapping Failed.!',
+							type: 'green',
+						});
+					}
+				});
+			}
+			else {
+				$.alert({
+					title: 'Recon',
+					content: 'No Rights given.!',
+					type: 'red',
+				});
+			}
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}	 
+</script>
+ 

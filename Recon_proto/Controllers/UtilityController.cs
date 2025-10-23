@@ -349,6 +349,11 @@ namespace Recon_proto.Controllers
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             fileconfigmodel FileDownload = new fileconfigmodel();
 
+        public JsonResult getfilepath(string confing_val,string username)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
+
             var context = _configuration.GetSection("Appsettings")[confing_val];
             FileDownload.in_config_name = context;
             DataTable result = new DataTable();
@@ -437,6 +442,7 @@ namespace Recon_proto.Controllers
                         if (obj_outresult.Count > 0)
 						{
 							out_filepath = obj_outresult[0].out_config_value;
+                            //out_filepath = "E:\\UAT_RECON\\Recon_files\\prod\\JobFiles\\";
 						}
                         if (file_name.ToLower().Contains(".xlsx"))
                         {
@@ -446,15 +452,15 @@ namespace Recon_proto.Controllers
                         }
 						string filePath = Path.Combine(out_filepath, fileName);
 
-                        if (!System.IO.File.Exists(filePath))
-                        {
-                            fileName = file_name + ".xlsm";
-                            filePath = Path.Combine(out_filepath, fileName);
+						if (!System.IO.File.Exists(filePath))
+						{
+                            filePath = filePath.Replace("xlsx", "xlsm");
                             if (!System.IO.File.Exists(filePath))
                             {
                                 return NotFound();
                             }
-                        }
+						}
+
 						
 						using (var memoryStream = new MemoryStream())
 						{

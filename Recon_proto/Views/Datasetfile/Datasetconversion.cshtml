@@ -7,6 +7,79 @@
 <head>
 	<title></title>
 	<style>
+		 @* Pandiaraj Support Docs download *@
+
+		.file-list {
+			margin-top: 10px;
+			width: 100%;
+		}
+
+		.file-item {
+			display: grid;
+			grid-template-columns: 300px auto; /* Fixed width for name, auto for delete icon */
+			align-items: center;
+			padding: 6px 10px;
+			border-bottom: 1px solid #ddd;
+			background: #f9f9f9;
+			font-family: sans-serif;
+		}
+
+		.file-name {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.delete-btn {
+			cursor: pointer;
+			color: red;
+			font-size: 16px;
+			justify-self: end;
+			glyphicon glyphicon-trash;
+		}
+
+		.k-filename {
+			color: black;
+		}
+
+		.file-item-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 5px;
+			border-bottom: 1px solid #ccc;
+			width: 300px;
+		}
+
+		.file-name {
+			flex: 1;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.delete-col {
+			width: 30px;
+			text-align: center;
+		}
+
+		#Supportfilespopup.k-window-content,
+		#Supportfilespopup.k-content {
+			all: unset;
+			height: 100%;
+			padding: .58em;
+		}
+
+		#BtnSupclosePopups {
+			min-width: 75px;
+			vertical-align: middle;
+			height: 20px;
+			padding: 3px 0px;
+			margin-top: 0;
+			border-radius: 5px;
+		}
+	</style>
+	<style>
 
 		.highlighted-column {
 			color: #000 !important;
@@ -48,17 +121,17 @@
 			font-size: 13px;
 		}
 
-		.k-widget.k-window {
+		/* comment for supporting documents popup 
+		/* .k-widget.k-window {
 			padding-top: 35px;
 			min-width: 90px;
 			min-height: 50px;
 			width: 700px !important;
 			height: 300px !important;
-			top: 180.766px !important;
-			/*left: 120px !important;*/
+			top: 180.766px !important; 
 			z-index: 10003;
 			left: 300px !important;
-		}
+		} */
 
 		.action-button {
 			width: 120px;
@@ -121,6 +194,10 @@
 
 		.tooltip-container:hover .tooltip1 {
 			display: block;
+		}
+
+		.k-window-titlebar {
+			font-size: 0.95em !important;
 		}
 	</style>
 	<script src="upload.js"></script>
@@ -192,7 +269,15 @@
 												<label for="" class="form-label">Pipeline<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 												<select id="Pipeline" class="form-select form-control"> </select>
 											</div>
-											<div class="col-sm-1" style="margin-top: 27px; width: 5%; margin-left: -4px;">
+											<div class="col-sm-3" style="margin-top: 35px; width: 35px;"> @* Pandiaraj Support Docs download *@
+												 <i class="fa fa-paperclip"
+												   style="margin-right: 10px; font-size: 20px;color: #1a1919;cursor: pointer;"
+												   onclick="openSupportPopup()"
+												   title="Download Supporting Documents">
+												</i>
+												
+											</div>
+											<div class="col-sm-2" style="margin-top: 27px; width: 5%; margin-left: -4px;">
 												<img style="height: 35px; width: 35px;cursor: pointer; margin-left: 4px;" title="Download Pipeline Template" src="../Assets/images/download.png" onclick="downloadTemplate()" />
 											</div>
 											<div class="col-sm-4">
@@ -283,7 +368,36 @@
 			</div>
 		</div>
 	</div>
+	@* Pandiaraj supportdoc popup add *@
 
+
+	<div style="display:none;" id="Supportfilespopup"> 	
+		<form id="supportUploadForm">
+			<div class="col-sm-12" style="width: 100%;margin-top:-7px; padding-left: 0; display: flex; justify-content: space-between;">  
+				<div style="margin-left: 20px; margin-right: 0px; font-weight: bold; color: #333;">
+					<label id="lbl_pcode" style="color:brown; margin-top: -12px;margin-bottom: 0px; font-size: 14px;"> </label>
+				</div> 
+			</div> 
+		</form> 
+		<div id="SupportfilesuploadedGrid" style="padding: .38em;"></div>
+		@* <div class="col-sm-12"
+			 style="width: 100%; padding-bottom: 5px; padding-left: 0; display: flex; align-items: center; justify-content: space-between;">
+			  
+			<div style="display: flex; gap: 5px;">
+				<button type="button" id="BtnSupclosePopup" class=" btn btn-sm btn-success me-2" data-bs-dismiss="modal" style="background: red;border-color: red;width:40%">
+					Close
+				</button>
+			</div>
+
+		</div> *@
+
+		@* <div style="width: 100%; display: flex; justify-content: flex-end;padding-top: 20px;">
+			<button type="button" id="BtnSupclosePopup" class="btn btn-sm btn-primary me-2">
+				Close
+			</button>
+		</div> *@
+	</div>
+	@* Pandiaraj supportdoc popup add *@
 </body>
 </html>
 <script>
@@ -895,3 +1009,181 @@
 	}
 
 </script>
+ 
+<script>
+
+	@* Pandiaraj supportdoc popup add *@
+	 
+		let files = [];
+		let selectedFiles = [];
+	function openSupportPopup() {
+		var pipeline_codes = $("#Pipeline").val();
+		if (pipeline_codes==""){
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Pipeline",
+				type: 'red',
+			});
+			return 
+		}		
+		GetSupportDocs(); 
+		
+	}
+
+	function getGridData() {
+		return $("#fileGridContainer").data("kendoGrid").dataSource.data().toJSON();
+	}
+
+	function GetSupportDocs() { 
+		var Pipelinelist = '@ViewBag.Pipelinelist';
+		var pipeline_codes = $("#Pipeline").val(); 
+		var ss = Pipelinelist + 'GetSupportDocuments?pipeline_code=' + pipeline_codes;
+		$.ajax({
+			type: 'GET',
+			url: '../Datasetfile/GetSupportDocs',
+			data: { pipeline_code: pipeline_codes }, 
+			dataType: "json",
+			cache: false,
+			success: function (res) {
+				console.log(res);
+				if (res.length> 0){
+					SupportDocsGrid(res);
+
+					Supportfilespopup.classList.add("show");
+					const $popup = $("#Supportfilespopup");
+					let popup = $popup.data("kendoWindow");
+
+					if (!popup) {
+						$popup.kendoWindow({
+							width: 1033,
+							top:35,// 12.5,
+							height:285,// 550,
+							title: "Support Files",
+							modal: true,
+							visible: false,
+							actions: ["Close"],
+							open: function () {
+								this.center();
+							},
+							actions: ["Close"]
+						});
+						popup = $popup.data("kendoWindow");
+					}
+					var lblpcode = document.getElementById('lbl_pcode');
+					lblpcode.innerHTML = "Pipeline Name -> " + $("#Pipeline option:selected").text();
+					popup.center().open();
+				}
+				else
+				{
+					SupportDocsGrid([]);
+					$.alert({
+						title: 'Recon',
+						content: "Supporting Documents not available",
+						type: 'red',
+					});
+					return false;
+				}				
+			},
+			error: function (err) {
+				console.error(err);
+			}
+		});
+	}
+
+	
+
+	function SupportDocsGrid(data1) {
+		try {
+			$('#SupportfilesuploadedGrid').empty();
+			$('#SupportfilesuploadedGrid').append('<div id="suportfileGrid" style="height: 232px;"></div>');
+			$('#suportfileGrid').kendoGrid({
+				dataSource: {
+					data: data1,
+					schema: {
+						model: {
+							fields: {
+								supportingdoc_gid: { type: "string" },
+								supportingdoc_name: { type: "string" },
+								supportingdoc_remarks: { type: "string" },
+								supportingdoc_size: { type: "string" },
+								supportingdoc_extension: { type: "string" },
+								Action: { type: "string" }
+							}
+						}
+					},
+					pageSize: 5
+				},
+				height: 232,
+				dataBound: function (e) {
+					var grid = this;
+					var gridContent = grid.element.find(".k-grid-content"); 
+					gridContent.height(163); 
+				},
+				pageable: true,
+				sortable: true,
+				filterable: true,
+				selectable: "single",
+				columns: [
+					{
+						field: "supportingdoc_gid",
+						title: "supportingdoc_gid",
+						hidden: true
+					},
+					{
+						field: "supportingdoc_name",
+						title: "Document Name",
+						width: 220
+					},
+					{
+						field: "supportingdoc_remarks",
+						title: "Remarks",
+						width: 220
+					},
+					{
+						field: "supportingdoc_size",
+						title: "Size",
+						width: 50,
+						filterable: false,
+					},
+					{
+						field: "supportingdoc_extension",
+						title: "Extenstion",
+						hidden: true
+					},
+					{
+						field: "Action",
+						title: "Action",
+						template: "<div class='action-cell' style='text-align: center;'>" +
+							"<i class='fa fa-download' " +
+							"onclick='DownloadSupportfiles(this)' " +
+							"style='color: green; cursor: pointer; font-size:16px;' " +
+							"title='Download'></i></div>", 
+						width: 70,
+						filterable: false,
+					}
+				]
+			});
+		} catch (err) {
+			// jAlert("Error: " + err, "Connector");
+			err;
+		}
+	}
+
+
+	function DownloadSupportfiles(e) {
+		var row = $(e).closest("tr");
+		var grid = $("#suportfileGrid").data("kendoGrid");
+		var dataItem = grid.dataItem(row); 
+		var docgid = dataItem.supportingdoc_gid;
+		var filedoc_name = dataItem.supportingdoc_name;
+		var filedoc_ext = dataItem.supportingdoc_extension; 
+		// var pipeline_code = $("#Pipeline").val();
+		var pipeline_code = $("#Pipeline").val().trim() + "-" + docgid + "." + filedoc_ext;
+		// pipeline_code = "PIPE_0597" + "~" + docgid + "." + filedoc_ext;
+		//var baseUrl = '@Url.Action("SupportDocsDownload", "datasetfile")';
+		var user_code = sessionStorage.getItem("usrname");	
+		window.location.href = '@Url.Action("SupportDocsDownload", "Datasetfile")?pipeline_code=' + pipeline_code + '&filedoc_name=' + filedoc_name + '&username=' + user_code + '';		 
+	}	 
+</script>
+@* Pandiaraj supportdoc popup add *@
+ 

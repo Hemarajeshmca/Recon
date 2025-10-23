@@ -355,7 +355,6 @@ namespace Recon_proto.Controllers
                         objcat.pipeline_name = result.Rows[i]["pipeline_name"].ToString();
                         objcat.pipeline_status = result.Rows[i]["pipeline_status"].ToString();
                         objcat.file_extenstion = result.Rows[i]["file_extenstion"].ToString();
-
 						objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);

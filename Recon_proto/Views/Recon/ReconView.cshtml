@@ -272,7 +272,14 @@
 															<label for="" class="form-label">Applied On&nbsp;</label>
 															<select id="cmbthersholdvalue" class="form-select form-control">
 															</select>
-														</div>														
+														</div>		
+														<div class="col-sm-2">
+															<label for="" class="form-label">Manual Theme&nbsp;</label>
+															<div style="margin-left:2px;margin-top:5px">
+																<input type="radio" id="manualtheme1" name="manualtheme" value="Y">&nbsp;Yes &nbsp;
+																<input type="radio" id="manualtheme2" name="manualtheme" value="N" style="margin-left: 10px;">&nbsp;No&nbsp;
+															</div>
+														</div>
 													</div>
 													<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px">
 														<div class="col-sm-2">
@@ -316,6 +323,7 @@
 															</div>
 														</div>
 													</div>
+													
 												</div>
 											</div>
 										</div>
@@ -634,8 +642,7 @@
 		grid_datasetrecon([]);
 		grid_recondatasetmapping([]);
 		$("#btncoll").hide();
-		$("#cmbkoprocessmethod").val('S');
-		
+		$("#cmbkoprocessmethod").val('S');		
 	});
 	function DatasetTypefield() {
 		if ($("#DatasetType").val() == "S") {
@@ -747,6 +754,7 @@
 				$("#txtstatus").val("Draft");
 				gridmap([]);
 				$('#partialmatch2').attr('checked', true);
+				$('#manualtheme2').attr('checked', true);
 				onpartial();
 				gridruleMapping([]);
 				gridpreprocessMapping([]);
@@ -786,7 +794,11 @@
 							} else {
 								$("#partialmatch2").prop("checked", true);
 							}
-
+							if (res.ReconHeader[0].recon_theme_flag == "Y") {
+								$("#manualtheme1").prop("checked", true);
+							} else {
+								$("#manualtheme2").prop("checked", true);
+							}
 							$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 							$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
 							$("#cmbthersholdvalue").val(res.ReconHeader[0].threshold_code);
@@ -907,6 +919,11 @@
 								$("#partialmatch1").prop("checked", true);
 							} else {
 								$("#partialmatch2").prop("checked", true);
+							}
+							if (res.ReconHeader[0].recon_theme_flag == "Y") {
+								$("#manualtheme1").prop("checked", true);
+							} else {
+								$("#manualtheme2").prop("checked", true);
 							}
 							$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
 							$("#cycle_date").val(res.ReconHeader[0].recon_cycle_date);
@@ -1047,6 +1064,11 @@
 							$("#partialmatch1").prop("checked", true);
 						} else {
 							$("#partialmatch2").prop("checked", true);
+						}
+						if (res.ReconHeader[0].recon_theme_flag == "Y") {
+							$("#manualtheme1").prop("checked", true);
+						} else {
+							$("#manualtheme2").prop("checked", true);
 						}
 						$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
 						$("#cycle_date").val(res.ReconHeader[0].recon_cycle_date);
@@ -1223,7 +1245,6 @@
 					$("#recon_id").val(res.ReconHeader[0].recon_gid);
 					$("#closure_date").val(res.ReconHeader[0].recon_closure_date);
 					$("#cycle_date").val(res.ReconHeader[0].recon_cycle_date);
-
 					if (res.ReconHeader[0].recon_value_flag == "Y") {
 						$("#reconvalueflag1").prop("checked", true);
 					} else {
@@ -1238,6 +1259,11 @@
 						$("#partialmatch1").prop("checked", true);
 					} else {
 						$("#partialmatch2").prop("checked", true);
+					}
+					if (res.ReconHeader[0].recon_theme_flag == "Y") {
+						$("#manualtheme1").prop("checked", true);
+					} else {
+						$("#manualtheme2").prop("checked", true);
 					}
 					$("#thersholdplus").val(res.ReconHeader[0].threshold_plus_value);
 					$("#thersholdminus").val(res.ReconHeader[0].threshold_minus_value);
@@ -1438,6 +1464,7 @@
 			var cmbrecontype = $("#cmbrecontype").val();
 			var ReconName = $("#ReconName").val();
 			var period_from = $("#period_from").val();
+			var in_recon_theme_flag = "";
 			if (period_from == "") {
 				$.alert({
 					title: 'Recon',
@@ -1495,6 +1522,7 @@
 			status = "D"
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			var in_recon_theme_flag = $("input[name='manualtheme']:checked").val();
 			if (in_recon_date_flag == undefined) {
 				in_recon_date_flag = "";
 			}
@@ -1520,7 +1548,7 @@
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
 				data: JSON.stringify({
-					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4,cycle_date: pr5,in_processing_method: in_processing_method
+					in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4,cycle_date: pr5,in_processing_method: in_processing_method,in_recon_theme_flag: in_recon_theme_flag
 				}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -2703,9 +2731,10 @@
 			} else {
 				var status = "Y";
 			}
-
+			var in_recon_theme_flag = "";
 			var in_recon_automatch_partial = $("input[name='partialmatch']:checked").val();
 			var in_recon_date_flag = $("input[name='recondateflag']:checked").val();
+			var in_recon_theme_flag = $("input[name='manualtheme']:checked").val();
 			if (in_recon_date_flag == undefined) {
 				in_recon_date_flag = "";
 			}
@@ -2731,7 +2760,7 @@
 				type: "POST",
 				url: '../Recon/Reconheadersave',
 				dataType: 'json',
-				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 ,cycle_date: pr5,in_processing_method: in_processing_method}),
+				data: JSON.stringify({ in_recon_gid: recon_id, in_recon_code: reconcode, in_recon_name: ReconName, in_recontype_code: cmbrecontype, in_action: action, in_action_by: action_by, in_period_from: pr, in_period_to: pr1, in_active_status: status, in_recon_automatch_partial: in_recon_automatch_partial, in_until_active_flag: in_until_active_flag, in_recon_date_flag: in_recon_date_flag, in_recon_date_field: in_recon_date_field, in_recon_value_flag: in_recon_value_flag, in_recon_value_field: in_recon_value_field, in_threshold_plus_value: in_threshold_plus_value, in_threshold_minus_value: in_threshold_minus_value, in_active_reason: in_active_reason, threshold_code: in_threshold_code, closure_date: pr4 ,cycle_date: pr5,in_processing_method: in_processing_method,in_recon_theme_flag: in_recon_theme_flag}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					if (response.out_result == "1") {
