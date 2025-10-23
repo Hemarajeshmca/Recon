@@ -434,7 +434,7 @@ namespace Recon_proto.Controllers
                         if (obj_outresult.Count > 0)
 						{
 							out_filepath = obj_outresult[0].out_config_value;
-                            out_filepath = "E:\\UAT_RECON\\Recon_files\\prod\\JobFiles\\";
+                            //out_filepath = "E:\\UAT_RECON\\Recon_files\\prod\\JobFiles\\";
 						}
                         if (file_name.ToLower().Contains(".xlsx"))
                         {
@@ -446,8 +446,13 @@ namespace Recon_proto.Controllers
 
 						if (!System.IO.File.Exists(filePath))
 						{
-							return NotFound(); 
+                            filePath = filePath.Replace("xlsx", "xlsm");
+                            if (!System.IO.File.Exists(filePath))
+                            {
+                                return NotFound();
+                            }
 						}
+
 						
 						using (var memoryStream = new MemoryStream())
 						{

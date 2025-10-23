@@ -316,18 +316,17 @@ namespace Recon_proto.Controllers
 			DataTable result = new DataTable();
 			string post_data = "";
 			var pass = "";
-
             if (context.user_password != "")
 			{
                 pass = Encrypt(clearText: context.user_password);
-			}
-						
+			}						
 			usermodel usr = new usermodel();
 			usr.user_password = pass;
 			usr.user_code = context.user_code;
 			usr.user_emailid = context.user_emailid;
 			usr.user_name = context.user_name;
-			usr.action_by = context.action_by;
+			usr.winauth = context.winauth;
+            usr.action_by = context.action_by;
 			usr.action = context.action;
 			usr.user_contact_no = context.user_contact_no;
 			usr.user_gid = context.user_gid;
@@ -369,7 +368,8 @@ namespace Recon_proto.Controllers
 			public string? user_emailid { get; set; }
 			public int user_gid { get; set; }
 			public string? user_name { get; set; }
-			public string? user_password { get; set; }
+            public string? winauth { get; set; }
+            public string? user_password { get; set; }
 			public string? action_by { get; set; }
 			public string? in_active_reason { get; set; }
 			public string? action { get; set; }
@@ -767,8 +767,15 @@ namespace Recon_proto.Controllers
         #endregion
 
 
+        public class rolereconmodel
+        {
+            public string? in_role_code { get; set; }
+            public string? in_report_flag { get; set; }
+            public string? in_recon_code { get; set; }
+            public string? in_user_code { get; set; }
+        }
         [HttpPost]
-        public JsonResult rolereconfetch([FromBody] rolefetchModel objrolefetch)
+        public JsonResult rolereconfetch([FromBody] rolereconmodel objrolefetch)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
@@ -802,8 +809,15 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-
-		public IActionResult saveRolePermissionsAccess([FromBody] saveroleAccessModel context)
+        public class saveroleAccesspermissionModel
+        {
+            public string? roledetails { get; set; }
+            public string? in_user_code { get; set; }
+            public string? in_recon_code { get; set; }
+            public string out_msg { get; set; }
+            public int out_result { get; set; }
+        }
+        public IActionResult saverolepermissionsaccess([FromBody] saveroleAccesspermissionModel context)
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
 			DataTable result = new DataTable();
@@ -822,7 +836,7 @@ namespace Recon_proto.Controllers
 					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
 					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-					var response = client.PostAsync("saveRolePermissionAccess", content).Result;
+					var response = client.PostAsync("saverolepermissionaccess", content).Result;
 					Stream data = response.Content.ReadAsStreamAsync().Result;
 					StreamReader reader = new StreamReader(data);
 					post_data = reader.ReadToEnd();
@@ -833,7 +847,7 @@ namespace Recon_proto.Controllers
 			catch (Exception ex)
 			{
 				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "saveRoleAccess");
+				objcom.errorlog(ex.Message, "saverolepermissionsaccess");
 				return Json(ex.Message);
 			}
 		}

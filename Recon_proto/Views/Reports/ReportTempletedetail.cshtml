@@ -509,7 +509,7 @@
                             <div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
                                 <div class="col-sm-4"></div>
                                 <div class="col-sm-4" style="text-align:center">
-                                    <button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+                                    <button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="saveheadersubmit()" disabled>Submit</button>&nbsp;&nbsp;&nbsp;
                                     <a href="../Reports/ReportTemplete" class="btn btn-sm cancel_btn me-2">Cancel</a>
                                 </div>
                                 <div class="col-sm-4"></div>
@@ -546,7 +546,7 @@
                                     <div class="row">
                                         <div class="col-md-9">
                                             <lable id="dynamic_label"></lable>
-                                            <textarea id="pasteAreaQuerySp" style="width:100%; height:380px;" placeholder="Enter your query or sp here..."></textarea>
+                                            <textarea id="pasteAreaQuerySp" onkeyup="$('#popupSaveBtnQuerySp').prop('disabled', true);" style="width:100%; height:380px;" placeholder="Enter your query or sp here..."></textarea> @* hari changes 08-09-25 *@
                                         </div>
                                         <div class="col-md-3">
                                             @* <lable id="dynamic_label">Static Fields</lable> *@
@@ -558,7 +558,7 @@
                                     </div>
                                     <div class="row" style="float:right; margin-top:20px;">
                                         <button style="width: 100px !important;" type="button" id="checkQuery" class="btn btn-sm save_btn me-2">CheckQuery</button>
-                                        <button style="width: 100px !important;" type="button" id="popupSaveBtnQuerySp" class="btn btn-sm save_btn me-2" disabled>Save</button>
+                                        <button style="width: 100px !important;" type="button" id="popupSaveBtnQuerySp" class="btn btn-sm save_btn me-2" disabled>Confirm</button> @* hari changes 08-09-25 *@
                                         <button style="width: 100px !important;color: red !important; background: white !important;" type="button" id="popupClearBtnQuerySp" class="btn btn-sm cancel_btn me-2">Clear</button>
                                         <button style="width: 100px !important;" onclick="closePopupQuerySp()" type="button" id="popupCancelBtnQuerySp" class="btn btn-sm cancel_btn me-2">Cancel</button>
                                     </div>
@@ -825,16 +825,24 @@
         }
         else if ((getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit" || getlocalStorage('btn_clk_val') == "Create") && ($("#reporttemplate_gid").val() != 0 || $("#reporttemplate_gid").val() != '0')) {
             if (getlocalStorage("ls_pageList") != undefined) {
+                var selectedTemplate_code = getlocalStorage("selectedTemplate_code");
                 var getselectedTemplate = getlocalStorage("selectedTemplate");
                 var jsondata = {};
                 jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
                 jsondata.in_recon_code = getselectedTemplate.recon_code;
                 jsondata.in_report_code = getselectedTemplate.report_code;
                 jsondata.in_action_by = sessionStorage.getItem("usrname");
+
+                if(getlocalStorage('btn_clk_val') == "Create" ) 
+                {
+                     jsondata.in_reporttemplate_code = "";
+                     selectedTemplate_code ="";
+                }
                 // resultset fetch
                 var data={};
                 data.action="GET";
                 data.report_code= getselectedTemplate.report_code;
+                data.reporttemplate_code = selectedTemplate_code;
                  $.ajax({
                     type: "POST",
                     url: '../Reports/reporttemplateResultset',
@@ -847,6 +855,7 @@
                             if (res1.Table.length > 0) {
                         
                             grid_Resultset(res1.Table);
+                            $("#btnsubmit").prop("disabled", false);  @* hari changes 08-09-25 *@
                             }
                             else
                             {
@@ -949,6 +958,11 @@
                 jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
                 jsondata.in_recon_code = getselectedTemplate.recon_code;
                 jsondata.in_report_code =getselectedTemplate.report_code;
+                jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
+                if($("#Resultset_code").val() == "empty")
+                {
+                     jsondata.in_reporttemplateresultset_code =null;
+                }
                 jsondata.in_action_by = sessionStorage.getItem("usrname");
                 $.ajax({
                     type: "POST",
@@ -989,7 +1003,8 @@
                 var jsondata = {};
                 jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
                 jsondata.in_recon_code = getselectedTemplate.recon_code;
-                jsondata.in_report_code =resulsetcode;
+                jsondata.in_report_code =$("#report_code").val();
+                jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
                 jsondata.in_action_by = sessionStorage.getItem("usrname");
                 $.ajax({
                     type: "POST",
@@ -1036,6 +1051,7 @@
                         fields: {
                             reportresultset_gid: { type: "string", defaultValue: "0" },
                            // reporttemplate_code: { type: "string" },
+                            reporttemplateresultset_code: { type: "string" },//hari change 03-oct-25
                             resultset_order: { type: "string" },
                             report_code: { type: "string" },
                             sheet_name: { type: "string" },
@@ -1073,7 +1089,8 @@
                 pageSizes: true,
                 buttonCount: 5
             },
-            toolbar: "<a href='javascript:void(0)' onclick='saveReportname()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
+            //toolbar: "<a href='javascript:void(0)' onclick='saveReportname()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
+            toolbar: "<a href='javascript:void(0)' onclick='saveheader()' > <span class='fa fa-plus' style = 'color:White' > </span></a> ",
             columns: [{
                 command: [
                     {
@@ -1115,8 +1132,14 @@
                 hidden: true,
             },
             {
+                field: "reporttemplateresultset_code",
+                title: "resultset code",
+                // width: 120,
+                hidden: true,
+            },
+            {
                 field: "resultset_name",
-                title: "SubReport Name",
+                title: "Resultset Name",
                  width: 80,
             },
             
@@ -1134,6 +1157,7 @@
                 // width: 120,
                 hidden: true,
             },
+             
             {
                 field: "exec_type",
                 title: "Exec Type",
@@ -1351,6 +1375,7 @@
             var reportcode=model.report_code;
             var exec_type=model.exec_type_code;
             var resultsetgid=model.reportresultset_gid;
+            var resultset_code =model.reporttemplateresultset_code;
             if(resultsetgid >0)
             {
                 if(exec_type=="R")
@@ -1358,8 +1383,11 @@
                     $("#rowfilter").show();
                     $("#colfilter").show();
                     $("#sorting").show();
-                    $("#Resultset_code").val(reportcode);
-                      tabdataFetch(reportcode);
+                   /* $("#Resultset_code").val(reportcode);
+                      tabdataFetch(reportcode); */ 
+                      $("#Resultset_code").val(resultset_code);
+                        $("#report_code").val(reportcode);
+                      tabdataFetch(resultset_code);
                 }
                 else
                 {
@@ -1519,6 +1547,7 @@
                             filter_seqno: { type: "string" },
                             report_field: { type: "string" },
                             report_code: { type: "string" },
+                            //in_reporttemplateresultset_code : {type : "string"},
                             reportparam_value: { type: "string" },
                             filter_criteria: { type: "string" },
                             filter_criteria_desc: { type: "string" },
@@ -1821,7 +1850,7 @@
         var arr1 = [];
         var data = {};
         data.in_reportparam_gid = 0;
-        data.in_report_code =  $("#Resultset_code").val();//$("#cmbreporttype").val();
+        data.in_report_code =  $("#report_code").val();//$("#cmbreporttype").val();
         data.in_recon_code = $("#cmbreconname").val();
         data.in_action = '';
         $.ajax({
@@ -2110,7 +2139,7 @@
         var jsondata = {};
         jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
         jsondata.in_recon_code = getselectedTemplate.recon_code;
-        jsondata.in_report_code =  $("#Resultset_code").val();//getselectedTemplate.report_code;
+        jsondata.in_report_code =  $("#report_code").val();//getselectedTemplate.report_code;
         jsondata.in_action_by = sessionStorage.getItem("usrname");
         $.ajax({
             type: "POST",
@@ -2288,7 +2317,7 @@
             {
                   $.alert({
                             title: 'Recon',
-                            content:"Sub Report name cannot be empty",
+                            content:"Resultset name cannot be empty",
                             type: 'red',
                         });
 
@@ -2394,6 +2423,7 @@
                                 // if (res.out_result == 1) {
                                 //     $("#txtmode").val("Edit");
                                 // }
+                                 btn_onClick("Edit");
                                 detailfetch();
                                 }
                             }
@@ -2433,7 +2463,7 @@
             if (model.system_flag != 'Y' || model.last_system_flag != 'N') {
                 data.in_reporttemplatefilter_gid = model.reporttemplatefilter_gid;
                 data.in_reporttemplate_code =  $("#reporttemplate_code").val();
-                data.in_report_code =  $("#Resultset_code").val();
+                data.in_reporttemplateresultset_code =  $("#Resultset_code").val();
                 data.in_filter_seqno = parseFloat(model.filter_seqno);
                 data.in_report_field = model.report_field;
                 data.in_filter_criteria = model.filter_criteria;
@@ -2538,7 +2568,7 @@
         data.templateJSON = JSON.stringify(modelArr);
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
         data.in_action_by = sessionStorage.getItem("usrname");
-        data.in_report_code = $("#Resultset_code").val();
+        data.in_reporttemplateresultset_code = $("#Resultset_code").val();
         if (data.templateJSON) {
             $.ajax({
                 url: '@Url.Action("reporttemplatefield", "Reports")',
@@ -2701,7 +2731,7 @@
                             data.in_filter_value = model.filter_value;
                             data.in_join_condition = model.join_condition;
                             data.in_last_system_flag = model.last_system_flag;
-                            data.in_report_code=$("#Resultset_code").val();
+                            data.in_reporttemplateresultset_code=$("#Resultset_code").val();
                             data.in_action = 'DELETE'
                             data.in_active_status = 'Y';
                             data.in_open_parentheses_flag = "";
@@ -2932,7 +2962,8 @@
             data.in_active_status = 'D';
             data.in_sortby_code = $("input[name='sortOrder']:checked").val();
             data.in_action_by = sessionStorage.getItem("usrname");
-            if (data.in_reporttemplate_name && data.in_report_code && data.in_recon_code) {
+            // if (data.in_reporttemplate_name && data.in_report_code && data.in_recon_code) { by hari 16-09-25
+            if (data.in_reporttemplate_name && data.in_recon_code) {
                 $.ajax({
                     type: "POST",
                     url: '../Reports/reporttemplate',
@@ -2955,6 +2986,7 @@
                                     constdata.reporttemplate_code = result[0].in_reporttemplate_code;
                                     setlocalStorage("selectedTemplate", constdata);
                                     setlocalStorage("ls_pageList", result[0].in_reporttemplate_code);
+                                    setlocalStorage("selectedTemplate_code", result[0].in_reporttemplate_code);
                                     setlocalStorage("temp_gid", result[0].in_reporttemplate_gid);
                                     btn_onClick("Edit");
                                     $("#reporttemplate_code").val(result[0].in_reporttemplate_code);
@@ -3001,13 +3033,15 @@
                     type: 'red',
                 });
             }
+            /*  by hari 16-09-25
             else if (!data.in_report_code) {
                 $.alert({
                     title: 'Recon',
                     content: 'Please Select Resultset',
                     type: 'red',
                 });
-            } else if (!data.in_recon_code) {
+            } */
+            else if (!data.in_recon_code) {
                 $.alert({
                     title: 'Recon',
                     content: 'Recon Name should not be empty',
@@ -3029,10 +3063,11 @@
         data.in_recon_code = $("#cmbreconname").val();
         data.in_system_flag = 'N';
         data.in_action = $("#reporttemplate_gid").val() == '0' ? 'INSERT' : 'UPDATE';
-        data.in_active_status = 'Y';
+        data.in_active_status = $("#txtstatus").val() == 'Draft' ? 'D' : 'Y'; @* hari changes 08-09-25 *@
         data.in_sortby_code = $("input[name='sortOrder']:checked").val();
         data.in_action_by = sessionStorage.getItem("usrname");
-        if (data.in_reporttemplate_name && data.in_report_code && data.in_recon_code) {
+       // if (data.in_reporttemplate_name && data.in_report_code && data.in_recon_code) { by hari 16-09-25
+            if (data.in_reporttemplate_name && data.in_recon_code) {
             $.ajax({
                 type: "POST",
                 url: '../Reports/reporttemplate',
@@ -3096,13 +3131,14 @@
                 type: 'red',
             });
         }
-        else if (!data.in_report_code) {
+       /* else if (!data.in_report_code) {
             $.alert({
                 title: 'Recon',
                 content: 'Please select Resultset',
                 type: 'red',
             });
-        } else if (!data.in_recon_code) {
+        } */
+        else if (!data.in_recon_code) {
             $.alert({
                 title: 'Recon',
                 content: 'Recon Name should not be empty',
@@ -3233,7 +3269,7 @@
         var data = {};
         data.in_reporttemplatesorting_gid = model.reporttemplatesorting_gid ? model.reporttemplatesorting_gid : 0;
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
-        data.in_report_code =$("#Resultset_code").val();
+        data.in_reporttemplateresultset_code =$("#Resultset_code").val();
         data.in_report_field = model.report_field;
         data.in_sorting_order = model.sorting_order;
         data.in_sort_type=model.sort_type_code;
@@ -3549,6 +3585,7 @@
                              //   content: res[0]?.out_msg,
                              //   type: 'green',
                              // });
+                             $("#txtstatus").val("Active");
                     } else {
 
                         // $.alert({

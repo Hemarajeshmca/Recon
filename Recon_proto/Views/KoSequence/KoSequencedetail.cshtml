@@ -759,8 +759,7 @@
 
 			$("#treeviewcustom").kendoTreeList({
 				dataSource: {
-					data: data,
-					sort: { field: "seqno", dir: "asc" },
+				data: data,					
 				schema: {
 					model: {
 						id: "id",
@@ -768,7 +767,7 @@
 						fields: {
 							id: { type: "number" },
 							parentId: { type: "number", nullable: true },
-							seqno: { type: "Decimal", editable: true },
+							seqno: { type: "number", parse: function(value) { return Number(value); }},
 							name: { type: "string" },
 							code: { type: "string" },
 							master_code: { type: "string" },
@@ -780,7 +779,12 @@
 						},
 						expanded: true
 					}
-				}
+				},
+				sort: { field: "seqno", dir: "asc", 
+					compare: function(a, b) {
+						return (a.seqno || 0) - (b.seqno || 0);
+					}
+				},
 			},
 			rowClass: function(e) {
 				return e.data.isNew ? "new-row" : "";
@@ -820,8 +824,9 @@
 					title: "Seq No",
 					width: 40,
 					attributes:	{ style: "text-align: Right" },
-					filterable: false,
-					template: '#=sel_textbox(data)#'
+					filterable: false,					
+					template: '#=sel_textbox(data)#',
+					format: "{0:n2}",
 				},
 				{ field: "type", title: "Type", width: 60,filterable: false},
 				{
@@ -1023,20 +1028,21 @@
 		var checkedItems = sourceTreeList.dataSource.data().filter(item => item.checked);
 		var destTreeList = $("#treeviewcustom").data("kendoTreeList");
 		var destDS = destTreeList.dataSource;
-		var max = 0;
+		var max = 1;
 
 		checkedItems.forEach(item => {
 			var uniqueid = destDS._data.length + 1
 			for (var i = 0; i < destDS._data.length; i++) {
 			if (destDS._data[i].seqno > max) {
-				max = destDS._data[i].seqno;
+				max = parseInt(destDS._data[i].seqno);
 			}
 		}
 		if(item.parentId > 0) {
+			var max1 = parseFloat(max) + 1;
 		// Avoid duplicates in destination
 			destDS._data.push({
 				id : uniqueid,
-				seqno: max + 1,
+				seqno: parseFloat(max1).toFixed(3),
 				parentId: 1,
 				name: item.name,
 				type: item.type,
@@ -1049,6 +1055,7 @@
 			 item.checked = false;
 			 item.moved = true;
 		});
+		destDS._data.sort({ field: "seqno", dir: "asc" });
 			destTreeList.refresh();
 
 	// Highlight rows manually
@@ -1080,13 +1087,18 @@
 	function sel_textbox(data){
 		var isvalue = data.seqno;
 		if (isvalue > 0) {
-			return '<input id="seqno_' + data.id + '" value=' + isvalue + ' name="seqno" style="width: 83%; border: none !important;box-shadow: none !important;" onpaste="return false;" maxlength="5" type="text"/> ';
-		}else {
+			return '<input id="seqno_' + data.id + '" ' +
+			   'value="' + kendo.toString(isvalue, "n2") + '" ' + // always two decimals
+			   'name="seqno" ' +
+			   'style="width: 83%; border: none !important; box-shadow: none !important; text-align:right;" ' +
+			   'onpaste="return false;" maxlength="5" type="text" />';
+		} else {
 			return '';
 		}
 	}
 
 	function save() {
+
 		var in_Koseq_gid = 0;
 		var in_recon_code = $("#cmbreconname").val();
 		var in_recon_version = $("#comreconversion").val();

@@ -46,21 +46,26 @@
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top:-1%;height:84%">
 				<div class="row" style="margin-bottom: 2%;">
+					<div class="col-sm-2">
+						<label for="" class="form-label">Recon Type&nbsp;</label>
+						<select id="cmbrecontype" class="form-select form-control" onchange="recontypeconfig()" style="width:77%" >
+						</select>
+					</div>
 					<div class="col-md-3">
 						<label for="organization" class="form-label">Recon Name</label><br>
-						<select id="reconname" class="form-select form-control"> </select>
+						<select id="reconname" class="form-select form-control" > </select>
 					</div>
 					<div class="col-md-2">
 						<label for="" class="form-label">
 							Tran Date
 						</label>
 						<div>
-							<input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" style="width:100%" />
+							<input class="cusDate" data-role='datepicker' id="tran_date" name="tran_date" style="width:80%" />
 							<span data-for='valid' class='k-invalid-msg'></span>
 						</div>
 					</div>
 
-					<div class="col-md-7" style="margin-top: 2.5%;">
+					<div class="col-md-5" style="margin-top: 2.5%;">
 						<button type="button" onclick="run()" class="btn btn-sm save_btn me-2" style="width:19%">
 							View
 						</button>
@@ -90,10 +95,9 @@
 		$("#exportExcel").hide();
 		$("#monthendexcel").hide();
 	});
-
-	function getreconlist() {
+	function recontypeconfig() {
 		var data = {};
-		data.in_recontype_code = 'B';
+		data.in_recontype_code = $("#cmbrecontype").val();;
 		data.in_user_code = sessionStorage.getItem("usrname");
 		var Context = data;
 		$.ajax({
@@ -120,6 +124,32 @@
 			error: function (er) {
 				alert(er)
 				console.log(er)
+			}
+		});
+	}
+	function getreconlist() {		
+		var in_master_code = "QCD_RC_RCON_TYPE";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbrecontype").empty();
+				$("#cmbrecontype").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+					if(item.masterSyscode == "B" || item.masterSyscode == "I" ) {
+						$("#cmbrecontype").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					}
+				});
 			}
 		});
 	}

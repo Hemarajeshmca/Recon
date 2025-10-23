@@ -6,26 +6,19 @@
 <html>
 <head>
     <title></title>
-
-
     <style>
-
-
-
         .k-grid-header .k-grid-filter .k-i-filter {
             display: inline-block !important; /* Ensure the filter icon is visible */
             visibility: visible !important;
         }
 
-
-
         table {
             width: 100% !important;
         }
 
-            table#grid1 {
-                width: 100% !important;
-            }
+        table#grid1 {
+            width: 100% !important;
+        }
 
         .custom-excel-button {
             background-color: #4CAF50; /* Green background */
@@ -36,9 +29,9 @@
             cursor: pointer; /* Optional: Change cursor to pointer */
         }
 
-            .custom-excel-button:hover {
-                background-color: #45a049; /* Darker green on hover */
-            }
+        .custom-excel-button:hover {
+            background-color: #45a049; /* Darker green on hover */
+        }
 
         th.k-header a.k-link {
             color: #fff !important;
@@ -55,19 +48,11 @@
             font-weight: 700 !important;
         }
 
-        /* .k-grid td {
-                    background-color: unset !important;
-                } */
-
         .selectedDataset {
             font-size: 13px;
             font-weight: 600;
             color: brown;
         }
-
-        /*      .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-                                                                                                                                                            color: #fff !important;
-                                                                                                                                                        }*/
 
         .nav-item.me-2.me-xl-50 {
             margin-right: 33rem !important;
@@ -82,17 +67,9 @@
             height: 360px;
         }
 
-        /*		.k-grid-header th.k-header > .k-link {
-                                                                                                                                                                                                    width: 100px;
-                                                                                                                                                                                                }*/
-
         .k-grid-header {
             font-weight: bold;
         }
-
-        /* .k-state-active {
-                                                                            display: none;
-                                                                        } */
 
         .k-content {
             font-weight: normal;
@@ -216,8 +193,8 @@
                             View
                         </button> &nbsp;&nbsp;
                         @* <button type="button" onclick="exportexcel()" id="exportExcel" aria-hidden="true" class="btn btn-sm btn-success me-2" style="background: #38b55a;border-color: #38b55a;width:23%;margin-top: 7px">
-                        <i class="fa-solid fa-file-excel"></i>
-                        </button> *@
+                            <i class="fa-solid fa-file-excel"></i>
+                            </button> *@
                     </div>
 
                 </div>
@@ -428,9 +405,20 @@
                     renderGroupedGridpivot(ruleRows, totalRows);
                 }
             } else if (reconType == "N") {
-                renderGroupedGridNonvaluebase(ruleRows, totalRows);
+                //renderGroupedGridNonvaluebase(ruleRows, totalRows);
+                if ($("#formatDropdown").val() == "format1") {
+                    renderGroupedGridNVB(ruleRows, totalRows);
+                }
+                else {
+                    renderGroupedGridNVBpivot(ruleRows, totalRows);
+                }
             } else if (reconType == "V") {
-                renderGroupedGridValuebase(ruleRows, totalRows);
+                if ($("#formatDropdown").val() == "format1") {
+                    renderGroupedGridValuebase(ruleRows, totalRows);
+                }
+                else {
+                    renderGroupedGridVBpivot(ruleRows, totalRows);
+                }
             } else {
 
                 if ($("#formatDropdown").val() == "format1") {
@@ -439,8 +427,6 @@
                 else {
                     renderGroupedGridpivot(ruleRows, totalRows);
                 }
-
-
             }
         }
     }
@@ -1529,7 +1515,8 @@
     }
 
 
-    function renderGroupedGridValuebase(datas, totalRows) {
+    function renderGroupedGridNVB(datas, totalRows) {
+        debugger;
         // Preprocess the data: replace empty spaces in all string values for datas
         const data = datas.map(item => {
             const sanitizedItem = {};
@@ -1575,9 +1562,11 @@
 
             groupLabels.forEach(group => {
                 const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
-                row[`${group}_Count`] = rowData ? rowData["Count"] : "0";
-                row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
-                row[`${group}_Formal_Value`] = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                row[`${group}_Source_Count`] = rowData ? rowData["Source Count"] : "0";
+                row[`${group}_Target_Count`] = rowData ? rowData["Target Count"] : "0";
+                row[`${group}_Total_Count`] = rowData ? rowData["Total Count"] : "0";
+                //row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                //row[`${group}_Formal_Value`] = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
                 format = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : format;
                 decimalPlaces = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[2] : decimalPlaces;
             });
@@ -1589,7 +1578,7 @@
             {
                 field: "RowLabel",
                 title: "Rules",
-                width: 250,
+                width: 500,
                 headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
                 footerTemplate: "Total", // Include the text 'Total' in the footer
                 locked: true // Freeze the first column
@@ -1607,39 +1596,39 @@
                 },
                 columns: [
                     {
-                        field: `${group}_Count`,
-                        title: "Count",
-                        width: 80,
-                        attributes: { style: "text-align:right;" },
-                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        aggregates: ["sum"],
-                        footerTemplate: "#= sum #",
-                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
-                    },
-                    {
-                        field: `${group}_Value`,
-                        title: `Value${format}`,
-                        width: 100,
-                        //hidden: true,
+                        field: `${group}_Source_Count`,
+                        title: "Source Count",
+                        width: 150,
                         attributes: { style: "text-align:right;" },
                         headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
                         aggregates: ["sum"],
                         //footerTemplate: "#= sum #",
-                        //footerTemplate: "#= kendo.toString(sum, 'n2') #",
                         format: `{0:N${decimalPlaces}}`,
                         footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
                         footerAttributes: { style: "text-align:right;" } // Right-align the footer
                     },
                     {
-                        field: `${group}_Formal_Value`,
-                        title: `Unit${format}`,
-                        width: 100,
-                        hidden: true,
+                        field: `${group}_Target_Count`,
+                        title: "Target Count",
+                        width: 150,
                         attributes: { style: "text-align:right;" },
                         headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
-                        //aggregates: ["sum"],
+                        aggregates: ["sum"],
                         //footerTemplate: "#= sum #",
-                        //footerTemplate: "#= kendo.toString(sum, 'n2') #",
+                        format: `{0:N${decimalPlaces}}`,
+                        footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Total_Count`,
+                        title: "Total Count",
+                        width: 150,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        //footerTemplate: "#= sum #",
+                        format: `{0:N${decimalPlaces}}`,
+                        footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
                         footerAttributes: { style: "text-align:right;" } // Right-align the footer
                     }
                 ]
@@ -1647,8 +1636,9 @@
 
             // Dynamically add the aggregates for this group
             aggregates.push(
-                { field: `${group}_Count`, aggregate: "sum" },
-                { field: `${group}_Value`, aggregate: "sum" }
+                { field: `${group}_Source_Count`, aggregate: "sum" },
+                { field: `${group}_Target_Count`, aggregate: "sum" },
+                { field: `${group}_Total_Count`, aggregate: "sum" }
             );
         });
 
@@ -1661,8 +1651,7 @@
                     model: {
                         fields: {
                             ...groupLabels.reduce((acc, group) => {
-                                acc[`${group}_Count`] = { type: "number" };
-                                acc[`${group}_Value`] = { type: "number" };
+                                acc[`${group}_Count`] = { type: "number" }
                                 return acc;
                             }, {})
                         }
@@ -1714,7 +1703,694 @@
         var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
     }
 
-    function renderGroupedGridNonValuebase(datas, totalRows) {
+    function renderGroupedGridNVBpivot(datas, totalRows) {
+        debugger;
+        // Preprocess the data: replace empty spaces in all string values for datas
+        const data = datas.map(item => {
+            const sanitizedItem = {};
+            for (const key in item) {
+                if (typeof item[key] === "string" && key === "groupRowLabel") {
+                    sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                } else {
+                    sanitizedItem[key] = item[key];
+                }
+            }
+            return sanitizedItem;
+        });
+
+        // Preprocess the totalRows in the same way
+        const totals = totalRows.map(item => {
+            const sanitizedTotal = {};
+            for (const key in item) {
+                if (typeof item[key] === "string") {
+                    sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                } else {
+                    sanitizedTotal[key] = item[key];
+                }
+            }
+            return sanitizedTotal;
+        });
+
+        // Map groupRowLabel to groupRowdisplayLabel for display purposes
+        const groupLabelMapping = {};
+        datas.forEach(item => {
+            const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+            groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+        });
+
+        // Extract unique group headers and row labels
+        const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+        groupLabel.push("Target");
+        const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+        //const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+        const rowLabels = [...new Set(data.map(d => d["Row Labels"] + "&$~^" + d["Target Labels"]))];
+
+        // Extract target labels if available
+        const targetLabels = [...new Set(data.map(d => d["Target Labels"]))];
+
+        // Transform data into the required row format
+        const gridData = rowLabels.map(rowLabel => {
+        const row = { "RowLabel": rowLabel.split("&$~^")[0] };
+        let totalNetValue = 0; // Initialize total for Net columns rowLabel.split('&$~^')[0]
+
+
+            groupLabels.forEach(group => {
+                if (group != "Target") {
+                    const rowData = data.find(d => d["Row Labels"] + "&$~^" + d["Target Labels"] === rowLabel && d.groupRowLabel === group);
+                    row[`${group}_Count`] = rowData ? rowData["Count"] : "0";
+                    row[`${group}_Source_Count`] = rowData ? rowData["Source Count"] : "0";
+                    row[`${group}_Target_Count`] = rowData ? rowData["Target Count"] : "0";
+                    row[`${group}_Total_Count`] = rowData ? rowData["Total Count"] : "0";
+                    //row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                    //row[`${group}_Formal_Value`] = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : decimalFixed(in_conversion_type, 0.000000);
+                    format = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : " ";//format;
+                    decimalPlaces = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[2] : decimalPlaces;
+                }else{
+                    const rowData = data.find(d => d["Row Labels"] + "&$~^" + d["Target Labels"] === rowLabel && d.groupRowLabel === group);
+                    row[`${group}_Count`] = rowData ? rowData["Targes DS Count"] : "0";
+                    row[`${group}_Total_Count`] = rowData ? rowData["Total Count"] : "0";
+                    format = rowData ? kendo.toString(rowData["Target Formal Value"]).split(" ")[1] : " ";//format;
+                    decimalPlaces = rowData ? kendo.toString(rowData["Target Formal Value"]).split(" ")[2] : decimalPlaces;
+                    row["TargetDataSet"] = rowData ? rowData["Target Labels"] : "-";
+                }
+            });
+
+            // Add Target Labels if available
+            row["Target_Labels"] = targetLabels.join(", "); // Join all target labels into a single field
+            return row;
+        });
+
+        // Add "Sub Total" row dynamically
+        const totalRowData = totals.find(t => t["Row Labels"] === "SubTotal") || {}; // Get 'Total' data from totalRows
+        const subTotalRow = {
+            RowLabel: "Total",
+            backcolor: totalRowData.backcolor || "yellow",  // Use dynamic color if available
+            forecolor: totalRowData.forecolor || "red"     // Use dynamic color if available
+        };
+
+        groupLabels.forEach(group => {
+            const total = totals.find(t => t.groupRowLabel === group);
+            subTotalRow[`${group}_Count`] = total ? total["Source Count"] : "0";
+            subTotalRow[`${group}_Source_Count`] = total ? total["Source Count"] : "0";
+            subTotalRow[`${group}_Target_Count`] = total ? total["Target Count"] : decimalFixed(in_conversion_type, 0.000000);
+            subTotalRow[`${group}_Total_Count`] = total ? total["Source Count"] : "0";
+            //subTotalRow[`${group}_Formal_Net_Value`] = total ? total["Formal Net Value"] : decimalFixed(in_conversion_type, 0.000000);
+        });
+
+
+
+        // Define grid columns dynamically with aggregate functions
+        const columns = [
+            {
+                field: "RowLabel",
+                title: "Rules",
+                width: 500,
+                headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+                footerTemplate: "Total", // Include the text 'Total' in the footer
+                locked: true, // Freeze the first column
+                filterable: true,
+            }
+        ];
+
+        // Prepare aggregates dynamically
+        const aggregates = [];
+        groupLabels.forEach(group => {
+            const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+            columns.push({
+                title: displayLabel,
+                headerAttributes: {
+                    style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                },
+                columns: [
+                    {
+                        field: `${group}_Count`,
+                        title: "Count",
+                        width: 150,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        footerTemplate: "#= sum #",
+                        //format: `{0:N${decimalPlaces}}`,
+                        /*footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer*/
+                    }
+                ]
+            });
+
+            // Dynamically add the aggregates for this group
+            aggregates.push(
+                { field: `${group}_Count`, aggregate: "sum" }
+            );
+        });
+        columns.push({
+            field: "TargetDataSet",
+            title: "Target Data Set",
+            width: 250,
+            headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+            filterable: true
+        });
+        // Initialize Kendo Grid with footer for Grand Total
+        var gridConfig = {
+            dataSource: {
+                data: gridData,
+                aggregate: aggregates,
+                schema: {
+                    model: {
+                        fields: {
+                            ...groupLabels.reduce((acc, group) => {
+                                acc[`${group}_Count`] = { type: "number" };
+                                /*acc[`${group}_Source_Count`] = { type: "number" };
+                                acc[`${group}_Target_Count`] = { type: "number" };
+                                acc[`${group}_Total_Count`] = { type: "number" };*/
+                                return acc
+                            }, {})
+                        }
+                    }
+                }
+            },
+            group: [{ field: "TargetDataSet" }], // Grouping by Target Labels
+            groupable: true, // Enables grouping
+            height: 400,
+            width: "auto", // Set the grid width to 100% of its container
+            sortable: false,
+            scrollable: {
+                virtual: false
+            },
+            resizable: true,
+            filterable: true,
+            columns: columns,
+            toolbar: [
+                {
+                    name: "excel",
+                    text: "Export to Excel",
+                    className: "custom-excel-button"
+                }
+            ],
+            excel: {
+                fileName: "Knockoff MIS.xlsx",
+                filterable: true,
+                allPages: true
+            }, excelExport: function (e) {
+                var sheet = e.workbook.sheets[0];
+
+                // Loop through rows to find all footer rows
+                sheet.rows.forEach(function (row) {
+                    if (row.type === "footer") { // Check if the row is a footer row
+                        row.cells.forEach(function (cell) {
+                            cell.hAlign = "right"; // Set horizontal alignment to right for all footer cells
+                            if (!cell.font) {
+                                cell.font = {}; // Ensure font object exists
+                            }
+                            cell.font.bold = true;
+                        });
+                    }
+                });
+            }
+        };
+
+        // Initialize the grid
+        $("#example").remove(); // Remove any existing grid
+        $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+        var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+    }
+
+
+    function renderGroupedGridVBpivot(datas, totalRows) {
+        debugger;
+        // Preprocess the data: replace empty spaces in all string values for datas
+        const data = datas.map(item => {
+            const sanitizedItem = {};
+            for (const key in item) {
+                if (typeof item[key] === "string" && key === "groupRowLabel") {
+                    sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                } else {
+                    sanitizedItem[key] = item[key];
+                }
+            }
+            return sanitizedItem;
+        });
+
+        // Preprocess the totalRows in the same way
+        const totals = totalRows.map(item => {
+            const sanitizedTotal = {};
+            for (const key in item) {
+                if (typeof item[key] === "string") {
+                    sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                } else {
+                    sanitizedTotal[key] = item[key];
+                }
+            }
+            return sanitizedTotal;
+        });
+
+        // Map groupRowLabel to groupRowdisplayLabel for display purposes
+        const groupLabelMapping = {};
+        datas.forEach(item => {
+            const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+            groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+        });
+
+        // Extract unique group headers and row labels
+        const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+        groupLabel.push("Target");
+        const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+        //const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+        const rowLabels = [...new Set(data.map(d => d["Row Labels"] + "&$~^" + d["Target Labels"]))];
+
+        // Extract target labels if available
+        const targetLabels = [...new Set(data.map(d => d["Target Labels"]))];
+
+        // Transform data into the required row format
+        const gridData = rowLabels.map(rowLabel => {
+            const row = { "RowLabel": rowLabel.split("&$~^")[0] };
+            let totalNetValue = 0; // Initialize total for Net columns rowLabel.split('&$~^')[0]
+
+
+            groupLabels.forEach(group => {
+                if (group != "Target") {
+                    const rowData = data.find(d => d["Row Labels"] + "&$~^" + d["Target Labels"] === rowLabel && d.groupRowLabel === group);
+                    row[`${group}_Count`] = rowData ? rowData["Count"] : "0";
+                    //row[`${group}_Value`] = rowData ? rowData["Value"] : "0";
+                    //row[`${group}_Source_Count`] = rowData ? rowData["Source Count"] : "0";
+                    //row[`${group}_Target_Count`] = rowData ? rowData["Target Count"] : "0";
+                    //row[`${group}_Total_Count`] = rowData ? rowData["tot_count"] : "0";
+                    //row[`${group}_Source_Value`] = rowData ? rowData["Source Value"] : "0";
+                    //row[`${group}_Target_Value`] = rowData ? rowData["Target Value"] : "0";
+                    //row[`${group}_Total_Value`] = rowData ? rowData["tot_value"] : "0";
+                    row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                    format = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : " ";//format;
+                    decimalPlaces = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[2] : decimalPlaces;
+                } else {
+                    const rowData = data.find(d => d["Row Labels"] + "&$~^" + d["Target Labels"] === rowLabel && d.groupTargetRowLabel === group);
+                    row[`${group}_Count`] = rowData ? rowData["tot_countTgt"] : "0";
+                    //row[`${group}_Value`] = rowData ? rowData["tot_valueTgt"] : "0";
+                    row[`${group}_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Target Formal Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                    format = rowData ? kendo.toString(rowData["Target Formal Value"]).split(" ")[1] : " ";//format;
+                    decimalPlaces = rowData ? kendo.toString(rowData["Target Formal Value"]).split(" ")[2] : decimalPlaces;
+                    row["TargetDataSet"] = rowData ? rowData["Target Labels"] : "-";
+                }
+            });
+
+            // Add Target Labels if available
+            row["Target_Labels"] = targetLabels.join(", "); // Join all target labels into a single field
+            return row;
+        });
+
+        // Add "Sub Total" row dynamically
+        const totalRowData = totals.find(t => t["Row Labels"] === "SubTotal") || {}; // Get 'Total' data from totalRows
+        const subTotalRow = {
+            RowLabel: "Total",
+            backcolor: totalRowData.backcolor || "yellow",  // Use dynamic color if available
+            forecolor: totalRowData.forecolor || "red"     // Use dynamic color if available
+        };
+
+        groupLabels.forEach(group => {
+            const total = totals.find(t => t.groupRowLabel === group);
+            subTotalRow[`${group}_Count`] = total ? total["Count"] : "0";
+            //subTotalRow[`${group}_Source_Count`] = total ? total["Source Count"] : "0";
+            //subTotalRow[`${group}_Target_Count`] = total ? total["Target Count"] : decimalFixed(in_conversion_type, 0.000000);
+           // subTotalRow[`${group}_Total_Count`] = total ? total["Source Count"] : "0";
+            subTotalRow[`${group}_Value`] = total ? total["Value"] : "0";
+            //subTotalRow[`${group}_Source_Value`] = total ? total["Source Value"] : "0";
+            //subTotalRow[`${group}_Target_Value`] = total ? total["Target Value"] : decimalFixed(in_conversion_type, 0.000000);
+            //subTotalRow[`${group}_Total_Value`] = total ? total["Total Value"] : "0";
+            //subTotalRow[`${group}_Formal_Net_Value`] = total ? total["Formal Net Value"] : decimalFixed(in_conversion_type, 0.000000);
+        });
+
+
+
+        // Define grid columns dynamically with aggregate functions
+        const columns = [
+            {
+                field: "RowLabel",
+                title: "Rules",
+                width: 500,
+                headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+                footerTemplate: "Total", // Include the text 'Total' in the footer
+                locked: true, // Freeze the first column
+                filterable: true,
+            }
+        ];
+
+        // Prepare aggregates dynamically
+        const aggregates = [];
+        groupLabels.forEach(group => {
+            const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+            columns.push({
+                title: displayLabel,
+                headerAttributes: {
+                    style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                },
+                columns: [
+                    {
+                        field: `${group}_Count`,
+                        title: "Count",
+                        width: 100,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        footerTemplate: "#= sum #",
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Value`,
+                        title: `Value${format}`,
+                        width: 150,
+                        //hidden: true,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        format: `{0:N${decimalPlaces}}`,
+                        footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    }
+
+                ]
+            });
+
+            // Dynamically add the aggregates for this group
+            aggregates.push(
+                { field: `${group}_Count`, aggregate: "sum" },
+                { field: `${group}_Value`, aggregate: "sum" },
+                //{ field: `${group}_Total_Count`, aggregate: "sum" },
+                //{ field: `${group}_Total_Value`, aggregate: "sum" }
+            );
+        });
+        columns.push({
+            field: "TargetDataSet",
+            title: "Target Data Set",
+            width: 250,
+            headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+            filterable: true
+        });
+        // Initialize Kendo Grid with footer for Grand Total
+        var gridConfig = {
+            dataSource: {
+                data: gridData,
+                aggregate: aggregates,
+                schema: {
+                    model: {
+                        fields: {
+                            ...groupLabels.reduce((acc, group) => {
+                                acc[`${group}_Count`] = { type: "number" };
+                                //acc[`${group}_Source_Count`] = { type: "number" };
+                                //acc[`${group}_Target_Count`] = { type: "number" };
+                                //acc[`${group}_Total_Count`] = { type: "number" };
+                                acc[`${group}_Value`] = { type: "number" };
+                                //acc[`${group}_Source_Value`] = { type: "number" };
+                                //acc[`${group}_Target_Value`] = { type: "number" };
+                                //acc[`${group}_Total_Value`] = { type: "number" };
+                                return acc;
+                            }, {})
+                        }
+                    }
+                }
+            },
+            group: [{ field: "TargetDataSet" }], // Grouping by Target Labels
+            groupable: true, // Enables grouping
+            height: 400,
+            width: "auto", // Set the grid width to 100% of its container
+            sortable: false,
+            scrollable: {
+                virtual: false
+            },
+            resizable: true,
+            filterable: true,
+            columns: columns,
+            toolbar: [
+                {
+                    name: "excel",
+                    text: "Export to Excel",
+                    className: "custom-excel-button"
+                }
+            ],
+            excel: {
+                fileName: "Knockoff MIS.xlsx",
+                filterable: true,
+                allPages: true
+            }, excelExport: function (e) {
+                var sheet = e.workbook.sheets[0];
+
+                // Loop through rows to find all footer rows
+                sheet.rows.forEach(function (row) {
+                    if (row.type === "footer") { // Check if the row is a footer row
+                        row.cells.forEach(function (cell) {
+                            cell.hAlign = "right"; // Set horizontal alignment to right for all footer cells
+                            if (!cell.font) {
+                                cell.font = {}; // Ensure font object exists
+                            }
+                            cell.font.bold = true;
+                        });
+                    }
+                });
+            }
+        };
+
+        // Initialize the grid
+        $("#example").remove(); // Remove any existing grid
+        $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+        var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+    }
+
+    function renderGroupedGridValuebase(datas, totalRows) {
+        // Preprocess the data: replace empty spaces in all string values for datas
+        const data = datas.map(item => {
+            const sanitizedItem = {};
+            for (const key in item) {
+                if (typeof item[key] === "string" && key === "groupRowLabel") {
+                    sanitizedItem[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+                } else {
+                    sanitizedItem[key] = item[key];
+                }
+            }
+            return sanitizedItem;
+        });
+
+        // Preprocess the totalRows in the same way
+        const totals = totalRows.map(item => {
+            const sanitizedTotal = {};
+            for (const key in item) {
+                if (typeof item[key] === "string") {
+                    sanitizedTotal[key] = item[key].replace(/[\s$#%^&*()!?/\\|[\]\-]+/g, "");
+                } else {
+                    sanitizedTotal[key] = item[key];
+                }
+            }
+            return sanitizedTotal;
+        });
+
+        // Map groupRowLabel to groupRowdisplayLabel for display purposes
+        const groupLabelMapping = {};
+        datas.forEach(item => {
+            const sanitizedLabel = item.groupRowLabel.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, "");
+            groupLabelMapping[sanitizedLabel] = item.groupRowdisplayLabel;
+        });
+
+        // Extract unique group headers and row labels
+        const groupLabel = [...new Set(data.map(d => d.groupRowLabel))];
+        const groupLabels = groupLabel.map(label => label.replace(/[\s$#%^&*()!?/\\|[\]\-\.]+/g, ""));
+        const rowLabels = [...new Set(data.map(d => d["Row Labels"]))];
+
+        // Transform data into the required row format
+        const gridData = rowLabels.map(rowLabel => {
+            const row = { "RowLabel": rowLabel };
+            let totalNetValue = 0; // Initialize total for Net columns
+
+            groupLabels.forEach(group => {
+                const rowData = data.find(d => d["Row Labels"] === rowLabel && d.groupRowLabel === group);
+                row[`${group}_Source_Count`] = rowData ? rowData["Source Count"] : "0";
+                row[`${group}_Target_Count`] = rowData ? rowData["Target Count"] : "0";
+                row[`${group}_Total_Count`] = rowData ? rowData["Total Count"] : "0";
+                /*row[`${group}_Source_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Source Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                row[`${group}_Target_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Target Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                row[`${group}_Total_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Total Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));*/
+                //row[`${group}_Source_Value`] = rowData ? rowData["Source Value"] : "0";
+                row[`${group}_Source_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Source Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                //row[`${group}_Target_Value`] = rowData ? rowData["Target Value"] : "0";
+                row[`${group}_Target_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Target Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                //row[`${group}_Total_Value`] = rowData ? rowData["Target Value"] : "0";
+                row[`${group}_Total_Value`] = rowData ? parseFloat(decimalFixed(in_conversion_type, Number(kendo.toString(rowData["Formal Total Value"]).split(" ")[0]))) : parseFloat(decimalFixed(in_conversion_type, 0.000000));
+                format = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[1] : format;
+                decimalPlaces = rowData ? kendo.toString(rowData["Formal Value"]).split(" ")[2] : decimalPlaces;
+            });
+            return row;
+        });
+
+        // Define grid columns dynamically with aggregate functions
+        const columns = [
+            {
+                field: "RowLabel",
+                title: "Rules",
+                width: 250,
+                headerAttributes: { style: "text-align:center; font-weight: bold; background-color: white; color: white;" },
+                footerTemplate: "Total", // Include the text 'Total' in the footer
+                locked: true // Freeze the first column
+            }
+        ];
+
+        // Prepare aggregates dynamically
+        const aggregates = [];
+        groupLabels.forEach(group => {
+            const displayLabel = groupLabelMapping[group] || group; // Fetch user-friendly name
+            columns.push({
+                title: displayLabel,
+                headerAttributes: {
+                    style: "text-align:center; font-weight: bold; background-color: blue; color: white;"  // Apply blue color to the group label
+                },
+                columns: [
+                    {
+                        field: `${group}_Source_Count`,
+                        title: "Source Count",
+                        width: 80,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        footerTemplate: "#= sum #",
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Source_Value`,
+                        title: `Source Value${format}`,
+                        width: 100,
+                        type: "number",
+                        //hidden: true,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        format: `{0:N${decimalPlaces}}`,
+                        footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Target_Count`,
+                        title: "Target Count",
+                        width: 80,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        footerTemplate: "#= sum #",
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Target_Value`,
+                        title: `Target Value${format}`,
+                        width: 100,
+                        type: "number",
+                        //hidden: true,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        format: `{0:N${decimalPlaces}}`,
+                        footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Total_Count`,
+                        title: "Total Count",
+                        width: 80,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        footerTemplate: "#= sum #",
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    },
+                    {
+                        field: `${group}_Total_Value`,
+                        title: `Total Value${format}`,
+                        width: 100,
+                        type: "number",
+                        //hidden: true,
+                        attributes: { style: "text-align:right;" },
+                        headerAttributes: { style: "text-align:center; font-weight: bold; background-color: blue; color: white;" },
+                        aggregates: ["sum"],
+                        format: `{0:N${decimalPlaces}}`,
+                        footerTemplate: `#= kendo.toString(sum || 0, 'N${decimalPlaces}') #`,
+                        footerAttributes: { style: "text-align:right;" } // Right-align the footer
+                    }
+                ]
+            });
+
+            // Dynamically add the aggregates for this group
+            aggregates.push(
+                { field: `${group}_Source_Count`, aggregate: "sum" },
+                { field: `${group}_Source_Value`, aggregate: "sum" },
+                { field: `${group}_Target_Count`, aggregate: "sum" },
+                { field: `${group}_Target_Value`, aggregate: "sum" },
+                { field: `${group}_Total_Count`, aggregate: "sum" },
+                { field: `${group}_Total_Value`, aggregate: "sum" }
+            );
+        });
+
+        // Initialize Kendo Grid with footer for Grand Total
+        var gridConfig = {
+            dataSource: {
+                data: gridData,
+                aggregate: aggregates,
+                schema: {
+                    model: {
+                        fields: {
+                            ...groupLabels.reduce((acc, group) => {
+                                acc[`${group}_Source_Count`] = { type: "number" };
+                                acc[`${group}_Source_Value`] = { type: "number" };
+                                acc[`${group}_Target_Count`] = { type: "number" };
+                                acc[`${group}_Target_Value`] = { type: "number" };
+                                acc[`${group}_Total_Count`] = { type: "number" };
+                                acc[`${group}_Total_Value`] = { type: "number" };
+                                return acc;
+                            }, {})
+                        }
+                    }
+                }
+            },
+            height: 400,
+            width: "auto", // Set the grid width to 100% of its container
+            sortable: false,
+            scrollable: {
+                virtual: false
+            },
+            resizable: true,
+            filterable: true,
+            columns: columns,
+            toolbar: [
+                {
+                    name: "excel",
+                    text: "Export to Excel",
+                    className: "custom-excel-button"
+                }
+            ],
+            excel: {
+                fileName: "Knockoff MIS.xlsx",
+                filterable: true,
+                allPages: true
+            }, excelExport: function (e) {
+                var sheet = e.workbook.sheets[0];
+
+                // Loop through rows to find all footer rows
+                sheet.rows.forEach(function (row) {
+                    if (row.type === "footer") { // Check if the row is a footer row
+                        row.cells.forEach(function (cell) {
+                            cell.hAlign = "right"; // Set horizontal alignment to right for all footer cells
+                            if (!cell.font) {
+                                cell.font = {}; // Ensure font object exists
+                            }
+                            cell.font.bold = true;
+                        });
+                    }
+                });
+            }
+        };
+
+        // Initialize the grid
+        $("#example").remove(); // Remove any existing grid
+        $('#grid').append('<div id="example" style="position:relative;width:auto;" class="k-content"><table id="grid1" style="position:relative;width:100%;"></table></div>');
+
+        var timeEditGrid = $("#grid1").kendoGrid(gridConfig).data("kendoGrid");
+    }
+
+    function renderGroupedGridNonValuebased(datas, totalRows) {
+        debugger;
         // Preprocess the data: replace empty spaces in all string values for datas
         const data = datas.map(item => {
             const sanitizedItem = {};
