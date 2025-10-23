@@ -266,6 +266,7 @@ namespace Recon_proto.Controllers
                         objcat.koqueue_status = result.Rows[i]["koqueue_status"].ToString();
                         objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
                         objcat.scheduled_by = result.Rows[i]["scheduled_by"].ToString();
+                        objcat.queue_type = "Knock Off"; // result.Rows[i]["queue_type"].ToString();
                         objcat_lst.Add(objcat);
                     }
 					return Json(objcat_lst);
@@ -330,7 +331,9 @@ namespace Recon_proto.Controllers
 			public String? jobstatus_desc { get; set; }
 			public string? scheduled_by { get; set; }
 			public string? in_user_code { get; set; }
-		}
+            public string? queue_type { get; set; }
+
+        }
         public class KoQueued
         {
             public string? in_koqueue_remark { get; set; }
@@ -340,6 +343,11 @@ namespace Recon_proto.Controllers
         }
         #endregion
         #region Downloads
+
+        public JsonResult getfilepath(string confing_val,string username)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
 
         public JsonResult getfilepath(string confing_val,string username)
         {
@@ -536,6 +544,7 @@ namespace Recon_proto.Controllers
             }
 
 		}
+
 
 	}
 }
