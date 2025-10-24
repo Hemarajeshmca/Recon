@@ -75,7 +75,7 @@
 						<button type="button" aria-hidden="true" onclick="monthendbrs()" id="monthendexcel" class="btn btn-sm save_btn me-2" style="">
 							Monthend Brs
 						</button>
-						<button type="button" class="btn btn-sm save_btn me-2" onclick="customReport()" style="">
+						<button type="button" class="btn btn-sm save_btn me-2" onclick="customReport()" id="cusreport" style="">
 							Custom Report
 						</button>
 					</div>
@@ -94,6 +94,7 @@
 		getreconlist();
 		$("#exportExcel").hide();
 		$("#monthendexcel").hide();
+		$("#cusreport").hide();
 	});
 	function recontypeconfig() {
 		var data = {};
@@ -174,7 +175,7 @@
 					if (res.length > 0) {
 						loadGrid(res);
 						$("#exportExcel").show();
-						$("#monthendexcel").show();
+						// $("#monthendexcel").show();
 					} else {
 						loadGrid([]);
 					}

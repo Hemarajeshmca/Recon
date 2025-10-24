@@ -569,9 +569,9 @@ namespace Recon_proto.Controllers
                         Table1 = JsonConvert.DeserializeObject<DataTable>(d2);
                         Table1.Columns.RemoveAt(0);
                         Table1.Columns[0].ColumnName = "Particulars";
-                        Table1.Columns[1].ColumnName = "Amount";
-                        Table1.Columns[2].ColumnName = "Account Mode";
-                        Table1.Columns[3].ColumnName = "Balance Amount";
+                        Table1.Columns[1].ColumnName = "tran_value";
+                        Table1.Columns[2].ColumnName = "tran_acc_mode";
+                        Table1.Columns[3].ColumnName = "bal_value";
                         using (XLWorkbook wb = new XLWorkbook())
                         {
 

@@ -155,6 +155,7 @@
 	function reporton() {
 		if ($("input[name='reconbasedon']:checked").val() == "R") {
 			$("#recon").show();
+			fetchroleaccess();
 		}else{
 			$("#recon").hide();
 			fetchroleaccess();
@@ -186,11 +187,7 @@
 							text: item.recon_name
 						}));
 					}
-				});
-				if (sessionStorage.getItem("reconcode") != null) {
-					$("#cmbreconname").val(sessionStorage.getItem("reconcode"));
-					jQuery('#cmbreconname').trigger("change");
-				}
+				});				
 			},
 			error: function (er) {
 				alert(er)
