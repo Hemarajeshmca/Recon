@@ -2456,7 +2456,7 @@ namespace Recon_proto.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    string Urlcon = "Report/";
+                    string Urlcon = "ReportQueue/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
@@ -2468,7 +2468,8 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(objdata), UTF8Encoding.UTF8, "application/json");
                     try
                     {
-                        var response = client.PostAsync("generatedynamicreport_new", content).Result;
+                        //var response = client.PostAsync("generatedynamicreport_new", content).Result;
+                        var response = client.PostAsync("setReportqueuewithdatamodel", content).Result;
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
                         post_data = reader.ReadToEnd();

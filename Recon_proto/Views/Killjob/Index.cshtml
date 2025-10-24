@@ -1,0 +1,250 @@
+﻿@{
+	ViewBag.title = "Kill Job";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		/*	.k-grid-header th.k-header > .k-link {
+					width: 100px;
+				}*/
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-grid-filter.k-state-active {
+			color: #ffffff;
+			background-color: #1274AC;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top: -1%; min-height: 82%;">
+				<div id="gd_killjob">
+					<div id="grid_killjob"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		getKilljob();
+	});
+
+
+	function getKilljob() {
+		var actionBy = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '@Url.Action("getKilljob", "Killjob")',
+			dataType: 'json',
+			data: JSON.stringify({ processId: 0, action: "get", userCode: actionBy }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					$("#grid_killjob").empty();
+					$("#grid_killjob").append("<div id='grid_killjob'></div>");
+					fetchGrid(JSON.parse(response));
+				}
+				else {
+					fetchGrid();
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+
+	function fetchGrid(data) {
+		try {
+			$("#grid_killjob").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 10,
+					schema: {
+						model: {
+							fields: {
+								ID: { type: "number" },
+								USER: { type: "string" },
+								HOST: { type: "string" },
+								DB: { type: "string" },
+								COMMAND: { type: "string" },
+								TIME: { type: "string" },
+								STATE: { type: "string" },
+								INFO: { type: "string" }
+							}
+						}
+					}
+				},
+				height: 380,
+				groupable: false,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_killjob').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+				},
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				sortable: true,
+				selectable: true,
+				filterable: true,
+				navigatable: true,
+				resizable: true,
+				columns: [
+					{
+						command: [
+							{
+								name: "delete",
+								id: "btn_delete",
+								template: "<a href='' onclick='killJob(this)' value='ID' data-bs-toggle='modal'><img style='height: 20px;width: 20px;' src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+							},
+						],
+						title: "Action&nbsp;",
+						width: "50px",
+						attributes: { style: "text-align: center;" },
+					},
+					{
+						field: "ID",
+						title: "Job ID",
+						width: 70,
+						attributes: { style: "text-align: right;" },
+						filterable: {
+							ui: "numeric",
+							extra: false,
+						},
+					},
+					{
+						field: "USER",
+						title: "User",
+						width: 100,
+					},
+					{
+						field: "HOST",
+						title: "Host",
+						width: 100,
+						hidden: true
+					},
+					{
+						field: "DB",
+						title: "Database",
+						width: 100,
+					},
+					{
+						field: "COMMAND",
+						title: "Command",
+						width: 100,
+					},
+					{
+						field: "TIME",
+						title: "Time",
+						width: 120,
+					},
+					{
+						field: "STATE",
+						title: "State",
+						width: 120,
+					},
+					{
+						field: "INFO",
+						title: "Info",
+						width: 100,
+					}
+				],
+				editable: false,
+			});
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	function killJob(val) {
+		var actionBy = sessionStorage.getItem("usrname");
+		var data = $(val).attr('value');
+		var rows = $('#grid_killjob').data('kendoGrid').tbody.children();
+		var grid = $("#grid_killjob").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var processid = model.ID;
+		// Show confirmation box with OK / Cancel
+		if (confirm("Are you sure you want to kill this job?")) {		
+			$.ajax({
+				type: "POST",
+				url: '@Url.Action("setKilljob", "Killjob")',
+				dataType: 'json',
+				data: JSON.stringify({ processId: processid, action: "kill", userCode: actionBy }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					
+					if (response != null ) {
+						if (JSON.parse(response)[0].out_result == 1) {
+							$("#grid_killjob").empty();
+							$("#grid_killjob").append("<div id='grid_killjob'></div>");
+							getKilljob();
+						}else{
+							$.alert({
+								title: 'Recon',
+								content: JSON.parse(response)[0].out_msg,
+								type: 'red',
+							});
+						}
+						
+					}
+				}
+			});
+		} else {
+			// Cancel clicked
+			alert("Job kill action cancelled.");
+		}
+	}
+</script>
