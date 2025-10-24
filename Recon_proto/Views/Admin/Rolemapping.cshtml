@@ -7,6 +7,15 @@
 <head>
 	<title></title>
 	<style>
+		.big-checkbox {
+			accent-color: #007bff; /* modern browsers: makes checkmark blue */
+			border: 1px solid #333 !important; /* darker border */
+			box-shadow: 0 0 2px rgba(0,0,0,0.6); /* subtle outline */
+		}
+
+		.big-checkbox:checked {
+			accent-color: #28a745; /* green when checked */
+		}
 		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
 			color: #fff !important;
 		}
@@ -198,7 +207,7 @@
 						field: entryIndex,
 						title: key,
 						attributes: { style: "text-align: center" },
-						template: '<input type="checkbox"  class="form-check-input ' + key + '" name="checkbox" id="attributecheckbox_' + key + '" value="Y"  onchange = "selectRowchild(this,' + m + ')"  ' + disabledflag + '/> ',
+						template: '<input type="checkbox"  class="form-check-input big-checkbox ' + key + '" name="checkbox" id="attributecheckbox_' + key + '" value="Y"  onchange = "selectRowchild(this,' + m + ')"  ' + disabledflag + '/> ',
 						width: "80px",
 						filterable: false,
 						// lockable: false
@@ -459,8 +468,6 @@
 		catch (e) {
 			console.log(e)
 		}
-
-
 	}
 
 	function saveroleaccess() {

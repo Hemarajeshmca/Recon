@@ -143,6 +143,14 @@
 							<select id="Cmbrole" class="form-select form-control">
 							</select>
 						</div>
+
+						<div class="col-sm-2">
+							<label for="" class="form-label">Windows Auth&nbsp;</label>
+							<div style="margin-left:2px;margin-top:5px">
+								<input type="radio" id="windowauth1" name="windowauth" value="Y" >&nbsp;Yes &nbsp;
+								<input type="radio" id="windowauth2" name="windowauth" value="N" style="margin-left: 10px;">&nbsp;No&nbsp;
+							</div>
+						</div>
 						<div class="col-sm-2" style="margin-top:30px">
 							<button type="button" class="btn btn-sm btn-primary me-2" id="btnreconstatus" onclick="Addroleuser()">Recon Access</button>&nbsp;&nbsp;&nbsp;
 						</div>
@@ -179,6 +187,7 @@
 		griduserlist();
 		gridlist();
 		$("#treeviewpop").hide();
+		$('#windowauth2').attr('checked', true);
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
@@ -289,6 +298,7 @@
 								role_code: { type: "string" },
 								role_name: { type: "string" },
 								user_password: { type: "string" },
+								windows_flag: { type: "string" },
 								status: { type: "string" }
 							}
 						}
@@ -404,6 +414,12 @@
 						hidden: true,
 					},
 					{
+						field: "windows_flag",
+						title: "windows_flag",
+						width: 100,
+						hidden: true,
+					},					
+					{
 						command: [
 							{
 								name: "edit",
@@ -457,7 +473,7 @@
 			var emailid = $("#emailid").val();
 			var passworduser = $("#passworduser").val();
 			var usergid = $("#usergid").val();
-
+			var winauth = $("input[name='windowauth']:checked").val();
 			if (usergid > 0) {
 				usergid = $("#usergid").val();
 			} else {
@@ -471,14 +487,14 @@
 				action = "INSERT"
 			} else {
 				action = "UPDATE"
-
 			}
 			var in_active_reason = "";
 			$.ajax({
 				type: "POST",
 				url: '../Admin/usersave',
 				dataType: 'json',
-				data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser, role_code: Cmbrole, action: action, in_active_reason: in_active_reason }),
+				data: JSON.stringify({ user_gid: usergid, user_name: user_name, user_contact_no: mobileno, user_emailid: emailid, user_code: userid, action_by: action_by, user_password: passworduser,
+									   role_code: Cmbrole, action: action, in_active_reason: in_active_reason,winauth: winauth }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					var result = JSON.parse(response);
@@ -530,6 +546,11 @@
 		$("#Cmbrole").val(selectedItem.role_code);
 		$("#txtmode").val("edit");
 		$("#txtuserid").val("ID :  " + selectedItem.user_gid);
+		if (selectedItem.windows_flag == "Y") {
+			$("#windowauth1").prop("checked", true);
+		} else {
+			$("#windowauth2").prop("checked", true);
+		}
 		$("#btnreconstatus").attr("disabled", false);
 	}
 	function Addroleuser() {

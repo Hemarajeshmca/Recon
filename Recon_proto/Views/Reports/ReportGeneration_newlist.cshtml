@@ -258,6 +258,7 @@
 		try {
 			var grid = $("#grid_reporttemplist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
+			selectedItem.recon_code=$("#cmbreconname").val();
 			setlocalStorage("ls_pageList", selectedItem.reporttemplate_code);
 			setlocalStorage("temp_gid", selectedItem.reporttemplate_gid);
 			setlocalStorage("selectedTemplate", selectedItem);
@@ -272,6 +273,8 @@
 		try {
 			var grid = $("#grid_reporttemplist").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
+			setlocalStorage("selectedTemplate_code", selectedItem.reporttemplate_code);
+			setlocalStorage("selectedTemplate_code", selectedItem.reporttemplate_code);
 			if (selectedItem.report_exec_type == 'C') {
 				reportgeneration();
 			} else 

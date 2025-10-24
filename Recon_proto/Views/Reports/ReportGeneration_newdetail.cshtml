@@ -497,7 +497,7 @@
 										</div>
 										<div class="modal-body" style="margin-top: -26px;">
 											<div class="row">
-												<div class="col-md-10">
+												<div class="col-md-12"> @* hari changes 08-09-25 *@
 													<lable id="dynamic_label"></lable>
 													<textarea readonly id="pasteAreaQuerySp" style="width:100%; height:380px;" placeholder="Enter your query or sp here..."></textarea>
 												</div>
@@ -679,6 +679,13 @@
 					jsondata.in_report_code = getselectedTemplate.report_code;
 					jsondata.in_action_by = sessionStorage.getItem("usrname");
 					ReporType = getselectedTemplate.system_flag_desc;
+
+					//Pandiaraj Report Permissions 03-09-2025
+                    reconCode = getselectedTemplate.recon_code;
+                    templateCode = getselectedTemplate.reporttemplate_code;
+                    report_permission = reportpermissionscreen(reconCode, templateCode);
+					//Pandiaraj Report Permissions 03-09-2025
+
 					//detail fetch
 					$.ajax({
 						type: "POST",
@@ -708,9 +715,10 @@
 										item.isLastRow = true;
 									}
 								});
+									grid_tempfilter(gridcopy);
 								$("#cmbreporttype").val(res.Table[0].report_code);
 								loadResultsetDropdown(res.Table[0].report_code);
-								grid_tempfilter(gridcopy);
+								
 							}
 							else {
 								grid_tempfilter([])
@@ -866,7 +874,7 @@
 				title: "Result Set",
 				width: 50,
 				editor: function (container, options) {
-					item_rate(container, options.field, '9', '2');
+					item_rate(container, options.field, '9', '3');
 				},
 				attributes: { style: "text-align: right;" },
 			},
@@ -1032,14 +1040,14 @@
 			grid.dataSource.bind("change", function(e) {
 			if (["itemchange", "add", "remove"].includes(e.action)) {
 				gridchange = "Y";
-				//gridaddcss();
+                addcss();
 			}
 
 			$("#grid_tempfilter").on("change", ".chkbx1, .chkbx2", function () {
 				gridchange = "Y";
 				addcss();
 			});
-			addcss();
+			 
 		});
 			join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
 		}
@@ -1074,7 +1082,8 @@
 		var dataSource = grid.dataSource;
 
 		var report_code = $("#resultsetname").val();
-		var report_name = $("#resultsetname option:selected").text();
+
+			var report_name =  $("#resultsetname option:selected").text().split(" - ")[0].trim();
 		var filter_val = "";
 
 		// 🔍 Filter existing rows with the same report_code
@@ -1083,7 +1092,8 @@
 		});
 
 		// 🆕 Determine new sequence number based on report_code group
-		var newSeqNo = existingRows.length + 1;
+			var lastSeqNo = grid.dataSource._data.length;
+			var newSeqNo = parseInt(lastSeqNo)  + 1;
 
 		// ✅ Set join_condition of the last matching row to "AND" if empty
 		if (existingRows.length > 0) {
@@ -1098,7 +1108,7 @@
 			report_code: report_code,
 			report_name: report_name,
 			resultset_dropname: report_name,
-			filter_seqno: newSeqNo,
+				filter_seqno: newSeqNo,
 			open_parentheses_flag: "N",
 			close_parentheses_flag: "N",
 			reporttemplatefilter_gid: 0,
@@ -1309,7 +1319,7 @@
 			var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 			var template_code = getlocalStorage("ls_pageList");
 			var selected_template = getlocalStorage("selectedTemplate");
-			var selectedText = $('#resultsetname option:selected').text();
+				var selectedText = $('#resultsetname option:selected').text().split(" - ").slice(0, -1).join(" - ");;
 
 			
 			var report_code = "";
@@ -1324,6 +1334,9 @@
 						mainreport_exec_type_code = selected_template.report_exec_type;
 						template_code = '';
 					}
+					
+				// condition = JSON.stringify(buildReportConditionFromGridForMultiresultSet("#grid_tempfilter", 'Report'));
+				
 				}
 			var str = $("#rt_name").val();
 			var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
@@ -1407,6 +1420,9 @@
 				var exec_type_code = grid._data[0].exec_type_code;
 				var report_code = exec_type_code == 'M' ? grid._data[0].report_code : $("#cmbreporttype").val();
 				var recon_code = exec_type_code == 'M' ? $("#recon_code").val() : $("#reconname").val();
+					// if(exec_type_code=='M'){
+					// 	condition = JSON.stringify(buildReportConditionFromGridForMultiresultSet("#grid_tempfilter", 'Report'));
+					// }
 				var data = {
 					"in_archival_code": archival_code ? archival_code : '',
 					"in_reporttemplate_code": exec_type_code == 'M' ? '' : template_code,
@@ -2026,16 +2042,21 @@
 										content: res[0]["out_msg"],
 										type: 'green',
 									});
-									if (screen_code[0].download == "Y") {
-										const img_xlsx = document.getElementById("img_xlsx");
-										img_xlsx.classList.remove("img_disable");
-									} 								
-									const img_csv = document.getElementById("img_csv");
-									const img_xlsx = document.getElementById("img_xlsx");
-									const img_preview = document.getElementById("img_preview");
-									img_csv.classList.remove("img_disable");
-									img_xlsx.classList.remove("img_disable");
-									img_preview.classList.remove("img_disable");
+
+                                    //Pandiaraj Report Permissions 03-09-2025
+                                    gridchange = "N";
+									addcss();
+                                    //Pandiaraj Report Permissions 03-09-2025
+									//if (screen_code[0].download == "Y") {
+									//	const img_xlsx = document.getElementById("img_xlsx");
+									//	img_xlsx.classList.remove("img_disable");
+									//} 								
+									//const img_csv = document.getElementById("img_csv");
+									//const img_xlsx = document.getElementById("img_xlsx");
+									//const img_preview = document.getElementById("img_preview");
+									//img_csv.classList.remove("img_disable");
+									//img_xlsx.classList.remove("img_disable");
+									//img_preview.classList.remove("img_disable");
 								
 								} else {
 									$.alert({
@@ -2164,130 +2185,101 @@
 	}
 
 			 
-     function addcss() {// Pandiaraj 05-08-2025
-		// var count = $("#resultsetname option").length;
-		var count = $("#resultsetname option").filter(function () {
-			return $(this).val().trim() !== "";
-		}).length;
+    function addcss() {
 
-		if (gridchange == "N") {
-
-			const img_checkQuery = document.getElementById("img_checkQuery");
-			const img_xlsx = document.getElementById("img_xlsx");
-
-			const img_csv = document.getElementById("img_csv");
-			const img_preview = document.getElementById("img_preview");
-			const img_view = document.getElementById("img_view");
-
-			img_checkQuery.classList.remove("img_enable");
-			img_checkQuery.classList.add("img_disable");
-			if ($('#reportexec_type_code').val() == 'R')
-			{
-				if (count > 1) {
-				img_csv.classList.remove("img_enable");
-				img_csv.classList.add("img_disable");
-
-				img_preview.classList.remove("img_enable");
-				img_preview.classList.add("img_disable");
-
-				img_view.classList.remove("img_enable");
-				img_view.classList.add("img_disable");
-				}
-				else
-				{
-					img_csv.classList.remove("img_disable");
-					img_csv.classList.add("img_enable");
-
-					img_preview.classList.remove("img_disable");
-					img_preview.classList.add("img_enable");
-
-					img_view.classList.remove("img_enable");
-					img_view.classList.add("img_disable");
-				}
+        var count = $("#resultsetname option").filter(function () {
+            return $(this).val().trim() !== "";
+        }).length;
 
 
-				$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
-			}
-			else {
-				img_csv.classList.remove("img_disable");
-				img_csv.classList.add("img_enable");
+        const img_checkQuery = document.getElementById("img_checkQuery");
+        const img_xlsx = document.getElementById("img_xlsx");
+        const img_csv = document.getElementById("img_csv");
+        const img_preview = document.getElementById("img_preview");
+        const img_view = document.getElementById("img_view");
 
-				img_preview.classList.remove("img_disable");
-				img_preview.classList.add("img_enable");
 
-				img_view.classList.remove("img_disable");
-				img_view.classList.add("img_enable");
-				$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
-			}
-			if (screen_code[0].download == "Y") {
-				img_xlsx.classList.remove("img_disable");
-				img_xlsx.classList.add("img_enable");
-			}
+        const enable = el => { el.classList.remove("img_disable"); el.classList.add("img_enable"); };
+        const disable = el => { el.classList.remove("img_enable"); el.classList.add("img_disable"); };
 
-		}
-		else{
 
-			img_checkQuery.classList.remove("img_disable");
-			img_checkQuery.classList.add("img_enable");
+        const execTypeCodeVal = $('#reportexec_type_code').val();
+        const selectedTextcss = $('#resultsetname option:selected').text().trim();
+        const execType = selectedTextcss.split(" - ").pop();
+        const isQueryLike = (execType === "Query" || execType === "SP");
 
-			img_xlsx.classList.remove("img_enable");
-			img_xlsx.classList.add("img_disable");
 
-			img_csv.classList.remove("img_enable");
-			img_csv.classList.add("img_disable");
+        if (gridchange === "Y") {
+            enable(img_checkQuery);
+            disable(img_xlsx);
+            disable(img_csv);
+            disable(img_preview);
+            disable(img_view);
 
-			img_preview.classList.remove("img_enable");
-			img_preview.classList.add("img_disable");
 
-			img_view.classList.remove("img_enable");
-			img_view.classList.add("img_disable");
+            $('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
+            if (isQueryLike) {
+                $('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
+            }
+            return;
+        }
 
-			$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
-			var selectedText = $('#resultsetname option:selected').text();
-			let execType = selectedText.split(" ~ ").pop();
-			if (execType === "Query" || execType === "SP") {
-				$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
-			}
-		}
-		let selectedTextcss = $('#resultsetname option:selected').text().trim();
-		let execType = selectedTextcss.split(" ~ ").pop();
-		if (execType === "Query" || execType === "SP") {
-			img_view.classList.remove("img_disable");
-			img_view.classList.add("img_enable");
+        disable(img_checkQuery);
 
-			img_csv.classList.remove("img_enable");
-			img_csv.classList.add("img_disable");
+        if (execTypeCodeVal === 'R') {
 
-			img_preview.classList.remove("img_enable");
-			img_preview.classList.add("img_disable");
-		}
-		if (ReporType == "Standard") {
-			$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
-		}
-	}
-	function gridaddcss(){
-		
-		img_checkQuery.classList.remove("img_disable");
-		img_checkQuery.classList.add("img_enable");
+            if (count > 1) {
+                disable(img_csv);
+                disable(img_preview);
+                disable(img_view);
+            } else {
+                enable(img_csv);
+                enable(img_preview);
+                disable(img_view);
+            }
+            $('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
+        } else {
 
-		img_xlsx.classList.remove("img_enable");
-		img_xlsx.classList.add("img_disable");
+            enable(img_csv);
+            enable(img_preview);
+            enable(img_view);
+            $('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
+        }
 
-		img_csv.classList.remove("img_enable");
-		img_csv.classList.add("img_disable");
 
-		img_preview.classList.remove("img_enable");
-		img_preview.classList.add("img_disable");
 
-		img_view.classList.remove("img_enable");
-		img_view.classList.add("img_disable");
-		 
-		var selectedText = $('#resultsetname option:selected').text();
-		let execType = selectedText.split(" ~ ").pop();
-		if (execType === "Query" || execType === "SP") { 
-			$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
-		}
-	}
+
+
+        if (typeof screen_code !== "undefined" && screen_code[0]?.download === "Y") {
+            enable(img_xlsx);
+        } else {
+            disable(img_xlsx);
+        }
+
+
+        if (!isQueryLike && report_permission && Array.isArray(report_permission) && report_permission.length > 0) {
+            (report_permission[0].exceldownload === "Y") ? enable(img_xlsx) : disable(img_xlsx);
+            (report_permission[0].csvdownload === "Y") ? enable(img_csv) : disable(img_csv);
+            (report_permission[0].preview === "Y") ? enable(img_preview) : disable(img_preview);
+        }
+
+
+        if (typeof ReporType !== "undefined" && ReporType === "Standard") {
+            $('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
+        }
+        if (count > 1) {
+            disable(img_csv);
+            disable(img_preview);
+            disable(img_view);
+        }
+        if (isQueryLike) {
+            enable(img_view);
+            disable(img_csv);
+            disable(img_preview);
+        }
+    }
+
+	 
 	function buildReportConditionForPreview(gridId, from) {
 		var grid = $(gridId).data("kendoGrid");
 		if (!grid) return;
@@ -2319,14 +2311,14 @@
 			var code = row.report_code || 'UNKNOWN';
 			var name = row.report_name || '';
 
-			if (!grouped[code]) {
-				grouped[code] = {
+				if (!grouped[name]) {
+					grouped[name] = {
 					report_code: code,
 					report_name: name,
 					rows: []
 				};
 			}
-			grouped[code].rows.push(row);
+				grouped[name].rows.push(row);
 		}
 
 		var result = [];
@@ -2543,11 +2535,12 @@
 }
 
 	function loadResultsetDropdown(report_code) {
+		var selectedTemplate_code = getlocalStorage("selectedTemplate_code");
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reporttemplateResultset',
 			dataType: "json",
-			data: JSON.stringify({ report_code: report_code, action: 'Get' }),
+				data: JSON.stringify({ report_code: report_code, action: "Get",reporttemplate_code : selectedTemplate_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				const $dropdown = $('#resultsetname');
@@ -2618,17 +2611,24 @@
 	function changeResultSet() {
 		var selectedCode = $('#resultsetname').val();
 		var selectedText = $('#resultsetname option:selected').text();
+		
 		var getType = reportTempResultset.filter(item => item.resultset_dropname == selectedText);
+				//selectedText = selectedText.split('-')[0].trim();
+			    selectedText = selectedText.split(" - ").slice(0, -1).join(" - ");
        // var getType = reportTempResultset.filter(item => item.report_code == selectedCode); //Pandiaraj 22-08-2025 selectedText concordinate
 		if (getType.length > 0) {
 			$('#reportexec_type').val(getType[0].exec_type);
 			$('#reportexec_type_code').val(getType[0].exec_type_code);
 			var grid = $('#grid_tempfilter').data('kendoGrid');
+			if(grid == undefined)
+			{
+				return ;
+			}
 			if (getType[0].exec_type_code === 'R') {
 				grid.dataSource.filter({
-					field: "report_code",
+					field: "report_name",
 					operator: "eq",
-					value: selectedCode
+				    value: selectedText
 				});
 				$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1'); // enable Plus
 			} else {				
@@ -2724,8 +2724,8 @@
 				error: function (er) {
 					hasError = true;
 					completed++;
-						gridchange = "Y";
-									addcss();
+					gridchange = "Y";
+					addcss();
 					console.log("Error for report: " + reportCode, er);
 
 					$.alert({
@@ -2748,13 +2748,17 @@
 					content:successMessages,
 					type: 'green',
 				});
-				const img_csv = document.getElementById("img_csv");
-				const img_xlsx = document.getElementById("img_xlsx");
-				const img_preview = document.getElementById("img_preview");
-				img_csv.classList.remove("img_disable");
-				img_xlsx.classList.remove("img_disable");
-				img_preview.classList.remove("img_disable");
+				//const img_csv = document.getElementById("img_csv");
+				//const img_xlsx = document.getElementById("img_xlsx");
+				//const img_preview = document.getElementById("img_preview");
+				//img_csv.classList.remove("img_disable");
+				//img_xlsx.classList.remove("img_disable");
+				//img_preview.classList.remove("img_disable");
+                gridchange = "N";
+                addcss();
 			} else {
+                gridchange = "Y";
+                addcss();
 				console.log("Some checks failed. CSS remains disabled.");
 			}
 		}

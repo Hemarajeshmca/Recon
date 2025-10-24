@@ -1251,6 +1251,29 @@
 		// 	});
 		// })();
 	</script>
+	<script>
+		function reportpermissionscreen(reconcode, templatecode) {
+			var result = {};
+			var in_user_code = sessionStorage.getItem("usrname");
 
+			$.ajax({
+				type: "POST",
+				url: '../Common/reportpermission',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({
+					in_template_code: templatecode,
+					in_user_code: in_user_code,
+					in_recon_code: reconcode
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					result = response;
+				}
+			});
+
+			return result;
+		}
+	</script>
 </body>
 </html>

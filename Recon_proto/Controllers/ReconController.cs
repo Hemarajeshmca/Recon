@@ -165,7 +165,8 @@ namespace Recon_proto.Controllers
 			public String? in_recon_value_field { get; set; }
 			public Double in_threshold_plus_value { get; set; }
 			public Double in_threshold_minus_value { get; set; }
-			public String in_active_reason { get; set; }
+            public String? in_recon_theme_flag { get; set; }
+            public String in_active_reason { get; set; }
 			public String in_processing_method { get; set; }
             public String threshold_code { get; set; }
 			public String in_action { get; set; }
