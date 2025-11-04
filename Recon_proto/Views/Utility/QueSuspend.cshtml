@@ -217,6 +217,7 @@
                                 recon_name: { type: "string" },
                                 scheduled_by: { type: "string" },
                                 queue_type: { type: "string" },
+                                queue_name: { type: "string" },
                             }
                         },
                         parse: function (data) {
@@ -281,6 +282,11 @@
                         width: 100,
                     },
                     {
+                        field: "queue_name",
+                        title: "Scheduled Job",
+                        width: 100,
+                    },
+                    {
                         field: "scheduled_date",
                         title: "Scheduled Date",
                         format: formatdatetime1,
@@ -302,6 +308,13 @@
                     {
                         field: "queue_type",
                         title: "Queue Type",
+                        hidden: true,
+                        width: 80,
+                    },
+                    {
+                        field: "queue_name",
+                        title: "Name",
+                        hidden: true,
                         width: 80,
                     },
                     {
