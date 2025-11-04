@@ -265,7 +265,7 @@
                     <div class="row" style="margin-top: -18px;margin-bottom: 10px;">
                         <div class="col-sm-12">
                             <div class="row">
-                                <div class="col-sm-2"> 
+                                <div class="col-sm-2">
                                     <label for="organization" class="form-label">Custom Report Code</label>
                                     <input class="form-control" type="text" id="reporttemplate_code" value="" disabled>
                                 </div>
@@ -277,18 +277,18 @@
                                     <label for="organization" class="form-label">Status</label><br>
                                     <input class="form-control" type="text" id="txtstatus" disabled>
                                 </div>
-                               
+
                                 <div class="col-sm-6" style="margin-top: 3%;text-align:right">
-                                  
-                                        <a href="../Reports/ReportTemplete"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    
+
+                                    <a href="../Reports/ReportTemplete"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+
                                 </div>
                             </div>
-                            </div>
-
                         </div>
-                      
-                      
+
+                    </div>
+
+
                     <div class="col-md-12">
                         <div class="box box-orange" style="height:auto;">
                             <div class="row" style="padding-bottom:5px;padding-left:5px;padding-right:5px">
@@ -296,7 +296,7 @@
                                     <label for="" class="form-label">Custom Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <input class="form-control" id="rt_name" name="ReportTemplate" type="text">
                                     <input class="form-control" type="hidden" id="reporttemplate_gid" value=0>
-				    <input class="form-control" type="hidden" id="recon_code" value="">
+                                    <input class="form-control" type="hidden" id="recon_code" value="">
                                 </div>
                                 <div class="col-sm-3" style="">
                                     <label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -306,13 +306,13 @@
                                 </div>
                                 <div class="col-sm-3" style="display:none">
                                     <label for="" class="form-label">Standard Report Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-                                    <select id="cmbreporttype" class="form-select form-control" style="display:none"> 
+                                    <select id="cmbreporttype" class="form-select form-control" style="display:none">
                                     </select>
                                     <input class="form-control" id="Standard_rt_name" name="StandardReportTemplate" type="text">
                                     <input type="hidden" id="report_code" />
                                     <input type="hidden" id="Resultset_code" value="empty" />
                                 </div>
-                               @*  <div class="col-sm-3" style="display:none">
+                                @*  <div class="col-sm-3" style="display:none">
                                     <label for="" class="form-label">Recon Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <input disabled class="form-control" id="cmbreconname_desc" name="reconName" type="text">
                                     <select hidden id="cmbreconname" class="form-select form-control" disabled>
@@ -323,9 +323,9 @@
                                 <select id="sys_flag" class="form-select form-control">
                                 </select>
                                 </div>*@
-                               
-                              
-                                <div class="col-sm-3"> 
+
+
+                                <div class="col-sm-3">
                                     <div class="form-group">
                                         <label for="Filename" class="form-label">Choose Excel</label>
                                         <input type="file" onchange="filechange(this)" class="form-control input-lg browse btn btn-primary input-lg" accept=".xlsx, .xls, .xlsm, .csv" name="File_Import" id="File_Import" style="width: 90%;height: 30px;">
@@ -337,9 +337,9 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-1" style="margin-top: 2.5%;">
-                                    <img id="img_checkQuery" onclick="tabdataFetchAll()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" class="" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <img id="img_checkQuery" onclick="tabdataFetchAll('fromcheckquery')" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" class="" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
-                               
+
                                 <div class="col-sm-2" style="display:none">
                                     <label for="" class="form-label">Clone Report&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
                                     <select id="clonereport" class="form-select form-control">
@@ -365,6 +365,7 @@
                                                     data-bs-toggle="tab"
                                                     data-bs-target="#navs-pills-top-Resultset"
                                                     aria-controls="navs-pills-top-Resultset"
+                                                    onclick="selectRadioByResultCode($('#Resultset_code').val())"
                                                     aria-selected="true">
                                                 Result Set
                                             </button>
@@ -378,8 +379,7 @@
                                                     data-bs-toggle="tab"
                                                     data-bs-target="#navs-pills-top-ReportFilter"
                                                     aria-controls="navs-pills-top-ReportFilter"
-                                                    aria-selected="true"
-                                                    >
+                                                    aria-selected="true">
                                                 Row Filter
                                             </button>
                                         </li>
@@ -393,8 +393,7 @@
                                                     data-bs-toggle="tab"
                                                     data-bs-target="#navs-pills-top-ColumnFilter"
                                                     aria-controls="navs-pills-top-ColumnFilter"
-                                                    aria-selected="true"
-                                                    >
+                                                    aria-selected="true">
                                                 Column Filter
                                             </button>
                                         </li>
@@ -408,15 +407,14 @@
                                                     data-bs-toggle="tab"
                                                     data-bs-target="#navs-pills-top-sorting"
                                                     aria-controls="navs-pills-top-sorting"
-                                                    aria-selected="true"
-                                                   >
+                                                    aria-selected="true">
                                                 Sorting
                                             </button>
-                                        </li> 
-                                        <li class="" >
                                         </li>
-                                         
-                                    </ul> 
+                                        <li class="">
+                                        </li>
+
+                                    </ul>
                                     <div class="tab-content">
                                         @*Result Set*@
                                         <div class="tab-pane fade show active" id="navs-pills-top-Resultset" role="tabpanel" style="margin-top:-25px;">
@@ -496,7 +494,6 @@
                                             <div class="panel panel-default">
                                                 <div class="panel-body">
                                                     <div class="row" style="padding-bottom:15%;margin-top:5px;padding-left:30px;padding-right:5px">
-                                                       
                                                     </div>
                                                 </div>
                                             </div>
@@ -550,11 +547,11 @@
                                         </div>
                                         <div class="col-md-3">
                                             @* <lable id="dynamic_label">Static Fields</lable> *@
-                                            <textarea id="staticfields" style="width:100%; height:380px;font-size:12px" readonly >
+                                            <textarea id="staticfields" style="width:100%; height:380px;font-size:12px" readonly>
 
                                             </textarea>
                                         </div>
-                                       
+
                                     </div>
                                     <div class="row" style="float:right; margin-top:20px;">
                                         <button style="width: 100px !important;" type="button" id="checkQuery" class="btn btn-sm save_btn me-2">CheckQuery</button>
@@ -611,7 +608,7 @@
         $("#navhead").text("Custom Report");
         kendodate_format();
         detailfetch();
-        $("#cmbreporttype").prop("disabled", false);      
+        $("#cmbreporttype").prop("disabled", false);
     });
 
     function filechange(val) {
@@ -619,6 +616,25 @@
         if (fileInput.files.length > 0) {
             $("#fetch_filename").val(fileInput.files[0].name);
             // document.getElementById("fetch_filename").textContent = fileInput.files[0].name;
+        }
+    }
+        function selectRadioByResultCode(resultCode) {
+        var grid = $("#grid_Resultset").data("kendoGrid");
+        var data = grid.dataSource.view(); // visible data (considering filtering/paging)
+
+        // Loop through each row’s data
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].reporttemplateresultset_code === resultCode) {
+                // Find the row element using data-uid
+                var row = grid.tbody.find("tr[data-uid='" + data[i].uid + "']");
+
+                // Find the radio button inside that row and check it
+                row.find("input[type='radio']").prop("checked", true);
+                   $("#Resultset_code").val(data[i].reporttemplateresultset_code);
+                   $("#report_code").val(data[i].report_code);
+               // radio.prop("checked", true).trigger("change");
+                break;
+            }
         }
     }
 
@@ -655,7 +671,7 @@
                             }));
                         }
                     });
-                }    
+                }
             },
             error: function (er) {
                 $.alert({
@@ -696,7 +712,7 @@
 
 
             var reconcode = sessionStorage.getItem("reconcode");
-	    var data = getlocalStorage("ls_pageList");
+        var data = getlocalStorage("ls_pageList");
             var in_user_code = sessionStorage.getItem("usrname");
             $.ajax({
                 type: "POST",
@@ -762,7 +778,7 @@
 
         // recon list
 
-        var data = {};      
+        var data = {};
         data.in_user_gid = 0;
         data.in_active_status = '';
         data.in_user_code = sessionStorage.getItem("usrname");
@@ -833,7 +849,7 @@
                 jsondata.in_report_code = getselectedTemplate.report_code;
                 jsondata.in_action_by = sessionStorage.getItem("usrname");
 
-                if(getlocalStorage('btn_clk_val') == "Create" ) 
+                if(getlocalStorage('btn_clk_val') == "Create" )
                 {
                      jsondata.in_reporttemplate_code = "";
                      selectedTemplate_code ="";
@@ -853,8 +869,9 @@
                         if (response != " " && response != null && response != "{}" && response != "[]") {
                             var res1 = JSON.parse(response);
                             if (res1.Table.length > 0) {
-                        
+
                             grid_Resultset(res1.Table);
+                            tabdataFetchAll("fromdetailfetch");
                             $("#btnsubmit").prop("disabled", false);  @* hari changes 08-09-25 *@
                             }
                             else
@@ -924,8 +941,8 @@
                           //  grid_Resultset([]);
                             if ((getlocalStorage('btn_clk_val') == "View")) {
                                 $("#btnsubmit").hide();
-                                $("#btncolgrid").hide(); 
-                                $("#btn_upload").hide(); 
+                                $("#btncolgrid").hide();
+                                $("#btn_upload").hide();
                                 $("#btnclone").hide();
                                 $("#grid_tempfilter .k-grid-toolbar").hide();
                                 $("#grid_sorting .k-grid-toolbar").hide();
@@ -947,9 +964,9 @@
                     }
                 });
             }
-        } 
+        }
     }
-    function tabdataFetchAll()
+    function tabdataFetchAll(fromstatus)
     {
          //detail fetch
                 debugger;
@@ -975,9 +992,19 @@
                             var res = JSON.parse(response);
 
                             grid_tempfilter(res.Table1);
-                           // grid_columfilter(res.Table2);
-                           // grid_sorting(res.Table3);
-                           checkMultipleQueries();
+                           grid_columfilter(res.Table2);
+                            grid_sorting(res.Table3);
+                            if( fromstatus == "fromdetailfetch")
+                            {
+                                //  $("#Resultset_code").val(getselectedTemplate.reporttemplate_code);
+
+                                  selectRadioByResultCode($("#Resultset_code").val());
+                            }
+                            else
+                            {
+                                checkMultipleQueries();
+                            }
+
                         }
                         else {
                             //grid_Resultset([]);
@@ -1015,11 +1042,11 @@
                     success: function (response) {
                         if (response != " " && response != null && response != "{}" && response != "[]") {
                             var res = JSON.parse(response);
-                          
+
                             grid_tempfilter(res.Table1);
                             grid_columfilter(res.Table2);
                             grid_sorting(res.Table3);
-                         
+
                         }
                         else {
                             //grid_Resultset([]);
@@ -1082,7 +1109,7 @@
             selectable: "row",
             filterable: false,
             navigatable: true,
-            pageable: true, 
+            pageable: true,
             resizable: true,
             pageable: {
                 refresh: false,
@@ -1125,7 +1152,7 @@
                 width: 20,
                 attributes: { style: "text-align: right;" },
             },
-           
+
             {
                 field: "reportresultset_gid",
                 title: "reportresultset_gid",
@@ -1142,22 +1169,22 @@
                 title: "Resultset Name",
                  width: 80,
             },
-            
-           
+
+
              {
                 field: "exec_type_code",
                 title: "Exec code",
                 // width: 120,
                 hidden: true,
             },
-           
+
              {
                 field: "report_code",
                 title: "Report code",
                 // width: 120,
                 hidden: true,
             },
-             
+
             {
                 field: "exec_type",
                 title: "Exec Type",
@@ -1166,7 +1193,7 @@
                     },
                 width: 40,
             },
-            { 
+            {
                 field: "report_name",
                 title: "Exec Input",
                  editor: function (container, options) {
@@ -1177,7 +1204,7 @@
                             .on("click", function () {
                                 openlistpopUp1(options);
                             });
-                     } 
+                     }
                      else if(options.model.exec_type_code === "S"){
                          $('<button type="button" class="k-button">Enter the SP</button>')
                             .appendTo(container)
@@ -1204,12 +1231,12 @@
                  width: 40,
                // hidden: true,
             }
-            
-          
+
+
            ],
             editable: true,
         });
-        
+
     }
         function openlistpopUp(options) {
             selectedFilterRow = options.model;
@@ -1239,7 +1266,7 @@
             $("#pasteAreaQuerySp").val(options.model.report_name);
             $("#setValueQuerySp").modal("show");
             loadstaticfields();
-            
+
         }
         function loadstaticfields()
         {
@@ -1248,7 +1275,7 @@
             data1.reportresultset_gid=0;
             data1.action="GET_STATIC_FIELDS";
              $.ajax({
-                    type: "POST", 
+                    type: "POST",
                     url: '../Reports/reporttemplateResultset',
                     dataType: 'json',
                     data: JSON.stringify(data1),
@@ -1262,7 +1289,7 @@
                                     return item.val;
                                 });
 
-            
+
                             $("#staticfields").val(values.join("\n"));
                         }
                         else {
@@ -1285,7 +1312,7 @@
           function closePopupQuerySp(){
            $("#setValueQuerySp").modal('hide');
           }
-          
+
         $("#popupClearBtnQuerySp").on("click", function () {
             $("#pasteAreaQuerySp").val("");
         });
@@ -1343,7 +1370,7 @@
                                 // if (res.out_result == 1) {
                                 //     $("#txtmode").val("Edit");
                                 // }
-                                  
+
                                //  $("#popupSaveBtnQuerySp").prop("disabled", false);
                                //   selectedModel.set("report_name", queryorsp);
                                // $("#setValueQuerySp").modal("hide");
@@ -1366,7 +1393,7 @@
                         });
                     }
                 });
-           
+
         });
        function onRadioSelect(e)
        {
@@ -1384,7 +1411,7 @@
                     $("#colfilter").show();
                     $("#sorting").show();
                    /* $("#Resultset_code").val(reportcode);
-                      tabdataFetch(reportcode); */ 
+                      tabdataFetch(reportcode); */
                       $("#Resultset_code").val(resultset_code);
                         $("#report_code").val(reportcode);
                       tabdataFetch(resultset_code);
@@ -1396,7 +1423,7 @@
                     $("#sorting").hide();
                     $("#Resultset_code").val("empty");
                 }
-           
+
                 $("#lblSelectedresultset1").text(model.resultset_name);
                 $("#lblSelectedresultset2").text(model.resultset_name);
                 $("#lblSelectedresultset3").text(model.resultset_name);
@@ -1413,7 +1440,7 @@
                    return false;
             }
        }
-       
+
        function combo_editor_exectype(container, cmbid, datafield, code_datafield, grid_id){
              var arr = [];
              var list = {};
@@ -1453,7 +1480,7 @@
             }
         });
        }
-      
+
 
         function combo_editor_resultset(container, cmbid, datafield, code_datafield, grid_id) {
         var arr1 = [];
@@ -1467,7 +1494,7 @@
             data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
             contentType: 'application/json; charset=utf-8',
             success: function (response) {
-                
+
                  $.each(response, function (index, item) {
                      if(item.report_exec_type != "M" && item.report_exec_type != "C")
                      {
@@ -1477,7 +1504,7 @@
                       arr1.push(list);
                       }
                 });
-              
+
             },
             error: function (er) {
                 $.alert({
@@ -1600,7 +1627,7 @@
                         id: "Delete",
                         template: function (dataItem) {
                             if ($("#txtmode").val() == "View") {
-                                return ""; 
+                                return "";
                             } else {
                                 return "<a href='' onclick='myDeleteJs()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
                             }
@@ -1795,7 +1822,7 @@
         }
     }
 
-    function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) { 
+    function combo_editor_man1(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
         var arr = [];
         var in_master_code = "QCD_RP_CONSTRAINT";
         var in_user_code = sessionStorage.getItem("usrname");
@@ -2044,7 +2071,7 @@
                         id: "Delete",
                         template: function (dataItem) {
                             if ($("#txtmode").val() == "View") {
-                                return ""; 
+                                return "";
                             } else {
                                 return "<a href='' onclick='deleteSort()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
                             }
@@ -2073,7 +2100,7 @@
                 },
                 width: 120
             },
-            
+
             {
                 field: "sort_type_code",
                 title: "sort type code",
@@ -2331,7 +2358,7 @@
                         });
 
             }
-          
+
             else
             {
             var data1 = {};
@@ -2373,7 +2400,7 @@
                 }
                 else
                 {
-                      
+
                        if(model.report_name_input == null || model.report_name_input == undefined)
                     {
                         data1.exec_type_data=model.report_name;
@@ -2383,7 +2410,7 @@
                      data1.exec_type_data=model.report_name_input;
                     }
                 }
-              
+
                 data1.sheet_name=model.sheet_name;
                 if (model.reportresultset_gid == "0" || model.reportresultset_gid ==undefined) {
                     data1.action = "INSERT";
@@ -2403,9 +2430,9 @@
                     success: function (response) {
                         if (response != " " && response != null && response != "{}" && response != "[]") {
                             var res = JSON.parse(response);
-                            
+
                             if (res.outparam.length > 0) {
-                               
+
                                 if (res.outparam[0].out_result == 1) {
                                    $.alert({
                                     title: 'Recon',
@@ -2444,7 +2471,7 @@
                         });
                     }
                 });
-         //   } 
+         //   }
 
         }
         }
@@ -2490,7 +2517,7 @@
                     data.in_action = "INSERT"
                 } else {
                     data.in_action = "UPDATE"
-                } 
+                }
                 $.ajax({
                     type: "POST",
                     url: '../Reports/reporttemplatefilter',
@@ -2507,8 +2534,8 @@
                                     type: 'green',
                                 });
                                 if (res.out_result == 1) {
-                                    $("#txtmode").val("Edit");                                    
-                                }   
+                                    $("#txtmode").val("Edit");
+                                }
                                 detailfetch();
                             }
                         }
@@ -2542,7 +2569,7 @@
         }
     }
 
-    function savecolfilter() {       
+    function savecolfilter() {
         var modelArr = [];
         var grid = $("#grid_colfilter").data("kendoGrid");
         var colfilterData = $("#grid_colfilter").data().kendoGrid.dataSource.view();
@@ -2638,7 +2665,7 @@
                         confirm: function () {
                             var data1 = {};
                             data1.reportresultset_gid = parseInt(model.reportresultset_gid);
-           
+
                             data1.action = 'DELETE'
 
                             data1.update_by = sessionStorage.getItem("usrname");
@@ -2788,7 +2815,7 @@
 
     }
 
-    function deleteSort() {       
+    function deleteSort() {
         var grid = $("#grid_sorting").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
         var reporttemplatesorting_gid = parseInt(model.reporttemplatesorting_gid);
@@ -2885,8 +2912,8 @@
                     if (response != " " && response != null && response != "{}" && response != "[]") {
                         var res = JSON.parse(response);
                         if (res.outparam.length > 0) {
-                            
-                           
+
+
 
                             var data = getlocalStorage("ls_pageList");
                             var in_user_code = sessionStorage.getItem("usrname");
@@ -2912,7 +2939,7 @@
                                      $("#cmbreporttype").val(res.outparam[0].in_report_code);
                                       $("#cmbreporttype").trigger("change");
                                     saveheader();
-                                    
+
                                 },
                                 error: function (er) {
                                     $.alert({
@@ -2922,7 +2949,7 @@
                                     });
                                 }
                             });
-                          
+
                         }
                     } else {
                         $.alert({
@@ -3263,7 +3290,7 @@
         });
     }
 
-    function saveSorting() {      
+    function saveSorting() {
         var grid = $("#grid_sorting").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
         var data = {};
@@ -3294,9 +3321,9 @@
                         $("#txtmode").val("Edit");
                         detailfetch();
                     } else {
-                        $.alert({
+                         $.alert({
                             title: 'Recon',
-                            content: 'Something went wrong..! Please try after sometime..!',
+                            content: result[0].out_msg,
                             type: 'red',
                         });
                     }
@@ -3324,10 +3351,10 @@
             });
         }
 
-      
+
     }
 
-    function upload() {       
+    function upload() {
         var data = {};
         var formData = new FormData();
         data.in_reporttemplate_code = $("#reporttemplate_code").val();
@@ -3400,7 +3427,7 @@
                                 type: 'green',
                             });
                         }
-                    //} 
+                    //}
                     //else {
                     //    $.alert({
                     //        title: 'Recon',
@@ -3432,7 +3459,7 @@
                     } catch (error) {
                         reject(error);
                     }
-                    
+
                 } else if (file.name.endsWith('.csv')) {
                     // Read CSV files
                     Papa.parse(file, {
@@ -3462,13 +3489,13 @@
             data: JSON.stringify(data),
             contentType: "application/json",
             success: function (data) {
-               
+
             },
             error: function (er) {
-               
+
             }
         });
-       
+
     }
     function checkMultipleQueries() {
         const grid = $("#grid_tempfilter").data("kendoGrid");
@@ -3486,7 +3513,7 @@
         let successMessages = "";
         if(totalReports <= 0)
         {
-       
+
                  $.alert({
                     title: 'Recon',
                     content:"Report does not contain any row filters to Validate !",
@@ -3548,7 +3575,7 @@
                 }
             });
         });
-        
+
         function finalizeCheck(hasError, messages) {
             if (!hasError) {
                 $.alert({
@@ -3595,17 +3622,17 @@
                         // });
                     }
 
-                  
+
                 },
                 error: function (er) {
-                   
+
                     $.alert({
                         title: 'Recon',
                         content: 'Server error occurred',
                         type: 'red',
                     });
 
-                    
+
                 }
             });
         }

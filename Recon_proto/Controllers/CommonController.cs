@@ -395,10 +395,10 @@ namespace Recon_proto.Controllers
 					for (int i = 0; i < result.Rows.Count; i++)
 					{
 						reportpermissionmodel objcat = new reportpermissionmodel();
-						objcat.csvdownload = result.Rows[i]["CSVDownload"].ToString();
-						objcat.exceldownload = result.Rows[i]["ExcelDownload"].ToString();
-						objcat.preview = result.Rows[i]["Preview"].ToString(); 
-						objcat.deny = result.Rows[i]["Deny"].ToString();
+						objcat.csvdownload = result.Rows[i]["csv_flag"].ToString();
+						objcat.exceldownload = result.Rows[i]["excel_flag"].ToString();
+						objcat.preview = result.Rows[i]["preview_flag"].ToString(); 
+						objcat.deny = result.Rows[i]["deny_flag"].ToString();
 						objcat_lst.Add(objcat);
 					}
 					return Json(objcat_lst);

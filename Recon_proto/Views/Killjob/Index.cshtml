@@ -1,5 +1,5 @@
 ﻿@{
-	ViewBag.title = "Kill Job";
+	ViewData["Title"] = "Session Manager";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
@@ -17,21 +17,9 @@
 			margin-left: 10px;
 		}
 
-		table {
-			border: 1px solid #C5C5C5 !important;
+		.k-grid-header th.k-header > .k-link {
+			width: 100px;
 		}
-
-		.k-grid-content {
-			overflow-x: hidden;
-		}
-
-		.k-grid.k-widget {
-			height: 360px;
-		}
-
-		/*	.k-grid-header th.k-header > .k-link {
-					width: 100px;
-				}*/
 
 		.k-grid-header {
 			font-weight: bold;
@@ -40,6 +28,15 @@
 		.k-grid-filter.k-state-active {
 			color: #ffffff;
 			background-color: #1274AC;
+		}
+
+		table {
+			border: 1px solid #C5C5C5 !important;
+		}
+
+		.k-grid-content {
+			overflow-x: hidden;
+			height: 227px;
 		}
 
 		.k-content {
@@ -75,9 +72,9 @@
 
 <script type="text/javascript">
 	$(document).ready(function () {
+		 $("#navhead").text("Session Manager");
 		getKilljob();
 	});
-
 
 	function getKilljob() {
 		var actionBy = sessionStorage.getItem("usrname");
@@ -109,7 +106,7 @@
 			$("#grid_killjob").kendoGrid({
 				dataSource: {
 					data: data,
-					pageSize: 10,
+					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
@@ -125,7 +122,7 @@
 						}
 					}
 				},
-				height: 380,
+				height: 450,
 				groupable: false,
 				dataBound: function (e) {
 					resultData = e.sender._data;
@@ -134,7 +131,7 @@
 				},
 				pageable: {
 					refresh: false,
-					pageSizes: true,
+					pageSizes: [15, 20, 25, 50],
 					buttonCount: 5
 				},
 				sortable: true,
@@ -146,9 +143,9 @@
 					{
 						command: [
 							{
-								name: "delete",
-								id: "btn_delete",
-								template: "<a href='' onclick='killJob(this)' value='ID' data-bs-toggle='modal'><img style='height: 20px;width: 20px;' src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
+								name: "Delete",
+								id: "Delete",
+								template: "<a href='' onclick='myDeleteJs(this)' class='k-grid-delete' data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;",
 							},
 						],
 						title: "Action&nbsp;",
@@ -158,7 +155,7 @@
 					{
 						field: "ID",
 						title: "Job ID",
-						width: 70,
+						width: 100,
 						attributes: { style: "text-align: right;" },
 						filterable: {
 							ui: "numeric",
@@ -209,42 +206,66 @@
 		}
 	}
 
-	function killJob(val) {
-		var actionBy = sessionStorage.getItem("usrname");
-		var data = $(val).attr('value');
-		var rows = $('#grid_killjob').data('kendoGrid').tbody.children();
-		var grid = $("#grid_killjob").data("kendoGrid");
-		var model = grid.dataItem($(event.target).closest("tr"));
-		var processid = model.ID;
-		// Show confirmation box with OK / Cancel
-		if (confirm("Are you sure you want to kill this job?")) {		
-			$.ajax({
-				type: "POST",
-				url: '@Url.Action("setKilljob", "Killjob")',
-				dataType: 'json',
-				data: JSON.stringify({ processId: processid, action: "kill", userCode: actionBy }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					
-					if (response != null ) {
-						if (JSON.parse(response)[0].out_result == 1) {
-							$("#grid_killjob").empty();
-							$("#grid_killjob").append("<div id='grid_killjob'></div>");
-							getKilljob();
-						}else{
-							$.alert({
-								title: 'Recon',
-								content: JSON.parse(response)[0].out_msg,
-								type: 'red',
-							});
+	function myDeleteJs(e) {
+		$.confirm({
+			icon: 'fa fa-warning',
+			title: 'Recon',
+			autoClose: 'cancel|10000',
+			theme: 'dark',
+			animationSpeed: 700,
+			content: 'Are you sure you want to kill this job?',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var actionBy = sessionStorage.getItem("usrname");					
+					var grid = $("#grid_killjob").data("kendoGrid");
+					var model = grid.dataItem($(e).closest("tr"));
+					var processid = model.ID;
+					$.ajax({
+						type: "POST",
+						url: '@Url.Action("setKilljob", "Killjob")',
+						dataType: 'json',
+						data: JSON.stringify({ processId: processid, action: "kill", userCode: actionBy }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							if (response != null ) {
+								if (JSON.parse(response)[0].out_result == 1)
+								{
+									$("#grid_killjob").empty();
+									$("#grid_killjob").append("<div id='grid_killjob'></div>");
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: JSON.parse(response)[0].out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									getKilljob();
+								}
+								else
+								{
+									$.alert({
+										title: 'Recon',
+										content: JSON.parse(response)[0].out_msg,
+										type: 'red',
+									});
+								}
+							}
 						}
-						
-					}
-				}
-			});
-		} else {
-			// Cancel clicked
-			alert("Job kill action cancelled.");
-		}
+					});
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'Job kill action cancelled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+				},
+			}
+		});
 	}
 </script>

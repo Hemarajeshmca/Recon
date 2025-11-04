@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClosedXML.Excel;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Data;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Data;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Text;
 using static Recon_proto.Controllers.CommonController;
-using ClosedXML.Excel;
-using System.Net.Mime;
-using Newtonsoft.Json.Linq;
+using static Recon_proto.Controllers.ReportsController.ResultSetModel;
 
 namespace Recon_proto.Controllers
 {
@@ -1276,6 +1277,7 @@ namespace Recon_proto.Controllers
             public String? in_action_by { get; set; }
         }
         #endregion
+
         #region reportResultset
         public JsonResult reporttemplateResultset([FromBody] ResultSetModel context)
         {
@@ -1492,7 +1494,6 @@ namespace Recon_proto.Controllers
 
         #endregion
 
-
         #region Pagination Report
 
         //ReportmatchoffGridRead
@@ -1554,7 +1555,6 @@ namespace Recon_proto.Controllers
         }
 
         #endregion
-
 
         #region Report Run Pagination
 
@@ -2241,7 +2241,8 @@ namespace Recon_proto.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    string Urlcon = "Report/";
+                    string Urlcon = "ReportQueue/";
+                    //string Urlcon = "Report/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
                     client.DefaultRequestHeaders.Accept.Clear();
@@ -2254,7 +2255,8 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     try
                     {
-                        var response = client.PostAsync("generatedynamicreport", content).Result;
+                        //var response = client.PostAsync("generatedynamicreport", content).Result;
+                        var response = client.PostAsync("setReportqueue", content).Result;
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
                         post_data = reader.ReadToEnd();
@@ -2457,6 +2459,7 @@ namespace Recon_proto.Controllers
                 using (var client = new HttpClient())
                 {
                     string Urlcon = "ReportQueue/";
+                    //string Urlcon = "Report/";                    
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
@@ -2572,7 +2575,8 @@ namespace Recon_proto.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    string Urlcon = "Report/";
+                    string Urlcon = "ReportQueue/";
+                    //string Urlcon = "Report/";
                     client.BaseAddress = new Uri(urlstring + Urlcon);
                     //client.BaseAddress = new Uri("https://localhost:44348/api/Report/");
                     client.DefaultRequestHeaders.Accept.Clear();
@@ -2585,7 +2589,8 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
                     try
                     {
-                        var response = client.PostAsync("generatedynamicReport_typeC", content).Result;
+                        //var response = client.PostAsync("generatedynamicReport_typeC", content).Result;
+                        var response = client.PostAsync("setReportqueue", content).Result;
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
                         post_data = reader.ReadToEnd();
