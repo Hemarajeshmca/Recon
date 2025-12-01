@@ -328,7 +328,7 @@
 					<div class="col-md-12">
 						<div class="box box-orange" style="height:auto;">
 							<div class="row">
-								<div class="col-sm-3">
+								<div class="col-sm-2" style="width:19%">
 									<label for="" class="form-label">
 										Report Name&nbsp;
 										<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
@@ -350,14 +350,20 @@
 									<select id="cmbreporttype" class="form-select form-control"></select>
 								</div>
 
-								<div class="col-md-3">
+								<div class="col-md-2" style="width:23%">
 									<label for="organization" class="form-label">
 										Recon Name&nbsp;
 										<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
 									</label><br>
 									<select id="reconname" class="form-select form-control"></select>
-								</div>
-
+								</div>							
+								<div class="col-md-2" id="resultsetpart" style="width:21%">
+									<label for="organization" class="form-label">
+										Resultset Name&nbsp;
+										<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+									</label><br>
+									<select id="resultsetname" onchange="changeResultSet()" class="form-select form-control"> </select>
+								</div>								
 								<div class="col-sm-2">
 									<label for="organization" class="form-label">Multiple Result&nbsp;</label><br>
 									<img id="img_checkQuery" onclick="checkquery()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" class="img_disable" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -376,15 +382,7 @@
 							</div>
 
 							<!-- 👇 New Row for Resultset Name -->
-							<div id="resultsetpart" class="row mt-2 ">
-								<div class="col-md-3">
-									<label for="organization" class="form-label">
-										Resultset Name&nbsp;
-										<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
-									</label><br>
-									<select id="resultsetname" onchange="changeResultSet()" class="form-select form-control"> </select>
-								</div>
-							</div>
+							
 
 
 							<div class="col-md-12">
@@ -2179,6 +2177,7 @@
 			var grid = $(gridId).data("kendoGrid");
 			if (!grid) return;
 
+
 			// Get selected dropdown value
 			var selectedCode = $('#resultsetname').val();
 
@@ -2316,34 +2315,31 @@
 			return result;
 		}
 
-		function buildReportConditionFromGrid(gridId, from) {
-			debugger;
-			var grid = $(gridId).data("kendoGrid");
-			if (!grid || grid._data.length==0) {
-				return " and 1=1";
-			} else if(grid._data[0].exec_type_code == "M"){
-				// Get selected dropdown value
-				var selectedCode = $('#resultsetname').val();
-				if (selectedCode) {
-					grid.dataSource.filter({
-						field: "report_code",
-						operator: "eq",
-						value: selectedCode
-					});
-				} else {
-					grid.dataSource.filter([]); // Clear filters
-					grid.dataSource.data([]);   // Clear data (optional)
-				}
-				  // 👈 This is the correct way
+	function buildReportConditionFromGrid(gridId, from) {
+		var grid = $(gridId).data("kendoGrid");
+		if (!grid || grid._data.length==0) {
+			return " and 1=1";
+		} else if(grid._data[0].exec_type_code == "M"){
+			// Get selected dropdown value
+			var selectedCode = $('#resultsetname').val();
+			if (selectedCode) {
+				grid.dataSource.filter({
+					field: "report_code",
+					operator: "eq",
+					value: selectedCode
+				});
+			} else {
+				grid.dataSource.filter([]); // Clear filters
+				grid.dataSource.data([]);   // Clear data (optional)
 			}
-
-				 var rows =  grid.dataSource.view();
+			  // 👈 This is the correct way
+		}
+		var rows =  grid.dataSource.view();
 		var rpt_cond = "";
 
-			for (var i = 0; i < rows.length; i++) {
+		for (var i = 0; i < rows.length; i++) {
 			var row = rows[i];
 			if (!row.filter_criteria || !row.report_field) continue;
-
 			var isInteger = row.reportparam_value?.toUpperCase().includes("INTEGER");
 			var isText = row.reportparam_value?.toUpperCase().includes("TEXT");
 			var isDate = row.reportparam_value?.toUpperCase().includes("DATE");
@@ -2356,72 +2352,70 @@
 					? `CAST(${row.report_field} AS SIGNED)`
 					: `CAST(${row.report_field} AS NCHAR)`;
 			}
-
-				// Build value based on criteria
-				var value = "";
-				var rawValue = row.filter_value || "";
-				switch (row.filter_criteria) {
-					case "QCD_ISNOT_EQUAL_TO":
-						value = (rawValue === 'null') ? " is not null " : ` != '${rawValue}'`;
-						break;
-					case "QCD_IS_EQUAL_TO":
-						value = (rawValue === 'null') ? " is null " : ` = '${rawValue}'`;
-						break;
-					case "QCD_ENDS_WITH":
-						value = ` like '%${rawValue}'`;
-						break;
-					case "QCD_BEGINS_WITH":
-						value = ` like '${rawValue}%'`;
-						break;
-					case "QCD_CONTAINS":
-						value = ` like '%${rawValue}%'`;
-						break;
-					case "QCD_DOESNOT_CONTAINT":
-						value = ` not like '%${rawValue}%'`;
-						break;
-					case "QCD_IS_GREATER_THAN":
-						value = ` > '${rawValue}'`;
-						break;
-					case "QCD_IS_LESS_THAN":
-						value = ` < '${rawValue}'`;
-						break;
-					case "QCD_LESSTHAN_EQUALTO":
-						value = ` <= '${rawValue}'`;
-						break;
-					case "QCD_GREATERTHAN_EQUALTO":
-						value = ` >= '${rawValue}'`;
-						break;
-					case "QCD_IN":
-					case "QCD_NOTIN":
-						values = rawValue;
-						if (isText) {
-							if(from != 'Query'){
-								let values = rawValue.split(',').map(v => `\\'${v.trim()}\\'`);
-								values = values.join(',');
-							}else if (from == 'Query'){
-								if (!(rawValue.startsWith('"') && rawValue.endsWith('"'))) {
-									values = `"${rawValue}"`;
-								}
-							}
-						}else if(isDate || isNumeric){
+			// Build value based on criteria
+			var value = "";
+			var rawValue = row.filter_value || "";
+			switch (row.filter_criteria) {
+				case "QCD_ISNOT_EQUAL_TO":
+					value = (rawValue === 'null') ? " is not null " : ` != '${rawValue}'`;
+					break;
+				case "QCD_IS_EQUAL_TO":
+					value = (rawValue === 'null') ? " is null " : ` = '${rawValue}'`;
+					break;
+				case "QCD_ENDS_WITH":
+					value = ` like '%${rawValue}'`;
+					break;
+				case "QCD_BEGINS_WITH":
+					value = ` like '${rawValue}%'`;
+					break;
+				case "QCD_CONTAINS":
+					value = ` like '%${rawValue}%'`;
+					break;
+				case "QCD_DOESNOT_CONTAINT":
+					value = ` not like '%${rawValue}%'`;
+					break;
+				case "QCD_IS_GREATER_THAN":
+					value = ` > '${rawValue}'`;
+					break;
+				case "QCD_IS_LESS_THAN":
+					value = ` < '${rawValue}'`;
+					break;
+				case "QCD_LESSTHAN_EQUALTO":
+					value = ` <= '${rawValue}'`;
+					break;
+				case "QCD_GREATERTHAN_EQUALTO":
+					value = ` >= '${rawValue}'`;
+					break;
+				case "QCD_IN":
+				case "QCD_NOTIN":
+					values = rawValue;
+					if (isText) {
+						if(from != 'Query'){
+							let values = rawValue.split(',').map(v => `\\'${v.trim()}\\'`);
+							values = values.join(',');
+						}else if (from == 'Query'){
 							if (!(rawValue.startsWith('"') && rawValue.endsWith('"'))) {
-								values = `"${rawValue}"`
+								values = `"${rawValue}"`;
 							}
 						}
-						//let joinedVals = values.join(", ");
-						value = (row.filter_criteria === "QCD_IN")
-								? ` IN (${values})`
-								: ` NOT IN (${values})`;
-						break;
-				}
+					}else if(isDate || isNumeric){
+						if (!(rawValue.startsWith('"') && rawValue.endsWith('"'))) {
+							values = `"${rawValue}"`
+						}
+					}
+					//let joinedVals = values.join(", ");
+					value = (row.filter_criteria === "QCD_IN")
+							? ` IN (${values})`
+							: ` NOT IN (${values})`;
+				break;
+			}
+			// Parentheses
+			let open_braces = row.open_parentheses_flag === 'Y' ? " ( " : "";
+			let close_braces = row.close_parentheses_flag === 'Y' ? " ) " : "";
 
-				// Parentheses
-				let open_braces = row.open_parentheses_flag === 'Y' ? " ( " : "";
-				let close_braces = row.close_parentheses_flag === 'Y' ? " ) " : "";
-
-				// Joins
-				let joins1 = (i === 0) ? " AND " : "";
-				let joins = (i === grid._data.length - 1) ? " " : (row.join_condition || " AND ") + " ";
+			// Joins
+			let joins1 = (i === 0) ? " AND " : "";
+			let joins = (i === grid._data.length - 1) ? " " : (row.join_condition || " AND ") + " ";
 
 			// Append to report condition
 			rpt_cond += `${joins1} ${open_braces}${fieldExpr}${value} ${close_braces}${joins}`;
@@ -2509,9 +2503,9 @@
 			var selectedText = $('#resultsetname option:selected').text();
 
 			var getType = reportTempResultset.filter(item => item.resultset_dropname == selectedText);
-					//selectedText = selectedText.split('-')[0].trim();
-					selectedText = selectedText.split(" - ").slice(0, -1).join(" - ");
-		   // var getType = reportTempResultset.filter(item => item.report_code == selectedCode); //Pandiaraj 22-08-2025 selectedText concordinate
+			//selectedText = selectedText.split('-')[0].trim();
+			selectedText = selectedText.split(" - ").slice(0, -1).join(" - ");
+		    // var getType = reportTempResultset.filter(item => item.report_code == selectedCode); //Pandiaraj 22-08-2025 selectedText concordinate
 			if (getType.length > 0) {
 				$('#reportexec_type').val(getType[0].exec_type);
 				$('#reportexec_type_code').val(getType[0].exec_type_code);
@@ -2720,7 +2714,7 @@
 						value = row.filter_criteria === "QCD_IN"
 							? ` IN (${formattedItems})`
 							: ` NOT IN (${formattedItems})`;
-						break;
+					break;
 				}
 
 				let open_braces = row.open_parentheses_flag === 'Y' ? " ( " : "";
@@ -2731,7 +2725,6 @@
 
 				rpt_cond += `${joins1} ${open_braces}${fieldExpr}${value} ${close_braces}${joins}`;
 			}
-				 return rpt_cond = rpt_cond.trim().endsWith("AND") ? rpt_cond.trim().slice(0, -3).trim() : rpt_cond.trim();
+			return rpt_cond = rpt_cond.trim().endsWith("AND") ? rpt_cond.trim().slice(0, -3).trim() : rpt_cond.trim();
 		}
-
 </script>

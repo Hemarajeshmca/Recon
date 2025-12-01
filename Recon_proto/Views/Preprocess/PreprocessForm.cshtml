@@ -576,6 +576,30 @@
 									</div>
 								</div>
 							</div>
+							<div class="accordion" id="headingaggregatefunction">
+								<input type="checkbox" name="radio-a" id="check20" style="display:none">
+								<label class="accordion-label" for="check20">&nbsp;&nbsp;&nbsp;Aggregate Function</label>
+								<div class="accordion-content" id="headingaggregatefunction">
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_aggfunction">
+											<div id="grid_aggfunction">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="accordion" id="headingaggregatecondition">
+								<input type="checkbox" name="radio-a" id="check21" style="display:none">
+								<label class="accordion-label" for="check21">&nbsp;&nbsp;&nbsp;Aggregate Condition</label>
+								<div class="accordion-content" id="headingaggregatecondition">
+									<div class="col-xs-12" style="margin-top:5px;">
+										<div id="gd_aggcondition">
+											<div id="grid_aggcondition">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 							<div class="accordion" id="headingfilter">
 								<input type="checkbox" name="radio-a" id="check1" style="display:none">
 								<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Recon Filter</label>
@@ -637,6 +661,8 @@
 		$("#headinglookupaggexp").hide();
 		$("#headinglookuporder").hide();
 		$("#headingexpressionlookupAgg").hide();
+		$("#headingaggregatefunction").hide();
+		$("#headingaggregatecondition").hide();
 		getGridComboList();
 		$("#btncoll").hide();
 	});
@@ -774,6 +800,8 @@
 			grid_preprocesscondition([]);
 			grid_sourcefilter([]);
 			grid_comparisionfilter([]);
+			grid_aggfunction([]);
+			grid_aggcondition([]);
 		}
 		else if (getlocalStorage('btn_clk_val') == "Edit") {
 			if (getlocalStorage("ls_pageList") != undefined) {
@@ -872,6 +900,8 @@
 				$("#headingexpressionlookup").hide();
 				$("#headingexpressionlookupAgg").hide();
 				$("#headingcomparisionfilter").hide();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingfilter").show();
 				$("#sourcedataset").prop('disabled', true);
 				$("#comdataset").prop('disabled', true);
@@ -910,6 +940,8 @@
 				$("#headingexpressionlookupAgg").hide();
 				$("#headingexpressiongrid").hide();
 				$("#headingcomparsion").hide();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingfilter").show();
 				$("#check3").prop('checked', true);
 				$("#sourcedataset").prop('disabled', true);
@@ -951,6 +983,8 @@
 				$("#headingexpressionlookup").hide();
 				$("#headingexpressiongrid").hide();
 				$("#headingcomparsion").hide();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingfilter").hide();
 				$("#check6").prop('checked', true);
 				$("#sourcedataset").prop('disabled', true);
@@ -986,6 +1020,8 @@
 				$("#headingexpressionlookupAgg").hide();
 				$("#headingexpression").hide();
 				$("#headingexpressiongrid").show();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingfilter").show();
 				$("#sourcedataset").prop('disabled', true);
 				$("#comdataset").prop('disabled', true);
@@ -1026,6 +1062,8 @@
 				$("#headingexpressionlookup").hide();
 				$("#headingexpressionlookupAgg").hide();
 				$("#headingexpressiongrid").hide();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingfilter").show();
 				$("#check8").prop('checked', true);
 				$("#sourcedataset").prop('disabled', true);
@@ -1066,6 +1104,8 @@
 				$("#headingexpressionlookup").hide();
 				$("#headingexpressionlookupAgg").hide();
 				$("#headingexpressiongrid").hide();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingfilter").show();
 				$("#check8").prop('checked', true);
 				$("#sourcedataset").prop('disabled', true);
@@ -1105,7 +1145,9 @@
 				$("#headingcomparsion").show();
 				$("#headingsourcefilter").show();
 				$("#headingcomparisionfilter").show();
-				$("#headingfilter").show();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
+				$("#headingfilter").hide();
 				$("#check18").prop('checked', true);
 				$("#sourcedataset").prop('disabled', false);
 				$("#comdataset").prop('disabled', false);
@@ -1139,6 +1181,8 @@
 				$("#headingcomparisionfilter").hide();
 				$("#headingexpressionlookup").show();
 				$("#headingexpressionlookupAgg").hide();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingcomparsion").hide();
 				$("#headingfilter").hide();
 				$("#headinglookupaggexp").hide();
@@ -1182,6 +1226,8 @@
 				$("#headingcomparisionfilter").hide();
 				$("#headingexpressionlookup").hide();
 				$("#headingexpressionlookupAgg").show();
+				$("#headingaggregatefunction").hide();
+				$("#headingaggregatecondition").hide();
 				$("#headingcomparsion").hide();
 				$("#headingfilter").hide();
 				$("#sourcedataset").prop('disabled', true);
@@ -1190,6 +1236,45 @@
 				$("#check19").prop('checked', true);
 				$("#sourcedataset").val("");
 				$("#comdataset").val("");
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+				$("#cmblookupdataset").val('');
+				$("#Cmblookupdatasetfield").val('');
+				$("#Cmbreconfield1").val('');
+				$("#querydata").val('');
+				$("#headingquery").hide();
+				$("#headinglookup").hide();
+				$("#headinglookupdataset").hide();
+				$("#headinglookuprecon").hide();
+				$("#headinglookupfilter").hide();
+				$("#headinglookupfilterExp").hide();
+				$("#headingfunction").hide();
+				$("#headinglookuporder").hide();
+				$("#cumulativeflag").hide();
+				$("#lblcumulativeflag").hide();
+				$("#lblopeningflag").hide();
+				$("#openingflag").hide();
+				$("#groupflag").hide();
+				$("#lblgroupflag").hide();
+				$("#aggflag").hide();
+				$("#lblaggflag").hide();
+				$("#headingcumexp").hide();
+				$("#headingaggexp").hide();
+				$("#headinglookupaggexp").hide();
+				$("#headingexpressionlookup").hide();
+				$("#headingexpressionlookupAgg").hide();
+				$("#headingexpressiongrid").show();
+				$("#headingexpression").hide();
+				$("#headingcomparsion").show();
+				$("#headingsourcefilter").show();
+				$("#headingcomparisionfilter").show();
+				$("#headingaggregatefunction").show();
+				$("#headingaggregatecondition").show();
+				$("#headingfilter").hide();
+				$("#check18").prop('checked', true);
+				$("#sourcedataset").prop('disabled', false);
+				$("#comdataset").prop('disabled', false);
+				//$("#check1").prop('checked', true);
 			}
 		}
 	function preprocessfetch(preprocess_code) {
@@ -1321,7 +1406,7 @@
 						grid_preprocesscondition(result.preprocesscondition)
 					} else {
 						grid_preprocesscondition([]);
-					}
+					}				
 					if (result.sourcefilter.length > 0) {
 						grid_sourcefilter(result.sourcefilter)
 					} else {
@@ -1332,7 +1417,28 @@
 					} else {
 						grid_comparisionfilter([]);
 					}
+					if (result.comaggfun.length > 0) {
+						grid_aggfunction(result.comaggfun)
+					} else {
+						grid_aggfunction([]);
+					}
+					if (result.comaggcon.length > 0) {
+						grid_aggcondition(result.comaggcon)
+					} else {
+						grid_aggcondition([]);
+					}
 					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP')
+					{
+						if (result.reconexp.length > 0) {
+							grid_expression(result.reconexp)
+						} else {
+							grid_expression([])
+						}
+						$("#sourcedataset").val(result.header[0].source_dataset_code);
+						$("#comdataset").val(result.header[0].comparison_dataset_code);
+						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
+					}
+					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG')
 					{
 						if (result.reconexp.length > 0) {
 							grid_expression(result.reconexp)
@@ -5420,6 +5526,26 @@
 					source_dataset_code = $("#sourcedataset").val();
 					comparison_dataset_code = $("#comdataset").val();
 				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+					if ($("#sourcedataset").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Source Dataset cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#comdataset").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Source Dataset cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					source_dataset_code = $("#sourcedataset").val();
+					comparison_dataset_code = $("#comdataset").val();
+				}
 				var in_cumulative_flag = "";
 				var in_opening_flag = "";
 				if ($('#cumulativeflag').is(":checked")) {
@@ -5737,6 +5863,26 @@
 					set_recon_field = $("#Cmbreconfield2").val();
 				}
 				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+					source_dataset_code = $("#sourcedataset").val();
+					comparison_dataset_code = $("#comdataset").val();
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+					if ($("#sourcedataset").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Source Dataset cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#comdataset").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Source Dataset cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
 					source_dataset_code = $("#sourcedataset").val();
 					comparison_dataset_code = $("#comdataset").val();
 				}
@@ -6194,6 +6340,26 @@
 							});
 							return;
 					}
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+					if ($("#sourcedataset").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Source Dataset cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#comdataset").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Source Dataset cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					source_dataset_code = $("#sourcedataset").val();
+					comparison_dataset_code = $("#comdataset").val();
 				}
 				var in_cumulative_flag = "";
 				var in_opening_flag="";
@@ -10061,5 +10227,911 @@
 		}
 	}
 	//-----------------------------------------------------  exp ----------------------------------------------------------------
+	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
+	function grid_aggfunction(data) {
+		$("#grid_aggfunction").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "grpfield_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessaggfield_gid: { type: "string", defaultValue: "0" },
+							preprocessaggfield_seqno: { type: "string", defaultValue: "0" },
+							preprocessfield_applied_on: { type: "string" },
+							preprocessaggfield_name: { type: "string" },
+							recon_field: { type: "string" },
+							preprocessagg_function: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" }
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggfunction').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowagg()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveaggfun()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsaggfun()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "preprocessaggfield_gid",
+				title: "preprocessaggfield_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocessaggfield_seqno",
+				title: "Seq No.",
+				width: 60,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '3');
+				},
+			},
+			{
+				field: "preprocessaggfield_name",
+				title: "Aggregate Function Desc",
+				width: 100,
+			},
+			{
+				field: "preprocessfield_applied_on_code",
+				title: "preprocessfield_applied_on_code",
+				hidden: true,
+			},
+			{
+				field: "preprocessfield_applied_on",
+				title: "Applied On",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "preprocessfield_applied_on_code", "grid_aggfunction")
+				},
+				width: 100,
+			},
+			{
+				field: "recon_field_code",
+				title: "recon_field_code",
+				hidden: true,
+			},
+			{
+				field: "recon_field",
+				title: "Recon Field",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "recon_field_code", "grid_aggfunction")
+				},
+				width: 100,
+			},
+			{
+				field: "preprocessagg_function",
+				title: "Aggregate Function",
+				width: 100,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			}],
+			editable: true,
+		});
+		recon_field_list = cmbsourcefield();
+		preprocessfield_applied_on_list = grpfield_applied_on();
+	}
+	function grpfield_applied_on() {
+		var arr1 = [];
+		var in_master_code = "QCD_Appiled_on";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (data) {
+				var response = data;
+				if (response != null) {
+					for (i = 0; response.length > i; i++) {
+						var list1 = {};
+						list1.code = response[i].masterSyscode;
+						list1.desc = response[i].masterName;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;
+	}
+	function cmbsourcefield() {
+		var arr1 = [];
+		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		var dataset_code = $("#sourcedataset").val();
+		$.ajax({
+			type: "POST",
+			//url: '../Rulesetup/FieldAgainstRecon',
+			url: '../Rulesetup/getdatasetField',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_dataset_code: dataset_code,in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					for (i = 0; result.length > i; i++) {
+						var list1 = {};
+						list1.code = result[i].recon_field_name;
+						list1.desc = result[i].recon_field_desc;
+						arr1.push(list1);
+					}
+				}
+			}
+		});
+		return arr1;
+	}
+	function addRowagg() {
+		var grid = $("#grid_aggfunction").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ preprocessaggfield_seqno: newSeqNo, preprocessaggfield_gid: 0 });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function saveaggfun() {
+		try {
+			var grid = $("#grid_aggfunction").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_preprocess_code = $("#txtpreprocesscode").val();
+			var recon_field = model.recon_field_code;
+			var preprocessaggfield_name = model.preprocessaggfield_name;
+			var preprocessaggfield_seqno = model.preprocessaggfield_seqno;
+			var preprocessfield_applied_on = model.preprocessfield_applied_on_code;
+			var preprocessagg_function = model.preprocessagg_function;
+			var action = "";
+			var action_by = sessionStorage.getItem("usrname");
+			var preprocessaggfield_gid = model.preprocessaggfield_gid;
+			if (preprocessaggfield_gid == "0") {
+				preprocessaggfield_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/Aggfunctionsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocessaggfield_gid: preprocessaggfield_gid, in_preprocess_code: in_preprocess_code, preprocessaggfield_seqno: preprocessaggfield_seqno,
+					recon_field: recon_field, in_action: action, in_action_by: action_by, in_active_status: status,
+					preprocessfield_applied_on: preprocessfield_applied_on, preprocessaggfield_name: preprocessaggfield_name, preprocessagg_function: preprocessagg_function
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response.out_result == 1) {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+						preprocessfetch($("#txtpreprocesscode").val());
+					}
+					else {
+						$.alert({
+							title: 'Recon',
+							content: response.out_msg,
+							type: 'green',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJsaggfun() {
+		var grid = $("#grid_aggfunction").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessaggfield_gid = parseInt(model.preprocessaggfield_gid);
+		if (preprocessaggfield_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_preprocess_code = $("#txtpreprocesscode").val();
+						var recon_field = "";
+						var preprocessaggfield_name = "";
+						var preprocessaggfield_seqno = 0;
+						var preprocessfield_applied_on = "";
+						var preprocessagg_function = "";
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var preprocessaggfield_gid = model.preprocessaggfield_gid;		
+						var status = "";
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/Aggfunctionsave',
+							dataType: 'json',
+							data: JSON.stringify({
+									preprocessaggfield_gid: preprocessaggfield_gid, in_preprocess_code: in_preprocess_code, preprocessaggfield_seqno: preprocessaggfield_seqno,
+									recon_field: recon_field, in_action: action, in_action_by: action_by, in_active_status: status,
+									preprocessfield_applied_on: preprocessfield_applied_on, preprocessaggfield_name: preprocessaggfield_name, preprocessagg_function: preprocessagg_function
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	//-----------------------------------------------------     Agg function    ----------------------------------------------------------------
+	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
+	var join_condition_list = "";
+	var preprocessagg_field_list = "";
+	var preprocessagg_value_list = "";
+	var preprocessagg_criteria_list = "";
+	function grid_aggcondition(data) {
+		$("#grid_aggcondition").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "preprocessaggcondition_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocessaggcondition_gid: { type: "string", defaultValue: "0" },
+							preprocessaggcondition_seqno: { type: "string", defaultValue: "0" },
+							preprocessagg_applied_on: { type: "string" },
+							preprocessagg_value: { type: "string" },
+							preprocessagg_value_code: { type: "string" },
+							preprocessagg_field_code: { type: "string" },
+							preprocessagg_field: { type: "string" },
+							preprocessagg_criteria: { type: "string" },
+							preprocessagg_value_flag: { type: "string", editable: false },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							open_parentheses_flag: { type: "string", editable: false },
+							close_parentheses_flag: { type: "string", editable: false },
+						}
+					}
+				}
+			},
+			height: 185,
+			groupable: false,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_aggfunction').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				}
+			},
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a href='javascript:void(0)' onclick='addRowaggcon()' href=''><span class='fa fa-plus' style='color:white'></span></a>",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='saveaggcon()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							// Check your condition here to determine whether to show or hide the delete button
+							if ($("#txtmode").val() == "View") {
+								return ""; // Return empty string to hide the delete button
+							} else {
+								return "<a href='' onclick='myDeleteJsaggcon()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "preprocessaggcondition_gid",
+				title: "preprocessaggcondition_gid",
+				hidden: true,
+			},
+			{
+				field: "preprocessaggcondition_seqno",
+				title: "Seq No.",
+				width: 50,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '3');
+				},
+			},
+			{
+				field: "open_parentheses_flag",
+				title: "(", width: 20,filterable: false,
+				template: function (dataItem) {
+					if (dataItem.themeaggcondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx7">';
+					}
+				}
+			},
+			{
+				field: "preprocessagg_field_code",
+				title: "preprocessagg_field_code",
+				hidden: true,
+			},
+			{
+				field: "preprocessagg_field",
+				title: "Condition Field",
+				editor: function (container, options) {
+					combo_editor_condition(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "preprocessagg_field_code", "grid_aggcondition")
+				},
+				width: 100,
+			},
+			{
+				field: "preprocessagg_criteria",
+				title: "Condition Criteria",
+				width: 100,
+				editor: function (container, options) {
+					combo_editor_conditionCriteria(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeagg_criteria", "grid_aggcondition")
+				},
+			},
+			{
+				field: "preprocessagg_value_flag",
+				title: "Value",
+				width: 60,
+				template: function (dataItem) {
+					var isChecked = dataItem.preprocessagg_value_flag == "Y" ? 'checked' : '';
+					return `
+					<center>
+						<label class="switch">
+							<input type="checkbox" class="chkbx9" ${isChecked}>
+							<span class="slider round"></span>
+						</label>
+					</center>`;
+				},
+			},
+			{
+				field: "preprocessagg_value_code",
+				title: "preprocessagg_value_code",
+				hidden: true,
+			},
+			{
+				field: "preprocessagg_value",
+				title: "Comparison Field/Value",
+				width: 100,
+				editor: function (container, options) {
+					if (options.model.preprocessagg_value_flag === "Y") {
+						$('<input name="' + options.field + '" class="k-input k-textbox" />')
+						.appendTo(container);
+					}
+					else {
+						combo_editor_conditionvalue(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "preprocessagg_value_code", "grid_aggcondition")
+					}					
+				},
+			},
+			{
+				field: "close_parentheses_flag",
+				title: ")", width: 20,filterable: false,
+				template: function (dataItem) {
+					if (dataItem.themeaggcondition_gid > 0) {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+					} else {
+						return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx8">';
+					}
+				},
+			},
+			{
+				field: "join_condition",
+				title: "Joins",
+				editor: function (container, options) {
+					combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_comparisionfilter")
+				},
+				width: 40,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true,
+			}],
+			editable: true,
+
+		});
+		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+	}
+	function addRowaggcon() {
+		var grid = $("#grid_aggcondition").data("kendoGrid");
+		var dataSource = grid.dataSource;
+
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		var newSeqNo = parseInt(lastSeqNo) + 1;
+
+		// Add a new row with the incremented sequence number
+		dataSource.add({ preprocessaggcondition_seqno: newSeqNo, preprocessaggcondition_gid: 0, open_parentheses_flag: "N", close_parentheses_flag: "N",preprocessagg_value_flag:'Y' });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	$(function () {
+			$('#grid_aggcondition').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_aggcondition').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('preprocessagg_value_flag', 'Y');
+					dataItem._set('preprocessagg_value', '');
+					dataItem._set('preprocessagg_value_code', '');
+							var uid = dataItem.uid; // store the edited dataItem UID before refresh
+								grid.refresh();
+								setTimeout(function() {
+									var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+									grid.select(editedRow);
+									grid.content.scrollTop(editedRow.position().top);
+								}, 100);
+				}
+				else {
+					dataItem._set('preprocessagg_value_flag', 'N');
+					dataItem._set('preprocessagg_value', '');
+					dataItem._set('preprocessagg_value_code', '');
+								var uid = dataItem.uid; // store the edited dataItem UID before refresh
+									grid.refresh();
+									setTimeout(function() {
+										var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+										grid.select(editedRow);
+										grid.content.scrollTop(editedRow.position().top);
+									}, 100);
+				}
+				//grid.editCell(row.find("td[data-field='preprocessagg_value']"));
+			})
+		});
+	$(function () {
+		$('#grid_aggcondition').on('click', '.chkbx7', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_aggcondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('open_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('open_parentheses_flag', 'N');
+			}
+		})
+	})
+	$(function () {
+		$('#grid_aggcondition').on('click', '.chkbx8', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_aggcondition').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('close_parentheses_flag', 'Y');
+			}
+			else {
+				dataItem._set('close_parentheses_flag', 'N');
+			}
+		})
+	})
+	function combo_editor_condition(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var preprocess_code = $("#txtpreprocesscode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/Preprocessfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ preprocess_code: preprocess_code,in_user_code:in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					if (result.comaggfun.length > 0) {
+						for (i = 0; result.comaggfun.length > i; i++) {
+							var list1 = {};
+							list1.code = result.comaggfun[i].preprocessagg_field;
+							list1.desc = result.comaggfun[i].preprocessaggfield_name;
+							arr1.push(list1);
+						}
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+					selectedItem[datafield] = "";
+					selectedItem[code_datafield] = "";
+				}
+				else {
+					selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_conditionvalue(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var preprocess_code = $("#txtpreprocesscode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/Preprocessfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ preprocess_code: preprocess_code,in_user_code:in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					if (result.comaggfun.length > 0) {
+						for (i = 0; result.comaggfun.length > i; i++) {
+							var list1 = {};
+							list1.code = result.comaggfun[i].preprocessagg_field;
+							list1.desc = result.comaggfun[i].preprocessaggfield_name;
+							arr1.push(list1);
+						}
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "preprocessagg_value") {
+					if (datafield == "preprocessagg_value" && selectedItem.preprocessagg_value_input != undefined) {
+						selectedItem[datafield] = selectedItem.preprocessagg_value_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_conditionCriteria(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr1 = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var preprocessagg_field_code = selectedItem.preprocessagg_field_code;
+		var sourcedata = "COMPARISON";
+		var in_preprocess_code = $("#txtpreprocesscode").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/getConditioncriteria',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: preprocessagg_field_code, in_preprocess_code: in_preprocess_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr1.push(list);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				if (cmb_value && this.selectedIndex == -1) {
+					this.value("");
+				}
+				//else{FF
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "preprocessagg_criteria") {
+					if (datafield == "preprocessagg_criteria" && selectedItem.preprocessagg_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.preprocessagg_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.preprocessagg_criteria_input = undefined;
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function saveaggcon() {
+		try {
+			var grid = $("#grid_aggcondition").data("kendoGrid");
+			var model = grid.dataItem($(event.target).closest("tr"));
+			var in_preprocess_code = $("#txtpreprocesscode").val();
+			var preprocessagg_field = model.preprocessagg_field_code;
+			var preprocessaggcondition_seqno = model.preprocessaggcondition_seqno;
+			var preprocessagg_applied_on = model.preprocessagg_applied_on_code;
+			var preprocessagg_criteria = model.preprocessagg_criteria;
+			var preprocessagg_value_flag = model.preprocessagg_value_flag;
+			if (model.preprocessagg_value_flag == 'Y') {					
+				var preprocessagg_value = model.preprocessagg_value;
+				var preprocessagg_value = model.preprocessagg_value_input;
+			} else {				
+				var preprocessagg_value = model.preprocessagg_value_code;
+			}
+			var in_open_flag = model.open_parentheses_flag
+			var in_close_flag = model.close_parentheses_flag;
+			var in_join_condition = model.join_condition;
+			if (in_join_condition == undefined) {
+				in_join_condition = "";
+			}
+			var action = "";
+			var action_by = sessionStorage.getItem("usrname");
+			var preprocessaggcondition_gid = model.preprocessaggcondition_gid;
+			if (preprocessaggcondition_gid == "0") {
+				preprocessaggcondition_gid = 0;
+				action = "INSERT"
+			} else {
+				action = "UPDATE"
+			}
+			var status = "Y";
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/Aggconditionsave',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocessaggcondition_gid: preprocessaggcondition_gid, in_preprocess_code: in_preprocess_code, preprocessaggcondition_seqno: preprocessaggcondition_seqno,
+					in_action: action, in_action_by: action_by, in_active_status: status,
+					preprocessagg_field: preprocessagg_field,
+					preprocessagg_applied_on: preprocessagg_applied_on, preprocessagg_criteria: preprocessagg_criteria,
+					preprocessagg_value: preprocessagg_value, preprocessagg_value_flag: preprocessagg_value_flag, in_open_flag: in_open_flag,
+					in_close_flag: in_close_flag, in_join_condition: in_join_condition
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					debugger;
+					if (response != null) {
+						if (response.out_result == "1") {
+							$.alert({
+								title: 'Recon',
+								content: response.out_msg,
+								type: 'green',
+							});
+							preprocessfetch($("#txtpreprocesscode").val());
+						} else {
+							{
+								$.alert({
+									title: 'Recon',
+									content: response.out_msg,
+									type: 'red',
+								});
+							}
+						}
+					}
+					else {
+
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function myDeleteJsaggcon() {
+		var grid = $("#grid_aggcondition").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessaggcondition_gid = parseInt(model.preprocessaggcondition_gid);
+		if (preprocessaggcondition_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_preprocess_code = $("#txtpreprocesscode").val();
+						var preprocessagg_field = model.preprocessagg_field_code;
+						var preprocessaggcondition_seqno  = 0;
+						var preprocessagg_applied_on  = "";
+						var preprocessagg_criteria  = "";
+						var preprocessagg_value_flag = "";
+						var preprocessagg_value  = "";
+						var in_open_flag  = "";
+						var in_close_flag = "";
+						var in_join_condition  = "";			
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var preprocessaggcondition_gid = model.preprocessaggcondition_gid;
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/Aggconditionsave',
+							dataType: 'json',
+							data: JSON.stringify({
+									preprocessaggcondition_gid: preprocessaggcondition_gid, in_preprocess_code: in_preprocess_code, preprocessaggcondition_seqno: preprocessaggcondition_seqno,
+									in_action: action, in_action_by: action_by, in_active_status: status,
+									preprocessagg_field: preprocessagg_field,
+									preprocessagg_applied_on: preprocessagg_applied_on, preprocessagg_criteria: preprocessagg_criteria,
+									preprocessagg_value: preprocessagg_value, preprocessagg_value_flag: preprocessagg_value_flag, in_open_flag: in_open_flag,
+									in_close_flag: in_close_flag, in_join_condition: in_join_condition
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+	//-----------------------------------------------------     Agg condition    ----------------------------------------------------------------
 </script>
 

@@ -780,5 +780,151 @@ namespace Recon_proto.Controllers
             }
         }
         #endregion
+
+        #region Aggfunction
+        public class Aggfunction
+        {
+            public int? preprocessaggfield_gid { get; set; }
+            public Decimal? preprocessaggfield_seqno { get; set; }
+            public string? recon_field { get; set; }
+            public string? preprocessfield_applied_on { get; set; }
+            public string? preprocessaggfield_name { get; set; }
+            public string? preprocessagg_function { get; set; }
+            public string? in_preprocess_code { get; set; }
+            public string? in_active_status { get; set; }
+            public string? in_action { get; set; }
+            public string? in_action_by { get; set; }
+            public string? out_msg { get; set; }
+            public string? out_result { get; set; }
+        }
+        [HttpPost]
+        public JsonResult Aggfunctionsave([FromBody] Aggfunction context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Aggfunction objList = new Aggfunction();
+            DataTable result = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Preprocess/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_action_by);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("preprocessaggfun", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataTable>(d2);
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    objList.preprocessaggfield_gid = Convert.ToInt32(result.Rows[i]["in_preprocessaggfield_gid"]);
+                    objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                    objList.out_result = result.Rows[i]["out_result"].ToString();
+                }
+                return Json(objList);
+            }
+        }
+        #endregion
+
+        #region fetch condition
+        public class getConditionpreprocess
+        {
+            public String? in_condition_type { get; set; }
+            public String? in_field_type { get; set; }
+            public String? in_preprocess_code { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        [HttpPost]
+        public JsonResult getConditioncriteria([FromBody] getConditionpreprocess context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Preprocess/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("getConditioncriteria", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                return Json(d2);
+            }
+        }
+        #endregion
+
+        #region Aggcondition
+        public class Aggcondition
+        {
+            public int? preprocessaggcondition_gid { get; set; }
+            public Decimal? preprocessaggcondition_seqno { get; set; }
+            public string? preprocessagg_applied_on { get; set; }
+            public string? preprocessagg_field { get; set; }
+            public string? preprocessagg_criteria { get; set; }
+            public string? preprocessagg_value_flag { get; set; }
+            public string? preprocessagg_value { get; set; }
+            public string? in_preprocess_code { get; set; }
+            public string? in_open_flag { get; set; }
+            public string? in_close_flag { get; set; }
+            public string? in_join_condition { get; set; }
+            public string? in_active_status { get; set; }
+            public string? in_action { get; set; }
+            public string? in_action_by { get; set; }
+            public string? out_msg { get; set; }
+            public string? out_result { get; set; }
+        }
+        [HttpPost]
+        public JsonResult Aggconditionsave([FromBody] Aggcondition context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Aggcondition objList = new Aggcondition();
+            DataTable result = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Preprocess/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_action_by);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("preprocessaggcondition", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataTable>(d2);
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    objList.preprocessaggcondition_gid = Convert.ToInt32(result.Rows[i]["in_preprocessaggcondition_gid"]);
+                    objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                    objList.out_result = result.Rows[i]["out_result"].ToString();
+                }
+                return Json(objList);
+            }
+        }
+        #endregion
     }
 }

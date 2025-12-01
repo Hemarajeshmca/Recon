@@ -130,6 +130,8 @@ namespace Recon_proto.Controllers
         {
             public string in_user_code { get; set; }
             public string in_master_code { get; set; }
+            public string? in_role_code { get; set; }
+            public string? in_lang_code { get; set; }
         }
         public class mainQCDMaster
         {
@@ -420,6 +422,65 @@ namespace Recon_proto.Controllers
 			public string deny { get; set; }
 			public string in_user_code { get; set; }
 		}
-		#endregion 
-	}
+        #endregion
+
+        #region Qcdticketmaster
+        [HttpPost]
+        public JsonResult Qcdticketmaster([FromBody] Qcdgridread context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            List<Qcdticket> objcat_lst = new List<Qcdticket>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Qcdmaster/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("QcdTicketMasterRead", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    for (int i = 0; i < result.Rows.Count; i++)
+                    {
+                        Qcdticket objcat1 = new Qcdticket();
+                        objcat1.master_gid = Convert.ToInt32(result.Rows[i]["master_gid"]);
+                        objcat1.master_code = result.Rows[i]["master_code"].ToString();
+                        objcat1.master_name = result.Rows[i]["master_name"].ToString();
+                        objcat1.parent_code = result.Rows[i]["parent_code"].ToString();
+                        objcat_lst.Add(objcat1);
+                    }
+                    return Json(objcat_lst);
+                }
+            }
+            catch (Exception ex)
+            {
+                errorlog(ex.Message, "QcdMasterGridRead");
+                return Json(ex);
+            }
+        }
+
+        public class Qcdticket
+        {
+            public string in_user_code { get; set; }
+            public int master_gid { get; set; }
+            public string master_code { get; set; }
+            public string master_name { get; set; }
+            public string parent_code { get; set; }
+        }
+        #endregion
+
+    }
 }

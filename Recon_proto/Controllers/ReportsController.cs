@@ -533,7 +533,7 @@ namespace Recon_proto.Controllers
 		}
         #endregion
 
-        #region
+        #region kendogrid download
 
         public ActionResult kendogrid_download(string in_tran_date, string in_recon_code, string in_recon_name, string in_action_by)
         {
@@ -1280,9 +1280,7 @@ namespace Recon_proto.Controllers
 
         #region reportResultset
         public JsonResult reporttemplateResultset([FromBody] ResultSetModel context)
-        {
-            
-            
+        {   
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             DataTable result = new DataTable();
             string post_data = "";
@@ -2471,8 +2469,8 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(objdata), UTF8Encoding.UTF8, "application/json");
                     try
                     {
-                        var response = client.PostAsync("generatedynamicreport_new", content).Result;
-                        //var response = client.PostAsync("setReportqueuewithdatamodel", content).Result;
+                        //var response = client.PostAsync("generatedynamicreport_new", content).Result;
+                        var response = client.PostAsync("setReportqueuewithdatamodel", content).Result;
                         Stream data = response.Content.ReadAsStreamAsync().Result;
                         StreamReader reader = new StreamReader(data);
                         post_data = reader.ReadToEnd();

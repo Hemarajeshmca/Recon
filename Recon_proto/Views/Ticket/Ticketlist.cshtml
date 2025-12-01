@@ -1,0 +1,3288 @@
+﻿<!Doctype html>
+<html>
+<head>
+    <title></title>
+
+    <style>
+
+        .k-state-active {
+            display: block !important
+        }
+
+
+        .delete-icon {
+            cursor: pointer;
+            color: #dc3545;
+            font-size: 22px; /* bigger size */
+            font-weight: bold;
+            padding: 4px 8px; /* make it easy to click */
+            border-radius: 4px;
+            background-color: #f8d7da; /* light red background */
+            transition: 0.2s;
+        }
+
+            .delete-icon:hover {
+                background-color: #dc3545;
+                color: #fff;
+            }
+
+        .subtle-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.2); /* subtle background */
+            border: none;
+            color: rgba(255,255,255,0.7); /* semi-transparent white */
+            font-size: 24px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .subtle-close:hover {
+                background: rgba(0,0,0,0.5);
+                color: white;
+                transform: scale(1.1);
+            }
+
+        .save_btn {
+            background: #175650;
+            border-color: #175650;
+            cursor: pointer;
+            color: white;
+            min-width: 8%;
+        }
+
+        .cancel_btn {
+            background: #ff0000;
+            border-color: #ff0000;
+            cursor: pointer;
+            color: white;
+            min-width: 8%;
+        }
+
+        #ticket_dataset .ticket-link {
+            color: #007bff;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+         #ticket_dataset .ticket-link:hover {
+                text-decoration: underline;
+            }
+
+        .tborder1 {
+            border: 1px solid #d5d6d7;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: -10px;
+            overflow-y: scroll;
+            height: 122px;
+            overflow-x: hidden;
+            width: 98%;
+            margin-left: 14px;
+            margin-bottom: 31px;
+        }
+
+        .k-state-active {
+            display: block !important
+        }
+
+       #ticket_dataset .k-grid-content {
+            height: 280px !important;
+        }
+
+        #attachmentsInput::-webkit-file-upload-button {
+            background-color: #175650;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Standard (non-webkit) */
+        #attachmentsInput::file-selector-button {
+            background-color: #175650;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #attach_dataset .k-grid-content {
+            height: 226px !important;
+        }
+
+        .content-area {
+            display: none;
+            margin-top: 15px;
+        }
+
+        #ticket_dataset.k-grid.k-widget {
+            height: 162px !important;
+        }
+
+        .k-popup,
+        .k-animation-container {
+            z-index: 999999 !important;
+            position: absolute !important;
+        }
+
+        #ticketModal {
+            overflow: visible !important;
+        }
+
+      
+    </style>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="card-body" style="margin-top: -4%; min-height: 82%;">
+                <div class="nav-align-top" style="width: 109%;margin-left: -53px; margin-top:12px;">
+                    <ul class="nav nav-pills mb-4" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-list" aria-controls="navs-pills-top-list" aria-selected="true">
+                                Tickets List
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-new" aria-controls="navs-pills-top-new" aria-selected="false" tabindex="-1">
+                                Raise Ticket
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-attach" aria-controls="navs-pills-top-attach" aria-selected="false" tabindex="-1">
+                                Attachments
+                            </button>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content" style="height:453px;">
+                        <div class="tab-pane fade show active" id="navs-pills-top-list" role="tabpanel">
+                            <div class="row" style="position: relative;top: -13px">
+                                <div class="col-sm-1" id="div_add" style="display:none;">
+                                    <!-- Plus Icon -->
+                                    <i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:18px;cursor:pointer;"></i>
+                                </div>
+                                <div class="col-sm-11" style="margin-bottom:-10px;">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="options" id="options1" checked> Assign Ticket
+                                    </label>&nbsp;&nbsp;&nbsp;
+                                    <label class="radio-inline">
+                                        <input type="radio" name="options" id="options2"> New Ticket
+                                    </label>
+                                </div>                               
+                            </div>                            
+                            <div class="row align-items-center">                        
+                               
+
+                                <!-- Assigned To Dropdown -->
+                                <div class="col-sm-2" id="asgndto">
+                                    <label class="form-label">Assigned To:</label>&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>                                   
+                                </div>
+
+                                <div class="col-sm-3" id="lblassign" style="margin-left:-123px;">
+                                    <select id="cmbassign" class="form-select form-control"></select>
+                                    <span id="queryErrorbasto" style="color: red; font-size: 12px;position:relative;"></span>
+                                </div>
+
+                                <div class="col-sm-3" id="lblremarks">                                   
+                                    <input type="text" id="remarks" placeholder="Remarks" class="form-control"/>
+                                </div>
+
+                                <!-- Assign Button -->
+                                <div class="col-sm-2" id="bthassign">
+                                    <button type="button" id="asgnto" class="btn btn-sm save_btn" onclick="assignto()">Assign</button>
+                                </div>
+                                <div class="col-sm-3" id="download">
+                                    <img id="dwlallIcon" style="width:26px; height:24px;margin-bottom:12px;cursor:pointer;float:right" src="../assets/images/download.png">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px;">
+                                <span id="queryErrorasgn" style="color: red; font-size: 12px;position:relative;"></span>
+                                <div id="tkt_dataset">
+                                    <div id="ticket_dataset"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="navs-pills-top-new" role="tabpanel">
+                            <div class="scrolls">
+                                <!-- Modal Form -->
+                                <div class="tborder">
+                                    <div class="row" style="margin-top:-15px;">
+                                        <div class="col-sm-2">
+                                            <label class="form-label">Ticket No</label>
+                                            <input class="form-control" type="text" id="txtTicketNo" disabled value="New">
+                                            <input class="form-control" type="text" id="txtRoleGid" hidden>
+                                            <input type="hidden" id="ticket_gid" />
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Context</label>
+                                            <input class="form-control" type="text" id="txtcontext" disabled>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <label class="form-label">Status</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorstatus" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="cmbqueue" class="form-select form-control"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:8px;">
+                                        <div class="col-sm-2" style="display:none;">
+                                            <label class="form-label">Creation Date</label>
+                                            <input class="form-control" type="text" id="cdate" disabled>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Screen Name</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorscreen" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="screenname" class="form-select form-control"></select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Recon Name</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorrecname" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="recname" class="form-select form-control" disabled></select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Report Name</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorreport" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="report" class="form-select form-control" disabled></select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Subject</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorsub" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <input class="form-control" type="text" id="txtSubject">
+                                        </div>
+                                    </div>
+
+                                    <div class="row" style="margin-top:8px;">
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Priority</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorpriority" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="cmbpriority" class="form-select form-control"></select>
+                                        </div>
+                                        <div class="col-sm-3" id="raiser_div">
+                                            <label class="form-label">Assigned To : </label>&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrorasto" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="cmbassign1" class="form-select form-control"></select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <label class="form-label">Ticket Type</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                            <span id="queryErrortkttype" style="color: red; font-size: 12px;position:relative;"></span>
+                                            <select id="cmbtype" class="form-select form-control"></select>
+                                        </div>
+                                        <div class="col-sm-3">
+                                           @*  <center><button type="button" id="btntktsave" style="margin-top:30px; width:60%;" class="btn btn-sm save_btn me-2" onclick="save_ticket()">Save</button></center>
+                                            <center><button type="button" id="updatesubmit" style="margin-top:30px;width:60%;display:none;background: #175650;color:#fff;border-color: #175650;" class="btn btn-sm update_btn me-2" onclick="update_ticket()">Submit</button></center> *@
+                                            <button type="button" id="btntktsave" style="margin-top:30px; width:30%;" class="btn btn-sm save_btn me-2" onclick="save_ticket()">Save</button> 
+                                             <button type="button" id="updatesubmit" style="margin-top:30px;width:30%;display:none;background: #175650;color:#fff;border-color: #175650;" class="btn btn-sm update_btn me-2" onclick="update_ticket()">Submit</button>
+                                            <button type="button" id="btntktcancel" style="margin-top:30px; width:30%;" class="btn btn-sm cancel_btn me-2" onclick="cancel_ticket()">cancel</button>
+                                             
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Rich Text Message -->
+                            <div class="row mb-3">
+                                <div id="textareaRow" class="row" style="margin-top:9px;">
+                                    <div class="col-sm-12">
+                                        <label class="form-label">Message</label> &nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
+                                        <span id="queryErrormsg" style="color: red; font-size: 12px;position:relative;"></span>
+                                        <textarea id="emailBody" name="emailBody" class="form-control" style="width:103%; height:55px; resize: vertical;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:20px;">
+                                <div class="tborder1">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div id="thread" class="form-control"
+                                                 style="width:100%; height:50px; resize:vertical; border:1px solid #ced4da; border-radius:4px; padding:0px; background-color:#eceef1;"
+                                                 contenteditable="false">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                           
+                        </div>
+                        <div class="tab-pane fade" id="navs-pills-top-attach" role="tabpanel">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-sm-3">
+                                    <input type="hidden" id="ticket_gid" />
+                                    <input type="hidden" id="queue_gid" />
+                                    <input type="hidden" id="subject" />
+                                    <label class="form-label">Ticket No</label>
+                                    <input class="form-control" type="text" id="attachTicketNo" disabled >
+                                </div>
+                                <div class="col-sm-3">
+                                    <label class="form-label">Subject</label>
+                                    <input class="form-control" type="text" id="attachSubject" disabled>
+                                </div>
+                                <div class="col-sm-3" style="margin-top:26px">                                   
+                                    <input type="file" name="Attachments" class="form-control" id="attachmentsInput" multiple />
+                                </div>
+                                <div class="col-sm-3" style="margin-top:26px">
+                                    <button type="button" id="btnattach" style="width:30%;"  class="btn btn-sm save_btn me-3" onclick="save_attachment()">Submit</button>
+                                    <button type="button" id="btntktcancel" style="width:30%;" class="btn btn-sm cancel_btn me-2" onclick="cancel_ticket()">cancel</button>
+                                </div>
+                            </div>
+                            <br />
+                            @* <div class="modal-body"> *@
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <input type="hidden" id="ticket_gid" />
+                                    <div id="tktattach_dataset">
+                                        <div id="attach_dataset" style="width:121%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            @* </div>   *@
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- ✅ Bootstrap Modal -->
+
+
+
+
+</body>
+</html>
+
+<script>
+           $(document).ready(function () {              
+        // Default on page load → Assigned
+        $('#navs-pills-top-list').tab('show');
+        $("#queryErrortkttype").text("");
+        $("#queryErrorpriority").text("");
+        $("#queryErrorscreen").text("");
+        $("#queryErrorrecname").text("");
+        $("#queryErrorreport").text("");
+        $("#queryErrorsub").text("");
+        $("#queryErrormsg").text("");
+        $("#queryErrorasto").text("");
+        $('input[name="options"]').change(function () {
+
+            if ($('#options1').is(':checked')) {
+                // Assigned → Tickets List tab
+                $('button[data-bs-target="#navs-pills-top-list"]').tab('show');                
+            }
+
+            if ($('#options2').is(':checked')) {
+                // New → Raise Ticket tab                
+                    $('button[data-bs-target="#navs-pills-top-new"]').show();
+                    $('button[data-bs-target="#navs-pills-top-new"]').tab('show');
+                    $("#txtTicketNo").val("New");
+                $("#queryErrortkttype").text("");
+                $("#queryErrorpriority").text("");
+                $("#queryErrorscreen").text("");
+                $("#queryErrorrecname").text("");
+                $("#queryErrorreport").text("");
+                $("#queryErrorsub").text("");
+                $("#queryErrormsg").text("");
+                $("#queryErrorasto").text("");
+        $('button[data-bs-target="#navs-pills-top-new"]').show();
+        $('button[data-bs-target="#navs-pills-top-new"]').tab('show');
+        $('button[data-bs-target="#navs-pills-top-new"]').text("Raise Ticket");
+        grid_edit = 'N';
+        $("#cmbqueue").val("TKT_STATUS_NEW").trigger("change").prop("disabled", true);
+        //$("#cmbqueue").prop("disabled", true);
+       // $("#cmbassign1").prop("disabled", true);
+        $("#cmbtype, #cmbpriority, #cmbStatus, #txtSubject").prop("disabled", false);
+        setCurrentDateTime();
+        $("#txtSubject").val("");        
+        $("#cmbpriority").val("");
+        $("#cmbStatus").val("");
+        $("#emailBody").val("");
+        $("#cmbtype").val("");
+        $("#screenname").val("");
+        $("#recname").val("").prop("disabled", true);
+        $("#report").val("").prop("disabled", true);
+        $(".save_btn").show();
+        $(".update_btn").hide();
+        $(".tborder1").hide();
+        $("#textareaRow").show();
+
+        $("#cmbassign1").val("admin");
+        if (role_code != "RC006" && role_code != "RC028") {
+            $("#cmbassign1").prop("disabled", true);
+        }
+            }
+        });
+    });
+     var userMap = {};
+    var canAdd = '';
+    var canEdit = '';
+    var canDelete = '';
+    var canProcess = '';
+    var screen_code = '';
+    var role_code = '';
+    var Is_ticketuser = '';
+    var last_insert = '';
+    var grid_edit = 'N';
+    var raiser_code = '';
+    var insert_by = '';
+    let attachmentList = [];
+    var selectedMenuCode = '';
+    var selectedMenuName = '';
+    var selectedReconCode = '';
+    var selectedReconName = '';
+    var selectedReportCode = '';
+    var selectedReportName = '';
+    var selectedTickets = [];
+    var isNewTicket = false;
+    // $("#navhead").text("Support Ticketing System");
+    $("#ticketModalLabel").text("Support Ticketing System");
+    $(document).ready(function () {
+        $('#ticketModal').on('shown.bs.modal', function () {
+            $.fn.modal.Constructor.prototype._enforceFocus = function () { };             
+        });
+       
+        $('button[data-bs-target="#navs-pills-top-attach"]').hide();
+        $('button[data-bs-target="#navs-pills-top-new"]').hide();
+
+
+        $('button[data-bs-target="#navs-pills-top-list"]').on('shown.bs.tab', function () {
+            $('button[data-bs-target="#navs-pills-top-new"]').hide();
+            $('button[data-bs-target="#navs-pills-top-attach"]').hide();
+            $('#options1').prop('checked', true);             
+            ticketlist();
+        });
+
+        $('button[data-bs-target="#navs-pills-top-attach"]').on('shown.bs.tab', function () {
+            $('button[data-bs-target="#navs-pills-top-attach"]').show();
+        });
+         
+        var txtusrname = sessionStorage.getItem("recon_userdetail");
+        screen_code = rolevalidatescreen('tkt_sys');
+        role_code = sessionStorage.getItem("rolecode");
+        if (screen_code && screen_code.length > 0) {
+            var permissions = screen_code[0];
+            canAdd = permissions.add || 'N';
+            canEdit = permissions.edit || 'N';
+            canDelete = permissions.delete || 'N';
+            canProcess = permissions.process || 'N';
+        } else {
+            console.warn("No permissions found for screen:", screen_code);
+        }
+         if (canAdd == 'N') {
+                document.getElementById("div_add").style.display = "none";
+            }
+
+        if (role_code == "RC027") {
+           
+            document.getElementById("lblassign").style.display = "none";
+            document.getElementById("bthassign").style.display = "none";
+            document.getElementById("asgndto").style.display = "none";
+            document.getElementById("lblremarks").style.display = "none";
+            document.getElementById("download").style.display = "none";
+            $("#options1").closest("label").hide();
+            $("#options2").closest("label").hide();
+            $("#div_add").show();
+            Is_ticketuser = 'User';
+            // const div = document.getElementById("cmbqueue");
+            // div.style.pointerEvents = "none";
+            // div.style.opacity = "0.5";
+        }
+        else if (role_code == "RC006") {
+            Is_ticketuser = 'Admin';
+            // document.getElementById("raiser_div").style.display = "block";
+            const div = document.getElementById("cmbqueue");
+            div.style.pointerEvents = "auto";
+            div.style.opacity = "1";            
+        }
+        else if (role_code == "RC010") {
+            Is_ticketuser = 'Support';
+            // document.getElementById("raiser_div").style.display = "block";
+            const div = document.getElementById("cmbqueue");
+            div.style.pointerEvents = "auto";
+            div.style.opacity = "1";
+        }
+        else if (role_code == "RC028") {
+            Is_ticketuser = 'Ticket Support';
+            // document.getElementById("raiser_div").style.display = "block";
+            const div = document.getElementById("cmbqueue");
+            document.getElementById("lblassign").style.display = "none";
+            document.getElementById("bthassign").style.display = "none";
+            document.getElementById("asgndto").style.display = "none";
+            document.getElementById("lblremarks").style.display = "none";
+            document.getElementById("download").style.display = "none";
+             $("#options1").closest("label").hide();
+             $("#options2").closest("label").hide();
+             $("#div_add").show();
+            div.style.pointerEvents = "auto";
+            div.style.opacity = "1";
+        }
+
+        ticketlist();
+        var lvl1 = sessionStorage.getItem("level1txt");
+        var lvl2 = sessionStorage.getItem("level2txt");
+        var lvl3 = sessionStorage.getItem("level3txt");
+        var context_code = sessionStorage.getItem("level3");
+        var usercode = sessionStorage.getItem("usrname");
+
+        console.log("Session values:", lvl1, lvl2, lvl3, usercode);
+
+        // build combined text if they exist
+        if (lvl1 || lvl2 || lvl3) {
+            var contextVal = [lvl1, lvl2, lvl3].filter(Boolean).join(" / ");
+            $("#txtcontext").val(contextVal);
+            $("#tabtxtcontext").val(contextVal);
+        }
+       
+
+        // Menu
+        $.ajax({
+            type: "POST",
+            url: '../Admin/getmenu',
+            dataType: 'json',
+            data: JSON.stringify({user_code:usercode }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {        
+            var data = JSON.parse(response);
+                $("#screenname").empty();
+                $("#screenname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                   $.each(data.SubMenu, function (index, item) {
+                    $("#screenname").append($('<option>', {
+                        value: item.menu_gid,
+                        text: item.menu_name
+                    }));
+                });
+                $("#screenname").on("change", function () {
+                    selectedMenuCode = $(this).val();
+                    selectedMenuName = $("#screenname option:selected").text();
+                    console.log("Selected Menu Code:", selectedMenuCode);
+                    console.log("Selected Menu Name:", selectedMenuName);
+                   if (selectedMenuName.trim() === "Report Generation") {
+                        $("#recname").prop("disabled", false);
+                        reconname();
+                    } else {
+                        $("#recname").prop("disabled", true).val("");
+                    }
+                });
+            }
+        });
+
+         $("#recname").on("change", function () {
+                    selectedReconCode = $(this).val();
+                    selectedReconName = $("#recname option:selected").text();
+                    $("#report").prop("disabled", false);
+                    reportlist(selectedReconCode);
+                    console.log("Selected Recon Code:", selectedReconCode);
+                    console.log("Selected Recon Name:", selectedReconName);
+           });
+
+        $("#report").on("change", function () {
+                    selectedReportCode = $(this).val();
+                    selectedReportName = $("#report option:selected").text();
+                      console.log("Selected Recon Code:", selectedReportCode);
+                    console.log("Selected Recon Name:", selectedReportName);
+                });
+
+        
+
+        // Assigned User
+        $.ajax({
+            type: "POST",
+            url: '../Ticket/assigedUsers',
+            dataType: 'json',
+            data: JSON.stringify({in_context_code:context_code,  in_lang_code: '', in_ip_addr: '' }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#cmbassign").empty();
+                $("#cmbassign").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(response, function (index, item) {
+                    //if (item.role_code === "RC028") {
+                    userMap[item.user_name.trim()] = item.user_code.trim();
+                        $("#cmbassign").append($('<option>', {
+                            value: item.user_code,
+                            text: item.user_name
+                        }));
+                    //}
+                });
+                $("#cmbassign").on("change", function () {
+                    var selectedUserCode = $(this).val();
+                    var selectedUserName = $("#cmbassign option:selected").text();
+                    console.log("Selected User Code:", selectedUserCode);
+                    console.log("Selected User Name:", selectedUserName);
+                });
+            }
+        });
+
+
+        // Assigned User In inner Forms
+        $.ajax({
+            type: "POST",
+            url: '../Ticket/assigedUsers',
+            dataType: 'json',
+            data: JSON.stringify({in_context_code:context_code,  in_lang_code: '', in_ip_addr: '' }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#cmbassign1").empty();
+                $("#cmbassign1").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $("#cmbassign1").append($('<option>', {
+                    value: "admin",
+                    text: "Admin"
+                }));
+                $.each(response, function (index, item) {
+                    $("#cmbassign1").append($('<option>', {
+                        value: item.user_code,
+                        text: item.user_name
+                    }));
+                });
+                $("#cmbassign1").on("change", function () {
+                    var selectedAssignCode = $(this).val();
+                    var selectedAssignName = $("#cmbassign1 option:selected").text();
+                    console.log("Selected User Code:", selectedAssignCode);
+                    console.log("Selected User Name:", selectedAssignName);
+                });
+            }
+        });
+      
+
+        var in_master_code = "TKT_PRIORITY";
+        var in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+            type: "POST",
+            url: '../Common/Qcdticketmaster',
+            dataType: 'json',
+            data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#cmbpriority").empty();
+                $("#cmbpriority").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(response, function (index, item) {
+                    $("#cmbpriority").append($('<option>', {
+                        value: item.master_code,
+                        text: item.master_name
+                    }));
+                });
+
+                $("#cmbpriority").on("change", function () {
+                    var selectedCode = $(this).val();             // master_code
+                    var selectedText = $("#cmbpriority option:selected").text(); // master_name
+                    console.log("Selected Master Code:", selectedCode);
+                    console.log("Selected Master Name:", selectedText);
+                });
+            }
+        });       
+
+
+        var in_master_code = "TKT_STATUS";
+        var in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+            type: "POST",
+            url: '../Common/Qcdticketmaster',
+            dataType: 'json',
+            data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#cmbqueue").empty();
+                $("#cmbqueue").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(response, function (index, item) {
+                    $("#cmbqueue").append($('<option>', {
+                        value: item.master_code,
+                        text: item.master_name
+                    }));
+                });
+                $("#cmbqueue").on("change", function () {
+                    var selectedQCode = $(this).val();             // master_code
+                    var selectedQText = $("#cmbqueue option:selected").text(); // master_name
+                    console.log("Selected Master Code:", selectedQCode);
+                    console.log("Selected Master Name:", selectedQText);
+                });
+            }
+        });        
+
+        var in_master_code = "TKT_TYPE";
+        var in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+            type: "POST",
+            url: '../Common/Qcdticketmaster',
+            dataType: 'json',
+            data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $("#cmbtype").empty();
+                $("#cmbtype").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                $.each(response, function (index, item) {
+                    $("#cmbtype").append($('<option>', {
+                        value: item.master_code,
+                        text: item.master_name
+                    }));
+                });
+                $("#cmbtype").on("change", function () {
+                    var selectedTypeCode = $(this).val();             // master_code
+                    var selectedTypeText = $("#cmbtype option:selected").text(); // master_name
+                    console.log("Selected Master Code:", selectedTypeCode);
+                    console.log("Selected Master Name:", selectedTypeText);
+                });
+            }
+        });       
+
+        $("#cmbqueue").off("change").on("change", function () {
+            $("#cmbassign1").prop("disabled", false);
+            var selectedQCode = $(this).val();
+            var selectedQText = $("#cmbqueue option:selected").text();          
+            console.log("Selected Master Code:", selectedQCode);
+            console.log("Selected Master Name:", selectedQText);
+        });      
+
+    });
+
+
+    function cancel_ticket() {
+        $("#queryErrortkttype").text("");
+        $("#queryErrorpriority").text("");
+        $("#queryErrorscreen").text("");
+        $("#queryErrorrecname").text("");
+        $("#queryErrorreport").text("");
+        $("#queryErrorsub").text("");
+        $("#queryErrormsg").text("");
+        $("#queryErrorasto").text("");
+        $('button[data-bs-target="#navs-pills-top-list"]').tab('show');
+    }
+     function reconname(callback) {
+         var user_code = sessionStorage.getItem("usrname");
+             $.ajax({
+            type: "POST",
+            url: '../Recon/Reconlistfetch',
+            dataType: 'json',
+            data: JSON.stringify({in_user_gid:0,in_active_status:'',in_user_code: user_code}),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+            var data = JSON.parse(response);
+                $("#recname").empty();
+                $("#recname").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                   $.each(data, function (index, item) {
+                    $("#recname").append($('<option>', {
+                        value: item.recon_code,
+                        text: item.recon_name
+                    }));
+                });
+               if (callback) callback();
+            }
+        });
+        } 
+
+        function reportlist(selectedReconCode, callback){
+            var user_code = sessionStorage.getItem("usrname");
+            $.ajax({
+            type: "POST",
+            url: '../Reports/reportTempletelist',
+            dataType: 'json',
+            data: JSON.stringify({in_recon_code:selectedReconCode,in_custom_flag:true,in_action_by: user_code}),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+            var data = JSON.parse(response);
+                $("#report").empty();
+                $("#report").append($('<option>', {
+                    value: "",
+                    text: "  Select  "
+                }));
+                   $.each(data, function (index, item) {
+                    $("#report").append($('<option>', {
+                        value: item.reporttemplate_code,
+                        text: item.reporttemplate_name
+                    }));
+                });
+                 if (callback) callback();
+            }
+        });
+        }
+
+    function setCurrentDateTime() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+
+        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        document.getElementById("cdate").value = formattedDate;
+    }
+
+    $(".fa-plus").click(function () {
+        //--------------User---------------------
+        // $("#ticketModalLabel").text("Create New Ticket");
+        isNewTicket = true;
+        $("#ticket_gid").val("");
+        $("#txtTicketNo").val("New");
+        $('button[data-bs-target="#navs-pills-top-new"]').show();
+        $('button[data-bs-target="#navs-pills-top-new"]').tab('show');
+        $('button[data-bs-target="#navs-pills-top-new"]').text("Raise Ticket");
+        grid_edit = 'N';
+        $("#cmbqueue").val("TKT_STATUS_NEW").trigger("change");
+        $("#cmbqueue").prop("disabled", true);
+        $("#cmbtype, #cmbpriority, #cmbStatus, #txtSubject, #cmbassign1").prop("disabled", false);
+        setCurrentDateTime();
+        $("#txtSubject").val("");
+        $("#cmbassign").val("");
+        $("#cmbpriority").val("");
+        $("#cmbStatus").val("");
+        $("#screenname").val("");
+        $("#emailBody").val("");
+        $("#cmbtype").val("");
+        $(".save_btn").show();
+        $(".update_btn").hide();
+        $(".tborder1").hide();
+        $("#textareaRow").show();
+
+        $("#cmbassign1").val("admin");
+        if (role_code != "RC006" && role_code != "RC028") {
+            $("#cmbassign1").prop("disabled", true);
+        }
+    });
+
+    $(".circle-close").on("click", function () {
+        $("#txtSubject").val("");
+        $("#cmbassign").val("");
+        $("#cmbpriority").val("");
+        $("#cmbStatus").val("");
+        $("#emailBody").val("");
+        $("#cmbtype").val("");
+        $("#cmbqueue").val("");
+        $("#cmbassign1").val("");
+        $("#asgnto").show();
+
+    });
+
+    function ticketlist() {
+        ticket_dataset_details([]);
+        var usercode = sessionStorage.getItem("usrname");
+         var username = sessionStorage.getItem("username");
+        var data = {
+            in_user_code: usercode,
+            in_role_code: '',
+            in_lang_code: '',
+            in_ip_addr: '',
+            in_action: 'VIEW',
+            in_screen_access: Is_ticketuser
+        };
+        var Context = data;
+        console.log(Context.in_user_code, Context.in_role_code, Context.in_lang_code, Context.in_lang_code, Context.in_ip_addr, Context.in_action, Context.in_screen_access);
+        $.ajax({
+            type: "POST",
+            url: '../Ticket/TicketListFetch',
+            dataType: 'json',
+            data: JSON.stringify({
+                in_user_code: Context.in_user_code,
+                in_role_code: Context.in_role_code,
+                in_lang_code: Context.in_lang_code,
+                in_ip_addr: Context.in_ip_addr,
+                in_action: Context.in_action,
+                in_screen_access: Context.in_screen_access
+            }),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var result = JSON.parse(response);
+                if (result != null) {
+                    $("#tkt_dataset").empty();
+                    $("#tkt_dataset").append("<div id='ticket_dataset' style='width:100%'></div>");
+                    ticket_dataset_details(result);
+                }
+                else {
+                    ticket_dataset_details([]);
+                }
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+
+        });
+
+    }
+
+    function ticket_dataset_details(data) {
+        try {
+            var role_code = sessionStorage.getItem("rolecode");
+            var usernames = sessionStorage.getItem("username");
+            var usercodes = sessionStorage.getItem("usrname");
+
+            // Delete button
+            var deleteBtn = "";
+            if (role_code !== "RC027" && role_code !== "RC028") {
+                deleteBtn = `<a href='javascript:void(0)' class='del-btn' title='Delete'>
+                                <img src='../Assets/images/del.png' onclick='DelTicket($(this))'>
+                            </a>`;
+            }
+
+            // Action buttons
+            var actionTemplate =
+                `<div class='action-buttons' style='text-align:center'>
+                    <a href='javascript:void(0)' class='edit-btn' title='Edit'>
+                        <img src='../Assets/images/editicons.png' onclick='editTicket($(this))'>
+                    </a>
+                    <a href='javascript:void(0)' class='view-btn' title='View'>
+                        <img src='../Assets/images/viewicons.png' onclick='viewTicket($(this))'>
+                    </a>
+                    ${deleteBtn}
+                </div>`;
+
+            // Build columns
+            var columnsList = [];
+
+            if (role_code !== "RC027" && role_code !== "RC028") {
+                columnsList.push({
+                    title: "Select",
+                    width: 60,
+                    template:
+                        "# if (status == 'New' || status == 'Reopened') { #" +
+                        "<input type='checkbox' class='ticket-checkbox' data-id='#= ticket_gid #' />" +
+                        "# } #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" }
+                });
+            }
+
+            columnsList.push({
+                field: "Action",
+                title: "Action",
+                width: 80,
+                hidden: true,
+                encoded: false,
+                editable: false,
+                sortable: false,
+                filterable: false,
+                exportable: false,
+                template: actionTemplate
+            });
+
+            columnsList.push(
+                { field: "ticket_gid", title: "ticket_gid", width: 100, hidden: true },
+                {
+                    field: "ticket_no",
+                    title: "Ticket No",
+                    width: 140,
+                    template: '<a href="javascript:void(0);" class="ticket-link">#= ticket_no #</a>'
+                },
+                { field: "creation_date", title: "Creation Date", width: 140, format: "{0:dd-MM-yyyy HH:mm:ss}" },
+                { field: "type", title: "Type", width: 140 },
+                { field: "priority", title: "Priority", width: 140 },
+             //   { field: "insert_by", title: "Processed by", width: 150 },
+                {
+                    field: "insert_by",
+                    title: "Processed By",
+                    width: 150,
+                    hidden: (role_code == "RC027")
+                },
+                { field: "status", title: "Status", width: 140 },
+                { field: "raiser", title: "Raiser", width: 140 },
+                { field: "assigned_to", title: "Assigned To", width: 140 },
+                { field: "subject", title: "Subject", width: 140 },
+                { field: "screen_name", title: "Screen Name", width: 140 },
+                { field: "recon_name", title: "Recon Name", width: 140 },
+                { field: "recon_code", title: "Recon Code", width: 140, hidden: true },
+                { field: "report_name", title: "Report Name", width: 140 },
+                { field: "entity", title: "entity", width: 10, hidden: true },
+                { field: "department", title: "department", width: 10, hidden: true },
+                { field: "unit", title: "unit", width: 10, hidden: true }
+            );
+
+            // Default filter
+            var gridFilter = {};
+            if (role_code == "RC006") {
+                gridFilter = {
+                    logic: "or",
+                    filters: [
+                        { field: "status", operator: "eq", value: "New" },
+                        { field: "status", operator: "eq", value: "Reopened" }
+                    ]
+                };
+            }
+            if ($("#ticketModal").data("useKendoAppendTo")) {
+                kendo.ui.FilterMenu.prototype.options.appendTo = "#ticketModal";
+                kendo.ui.Popup.prototype.options.appendTo = "#ticketModal";
+            }
+            // Create Grid
+            $("#ticket_dataset").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 10,
+                    filter: gridFilter,
+                    schema: {
+                        model: {
+                            fields: {
+                                ticket_gid: { type: "string" },
+                                ticket_no: { type: "string" },
+                                creation_date: { type: "date" },
+                                raiser: { type: "string" },
+                                assigned_to: { type: "string" },
+                                subject: { type: "string" },
+                                type: { type: "string" },
+                                priority: { type: "string" },
+                                status: { type: "string" },
+                                insert_by: { type: "string" },
+                                entity: { type: "string" },
+                                department: { type: "string" },
+                                unit: { type: "string" }
+                            }
+                        }
+                    }
+                },
+
+                filterable: {
+                    extra: true,
+                    mode: "menu",
+                    appendTo: "#ticketModal"
+                },
+
+                dataBound: function () {
+                    var grid = this;
+
+                    grid.tbody.find(".ticket-link").off("click").on("click", function (e) {
+                        e.preventDefault();
+                        var dataItem = grid.dataItem($(this).closest("tr"));
+                        if (dataItem) editTicket(dataItem.ticket_gid);
+                    });
+
+                    grid.tbody.find("input.ticket-checkbox").each(function () {
+                        var id = Number($(this).data("id"));
+                        if (selectedTickets.includes(id)) $(this).prop("checked", true);
+                    });
+
+                    grid.tbody.find("input.ticket-checkbox").off("change").on("change", function () {
+                        var id = Number($(this).data("id"));
+                        if ($(this).is(":checked")) {
+                            if (!selectedTickets.includes(id)) selectedTickets.push(id);
+                        } else {
+                            selectedTickets = selectedTickets.filter(x => x !== id);
+                        }
+                    });
+                },
+
+                pageable: {
+                    refresh: false,
+                    pageSizes: [10, 15, 20, 25, 50],
+                    buttonCount: 5
+                },
+
+                excel: { fileName: "TicketData.xlsx", allPages: true },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                resizable: true,
+                editable: false,
+                columns: columnsList
+            });
+
+            // Attach filter popup fix AFTER grid is created
+            var grid = $("#ticket_dataset").data("kendoGrid");
+            grid.bind("filterMenuInit", function (e) {
+                $(document).off("focusin.bs.modal");
+            });
+
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    // Modal open fix
+    $('#ticketModal').on('shown.bs.modal', function () {
+        $(document).off('focusin.bs.modal');
+        $('#ticketModal').removeAttr('tabindex');
+        $(".k-animation-container, .k-popup").css("z-index", 999999);
+    });
+
+    document.getElementById("ticketModal")
+        .addEventListener("hidden.bs.modal", function () {
+
+            // RESET modal-specific override
+            $("#ticketModal").removeData("useKendoAppendTo");
+
+            // restore defaults so other pages work normally
+            kendo.ui.FilterMenu.prototype.options.appendTo = null;
+            kendo.ui.Popup.prototype.options.appendTo = null;
+        });
+
+    
+    function ticket_dataset_details_old(data) {
+        try {
+            
+            var role_code = sessionStorage.getItem("rolecode");
+            console.log("Role Code:", role_code);
+            var usernames = sessionStorage.getItem("username");
+            var usercodes = sessionStorage.getItem("usrname"); console.log("usernamess");
+            // Step 1️⃣ — Build delete button (hide for RC027, RC028)
+            var deleteBtn = "";
+            if (role_code !== "RC027" && role_code !== "RC028") {
+                deleteBtn = `<a href='javascript:void(0)' class='del-btn' title='Delete'>
+                                            <img src='../Assets/images/del.png' onclick='DelTicket($(this))'>
+                                         </a>`;
+            }
+            
+
+            // Step 2️⃣ — Action column (always visible)
+            var actionTemplate =
+                `<div class='action-buttons' style='text-align:center'>
+                                <a href='javascript:void(0)' class='edit-btn' title='Edit'>
+                                    <img src='../Assets/images/editicons.png' onclick='editTicket($(this))'>
+                                </a>
+                                <a href='javascript:void(0)' class='view-btn' title='View'>
+                                    <img src='../Assets/images/viewicons.png' onclick='viewTicket($(this))'>
+                                </a>
+                                ${deleteBtn}
+                            </div>`;
+
+            // Step 3️⃣ — Build columns dynamically
+            var columnsList = [];
+
+            // Add checkbox column only if allowed
+            if (role_code !== "RC027" && role_code !== "RC028") {
+                columnsList.push({
+                    title: "Select",
+                    width: 60,
+                    template: "# if (status == 'New' || status == 'Reopened') { #" +
+                      "<input type='checkbox' class='ticket-checkbox' data-id='#= ticket_gid #' />" +
+                      "# } #",
+                    headerAttributes: { style: "text-align:center" },
+                    attributes: { style: "text-align:center" }
+                });
+            }
+
+            // Action column
+            columnsList.push({
+                field: "Action",
+                title: "Action",
+                width: 80,
+                hidden: true,
+                encoded: false,
+                editable: false,
+                sortable: false,
+                filterable: false,
+                exportable: false,
+                template: actionTemplate
+            });
+
+            // Remaining columns
+            columnsList.push(
+                { field: "ticket_gid", title: "ticket_gid", width: 100, hidden: true },
+                {
+                    field: "ticket_no",
+                    title: "Ticket No",
+                    width: 140,
+                    template: '<a href="javascript:void(0);" class="ticket-link">#= ticket_no #</a>'
+                },
+                { field: "creation_date", title: "Creation Date", width: 140, format: "{0:dd-MM-yyyy HH:mm:ss}" },
+                { field: "type", title: "Type", width: 140 },
+                { field: "priority", title: "Priority", width: 140 },
+                { field: "insert_by", title: "Processed by", width: 150 },
+                { field: "status", title: "Status", width: 140 },
+                { field: "raiser", title: "Raiser", width: 140 },
+                { field: "assigned_to", title: "Assigned To", width: 140 },
+                { field: "subject", title: "Subject", width: 140 },
+                { field: "screen_name", title: "Screen Name", width: 140 },
+                { field: "recon_name", title: "Recon Name", width: 140 },
+                { field: "recon_code", title: "Recon Code", width: 140,hidden:true },
+                { field: "report_name", title: "Report Name", width: 140 },                
+                { field: "entity", title: "entity", width: 10, hidden: true },
+                { field: "department", title: "department", width: 10, hidden: true },
+                { field: "unit", title: "unit", width: 10, hidden: true }
+            );
+            // kendo.ui.FilterMenu.fn.options.appendTo = "#ticketModal";
+            // kendo.ui.Popup.fn.options.appendTo = "#ticketModal";
+           
+            // Step 4️⃣ — Initialize Grid
+             
+            var role_code = sessionStorage.getItem("rolecode"); 
+            var tktgridFilter = {};
+
+            // Example condition
+                if (role_code == "RC006") {
+                tktgridFilter = {
+                        logic: "or",
+                        filters: [
+                            { field: "status", operator: "eq", value: "New" },
+                            { field: "status", operator: "eq", value: "Reopened" }
+                        ]
+                    };
+                } else {
+                tktgridFilter = {};  // show all
+                }
+
+            $("#ticket_dataset").kendoGrid({
+                dataSource: {
+                    data: data,
+                    pageSize: 10,
+                    serverPaging: false,
+                    height: 338,
+                    groupable: false,
+                    filterable: true,
+                    schema: {
+                        model: {
+                            fields: {
+                                ticket_gid: { type: "string" },
+                                ticket_no: { type: "string" },
+                                creation_date: { type: "date" },
+                                raiser: { type: "string" },
+                                assigned_to: { type: "string" },
+                                subject: { type: "string" },
+                                type: { type: "string" },
+                                priority: { type: "string" },
+                                status: { type: "string" },
+                                insert_by: { type: "string" },
+                                entity: { type: "string" },
+                                department: { type: "string" },
+                                unit: { type: "string" }
+                            }
+                        }
+                    },
+                    // filter: { field: "status", operator: "eq", value: "New" }
+                    filter: tktgridFilter
+                },
+
+                // filterable: {
+                // 	mode: "row"
+                // },
+                           dataBound: function (e) {
+        var grid = this;
+
+        grid.tbody.find(".ticket-link").off("click").on("click", function(e){
+        e.preventDefault();
+        var dataItem = grid.dataItem($(this).closest("tr"));
+        if (dataItem) {
+            editTicket(dataItem.ticket_gid);
+        }
+    });
+
+        // Restore checked state
+        grid.tbody.find("input.ticket-checkbox").each(function () {
+            var id = Number($(this).data("id"));
+            if (selectedTickets.includes(id)) {
+                $(this).prop("checked", true);
+            }
+        });
+
+        // Attach change handler
+        grid.tbody.find("input.ticket-checkbox").off("change").on("change", function () {
+            var id = Number($(this).data("id"));
+            if ($(this).is(":checked")) {
+                if (!selectedTickets.includes(id)) {
+                    selectedTickets.push(id);
+                }
+            } else {
+                selectedTickets = selectedTickets.filter(x => x !== id);
+            }
+            console.log("Selected Tickets:", selectedTickets.join(","));
+        });
+    },
+                pageable: {
+                    refresh: false,
+                    pageSizes: [10, 15, 20, 25, 50],
+                    buttonCount: 5
+                },
+                excel: {
+                fileName: "TicketData.xlsx",
+                allPages: true
+            },
+                sortable: true,
+                selectable: true,
+                navigatable: true,
+                resizable: true,
+                columns: columnsList,
+                editable: false
+            });
+              setTimeout(function () {
+        $(".k-animation-container").appendTo("#ticketModal");
+    }, 300);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+     
+
+
+    $(document).on("change", ".ticket-checkbox", function () {
+        if (!$(this).prop("checked")) {
+            $("#selectAllTickets").prop("checked", false);
+        } else if ($(".ticket-checkbox:checked").length === $(".ticket-checkbox").length) {
+            $("#selectAllTickets").prop("checked", true);
+        }
+    });
+
+
+    $("#dwlallIcon").on("click", function () {
+        var grid = $("#ticket_dataset").data("kendoGrid");
+        grid.saveAsExcel();
+    });
+
+            function getSelectedTickets() {
+        var currentPageSelected = [];
+        $(".ticket-checkbox:checked").each(function () {
+            currentPageSelected.push(Number($(this).data("id")));
+        });
+
+        // Merge with previous selections
+        selectedTickets = [...new Set([...selectedTickets, ...currentPageSelected])];
+        return selectedTickets;
+    }
+
+
+
+
+    function assignto() {
+        var isValid = true;
+       // var selectedTickets = getSelectedTickets();
+        var selectedAsgnCode = $("#cmbassign").val();
+        var bulkassgnsto = $("#cmbassign").val();
+       var remarks = $("#remarks").val().trim();
+       console.log("selectedTickets :", selectedTickets);
+            if (remarks === "") {
+                remarks = "Assigned to developer";
+            }
+            if (selectedAsgnCode == "") {
+            $("#queryErrorasgn").text("Please select Ticket support");
+            isValid = false;
+        }
+        var usercode = sessionStorage.getItem("usrname");
+         var username = sessionStorage.getItem("username");
+
+        if (selectedTickets.length === 0) {
+            $("#queryErrorasgn").text("Please select at least one ticket to assign");
+            isValid = false;
+        } else {
+            $("#queryErrorasgn").text("");
+        }
+
+            if (!bulkassgnsto || bulkassgnsto === "Select") {
+                $("#queryErrorbasto").text("Select Assigned To");
+                isValid = false;
+            } else {
+                $("#queryErrorbasto").text("");
+            }
+
+        if (isValid) {
+            var selectedTicketsStr = selectedTickets.join(",");
+            console.log("Selected Ticket GIDs:", selectedTicketsStr, selectedAsgnCode);
+
+            $.ajax({
+                type: "POST",
+                url: "../Ticket/ticketbulkassign",
+                dataType: "json",
+                data: JSON.stringify({
+                    ticket_gid: selectedTicketsStr,
+                    //ticket_no: ticketNo,
+                    ticket_for: usercode,
+                    ticket_assigned: selectedAsgnCode,
+                    //ticket_date: createDate,
+                    //ticket_type: selectedTypeCode,
+                    //ticket_subject: subject,
+                    ticket_description:remarks,
+                    //ticket_priority: selectedCode,
+                    //ticket_isattachment: 'N',
+                    in_user: usercode,
+                    ticket_status: 'TKT_STATUS_ASS',
+                    in_ip_addr: '',
+                    in_action: "UPDATE"
+                }),
+
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger;
+                    var result = JSON.parse(response);
+                    console.log("BulkTicketresponse : ", result);
+                    var data = result[0];
+                    if (data.out_result == "1") {
+                        $.alert({
+                            title: "Recon",
+                            content: data.out_msg,
+                            type: "green",
+                            buttons: {
+                                ok: {
+                                    text: "OK",
+                                    btnClass: "btn-green",
+                                    action: function () {
+                                        $('#ticketModal').modal('show');                                       
+                                        $('#remarks').val('');
+                                        $('#cmbassign').val('');
+                                        $('#ticket_gid').val('');
+                                        $('.ticket-checkbox').prop('checked', false);
+                                        selectedTickets = [];
+                                         ticketlist();
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        $.alert({
+                            title: "Recon",
+                            content: data.out_msg,
+                            type: "red"
+                        });
+                    }
+                },
+                error: function (er) {
+                    alert(er);
+                    console.log(er);
+                }
+            });
+
+        }
+
+    }
+
+    function save_ticket() {
+        try {             
+            var isValid = true;
+            var lvl1 = sessionStorage.getItem("level1txt");
+            var lvl2 = sessionStorage.getItem("level2txt");
+            var lvl3 = sessionStorage.getItem("level3txt");
+            var usercode = sessionStorage.getItem("usrname");
+            var username = sessionStorage.getItem("username");
+            var ticketNo = $("#txtTicketNo").val();
+            var createDate = $("#cdate").val();
+            var context = $("#txtcontext").val();
+            var subject = $("#txtSubject").val();
+            var selectedTypeCode = $("#cmbtype").val();
+            var selectedCode = $("#cmbpriority").val();
+            var selectedQCode = $("#cmbqueue").val();
+            var screencode = selectedMenuCode;
+            var screenname = selectedMenuName;
+            var reconcode = selectedReconCode;
+            var reconname = selectedReconName;
+            var reportcode = selectedReportCode;
+            var reportname = selectedReportName;
+            var selectedAssignedCode = $("#cmbassign1").val();
+            var message = $("#emailBody").val();
+            var assgnsto = $("#cmbassign1").val();
+
+            // ✅ File handling
+            var fileInput = document.getElementById("attachmentsInput");
+            var fileName = "";
+            var ticket_isattachment = "N"; // Default
+            if (fileInput.files.length > 0) {
+                fileName = fileInput.files[0].name;
+                console.log("Selected file:", fileName);
+                ticket_isattachment = "Y";
+            } else {
+                //alert("No file selected");
+                ticket_isattachment = "N";
+            }
+
+            if (!selectedTypeCode || selectedTypeCode === "Select") {
+                $("#queryErrortkttype").text("Ticket type must be selected.");
+                isValid = false;
+            } else {
+                $("#queryErrortkttype").text("");
+            }
+
+            if (!selectedCode || selectedCode === "Select") {
+                $("#queryErrorpriority").text("Priority must be specified.");
+                isValid = false;
+            } else {
+                $("#queryErrorpriority").text("");
+            }
+
+                 let scr = $("#screenname").val();
+
+                if (!scr || scr === "Select") {
+                $("#queryErrorscreen").text("Screen name selection is required.");
+                    isValid = false;
+                } else {
+                    $("#queryErrorscreen").text("");
+                }
+         
+
+            if (!$("#recname").prop("disabled")) {
+                if ($("#recname").val() === "" || $("#recname").val() == null) {
+                    $("#queryErrorrecname").text("Select Recon");
+                    isValid = false;
+                } else {
+                    $("#queryErrorrecname").text("");
+                }
+            }
+
+            if (!$("#report").prop("disabled")) {
+                if ($("#report").val() === "" || $("#report").val() == null) {
+                    $("#queryErrorreport").text("Select Report");
+                    isValid = false;
+                } else {
+                    $("#queryErrorreport").text("");
+                }
+            }
+
+            if (!subject || subject === "") {
+                $("#queryErrorsub").text("Subject is required.");
+                isValid = false;
+            } else {
+                $("#queryErrorsub").text("");
+            }
+
+            if (!message || message === "") {
+                $("#queryErrormsg").text("Message is required.");
+                isValid = false;
+            } else {
+                $("#queryErrormsg").text("");
+            }
+
+            if (!assgnsto || assgnsto === "Select") {
+                $("#queryErrorasto").text("Assign must be specified");
+                isValid = false;
+            } else {
+                $("#queryErrorasto").text("");
+            }
+
+            if (isValid) {
+                $('#btntktsave').prop("disabled", true);
+                // ✅ Ajax call
+                $.ajax({
+                    type: "POST",
+                    url: "../Ticket/ticketsave",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        ticket_gid: '0',
+                        ticket_no: ticketNo,
+                        ticket_for: usercode,
+                        ticket_date: createDate,
+                        ticket_type: selectedTypeCode,
+                        ticket_subject: subject,
+                        ticket_description: message,
+                        ticket_priority: selectedCode,
+                        ticket_status: selectedQCode,
+                        in_screen_code:screencode,
+                        in_screen_name:screenname,
+                        in_recon_code:reconcode,
+                        in_recon_name:reconname,
+                        in_report_code:reportcode,
+                        in_report_name:reportname,
+                        ticket_assigned: selectedAssignedCode,
+                        entity: lvl1,
+                        department: lvl2,
+                        unit: lvl3,
+                        ticket_isattachment: ticket_isattachment,
+                        in_user: usercode,
+                        in_ip_addr: '',
+                        in_action: "INSERT"
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        console.log("SaveTicketresponse : ", result);
+                        var data = result[0];
+                        if (data.out_result == "1") {
+                            $.alert({
+                                title: "Recon",
+                                content: data.out_msg,
+                                type: "green",
+                                buttons: {
+                                    ok: {
+                                        text: "OK",
+                                        btnClass: "btn-green",
+                                        action: function () {
+                                            $("#ticket_gid").val(data.out_ticket_gid);
+                                            $("#queue_gid").val(data.out_queue_gid);
+                                            $("#attachTicketNo").val(data.out_ticket_no);
+                                            $("#attachSubject").val(subject);
+                                            $('#ticketModal').modal('show');
+                                            $('#btntktsave').prop("disabled", false);                                          
+                                           $('button[data-bs-target="#navs-pills-top-attach"]').show();
+                                            // Activate the Attachments tab
+                                            $('button[data-bs-target="#navs-pills-top-attach"]').tab('show');
+                                            updateAttachGrid();
+                                                $('button[data-bs-target="#navs-pills-top-new"]').on('shown.bs.tab', function () {
+                                                    setTimeout(function () {
+                                                        $('#btntktsave').prop("disabled", true);
+                                                        var tid = $("#ticket_gid").val();
+                                                        var txtTicketNo = $("#attachTicketNo").val();
+                                                        var tborder1 = document.getElementById("tborder1");
+                                                        console.log("Tab opened - isNewTicket:", isNewTicket, "tid:", tid, "txtTicketNo:", $("#attachTicketNo").val());
+                                                        if (tborder1) {
+                                                            tborder1.style.display = "none";  // SAFE
+                                                        }
+                                                        if (!isNewTicket && tid && tid !== "0") {
+                                                            // Existing ticket
+                                                            editTicket(tid);
+                                                        }
+                                                        else if (isNewTicket) {
+                                                            // New ticket
+                                                            $("#txtTicketNo").val('New');
+                                                        }
+                                                    }, 50);
+                                                });
+                                        }
+                                    }
+                                }
+                            });
+                           
+                        } else {
+                              $('#btntktsave').prop("disabled", false);
+                            $.alert({
+                                title: "Recon",
+                                content: data.out_msg,
+                                type: "red"
+                            });
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                          $('#btntktsave').prop("disabled", false);
+                        console.log(er);
+                    }
+                });
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+        
+
+
+    function save_attachment_old() {
+        var ticket_gid = $("#ticket_gid").val();        
+        var queue_gid = 0;
+        console.log("Attachment ticket_gid:", ticket_gid);
+          console.log("Attachment queue_gid:", queue_gid);
+        var uploadPromises = [];
+        // Loop through global attachment list or table rows
+        attachmentList.forEach(function (item) {
+            // if (item.attachment_gid == 0 && item.fileObject) {
+            // 	console.log(item.fileObject);
+            // 	AddAttachments(ticket_gid, queue_gid, item.fileObject);
+            // }
+            if (item.attachment_gid == 0 && item.fileObject) {
+                // Push each AddAttachments AJAX call as a promise
+                uploadPromises.push(AddAttachments(ticket_gid, queue_gid, item.fileObject));
+            }
+        });
+        Promise.all(uploadPromises).then(function () {
+            attachlist(ticket_gid);
+        }).catch(function (err) {
+            console.error("Error during upload:", err);
+        });
+    }
+
+        function save_attachment() {
+         $('#btnattach').prop("disabled", true);
+        var ticket_gid = $("#ticket_gid").val();
+        var queue_gid = 0;
+        console.log("Attachment ticket_gid:", ticket_gid);
+        console.log("Attachment queue_gid:", queue_gid);
+
+        var uploadPromises = [];
+
+        attachmentList.forEach(function (item) {
+            if (item.attachment_gid == 0 && item.fileObject) {
+                uploadPromises.push(AddAttachments(ticket_gid, queue_gid, item.fileObject));
+            }
+        });
+
+        Promise.all(uploadPromises)
+            .then(function (responses) {
+                // Check if all were successful
+                var allSuccess = responses.every(r => r.status === "success");
+
+                if (allSuccess) {
+                    $.alert({
+                        title: "Recon",
+                        content: "Attachments  uploaded successfully.",
+                        type: "green",
+                        buttons: {
+                            ok: {
+                                text: "OK",
+                                btnClass: "btn-green",
+                                action: function () {
+                                    $('#ticketModal').modal('show');
+                                    //$('button[data-bs-target="#navs-pills-top-list"]').show();
+                                   // $('button[data-bs-target="#navs-pills-top-list"]').tab('show');
+                                   // ticketlist();
+                                }
+                            }
+                        }
+                    });
+                } else {
+                    $.alert({
+                        title: "Recon",
+                        content: "Some attachments failed to upload.",
+                        type: "red"
+                    });
+                }
+                  $('#btnattach').prop("disabled", false);
+                attachlist(ticket_gid);
+            })
+            .catch(function (err) {
+                console.error("Error during upload:", err);
+                  $('#btnattach').prop("disabled", false);
+                $.alert({
+                    title: "Recon",
+                    content: "Error uploading attachments.",
+                    type: "red"
+                });
+            });
+    }
+
+        function AddAttachments(ticket_gid, queue_gid, file) {
+        return new Promise((resolve, reject) => {
+            try {
+                var usercode = sessionStorage.getItem("usrname");
+                var formData = new FormData();
+
+                formData.append("in_action", "INSERT");
+                formData.append("attachment_gid", 0);
+                formData.append("ticket_gid", ticket_gid);
+                formData.append("queue_gid", queue_gid);
+                formData.append("file", file);
+                formData.append("in_user", usercode);
+                formData.append("in_ip_addr", "");
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Ticket/addattachment",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("Attachment saved:", file.name);
+                        resolve(response);
+                    },
+                    error: function (err) {
+                        console.error("Error uploading file:", err);
+                        reject(err);
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+                reject(e);
+            }
+        });
+    }
+
+
+    function AddAttachments_old(ticket_gid, queue_gid, file) {
+        return new Promise((resolve, reject) => {
+            try {
+                var usercode = sessionStorage.getItem("usrname");
+                //var file = fileInput.files[0];
+                var formData = new FormData();
+
+                formData.append("in_action", "INSERT");
+                formData.append("attachment_gid", 0);
+                formData.append("ticket_gid", ticket_gid);
+                formData.append("queue_gid", queue_gid);
+                formData.append("file", file);
+                formData.append("in_user", usercode);
+                formData.append("in_ip_addr", "");
+
+                $.ajax({
+                    type: "POST",
+                    url: "../Ticket/addattachment",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("Attachment saved:", file.name);
+                        resolve(response);
+                        console.log("attachres:", response);
+                         var data = response;
+                         if (data.status == "success") {
+                               $.alert({
+                                 title: "Recon",
+                                 content: data.message,
+                                 type: "green",
+                                 buttons: {
+                                     ok: {
+                                         text: "OK",
+                                         btnClass: "btn-green",
+                                         action: function () {
+                                             $("#ticket_gid").val(data.out_ticket_gid);
+                                             $("#queue_gid").val(data.out_queue_gid);
+                                             $('#ticketModal').modal('show');
+                                             //AddAttachments(ticket_gid, queue_gid, fileInput);
+                                            $('button[data-bs-target="#navs-pills-top-list"]').show();
+                                             // Activate the Attachments tab
+                                             $('button[data-bs-target="#navs-pills-top-list"]').tab('show');
+                                           ticketlist();
+                                         }
+                                     }
+                                 }
+                             });
+                         } else {
+                             $.alert({
+                                 title: "Recon",
+                                 content: data.message,
+                                 type: "red"
+                             });
+                         }
+                    },
+                    error: function (err) {
+                        console.error("Error uploading file:", err);
+                        reject(err);
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+                reject(e);
+            }
+        });
+    }
+
+    function formatDateDDMMYYYYHHMMSS(dateInput) {
+        if (!dateInput) return "";
+
+        // Convert string or Date object to Date
+        var date = new Date(dateInput);
+
+        // Handle invalid date
+        if (isNaN(date.getTime())) return "";
+
+        var day = String(date.getDate()).padStart(2, '0');
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var year = date.getFullYear();
+        var hours = String(date.getHours()).padStart(2, '0');
+        var minutes = String(date.getMinutes()).padStart(2, '0');
+        var seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+    }
+
+
+    function editTicket_old(ticket_gid) {
+        isNewTicket = false;
+        var username = sessionStorage.getItem("username");
+        var usercode = sessionStorage.getItem("usrname"); console.log("usernamess");
+        console.log(usercode); console.log(username);
+        $('button[data-bs-target="#navs-pills-top-new"]').tab('show');
+        $('button[data-bs-target="#navs-pills-top-new"]').text("Ticket Details");
+        $('button[data-bs-target="#navs-pills-top-new"]').show();
+        $('button[data-bs-target="#navs-pills-top-list"]').show(); 
+        $('button[data-bs-target="#navs-pills-top-attach"]').show();
+         
+        console.log("Tabticketgid :", ticket_gid);
+        role_code = sessionStorage.getItem("rolecode");
+        console.log("Rolecodess :", role_code);
+        grid_edit = 'Y';
+        console.log("raiserUserCode"); console.log(raiserUserCode);
+        $("#cmbqueue option").show();
+
+        $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();     
+  
+
+        $(".tborder1").show();
+        $("#asgnto").show();
+        $("#textareaRow").show();
+        // $("#ticketModalLabel").text("Edit Ticket");
+        var grid = $("#ticket_dataset").data("kendoGrid");
+        var rowData = grid.dataSource.data().find(item => String(item.ticket_gid) === String(ticket_gid));
+
+        $("#btntktsave").hide();
+        $("#updatesubmit").show(); 
+        $("#txtcontext").val(rowData.entity + " / " + rowData.department + " / " + rowData.unit);
+        $("#tabtxtcontext").val(rowData.entity + " / " + rowData.department + " / " + rowData.unit);
+        $("#ticket_gid").val(rowData.ticket_gid);       
+        $("#txtTicketNo").val(rowData.ticket_no);
+        $("#cdate").val(formatDateDDMMYYYYHHMMSS(rowData.creation_date));
+        $("#txtSubject").val(rowData.subject);
+        $("#emailBody").val('');
+        $("#attachTicketNo").val(rowData.ticket_no);
+        $("#attachSubject").val(rowData.subject);
+        raiser_code = rowData.raiser;
+           insert_by = rowData.insert_by; 
+        $("#cmbtype option").filter(function () {
+            return $(this).text() === rowData.type;
+        }).prop("selected", true);
+        $("#cmbpriority option").filter(function () {
+            return $(this).text() === rowData.priority;
+        }).prop("selected", true);
+        $("#cmbqueue option").filter(function () {
+            return $(this).text() === rowData.status;
+        }).prop("selected", true);
+        $("#cmbassign1 option").filter(function () {
+            return $(this).text() === rowData.assigned_to;
+        }).prop("selected", true);
+        $("#screenname").prop("disabled", true);
+    $("#screenname option").filter(function () {
+        return $(this).text() === rowData.screen_name;
+    }).prop("selected", true);
+            if (rowData.screen_name === "Report Generation") { 
+                $("#recname").prop("disabled", false);
+
+                // Call reconname only ONCE with callback
+                reconname(function () {
+
+                    // Select the recon_name after loading items
+                    $("#recname option").filter(function () {
+                        return $(this).text().trim() === rowData.recon_name;
+                    }).prop("selected", true);
+
+                    // Now load report names
+                    reportlist(rowData.recon_code, function () {
+
+                        // Select report_name after loading report list
+                        $("#report option").filter(function () {
+                            return $(this).text().trim() === rowData.report_name;
+                        }).prop("selected", true);
+
+                    });
+                });
+
+                } else {
+
+                    // If screen_name is not Report Generation
+                    $("#recname").prop("disabled", true).val("");
+                    $("#report").val("");
+                    $("#recname").empty();
+                    $("#recname").append($('<option>', {
+                        value: "",
+                        text: "  Select  "
+                    }));
+
+                    $("#report").empty();
+                    $("#report").append($('<option>', {
+                        value: "",
+                        text: "  Select  "
+                    }));
+                }
+
+        var ticketgid = $("#ticket_gid").val();
+        var ticketno = $("#txtTicketNo").val();
+        threadmessage(ticketgid, ticketno);
+        attachlist(ticketgid);
+        document.getElementById("raiser_div").style.display = "block";         
+
+        if (role_code === "RC027"){
+            $("#recname").prop("disabled", false);
+            $("#report").prop("disabled", false);
+            $("#screenname").prop("disabled", false);
+            console.log("User Assigned to", rowData.assigned_to);
+            $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_ASS']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INFO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_RES']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CLO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CANC']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();      
+             if (rowData.status == "New") {
+               //$("#cmbqueue").prop("disabled", true);
+               $("#cmbassign1").val("admin").prop("disabled", true);
+            }
+             if (rowData.status == "Resolved") {
+                 var raiserUserCode = userMap[raiser_code.trim()];
+                $("#cmbassign1").val(raiserUserCode);
+               $("#cmbassign1").prop("disabled", true);
+               $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();
+               $("#cmbqueue option[value='TKT_STATUS_ASS']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INFO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CANC']").show();
+            }
+            
+              if (rowData.status == "InProgress" || rowData.status == "Assigned" ) {
+                // var raiserUserCode = userMap[raiser_code.trim()];
+                // $("#cmbassign1").val(raiserUserCode);
+                  $("#cmbassign1").prop("disabled", true);
+                   $("#cmbqueue").prop("disabled", true);
+                  
+            }
+              if (rowData.status == "Need Info") {
+                 var raiserUserCode = userMap[raiser_code.trim()];
+                  $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                    $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+                   
+             }
+              if (rowData.status == "Closed") {
+                  $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();
+                  $("#cmbqueue option[value='TKT_STATUS_CLO']").hide();
+                  $("#cmbqueue option[value='TKT_STATUS_REOP']").show();
+                  var raiserUserCode = userMap[raiser_code.trim()];
+                         $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+              }
+               if (rowData.status == "Clarified") {
+                   $("#cmbqueue option[value='TKT_STATUS_CLO']").hide();
+                    $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+              }
+                $("#cmbqueue").off("change").on("change", function () {          
+
+                if ($(this).val() === "TKT_STATUS_CLA") {
+                     $("#cmbassign1").val(insert_by).prop("disabled", true);
+
+                }
+                  if ($(this).val() === "TKT_STATUS_NEW") {
+                    $("#cmbassign1").val("admin").prop("disabled", true);
+
+                }
+                if ($(this).val() === "TKT_STATUS_CANC") {
+                     $("#cmbassign1").val(insert_by).prop("disabled", true);
+                      $("#cmbqueue option[value='TKT_STATUS_NEW']").show();
+                }
+                if ($(this).val() === "TKT_STATUS_RES" || $(this).val() === "TKT_STATUS_CLO" ) {
+                    var raiserUserCode = userMap[raiser_code.trim()];                        
+                    $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                    $("#cmbqueue option[value='TKT_STATUS_CLO']").show();
+                 }
+                if ($(this).val() === "TKT_STATUS_REOP") {
+                    $("#cmbassign1").val("admin").prop("disabled", true);
+                    $("#cmbqueue option[value='TKT_STATUS_CLO']").show();
+                }
+
+              });
+
+            console.log("pandiaraj");
+            console.log(usercode);
+            console.log(insert_by);
+            $("#updatesubmit").prop("disabled", false);
+            $("#screenname").prop("disabled", false);
+            $("#recname").prop("disabled", false);
+            $("#report").prop("disabled", false);
+            $("#txtSubject").prop("disabled", false);
+            $("#cmbpriority").prop("disabled", false);
+            $("#cmbassign1").prop("disabled", false);
+            $("#cmbtype").prop("disabled", false);
+            $("#emailBody").prop("disabled", false);
+            if (usercode === insert_by) {
+                $("#updatesubmit").prop("disabled", true);  
+                $("#screenname").prop("disabled", true);
+                $("#recname").prop("disabled", true);
+                $("#report").prop("disabled", true);
+                $("#txtSubject").prop("disabled", true);
+                $("#cmbpriority").prop("disabled", true);
+                $("#cmbassign1").prop("disabled", true);
+                $("#cmbtype").prop("disabled", true);
+                $("#emailBody").prop("disabled", true);
+
+            }
+        }
+         if (role_code === "RC028"){
+
+            $("#updatesubmit").prop("disabled", false);
+            $("#screenname").prop("disabled", false);
+            $("#recname").prop("disabled", false);
+            $("#report").prop("disabled", false);
+            $("#txtSubject").prop("disabled", false);
+            $("#cmbpriority").prop("disabled", false);
+            $("#cmbassign1").prop("disabled", false);
+            $("#cmbtype").prop("disabled", false);
+            $("#emailBody").prop("disabled", false);
+
+            $("#cmbassign1").prop("disabled", true);
+            $("#recname").prop("disabled", true);
+            $("#report").prop("disabled", true);
+            $("#screenname").prop("disabled", true);
+            $("#cmbtype").prop("disabled", true);
+            $("#cmbpriority").prop("disabled", true);                  
+            $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_ASS']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INP']").show();
+            $("#cmbqueue option[value='TKT_STATUS_INFO']").show();
+            $("#cmbqueue option[value='TKT_STATUS_RES']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CLO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CANC']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();  
+            
+            // $("#cmbassign1").off("change").on("change", function () {
+            //     $('#cmbqueue').val('Assigned');
+            // });
+
+           $("#cmbqueue").off("change").on("change", function () {
+                if ($(this).val() === "TKT_STATUS_INFO" ||
+                    $(this).val() === "TKT_STATUS_RES") {
+                    var raiserUserCode = userMap[raiser_code.trim()];
+                    console.log("Mapped raiser user code:", raiserUserCode);
+                    $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                }
+                  if ($(this).val() === "TKT_STATUS_INP") {                   
+                     $("#cmbassign1").val("ticketdeveloper").prop("disabled", true);
+                 }
+            });
+             console.log("pandiaraj");
+            console.log(usercode);
+            console.log(raiser_code);
+            if (usercode === insert_by) {
+                // && 
+                // ($("#cmbqueue").val() === "TKT_STATUS_INP" || $("#cmbqueue").val() === "TKT_STATUS_CLO" || 
+                // $("#cmbqueue").val() === "TKT_STATUS_RES" || $("#cmbqueue").val() === "TKT_STATUS_INFO")
+               
+                
+                $("#updatesubmit").prop("disabled", true);
+                $("#cmbassign1").prop("disabled", true);
+                $("#cmbqueue").prop("disabled", true);
+                $("#screenname").prop("disabled", true);
+                $("#recname").prop("disabled", true);
+                $("#report").prop("disabled", true);
+                $("#txtSubject").prop("disabled", true);
+                $("#cmbpriority").prop("disabled", true);
+                $("#cmbassign1").prop("disabled", true);
+                $("#cmbtype").prop("disabled", true);
+                $("#emailBody").prop("disabled", true); 
+            }
+            else if (usercode === raiser_code){
+                $("#updatesubmit").prop("disabled", false);
+                $("#cmbassign1").prop("disabled", false);
+                $("#cmbqueue").prop("disabled", false);
+                $("#screenname").prop("disabled", false);
+                $("#recname").prop("disabled", false);
+                $("#report").prop("disabled", false);
+                $("#txtSubject").prop("disabled", false);
+                $("#cmbpriority").prop("disabled", false);
+                $("#cmbassign1").prop("disabled", false);
+                $("#cmbtype").prop("disabled", false);
+                $("#emailBody").prop("disabled", false);
+            }
+        }
+
+
+            if (role_code === "RC006")
+             {
+                console.log("raiserUserCode"); console.log(raiserUserCode);
+                $("#recname").prop("disabled", false);
+                $("#report").prop("disabled", false);
+                $("#screenname").prop("disabled", false);
+               // $("#cmbassign1").val(raiserUserCode).prop("disabled", false);
+                $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+                $("#cmbqueue option[value='TKT_STATUS_ASS']").show();
+                $("#cmbqueue option[value='TKT_STATUS_INP']").show();
+                $("#cmbqueue option[value='TKT_STATUS_INFO']").show();
+                $("#cmbqueue option[value='TKT_STATUS_RES]").show();
+                $("#cmbqueue option[value='TKT_STATUS_CLO']").show();
+                $("#cmbqueue option[value='TKT_STATUS_REOP']").show();
+                $("#cmbqueue option[value='TKT_STATUS_CANC']").show();
+                $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();
+                 if (rowData.status == "New") {
+                    $("#cmbassign1").val("admin");
+                    $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+                    $("#cmbqueue option[value='TKT_STATUS_INP']").hide();
+                 }
+                 if (rowData.status == "Need Info" || rowData.status == "Resolved") {
+                    var raiserUserCode = userMap[raiser_code.trim()];
+                    $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                }
+                     $("#cmbqueue").off("change").on("change", function ()
+                     {
+                        $("#cmbassign1").val(raiserUserCode).prop("disabled", false);
+                        if ($(this).val() === "TKT_STATUS_CANC" ||
+                             $(this).val() === "TKT_STATUS_INFO" ||
+                            $(this).val() === "TKT_STATUS_CLO" ||
+                            $(this).val() === "TKT_STATUS_RES")
+                            {
+                                var raiserUserCode = userMap[raiser_code.trim()];
+                                console.log("Mapped raiser user code:", raiserUserCode);
+                                $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                            }
+                    });
+            }
+
+    }
+
+    function editTicket(ticket_gid) {
+        $("#queryErrortkttype").text("");
+        $("#queryErrorpriority").text("");
+        $("#queryErrorscreen").text("");
+        $("#queryErrorrecname").text("");
+        $("#queryErrorreport").text("");
+        $("#queryErrorsub").text("");
+        $("#queryErrormsg").text("");
+        $("#queryErrorasto").text("");
+        isNewTicket = false;
+
+        var username = sessionStorage.getItem("username");
+        var usercode = sessionStorage.getItem("usrname");
+         
+
+        // Switch to Ticket Details tab
+        $('button[data-bs-target="#navs-pills-top-new"]').tab('show').text("Ticket Details").show();
+        $('button[data-bs-target="#navs-pills-top-list"]').show();
+        $('button[data-bs-target="#navs-pills-top-attach"]').show();
+
+        console.log("Tabticketgid :", ticket_gid);
+
+        role_code = sessionStorage.getItem("rolecode");
+        console.log("Rolecodess :", role_code);
+
+        grid_edit = 'Y';
+
+        console.log("raiserUserCode");
+        console.log(raiserUserCode);
+
+        $("#cmbqueue option").show();
+        $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+
+        $(".tborder1").show();
+        $("#asgnto").show();
+        $("#textareaRow").show();
+
+        var grid = $("#ticket_dataset").data("kendoGrid");
+        var rowData = grid.dataSource.data().find(item => String(item.ticket_gid) === String(ticket_gid));
+         
+        // Hide/Show buttons
+        $("#btntktsave").hide();
+        $("#updatesubmit").show();
+
+        // Basic details
+        $("#txtcontext").val(`${rowData.entity} / ${rowData.department} / ${rowData.unit}`);
+        $("#tabtxtcontext").val(`${rowData.entity} / ${rowData.department} / ${rowData.unit}`);
+
+        $("#ticket_gid").val(rowData.ticket_gid);
+        $("#txtTicketNo").val(rowData.ticket_no);
+        $("#cdate").val(formatDateDDMMYYYYHHMMSS(rowData.creation_date));
+        $("#txtSubject").val(rowData.subject);
+        $("#emailBody").val('');
+        $("#attachTicketNo").val(rowData.ticket_no);
+        $("#attachSubject").val(rowData.subject);
+
+        raiser_code = rowData.raiser;
+        insert_by = rowData.insert_by;
+
+        // Drop-down selections
+        $("#cmbtype option").filter(function () {
+            return $(this).text() === rowData.type;
+        }).prop("selected", true);
+
+        $("#cmbpriority option").filter(function () {
+            return $(this).text() === rowData.priority;
+        }).prop("selected", true);
+
+        $("#cmbqueue option").filter(function () {
+            return $(this).text() === rowData.status;
+        }).prop("selected", true);
+
+        $("#cmbassign1 option").filter(function () {
+            return $(this).text().toLowerCase() === rowData.assigned_to.toLowerCase()
+        }).prop("selected", true); 
+
+        $("#screenname").prop("disabled", true);
+        $("#screenname option").filter(function () {
+            return $(this).text() === rowData.screen_name;
+        }).prop("selected", true);
+         
+        if (rowData.screen_name === "Report Generation") {
+
+            $("#recname").prop("disabled", false);
+
+            reconname(function () {
+                $("#recname option").filter(function () {
+                    return $(this).text().trim() === rowData.recon_name;
+                }).prop("selected", true);
+
+                reportlist(rowData.recon_code, function () {
+                    $("#report option").filter(function () {
+                        return $(this).text().trim() === rowData.report_name;
+                    }).prop("selected", true);
+                });
+            });
+
+        } else {
+            $("#recname").prop("disabled", true).val("");
+            $("#report").val("");
+
+            $("#recname").empty().append(`<option value="">  Select  </option>`);
+            $("#report").empty().append(`<option value="">  Select  </option>`);
+        }
+
+        // Load messages & attachments
+        var ticketgid = $("#ticket_gid").val();
+        var ticketno = $("#txtTicketNo").val();
+        threadmessage(ticketgid, ticketno);
+        attachlist(ticketgid);
+
+        document.getElementById("raiser_div").style.display = "block";
+
+        // ─────────────────────────────────────────────────────────────
+        // RC027 ROLE LOGIC
+        // ───────────────────────────────────────User──────────────────────
+        if (role_code === "RC027") {
+            $("#updatesubmit").prop("disabled", false);
+            $("#screenname, #cmbqueue, #recname, #report, #txtSubject, #cmbpriority,  #cmbtype, #emailBody").prop("disabled", false);
+            $("#recname, #report, #screenname").prop("disabled", false);
+
+            $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_ASS']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INFO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_RES']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CLO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CANC']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();
+
+            if (rowData.status == "New") {
+                $("#cmbassign1").val("admin").prop("disabled", true);
+            }
+
+            if (rowData.status == "Resolved") {
+                var raiserUserCode = userMap[raiser_code.trim()];
+                $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                $("#cmbqueue option[value='TKT_STATUS_CANC']").hide();
+                $("#cmbqueue option[value='TKT_STATUS_CLO']").show();
+            }
+
+            if (rowData.status == "InProgress" || rowData.status == "Assigned") {
+                $("#cmbassign1").prop("disabled", true);
+                $("#cmbqueue").prop("disabled", true);
+            }
+
+            if (rowData.status == "Need Info") {
+                var raiserUserCode = userMap[raiser_code.trim()]; 
+                $("#cmbqueue option[value='TKT_STATUS_CANC']").hide();
+                $("#cmbqueue option[value='TKT_STATUS_CLA']").show();
+                $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+            }
+
+            if (rowData.status == "Closed") {
+                var raiserUserCode = userMap[raiser_code.trim()];
+                $("#cmbqueue option[value='TKT_STATUS_CANC']").hide();
+                $("#cmbqueue option[value='TKT_STATUS_REOP']").show();
+                $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+            }
+
+            $("#cmbqueue").off("change").on("change", function () {
+                if ($(this).val() === "TKT_STATUS_CLA") {
+                    $("#cmbassign1").val(insert_by).prop("disabled", true);
+                }
+                if ($(this).val() === "TKT_STATUS_NEW") {
+                    $("#cmbassign1").val("admin").prop("disabled", true);
+                }
+                if ($(this).val() === "TKT_STATUS_CANC") {
+                    $("#cmbassign1").val(insert_by).prop("disabled", true);
+                }
+                if ($(this).val() === "TKT_STATUS_RES" || $(this).val() === "TKT_STATUS_CLO") {
+                    var raiserUserCode = userMap[raiser_code.trim()];
+                    $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                }
+                if ($(this).val() === "TKT_STATUS_REOP") {
+                    $("#cmbassign1").val("admin").prop("disabled", true); 
+                }
+            });
+            var raiserUserCode = userMap[raiser_code.trim()];
+            console.log("usercode");
+            console.log(raiserUserCode);
+            console.log(raiser_code);
+            if (usercode === insert_by) {
+                $("#updatesubmit").prop("disabled", true);
+                $("#screenname, #recname, #report, #txtSubject, #cmbpriority, #cmbassign1, #cmbtype, #emailBody, #btnattach").prop("disabled", true);
+            }
+            else{
+                $("#updatesubmit").prop("disabled", false);
+                $("#screenname, #recname, #report, #txtSubject, #cmbpriority,  #cmbtype, #emailBody, #btnattach").prop("disabled", false);
+            }
+            
+            if (usercode === rowData.assigned_to) {
+                $("#cmbqueue").prop("disabled", false);
+            }
+            if (raiserUserCode === usercode) {
+                $("#updatesubmit").prop("disabled", false);
+                $("#screenname, #recname, #report, #txtSubject, #cmbpriority,  #cmbtype, #emailBody, #btnattach").prop("disabled", false);
+            }
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // RC028 ROLE LOGIC
+        // ─────────────────────────────────────────────────────────────
+        if (role_code === "RC028") {
+
+            // $("#updatesubmit").prop("disabled", false);
+
+            // $("#cmbassign1, #recname, #report, #screenname, #cmbtype, #cmbpriority")
+            //     .prop("disabled", true);
+
+            $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_ASS']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_INP']").show();
+            $("#cmbqueue option[value='TKT_STATUS_INFO']").show();
+            $("#cmbqueue option[value='TKT_STATUS_RES']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CLO']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CANC']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();
+            console.log("rowData.raiser");
+            console.log($("#cmbassign1").val());
+            console.log(usercode);
+            $("#updatesubmit, #cmbassign1, #cmbqueue, #screenname, #recname, #report, #txtSubject, #cmbpriority, #cmbtype, #emailBody, #btnattach")
+                .prop("disabled", true);
+            $("#cmbqueue").off("change").on("change", function () {
+                if ($(this).val() === "TKT_STATUS_INFO" || $(this).val() === "TKT_STATUS_RES") {
+                    var raiserUserCode = userMap[raiser_code.trim()];
+                    $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                }
+                if ($(this).val() === "TKT_STATUS_INP") {
+                    $("#cmbassign1").val(usercode).prop("disabled", true);
+                }
+            }); 
+            if (
+            (
+                (usercode === insert_by)  &&
+                (
+                    $("#cmbassign1").val() === "TKT_STATUS_ASS" ||
+                    $("#cmbassign1").val() === "TKT_STATUS_INP" ||
+                    $("#cmbassign1").val() === "TKT_STATUS_CLA" ||
+                    $("#cmbassign1").val() === "TKT_STATUS_INFO"
+                )
+            ) || ($("#cmbassign1").val() === usercode)) {
+                $("#updatesubmit").prop("disabled", false);
+                $("#cmbqueue, #screenname, #recname, #report, #txtSubject, #cmbpriority, #cmbtype, #emailBody, #btnattach")
+                    .prop("disabled", false);
+            }
+
+            // 3️⃣ If user is the raiser → enable everything
+            if (usercode === raiser_code) {
+                $("#updatesubmit,  #cmbqueue, #screenname, #recname, #report, #txtSubject, #cmbpriority, #cmbtype, #emailBody, #btnattach")
+                    .prop("disabled", false);
+            } 
+            if ($("#cmbqueue").val() === "TKT_STATUS_RES" || $("#cmbqueue").val() === "TKT_STATUS_CLO" || $("#cmbqueue").val() === "TKT_STATUS_REOP") {
+                $("#updatesubmit, #cmbassign1, #cmbqueue, #screenname, #recname, #report, #txtSubject, #cmbpriority, #cmbtype, #emailBody, #btnattach")
+                    .prop("disabled", true);
+            }
+
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // RC006 ROLE LOGIC
+        // ─────────────────────────────────────────────────────────────
+        if (role_code === "RC006") {
+
+            $("#recname, #report, #screenname").prop("disabled", false);
+
+            $("#cmbqueue option[value='TKT_STATUS_NEW']").hide();
+            $("#cmbqueue option[value='TKT_STATUS_ASS']").show();
+            $("#cmbqueue option[value='TKT_STATUS_INP']").show();
+            $("#cmbqueue option[value='TKT_STATUS_INFO']").show();
+            $("#cmbqueue option[value='TKT_STATUS_RES']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CLO']").show();
+            $("#cmbqueue option[value='TKT_STATUS_REOP']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CANC']").show();
+            $("#cmbqueue option[value='TKT_STATUS_CLA']").hide();
+
+            if (rowData.status === "New") {
+                $("#cmbassign1").val("admin");
+                $("#cmbqueue option[value='TKT_STATUS_REOP']").hide();
+                $("#cmbqueue option[value='TKT_STATUS_INP']").hide();
+            }
+
+            if (rowData.status === "Need Info" || rowData.status === "Resolved") {
+                var raiserUserCode = userMap[raiser_code.trim()];
+                $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+            }
+
+            $("#cmbqueue").off("change").on("change", function () {
+                $("#cmbassign1").val(raiserUserCode).prop("disabled", false);
+
+                if ($(this).val() === "TKT_STATUS_CANC" ||
+                    $(this).val() === "TKT_STATUS_INFO" ||
+                    $(this).val() === "TKT_STATUS_CLO" ||
+                    $(this).val() === "TKT_STATUS_RES") {
+
+                    var raiserUserCode = userMap[raiser_code.trim()];
+                    $("#cmbassign1").val(raiserUserCode).prop("disabled", true);
+                }
+            });
+        }
+
+    }
+
+
+    function threadmessage(ticketgid, ticketno) {
+        var usercode = sessionStorage.getItem("usrname");
+        var username = sessionStorage.getItem("username");
+        var payload = {
+            in_user_code: usercode,
+            in_ticket_gid: ticketgid,
+            in_ticket_no: ticketno,
+            in_lang_code: '',
+            in_ip_addr: '',
+            in_action: ''
+        };
+        $.ajax({
+            type: "POST",
+            url: '../Ticket/threadFetch',
+            data: JSON.stringify(payload),// ✅ send whole object directly
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                var result = JSON.parse(response);
+                console.log("threads : ", result);
+                var threadDiv = $("#thread");
+                var tabthreadDiv = $("#tabthread");
+                threadDiv.empty(); // Clear previous content
+                tabthreadDiv.empty(); // Clear previous content
+
+                result.forEach(function (item) {
+                    // Format date (optional: show only date & time nicely)
+                        var ticketDate = new Date(item.Ticket_date);
+
+                        var formattedDate = ticketDate.toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true
+                        });
+
+                    // Build message block
+                    var messageHTML = `
+                        <div style="margin-bottom:10px; border-bottom:1px solid #ccc; padding:8px; border-radius:6px; background-color:#f2f2f2;">
+                            <div style="display:flex; justify-content:space-between; font-weight:normal;">
+                                 <span>${item.user_name} - Date : ${formattedDate} - Status : ${item.Queue_status}</span>
+                            </div>
+                            <div style="margin-top:3px;">${item.queue_remarks}</div>
+                        </div>
+                    `;
+                    threadDiv.append(messageHTML);
+
+                    var tabmessageHTML = `
+                        <div style="margin-bottom:10px; border-bottom:1px solid #ccc; padding:8px; border-radius:6px; background-color:#f2f2f2;">
+                            <div style="display:flex; justify-content:space-between; font-weight:normal;">
+                                <span>${item.user_name} - Date : ${formattedDate} - Status : ${item.Queue_status}</span>
+                            </div>
+                            <div style="margin-top:3px;">${item.queue_remarks}</div>
+                        </div>
+                    `;
+                    tabthreadDiv.append(tabmessageHTML);
+                });
+            },
+            error: function (er) {
+                alert(er)
+                console.log(er)
+            }
+        });
+    }
+
+    function viewTicket(e) {
+        $(".tborder1").show();
+        $("#ticketModalLabel").text("View Ticket");
+        $("#cmbtype, #cmbpriority, #cmbStatus, #txtSubject, #cmbqueue,#cmbassign1").prop("disabled", true);
+
+        var getGrid = $("#ticket_dataset").data("kendoGrid");
+        var rowData = getGrid.dataItem($(e).closest("tr"));
+        var myModal = new bootstrap.Modal(document.getElementById('ticketModal'));
+        myModal.show();
+        $(".save_btn").hide();
+        $(".update_btn").hide();
+        $("#updatesubmit").hide();
+        $("#textareaRow").hide();
+        console.log("rowData.type:", rowData.type);
+        $("#ticket_gid").val(rowData.ticket_gid);
+        $("#txtTicketNo").val(rowData.ticket_no);
+        $("#cdate").val(rowData.creation_date);
+        $("#txtSubject").val(rowData.subject);
+        //$("#emailBody").val(rowData.subject);
+        $("#cmbtype option").filter(function () {
+            return $(this).text() === rowData.type;
+        }).prop("selected", true);
+        $("#cmbpriority option").filter(function () {
+            return $(this).text() === rowData.priority;
+        }).prop("selected", true);
+        $("#cmbqueue option").filter(function () {
+            return $(this).text() === rowData.status;
+        }).prop("selected", true);
+        $("#cmbassign1 option").filter(function () {
+            return $(this).text() === rowData.status;
+        }).prop("selected", true);
+        var ticketgid = $("#ticket_gid").val();
+        var ticketno = $("#txtTicketNo").val();
+        threadmessage(ticketgid, ticketno);
+        $("#cmbassign1 option").filter(function () {
+            return $(this).text().trim().toLowerCase() === rowData.assigned_to.trim().toLowerCase();
+        }).prop("selected", true);
+    }
+
+    function update_ticket() {
+        try {
+            var role_code = sessionStorage.getItem("rolecode");
+            var isValid = true;
+            var ticket_gid = $("#ticket_gid").val();
+            var lvl1 = sessionStorage.getItem("level1txt");
+            var lvl2 = sessionStorage.getItem("level2txt");
+            var lvl3 = sessionStorage.getItem("level3txt");
+            var usercode = sessionStorage.getItem("usrname");
+             var username = sessionStorage.getItem("username");
+            var ticketNo = $("#txtTicketNo").val();
+            var createDate = $("#cdate").val();
+            var context = $("#txtcontext").val();
+            var subject = $("#txtSubject").val();
+            var selectedTypeCode = $("#cmbtype").val();
+            var selectedCode = $("#cmbpriority").val();
+            var selectedQCode = $("#cmbqueue").val();
+            var message = $("#emailBody").val();
+            var assign = $("#cmbassign1").val();
+
+            // ✅ File handling
+            var fileInput = document.getElementById("attachmentsInput");
+            var fileName = "";
+            var ticket_isattachment = "N"; // Default
+            if (fileInput.files.length > 0) {
+                fileName = fileInput.files[0].name;
+                console.log("Selected file:", fileName);
+                ticket_isattachment = "Y";
+            } else {
+                //alert("No file selected");
+                ticket_isattachment = "N";
+            }
+            if (!selectedTypeCode || selectedTypeCode === "Select") {
+                $("#queryErrortkttype").text("Ticket type must be selected.");
+                isValid = false;
+            } else {
+                $("#queryErrortkttype").text("");
+            }
+            if (!selectedCode || selectedCode === "Select") {
+                $("#queryErrorpriority").text("Priority must be specified.");
+                isValid = false;
+            } else {
+                $("#queryErrorpriority").text("");
+            }
+            if (!selectedQCode || selectedQCode === "Select") {
+                $("#queryErrorstatus").text("Status type must be selected.");
+                isValid = false;
+            } else {
+                $("#queryErrorstatus").text("");
+            }
+            if (!subject || subject === "") {
+                $("#queryErrorsub").text("Subject is required.");
+                isValid = false;
+            } else {
+                $("#queryErrorsub").text("");
+            }
+            if (!message || message === "") {
+                $("#queryErrormsg").text("Message is required.");
+                isValid = false;
+            } else {
+                $("#queryErrormsg").text("");
+            }
+
+            if (isValid) {
+                $.ajax({
+                    type: "POST",
+                    url: "../Ticket/ticketsave",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        ticket_gid: ticket_gid,
+                        ticket_no: ticketNo,
+                        ticket_for: usercode,
+                        ticket_assigned: assign,
+                        //ticket_date: createDate,
+                        //ticket_type: selectedTypeCode,
+                        //ticket_subject: subject,
+                        ticket_description: message,
+                        //ticket_priority: selectedCode,
+                        ticket_isattachment: ticket_isattachment,
+                        in_user: usercode,
+                        ticket_status: selectedQCode,
+                        in_ip_addr: '',
+                        in_action: "UPDATE"
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        var result = JSON.parse(response);
+                        console.log("Ticketresponse : ", result);
+                        var data = result[0];
+                        var ticket_gid = data.out_ticket_gid;
+                        var queue_gid = data.out_queue_gid;
+                        //AddAttachments(ticket_gid, queue_gid, fileInput);
+                        if (data.out_result == "1") {
+                            $.alert({
+                                title: "Recon",
+                                content: data.out_msg,
+                                type: "green",
+                                buttons: {
+                                    ok: {
+                                        text: "OK",
+                                        btnClass: "btn-green",
+                                        action: function () {
+                                             $('#ticketModal').modal('show');
+                                               $("#ticket_gid").val(data.out_ticket_gid);
+                                            $("#queue_gid").val(data.out_queue_gid);
+                                            $("#attachTicketNo").val(data.out_ticket_no);
+                                            $("#attachSubject").val(subject);          
+                                             $('button[data-bs-target="#navs-pills-top-list"]').show();
+                                            // Activate the Attachments tab
+                                            $('button[data-bs-target="#navs-pills-top-list"]').tab('show');
+                                                ticketlist();
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            $.alert({
+                                title: "Recon",
+                                content: data.out_msg,
+                                type: "red"
+                            });
+                        }
+                    },
+                    error: function (er) {
+                        alert(er);
+                        console.log(er);
+                    }
+                });
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    function DelTicket(e) {
+        try {
+            var getGrid = $("#ticket_dataset").data("kendoGrid");
+            var rowData = getGrid.dataItem($(e).closest("tr"));
+            $("#ticket_gid").val(rowData.ticket_gid);
+            var ticket_gid = $("#ticket_gid").val();
+            var usercode = sessionStorage.getItem("usrname");
+             var username = sessionStorage.getItem("username");
+            //var attachmentgid = rowData.attachment_gid
+            console.log("deleteattach");
+            console.log(ticket_gid);
+            //	console.log(attachmentgid);
+
+            $.confirm({
+                icon: 'fa fa-warning',
+                title: 'Recon',
+                autoClose: 'cancel|10000',
+                theme: 'blue',
+                animationSpeed: 700,
+                content: 'Are you sure do you want to delete this record!',
+                type: 'orange',
+                buttons: {
+                    confirm: function () {
+                        // ✅ Ajax call
+                        $.ajax({
+                            type: "POST",
+                            url: "../Ticket/ticketsave",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                ticket_gid: ticket_gid,
+                                attachment_gid: attachmentgid,
+                                in_user: username,
+                                in_ip_addr: '',
+                                in_action: "DELETE"
+                            }),
+                            contentType: "application/json; charset=utf-8",
+                            success: function (response) {
+                                var result = JSON.parse(response);
+                                console.log("Ticketresponse : ", result);
+                                var data = result[0];
+                                if (data.out_result == "1") {
+                                    $.alert({
+                                        title: "Recon",
+                                        content: data.out_msg,
+                                        type: "green",
+                                        buttons: {
+                                            ok: {
+                                                text: "OK",
+                                                btnClass: "btn-green",
+                                                action: function () {
+                                                    location.reload();
+                                                }
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    $.alert({
+                                        title: "Recon",
+                                        content: data.out_msg,
+                                        type: "red"
+                                    });
+                                }
+                            },
+                            error: function (er) {
+                                alert(er);
+                                console.log(er);
+                            }
+                        });
+                    },
+                    cancel: function () {
+                        $.alert({
+                            icon: 'fa fa-success',
+                            title: 'STA',
+                            theme: 'dark',
+                            content: 'Delete Canceled.!',
+                            type: 'blue',
+                            animationSpeed: 700,
+                        });
+                    },
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+
+    $(document).off('click', '.dow-btn').on('click', '.dow-btn', function () {
+        downloaddoc($(this));
+    });
+
+    function downloaddoc(element) {
+        var grid = $("#attach_dataset").data("kendoGrid");
+        var dataItem = grid.dataItem(element.closest("tr"));
+
+        if (!dataItem) {
+            console.error("No data item found for clicked row");
+            return;
+        }
+
+        var attachment_gid = dataItem.attachment_gid;
+        var originalFileName = dataItem.file_name;
+        console.log("Downloadfilename:", originalFileName);
+
+        if (!attachment_gid) {
+            alert("Attachment ID not found for this record.");
+            return;
+        }
+
+        //var downloadUrl = `../Ticket/DownloadAttachment?attachment_gid=${encodeURIComponent(attachment_gid)}&originalFileName=${encodeURIComponent(originalFileName)}`;
+        var downloadUrl = `../Ticket/DownloadAttachment?attachment_gid=${attachment_gid}&originalFileName=${encodeURIComponent(originalFileName)}`;
+
+        // ✅ First check if file exists (HEAD or GET with fetch)
+        $.ajax({
+            url: downloadUrl,
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' // expect binary
+            },
+            success: function (data, status, xhr) {
+                const contentType = xhr.getResponseHeader("Content-Type");
+                if (contentType && contentType.includes("application/json")) {
+                    // Backend sent a message instead of file
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const response = JSON.parse(reader.result);
+                        alert(response.message || "File not found.");
+                    };
+                    reader.readAsText(data);
+                } else {
+                    // ✅ File exists → trigger download
+                    const blob = new Blob([data], { type: contentType });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = originalFileName || 'download';
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                }
+            },
+            error: function (xhr) {
+                if (xhr.status === 404) {
+                    alert("Attachment not found on the server.");
+                } else {
+                    alert("Error downloading attachment. Please try again.");
+                }
+            }
+        });
+    }
+
+
+    //---------------------------------------------Attachment New------------------------
+
+    // ✅ Global array to hold both DB + new uploads
+
+
+    $(document).ready(function () {
+
+        // ✅ Handle file upload selection
+        $("#attachmentsInput").on("change", function () {
+             var username = sessionStorage.getItem("username");
+            var input = this;
+            if (input.files.length === 0) {
+                $("#btnattach").hide();
+                return;
+            }
+
+            for (let i = 0; i < input.files.length; i++) {
+                const file = input.files[i];
+
+                // ✅ Fix syntax: use backticks and correct alert
+                if (attachmentList.some(att => att.file_name === file.name)) {
+                    alert(`File "${file.name}" already added.`);
+                    continue;
+                }                   
+
+                const attachment = {
+                    attachment_gid: 0,
+                    ticket_gid: $("#ticket_gid").val(),
+                    file_name: file.name,
+                    insert_date:new Date(),
+                    user_name:username,
+                    fileObject: file,
+                    is_new: true
+                };
+
+                attachmentList.push(attachment);
+            }
+
+            // ✅ Clear file input to allow re-selecting same file after delete
+            $(input).val("");
+
+            // ✅ Refresh grid
+            updateAttachGrid();
+            $("#btnattach").show();
+        });
+    });
+
+
+
+    // ✅ Fetch attachment list from DB
+    function attachlist(ticketgid) {
+        var ticketgid = $("#ticket_gid").val();
+        var usercode = sessionStorage.getItem("usrname") || "system";
+        // Clear current list
+        attachmentList = [];
+
+        var data = {
+            in_action: 'SELECT',
+            in_ticket_gid: parseInt(ticketgid),
+            in_attachment_gid: parseInt(ticketgid),
+            file_name: '',
+            in_user: usercode,
+            in_ip_addr: ''
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '../Ticket/AttachFetch',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var result = JSON.parse(response);
+
+                if (result && Array.isArray(result)) {
+                    attachmentList = result;
+                }
+                updateAttachGrid();
+            },
+            error: function (er) {
+                console.log("Error loading attachments:", er);
+            }
+        });
+    }
+
+
+    //  // ✅ Build or refresh the Kendo Grid
+    //  function updateAttachGrid_old() {
+
+    // 	 // If empty, show a "No attachments found" message
+    // 	 if (attachmentList.length === 0) {
+    // 		 $("#attach_dataset").html("<div style='padding:10px; text-align:center;'></div>");
+    // 		 return;
+    // 	 }
+
+    // 	 var grid = $("#attach_dataset").data("kendoGrid");
+
+    // 	 if (grid) {
+    // 		 grid.dataSource.data(attachmentList);
+    // 		 grid.refresh();
+    // 		 return;
+    // 	 }
+
+    // 	 // Initialize Kendo Grid
+    // 	 $("#attach_dataset").kendoGrid({
+    // 		 dataSource: {
+    // 			 data: attachmentList,
+    // 			 pageSize: 15
+    // 		 },
+    // 		 height: 258,
+    // 		 groupable: false,
+    // 		 sortable: true,
+    // 		 selectable: true,
+    // 		 filterable: true,
+    // 		 navigatable: true,
+    // 		 resizable: false,
+    // 		 columns: [
+    // 			 {
+    // 				 field: "queue_date",
+    // 				 title: "Attachment date",
+    // 				 width: 150
+    // 			 },
+    // 			 {
+    // 				 field: "file_name",
+    // 				 title: "File Name",
+    // 				 width: 330
+    // 			 },
+
+    // 			 {
+    // 				 field: "user_name",
+    // 				 title: "Upload by",
+    // 				 width: 185
+    // 			 },
+    // 			 {
+    // 				 field: "master_name",
+    // 				 title: "status"
+    // 			 },
+    // 			 {
+    // 				 field: "Action",
+    // 				 title: "Action",
+    // 				 width: 80,
+    // 				 encoded: false,
+    // 				 sortable: false,
+    // 				 filterable: false,
+    // 				 template: function (dataItem) {
+    // 					 if (dataItem.is_new) {
+    // 						 // Show only Delete for new files
+    // 						 return `
+    // 						<div style="display:flex;justify-content:center;align-items:center;gap:10px;padding-left: 29px;">
+    // 						<a href='javascript:void(0)' title='' onclick='' style="display:none">
+    // 							<i class='fa fa-download' style='color:blue;'></i>
+    // 						</a>
+
+    // 					<a href='javascript:void(0)' title='Delete'>
+    // 						<img src='../Assets/images/del.png' onclick='DelAttachment($(this))'>
+    // 					</a>
+    // 				</div>`;
+    // 					 } else {
+    // 						 // Show Download + Delete for DB files
+    // 						 return `
+    // 				<div style='text-align:center'>
+    // 					<a href='javascript:void(0)' title='Download' onclick='DownloadAttachment(${dataItem.attachment_gid})'>
+    // 						<i class='fa fa-download' style='color:blue;'></i>
+    // 					</a>
+
+    // 					<a href='javascript:void(0)' title='Delete'>
+    // 						<img src='../Assets/images/del.png' onclick='DelAttachment($(this))'>
+    // 					</a>
+    // 				</div>`;
+    // 					 }
+    // 				 }
+    // 			 },
+    // 			 { field: "attachment_gid", hidden: true },
+    // 			 { field: "ticket_gid", hidden: true }
+    // 		 ],
+    // 		 editable: false
+    // 	 });
+    //  }
+
+
+    function updateAttachGrid() {       
+          var username = sessionStorage.getItem("username");
+         
+        var grid = $("#attach_dataset").data("kendoGrid");
+
+        // Always initialize the grid (even if empty)
+        if (!grid) {
+            $("#attach_dataset").kendoGrid({
+                dataSource: {
+                    data: attachmentList, // even if empty
+                    pageSize: 15
+                },
+                height: 258,
+                groupable: false,
+                sortable: true,
+                selectable: true,
+                filterable: true,
+                navigatable: true,
+                resizable: false,
+                noRecords: {
+                    template: "<div style='padding:10px; text-align:center;'>No attachments found.</div>"
+                },
+                columns: [
+                    { field: "insert_date", title: "Attachment Date", width: 150, template: function (dataItem) {
+                        return formatDateDDMMYYYYHHMMSS(dataItem.insert_date);
+                    } },
+                    { field: "file_name", title: "File Name", width: 330 },
+                    { field: "user_name", title: "Uploaded By", width: 185 },
+                    { field: "master_name", title: "Status",hidden:true },
+                    {
+                        field: "Action",
+                        title: "Action",
+                        width: 80,
+                        encoded: false,
+                        sortable: false,
+                        filterable: false,
+                        template: function (dataItem) {
+                            let deleteIcon = "";
+                            console.log("attusercode: ", username);
+                            if (dataItem.user_name === username) {
+                            deleteIcon = `
+                                <a href='javascript:void(0)' title='Delete'>
+                                    <img src='../Assets/images/del.png' style='margin-left:17px;' onclick='DelAttachment($(this))'>
+                                </a>`;
+                        } else {
+                            deleteIcon = `<span style="display:inline-block; width:24px; margin-left:10px;"></span>`;
+                        }
+                            if (dataItem.is_new) {
+                                // Show only Delete for new files
+                                return `
+                                                <div style="display:flex;justify-content:center;align-items:center;gap:10px;padding-left: 29px;">
+                                                    <a href='javascript:void(0)' title='' onclick='' style="display:none">
+                                                        <i class='fa fa-download' style='color:blue;'></i>
+                                                    </a>
+                                                  ${deleteIcon}
+                                                </div>`;
+                            } else {
+                                // Show Download + Delete for DB files
+                                   return `
+                                            <div style='text-align:center'>
+                                                <a href='javascript:void(0)'
+                                                   title='Download'
+                                                   onclick='DownloadAttachment("${dataItem.attachment_gid}", "${dataItem.file_name}")'>
+                                                    <i class='fa fa-download' style='color:blue;'></i>
+                                                </a>
+                                                ${deleteIcon}
+                                            </div>`;
+
+                            }
+                        }
+                    },
+                    { field: "attachment_gid", hidden: true },
+                    { field: "ticket_gid", hidden: true }
+                ],
+                 pageable: {
+                    refresh: false,
+                    pageSizes: [10, 15, 20, 25, 50],
+                    buttonCount: 5
+                },
+                editable: false
+            });
+        } else {
+            // Update data when grid already exists
+            grid.dataSource.data(attachmentList);
+            grid.refresh();
+        }
+    }
+
+
+    // ✅ Delete attachment (both new and DB)
+
+
+    function DelAttachment(el) {
+        const grid = $("#attach_dataset").data("kendoGrid");
+        const row = el.closest("tr");
+        const dataItem = grid.dataItem(row);
+
+
+        $.confirm({
+            icon: 'fa fa-warning',
+            title: 'Recon',
+            autoClose: 'cancel|10000',
+            theme: 'dark',
+            animationSpeed: 700,
+            content: 'Are you sure you want to delete this Ticket?',
+            type: 'orange',
+            buttons: {
+                confirm: function () {
+                    // If it's a new (unsaved) attachment — just remove locally
+                    if (dataItem.is_new) {
+                        attachmentList = attachmentList.filter(a => a.file_name !== dataItem.file_name);
+                        updateAttachGrid();
+                        return;
+                    }
+
+                    var usercode = sessionStorage.getItem("usrname");
+                    var data = {
+                        in_action: 'DELETE',
+                        ticket_gid: parseInt(dataItem.ticket_gid),
+                        attachment_gid: parseInt(dataItem.attachment_gid),
+                        in_user: usercode,
+                        in_ip_addr: ''
+                    };
+
+                    $.ajax({
+                        type: "POST",
+                        url: '../Ticket/DeleteAttachment',
+                        dataType: 'json',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=utf-8',
+                        success: function (response) {
+                            console.log("DeleteAttachment Response:", response);
+                            if (response.data) {
+                                const parsed = JSON.parse(response.data);
+                                const resultData = parsed[0];
+                                if (resultData.result === 1) {
+                                    $.alert({
+                                        icon: 'fa fa-check',
+                                        title: 'Recon',
+                                        theme: 'dark',
+                                        content: resultData.message,
+                                        type: 'green',
+                                        animationSpeed: 700,
+                                    });
+                                    attachlist(parseInt(dataItem.ticket_gid));
+                                }
+                                else {
+                                    $.alert({
+                                        title: "Recon",
+                                        content: resultData.message,
+                                        type: "red"
+                                    });
+                                }
+
+                            } else {
+                                $.alert({
+                                    title: "Ticket System",
+                                    content: resultData.message || "Unexpected server error",
+                                    type: "red"
+                                });
+                            }
+                        },
+                        error: function (er) {
+                            console.log("Error deleting attachment:", er);
+                            $.alert({
+                                title: "Error",
+                                content: "Error deleting attachment.",
+                                type: "red"
+                            });
+                        }
+                    });
+
+                },
+                cancel: function () {
+                    $.alert({
+                        icon: 'fa fa-info',
+                        title: 'Recon',
+                        theme: 'dark',
+                        content: 'Delete Canceled!',
+                        type: 'blue',
+                        animationSpeed: 700,
+                    });
+                }
+            }
+        });
+    }
+
+
+
+    // ✅ Download file from server
+          function DownloadAttachment(attachment_gid, originalFileName) {
+        if (!attachment_gid || attachment_gid === "0") {
+            alert("File not yet uploaded to server.");
+            return;
+        }
+
+        window.location.href =
+            `../Ticket/DownloadAttachment?attachment_gid=${attachment_gid}&originalFileName=${encodeURIComponent(originalFileName)}`;
+    }
+
+
+
+</script>
+
+
+

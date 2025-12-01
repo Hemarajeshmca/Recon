@@ -73,7 +73,15 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		 $("#navhead").text("Session Manager");
+		setInterval(function () {
+				isjobrun = true;
+			}, 5000);
 		getKilljob();
+		if (isjobrun = true) {
+			setInterval(function () {
+				getKilljob();
+			}, 5000);// 5000 milliseconds = 5 seconds
+		}
 	});
 
 	function getKilljob() {

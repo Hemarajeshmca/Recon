@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "manualtheme";
+	ViewData["Title"] = "reference";
 	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 <!Doctype html>
@@ -43,10 +43,9 @@
 			padding-top: 35px;
 			min-width: 90px;
 			min-height: 50px;
-			width: 700px !important;
+			width: 900px !important;
 			height: 300px !important;
 			top: 180.766px !important;
-			/*left: 120px !important;*/
 			z-index: 10003;
 			left: 300px !important;
 		}
@@ -66,8 +65,8 @@
 						<a href='' onclick='getSerializedRows()' data-bs-toggle='modal' id="btn_new">
 							<i class="fa fa-plus cursor-pointer" aria-hidden="true" style="color:green;font-size:15px;"></i>
 						</a>
-						<div id="gd_manualtheme">
-							<div id="grid_manualtheme"> </div>
+						<div id="gd _reference">
+							<div id="grid_reference"> </div>
 						</div>
 					</div>
 				</div>
@@ -75,7 +74,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="manual_theme" tabindex="-1" aria-hidden="true">
+	<div class="modal fade" id="refernece" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -85,7 +84,7 @@
 						<div class="col-sm-4">
 						</div>
 						<div class="col-sm-4">
-							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Manual Theme</h4>
+							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Reference</h4>
 						</div>
 						<div class="col-sm-4">
 							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
@@ -93,11 +92,18 @@
 					</div>
 					<hr style="margin-top:-1px; width:100%;">
 					<div class="row">
-						<div class="col-md-6">
-							<label>Manual Theme Description</label>
-							<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
-							<input class="form-control" id="manualthemedesc" type="text" />
-							<input class="form-control" type="number" id="manualtheme_id" hidden>
+						<div class="col-md-3">
+							<label for="" class="form-label">Referenece Code&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" id="ref_code" type="text" />
+							<input class="form-control" id="ref_gid" type="hidden" />							
+						</div>
+						<div class="col-md-3">
+							<label for="" class="form-label">Referenece Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" id="ref_name" type="text" />
+						</div>
+						<div class="col-md-3">
+							<label for="" class="form-label">Referenece Value&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" id="ref_value" type="text" />
 						</div>
 						<div class="col-md-3">
 							<label for="" class="form-label">Active Status&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
@@ -125,9 +131,9 @@
 <script>
 	$(document).ready(function () {
 		$('[data-bs-toggle="tooltip"]').tooltip();
-		$("#navhead").text("Manual Theme");
+		$("#navhead").text("Reference");
 		setlocalStorage("ls_pageList", "");
-		grid_manualtheme_details([]);
+		grid_reference_details([]);
 		gridlist();
 	});
 	function gridlist() {
@@ -196,18 +202,22 @@
 		});
 	}
 	var status_Priority = [];
-	function grid_manualtheme_details(data) {
+	function grid_reference_details(data) {
 		try {
-			$("#grid_manualtheme").kendoGrid({
+			$("#grid_reference").kendoGrid({
 				dataSource: {
 					data: data,
 					pageSize: 15,
 					schema: {
 						model: {
 							fields: {
-								manualtheme_gid : { type: "string" },
-								recon_code : { type: "string" },
-								manualtheme_desc : { type: "string" },
+								ref_gid : { type: "string" },
+								recon_code : { type: "string" },							
+								ref_code : { type: "string" },
+								ref_value : { type: "string" },
+								ref_name : { type: "string" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" }
 							}
 						},
 					}
@@ -215,9 +225,9 @@
 				height: 400,
 				dataBound: function (e) {
 					resultData = e.sender._data;
-					var rows = $('#grid_manualtheme').data('kendoGrid').tbody.children();
+					var rows = $('#grid_reference').data('kendoGrid').tbody.children();
 					setColor(rows, resultData);
-					var screen_code = rolevalidatescreen('manualtheme')
+					var screen_code = rolevalidatescreen('reference')
 					if (screen_code[0].add == "N") {
 						$("#btn_new").hide();
 					}
@@ -262,7 +272,7 @@
 					width: 25,
 				},
 				{
-					field: "manualtheme_gid",
+					field: "ref_gid",
 					title: "Row id",
 					width: 10,
 					hidden: true
@@ -275,9 +285,19 @@
 					hidden: true
 				},
 				{
-					field: "manualtheme_desc",
-					title: "Manual Theme Descripition",
-					width: 150
+					field: "ref_code",
+					title: "Reference Code",
+					width: 100
+				},
+				{
+					field: "ref_name",
+					title: "Reference Name",
+					width: 100
+				},
+				{
+					field: "ref_value",
+					title: "Reference Value",
+					width: 100
 				},
 				{
 					field: "active_status",
@@ -301,30 +321,37 @@
 	}
 	function getSerializedRows(mode) {
 		if ($(mode).attr('value') == "edit") {
-			var grid = $("#grid_manualtheme").data("kendoGrid");
+			var grid = $("#grid_reference").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
-			$("#manualthemedesc").val(selectedItem.manualtheme_desc);
-			$("#manualtheme_id").val(selectedItem.manualtheme_gid);
+			$("#ref_code").val(selectedItem.ref_code);
+			$("#ref_name").val(selectedItem.ref_name);
+			$("#ref_value").val(selectedItem.ref_value);
 			$("#active_flag").val(selectedItem.active_status);
-			$("#manual_theme").modal('show');
+			$("#ref_gid").val(selectedItem.ref_gid);
+			$("#refernece").modal('show');
 			$("#savebtn").show();
 		}else if ($(mode).attr('value') == "view") {
-			var grid = $("#grid_manualtheme").data("kendoGrid");
+			var grid = $("#grid_reference").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
-			$("#manualthemedesc").val(selectedItem.manualtheme_desc);
-			$("#manualtheme_id").val(selectedItem.manualtheme_gid);
+			$("#ref_code").val(selectedItem.ref_code);
+			$("#ref_name").val(selectedItem.ref_name);
+			$("#ref_value").val(selectedItem.ref_value);
 			$("#active_flag").val(selectedItem.active_status);
-			$("#manual_theme").modal('show');
+			$("#ref_gid").val(selectedItem.ref_gid);
+			$("#refernece").modal('show');
 			$("#savebtn").hide();
 		}else {
-			$("#manualthemedesc").val("");
-			$("#manualtheme_id").val("");
-			$("#manual_theme").modal('show');
+			$("#ref_code").val("");
+			$("#ref_name").val("");
+			$("#ref_value").val("");
+			$("#active_flag").val("");
+			$("#ref_gid").val(0);
+			$("#refernece").modal('show');
 		}
 	}
 	function selectRow() {
 		try {
-			var grid = $("#grid_manualtheme").data("kendoGrid");
+			var grid = $("#grid_reference").data("kendoGrid");
 			var selectedItem = grid.dataItem(grid.select());
 			setlocalStorage("ls_pageList", selectedItem);
 		}
@@ -333,9 +360,9 @@
 		}
 	}
 	function myDeleteJs() {
-		var grid = $("#grid_manualtheme").data("kendoGrid");
+		var grid = $("#grid_reference").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var manualtheme_id = model.manualtheme_gid;
+		var ref_gid = model.ref_gid;
 			$.confirm({
 				icon: 'fa fa-warning',
 				title: 'Recon',
@@ -366,15 +393,18 @@
 											return false;
 										}
 										var recon_code = "";
-										var manualtheme_desc = "";
-										var status = "";
+										var ref_code = "";
+										var ref_name = "";
+										var ref_value = "";
+										var active_status = "";
 										var action = "DELETE";
+										var ref_gid = ref_gid ;
 										var action_by = sessionStorage.getItem("usrname");
 										$.ajax({
 											type: "POST",
-											url: '../QCDmaster/manualthemesave',
+											url: '../QCDmaster/referencesave',
 											dataType: 'json',
-											data: JSON.stringify({ recon_code: recon_code, manualtheme_desc: manualtheme_desc, in_action: action, in_user_code: action_by, manualtheme_id: manualtheme_id,active_status: status }),
+											data: JSON.stringify({ recon_code: recon_code, ref_code: ref_code,ref_name: ref_name,ref_value: ref_value,active_status: active_status, in_action: action, in_user_code: action_by, ref_gid: ref_gid }),
 											contentType: 'application/json; charset=utf-8',
 											success: function (response) {
 												var result = JSON.parse(response);
@@ -410,27 +440,29 @@
 						});
 					},
 				}
-			});	
+			});
 	}
 	function save() {
 		var recon_code = $("#cmbreconname").val();
-		var manualtheme_desc = $("#manualthemedesc").val();
+		var ref_code = $("#ref_code").val();
+		var ref_name =	$("#ref_name").val();
+		var ref_value =	$("#ref_value").val();
+		var active_status =	$("#active_flag").val();
 		var action = "";
 		var action_by = sessionStorage.getItem("usrname");
-		var manualtheme_id = $("#manualtheme_id").val();
-		if (manualtheme_id > 0) {
-			manualtheme_id = $("#manualtheme_id").val();
+		var ref_gid = $("#ref_gid").val();
+		if (ref_gid > 0) {
+			ref_gid = $("#ref_gid").val();
 			action = "UPDATE"
 		} else {
-			manualtheme_id = 0;
+			ref_gid = 0;
 			action = "INSERT"
-		}
-		var status = $("#active_flag").val();
+		}		
 		$.ajax({
 			type: "POST",
-			url: '../QCDmaster/manualthemesave',
+			url: '../QCDmaster/referencesave',
 			dataType: 'json',
-			data: JSON.stringify({ recon_code: recon_code, manualtheme_desc: manualtheme_desc, in_action: action, in_user_code: action_by, manualtheme_id: manualtheme_id,active_status: status }),
+			data: JSON.stringify({ recon_code: recon_code, ref_code: ref_code,ref_name: ref_name,ref_value: ref_value,active_status: active_status, in_action: action, in_user_code: action_by, ref_gid: ref_gid }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
@@ -442,7 +474,7 @@
 						type: 'green',
 					});
 					detailsfetch($("#cmbreconname").val());
-					$("#manual_theme").modal('hide');
+					$("#refernece").modal('hide');
 				} else {
 					$.alert({
 						title: 'Recon',
@@ -461,13 +493,13 @@
 		var action_by = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
-			url: '../QCDmaster/getmanualtheme',
+			url: '../QCDmaster/getreference',
 			dataType: 'json',
 			data: JSON.stringify({ recon_code: reconcode,in_user_code: action_by }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
-				grid_manualtheme_details(result);
+				grid_reference_details(result);
 			}
 		});
 	}
