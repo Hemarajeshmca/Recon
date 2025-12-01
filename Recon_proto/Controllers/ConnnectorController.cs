@@ -18,5 +18,19 @@ namespace Recon_proto.Controllers
             ViewBag.conn = conn+"?user_code=" + user_code;
             return View();
 		}
-	}
+        public IActionResult Importedfile()
+        {
+            var conn = _configuration.GetValue<string>("AppSettings:Importedfile");
+            var user_code = _configuration.GetSection("AppSettings")["user_code"].ToString();
+            ViewBag.conn = conn + "?user_code=" + user_code;
+            return View();
+        }
+        public IActionResult pipelinedataset()
+        {
+            var conn = _configuration.GetValue<string>("AppSettings:pipelinedataset");
+            var user_code = _configuration.GetSection("AppSettings")["user_code"].ToString();
+            ViewBag.conn = conn + "?user_code=" + user_code;
+            return View();
+        }
+    }
 }

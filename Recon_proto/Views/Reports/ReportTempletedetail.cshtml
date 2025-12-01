@@ -568,8 +568,6 @@
             </div>
         </div>
     </div>
-
-
 </body>
 </html>
 
@@ -683,7 +681,6 @@
 
         });
 
-
         // system flag
         var in_master_code = "QCD_YN";
         var in_user_code = "";
@@ -710,38 +707,37 @@
             }
         });
 
-
-            var reconcode = sessionStorage.getItem("reconcode");
+        var reconcode = sessionStorage.getItem("reconcode");
         var data = getlocalStorage("ls_pageList");
-            var in_user_code = sessionStorage.getItem("usrname");
-            $.ajax({
-                type: "POST",
-                url: '../Reports/StandardReportList',
-                dataType: 'json',
-                async: false,
-                data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
-                contentType: 'application/json; charset=utf-8',
-                success: function (response) {
-                    $("#cmbreporttype").empty();
+        var in_user_code = sessionStorage.getItem("usrname");
+        $.ajax({
+             type: "POST",
+             url: '../Reports/StandardReportList',
+             dataType: 'json',
+             async: false,
+             data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+             contentType: 'application/json; charset=utf-8',
+             success: function (response) {
+                 $("#cmbreporttype").empty();
+                 $("#cmbreporttype").append($('<option>', {
+                      value: "",
+                      text: "  Select  "
+                 }));
+                 $.each(response, function (index, item) {
                      $("#cmbreporttype").append($('<option>', {
-                        value: "",
-                        text: "  Select  "
-                    }));
-                     $.each(response, function (index, item) {
-                         $("#cmbreporttype").append($('<option>', {
-                                value: item.report_code,
-                                text: item.report_desc
-                           }));
-                    });
-                },
-                error: function (er) {
-                  $.alert({
-                     title: 'Recon',
-                     content: er.statusText,
-                     type: 'red',
-                  });
-                }
-            });
+                           value: item.report_code,
+                           text: item.report_desc
+                     }));
+                 });
+             },
+             error: function (er) {
+                $.alert({
+                   title: 'Recon',
+                   content: er.statusText,
+                   type: 'red',
+                });
+             }
+        });
 
         // system flag
         var in_master_code = "QCD_YN";
@@ -777,7 +773,6 @@
         });
 
         // recon list
-
         var data = {};
         data.in_user_gid = 0;
         data.in_active_status = '';
@@ -836,7 +831,7 @@
             $("#btn_upload").css("pointer-events", "none").css("opacity", "0.5");
             $("#btnclone").prop('disabled', false);
             $("#cmbreconname_desc").val($("#cmbreconname :selected").text());
-             grid_Resultset([]);
+            grid_Resultset([]);
             grid_tempfilter([]);
         }
         else if ((getlocalStorage('btn_clk_val') == "View" || getlocalStorage('btn_clk_val') == "Edit" || getlocalStorage('btn_clk_val') == "Create") && ($("#reporttemplate_gid").val() != 0 || $("#reporttemplate_gid").val() != '0')) {
@@ -854,7 +849,7 @@
                      jsondata.in_reporttemplate_code = "";
                      selectedTemplate_code ="";
                 }
-                // resultset fetch
+                // resultset fetch                
                 var data={};
                 data.action="GET";
                 data.report_code= getselectedTemplate.report_code;
@@ -869,10 +864,9 @@
                         if (response != " " && response != null && response != "{}" && response != "[]") {
                             var res1 = JSON.parse(response);
                             if (res1.Table.length > 0) {
-
-                            grid_Resultset(res1.Table);
-                            tabdataFetchAll("fromdetailfetch");
-                            $("#btnsubmit").prop("disabled", false);  @* hari changes 08-09-25 *@
+                                grid_Resultset(res1.Table);                              
+                                tabdataFetchAll("fromdetailfetch");                               
+                                $("#btnsubmit").prop("disabled", false);
                             }
                             else
                             {
@@ -934,11 +928,12 @@
                             if (getstring == 'Clone' && res.Table[0].file_name) {
                                 clonefiles(objdata);
                             }
+
                             // tabdataFetchAll();
                             // grid_tempfilter(res.Table1);
                             // grid_columfilter(res.Table2);
                             // grid_sorting(res.Table3);
-                          //  grid_Resultset([]);
+                            //  grid_Resultset([]);
                             if ((getlocalStorage('btn_clk_val') == "View")) {
                                 $("#btnsubmit").hide();
                                 $("#btncolgrid").hide();
@@ -968,101 +963,94 @@
     }
     function tabdataFetchAll(fromstatus)
     {
-         //detail fetch
-                debugger;
-                var getselectedTemplate = getlocalStorage("selectedTemplate");
-                var jsondata = {};
-                jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
-                jsondata.in_recon_code = getselectedTemplate.recon_code;
-                jsondata.in_report_code =getselectedTemplate.report_code;
-                jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
-                if($("#Resultset_code").val() == "empty")
-                {
-                     jsondata.in_reporttemplateresultset_code =null;
-                }
-                jsondata.in_action_by = sessionStorage.getItem("usrname");
-                $.ajax({
-                    type: "POST",
-                    url: '../Reports/reporttemplatefetch',
-                    dataType: 'json',
-                    data: JSON.stringify(jsondata),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (response) {
-                        if (response != " " && response != null && response != "{}" && response != "[]") {
-                            var res = JSON.parse(response);
-
-                            grid_tempfilter(res.Table1);
-                           grid_columfilter(res.Table2);
-                            grid_sorting(res.Table3);
-                            if( fromstatus == "fromdetailfetch")
-                            {
-                                //  $("#Resultset_code").val(getselectedTemplate.reporttemplate_code);
-
-                                  selectRadioByResultCode($("#Resultset_code").val());
-                            }
-                            else
-                            {
-                                checkMultipleQueries();
-                            }
-
-                        }
-                        else {
-                            //grid_Resultset([]);
-                            grid_tempfilter([]);
-                            grid_columfilter([]);
-                            grid_sorting([]);
-                        }
-                    },
-                    error: function (er) {
-                        $.alert({
-                            title: 'Recon',
-                            content: er.statusText,
-                            type: 'red',
-                        });
-                    }
-                });
+       //detail fetch
+        var getselectedTemplate = getlocalStorage("selectedTemplate");
+        var jsondata = {};
+        jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
+        jsondata.in_recon_code = getselectedTemplate.recon_code;
+        jsondata.in_report_code =getselectedTemplate.report_code;
+        jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
+         if($("#Resultset_code").val() == "empty")
+         {
+           jsondata.in_reporttemplateresultset_code =null;
+         }
+        jsondata.in_action_by = sessionStorage.getItem("usrname");
+          $.ajax({
+               type: "POST",
+               url: '../Reports/reporttemplatefetch',
+               dataType: 'json',
+               data: JSON.stringify(jsondata),
+               contentType: 'application/json; charset=utf-8',
+               success: function (response) {
+                  if (response != " " && response != null && response != "{}" && response != "[]") {
+                      var res = JSON.parse(response);
+                      grid_tempfilter(res.Table1);
+                      grid_columfilter(res.Table2);
+                      grid_sorting(res.Table3);
+                      if( fromstatus == "fromdetailfetch")
+                      {
+                         //  $("#Resultset_code").val(getselectedTemplate.reporttemplate_code);
+                         selectRadioByResultCode($("#Resultset_code").val());
+                      }
+                      else
+                      {
+                          checkMultipleQueries();
+                      }
+                  }
+                  else {
+                      //grid_Resultset([]);
+                      grid_tempfilter([]);
+                      grid_columfilter([]);
+                      grid_sorting([]);
+                  }
+               },
+               error: function (er) {
+                   $.alert({
+                         title: 'Recon',
+                         content: er.statusText,
+                         type: 'red',
+                   });
+               }
+          });
     }
     function tabdataFetch(resulsetcode)
     {
-         //detail fetch
-                debugger;
-                var getselectedTemplate = getlocalStorage("selectedTemplate");
-                var jsondata = {};
-                jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
-                jsondata.in_recon_code = getselectedTemplate.recon_code;
-                jsondata.in_report_code =$("#report_code").val();
-                jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
-                jsondata.in_action_by = sessionStorage.getItem("usrname");
-                $.ajax({
-                    type: "POST",
-                    url: '../Reports/reporttemplatefetch',
-                    dataType: 'json',
-                    data: JSON.stringify(jsondata),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (response) {
-                        if (response != " " && response != null && response != "{}" && response != "[]") {
-                            var res = JSON.parse(response);
-
-                            grid_tempfilter(res.Table1);
-                            grid_columfilter(res.Table2);
-                            grid_sorting(res.Table3);
-
-                        }
-                        else {
-                            //grid_Resultset([]);
-                            grid_tempfilter([]);
-                            grid_columfilter([]);
-                            grid_sorting([]);
-                        }
-                    },
-                    error: function (er) {
-                        $.alert({
-                            title: 'Recon',
-                            content: er.statusText,
-                            type: 'red',
-                        });
-                    }
-                });
+       //detail fetch
+       var getselectedTemplate = getlocalStorage("selectedTemplate");
+       var jsondata = {};
+       jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
+       jsondata.in_recon_code = getselectedTemplate.recon_code;
+       jsondata.in_report_code =$("#report_code").val();
+       jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
+       jsondata.in_action_by = sessionStorage.getItem("usrname");
+       $.ajax({
+             type: "POST",
+             url: '../Reports/reporttemplatefetch',
+             dataType: 'json',
+             data: JSON.stringify(jsondata),
+             contentType: 'application/json; charset=utf-8',
+             success: function (response) {
+                  if (response != " " && response != null && response != "{}" && response != "[]") {
+                       var res = JSON.parse(response);
+                       grid_tempfilter(res.Table1);
+                       grid_columfilter(res.Table2);
+                       grid_sorting(res.Table3);
+                  }
+                  else {
+                     //grid_Resultset([]);
+                       grid_tempfilter([]);
+                       grid_columfilter([]);
+                       grid_sorting([]);
+                  }
+             },
+             error: function (er) {
+                  $.alert({
+                       title: 'Recon',
+                       content: er.statusText,
+                       type: 'red',
+                  });
+             }
+       });
     }
     // Resul tset
     function grid_Resultset(data) {
@@ -2125,18 +2113,16 @@
         });
     }
      function combo_editor_sorttype(container, cmbid, datafield, code_datafield, grid_id){
-             var arr = [];
-             var list = {};
-            list.code = "ASC";
-            list.desc = "ASC";
-            arr.push(list);
-            var list1 = {};
-            list1.code = "DESC";
-            list1.desc = "DESC";
-            arr.push(list1);
-
-
-              $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+        var arr = [];
+        var list = {};
+        list.code = "ASC";
+        list.desc = "ASC";
+        arr.push(list);
+        var list1 = {};
+        list1.code = "DESC";
+        list1.desc = "DESC";
+        arr.push(list1);
+        $('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
             autoBind: true,
             filter: "contains",
             dataSource: arr,
@@ -2307,9 +2293,7 @@
         // Add a new row with the incremented sequence number
         dataSource.add({ filter_seqno: newSeqNo, reporttemplatesorting_gid: 0 });
     }
-
       // save result set
-
     function savereportResultset() {
         try {
             var grid = $("#grid_Resultset").data("kendoGrid");
@@ -2320,25 +2304,23 @@
                             title: 'Recon',
                             content: "Resultset order cannot be empty !",
                             type: 'red',
-                        });
+                  });
             }
-               else if(model.sheet_name =="" || model.sheet_name == undefined)
+            else if(model.sheet_name =="" || model.sheet_name == undefined)
             {
                   $.alert({
                             title: 'Recon',
                             content:"Sheet Name cannot be empty",
                             type: 'red',
-                        });
-
+                  });
             }
-             else if(model.exec_type_code =="" || model.exec_type_code ==undefined)
+            else if(model.exec_type_code =="" || model.exec_type_code ==undefined)
             {
                   $.alert({
                             title: 'Recon',
                              content:"Exec Type cannot be empty",
                             type: 'red',
-                        });
-
+                  });
             }
             else if(model.resultset_name =="" || model.resultset_name ==undefined)
             {
@@ -2346,8 +2328,7 @@
                             title: 'Recon',
                             content:"Resultset name cannot be empty",
                             type: 'red',
-                        });
-
+                  });
             }
             else if(model.exec_type_code == "R" && (model.report_code =="" || model.report_code ==undefined))
             {
@@ -2355,94 +2336,64 @@
                             title: 'Recon',
                             content:"Sub Report name cannot be empty",
                             type: 'red',
-                        });
-
+                  });
             }
-
+          else
+            {
+            var data1 = {};          
+            data1.reporttemplate_code = $("#reporttemplate_code").val();
+            data1.resultset_order = model.resultset_order;
+            data1.report_code =  $("#report_code").val();
+            data1.resultset_name=model.resultset_name;
+            data1.insert_by = sessionStorage.getItem("usrname");
+            data1.update_by = sessionStorage.getItem("usrname");
+            // data1.resultset_name=model.report_name;
+            data1.resultset_exec_type=model.exec_type_code;
+            if(model.exec_type_code == "R")
+            {
+               data1.exec_type_data=model.report_code;
+            }
             else
             {
-            var data1 = {};
-           // if (model.system_flag != 'Y' || model.last_system_flag != 'N') {
-                  //  if(model.reportresultset_gid == undefined)
-                  // {
-                  //      data.reportresultset_gid =0;
-                  // }
-                  // else
-                  // {
-                  // data.reportresultset_gid = model.reportresultset_gid;
-                  // }
-                data1.reporttemplate_code = $("#reporttemplate_code").val();
-                data1.resultset_order = model.resultset_order;
-                data1.report_code =  $("#report_code").val();
-              /*  if(model.exec_type_code == "R")
-                { data1.resultset_name=model.report_name;
-                }
-                else
-                {
-                    if(model.report_name_input == null || model.report_name_input == undefined)
-                    {
-                        data1.resultset_name=model.report_name;
-                    }
-                    else
-                    {
-                     data1.resultset_name=model.report_name_input;
-                    }
-                }
-               */
-                data1.resultset_name=model.resultset_name;
-                data1.insert_by = sessionStorage.getItem("usrname");
-                data1.update_by = sessionStorage.getItem("usrname");
-               // data1.resultset_name=model.report_name;
-                data1.resultset_exec_type=model.exec_type_code;
-                  if(model.exec_type_code == "R")
-                {
-                     data1.exec_type_data=model.report_code;
-                }
-                else
-                {
-
-                       if(model.report_name_input == null || model.report_name_input == undefined)
-                    {
-                        data1.exec_type_data=model.report_name;
-                    }
-                    else
-                    {
-                     data1.exec_type_data=model.report_name_input;
-                    }
-                }
-
-                data1.sheet_name=model.sheet_name;
-                if (model.reportresultset_gid == "0" || model.reportresultset_gid ==undefined) {
-                    data1.action = "INSERT";
-                    data1.reportresultset_gid =parseInt( model.reportresultset_gid);
-                } else {
-                    data1.action = "UPDATE";
-                    data1.reportresultset_gid =parseInt( model.reportresultset_gid);
-                }
-                 // data1.action = "UPDATE"
-                 // data1.reportresultset_gid =parseInt( model.reportresultset_gid);
-                $.ajax({
-                    type: "POST",
-                    url: '../Reports/reporttemplateResultset',
-                    dataType: 'json',
-                    data: JSON.stringify(data1),
-                    contentType: 'application/json; charset=utf-8',
-                    success: function (response) {
-                        if (response != " " && response != null && response != "{}" && response != "[]") {
-                            var res = JSON.parse(response);
-
-                            if (res.outparam.length > 0) {
-
-                                if (res.outparam[0].out_result == 1) {
-                                   $.alert({
+              if(model.report_name_input == null || model.report_name_input == undefined)
+              {
+                  data1.exec_type_data=model.report_name;
+              }
+              else
+              {
+                  data1.exec_type_data=model.report_name_input;
+              }
+            }
+            data1.sheet_name=model.sheet_name;
+            if (model.reportresultset_gid == "0" || model.reportresultset_gid ==undefined) {
+                data1.action = "INSERT";
+                data1.reportresultset_gid =parseInt( model.reportresultset_gid);
+            } else {
+                data1.action = "UPDATE";
+                data1.reportresultset_gid =parseInt( model.reportresultset_gid);
+            }
+            // data1.action = "UPDATE"
+            // data1.reportresultset_gid =parseInt( model.reportresultset_gid);
+            $.ajax({
+                 type: "POST",
+                 url: '../Reports/reporttemplateResultset',
+                 dataType: 'json',
+                 data: JSON.stringify(data1),
+                 contentType: 'application/json; charset=utf-8',
+                 success: function (response) {
+                    if (response != " " && response != null && response != "{}" && response != "[]") {
+                        var res = JSON.parse(response);
+                        if (res.outparam.length > 0) {
+                            if (res.outparam[0].out_result == 1) {
+                                $.alert({
                                     title: 'Recon',
                                     content: res.outparam[0].out_msg,
                                     type: 'red',
                                 });
-                                 }
-                                else
-                                {
-                                 $.alert({
+                            }
+                            else
+                            {
+                                $.alert({
                                     title: 'Recon',
                                     content: res.outparam[0].out_msg,
                                     type: 'green',
@@ -2450,38 +2401,34 @@
                                 // if (res.out_result == 1) {
                                 //     $("#txtmode").val("Edit");
                                 // }
-                                 btn_onClick("Edit");
+                                btn_onClick("Edit");
                                 detailfetch();
-                                }
                             }
                         }
-                        else {
-                            $.alert({
-                                title: 'Recon',
-                                content: 'Something went wrong .!',
-                                type: 'red',
-                            });
-                        }
-                    },
-                    error: function (er) {
+                    }
+                    else {
                         $.alert({
-                            title: 'Recon',
-                            content: er.statusText,
-                            type: 'red',
+                              title: 'Recon',
+                              content: 'Something went wrong .!',
+                              type: 'red',
                         });
                     }
-                });
-         //   }
-
-        }
+                 },
+                 error: function (er) {
+                     $.alert({
+                           title: 'Recon',
+                           content: er.statusText,
+                           type: 'red',
+                     });
+                 }
+            });
+          }
         }
         catch (e) {
-            console.log(e)
+         console.log(e)
         }
     }
-
     // save
-
     function savereportFilter() {
         try {
             var grid = $("#grid_tempfilter").data("kendoGrid");
@@ -2645,7 +2592,7 @@
 
     }
 
-      function myDeleteJsResultset() {
+    function myDeleteJsResultset() {
         var grid = $("#grid_Resultset").data("kendoGrid");
         var model = grid.dataItem($(event.target).closest("tr"));
         if (model.system_flag != 'Y') {
@@ -2678,16 +2625,12 @@
                     success: function (response) {
                         if (response != " " && response != null && response != "{}" && response != "[]") {
                             var res = JSON.parse(response);
-
                             if (res.outparam.length > 0) {
                                 $.alert({
                                     title: 'Recon',
                                     content: res.outparam[0].out_msg,
                                     type: 'green',
-                                });
-                                // if (res.out_result == 1) {
-                                //     $("#txtmode").val("Edit");
-                                // }
+                                });                               
                                 detailfetch();
                             }
                         }
@@ -2975,6 +2918,7 @@
             addRowResultset();
        }
     }
+
     function saveheader() {
         if ($("#reporttemplate_gid").val() == '0' || $("#reporttemplate_gid").val() == 0) {
             debugger;
@@ -3364,82 +3308,73 @@
         fileInput = document.getElementById('File_Import');
         if (fileInput.files.length > 0) {
             formData.append('file', fileInput.files[0]);
-             data.in_file_name = fileInput.files[0].name;
+            data.in_file_name = fileInput.files[0].name;
             getFirstSheetNameFromFile(fileInput.files[0])
-                .then(firstSheetName => {
-                    //if (firstSheetName === "Data") {
-                        formData.append('in_reporttemplate_code', data.in_reporttemplate_code);
-                        formData.append('in_action_by', data.in_action_by);
-                        formData.append('in_file_name', data.in_file_name);
-                        if (data.in_file_name && data.in_reporttemplate_code) {
-                            $.ajax({
-                                url: '@Url.Action("uploadreporttempletefile", "Reports")',
-                                type: "post",
-                                data: formData,
-                                processData: false,
-                                contentType: false,
-                                async: true,
-                                success: function (res) {
-                                    if (res != '') {
-                                        var response = JSON.parse(res);
-                                        if (response[0].out_result == 1 || response[0].out_result == "1") {
-                                            $.alert({
-                                                title: 'Recon',
-                                                content: response[0].out_msg,
-                                                type: 'green',
-                                            });
-                                           // $("#txtmode").val("Edit");
-                                            detailfetch();
-                                        } else {
-                                            $.alert({
-                                                title: 'Recon',
-                                                content: response[0].out_msg,
-                                                type: 'red',
-                                            });
-                                        }
-                                    } else {
-                                        $.alert({
-                                            title: 'Recon',
-                                            content: 'Something went wrong',
-                                            type: 'red',
-                                        });
-                                    }
-                                }, error: function (er) {
-                                    $.alert({
+              .then(firstSheetName => {
+                formData.append('in_reporttemplate_code', data.in_reporttemplate_code);
+                formData.append('in_action_by', data.in_action_by);
+                formData.append('in_file_name', data.in_file_name);
+                if (data.in_file_name && data.in_reporttemplate_code) {
+                   $.ajax({
+                      url: '@Url.Action("uploadreporttempletefile", "Reports")',
+                      type: "post",
+                      data: formData,
+                      processData: false,
+                      contentType: false,
+                      async: true,
+                      success: function (res) {
+                          if (res != '') {
+                              var response = JSON.parse(res);
+                              if (response[0].out_result == 1 || response[0].out_result == "1") {
+                                  $.alert({
                                         title: 'Recon',
-                                        content: er.statusText,
-                                        type: 'green',
+                                        content: response[0].out_msg,
+                                         type: 'green',
+                                  });
+                                 // $("#txtmode").val("Edit");
+                                   detailfetch();
+                              } else {
+                                    $.alert({
+                                          title: 'Recon',
+                                          content: response[0].out_msg,
+                                          type: 'red',
                                     });
-                                }
-                            });
-                        }
-                        else if (!data.in_file_name) {
+                              }
+                          } else {
+                               $.alert({
+                                     title: 'Recon',
+                                     content: 'Something went wrong',
+                                     type: 'red',
+                               });
+                          }
+                      }, error: function (er) {
                             $.alert({
-                                title: 'Recon',
-                                content: 'File Name is missing.!',
-                                type: 'green',
+                                 title: 'Recon',
+                                 content: er.statusText,
+                                 type: 'green',
                             });
-                        }
-                        else if (!data.in_reporttemplate_code) {
-                            $.alert({
-                                title: 'Recon',
-                                content: 'Custom Template code is missing.!',
-                                type: 'green',
-                            });
-                        }
-                    //}
-                    //else {
-                    //    $.alert({
-                    //        title: 'Recon',
-                    //        content: 'First sheet name should be "Data", Please rename it as "Data"',
-                    //        type: 'red',
-                    //    });
-                    //    return;
-                    //}
-                })
-                .catch(error => {
+                      }
+                   });
+                }
+                else if (!data.in_file_name) {
+                      $.alert({
+                           title: 'Recon',
+                           content: 'File Name is missing.!',
+                           type: 'green',
+                      });
+                }
+                else if (!data.in_reporttemplate_code) {
+                      $.alert({
+                            title: 'Recon',
+                            content: 'Custom Template code is missing.!',
+                            type: 'green',
+                      });
+                }
+                
+              })
+              .catch(error => {
                     console.error("Error reading file:", error);
-                });
+              });
         }
     }
 
@@ -3513,8 +3448,7 @@
         let successMessages = "";
         if(totalReports <= 0)
         {
-
-                 $.alert({
+                $.alert({
                     title: 'Recon',
                     content:"Report does not contain any row filters to Validate !",
                     type: 'red',
@@ -3606,23 +3540,9 @@
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
                     const res = JSON.parse(response);
-                    if (res.length > 0 && (res[0]["out_result"] == '1' || res[0]["out_result"] == 1)) {
-                             //  $.alert({
-                             //   title: 'Recon',
-                             //   content: res[0]?.out_msg,
-                             //   type: 'green',
-                             // });
+                    if (res.length > 0 && (res[0]["out_result"] == '1' || res[0]["out_result"] == 1)) {                            
                              $("#txtstatus").val("Active");
-                    } else {
-
-                        // $.alert({
-                        //     title: 'Recon',
-                        //     content: res[0]?.out_msg,
-                        //     type: 'red',
-                        // });
-                    }
-
-
+                    } 
                 },
                 error: function (er) {
 
@@ -3708,8 +3628,6 @@
 
             rpt_cond += `${joins1} ${open_braces}${fieldExpr}${value} ${close_braces}${joins}`;
         }
-             return rpt_cond = rpt_cond.trim().endsWith("AND") ? rpt_cond.trim().slice(0, -3).trim() : rpt_cond.trim();
+        return rpt_cond = rpt_cond.trim().endsWith("AND") ? rpt_cond.trim().slice(0, -3).trim() : rpt_cond.trim();
     }
-
-
 </script>

@@ -23,7 +23,10 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
-
+        public IActionResult reference()
+        {
+            return View();
+        }
         #region QcdMasterGridRead
         [HttpPost]
         public JsonResult QcdMasterGridRead([FromBody] QcdlistModal context)
@@ -269,10 +272,12 @@ namespace Recon_proto.Controllers
             public string? recon_code { get; set; }
             public string? manualtheme_desc { get; set; }
             public Int32 manualtheme_id { get; set; }
+            public string? active_status { get; set; }
             public string? in_action { get; set; }
             public string? in_user_code { get; set; }
         }
         #endregion
+
         #region getmanualtheme
         [HttpPost]
         public JsonResult getmanualtheme([FromBody] manualthememodel context)
@@ -315,6 +320,105 @@ namespace Recon_proto.Controllers
         public class getmanualthememodel
         {
             public string? recon_code { get; set; }          
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+
+        #region referencesave
+        [HttpPost]
+        public JsonResult referencesave([FromBody] referencemodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            List<QcdMasterModel> objcat_lst = new List<QcdMasterModel>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Qcdmaster/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("referencesave", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "manualthemesave");
+                return Json(ex.Message);
+            }
+        }
+
+
+        public class referencemodel
+        {
+            public string? recon_code { get; set; }
+            public string? ref_code { get; set; }
+            public string? ref_name { get; set; }
+            public string? ref_value { get; set; }
+            public string? active_status { get; set; }
+            public Int32 ref_gid { get; set; }
+            public string? in_action { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+
+        #region getreference
+        [HttpPost]
+        public JsonResult getreference([FromBody] getreferencemodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            List<QcdMasterModel> objcat_lst = new List<QcdMasterModel>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Qcdmaster/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Qcdmaster/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("getreference", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getmanualtheme");
+                return Json(ex.Message);
+            }
+        }
+
+        public class getreferencemodel
+        {
+            public string? recon_code { get; set; }
             public string? in_user_code { get; set; }
         }
         #endregion
