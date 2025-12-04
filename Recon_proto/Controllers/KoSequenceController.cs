@@ -27,7 +27,11 @@ namespace Recon_proto.Controllers
         public IActionResult KoSequencedetail()
         {
             return View();
-        }      
+        }
+        public IActionResult Reconexception()
+        {
+            return View();
+        }
 
         #region save
         [HttpPost]
@@ -217,6 +221,101 @@ namespace Recon_proto.Controllers
         public class cosseqlistmodel
         {
             public string? in_recon_code { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+
+        #region rowqcdlist
+        [HttpPost]
+        public JsonResult reconrowqcdlist([FromBody] rowqcdlistmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "KoSequence/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("rowqcdlist", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "rowqcdlist");
+                return Json(ex.Message);
+            }
+        }
+
+        public class rowqcdlistmodel
+        {
+            public string? in_recon_code { get; set; }
+            public Int64? in_tran_gid { get; set; }
+            public Int64? in_tranbrkp_gid { get; set; }
+            public string? in_user_code { get; set; }
+        }
+        #endregion
+
+        #region reconfieldqcdlistexp
+        [HttpPost]
+        public JsonResult reconfieldqcdlistexp([FromBody] reconfieldqcdlist context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "KoSequence/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("reconfieldqcdlist", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "rowqcdlist");
+                return Json(ex.Message);
+            }
+        }
+
+        public class reconfieldqcdlist
+        {
+            public string? in_recon_code { get; set; }
+            public Int64? in_tran_gid { get; set; }
+            public Int64? in_tranbrkp_gid { get; set; }
+            public string? in_recon_field_name { get; set; }
             public string? in_user_code { get; set; }
         }
         #endregion
