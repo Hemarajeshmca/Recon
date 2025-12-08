@@ -318,6 +318,31 @@ namespace Recon_proto.Controllers
             public string? in_recon_field_name { get; set; }
             public string? in_user_code { get; set; }
         }
-        #endregion
-    }
+		#endregion
+
+
+		[HttpGet]
+		public IActionResult GetValues(string field)
+		{
+			if (field == "account_type")
+			{
+				return Json(new[] {
+			new { value = "SAVINGS", text = "Savings" },
+			new { value = "CURRENT", text = "Current" }
+		});
+			}
+
+			if (field == "col19")
+			{
+				return Json(new[] {
+			new { value = "ATM", text = "ATM" },
+			new { value = "POS", text = "POS" },
+			new { value = "ONLINE", text = "Online Transfer" }
+		});
+			}
+
+			return Json(new { });
+		}
+
+	}
 }

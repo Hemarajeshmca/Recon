@@ -552,8 +552,8 @@
 		$("#gotoPage").val(1);
 		$("#comboBox").kendoComboBox({
 			autoBind: false,
-			dataSource: ["100", "200", "300", "1000", "5000", "10000"],
-			value: 5000,
+			dataSource: ["10", "50", "100", "200", "300", "1000", "5000", "10000"],
+			value: 10,
 			editable: true,
 			change: function (e) {
 				var inputValue = this.value();
@@ -1610,12 +1610,12 @@
 
 	var currentpage = 0;
 	var pageno = 1;
-	var pagesize = $("#items").val() ? $("#items").val() : 5000;
+	var pagesize = $("#items").val() ? $("#items").val() : 10;
 	
 	function pageChange(event) {
 		if (event.keyCode === 13) {
 			pageno = $("#gotoPage").val() ? $("#gotoPage").val() : 1;
-			pagesize = pagesize ? pagesize : 5000;
+			pagesize = pagesize ? pagesize : 10;
 			var Actpageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 			if (pageno > Actpageno) {
 				$.alert({
@@ -1659,7 +1659,7 @@
 		} else if (data == "last") {
 				pageno = Math.ceil(parseFloat(result) / parseFloat(pagesize));
 				//pagesize = $("#items").val();
-				pagesize = pagesize ? pagesize: 5000;
+				pagesize = pagesize ? pagesize: 10;
 				$("#gotoPage").val(pageno);
 				Runprogress();
 		} else if (data == "first") {
@@ -2033,7 +2033,7 @@
 		kendo.bind($("#grid2"), viewModel);
 	}
 
-	function grid_row_update(data) {
+	function grid_row_update_old(data) {
 			$("#grid_rowupdate").kendoGrid({
 			dataSource: {
 				data: data,
@@ -2271,5 +2271,144 @@
 			}
 		})
 	});
+</script>
+
+<script>
+	function grid_row_update(data) {
+
+		$("#grid_rowupdate").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 10,
+				schema: {
+					model: {
+						id: "rowvalue_gid",
+						fields: {
+							rowvalue_gid: { type: "number" },
+							tran_gid: { type: "number" },
+							tranbrkp_gid: { type: "number" },
+							field_desc: { type: "string" },
+							field_name: { type: "string" },
+							field_value: { type: "string" },
+							qcd_multivalue_flag: { type: "string" }
+						}
+					}
+				}
+			},
+
+			height: 225,
+			editable: "inline",
+
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_rowupdate').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-edit").hide();
+					$(".k-grid-delete").hide();
+				}
+			},
+
+			columns: [
+				{ field: "rowvalue_gid", hidden: true },
+				{ field: "tran_gid", hidden: true },
+				{ field: "tranbrkp_gid", hidden: true },
+
+				{ field: "field_desc", title: "Recon Field", width: 120 },
+
+				{ field: "field_name", hidden: true },
+
+				{
+					field: "field_value",
+					title: "Recon Field Value",
+					width: 150,
+					editor: dynamicEditor   // <-- IMPORTANT (CUSTOM EDITOR)
+				},
+
+				{ field: "qcd_multivalue_flag", hidden: true },
+
+				{
+					command: ["edit"],
+					title: "Action",
+					width: 60
+				}
+			]
+		});
+	}
+	function dynamicEditor(container, options) {
+
+		var row = options.model;
+
+		// If value contains / means date
+		var isDateField = row.field_value && row.field_value.includes("/");
+
+		// If qcd_multivalue_flag is not empty → MultiSelect
+		var isMultiSelect = row.qcd_multivalue_flag && row.qcd_multivalue_flag.trim() !== "";
+
+		// 1️⃣ MULTISELECT DROPDOWN
+		if (isMultiSelect) {
+
+			$('<input name="' + options.field + '" />')
+				.appendTo(container)
+				.kendoMultiSelect({
+					placeholder: "Select values...",
+					dataTextField: "text",
+					dataValueField: "value",
+					valuePrimitive: true,
+
+					dataSource: {
+						transport: {
+							read: {
+								url: "/KoSequence/GetValues?field=" + row.field_name,
+								dataType: "json"
+							}
+						}
+					}
+				});
+
+			return;
+		}
+
+		// 2️⃣ SINGLE SELECT DROPDOWN
+		if (row.field_desc.toLowerCase().includes("type") ||
+			row.field_desc.toLowerCase().includes("category")) {
+
+			$('<input name="' + options.field + '" />')
+				.appendTo(container)
+				.kendoDropDownList({
+					optionLabel: "Select",
+					dataTextField: "text",
+					dataValueField: "value",
+					dataSource: {
+						transport: {
+							read: {
+								url: "/Dropdown/GetValues?field=" + row.field_name,
+								dataType: "json"
+							}
+						}
+					}
+				});
+
+			return;
+		}
+
+		// 3️⃣ DATE PICKER
+		if (isDateField) {
+
+			$('<input name="' + options.field + '" />')
+				.appendTo(container)
+				.kendoDatePicker({
+					format: "dd-MM-yyyy"
+				});
+
+			return;
+		}
+
+		// 4️⃣ DEFAULT → TEXTBOX
+		$('<input class="k-textbox" name="' + options.field + '"/>')
+			.appendTo(container);
+	}
+
 </script>
 
