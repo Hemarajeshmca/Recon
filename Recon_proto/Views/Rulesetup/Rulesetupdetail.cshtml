@@ -921,7 +921,7 @@
 					document.getElementById('partial_match').innerHTML = res[0].recon_automatch_partial;
 					document.getElementById('reconappliedon').innerHTML = res[0].threshold_desc;
 					$("#recontype").val(res[0].recontype_code);
-				recontypecondition();
+					recontypecondition();
 				}
 			});
 			//dataset combo
@@ -1063,6 +1063,7 @@
 						} else {
 							grid_aggcondition([]);
 						}
+							$("#comaccmode").val(res.RuleHeader[0].comparison_acc_mode);
 					}
 					else {
 
@@ -1250,7 +1251,7 @@
 				type: "POST",
 				url: '../Common/Qcdmaster',
 				dataType: 'json',
-				async: false,
+					async: false,
 				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -1278,7 +1279,7 @@
 				type: "POST",
 				url: '../Common/Qcdmaster',
 				dataType: 'json',
-				async: false,
+					async: false,
 				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
@@ -1325,7 +1326,7 @@
 			type: "POST",
 			url: '../Common/Qcdmaster',
 			dataType: 'json',
-			async: false,
+				async: false,
 			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
 			contentType: 'application/json; charset=utf-8',
 			success: function (data) {
