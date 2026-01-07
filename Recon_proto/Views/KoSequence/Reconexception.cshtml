@@ -1,7 +1,6 @@
-﻿
-@{
-    ViewData["Title"] = "Reconexception";
-    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+﻿@{
+	ViewData["Title"] = "Recon Field Update";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
 }
 
 <!Doctype html>
@@ -131,11 +130,12 @@
 
 		div.k-header.k-grid-toolbar {
 			background-image: none;
+			color: white;
 		}
 
-		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-			color: white !important;
-		}
+		/* .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+							color: white !important;
+						} */
 
 		.control-label.required:after {
 			content: "*";
@@ -188,7 +188,7 @@
 
 		.k-state-selected, .k-state-selected:link, .k-state-selected:visited, .k-list > .k-state-selected, .k-list > .k-state-highlight, .k-panel > .k-state-selected, .k-ghost-splitbar-vertical, .k-ghost-splitbar-horizontal, .k-draghandle.k-state-selected:hover, .k-scheduler .k-scheduler-toolbar .k-state-selected, .k-scheduler .k-today.k-state-selected, .k-marquee-color {
 			border-color: #872E7B !important;
-			color: #e74949 !important;
+			/* color: #e74949 !important; */
 		}
 
 		.k-grid-content > table > tbody > .k-alt {
@@ -202,6 +202,7 @@
 
 		div.k-grid tbody .k-button {
 			min-width: 0;
+			color: white !important;
 		}
 
 		.form-horizontal .control-label {
@@ -276,8 +277,16 @@
 			color: #fff !important;
 		}
 
-		.k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
+		.k-link:link, .k-nav-current.k-state-hover .k-link {
 			color: #fff !important;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: #fff !important;
+		}
+
+		.k-calendar .k-link {
+			color: #2e2e2e !important;
 		}
 
 		.previous {
@@ -323,6 +332,45 @@
 			overflow-x: hidden;
 			/* height: 380px !important; */
 		}
+
+		#grid2 .k-grid-table {
+			min-width: 1200px; /* adjust based on columns */
+		}
+
+		.selectedRule {
+			font-size: 13px;
+			font-weight: 600;
+			color: brown;
+		}
+
+		.row-locked {
+			color: red;
+			font-weight: bold;
+		}
+
+		.rp-placeholder {
+			color: #999;
+			font-style: italic;
+		}
+
+		.k-textbox.textarea-fixed {
+			height: 80px !important;
+			resize: none;
+		}
+
+		.k-list-item .k-checkbox {
+			opacity: 1 !important;
+			position: static !important;
+			appearance: checkbox !important; /* Force browser default if theme hides it */
+			-webkit-appearance: checkbox !important;
+			margin-right: 8px;
+			display: inline-block !important;
+		}
+
+		.k-list .k-item.k-state-focused {
+			background-color: #fff !important; /* Example color (Telerik's default red) */
+			color: #f00 !important; /* Example text color */
+		}
 	</style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini fixed">
@@ -340,18 +388,18 @@
 									</label><br>
 									<select id="reconname" class="form-select form-control"></select>
 								</div>
-								<div class="col-sm-3">
+								<div class="col-sm-3" style="display:none">
 									<label for="" class="form-label">
 										Report Name&nbsp;
 										<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
 									</label>
-									<select id="reporttype" class="form-select form-control" disabled >
+									<select id="reporttype" class="form-select form-control" disabled>
 									</select>
 								</div>
-															
+
 								<div class="col-sm-2" style="margin-top:30px">
 									<img id="img_checkQuery" onclick="checkquery()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
-									<img id="img_preview" onclick="preview()" style="cursor:pointer;height: 20px;width: 20px;" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;								
+									<img id="img_preview" onclick="preview()" style="cursor:pointer;height: 20px;width: 20px;" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -398,7 +446,6 @@
 								</div>
 							</div>
 
-							
 							<div class="modal fade" id="setValueQuerySp" tabindex="-1" aria-hidden="true">
 								<div class="modal-dialog modal-lg" role="document">
 									<div class="modal-content">
@@ -432,49 +479,7 @@
 	</div>
 	<div class="modal fade" id="recon_exception" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-				</div>
-				<div class="modal-body" style="margin-top: -26px;">
-					<div class="row">
-						<div class="col-sm-4">
-						</div>
-						<div class="col-sm-4">
-							<h4 style="font-size: 15px;text-align: center;color: #1a9950;font-weight: 600;">Recon Exception</h4>
-						</div>
-						<div class="col-sm-4">
-							<i class="bx bx-x cursor-pointer" data-bs-dismiss="modal" style="color: #000000;float:right"></i>
-						</div>
-					</div>
-					<hr style="margin-top:-1px; width:100%;">
-					<div class="col-xs-12" style="margin-top:15px;">	
-						<label for="organization" class="form-label">
-							Row Value&nbsp;							
-						</label><br>
-							<div id="grid_rowvalue"> </div>						
-					</div>
-					<div class="col-xs-12" style="margin-top:15px;">
-						<label for="organization" class="form-label">
-							Row Update&nbsp;
-						</label><br>
-						<div id="grid_rowupdate"> </div>
-					</div>
-					<div class="row" style="margin-top: 2%;">
-						<div class="col-sm-4"></div>
-						<div class="col-sm-4" style="margin-top:20px;float: right;">
-							<center>							
-								<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
-							</center>
-						</div>
-						<div class="col-sm-4"></div>
-					</div>
-				</div>
-			</div>
-		</div>		
-	</div>
-	<div class="modal fade" id="recon_exceptionupdate" tabindex="-1" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
+			<div class="modal-content" style="width:130% !important;margin-left: -63px;">
 				<div class="modal-header">
 				</div>
 				<div class="modal-body" style="margin-top: -26px;">
@@ -490,32 +495,22 @@
 					</div>
 					<hr style="margin-top:-1px; width:100%;">
 					<div class="col-xs-12" style="margin-top:15px;">
-						<div class="col-sm-4">
-							<label for="" class="form-label">Recon Field&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
-							<input class="form-control" id="recon_field" name="recon_field" type="text">
-							<input class="form-control" id="field_name" name="field_name" type="hidden">
-							<input class="form-control" id="field_value" name="field_value" type="hidden">
-						</div>
+						<label for="organization" class="form-label selectedRule">
+							Row Value&nbsp;
+						</label><br>
+						<div id="grid_rowvalue"> </div>
 					</div>
-					<div class="row" style="margin-top:15px;">
-						<div class="col-sm-6">
-							<label for="" class="form-label">Old Value&nbsp;</label>
-							<div class="base-page">
-								<div id="gridoldvalue"></div>
-							</div>
-						</div>
-						<div class="col-sm-6">
-							<label for="" class="form-label">New Value&nbsp;</label>
-							<div class="base-page">
-								<div id="gridnewvalue"></div>
-							</div>
-						</div>
+					<div class="col-xs-12" style="margin-top:15px;">
+						<label for="organization" class="form-label selectedRule">
+							Value Update&nbsp;
+						</label><br>
+						<div id="grid_rowupdate"> </div>
 					</div>
 					<div class="row" style="margin-top: 2%;">
 						<div class="col-sm-4"></div>
 						<div class="col-sm-4" style="margin-top:20px;float: right;">
 							<center>
-								<button type="button" class="btn btn-sm save_btn me-2" data-bs-dismiss="modal">Update</button>
+								<button type="button" class="btn btn-sm save_btn me-2" onclick="savereconexp()" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-sm cancel_btn me-2" data-bs-dismiss="modal">Cancel</button>
 							</center>
 						</div>
@@ -542,9 +537,9 @@
 	var screen_code = "";
 	var gridchange = "N";
 	var ReporType = "";
-	$(document).ready(function () {	
+	$(document).ready(function () {
 		screen_code = rolevalidatescreen('reconexcp');
-		$("#navhead").text("Recon Exception");		
+		$("#navhead").text("Recon Field Update");
 		kendodate_format();
 		detailfetch();
 		$("#cmbreporttype").prop("disabled", false);
@@ -576,8 +571,8 @@
 		}).data("kendoComboBox");
 	});
 
-	function goToReportPage() {	
-		window.location.href = "../Reports/ReportGeneration_newlist";		
+	function goToReportPage() {
+		window.location.href = "../Reports/ReportGeneration_newlist";
 	}
 
 	function detailfetch() {
@@ -602,7 +597,7 @@
 						value: item.report_code,
 						text: item.report_desc
 					}));
-				});	
+				});
 				$("#reporttype").val("RPT_EXCP_WITHBRKP");
 			},
 			error: function (er) {
@@ -683,7 +678,7 @@
 				console.log(er)
 			}
 		});
-			
+
 		var getselectedTemplate = getlocalStorage("selectedTemplate");
 		var jsondata = {};
 		jsondata.in_reporttemplate_code = "";
@@ -703,7 +698,7 @@
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				if (response != " " && response != null && response != "{}" && response != "[]") {
-					var res = JSON.parse(response);					
+					var res = JSON.parse(response);
 					$("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
 					$("#txtmode").val(getlocalStorage('btn_clk_val'));
 					$("#txtstatus").val("Active");
@@ -711,7 +706,7 @@
 					$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
 					$("#rt_name").val(res.Table[0].reporttemplate_name);
 					$("#cmbreporttype").val(res.Table[0].report_code);
-					$("#reconname").val(res.Table[0].recon_code);								
+					$("#reconname").val(res.Table[0].recon_code);
 					gridcopy = res.Table1;
 					res.Table1.forEach(function (item, index) {
 						if (index !== res.Table1.length - 1) {
@@ -721,7 +716,7 @@
 						}
 					});
 					grid_tempfilter(gridcopy);
-					$("#cmbreporttype").val(res.Table[0].report_code);								
+					$("#cmbreporttype").val(res.Table[0].report_code);
 				}
 				else {
 					grid_tempfilter([])
@@ -731,7 +726,7 @@
 				alert(er)
 				console.log(er)
 			}
-		});			
+		});
 	}
 
 	function combo_editor_resultsetdet(container, cmbid, datafield, code_datafield, grid_id) {
@@ -786,11 +781,9 @@
 			}
 		});
 	}
-
 </script>
 <script>
 	function grid_tempfilter(data) {
-		//style='opacity:" + opacity + "'
 		var selectedCode = $('#resultsetname').val();
 		var opacity = data.length == 0 ? '0.5' : '1';
 		var filter_criteria_desc_list = "";
@@ -806,7 +799,7 @@
 						fields: {
 							reporttemplatefilter_gid: { type: "number", defaultValue: 0 },
 							reporttemplate_code: { type: "string" },
-							filter_seqno: { type: "string", defaultValue: "0" },
+							filter_seqno: { type: "string" },
 							resultset_name: { type: "string", defaultValue: "" },
 							resultset_dropname: { type: "string", defaultValue: "" },
 							report_field: { type: "string" },
@@ -823,7 +816,7 @@
 							last_system_flag: { type: "string" },
 							active_status: { type: "string" },
 							active_status_desc: { type: "string" },
-							isLastRow:{type: "boolean"}
+							isLastRow: { type: "boolean" },
 						}
 					}
 				}
@@ -849,22 +842,22 @@
 			},
 			toolbar: "<a id='addRowBtn' href='javascript:void(0)' style='opacity:" + opacity + "' onclick='addRow()' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
 			columns: [{
-				command: [
-					{
-						name: "Delete",
-						id: "Delete",
-						template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
-					},
+				command:[
+				{
+					name: "Delete",
+					id: "Delete",
+					template: "<a href='' onclick='myDeleteJs()' data-bs-toggle='modal'><img src = '../Assets/images/del.png' href='../Rulesetup/Rulesetupdetail'></a>&nbsp;&nbsp;&nbsp;"
+				},
 				], title: "Action&nbsp;", width: "41px",
 			},
 			{
 				field: "filter_seqno",
 				title: "Result Set",
 				width: 50,
+				attributes: { style: "text-align: right;" },
 				editor: function (container, options) {
 					item_rate(container, options.field, '9', '2');
-				},
-				attributes: { style: "text-align: right;" },
+				}				
 			},
 			{
 				field: "report_code",
@@ -886,7 +879,7 @@
 			},
 			{
 				field: "report_name",
-				title: "Resultset Name",				
+				title: "Resultset Name",
 				editable: false, // Disable inline editing for this column
 				width: 120,
 				hidden: true,
@@ -897,10 +890,10 @@
 				template: function (dataItem) {
 					const id = "chk_sel_" + dataItem.reporttemplatefilter_gid;
 					if (dataItem.reporttemplatefilter_gid > 0) {
-							return '<input type="checkbox" id="' + id + '" disabled="disabled" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
+						return '<input type="checkbox" id="' + id + '" disabled="disabled" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
 					} else {
 						return '<input type="checkbox" id="' + id + '" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx1">';
-					}					
+					}
 				}
 			},
 			{
@@ -925,8 +918,7 @@
 				editor: function (container, options) {
 					if (options.model.reporttemplatefilter_gid > 0) {
 						container.html(options.model.reportparam_value);
-					} else
-					{
+					} else {
 						combo_editor_reportfiled(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "report_field", "grid_tempfilter")
 					}
 				},
@@ -970,7 +962,7 @@
 								.on("change", function () {
 									options.model.set("filter_value", this.value);
 								});
-						}
+					}
 				}
 			},
 			{
@@ -1030,28 +1022,6 @@
 
 		});
 		join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
-	}
-
-	function addRow_old() {
-		var grid = $("#grid_tempfilter").data("kendoGrid");
-		var dataSource = grid.dataSource;
-		// Get the last row's index
-		var lastRowIndex = grid.dataSource._data.length - 1;
-		// Set the previous row's "join_condition" to "AND" if the value is blank
-		if (lastRowIndex >= 0) {
-			var previousRow = dataSource.at(lastRowIndex);
-				if (!previousRow.join_condition || previousRow.join_condition === "") {
-					previousRow.set("join_condition", "AND");
-				}
-		}
-		var report_code = $("#resultsetname").val();
-		var report_name = $("#resultsetname option:selected").text();
-		// Get the last sequence number and increment it
-		var lastSeqNo = grid.dataSource._data.length;
-		var newSeqNo = parseInt(lastSeqNo) + 1;
-		var filter_val = "";
-		// Add a new row with the incremented sequence number
-		dataSource.add({ report_code: report_code, report_name: report_name, filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", reporttemplatefilter_gid: 0, isLastRow: false, filter_value: filter_val });
 	}
 
 	function addRow() {
@@ -1257,7 +1227,8 @@
 		});
 		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
 	}
-
+</script>
+<script>
 	function myDeleteJs() {
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var model = grid.dataItem($(event.target).closest("tr"));
@@ -1273,9 +1244,17 @@
 		} else {
 			grid.dataSource.remove(model);
 		}
-	}	
+	}
 
 	function preview() {
+		if ($("#recon_code").val() ==''){
+			$.alert({
+				title: 'Recon',
+				content: "Please Select Recon Name",
+				type: 'green',
+			});
+			return;
+		}
 		var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 		var template_code = getlocalStorage("ls_pageList");
 		var archival_code = $("#archivecode").val();
@@ -1311,6 +1290,7 @@
 									$('#framevalue').text(condition);
 									$("#framevalue").show();
 									Runprogress();
+									getrecordlock();
 								} else {
 									$.alert({
 										title: 'Recon',
@@ -1324,7 +1304,7 @@
 									$("#framevalue").hide();
 									$(".page_bg").hide();
 								}
-							} 
+							}
 							else {
 								$.alert({
 									title: 'Recon',
@@ -1483,6 +1463,7 @@
 					type: "POST",
 					url: '../Reports/getPageNoReport',
 					dataType: "json",
+					async:false,
 					data: JSON.stringify(data),
 					contentType: 'application/json; charset=utf-8',
 					success: function (Data1) {
@@ -1492,10 +1473,10 @@
 							var arr = [];
 							$.each(chkval, function (i, e) {
 								$.each(e, function (key, val) {
-									arr.push(val);									
-								});								
+									arr.push(val);
+								});
 							});
-							
+
 							var data = JSON.parse(Data1);
 							columns.push({
 								title: "Select",
@@ -1504,9 +1485,21 @@
 										return `<input type="radio" name="rowSelect" onclick="selectRow(this)">`;
 								}
 							});
+							columns.push({
+									field: "Rp_lock",
+									title: "lock",
+									width: 70,
+									hidden: true,
+							});
+							columns.push({
+									field: "Rp_user",
+									title: "user",
+									width: 70,
+									hidden: true,
+							});
 							var i = 0;
-							var entryIndex = "entries[" + i + "]";							
-							for (var key in data[0]) {								
+							var entryIndex = "entries[" + i + "]";
+							for (var key in data[0]) {
 								var propType = typeof data[0][key];
 								if (propType == 'number' && key != "") {
 									columns.push({
@@ -1593,7 +1586,6 @@
 						});
 					}
 				});
-
 				$("#exportExcel").show();
 				if ($('.accordion_body').is(':visible')) {
 					$(".accordion_body").slideUp(300);
@@ -1611,7 +1603,7 @@
 	var currentpage = 0;
 	var pageno = 1;
 	var pagesize = $("#items").val() ? $("#items").val() : 10;
-	
+
 	function pageChange(event) {
 		if (event.keyCode === 13) {
 			pageno = $("#gotoPage").val() ? $("#gotoPage").val() : 1;
@@ -1733,18 +1725,47 @@
 		jsondata.in_tran_gid = dataItem.entries[0];
 		jsondata.in_recon_code = $("#reconname").val();
 		jsondata.in_tranbrkp_gid = dataItem.entries[1];
-		jsondata.in_action_by = sessionStorage.getItem("usrname");		
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+				
 		$.ajax({
 			type: "POST",
-			url: '../KoSequence/reconrowqcdlist',
+			url: '../KoSequence/setrecordlock',
 			dataType: 'json',
 			data: JSON.stringify(jsondata),
 			contentType: 'application/json; charset=utf-8',
 			success: function (response) {
 				var result = JSON.parse(response);
-				$("#recon_exception").modal('show');
-				grid_row_value(result.rowvalue);
-				grid_row_update(result.rowupdate);
+
+				if( result[0].out_result == '1' ) {
+					$.ajax({
+						type: "POST",
+						url: '../KoSequence/reconrowqcdlist',
+						dataType: 'json',
+						data: JSON.stringify(jsondata),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var result = JSON.parse(response);
+							$("#recon_exception").modal('show');
+							grid_row_value(result.rowvalue);
+							result.rowupdate = result.rowupdate.map(function (x) {								
+								if( x.field_type == "TEXT" && x.clone_field_flag == "Y" ) {
+									if(x.field_name == x.clone_recon_field) {
+										x.new_value = x.field_value
+									}
+								};
+								x.new_value = x.field_value;
+								return x;
+							});
+							grid_row_update(result.rowupdate);
+						}
+					});
+				} else {
+					$.alert({
+						title: 'Recon',
+						content:'Failed',
+						type: 'red',
+					});
+				}
 			}
 		});
 	}
@@ -1773,7 +1794,7 @@
 		}
 	});
 
-	function checkquery(){
+	function checkquery() {
 		var resultsetcount=0;
 		if(reportTempResultset != undefined) // hari changes 22 aug
 		{
@@ -1788,10 +1809,10 @@
 			var selected_template = getlocalStorage("selectedTemplate");
 			var str = $("#rt_name").val();
 			var dataset1 = {
-				"in_recon_code": selected_template.recon_code,
-				"in_report_code": selected_template.report_code,
-				 "in_report_condition": condition,
-				 "in_user_code": txtusername,
+				"in_recon_code": $("#reconname").val(),
+				"in_report_code": "RPT_EXCP_WITHBRKP",
+				"in_report_condition": condition,
+				"in_user_code": txtusername,
 			};
 			$.ajax({
 				type: "POST",
@@ -1854,13 +1875,13 @@
 			disable(img_csv);
 			disable(img_preview);
 		}
-	}	
-		
+	}
+
 	function buildReportConditionFromGrid(gridId, from) {
 		var grid = $(gridId).data("kendoGrid");
 		if (!grid || grid._data.length==0) {
 			return " and 1=1";
-		} else if(grid._data[0].exec_type_code == "M"){
+		} else if(grid._data[0].exec_type_code == "M") {
 			// Get selected dropdown value
 			var selectedCode = $('#resultsetname').val();
 			if (selectedCode) {
@@ -1870,10 +1891,9 @@
 					value: selectedCode
 				});
 			} else {
-				grid.dataSource.filter([]); // Clear filters
-				grid.dataSource.data([]);   // Clear data (optional)
-			}
-			  // 👈 This is the correct way
+				grid.dataSource.filter([]); 
+				grid.dataSource.data([]); 
+			}			  
 		}
 		var rows =  grid.dataSource.view();
 		var rpt_cond = "";
@@ -1966,316 +1986,55 @@
 
 	function grid_row_value(data) {
 		var columns = [];
-		var chkval = data;
-		var arr = [];
-		$.each(chkval, function (i, e) {
-			$.each(e, function (key, val) {
-				arr.push(val);
-			});
-		});
-		var data = data;
 		var i = 0;
 		var entryIndex = "entries[" + i + "]";
 		for (var key in data[0]) {
 			var propType = typeof data[0][key];
-			if (propType == 'number' && key != "") {
-				columns.push({
-					field: entryIndex,
-					title: key,
-					type: propType,
-					attributes: { style: "text-align: right;" },
-					width: 150,
-				});
-			} else if (propType != 'number' && key != "") {
-				columns.push({
-					field: entryIndex,
-					title: key,
-					type: propType,
-					attributes: { style: "text-align: left;" },
-					width: 150,
-				});
-			}
-			i = i + 1;
+			columns.push({
+				field: entryIndex,
+				title: key,
+				width: 150,
+				attributes: {
+					style: "text-align:" + (propType === "number" ? "right" : "left")
+				}
+			});
+			i++;
 			entryIndex = "entries[" + i + "]";
 		}
+
 		var rows = [];
-		var data1 = data;
-		$.each(data1, function (i, e) {
+		$.each(data, function (i, e) {
 			var entryArray = [];
 			$.each(e, function (key, val) {
 				entryArray.push(val);
 			});
-			rows.push(kendo.observable({
-				entries: entryArray
-			}));
+			rows.push({ entries: entryArray });
 		});
-		var viewModel = kendo.observable({
-			gridRows: rows
-		});
-		var configuration = {
-				height: 63,
-				navigatable: true,
-				groupable: false,
-				editable: false,
-				sortable: true,
-				Scrollable: true,
-				filterable: false,
-				pagable: false,
-				resizable: true,
-				persistSelection: true,
-				selectable: "false",
-				columns: columns,
-				rows: viewModel,
-		};
+
 		$("#example2").remove();
-		$('#grid_rowvalue').append('<div id="example2" style="position:relative" class="k-content"><table id="grid2" data-bind="source: gridRows" style="position:relative;overflow:scroll;width:100%"></table></div>');
-		$("#grid2").kendoGrid(configuration).data("kendoGrid");
-		kendo.bind($("#grid2"), viewModel);
-	}
+		$("#grid_rowvalue").append(
+			'<div id="example2" style="overflow-x:auto; overflow-y:auto; width:100%">' +
+				'<div id="grid2"></div>' +
+			'</div>'
+		);
 
-	function grid_row_update_old(data) {
-			$("#grid_rowupdate").kendoGrid({
-			dataSource: {
-				data: data,
-				pageSize: 10,
-				schema: {
-					model: {
-						fields: {
-							rowvalue_gid: { type: "number" },
-							tran_gid: { type: "number" },
-							tranbrkp_gid: { type: "number" },
-							field_desc: { type: "string" },
-							field_name: { type: "string" },
-							field_value: { type: "string" },
-							qcd_multivalue_flag: { type: "string" }
-						}
-					}
-				}
-			},
-			height: 225,
-			groupable: false,
-			dataBound: function (e) {
-				resultData = e.sender._data;
-				var rows = $('#grid_rowupdate').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);
-				if ($("#txtmode").val() == "View") {
-					$(".k-grid-edit").hide();
-					$(".k-grid-delete").hide();
-				}
-			},
-			sortable: false,
-			selectable: true,
-			filterable: false,
+		$("#grid2").kendoGrid({
+			dataSource: rows,
+			height: 60,
 			navigatable: true,
-			pageable: true,
-			resizable: true,
-			pageable: {
-				refresh: false,
-				pageSizes: true,
-				buttonCount: 5
-			},
-			columns: [
-			{
-				field: "rowvalue_gid",
-				title: "rowvalue_gid",
-				hidden: true,
-			},
-			{
-				field: "tran_gid",
-				title: "tran_gid",
-				hidden: true,
-			},
-			{
-				field: "tranbrkp_gid",
-				title: "tranbrkp_gid",
-				hidden: true,
-			},			
-			{
-				field: "field_desc",				
-				title: "Recon Field",
-				width: 100,				
-			},						
-			{
-				field: "field_name",
-				title: "field_name",
-				width: 100,
-				hidden: true,
-			},
-			{
-				field: "field_value",
-				title: "Recon Field Value",
-				width: 100,
-			},
-			{
-				field: "qcd_multivalue_flag",
-				title: "qcd_multivalue_flag",
-				hidden: true
-			},
-			{
-				command: [
-					{
-						name: "update",
-						id: "Update",
-						template: "<a href='' onclick='getreconfield(this)' value='Update' class='k-grid-edit' data-bs-toggle='modal'>Update</a>&nbsp;&nbsp;&nbsp;",
-					},
-				], title: "Action&nbsp;", width: "40px",
-			}],
+			groupable: false,
 			editable: false,
-		});
-	}		
-
-	function getreconfield(e) {
-		$("#recon_exception").modal('show');
-		$("#recon_exceptionupdate").modal('show');
-	
-			
-		var grid = $("#grid_rowupdate").data("kendoGrid");
-		var selectedItem = grid.dataItem($(event.target).closest("tr"));		
-		$("#recon_field").val(selectedItem.field_desc);
-		$("#field_name").val(selectedItem.field_name);
-		$("#field_value").val(selectedItem.field_value);
-		var jsondata = {};
-		jsondata.in_tran_gid = selectedItem.tran_gid;
-		jsondata.in_recon_field_name  = selectedItem.field_name ;
-		jsondata.in_recon_code = $("#reconname").val();
-		jsondata.in_tranbrkp_gid = selectedItem.tranbrkp_gid;
-		jsondata.in_action_by = sessionStorage.getItem("usrname");
-		$.ajax({
-			type: "POST",
-			url: '../KoSequence/reconfieldqcdlistexp',
-			dataType: 'json',
-			data: JSON.stringify(jsondata),
-			contentType: 'application/json; charset=utf-8',
-			success: function (response) {
-				var result = JSON.parse(response);
-				var text = $("#field_value").val();
-				var arr = text.split(",").map(function (v, i) {
-					return {
-							id: i + 1,
-							value: v.trim()
-					};
-				});
-				gridoldvalue(arr);
-				gridnewvalue(result.newvalue);
-			}
-		});
-	}	
-	function gridoldvalue(arr) {
-		$("#gridoldvalue").kendoGrid({
-			 dataSource: {
-				data: arr,
-				  schema: {
-					model: {
-						fields: {
-							id: { type: "number",filterable: false },
-							value: { type: "string" ,filterable: false}
-						}
-					}
-				}
-		  	 },
-			height: 225,
-			groupable: false,
-			dataBound: function (e) {
-				resultData = e.sender._data;
-				var rows = $('#gridoldvalue').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);				
-			},
-			sortable: false,
-			selectable: true,
+			sortable: true,
+			scrollable: false,
 			filterable: false,
-			navigatable: true,
 			pageable: false,
 			resizable: true,
-			columns: [
-				{ field: "id", title: "ID", width: 50,filterable: false },
-				{ field: "value", title: "Value",width: 100,filterable: false}
-			],
-			editable: true,
+			selectable: false,
+			columns: columns
 		});
 	}
-	function gridnewvalue(data) {
-			$("#gridnewvalue").kendoGrid({
-			dataSource: {
-				data: data,
-				pageSize: 10,
-				schema: {
-					model: {
-						fields: {
-							master_gid: { type: "number" },							
-							master_code: { type: "string" },
-							master_name: { type: "string" ,filterable: false}
-						}
-					}
-				}
-			},
-			height: 225,
-			groupable: false,
-			dataBound: function (e) {
-				resultData = e.sender._data;
-				var rows = $('#gridnewvalue').data('kendoGrid').tbody.children();
-				setColor(rows, resultData);
-				if ($("#txtmode").val() == "View") {
-					$(".k-grid-edit").hide();
-					$(".k-grid-delete").hide();
-				}
-			},
-			sortable: false,
-			selectable: true,
-			filterable: false,
-			navigatable: true,
-			pageable: false,
-			resizable: true,			
-			columns: [
-			{
-				field: "master_gid",
-				title: "master_gid",
-				hidden: true,
-			},
-			{
-				field: "master_code",
-				title: "master_code",
-				width: 100,
-				hidden: true,
-			},
-			{
-				field: "master_name",
-				title: "Reason",
-				width: 100,
-				filterable: false
-			},			
-			{
-				command: [
-					{
-						name: "select",
-						id: "select",
-						template: function (dataItem) {
-							return '<input type="checkbox" id =' + dataItem.master_gid + ' class="chkbx3">';
-						}				
-					},
-				], title: "Select&nbsp;", width: "40px",
-			}],
-			editable: false,
-		});
-	}
-	$(function () {
-		$('#gridnewvalue').on('click', '.chkbx3', function () {
-			var checked = $(this).is(':checked');
-			var grid = $('#grid_sourceidentifier').data().kendoGrid;
-			var dataItem = grid.dataItem($(this).closest('tr'));
-			var row = $(this).closest('tr');
-			if (checked == true) {
-				dataItem._set('open_parentheses_flag', 'Y');
-			}
-			else {
-				dataItem._set('open_parentheses_flag', 'N');
-			}
-		})
-	});
-</script>
 
-<script>
 	function grid_row_update(data) {
-
 		$("#grid_rowupdate").kendoGrid({
 			dataSource: {
 				data: data,
@@ -2287,128 +2046,543 @@
 							rowvalue_gid: { type: "number" },
 							tran_gid: { type: "number" },
 							tranbrkp_gid: { type: "number" },
-							field_desc: { type: "string" },
 							field_name: { type: "string" },
-							field_value: { type: "string" },
-							qcd_multivalue_flag: { type: "string" }
+							field_desc: { type: "string",editable: false },
+							field_value: { type: "string",editable: false },
+							new_value: { type: "string" },
+							field_type: { type: "string" },
+							qcd_parent_code: { type: "string" },
+							qcd_multivalue_flag: { type: "string" },
+							depend_field_flag: { type: "string" },
+							depend_recon_field: { type: "string" },
+							clone_field_flag: { type: "string" },
+							clone_recon_field: { type: "string" },
 						}
 					}
 				}
 			},
-
 			height: 225,
-			editable: "inline",
-
+			editable: true,
+			navigatable: true,
 			dataBound: function (e) {
 				resultData = e.sender._data;
 				var rows = $('#grid_rowupdate').data('kendoGrid').tbody.children();
 				setColor(rows, resultData);
-
-				if ($("#txtmode").val() == "View") {
-					$(".k-grid-edit").hide();
-					$(".k-grid-delete").hide();
-				}
 			},
-
 			columns: [
-				{ field: "rowvalue_gid", hidden: true },
-				{ field: "tran_gid", hidden: true },
-				{ field: "tranbrkp_gid", hidden: true },
-
-				{ field: "field_desc", title: "Recon Field", width: 120 },
-
-				{ field: "field_name", hidden: true },
-
+				{
+					field: "rowvalue_gid",
+					title: "rowvalue_gid",
+					hidden: true
+				},
+				{
+					field: "tran_gid",
+					title: "tran_gid",
+					hidden: true
+				},
+				{
+					field: "tranbrkp_gid",
+					title: "tranbrkp_gid",
+					hidden: true
+				},
+				{
+					field: "field_type",
+					title: "field_type",
+					hidden: true
+				},
+				{
+					field: "qcd_parent_code",
+					title: "qcd_parent_code",
+					hidden: true
+				},
+				{
+					field: "qcd_multivalue_flag",
+					title: "qcd_multivalue_flag",
+					hidden: true
+				},
+				{
+					field: "qcd_multivalue_flag",
+					title: "qcd_multivalue_flag",
+					hidden: true
+				},
+				{
+					field: "depend_recon_field",
+					title: "depend_recon_field",
+					hidden: true
+				},
+				{
+					field: "clone_recon_field",
+					title: "clone_recon_field",
+					hidden: true
+				},
+				{
+					field: "clone_field_flag",
+					title: "clone_field_flag",
+					hidden: true
+				},
+				{
+					field: "field_desc",
+					title: "Recon Field",
+					width: 60,
+					editable: false,
+				},
+				{
+					field: "field_name",
+					title: "field_name",
+					hidden: true
+				},
 				{
 					field: "field_value",
-					title: "Recon Field Value",
-					width: 150,
-					editor: dynamicEditor   // <-- IMPORTANT (CUSTOM EDITOR)
+					title: "Current Value",
+					width: 100,
+					editable: false
 				},
-
-				{ field: "qcd_multivalue_flag", hidden: true },
-
 				{
-					command: ["edit"],
-					title: "Action",
-					width: 60
-				}
+					field: "new_value",
+					title: "New Value",
+					width: 120,
+					template: function (dataItem) {
+						 var val = dataItem.new_value;
+						if (!val) return "";
+						if (val instanceof Date) {
+							return kendo.toString(val, "yyyy-MM-dd");
+						}
+						if (typeof val === "string" && val.includes("GMT")) {
+							return kendo.toString(new Date(val), "yyyy-MM-dd");
+						}
+						if (Array.isArray(val)) {
+							return val.join(';');
+						}
+						return val;
+					},
+					editor: dynamicEditor,
+				},
+				{
+					field: "qcd_multivalue_flag",
+					title: "qcd_multivalue_flag",
+					hidden: true
+				},
 			]
 		});
 	}
+
 	function dynamicEditor(container, options) {
-
 		var row = options.model;
-
-		// If value contains / means date
-		var isDateField = row.field_value && row.field_value.includes("/");
-
 		// If qcd_multivalue_flag is not empty → MultiSelect
 		var isMultiSelect = row.qcd_multivalue_flag && row.qcd_multivalue_flag.trim() !== "";
 
 		// 1️⃣ MULTISELECT DROPDOWN
-		if (isMultiSelect) {
+		if (isMultiSelect) {			
+			var arr = [];
+			var preSelected = [];
+			var v_field_name = row.field_name;
+			if (row[options.field]) {
+				// preSelected = row[options.field].split(";").map(x => x.trim()).filter(x => x);
+				preSelected = row[options.field];
+			}
+			var dependcode ="";
+			var grid = $("#grid_rowupdate").data("kendoGrid");
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].field_name == row.depend_recon_field) {
+					dependcode = grid.dataSource._data[i].new_value;
+				}
+			}
+			var jsondata = {};
+			jsondata.in_tran_gid = row.tran_gid;
+			jsondata.in_recon_field_name  = row.field_name ;
+			jsondata.in_recon_code = $("#reconname").val();
+			jsondata.in_tranbrkp_gid = row.tranbrkp_gid;
+			jsondata.in_depend_code = dependcode;
+			jsondata.in_user_code = sessionStorage.getItem("usrname");
 
-			$('<input name="' + options.field + '" />')
+			$.ajax({
+				type: "POST",
+				url: '../KoSequence/reconfieldqcdlistexp',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify(jsondata),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					arr = result
+						.filter(x =>  x.master_name  && x.master_name)
+						.map(x => ({ value:  x.master_name , text: x.master_name }));
+					options.model.dropdown_list = arr;				
+					
+				}
+			});
+			
+			 var checkInputs = function(elements) {
+				  elements.each(function() {
+					var element = $(this);
+					var input = element.children("input");
+					input.prop("checked", false);
+					input.prop("checked", element.hasClass("k-state-selected"));
+				  });
+			 };
+			$('<input id='+v_field_name+'  name="' + options.field + '" />')
 				.appendTo(container)
 				.kendoMultiSelect({
-					placeholder: "Select values...",
 					dataTextField: "text",
 					dataValueField: "value",
+					dataSource: arr,
 					valuePrimitive: true,
-
-					dataSource: {
-						transport: {
-							read: {
-								url: "/KoSequence/GetValues?field=" + row.field_name,
-								dataType: "json"
-							}
-						}
+					autoClose: false,
+					tagTemplate: "#: value #",
+					itemTemplate: "<input type='checkbox'/> #:data.text#",
+				
+					dataBound: function() {
+						var items = this.ul.find("li");
+						var widget = this;
+						setTimeout(function() {
+						  checkvalue();
+						  checkInputs(items);
+						  // enableKeyboardSelection(widget);
+						});
+					},
+					change: function() {
+						var items = this.ul.find("li");
+						checkInputs(items);
 					}
 				});
+		}
+		function checkvalue()		  {
+			var y = $("#"+v_field_name).data("kendoMultiSelect");
 
-			return;
+			if (preSelected != '')
+			{
+				var txtarr = preSelected.split(';');
+				y.value(txtarr);
+			}
+			else
+			{
+				y.value([]);
+			}
+
+			y.open();
+
+			y.input.on("blur",function()
+			{
+				var thisvalue = y.value();
+				preSelected = thisvalue.join(';');
+				options.model.set("new_value", preSelected);
+			});
+			y.input.on("keydown", function(e) {
+					if (e.keyCode === 32) { // Check for spacebar key code
+									//alert('enter');
+									//return false;
+						var focusedItem = y.popup.element.find(".k-state-focused");
+						if (focusedItem.length > 0) {
+										focusedItem.trigger("click");
+										return false;
+						}
+					}
+
+					if (e.keyCode === 13) {
+						return false;
+					}
+				}
+			);
+		}
+		function enableKeyboardSelection(multiselect) {
+			multiselect.input.on("keydown", function (e) {
+				var list = multiselect.ul;
+				var focused = list.find(".k-focus");
+				if (!focused.length) {
+					focused = list.children("li:first");
+					focused.addClass("k-focus");
+				}
+				switch (e.keyCode) {
+					case 32: 
+					case 13: 
+						e.preventDefault();
+						var dataItem = multiselect.dataItem(focused);
+						var values = multiselect.value().slice();
+						var index = values.indexOf(dataItem.value);
+						if (index === -1) {
+							values.push(dataItem.value);
+						} else {
+							values.splice(index, 1);
+						}						
+						multiselect.value(values);
+						// multiselect.trigger("blur");
+						// multiselect.trigger("change");
+
+						//checkInputs(list.children("li"));
+					break;
+				
+					case 40:
+						e.preventDefault();
+						focused.removeClass("k-focus")
+						.next().addClass("k-focus");
+					break;
+
+					case 38:
+						e.preventDefault();
+						focused.removeClass("k-focus")
+						 .prev().addClass("k-focus");
+					break;
+
+					case 9:
+						var finalVal = multiselect.value();
+						preSelected = finalVal.join(';');
+						options.model.set("new_value", preSelected);
+					break;
+				}
+			});
 		}
 
+		
 		// 2️⃣ SINGLE SELECT DROPDOWN
-		if (row.field_desc.toLowerCase().includes("type") ||
-			row.field_desc.toLowerCase().includes("category")) {
+		if (row.field_type == "QCD" && row.qcd_multivalue_flag == "" ) {
 
-			$('<input name="' + options.field + '" />')
-				.appendTo(container)
-				.kendoDropDownList({
-					optionLabel: "Select",
-					dataTextField: "text",
-					dataValueField: "value",
-					dataSource: {
-						transport: {
-							read: {
-								url: "/Dropdown/GetValues?field=" + row.field_name,
-								dataType: "json"
-							}
+		var arr1 = [];
+		var dependcode ="";
+		var jsondata = {};
+		jsondata.in_tran_gid = row.tran_gid;
+		jsondata.in_recon_field_name  = row.field_name ;
+		jsondata.in_recon_code = $("#reconname").val();
+		jsondata.in_tranbrkp_gid = row.tranbrkp_gid;
+		jsondata.in_depend_code = dependcode;
+		jsondata.in_action_by = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/reconfieldqcdlistexp',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				 arr1 = result
+					.filter(x =>  x.master_name  && x.master_name)
+					.map(x => ({ value:  x.master_name , text: x.master_name }));
+			},
+		});
+
+		$('<input name="' + options.field + '" />')
+			.appendTo(container)
+			.kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "value",
+				dataSource: arr1,
+				value: options.model[options.field],
+				dataBound: function() {
+							this.open();
 						}
-					}
-				});
 
-			return;
+			});
+			options.model.dropdown_list = arr1;
+		return;
 		}
 
 		// 3️⃣ DATE PICKER
-		if (isDateField) {
+		if (row.field_type == "DATE") {
+		$('<input name="' + options.field + '" />')
+			.appendTo(container)
+			.kendoDatePicker({
+				format: "yyyy-MM-dd",
+				parseFormats: ["dd-MM-yyyy","yyyy-MM-dd","MM/dd/yyyy"],
+				change: function () {
+					// Ensure selected date is formatted
+					var dp = this;
+					var selectedDate = dp.value();
 
-			$('<input name="' + options.field + '" />')
-				.appendTo(container)
-				.kendoDatePicker({
-					format: "dd-MM-yyyy"
-				});
-
-			return;
+					if (selectedDate) {
+						var formatted = kendo.toString(selectedDate, "yyyy-MM-dd");
+						dp.value(formatted);      // Forces display format
+					}
+				}
+			});
+		return;
 		}
 
-		// 4️⃣ DEFAULT → TEXTBOX
-		$('<input class="k-textbox" name="' + options.field + '"/>')
-			.appendTo(container);
+		if (row.field_type == "DATETIME") {
+		$('<input name="' + options.field + '" />')
+			.appendTo(container)
+			.kendoDateTimePicker({
+				 format: "yyyy-MM-dd HH:mm:ss",    // display format
+				parseFormats: ["yyyy-MM-dd"],
+
+				change: function () {
+					var selected = this.value();  // This is always a Date object
+
+				if (selected) {
+					// Save formatted string to grid model
+					var formatted = kendo.toString(selected, "yyyy-MM-dd HH:mm:ss");
+					options.model.set(options.field, formatted);
+				}
+			}
+			});
+		return;
+		}
+
+		if (row.field_type == "TEXT") {
+			 $('<textarea class="k-textbox" name="' + options.field + '" rows="4"></textarea>')
+				.appendTo(container);
+
+			var newvalue = "";
+			var grid = $("#grid_rowupdate").data("kendoGrid");
+			for (var i = 0; i < grid.dataSource._data.length; i++) {
+				if (grid.dataSource._data[i].field_name == row.clone_recon_field) {
+					newvalue = grid.dataSource._data[i].new_value;
+				}
+			}
+			if (newvalue) {
+				options.model.set("new_value", newvalue);
+			}
+		}
 	}
 
+	function savereconexp() {
+		var grid = $("#grid_rowupdate").data("kendoGrid");
+		var in_recon_code = $("#reconname").val();
+		var in_tran_gid = parseInt(grid.dataSource._data[0].tran_gid);
+		var in_tranbrkp_gid = parseInt(grid.dataSource._data[0].tranbrkp_gid);
+		var in_user_code = sessionStorage.getItem("usrname");
+		var jsondata = {};
+		jsondata.in_tran_gid = in_tran_gid;
+		jsondata.in_recon_code = in_recon_code;
+		jsondata.in_tranbrkp_gid = in_tranbrkp_gid;
+		jsondata.in_user_code = in_user_code;
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/setrecordunlock',
+			dataType: 'json',
+			async: true,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result[0].out_result == '1')
+				{
+					var jsonArray = [];
+					var jsonArray1 = [];
+					var rows = grid.dataSource.data();
+					rows.forEach(function (item) {
+						jsonArray.push({
+							field_name: item.field_name,
+							field_value: item.field_value
+						});
+					});
+					rows.forEach(function (item) {
+						var value = item.new_value;
+						if (value instanceof Date) {
+							value = kendo.toString(value, "yyyy-MM-dd");
+						}
+						else if (typeof value === "string" && value.includes("GMT")) {
+							value = kendo.toString(new Date(value), "yyyy-MM-dd");
+						}
+						jsonArray1.push({
+							field_name: item.field_name,
+							field_value: value
+						});
+					});
+					var in_curr_value = JSON.stringify(jsonArray);
+					var in_new_value = JSON.stringify(jsonArray1);
+
+					$.ajax({
+						type: "POST",
+						url: '../KoSequence/reconfieldqcdsave',
+						dataType: 'json',
+						data: JSON.stringify({
+							in_recon_code: in_recon_code, in_tran_gid: in_tran_gid, in_tranbrkp_gid: in_tranbrkp_gid,
+							in_curr_value: in_curr_value, in_new_value: in_new_value, in_user_code: in_user_code
+						}),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var res = JSON.parse(response);
+							if (res[0].out_result == 1) {
+								$.alert({
+									title: 'Recon',
+									content: res[0].out_msg,
+									type: 'green',
+								});
+								Runprogress();
+							}
+							else {
+								$.alert({
+									title: 'Recon',
+									content: res[0].out_msg,
+									type: 'green',
+								});
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				}
+			}
+		});
+	}
+
+	function getrecordlock() {
+		var grid1 = $("#grid").data("kendoGrid");
+		var currentPageData = grid1.dataSource.view();
+		$.each(currentPageData, function (index, item) {
+			var jsondata = {};
+			jsondata.in_tran_gid = item.entries[0];
+			jsondata.in_recon_code = $("#reconname").val();
+			jsondata.in_tranbrkp_gid = item.entries[1];
+			jsondata.in_user_code = sessionStorage.getItem("usrname");
+
+			$.ajax({
+				type: "POST",
+				url: '../KoSequence/getrecordlock',
+				dataType: 'json',
+				async: true,
+				data: JSON.stringify(jsondata),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					if(result.outparam[0].out_result == 2) {
+						item.set("Rp_user", result.Table[0]["user_code"]);
+						var row = grid1.tbody.find("tr[data-uid='" + item.uid + "']");
+						row.addClass("row-locked");
+					}
+				}
+			});
+		});
+	}
+
+	$('#recon_exception').on('hidden.bs.modal', function () {
+		Runprogress();
+		var grid = $("#grid_rowupdate").data("kendoGrid");
+		var jsondata = {};
+		jsondata.in_recon_code = $("#reconname").val();
+		jsondata.in_tran_gid = parseInt(grid.dataSource._data[0].tran_gid);
+		jsondata.in_tranbrkp_gid = parseInt(grid.dataSource._data[0].tranbrkp_gid);
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/setrecordunlock',
+			dataType: 'json',
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+			}
+		});
+	});
+	function closedata() {
+		Runprogress();
+		var grid = $("#grid_rowupdate").data("kendoGrid");
+		var jsondata = {};
+		jsondata.in_recon_code = $("#reconname").val();
+		jsondata.in_tran_gid = parseInt(grid.dataSource._data[0].tran_gid);
+		jsondata.in_tranbrkp_gid = parseInt(grid.dataSource._data[0].tranbrkp_gid);
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/setrecordunlock',
+			dataType: 'json',
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+			}
+		});
+	}
 </script>
+
 
