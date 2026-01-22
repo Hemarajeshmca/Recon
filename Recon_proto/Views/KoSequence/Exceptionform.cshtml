@@ -1,0 +1,738 @@
+﻿@{
+	ViewData["Title"] = "Recon Field Update";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<head>
+	<title></title>
+	<style>
+		.form-label {
+			margin-bottom: 0.3rem !important;
+		}
+
+		.section1-scroll {
+			max-height: 18vh;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.section2-scroll {
+			max-height: 51vh;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.card {
+			background: #fff;
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 16px;
+			margin-bottom: 16px;
+		}
+
+		.section-title {
+			font-weight: 600;
+			margin-bottom: 5px;
+			color:Black;
+		}
+
+		select, textarea {
+			border: 1px solid;
+			border-radius: 8px;
+			padding: 3px;
+			width: 100%;
+		}
+
+		textarea {
+			min-height: 166px
+		}
+	
+		.card {
+			background: #fff;
+			border: 1px solid;
+			border-radius: 12px;
+			padding: 9px;
+			margin-bottom: 5px;
+			margin-top: -12px;
+		}
+
+		.card1 {
+			background: #fff;
+			border: 1px solid;
+			border-radius: 12px;
+			padding: 9px;
+			margin-bottom: 5px;
+			margin-top: 2px;
+		}
+
+		.k-multiselect-wrap.k-floatwrap {
+			height:30px;
+		}
+
+		.k-header, .k-grid-header, .k-toolbar, .k-dropdown-wrap, .k-picker-wrap, .k-numeric-wrap, .k-grouping-header, .k-pager-wrap, .k-textbox, .k-button, .k-progressbar, .k-draghandle, .k-autocomplete, .k-state-highlight, .k-tabstrip-items .k-item, .k-panelbar .k-tabstrip-items .k-item, .km-pane-wrapper > .km-pane > .km-view > .km-content {
+			background-image: none, -webkit-linear-gradient(top, rgb(135, 46, 123) 0, rgb(135, 46, 123) 100%);
+			color: white !important;
+		}
+
+		.info-label {
+			display: inline-block;
+			cursor: pointer;
+			color: blue;
+		}
+
+		.info-content {
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			border: 1px solid #ccc;
+			padding: 10px;
+			z-index: 1;
+		}
+
+		.info-label:hover .info-content,
+		.info-label.active .info-content {
+			display: block;
+		}
+
+		.copy-icon {
+			 float: right;
+			 margin-right: 20px;
+			 margin-top: 5px;
+			 cursor: pointer;
+			 font-size: 18px;
+		    color: #0d6efd;   
+		}
+
+		.copy-icon:hover {
+			color: #084298;
+		}
+	</style>
+</head>
+<div class="content-wrapper">
+	<div class="card-body" style="margin-top:-12px;height: 84%;">
+		<div class="card">
+			<div class="section-title">Section 1</div>
+			<div class="section1-scroll">
+				<div class="row">
+					<div class="col-sm-2">
+						<label for="" class="form-label">Report ID</label>
+						<input class="form-control" type="text" id="reportid" value="" tabindex="-1" readonly>
+						<input type="hidden" id="trabbrkid">
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Employee ID</label>
+						<input class="form-control" type="text" id="employeeid" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Name</label>
+						<input class="form-control" type="text" id="name" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Grade</label>
+						<input class="form-control" type="text" id="grade" value="" tabindex="-1"  readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Expense Type</label>
+						<input class="form-control" type="text" id="expencetype" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Category</label>
+						<input class="form-control" type="text" id="category" value="" tabindex="-1" readonly>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-2">
+						<label for="" class="form-label">Transaction Status</label>
+						<input class="form-control" type="text" id="transts" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Approved Amount</label>
+						<input class="form-control" type="text" id="approveamt" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Sub Category</label>
+						<input class="form-control" type="text" id="subcategory" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Description</label>
+						<input class="form-control" type="text" id="description" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Email ID</label>
+						<input class="form-control" type="text" id="emailid" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Approve Name</label>
+						<input class="form-control" type="text" id="actor3" value="" tabindex="-1" readonly>
+					</div>
+				</div>
+				<div class="row">					
+					<div class="col-sm-2">
+						<label for="" class="form-label">Received Date</label>
+						<input class="form-control" type="text" id="tknat3" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Date of Expense</label>
+						<input class="form-control" type="text" id="dtofexpence" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">AH Location</label>
+						<input class="form-control" type="text" id="ahloc" value="" tabindex="-1" readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">AH Department</label>
+						<input class="form-control" type="text" id="ahdept" value="" tabindex="-1"  readonly>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Designation</label>
+						<input class="form-control" type="text" id="designation" value="" tabindex="-1" readonly>
+					</div>
+				</div>							
+			</div>
+		</div>
+		<div class="card1">
+			<div class="section2-scroll">
+				<div class="section-title">Section 2</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<label for="" class="form-label">Document Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoWindow(this)" data-bs-toggle="modal"><img src='../images/info.png' style="width: 39%;"></span></label>
+						<select id="cmbdoctype" class="form-select form-control" onchange="holdchange()"></select>
+					</div>
+					<div class="col-sm-2">
+						<label for="" class="form-label">Claim Status&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbclaimsts" class="form-select form-control"></select>
+					</div>
+					<div class="col-sm-7">
+						<label for="">Hold/ Reject Category</label>
+						<input id="cmbholdrjt" style="overflow-y:auto;height: 30px;" onchange="holdreject()">
+						<input type="hidden" id="holdRejectValue" name="holdRejectValue">
+					</div>
+				</div>
+				<div class="col-sm-12">
+					<label class="form-label">Hold / Reject Reasons Template</label><i class="fa fa-copy copy-icon" title="Copy" onclick="copyText()"></i>
+				    <textarea id="holdRejectReasons" class="form-select form-control" name="holdRejectReasons" style="height: 166px;"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px;margin-top:-1px">
+			<div class="col-sm-4">
+				<label for="" class="form-label">Submitted in Happay?&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>			
+				<input type="radio" id="subhaapy1" name="subhaapy" value="Y" style="margin-left: 10px;"><span style="color:black">&nbspYes&nbsp</span>
+				<input type="radio" id="subhaapy2" name="subhaapy" value="N" style="margin-left: 10px;"><span style="color:black">&nbspNo&nbsp</span>
+			</div>
+			<div class="col-sm-4" style="text-align:center">
+				<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="savereconexp()">Save</button>&nbsp;&nbsp;&nbsp;
+				<a href="../KoSequence/Reconexception" class="btn btn-sm cancel_btn me-2">Cancel</a>
+			</div>
+			<div class="col-sm-4"></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var fields = {};
+	var preSelected = "";
+	var arr = [];
+	$(document).ready(function () {
+		$("#navhead").text("Recon Field Update");
+		var data = getlocalStorage("ls_pageList");
+		var jsondata = {};
+		jsondata.in_recon_code = sessionStorage.getItem("reconcode");
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/reconfieldinfo',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				var jsondata1 = {};
+			jsondata1.in_tran_gid = data.entries[(res[0].position_tran_gid) -1];
+			jsondata1.in_recon_code = sessionStorage.getItem("reconcode");
+			jsondata1.in_tranbrkp_gid = res[0].position_tranbrkp_gid;
+			$("#trabbrkid").val(0);
+			jsondata1.in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../KoSequence/getreconvalue',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify(jsondata1),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+				  var result = JSON.parse(response);
+				  fields =result.Table
+					$("#reportid").val((getValueByDesc("Report ID")));
+					$("#employeeid").val((getValueByDesc("Employee ID")));;
+					$("#name").val((getValueByDesc("Name")));
+					$("#grade").val((getValueByDesc("Grade")));
+					$("#expencetype").val((getValueByDesc("Expense Type")));
+					$("#category").val((getValueByDesc("Category")));
+					$("#transts").val((getValueByDesc("Transaction Status")));
+					$("#approveamt").val((getValueByDesc("Gross Amount")));
+					$("#subcategory").val((getValueByDesc("Subcategories")));
+					$("#description").val((getValueByDesc("Description")));
+					$("#emailid").val((getValueByDesc("Email ID")));
+					$("#actor3").val((getValueByDesc("Actor3")));
+					$("#tknat3").val((getValueByDesc("Taken At3")));
+					$("#dtofexpence").val((getValueByDesc("Date of expense")));
+					$("#ahloc").val(getValueByDesc("AH Location"));
+					$("#ahdept").val((getValueByDesc("AH Department")));
+					$("#designation").val(getValueByDesc("Designation"));
+				}
+			});
+			}
+		});
+		
+
+			var in_master_code = getparentByDesc("Doc Type");
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+					async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#cmbdoctype").empty();
+					$("#cmbdoctype").append($('<option>', {
+						value: "",
+						text: "  Select  ",
+						code:""
+					}));
+					$.each(response, function (index, item) {
+					   $("#cmbdoctype").append($('<option>', {
+						  value: item.masterName,
+						  text: item.masterName,
+						  code: item.mastermutiplename
+					   }));
+					});
+				}
+			});
+
+			var in_master_code = getparentByDesc("Claim Status");
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#cmbclaimsts").empty();
+					$("#cmbclaimsts").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+					   $("#cmbclaimsts").append($('<option>', {
+						  value: item.masterName,
+						  text: item.masterName
+					   }));
+					});
+				}
+			});
+
+			$("#cmbholdrjt").kendoMultiSelect({
+				dataTextField: "text",
+				dataValueField: "value",
+				valuePrimitive: true,
+				autoClose: false,				
+				tagTemplate: "#: value #",
+				itemTemplate: "<input type='checkbox'/> #: data.text #",
+
+				dataBound: function () {
+					 syncCheckboxes(this);
+				},
+
+				change: function () {
+					syncCheckboxes(this);
+					updateValue(this);
+				}
+		    });
+
+		   $("#holdRejectValue").val((getValueByDesc("Reject/Hold Template")));
+		   $("#cmbdoctype").val((getValueByDesc("Doc Type")));
+		   jQuery('#cmbdoctype').trigger("change");
+		   $("#cmbclaimsts").val((getValueByDesc("Claim Status")));		  
+		   $("#holdRejectReasons").val(getValueByDesc("Reject/Hold Reasons"));		  
+		   if (getValueByDesc("Happay Submitted Status") == "Y") {
+			 $("#subhaapy1").prop("checked", true);
+		   } else
+		    {
+			 $("#subhaapy2").prop("checked", true);
+		   }
+		   $("#cmbdoctype").on("focus", function () {
+				 // this.size = this.options.length;   // open
+		   });
+
+		   $("#cmbdoctype").on("blur", function () {
+				 this.size = 1;                     // close
+		   });
+	});
+</script>
+<script>
+	function getValueByDesc(desc) {
+		return fields.find(f => f.field_desc === desc)?.field_value ?? "";
+	}
+	function getparentByDesc(desc) {
+	   return fields.find(f => f.field_desc === desc)?.qcd_parent_code ?? "";
+	}
+	function getcolByDesc(desc) {
+	   return fields.find(f => f.field_desc === desc)?.field_name ?? "";
+	}
+
+	function holdchange() {
+		var multi = $("#cmbholdrjt").data("kendoMultiSelect");
+		var dbValue = $("#holdRejectValue").val();   
+
+		var selectedValues = dbValue
+			? dbValue.split(";").map(x => x.trim()).filter(Boolean)
+			: [];
+	
+		if (multi) {
+			multi.value([]);
+			$("#holdRejectValue").val("");
+			$("#holdRejectReasons").val("");
+			preSelected = "";
+		}	
+	 
+		arr = [];
+		var jsondata = {};
+		jsondata.in_tran_gid = getValueByDesc("Tran Id");
+		jsondata.in_recon_field_name  = getcolByDesc("Reject/Hold Template") ;
+		jsondata.in_recon_code = getValueByDesc("Recon Code");
+		jsondata.in_tranbrkp_gid = $("#trabbrkid").val();
+		jsondata.in_depend_code = $("#cmbdoctype :selected").text();
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/reconfieldqcdlistexp',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				arr = result.filter(x =>  x.master_name  && x.master_name)
+						.map(x => ({ value:  x.master_name , text: x.master_name ,code: x.master_multiple_name}));
+				if (multi) {
+					multi.dataSource.data(arr);
+					multi.value(selectedValues);
+					syncCheckboxes(multi);					
+				}
+			}
+		});
+	}
+
+	function syncCheckboxes(widget) {
+		widget.ul.find("li").each(function () {
+			var li = $(this);
+			var checkbox = li.find("input[type='checkbox']");
+			var dataItem = widget.dataItem(li.index());
+			checkbox.prop("checked", widget.value().includes(dataItem.value));
+		});
+	}
+		
+	function updateValue(widget) {
+		var value = widget.value().join(';');
+		preSelected = value;
+		$("#holdRejectValue").val(value);
+	}
+
+	function holdreject() {
+		var multi = $("#cmbholdrjt").data("kendoMultiSelect");
+		if (!multi) return;
+		var items = multi.dataItems();
+		var output = items
+			 .filter(x => x.code && x.code.trim() !== "")
+			 .map((x, index) => (index + 1) + ") " + x.code.trim())
+			 .join("\n");
+		$("#holdRejectReasons").val(output);
+	}
+
+	function savereconexp() {
+		var multi = $("#cmbholdrjt").data("kendoMultiSelect");
+		var selectedfrm = "";
+		if($("#cmbdoctype").val() =='')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Document Type not selected',
+				type: 'red',
+			});
+			return false;
+		}
+		if($("#cmbclaimsts").val() =='')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Claim Status not selected',
+				type: 'red',
+			});
+			return false;
+		}
+		if($("#cmbclaimsts").val() =='Hold' ||  $("#cmbclaimsts").val() =='Rejected' )
+		{
+			if(multi.value().length == 0) {
+				$.alert({
+				title: 'Recon',
+				content: 'Hold/ Reject Category not selected',
+				type: 'red',
+			});
+			return false;
+			}			
+		}
+		var in_recon_code = getValueByDesc("Recon Code");
+		var in_tran_gid = parseInt(getValueByDesc("Tran Id"));
+		var in_tranbrkp_gid = parseInt($("#trabbrkid").val());
+		var in_user_code = sessionStorage.getItem("usrname");
+		var jsondata = {};
+		jsondata.in_tran_gid = in_tran_gid;
+		jsondata.in_recon_code = in_recon_code;
+		jsondata.in_tranbrkp_gid = in_tranbrkp_gid;
+		jsondata.in_user_code = in_user_code;
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/setrecordunlock',
+			dataType: 'json',
+			async: true,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);				
+			    selectedfrm =	multi.value().join(';');
+				if (result[0].out_result == '1')
+				{ 
+					if($("#cmbclaimsts option:selected").text() == "Hold"){
+						var json = [
+						{
+							field_name: "col99",
+							field_value: $("#cmbdoctype option:selected").text()
+						},
+						{
+							field_name: "col100",
+							field_value: $("#cmbclaimsts option:selected").text()
+						},
+						{
+							field_name: "col101",
+							field_value: selectedfrm
+						},
+						{
+							field_name: "col102",
+							field_value: $("#holdRejectReasons").val()
+						},
+						{
+							field_name: "col103",
+							field_value: $("input[name='subhaapy']:checked").val()
+						},
+						{
+							field_name: "col105",
+							field_value: "Y"
+						},
+						{
+							field_name: "col106",
+							field_value: '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")'
+						},
+						{
+							field_name: "col107",
+							field_value: sessionStorage.getItem("usrname")
+						},
+						{
+							field_name: "col108",							
+							field_value: '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")'
+						},
+						{
+							field_name: "col109",
+							field_value: sessionStorage.getItem("usrname")
+						}
+						];
+					} else {
+						var json = [
+						{
+							field_name: "col99",
+							field_value: $("#cmbdoctype option:selected").text()
+						},
+						{
+							field_name: "col100",
+							field_value: $("#cmbclaimsts option:selected").text()
+						},
+						{
+							field_name: "col101",
+							field_value: selectedfrm
+						},
+						{
+							field_name: "col102",
+							field_value: $("#holdRejectReasons").val()
+						},
+						{
+							field_name: "col103",
+							field_value: $("input[name='subhaapy']:checked").val()
+						},
+						{
+							field_name: "col108",							
+							field_value: '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")'
+						},
+						{
+							field_name: "col109",
+							field_value: sessionStorage.getItem("usrname")
+						}
+						];
+					}	
+					var in_curr_value = JSON.stringify(json);
+					var in_new_value = JSON.stringify(json);
+
+					$.ajax({
+						type: "POST",
+						url: '../KoSequence/reconfieldqcdsave',
+						dataType: 'json',
+						data: JSON.stringify({
+							in_recon_code: in_recon_code, in_tran_gid: in_tran_gid, in_tranbrkp_gid: in_tranbrkp_gid,
+							in_curr_value: in_curr_value, in_new_value: in_new_value, in_user_code: in_user_code
+						}),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var res = JSON.parse(response);
+							if (res[0].out_result == 1) {
+								$.alert({
+									title: 'Recon',
+									content: res[0].out_msg,
+									type: 'green',
+								});
+								sessionStorage.setItem("excpform", in_recon_code);
+								window.location.href = "../KoSequence/Reconexception";
+							}
+							else {
+								$.alert({
+									title: 'Recon',
+									content: res[0].out_msg,
+									type: 'Red',
+								});
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				}
+			}
+		});
+	}
+
+	function copyText() {
+		var textarea = document.getElementById("holdRejectReasons");
+
+		if (!textarea || !textarea.value) {
+			 console.log("Nothing to copy");
+			  return;
+		}
+
+		// Modern browsers (HTTPS)
+		if (navigator.clipboard && window.isSecureContext) {
+			navigator.clipboard.writeText(textarea.value)
+			  .then(() => console.log("Copied using clipboard API"))
+			  .catch(() => fallbackCopy(textarea));
+		} else {
+			// HTTP fallback
+			fallbackCopy(textarea);
+	    }
+    }
+
+	function fallbackCopy(textarea) {
+		textarea.select();
+		textarea.setSelectionRange(0, textarea.value.length);
+
+		try {
+		   var success = document.execCommand("copy");
+		  console.log(success ? "Copied (fallback)" : "Copy failed");
+		} catch (err) {
+		    console.error("Copy not supported");
+		}
+	}
+
+	function openInfoWindow() {
+		 var selectedOption = $("#cmbdoctype option:selected");		
+		 var code  = selectedOption.attr("code");
+		 openHtmlInNewWindow(code);
+	}
+
+	function openHtmlInNewWindow(htmlContent) {
+		var selectedOption = $("#cmbdoctype option:selected")
+		var win = window.open(			
+			"width=3000,height=600,scrollbars=yes,resizable=yes"
+		);
+
+		if (!win) {
+			alert("Popup blocked. Please allow popups.");
+			return;
+		}
+
+		win.document.open();
+		win.document.title = selectedOption.text();
+		win.document.write(htmlContent);
+		win.document.close();
+	}		
+	const textarea = document.getElementById("holdRejectReasons");
+
+    function getRanges(value) {
+        const ranges = [];
+        const regex = /<[^>]*>/g;
+        let match;
+        while ((match = regex.exec(value)) !== null) {
+            ranges.push({
+                start: match.index + 1,
+                end: match.index + match[0].length - 1
+            });
+        }
+        return ranges;
+    }
+
+    function selectionInsideRange(start, end, ranges) {
+        return ranges.some(r => start >= r.start && end <= r.end);
+    }
+
+    textarea.addEventListener("keydown", function (e) {
+        const value = textarea.value;
+        const ranges = getRanges(value);
+
+        const selStart = textarea.selectionStart;
+        const selEnd = textarea.selectionEnd;
+
+        const allowedKeys = [
+            "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+            "Tab"
+        ];
+
+        const isSelection = selStart !== selEnd;
+        const inside = selectionInsideRange(selStart, selEnd, ranges);
+
+        /* ❌ Block delete/backspace if selection is outside <> */
+        if ((e.key === "Backspace" || e.key === "Delete") && !inside) {
+            e.preventDefault();
+            return;
+        }
+
+        /* ❌ Block typing outside <> */
+        if (!inside && !allowedKeys.includes(e.key)) {
+            e.preventDefault();
+            return;
+        }
+
+        /* ❌ Prevent deleting < or > */
+        ranges.forEach(r => {
+            if ((selStart === r.start && e.key === "Backspace") ||
+                (selStart === r.end && e.key === "Delete")) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Block paste & cut
+    //textarea.addEventListener("paste", e => e.preventDefault());
+    //textarea.addEventListener("cut", e => e.preventDefault());
+</script>

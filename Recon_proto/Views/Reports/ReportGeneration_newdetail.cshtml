@@ -347,7 +347,7 @@
 										Report&nbsp;
 										<span style="font-size: 12px;color: red;font-weight: bold;">*</span>
 									</label>
-									<select id="cmbreporttype" class="form-select form-control"></select>
+									<select id="cmb_report_code" class="form-select form-control"></select>
 								</div>
 
 								<div class="col-md-2" style="width:23%">
@@ -370,14 +370,19 @@
 									<img id="img_xlsx" onclick="generateXlsxdynamic()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/xlsx.png" title="Excel Report">&nbsp;&nbsp;&nbsp;&nbsp;
 								</div>
 
-								<div class="col-md-3" style="margin-left:-59px;">
+								<div class="col-md-2" style="margin-left:-59px;">
 									<label for="organization" class="form-label">Single Result&nbsp;</label><br>
 									<img id="img_csv" onclick="generateReport()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/csv.png" title="CSV Report">&nbsp;&nbsp;&nbsp;&nbsp;
 									<img id="img_preview" onclick="preview()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
 									<img id="img_view" onclick="viewQuerySP()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/viewicons.png" title="View Query/SP">&nbsp;&nbsp;&nbsp;&nbsp;
-									<a href="../Reports/ReportGeneration_newlist">
-										<img style="cursor:pointer;" src="~/Content/images/toplist.png" title="Back">
-									</a>&nbsp;&nbsp;&nbsp;&nbsp;
+									
+								</div>
+								<div class="col-sm-1" style="margin-top:20px;">
+									<center>
+										<a href="../Reports/ReportGeneration_newlist">
+											<img style="cursor:pointer;" src="~/Content/images/toplist.png" title="Back">
+										</a>&nbsp;&nbsp;&nbsp;&nbsp;
+									</center>
 								</div>
 							</div>
 
@@ -496,7 +501,7 @@
 	var gridchange = "N";
 	var ReporType = "";
 	$(document).ready(function () {
-		var report_code = $("#cmbreporttype").val();
+		var report_code = $("#cmb_report_code").val();
 		loadResultsetDropdown(report_code);
 		screen_code = rolevalidatescreen('rpt_generation_w');
 		const urlParams = new URLSearchParams(window.location.search);
@@ -515,7 +520,7 @@
 			kendodate_format();
 			//getreconlist();
 			detailfetch();
-			$("#cmbreporttype").prop("disabled", false);
+			$("#cmb_report_code").prop("disabled", false);
 			$("#framevalue").hide();
 			$("#gotoPage").val(1);
 			$("#comboBox").kendoComboBox({
@@ -601,13 +606,13 @@
 				data: JSON.stringify({}),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
-					$("#cmbreporttype").empty();
-					$("#cmbreporttype").append($('<option>', {
+					$("#cmb_report_code").empty();
+					$("#cmb_report_code").append($('<option>', {
 						value: "",
 						text: "  Select  "
 					}));
 					$.each(response, function (index, item) {
-						$("#cmbreporttype").append($('<option>', {
+						$("#cmb_report_code").append($('<option>', {
 							value: item.report_code,
 							text: item.report_desc
 						}));
@@ -629,7 +634,9 @@
 					var getselectedTemplate = getlocalStorage("selectedTemplate");
 					if(getselectedTemplate.report_exec_type !='M')
 					{
-						$("#resultsetpart").hide();
+						$("#resultsetname").prop("disabled", true);
+					}else {
+						$("#resultsetname").prop("disabled", false);
 					}
 					var jsondata = {};
 					jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
@@ -659,9 +666,9 @@
 								$("#file_name").val(res.Table[0].file_name);
 								$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
 								$("#rt_name").val(res.Table[0].reporttemplate_name);
-								$("#cmbreporttype").val(res.Table[0].report_code);
+								$("#cmb_report_code").val(res.Table[0].report_code);
 								$("#reconname").val(res.Table[0].recon_code);
-								$("#cmbreporttype").prop("disabled", true);
+								$("#cmb_report_code").prop("disabled", true);
 								$("#reconname").prop("disabled", true);
 								gridcopy = res.Table1;
 								res.Table1.forEach(function (item, index) {
@@ -672,7 +679,7 @@
 									}
 								});
 								grid_tempfilter(gridcopy);
-								$("#cmbreporttype").val(res.Table[0].report_code);
+								$("#cmb_report_code").val(res.Table[0].report_code);
 								loadResultsetDropdown(res.Table[0].report_code);
 							}
 							else {
@@ -689,7 +696,7 @@
 	}
 	function combo_editor_resultsetdet(container, cmbid, datafield, code_datafield, grid_id) {
 		var arr1 = [];
-		var report_code = $("#cmbreporttype").val();
+		var report_code = $("#cmb_report_code").val();
 		$.ajax({
 			type: "POST",
 			url: '../Reports/reporttemplateResultset',
@@ -1157,13 +1164,13 @@
 			// hariharan changes 28-08-25
 			if($("#resultsetname").val() == "")
 			{
-					data.in_report_code = $("#cmbreporttype").val();
+					data.in_report_code = $("#cmb_report_code").val();
 			}
 			else
 			{
 					data.in_report_code = $("#resultsetname").val();
 			}
-			//data.in_report_code = $("#resultsetname").val();//$("#cmbreporttype").val();
+			//data.in_report_code = $("#resultsetname").val();//$("#cmb_report_code").val();
 			// hariharan changes 28-08-25 ends
 			data.in_recon_code = $("#recon_code").val();//$("#reconname").val()
 			data.in_action = '';
@@ -1257,25 +1264,27 @@
 					if(getType.length > 0 && selected_template.report_exec_type == 'M'){
 						report_code =  getType[0].report_code;
 						mainreport_exec_type_code = selected_template.report_exec_type;
-						template_code = '';
+						// template_code = '';
 					}
 				}
 				var str = $("#rt_name").val();
 				var concatName = str.replace(/[^\w\s]|_/gi, '').replace(/\s+/g, '');
 				var archival_code = $("#archivecode").val();
+				var reporttemplateresultset_code = $('#resultsetname').val();
 				var data = {
 					"in_archival_code":archival_code ? archival_code : '',
 					"in_reporttemplate_code": template_code ? template_code : '',
 					"in_report_code": selected_template.report_exec_type == 'M' ? report_code :  selected_template.report_code,
 					"in_recon_code": selected_template.recon_code,
-					"in_report_param": $("#cmbreporttype").find(":selected").text(),
+					"in_report_param": $("#cmb_report_code").find(":selected").text(),
 					"in_report_condition": condition,
 					"in_outputfile_flag": true,
 					"in_outputfile_type": 'csv',
 					"in_ip_addr": "",
 					"in_user_code": sessionStorage.getItem("usrname"),
 					"file_name": $("#file_name").val(),
-					"in_report_name": concatName
+					"in_report_name": concatName,
+					"in_reporttemplateresultset_code": reporttemplateresultset_code ? reporttemplateresultset_code : ''
 				};
 				console.log(JSON.stringify(data));
 				if (data.in_report_param && data.in_report_condition) {
@@ -1305,26 +1314,26 @@
 			}
 
 			function preview() {
-
 					var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 					var template_code = getlocalStorage("ls_pageList");
 					var archival_code = $("#archivecode").val();
 					var grid = $('#grid_tempfilter').data('kendoGrid');
 					var exec_type_code = grid._data[0].exec_type_code;
-					var report_code = exec_type_code == 'M' ? grid._data[0].report_code : $("#cmbreporttype").val();
+					var report_code = exec_type_code == 'M' ? '' : $("#cmb_report_code").val();
 					var recon_code = exec_type_code == 'M' ? $("#recon_code").val() : $("#reconname").val();
 						// if(exec_type_code=='M'){
 						// 	condition = JSON.stringify(buildReportConditionFromGridForMultiresultSet("#grid_tempfilter", 'Report'));
 						// }
 					var data = {
 						"in_archival_code": archival_code ? archival_code : '',
-						"in_reporttemplate_code": exec_type_code == 'M' ? '' : template_code,
+						"in_reporttemplate_code": exec_type_code == 'M' ? template_code : template_code,
+						"in_reporttemplateresultset_code": exec_type_code == 'M' ? $("#resultsetname").val() : '',
 						"in_recon_code": recon_code,
 						"in_report_code": report_code,
 						"in_report_condition": condition,
 						"in_action_by": sessionStorage.getItem("usrname")
 					};
-					if (condition && recon_code && report_code) {
+					if (condition && recon_code) {
 						$.ajax({
 							type: "POST",
 							url: '../Reports/Report_Runpagereport',
@@ -1393,13 +1402,13 @@
 						});
 
 					}
-					else if ($("#cmbreporttype").val() == "") {
-						$.alert({
-							title: 'Impact',
-							content: "Report Name is Missing",
-							type: 'blue',
-						});
-					}
+					// else if ($("#cmb_report_code").val() == "") {
+					// 	$.alert({
+					// 		title: 'Impact',
+					// 		content: "Report Name is Missing",
+					// 		type: 'blue',
+					// 	});
+					// }
 
 
 		}
@@ -1516,8 +1525,9 @@
 					data.in_tot_records = result;
 					data.in_condition = condition;
 					data.in_reporttemplate_code = template_code;
+					data.in_reporttemplateresultset_code = $("#resultsetname").val();
 					data.in_recon_code = selected_template.recon_code;
-					data.in_report_code = exec_type_code != 'M' ? selected_template.report_code : $('#resultsetname').val();
+					data.in_report_code = exec_type_code != 'M' ? selected_template.report_code : '';
 					data.in_action_by = sessionStorage.getItem("usrname");
 					$.ajax({
 						type: "POST",
@@ -1820,7 +1830,7 @@
 					"in_reporttemplate_code": template_code ? template_code : '',
 					"in_report_code": selected_template.report_code,
 					"in_recon_code": selected_template.recon_code,
-					"in_report_param": $("#cmbreporttype").find(":selected").text(),
+					"in_report_param": $("#cmb_report_code").find(":selected").text(),
 					"in_report_condition": condition,
 					"in_outputfile_flag": true,
 					"in_outputfile_type": 'xlsx',
@@ -1828,7 +1838,8 @@
 					"in_user_code": txtusername,
 					"file_name": $("#file_name").val(),
 					"in_report_name": concatName,
-					"in_action_by": sessionStorage.getItem("usrname")
+					"in_action_by": sessionStorage.getItem("usrname"),
+					"in_reporttemplateresultset_code": ""
 				};
 				dataArray.push(dataset1);
 				var dataset = {
@@ -2026,14 +2037,14 @@
 					$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
 				}
 				else {
-					img_csv.classList.remove("img_disable");
-					img_csv.classList.add("img_enable");
+					// img_csv.classList.remove("img_disable");
+					// img_csv.classList.add("img_enable");
 
-					img_preview.classList.remove("img_disable");
-					img_preview.classList.add("img_enable");
+					// img_preview.classList.remove("img_disable");
+					// img_preview.classList.add("img_enable");
 
-					img_view.classList.remove("img_disable");
-					img_view.classList.add("img_enable");
+					// img_view.classList.remove("img_disable");
+					// img_view.classList.add("img_enable");
 
 					// img_xlsx.classList.remove("img_disable");
 					// img_xlsx.classList.add("img_enable");
@@ -2145,8 +2156,12 @@
 
 			if (typeof screen_code !== "undefined" && screen_code[0]?.download === "Y") {
 				enable(img_xlsx);
+				enable(img_csv);
+				enable(img_preview);
 			} else {
 				disable(img_xlsx);
+				disable(img_csv);
+				disable(img_preview);
 			}
 
 
@@ -2160,11 +2175,11 @@
 			if (typeof ReporType !== "undefined" && ReporType === "Standard") {
 				$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
 			}
-			if (count > 1) {
-				disable(img_csv);
-				disable(img_preview);
-				disable(img_view);
-			}
+			// if (count > 1) {
+			// 	disable(img_csv);
+			// 	disable(img_preview);
+			// 	disable(img_view);
+			// }
 			if (isQueryLike) {
 				enable(img_view);
 				disable(img_csv);
@@ -2320,19 +2335,18 @@
 		if (!grid || grid._data.length==0) {
 			return " and 1=1";
 		} else if(grid._data[0].exec_type_code == "M"){
-			// Get selected dropdown value
+			
 			var selectedCode = $('#resultsetname').val();
-			if (selectedCode) {
-				grid.dataSource.filter({
-					field: "report_code",
-					operator: "eq",
-					value: selectedCode
-				});
-			} else {
-				grid.dataSource.filter([]); // Clear filters
-				grid.dataSource.data([]);   // Clear data (optional)
-			}
-			  // 👈 This is the correct way
+			// if (selectedCode) {
+			// 	grid.dataSource.filter({
+			// 		field: "report_code",
+			// 		operator: "eq",
+			// 		value: selectedCode
+			// 	});
+			// } else {
+			// 	grid.dataSource.filter([]); 
+			// 	grid.dataSource.data([]); 
+			// }
 		}
 		var rows =  grid.dataSource.view();
 		var rpt_cond = "";
@@ -2441,7 +2455,7 @@
 						reportTempResultset = _data.Table;
 						//$dropdown.append('<option value="">-- Select Resultset --</option>');
 						_data.Table.forEach(function (item) {
-							let code = item.report_code;
+						let code = item.reporttemplateresultset_code;
 							desc = item.resultset_dropname;
 							$dropdown.append(`<option value="${code}">${desc}</option>`);
 						});
@@ -2470,7 +2484,11 @@
 								$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
 							}
 						}
+					img_csv.classList.remove("img_disable");
+					img_csv.classList.add("img_enable");
 
+					img_preview.classList.remove("img_disable");
+					img_preview.classList.add("img_enable");
 					} else {
 						$dropdown.append('<option value="">No resultsets available</option>');
 						img_csv.classList.remove("img_disable");
