@@ -1612,6 +1612,7 @@ namespace Recon_proto.Controllers
         {
             public string? in_archival_code { get; set; }
             public string? in_reporttemplate_code { get; set; }
+            public string? in_reporttemplateresultset_code { get; set; }
             public string? in_report_condition { get; set; }
             public string? in_recon_code { get; set; }
             public string? in_report_code { get; set; }
@@ -1783,6 +1784,7 @@ namespace Recon_proto.Controllers
             public string in_recon_code { get; set; }
             public string? in_report_code { get; set; }
             public String? in_action_by { get; set; }
+            public String? in_reporttemplateresultset_code { get; set; }
 
         }
 
@@ -2289,6 +2291,7 @@ namespace Recon_proto.Controllers
             public string? in_user_code { get; set; }
             public string? file_name { get; set; }
             public string? in_report_name { get; set; }
+            public string? in_reporttemplateresultset_code { get; set; }
 
         }
 
@@ -2623,6 +2626,7 @@ namespace Recon_proto.Controllers
             public string? in_user_code { get; set; }
             public string? file_name { get; set; }
             public string? in_report_name { get; set; }
+            public String? in_reporttemplateresultset_code { get; set; }
 
         }
 
