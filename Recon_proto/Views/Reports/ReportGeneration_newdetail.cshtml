@@ -640,13 +640,19 @@
 					}
 					var jsondata = {};
 					jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
+					jsondata.in_reporttemplateresultset_code = null
 					jsondata.in_recon_code = getselectedTemplate.recon_code;
 					jsondata.in_report_code = getselectedTemplate.report_code;
 					jsondata.in_action_by = sessionStorage.getItem("usrname");
 					ReporType = getselectedTemplate.system_flag_desc;
 					//Pandiaraj Report Permissions 03-09-2025
 					reconCode = getselectedTemplate.recon_code;
-					templateCode = getselectedTemplate.reporttemplate_code;
+					if(getselectedTemplate.reporttemplate_code == ""){
+						templateCode = getselectedTemplate.report_code  ;
+					}else {
+						templateCode = getselectedTemplate.reporttemplate_code;
+					}
+					
 					report_permission = reportpermissionscreen(reconCode, templateCode);
 					//Pandiaraj Report Permissions 03-09-2025
 					//detail fetch
@@ -654,6 +660,7 @@
 						type: "POST",
 						url: '../Reports/reporttemplatefetch',
 						dataType: 'json',
+						async: false,
 						data: JSON.stringify(jsondata),
 						contentType: 'application/json; charset=utf-8',
 						success: function (response) {
@@ -665,10 +672,8 @@
 								$("#txtstatus").val("Active");
 								$("#file_name").val(res.Table[0].file_name);
 								$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
-								$("#rt_name").val(res.Table[0].reporttemplate_name);
-								$("#cmb_report_code").val(res.Table[0].report_code);
-								$("#reconname").val(res.Table[0].recon_code);
-								$("#cmb_report_code").prop("disabled", true);
+								$("#rt_name").val(res.Table[0].reporttemplate_name);								
+								$("#reconname").val(res.Table[0].recon_code);								
 								$("#reconname").prop("disabled", true);
 								gridcopy = res.Table1;
 								res.Table1.forEach(function (item, index) {
@@ -678,9 +683,11 @@
 										item.isLastRow = true;
 									}
 								});
-								grid_tempfilter(gridcopy);
+								grid_tempfilter(gridcopy);								
+								//jQuery('#resultsetname').trigger("change");
 								$("#cmb_report_code").val(res.Table[0].report_code);
 								loadResultsetDropdown(res.Table[0].report_code);
+								addcss();
 							}
 							else {
 								grid_tempfilter([])
@@ -1161,18 +1168,11 @@
 			var arr1 = [];
 			var data = {};
 			data.in_reportparam_gid = 0;
-			// hariharan changes 28-08-25
-			if($("#resultsetname").val() == "")
-			{
-					data.in_report_code = $("#cmb_report_code").val();
-			}
-			else
-			{
-					data.in_report_code = $("#resultsetname").val();
-			}
+			// hariharan changes 28-08-25			
+			data.in_report_code = $("#cmb_report_code").val();			
 			//data.in_report_code = $("#resultsetname").val();//$("#cmb_report_code").val();
 			// hariharan changes 28-08-25 ends
-			data.in_recon_code = $("#recon_code").val();//$("#reconname").val()
+			data.in_recon_code = $("#reconname").val();
 			data.in_action = '';
 			$.ajax({
 				type: "POST",
@@ -2444,7 +2444,8 @@
 				type: "POST",
 				url: '../Reports/reporttemplateResultset',
 				dataType: "json",
-					data: JSON.stringify({ report_code: report_code, action: "Get",reporttemplate_code : selectedTemplate_code }),
+				async: false,
+				data: JSON.stringify({ report_code: report_code, action: "Get",reporttemplate_code : selectedTemplate_code }),
 				contentType: 'application/json; charset=utf-8',
 				success: function (response) {
 					const $dropdown = $('#resultsetname');
@@ -2483,28 +2484,7 @@
 							if ($('#reportexec_type_code').val() != 'R') {
 								$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
 							}
-						}
-					img_csv.classList.remove("img_disable");
-					img_csv.classList.add("img_enable");
-
-					img_preview.classList.remove("img_disable");
-					img_preview.classList.add("img_enable");
-					} else {
-						$dropdown.append('<option value="">No resultsets available</option>');
-						img_csv.classList.remove("img_disable");
-						img_csv.classList.add("img_enable");
-
-						img_preview.classList.remove("img_disable");
-						img_preview.classList.add("img_enable");
-
-						img_view.classList.remove("img_enable");
-						img_view.classList.add("img_disable");
-
-						img_xlsx.classList.remove("img_disable");
-						img_xlsx.classList.add("img_enable");
-
-						img_checkQuery.classList.remove("img_disable");
-						img_checkQuery.classList.add("img_enable");
+						}					
 					}
 				},
 				error: function (xhr, status, error) {
@@ -2527,6 +2507,8 @@
 			if (getType.length > 0) {
 				$('#reportexec_type').val(getType[0].exec_type);
 				$('#reportexec_type_code').val(getType[0].exec_type_code);
+				$("#cmb_report_code").val(getType[0].report_code);
+			
 				var grid = $('#grid_tempfilter').data('kendoGrid');
 				if(grid == undefined)
 				{

@@ -133,10 +133,6 @@
 			color: white;
 		}
 
-		/* .k-link:link, .k-link:visited, .k-nav-current.k-state-hover .k-link {
-							color: white !important;
-						} */
-
 		.control-label.required:after {
 			content: "*";
 			color: red;
@@ -334,7 +330,7 @@
 		}
 
 		#grid2 .k-grid-table {
-			min-width: 1200px; /* adjust based on columns */
+			min-width: 1200px; 
 		}
 
 		.selectedRule {
@@ -361,15 +357,15 @@
 		.k-list-item .k-checkbox {
 			opacity: 1 !important;
 			position: static !important;
-			appearance: checkbox !important; /* Force browser default if theme hides it */
+			appearance: checkbox !important; 
 			-webkit-appearance: checkbox !important;
 			margin-right: 8px;
 			display: inline-block !important;
 		}
 
 		.k-list .k-item.k-state-focused {
-			background-color: #fff !important; /* Example color (Telerik's default red) */
-			color: #f00 !important; /* Example text color */
+			background-color: #fff !important; 
+			color: #f00 !important; 
 		}
 	</style>
 </head>
@@ -403,8 +399,8 @@
 								</div>
 
 								<div class="col-sm-2" style="margin-top:30px">
-									<img id="img_checkQuery" onclick="checkquery()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
-									<img id="img_preview" onclick="preview()" style="cursor:pointer;height: 20px;width: 20px;" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
+									<img id="img_checkQuery" onclick="checkquery()" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" src="~/Assets/images/check_query.png"  class="img_disable" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
+									<img id="img_preview" onclick="preview()" style="cursor:pointer;height: 20px;width: 20px;" class="img_disable" src="~/Assets/images/preview.png" title="Preview Report">&nbsp;&nbsp;&nbsp;&nbsp;
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -421,7 +417,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="accordion_footer">
+										<div class="accordion_footer" style="display: none">
 											<div class="row">
 												<div class="col-sm-10">
 													@Html.TextArea("Message", new { rows = 1, columns = 40, id = "framevalue", style = "width:90%;background-color:rgb(135,46,123);border:none;color:white;font-size:smaller;pointer-events: none;" })
@@ -544,6 +540,7 @@
 	var ReporType = "";
 	$(document).ready(function () {
 		screen_code = rolevalidatescreen('reconexcp');
+		//sessionStorage.setItem("reconfield_update_condt", "");
 		$("#navhead").text("Recon Field Update");
 		kendodate_format();
 		detailfetch();
@@ -615,6 +612,7 @@
 						$("#reconname").val(sessionStorage.getItem("reconcode"));						
 						jQuery('#reconname').trigger("change");
 						reconfieldinfo();
+						addcss();
 					}
 				} else {
 					$.alert({
@@ -932,21 +930,17 @@
 		var report_code = $("#resultsetname").val();
 		var report_name =  $("#resultsetname option:selected").text().split(" - ")[0].trim();
 		var filter_val = "";
-		// 🔍 Filter existing rows with the same report_code
 		var existingRows = dataSource.data().filter(function (item) {
 			return item.report_code === report_code;
 		});
-		// 🆕 Determine new sequence number based on report_code group
 		var lastSeqNo = grid.dataSource._data.length;
 		var newSeqNo = parseInt(lastSeqNo)  + 1;
-		// ✅ Set join_condition of the last matching row to "AND" if empty
 		if (existingRows.length > 0) {
 			var lastRow = existingRows[existingRows.length - 1];
 				if (!lastRow.join_condition || lastRow.join_condition === "") {
 					lastRow.set("join_condition", "AND");
 				}
 		}
-		// ➕ Add new row
 		dataSource.add({
 			report_code: report_code,
 			report_name: report_name,
@@ -1156,6 +1150,8 @@
 			return;
 		}
 		var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
+		sessionStorage.setItem("reconfield_update_condt", condition);
+		var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Report');
 		var template_code = getlocalStorage("ls_pageList");
 		var archival_code = $("#archivecode").val();
 		var grid = $('#grid_tempfilter').data('kendoGrid');
@@ -1332,15 +1328,20 @@
 					} else if (grid._data[i].filter_criteria == "QCD_DOESNOT_CONTAINT") {
 						value = " not like '%" + grid._data[i].filter_value + "%'";
 					}
+
 					rpt_cond += joins1 + " " + open_braces + grid._data[i].report_field + value + " " + close_braces + joins;
 				}
 			}
 			var condition;
-			if (rpt_cond.endsWith('AND ')) {
-				condition = rpt_cond.slice(0, -4);
-			} else {
-				condition = rpt_cond;
-			}
+			if (sessionStorage.getItem("reconfield_update_condt") == null) {
+				if (rpt_cond.endsWith('AND ')) {
+					condition = rpt_cond.slice(0, -4);
+				} else {
+					condition = rpt_cond;
+				}
+			}else{
+				condition = sessionStorage.getItem("reconfield_update_condt");
+			}			
 
 			$("#Dynamic_grid").show();
 			$("#framevalue").show();
@@ -1665,12 +1666,12 @@
 				if( result[0].out_result == '1' ) {
 					setlocalStorage("ls_pageList", dataItem);
 					if (getlocalStorage("ls_pageList") != undefined || getlocalStorage("ls_pageList") != "") {				
-						document.location = '../KoSequence/Exceptionform';
+						document.location = '../KoSequence/Exceptionform1';
 					}
 				} else {
 					$.alert({
 						title: 'Recon',
-						content:'Failed',
+						content: result[0].out_msg,
 						type: 'red',
 					});
 				}
@@ -1709,51 +1710,49 @@
 			var filteredTemplates = reportTempResultset.filter(item => item.exec_type_code === 'R');
 						resultsetcount=filteredTemplates.length;
 		}
-		if (resultsetcount > 0) {
-			checkMultipleQueries();
-		} else {
-			var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Query');
-			var txtusername = sessionStorage.getItem("usrname");
-			var selected_template = getlocalStorage("selectedTemplate");
-			var str = $("#rt_name").val();
-			var dataset1 = {
-				"in_recon_code": $("#reconname").val(),
-				"in_report_code": $("#report_code").val(),
-				"in_report_condition": condition,
-				"in_user_code": txtusername,
-			};
-			$.ajax({
-				type: "POST",
-				url: '../Reports/checkquery',
-				dataType: 'json',
-				async: true,
-				data: JSON.stringify(dataset1),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					var res = JSON.parse(response);
-					if (res.length > 0) {
-						if(res[0]["out_result"] == '1' || res[0]["out_result"] == 1){
-							$.alert({
-								title: 'Recon',
-								content: res[0]["out_msg"],
-								type: 'green',
-							});
-							gridchange = "N";
-							addcss();
-						} else {
-							$.alert({
-								title: 'Recon',
-								content: res[0]["out_msg"],
-								type: 'red',
-							});
-						}
+		var condition = buildReportConditionFromGrid("#grid_tempfilter", 'Query');
+		sessionStorage.setItem("reconfield_update_condt", condition);
+		var txtusername = sessionStorage.getItem("usrname");
+		var selected_template = getlocalStorage("selectedTemplate");
+		var str = $("#rt_name").val();
+		var dataset1 = {
+			"in_recon_code": $("#reconname").val(),
+			"in_report_code": $("#report_code").val(),
+			"in_report_condition": condition,
+			"in_user_code": txtusername,
+		};
+		$.ajax({
+			type: "POST",
+			url: '../Reports/checkquery',
+			dataType: 'json',
+			async: true,
+			data: JSON.stringify(dataset1),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				if (res.length > 0) {
+					if(res[0]["out_result"] == '1' || res[0]["out_result"] == 1){
+						$.alert({
+							title: 'Recon',
+							content: res[0]["out_msg"],
+							type: 'green',
+						});
+						gridchange = "N";
+						addcss();
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: res[0]["out_msg"],
+							type: 'red',
+						});
 					}
-				},
-				error: function (er) {
-					console.log(er);
 				}
-			});
-		}
+			},
+			error: function (er) {
+					console.log(er);
+			}
+		});
+		
 	}
 
 	function addcss() {
@@ -1765,7 +1764,8 @@
 		const img_csv = document.getElementById("img_csv");
 		const img_preview = document.getElementById("img_preview");
 		const img_view = document.getElementById("img_view");
-
+		const enable = el => { el.classList.remove("img_disable"); el.classList.add("img_enable"); };
+		const disable = el => { el.classList.remove("img_enable"); el.classList.add("img_disable"); };
 		const execTypeCodeVal = $('#reportexec_type_code').val();
 		const selectedTextcss = $('#resultsetname option:selected').text().trim();
 		const execType = selectedTextcss.split(" - ").pop();
@@ -1780,17 +1780,30 @@
 		}
 		if (isQueryLike) {
 			enable(img_view);
-			disable(img_csv);
+			disable(img_csv);			
+		}
+		if (gridchange === "Y") {
+			enable(img_checkQuery);
 			disable(img_preview);
+			$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
+			if (isQueryLike) {
+				$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
+			}
+			return;
+		}
+		if (gridchange === "N") {
+			enable(img_preview);
+			$('#addRowBtn').css('pointer-events', 'auto').css('opacity', '1');
+			if (isQueryLike) {
+				$('#addRowBtn').css('pointer-events', 'none').css('opacity', '0.5');
+			}
+			return;
 		}
 	}
 
 	function buildReportConditionFromGrid(gridId, from) {
 		var grid = $(gridId).data("kendoGrid");
-	   
-			// Get selected dropdown value
-			var selectedCode = $("#report_code").val();
-					  
+		var selectedCode = $("#report_code").val();	  
 		
 		var rows =  grid.dataSource.view();
 		var rpt_cond = "";
@@ -1804,13 +1817,11 @@
 			var isNumeric = row.reportparam_value?.toUpperCase().includes("NUMERIC");
 			var fieldExpr = row.report_field;
 
-			// Cast the field appropriately
 			if (row.filter_criteria === "QCD_IN" || row.filter_criteria === "QCD_NOTIN") {
 				fieldExpr = isInteger
 					? `CAST(${row.report_field} AS SIGNED)`
 					: `CAST(${row.report_field} AS NCHAR)`;
 			}
-			// Build value based on criteria
 			var value = "";
 			var rawValue = row.filter_value || "";
 			switch (row.filter_criteria) {
@@ -1867,18 +1878,17 @@
 							: ` NOT IN (${values})`;
 				break;
 			}
-			// Parentheses
 			let open_braces = row.open_parentheses_flag === 'Y' ? " ( " : "";
 			let close_braces = row.close_parentheses_flag === 'Y' ? " ) " : "";
-
-			// Joins
 			let joins1 = (i === 0) ? " AND " : "";
 			let joins = (i === grid._data.length - 1) ? " " : (row.join_condition || " AND ") + " ";
-
-			// Append to report condition
 			rpt_cond += `${joins1} ${open_braces}${fieldExpr}${value} ${close_braces}${joins}`;
 		}
-		return rpt_cond.endsWith("AND ") ? rpt_cond.slice(0, -4) : rpt_cond;
+		if (sessionStorage.getItem("reconfield_update_condt") == null || gridchange === "Y") {
+			return rpt_cond.endsWith("AND ") ? rpt_cond.slice(0, -4) : rpt_cond;
+		}else{
+			return sessionStorage.getItem("reconfield_update_condt");
+		}
 	}
 
 	function savereconexp() {
@@ -2001,51 +2011,17 @@
 			});
 		});
 	}
-
-	// $('#recon_exception').on('hidden.bs.modal', function () {
-	// 	Runprogress();
-	// 	var grid = $("#grid_rowupdate").data("kendoGrid");
-	// 	var jsondata = {};
-	// 	jsondata.in_recon_code = $("#reconname").val();
-	// 	jsondata.in_tran_gid = parseInt(grid.dataSource._data[0].tran_gid);
-	// 	jsondata.in_tranbrkp_gid = parseInt(grid.dataSource._data[0].tranbrkp_gid);
-	// 	jsondata.in_user_code = sessionStorage.getItem("usrname");
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: '../KoSequence/setrecordunlock',
-	// 		dataType: 'json',
-	// 		data: JSON.stringify(jsondata),
-	// 		contentType: 'application/json; charset=utf-8',
-	// 		success: function (response) {
-	// 		}
-	// 	});
-	// });
-	// function closedata() {
-	// 	Runprogress();
-	// 	var grid = $("#grid_rowupdate").data("kendoGrid");
-	// 	var jsondata = {};
-	// 	jsondata.in_recon_code = $("#reconname").val();
-	// 	jsondata.in_tran_gid = parseInt(grid.dataSource._data[0].tran_gid);
-	// 	jsondata.in_tranbrkp_gid = parseInt(grid.dataSource._data[0].tranbrkp_gid);
-	// 	jsondata.in_user_code = sessionStorage.getItem("usrname");
-	// 	$.ajax({
-	// 		type: "POST",
-	// 		url: '../KoSequence/setrecordunlock',
-	// 		dataType: 'json',
-	// 		data: JSON.stringify(jsondata),
-	// 		contentType: 'application/json; charset=utf-8',
-	// 		success: function (response) {
-	// 		}
-	// 	});
-	// }
+	
 	function gridlist() {
 		if ($("#reconname").val() != '') {
 			sessionStorage.setItem("reconcode", $("#reconname").val());
 			sessionStorage.setItem("reconname", $("#reconname :selected").text());
 			setcon();
 			reconfieldinfo();
+			addcss();
 		}
 	}
+
 	function reconfieldinfo() {
 		var jsondata = {};
 		jsondata.in_recon_code = $("#reconname").val();
@@ -2066,8 +2042,10 @@
 				$('#position_tranbrkp_gid').val(res[0].position_tranbrkp_gid);
 			}
 		});
+		grid_tempfilter([]);
 		var jsondata = {};
 		jsondata.in_reporttemplate_code = $("#reporttemplate_code").val();
+		jsondata.in_reporttemplateresultset_code = $('#reporttemplateresultset_code').val();
 		jsondata.in_recon_code = $("#reconname").val();
 		jsondata.in_report_code = "";
 		jsondata.in_action_by = sessionStorage.getItem("usrname");
@@ -2086,25 +2064,25 @@
 				if (response != " " && response != null && response != "{}" && response != "[]") {
 					var res = JSON.parse(response);
 					if(res.Table.length > 0) {
-					 $("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
-					 $("#txtmode").val(getlocalStorage('btn_clk_val'));
-					 $("#txtstatus").val("Active");
-					 $("#file_name").val(res.Table[0].file_name);
-					 $("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
-					 $("#rt_name").val(res.Table[0].reporttemplate_name);
-					 $("#cmbreporttype").val(res.Table[0].report_code);
-					//$("#reconname").val(res.Table[0].recon_code);
-					 gridcopy = res.Table1;
-					 res.Table1.forEach(function (item, index) {
-						if (index !== res.Table1.length - 1) {
-							item.isLastRow = false;
-						} else {
-							item.isLastRow = true;
-						}
-					 });
-					 grid_tempfilter(gridcopy);
-					 $("#cmbreporttype").val(res.Table[0].report_code);
-				 }
+						$("#reporttemplate_code").val(res.Table[0].reporttemplate_code);
+						$("#txtmode").val(getlocalStorage('btn_clk_val'));
+						$("#txtstatus").val("Active");
+						$("#file_name").val(res.Table[0].file_name);
+						$("#reporttemplate_gid").val(res.Table[0].reporttemplate_gid);
+						$("#rt_name").val(res.Table[0].reporttemplate_name);
+						$("#cmbreporttype").val(res.Table[0].report_code);
+						//$("#reconname").val(res.Table[0].recon_code);
+						 gridcopy = res.Table1;
+						 res.Table1.forEach(function (item, index) {
+							if (index !== res.Table1.length - 1) {
+								item.isLastRow = false;
+							} else {
+								item.isLastRow = true;
+							}
+						 });
+						grid_tempfilter(gridcopy);
+						$("#cmbreporttype").val(res.Table[0].report_code);
+					}
 				}
 				else {
 					grid_tempfilter([])
@@ -2117,5 +2095,3 @@
 		});
 	}	
 </script>
-
-

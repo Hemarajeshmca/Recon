@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using static Recon_proto.Controllers.UtilityController;
+using System;
+using System.Data;
 using System.Data.SqlTypes;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
-using System.Text;
-using System.Data;
 using System.Reflection.PortableExecutable;
-using System.Net;
-using static Recon_proto.Controllers.DatasettoReconController;
-using System.Net.Http;
+using System.Text;
 using static Recon_proto.Controllers.DataSetController;
+using static Recon_proto.Controllers.DatasettoReconController;
+using static Recon_proto.Controllers.UtilityController;
 
 namespace Recon_proto.Controllers
 {
@@ -669,7 +670,54 @@ namespace Recon_proto.Controllers
 		}
 
 
-		#endregion
-	}
+        #endregion
+
+        #region NewSchedulerForOthers
+        [HttpPost]
+        public async Task<string> NewSchedulerForOthers([FromBody] schedulermodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["connectorUrl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = $"Pipeline/NewSchedulerForOthers" + $"?pipeline_code={context.pipeline_code}" +
+                            $"&initiated_by={context.initiated_by}" + $"&dataset_code={context.dataset_code}";
+                    client.BaseAddress = new Uri(urlstring);
+                    //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.initiated_by);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    var content = new StringContent("{}", Encoding.UTF8, "text/plain");                   
+                    var response = await client.PostAsync(Urlcon, content);
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();                 
+                    return post_data;
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "NewSchedulerForOthers");
+                return ex.Message;
+            }
+        }
+
+        public class schedulermodel
+        {
+            public string? pipeline_code { get; set; }
+            public string? initiated_by { get; set; }
+            public string? dataset_code { get; set; }
+            
+        }
+        #endregion
+    }
 
 }

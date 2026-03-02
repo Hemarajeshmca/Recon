@@ -355,7 +355,8 @@ namespace Recon_proto.Controllers
                         objcat.pipeline_name = result.Rows[i]["pipeline_name"].ToString();
                         objcat.pipeline_status = result.Rows[i]["pipeline_status"].ToString();
                         objcat.file_extenstion = result.Rows[i]["file_extenstion"].ToString();
-						objcat_lst.Add(objcat);
+                        objcat.source_db_type = result.Rows[i]["source_db_type"].ToString();
+                        objcat_lst.Add(objcat);
                     }
                     return Json(objcat_lst);
                 }
@@ -381,7 +382,8 @@ namespace Recon_proto.Controllers
 			public string pipeline_name { get; set; }
 			public string pipeline_status { get; set; }
             public string file_extenstion { get; set;}
-		}
+            public string source_db_type { get; set; }
+        }
         #endregion
 
         #region Datasetindex

@@ -291,7 +291,7 @@
 											</div>
 											<div class="col-sm-2" style="margin-top:29px">
 												<label class="form-label"></label>
-												<input type="button" onclick="start()" style="background: #175650;border-color: #175650;width:40%; color:#fff;" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
+												<input type="button" onclick="startconnector()" style="background: #175650;border-color: #175650;width:40%; color:#fff;" name="Start" class="btn btn-sm btn-success me-2" value="Start" />
 												<progress id="progressBar" value="0" max="100"></progress>
 											</div>
 										</div>
@@ -669,6 +669,7 @@
 			selected_dataset = grid.dataItem(checkedrows[i]);
 		}
 		if (selected_dataset) {
+			$("#cmbreconname").prop('disabled', true);
 			$("#Datasetlist").removeClass('nav-link active');
 			$("#Datasetlist").toggleClass('nav-link');
 			$("#navs-pills-DatasetProgress").toggleClass('tab-pane fade active in');
@@ -686,7 +687,6 @@
 				type: 'red',
 			});
 		}
-
 	}
 
 	function validatePrevdp() {
@@ -698,6 +698,7 @@
 		$("#Datasetlist").toggleClass('nav-link active');
 		$("#navs-pills-DatasetProgress").hide();
 		$("#navs-pills-Datasetlist").show();
+		$("#cmbreconname").prop('disabled', false);
 		$("#FileName").val("");
 		$("#File_Import").val("");
 		$("#Pipeline").val("");
@@ -723,7 +724,8 @@
 						$("#Pipeline").empty();
 						$("#Pipeline").append($('<option>', {
 							value: item.pipeline_code,
-							text: item.pipeline_name
+							text: item.pipeline_name,
+							code: item.source_db_type
 						}));
 					});
 				} else if (response.length > 1) {
@@ -736,7 +738,8 @@
 					$.each(response, function (index, item) {
 						$("#Pipeline").append($('<option>', {
 							value: item.pipeline_code,
-							text: item.pipeline_name
+							text: item.pipeline_name,
+							code: item.source_db_type
 						}));
 					});
 				} else {
@@ -746,7 +749,6 @@
 						text: "  Select  "
 					}));
 				}
-
 			}
 		});
 	}
@@ -777,12 +779,79 @@
 			});
 		}
 	}
-
-	function start() {
+	function startconnector() {
+		var pipeline_code1 = $("#Pipeline").val();
+		if( pipeline_code1 == '')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Pipeline not selected',
+				type: 'red',
+			});
+			return false;
+		}
+		var selectedOption = $("#Pipeline option:selected");
+		var code  = selectedOption.attr("code");
+		if(code == "Excel" || code == "CSV"){
+			start();
+		} else {			
+			var pipeline_code = $("#Pipeline").val();
+			var dataset_code = selected_dataset.dataset_code;
+			var initiated_by =  sessionStorage.getItem("usrname");
+			var jsondata = {};
+			jsondata.pipeline_code = pipeline_code;
+			jsondata.dataset_code = dataset_code;
+			jsondata.initiated_by = initiated_by;
+			$.ajax({
+				type: "POST",
+				url: '../Datasetfile/NewSchedulerForOthers',
+				dataType: 'json',				
+				data: JSON.stringify(jsondata),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					hideProgress();
+					if (!response) {
+						$.alert({
+							title: 'Recon',
+							content: 'Something went wrong',
+							type: 'red',
+						});
+					} 
+					else 
+					{
+						var res = JSON.parse(response);
+						if (res.result == 0) {
+							$.alert({
+								title: 'Recon',
+								content: res.message,
+								type: 'red',
+							});
+						} else {
+							$.alert({
+								title: 'Recon',
+								content: "Success",
+								type: 'green',
+							});
+						}
+				    }
+				}
+			});
+		}
+	}
+	function start() {		
 		var fileName = '';
 		var fileType = '';
 		var fileInput = '';
 		var pipeline_code = $("#Pipeline").val();
+		if( pipeline_code == '')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Pipeline not selected',
+				type: 'red',
+			});
+			return false;
+		}
 		var filepath = $("#File_Import").val();
 		fileInput = document.getElementById('File_Import');
 		var formData = new FormData();

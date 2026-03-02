@@ -9873,7 +9873,7 @@
 	}
 	function combo_editor_exp(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
-		if($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION") {
+		if($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP") {
 			var reconcode = $("#cmbrecon").val();
 			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
@@ -9895,28 +9895,29 @@
 					}
 				}
 			});
-			} else {
-					var datasetcode = $("#cmblookupdataset1").val();
-					var in_user_code = sessionStorage.getItem("usrname");
-					$.ajax({
-							type: "POST",
-							url: '../Recon/Datasetfieldlist',
-							dataType: 'json',
-							async: false,
-							data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
-							contentType: 'application/json; charset=utf-8',
-							success: function (response) {
-							if (response != null) {
+		} 
+		else {
+				var datasetcode = $("#cmblookupdataset1").val();
+				var in_user_code = sessionStorage.getItem("usrname");
+				$.ajax({
+					type: "POST",
+					url: '../Recon/Datasetfieldlist',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
 							var result = JSON.parse(response);
-								for (i = 0; result.DataSet.length > i; i++) {
-										var list1 = {};
-										list1.code = result.DataSet[i].dataset_table_field;
-										list1.desc = result.DataSet[i].field_name;
-										arr1.push(list1);
-									}
-				}
-			}
-		});
+							for (i = 0; result.DataSet.length > i; i++) {
+									var list1 = {};
+									list1.code = result.DataSet[i].dataset_table_field;
+									list1.desc = result.DataSet[i].field_name;
+									arr1.push(list1);
+							}
+						}
+					}
+				});
 		}
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
@@ -9946,7 +9947,7 @@
 	}
 	function saveexp() {
 		try {
-			if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION") {
+			if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP") {
 				var grid = $("#grid_expression").data("kendoGrid");
 				var model = grid.dataItem($(event.target).closest("tr"));
 				var in_preprocess_code = $("#txtpreprocesscode").val();
@@ -10007,12 +10008,14 @@
 		}
 	}
 	function myDeleteJsexp() {
-		var grid = $("#grid_expression").data("kendoGrid");
+		if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION") {
+			var grid = $("#grid_expression").data("kendoGrid");
+		} else {
+			var grid = $("#grid_expression1").data("kendoGrid");
+		}
 		var model = grid.dataItem($(event.target).closest("tr"));
-		var model = grid.dataItem($(event.target).closest("tr"));
-		var preprocessrecorder_gid = parseInt(model.preprocessrecorder_gid);
-		if (preprocessrecorder_gid == 0) {
-			grid.dataSource.remove(model);
+		var in_preprocessexp_gid = parseInt(model.preprocessexp_gid);
+		if (in_preprocessexp_gid == 0) {
 			grid.dataSource.remove(model);
 		} else {
 			$.confirm({
@@ -10026,21 +10029,22 @@
 				buttons: {
 					confirm: function () {
 						var in_preprocess_code = "";
-						var in_recorder_seqno = 0;
-						var in_recorder_field = "";
-						var in_recorder_on = "";
-						var in_recorderby_type = "";
+						var in_preprocessexp_sno = 0;
+						var in_preprocessexp_on = "";
+						var in_preprocessexp_update_field = "";
+						var in_preprocess_expression = "";
 						var action = "DELETE";
 						var action_by = sessionStorage.getItem("usrname");
 						var status = ""
 						$.ajax({
 							type: "POST",
-							url: '../Preprocess/reconfieldordersave',
+							url: '../Preprocess/preprocessexp',
 							dataType: 'json',
 							data: JSON.stringify({
-								in_preprocessrecorder_gid: preprocessrecorder_gid, in_preprocess_code: in_preprocess_code,
-								in_recorder_seqno: in_recorder_seqno, in_recorder_field: in_recorder_field,in_recorder_on: in_recorder_on,in_recorderby_type: in_recorderby_type,
-								in_action: action, in_user_code: action_by, in_active_status: status
+									in_preprocessexp_gid: in_preprocessexp_gid, in_preprocess_code: in_preprocess_code,
+									in_preprocessexp_sno: in_preprocessexp_sno, in_preprocessexp_on: in_preprocessexp_on,in_preprocessexp_update_field: in_preprocessexp_update_field,
+									in_preprocess_expression: in_preprocess_expression,
+									in_action: action, in_user_code: action_by, in_active_status: status
 							}),
 							contentType: 'application/json; charset=utf-8',
 							success: function (response) {

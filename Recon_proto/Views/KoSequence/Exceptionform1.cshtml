@@ -1,0 +1,1156 @@
+﻿@{
+	ViewData["Title"] = "Exceptionform1";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<!Doctype html>
+<head>
+	<title></title>
+	<style>
+		.form-label {
+			margin-bottom: 0.3rem !important;
+		}
+
+		.section1-scroll {
+			max-height: 18vh;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.section2-scroll {
+			max-height: 51vh;
+			overflow-y: auto;
+			overflow-x: hidden;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: #fff !important;
+		}
+
+		.card {
+			background: #fff;
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 16px;
+			margin-bottom: 16px;
+		}
+
+		.section-title {
+			font-weight: 600;
+			margin-bottom: 5px;
+			color: Black;
+		}
+
+		select, textarea {
+			border-radius: 8px;
+			padding: 2px;
+			width: 96%;
+			font-size: 13px;
+		}
+
+		textarea {
+			min-height: 50px
+		}
+
+		.card {
+			background: #fff;
+			border: 1px solid;
+			border-radius: 12px;
+			padding: 9px;
+			margin-bottom: 5px;
+			margin-top: -12px;
+		}
+
+		.card1 {
+			background: #fff;
+			border: 1px solid;
+			border-radius: 12px;
+			padding: 9px;
+			margin-bottom: 5px;
+			margin-top: 2px;
+		}
+
+		.k-multiselect-wrap.k-floatwrap {
+			height: 30px;
+		}
+
+		.k-header, .k-grid-header, .k-toolbar, .k-dropdown-wrap, .k-picker-wrap, .k-numeric-wrap, .k-grouping-header, .k-pager-wrap, .k-textbox, .k-button, .k-progressbar, .k-draghandle, .k-autocomplete, .k-state-highlight, .k-tabstrip-items .k-item, .k-panelbar .k-tabstrip-items .k-item, .km-pane-wrapper > .km-pane > .km-view > .km-content {
+			background-image: none, -webkit-linear-gradient(top, rgb(135, 46, 123) 0, rgb(135, 46, 123) 100%);
+			color: white !important;
+		}
+
+		.info-label {
+			display: inline-block;
+			cursor: pointer;
+			color: blue;
+		}
+
+		.info-content {
+			display: none;
+			position: absolute;
+			background-color: #f9f9f9;
+			border: 1px solid #ccc;
+			padding: 10px;
+			z-index: 1;
+		}
+
+		.info-label:hover .info-content,
+		.info-label.active .info-content {
+			display: block;
+		}
+
+		.copy-icon {
+			float: right;
+			margin-right: -107px;
+			margin-top: 5px;
+			cursor: pointer;
+			font-size: 18px;
+			color: #0d6efd;
+		}
+
+		.copy-icon:hover {
+			color: #084298;
+		}
+
+		.accordion-wrapper {
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5);
+			width: 100%;
+			margin: 0 auto;
+		}
+
+		.accordion {
+			width: 100%;
+			color: white;
+			overflow: hidden;
+			margin-bottom: 9px;
+		}
+
+		.accordion:last-child {
+			margin-bottom: 5px;
+		}
+
+		.accordion-label {
+			display: flex;
+			-webkit-box-pack: justify;
+			justify-content: space-between;
+			padding: 4px;
+			background: rgb(135, 46, 123);
+			/*background: rgba(4,57,94,.8);*/
+			font-weight: bold;
+			cursor: pointer;
+			font-size: 14px;
+			color: white;
+		}
+
+		.accordion-label:hover {
+			background: rgb(135, 46, 123)
+		}
+
+		.accordion-label::after {
+			content: "\276F";
+			width: 16px;
+			height: 16px;
+			text-align: center;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
+
+		.accordion-content {
+			max-height: 0;
+			padding: 0 16px;
+			color: rgba(4, 57, 94, 1);
+			background: rgb(135 46 123 / 14%);
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
+
+		.accordion-content p {
+			margin: 0;
+			color: rgba(4,57,94,.7);
+			font-size: 18px;
+		}
+
+		input:checked + .accordion-label {
+			background: rgba(4,57,94,1);
+		}
+
+		input:checked + .accordion-label::after {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+
+		input:checked ~ .accordion-content {
+			max-height: 100vh;
+			padding-bottom: 16px;
+			padding-top:5px;
+		}
+
+		.validated1 {
+			background-color: green; /* Change to desired color */
+			color: white; /* Change to desired text color */
+		}
+
+		.validated {
+			background-color: red; /* Change to desired color */
+			color: white; /* Change to desired text color */
+		}
+
+		.k-grid .wrap-text {
+			white-space: normal !important;
+			word-wrap: break-word;
+			word-break: break-word;
+			line-height: 1.4;
+		}
+	</style>
+</head>
+<div class="content-wrapper">
+	<div class="card-body" style="margin-top:-12px;height: 84%;">
+		<div style="height:515px;overflow-x:auto;margin-top: -14px;">
+			<div class="accordion-wrapper">
+				<div class="accordion" id="headingsection1">
+					<input type="checkbox" name="radio-a" id="check1" checked style="display:none">
+					<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Happay Info<span id="banner" style="font-size: 13px;color: white;">*</span></label>
+					<div id="headingsection1" class="accordion-content">
+						<div class="accordion-body" style="padding: 0.04rem;">
+							<div class="row">
+								<div class="col-sm-2">
+									<label for="" class="form-label">Report ID</label>
+									<input class="form-control" type="text" id="reportid" value="" tabindex="-1" readonly>
+									<input type="hidden" id="trabbrkid">
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Employee ID</label>
+									<input class="form-control" type="text" id="employeeid" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Name</label>
+									<input class="form-control" type="text" id="name" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Grade</label>
+									<input class="form-control" type="text" id="grade" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Expense Type</label>
+									<input class="form-control" type="text" id="expencetype" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Category</label>
+									<input class="form-control" type="text" id="category" value="" tabindex="-1" readonly>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-2">
+									<label for="" class="form-label">Transaction Status</label>
+									<input class="form-control" type="text" id="transts" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Approved Amount</label>
+									<input class="form-control" type="text" id="approveamt" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Sub Category</label>
+									<input class="form-control" type="text" id="subcategory" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Description</label>
+									<input class="form-control" type="text" id="description" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Email ID</label>
+									<input class="form-control" type="text" id="emailid" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2" style="display: none">
+									<label for="" class="form-label">Approve Name</label>
+									<input class="form-control" type="text" id="actor3" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">AH Location</label>
+									<input class="form-control" type="text" id="ahloc" value="" tabindex="-1" readonly>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-2" style="display: none">
+									<label for="" class="form-label">Received Date</label>
+									<input class="form-control" type="text" id="tknat3" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2" style="display: none">
+									<label for="" class="form-label">Date of Expense</label>
+									<input class="form-control" type="text" id="dtofexpence" value="" tabindex="-1" readonly>
+								</div>
+
+								<div class="col-sm-2">
+									<label for="" class="form-label">AH Department</label>
+									<input class="form-control" type="text" id="ahdept" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-2">
+									<label for="" class="form-label">Designation</label>
+									<input class="form-control" type="text" id="designation" value="" tabindex="-1" readonly>
+								</div>
+								<div class="col-sm-4">
+									<label for="" class="form-label">Document Type&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span>&nbsp;&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;" class="info-label" onclick="openInfoWindow(this)" data-bs-toggle="modal"><img src='../images/info.png' style="width: 39%;"></span></label>
+									<select class="form-select form-control" id="cmbdoctype" onchange="holdchange()"></select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="accordion" id="headingsection2">
+					<input type="checkbox" name="radio-a" id="check2" style="display:none">
+					<label class="accordion-label" for="check2">&nbsp;&nbsp;&nbsp;Audit <span id="banner1" style="font-size: 13px;color: white;"></span></label>
+					<div id="headingsection2" class="accordion-content">
+						<div class="accordion-body" style="padding: 0.04rem;">							
+							<div id="grid_update" style="padding-top:5px;padding-bottom:25px"></div>							
+							<div class="row" style="padding-top:10px">
+								<div class="col-sm-2">
+									<label for="" class="form-label">Claim Status&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select class="form-select form-control" id="cmbclaimsts" onchange="claimsts()" style="width:68%" ></select>
+									<input type="hidden" id="holdRejectReasons" name="holdRejectReasons">
+								</div>
+								<div class="col-sm-2" style="margin-left:-70px">
+									<label for="" class="form-label">Submitted in Happay?&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+									<select id="subhaapy" class="form-select form-control" style=" width:74%;"></select>						
+								</div>								
+								<div class="col-sm-8" style="margin-left:-57px">
+									<label class="form-label">Remarks</label><i class="fa fa-copy copy-icon" title="Copy" onclick="copyText()"></i>
+									<textarea id="holdRejectReason" class="form-select form-control" name="holdRejectReason" style="height: 46px;width: 115%;"></textarea>
+								</div>
+							</div>
+							<div class="row" style="padding-bottom:3px;padding-left:5px;padding-right:5px;margin-top:10px">
+								<div class="col-sm-4"></div>
+								<div class="col-sm-4" style="text-align:center;">
+									<button type="button" class="btn btn-sm save_btn me-2" id="btnsubmit" onclick="savereconexp()">Save</button>&nbsp;&nbsp;&nbsp;
+									<a href="../KoSequence/Reconexception" class="btn btn-sm cancel_btn me-2">Cancel</a>
+								</div>
+								<div class="col-sm-4"></div>
+							</div>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var fields = {};
+	var preSelected = "";
+	var arr = [];
+	$(document).ready(function () {
+		$("#navhead").text("Recon Field Update");
+		var data = getlocalStorage("ls_pageList");
+		var jsondata = {};
+		jsondata.in_recon_code = sessionStorage.getItem("reconcode");
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/reconfieldinfo',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var res = JSON.parse(response);
+				var jsondata1 = {};
+				jsondata1.in_tran_gid = data.entries[(res[0].position_tran_gid) -1];
+				jsondata1.in_recon_code = sessionStorage.getItem("reconcode");
+				jsondata1.in_tranbrkp_gid = res[0].position_tranbrkp_gid;
+				$("#trabbrkid").val(0);
+				jsondata1.in_user_code = sessionStorage.getItem("usrname");
+				$.ajax({
+					type: "POST",
+					url: '../KoSequence/getreconvalue',
+					dataType: 'json',
+					async: false,
+					data: JSON.stringify(jsondata1),
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						var result = JSON.parse(response);
+						fields =result.Table
+						$("#reportid").val((getValueByDesc("Report ID")));
+						$("#employeeid").val((getValueByDesc("Employee ID")));;
+						$("#name").val((getValueByDesc("Name")));
+						$("#grade").val((getValueByDesc("Grade")));
+						$("#expencetype").val((getValueByDesc("Expense Type")));
+						$("#category").val((getValueByDesc("Category")));
+						$("#transts").val((getValueByDesc("Transaction Status")));
+						$("#approveamt").val((getValueByDesc("Gross Amount")));
+						$("#subcategory").val((getValueByDesc("Subcategories")));
+						$("#description").val((getValueByDesc("Description")));
+						$("#emailid").val((getValueByDesc("Email ID")));
+						$("#actor3").val((getValueByDesc("Actor3")));
+						$("#tknat3").val((getValueByDesc("Taken At3")));
+						$("#dtofexpence").val((getValueByDesc("Date of expense")));
+						$("#ahloc").val(getValueByDesc("AH Location"));
+						$("#ahdept").val((getValueByDesc("AH Department")));
+						$("#designation").val(getValueByDesc("Designation"));
+						$("#check1").prop('checked', true);
+						$("#check2").prop('checked', false);
+					}
+				});
+			}
+		});
+
+		var in_master_code = getparentByDesc("Doc Type");
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbdoctype").empty();
+				$("#cmbdoctype").append($('<option>', {
+						value: "",
+						text: "  Select  ",
+						code:""
+				}));
+				$.each(response, function (index, item) {
+				   $("#cmbdoctype").append($('<option>', {
+					  value: item.masterName,
+					  text: item.masterName,
+					  code: item.mastermutiplename
+				   }));
+				});
+			}
+		});
+
+		var in_master_code = "QCD_YN";
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {				
+				$.each(response, function (index, item) {
+					$("#subhaapy").append($('<option>', {
+						value: item.masterSyscode,
+						text: item.masterName
+					}));
+				});
+
+			}
+		});
+		$("#subhaapy").val("N")
+		var in_master_code = getparentByDesc("Claim Status");
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Common/Qcdmaster',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				$("#cmbclaimsts").empty();
+				$("#cmbclaimsts").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(response, function (index, item) {
+				   $("#cmbclaimsts").append($('<option>', {
+					  value: item.masterName,
+					  text: item.masterName
+				   }));
+				});
+			}
+		});
+
+		$("#cmbholdrjt").kendoMultiSelect({
+			dataTextField: "text",
+			dataValueField: "value",
+			valuePrimitive: true,
+			autoClose: false,
+			tagTemplate: "#: value #",
+			itemTemplate: "<input type='checkbox'/> #: data.text #",
+			dataBound: function () {
+				 syncCheckboxes(this);
+			},
+			change: function () {
+				syncCheckboxes(this);
+				updateValue(this);
+			}
+		});
+
+		 $("#holdRejectValue").val((getValueByDesc("Reject/Hold Template")));
+		 $("#cmbdoctype").val((getValueByDesc("Doc Type")));
+		 jQuery('#cmbdoctype').trigger("change");
+		 $("#cmbclaimsts").val((getValueByDesc("Claim Status")));
+		 $("#holdRejectReasons").val(getValueByDesc("Reject/Hold Reasons"));
+		 $("#holdRejectReason").val(getValueByDesc("Remarks"));
+		 if(getValueByDesc("Happay Submitted Status") == "P"){
+			  $("#subhaapy").val("N");
+		 }else {
+			  $("#subhaapy").val(getValueByDesc("Happay Submitted Status"));		
+		 }
+		
+		  $("#cmbdoctype").on("focus", function () {
+			 // this.size = this.options.length;
+		  });
+		  $("#cmbdoctype").on("blur", function () {
+			 this.size = 1;
+		  });
+		  $("#headingsection1").show();
+		  var rejectReasonStr = $("#holdRejectReasons").val();
+		  if($("#cmbclaimsts").val() != "") {
+				bindRejectReasons("#grid_update", rejectReasonStr);
+		  } 
+	});
+</script>
+<script>
+	function getValueByDesc(desc) {
+		return fields.find(f => f.field_desc === desc)?.field_value ?? "";
+	}
+	function getparentByDesc(desc) {
+	   return fields.find(f => f.field_desc === desc)?.qcd_parent_code ?? "";
+	}
+	function getcolByDesc(desc) {
+	   return fields.find(f => f.field_desc === desc)?.field_name ?? "";
+	}
+
+	function holdchange() {
+		var multi = $("#cmbholdrjt").data("kendoMultiSelect");
+		var dbValue = $("#holdRejectValue").val();
+
+		var selectedValues = dbValue
+			? dbValue.split(";").map(x => x.trim()).filter(Boolean)
+			: [];
+
+		if (multi) {
+			multi.value([]);
+			$("#holdRejectValue").val("");
+			$("#holdRejectReasons").val("");
+			preSelected = "";
+		}
+
+		arr = [];
+		var jsondata = {};
+		jsondata.in_tran_gid = getValueByDesc("Tran Id");
+		jsondata.in_recon_field_name  = getcolByDesc("Reject/Hold Template") ;
+		jsondata.in_recon_code = getValueByDesc("Recon Code");
+		jsondata.in_tranbrkp_gid = $("#trabbrkid").val();
+		jsondata.in_depend_code = $("#cmbdoctype :selected").text();
+		jsondata.in_user_code = sessionStorage.getItem("usrname");
+
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/reconfieldqcdlistexp',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				arr = result.filter(x =>  x.master_name  && x.master_name)
+						.map(x => ({ value:  x.master_name , text: x.master_name ,code: x.master_multiple_name}));
+				if (multi) {
+					multi.dataSource.data(arr);
+					multi.value(selectedValues);
+					syncCheckboxes(multi);
+				}
+			}
+		});
+		var in_user_code = sessionStorage.getItem("usrname");
+		var selectedOption = $("#cmbdoctype option:selected");
+		var code  = selectedOption.attr("code");
+		if ( code != "" ) {
+			$.ajax({
+				type: "POST",
+				url: '../KoSequence/ecfchecklistinfo',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_checklist_json: code,in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var result = JSON.parse(response);
+						result.Table1.forEach(function (item, index) {
+							 item.slno = index + 1;
+						 });
+						grid_update(result.Table1);
+					}
+				}
+			});
+		}
+		if($("#cmbdoctype :selected").val() != ""){
+			$("#check1").prop('checked', false);
+			$("#check2").prop('checked', true);			
+			var bannertext1 = '<span style="color:bisque; font-weight:bold;">Document Type </span> : ' + $("#cmbdoctype :selected").text() ;
+		$("#banner1").html(bannertext1);
+		}
+		var bannertext =
+		'<span style="color:bisque; font-weight:bold;">Report ID </span> : ' + $("#reportid").val() +
+		'&nbsp;&nbsp;<span style="color:bisque; font-weight:bold;">Employee ID </span> : ' + $("#employeeid").val() +
+		'&nbsp;&nbsp;<span style="color:bisque; font-weight:bold;">Approved Amount </span> : ' + $("#approveamt").val() +
+		'&nbsp;&nbsp;<span style="color:bisque; font-weight:bold;">Sub Category </span> : ' + $("#subcategory").val()
+		$("#banner").html(bannertext);		
+	}
+
+	function syncCheckboxes(widget) {
+		widget.ul.find("li").each(function () {
+			var li = $(this);
+			var checkbox = li.find("input[type='checkbox']");
+			var dataItem = widget.dataItem(li.index());
+			checkbox.prop("checked", widget.value().includes(dataItem.value));
+		});
+	}
+
+	function updateValue(widget) {
+		var value = widget.value().join(';');
+		preSelected = value;
+		$("#holdRejectValue").val(value);
+	}
+
+	function holdreject() {
+		var multi = $("#cmbholdrjt").data("kendoMultiSelect");
+		if (!multi) return;
+		var items = multi.dataItems();
+		var output = items
+			 .filter(x => x.code && x.code.trim() !== "")
+			 .map((x, index) => (index + 1) + ") " + x.code.trim())
+			 .join("\n");
+		$("#holdRejectReasons").val(output);
+	}
+	function validateChecklistYesNo(gridId) {
+		var grid = $(gridId).data("kendoGrid");
+		var data = grid.dataSource.data();
+		var invalidRows = [];
+		data.forEach(function (item, index) {
+			if (!item.checklist_yesno || item.checklist_yesno.trim() === "" || item.checklist_yesno == undefined) {
+				invalidRows.push(index + 1); // row number
+			}
+		});
+		if (invalidRows.length > 0) {
+			// alert("Please select Yes / No for all checklist rows.\nMissing rows: " + invalidRows.join(", "));
+			return false;
+		}
+		return true;
+	}
+	function savereconexp() {
+		var multi = $("#cmbholdrjt").data("kendoMultiSelect");
+		var selectedfrm = "";
+		if($("#cmbdoctype").val() =='')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Document Type not selected',
+				type: 'red',
+			});
+			return false;
+		}
+		if($("#cmbclaimsts").val() =='')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Claim Status not selected',
+				type: 'red',
+			});
+			return false;
+		}
+		if (!validateChecklistYesNo("#grid_update")) {
+			$.alert({
+				title: 'Recon',
+				content: 'Checklist not Completed',
+				type: 'red',
+			});
+			return;
+		}
+		var in_recon_code = getValueByDesc("Recon Code");
+		var in_tran_gid = parseInt(getValueByDesc("Tran Id"));
+		var in_tranbrkp_gid = parseInt($("#trabbrkid").val());
+		var in_user_code = sessionStorage.getItem("usrname");
+		var jsondata = {};
+		jsondata.in_tran_gid = in_tran_gid;
+		jsondata.in_recon_code = in_recon_code;
+		jsondata.in_tranbrkp_gid = in_tranbrkp_gid;
+		jsondata.in_user_code = in_user_code;
+		$.ajax({
+			type: "POST",
+			url: '../KoSequence/setrecordunlock',
+			dataType: 'json',
+			async: true,
+			data: JSON.stringify(jsondata),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+
+				if (result[0].out_result == '1')
+				{
+					var grid = $("#grid_update").data("kendoGrid");
+					var data = grid.dataSource.data();
+					var checklistStr = data
+					.map(function (item) {
+						return item.checklist_desc;
+					})
+					.filter(function (val) {
+						return val && val.trim() !== "";
+					})
+					.join(";");
+					var checklistCategoryStr = data
+					.map(function (item) {
+						return item.checklist_category;
+					})
+					.filter(function (val) {
+						return val && val.trim() !== "";
+					})
+					.join(";");
+					var remarkStr = data
+					.map(function (item) {
+						return item.reject_reason;
+					})
+					.join(";");
+					if($("#cmbclaimsts option:selected").text() == "Hold"){
+						var json = [
+						{
+							field_name: getcolByDesc("Doc Type"),
+							field_value: $("#cmbdoctype option:selected").text()
+						},
+						{
+							field_name: getcolByDesc("Claim Status"),
+							field_value: $("#cmbclaimsts option:selected").text()
+						},
+						{
+							field_name: getcolByDesc("Reject/Hold Template"),
+							field_value: checklistStr
+						},
+						{
+							field_name: getcolByDesc("Reject/Hold Reasons"),
+							field_value: remarkStr
+						},
+						{
+							field_name: getcolByDesc("Reject/Hold Categories"),
+							field_value: checklistCategoryStr
+						},
+						{
+							field_name: getcolByDesc("Happay Submitted Status"),
+							field_value: $("#subhaapy").val()
+						},
+						{
+							field_name: getcolByDesc("Is Hold"),
+							field_value: "Y"
+						},
+						{
+							field_name: getcolByDesc("Hold Date"),
+							field_value: '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")'
+						},
+						{
+							field_name: getcolByDesc("Hold By"),
+							field_value: sessionStorage.getItem("usrname")
+						},
+						{
+							field_name: getcolByDesc("Remarks"),
+							field_value: $("#holdRejectReason").val()
+						},
+						{
+							field_name: getcolByDesc("Last Update Date"),
+							field_value: '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")'
+						},
+						{
+							field_name: getcolByDesc("Last Update By"),
+							field_value: sessionStorage.getItem("usrname")
+						}
+						];
+					} else {
+						var json = [
+						{
+							field_name: getcolByDesc("Doc Type"),
+							field_value: $("#cmbdoctype option:selected").text()
+						},
+						{
+							field_name: getcolByDesc("Claim Status"),
+							field_value: $("#cmbclaimsts option:selected").text()
+						},
+						{
+							field_name: getcolByDesc("Reject/Hold Template"),
+							field_value: checklistStr
+						},
+						{
+							field_name: getcolByDesc("Reject/Hold Categories"),
+							field_value: checklistCategoryStr
+						},
+						{
+							field_name: getcolByDesc("Reject/Hold Reasons"),
+							field_value: remarkStr
+						},
+						{
+							field_name: getcolByDesc("Happay Submitted Status"),
+							field_value: $("#subhaapy").val()
+						},
+						{
+							field_name: getcolByDesc("Remarks"),
+							field_value: $("#holdRejectReason").val()
+						},
+						{
+							field_name: getcolByDesc("Last Update Date"),
+							field_value: '@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")'
+						},
+						{
+							field_name: getcolByDesc("Last Update By"),
+							field_value: sessionStorage.getItem("usrname")
+						}
+						];
+					}
+					var in_curr_value = JSON.stringify(json);
+					var in_new_value = JSON.stringify(json);
+
+					$.ajax({
+						type: "POST",
+						url: '../KoSequence/reconfieldqcdsave',
+						dataType: 'json',
+						data: JSON.stringify({
+							in_recon_code: in_recon_code, in_tran_gid: in_tran_gid, in_tranbrkp_gid: in_tranbrkp_gid,
+							in_curr_value: in_curr_value, in_new_value: in_new_value, in_user_code: in_user_code
+						}),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var res = JSON.parse(response);
+							if (res[0].out_result == 1) {
+								$.alert({
+									title: 'Recon',
+									content: res[0].out_msg,
+									type: 'green',
+								});
+								sessionStorage.setItem("excpform", in_recon_code);
+								window.location.href = "../KoSequence/Reconexception";
+							}
+							else {
+								$.alert({
+									title: 'Recon',
+									content: res[0].out_msg,
+									type: 'Red',
+								});
+							}
+						},
+						error: function (er) {
+							alert(er)
+							console.log(er)
+						}
+					});
+				}
+			}
+		});
+	}
+
+	function openInfoWindow() {
+		 var selectedOption = $("#cmbdoctype option:selected");
+		 var code  = selectedOption.attr("code");
+		 var result = JSON.parse(code);
+		 openHtmlInNewWindow(result.info);
+	}
+
+	function openHtmlInNewWindow(htmlContent) {
+		var selectedOption = $("#cmbdoctype option:selected");
+		var win = window.open("width=3000,height=600,scrollbars=yes,resizable=yes");
+
+		if (!win) {
+			alert("Popup blocked. Please allow popups.");
+			return;
+		}
+
+		win.document.open();
+		win.document.title = selectedOption.text();
+		win.document.write(htmlContent);
+		win.document.close();
+	}
+	function grid_update(data) {
+		$("#grid_update").kendoGrid({
+			dataSource: {
+				data: data,
+				// pageSize: 5,
+				schema: {
+					model: {
+						fields: {
+							slno: { type: "number", editable: false },
+							checklist_desc : { type: "string", editable: false, },
+							checklist_category : { type: "string" },
+							checklist_template : { type: "string", editable: false, },
+							checklist_yesno: { type: "string"},
+							reject_reason : { type: "string" },
+							hold_flag : { type: "string" },
+							reject_flag : { type: "string" },
+						}
+					}
+				}
+			},
+			height: 288,
+			groupable: false,
+			dataBinding: setDefaultValues,
+			scrollable: true,
+			sortable: false,
+			selectable: true,
+			filterable: false,
+			resizable: true,
+			editable: true,
+			pageable: false,
+			dataBound: function (e) {
+				var grid = e.sender;
+				grid.tbody.off("click.yn").on("click.yn", ".ynRadio", function () {
+					var radio = this;
+					var row = $(radio).closest("tr");
+					var dataItem = grid.dataItem(row);
+					dataItem.set("checklist_yesno", radio.value);
+					if (radio.value === "N") {
+						dataItem.set("reject_reason", dataItem.checklist_template || "");
+					} else {
+						dataItem.set("reject_reason", "");
+					}
+					filterClaimStatusOptions();
+				});
+
+				grid.tbody.off("keydown.tabradio").on("keydown.tabradio", ".ynRadio", function (ev) {
+				if (ev.key === "Tab") {
+					ev.preventDefault();
+					var row = $(this).closest("tr");
+					grid.editCell(row.children("td").eq(2));
+				}
+			});
+			},
+			columns: [
+				{
+					field: "slno",
+					title: "#",
+					width: 40,
+					hidden: true,
+					editable: false
+				},
+				{
+					field: "checklist_desc",
+					title: "Checklist",
+					width: 80,
+					attributes: { class: "wrap-text" },
+					headerAttributes: { class: "wrap-text" },
+					editable: false,
+					filterable: false,
+				},
+				{
+					field: "checklist_category",
+					title: "Hold/ Reject Category",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "checklist_yesno",
+					title: "Yes / No",
+					filterable: false,
+					template: yesNoTemplate,
+					width: 30
+				},
+
+				{
+					field: "reject_reason",
+					title: "Reject Reason",
+					width: 100,
+					attributes: { class: "wrap-text" },
+					headerAttributes: { class: "wrap-text" },
+					filterable: false,
+					editor: rejectReasonEditor,
+					template: function (dataItem) {
+							return '<div class="wrap-text">' +
+							  kendo.htmlEncode(dataItem.reject_reason || '') +
+							'</div>';
+					},
+				},
+				{
+					field: "checklist_template",
+					title: "Hold / Reject Reasons Template",
+					width: 100,
+					attributes: { class: "wrap-text" },
+					headerAttributes: { class: "wrap-text" },
+					filterable: false,
+					hidden: true,
+				},
+				{
+					field: "hold_flag",
+					title: "hold_flag",
+					width: 40,
+					hidden: true,
+				},
+				{
+					field: "reject_flag",
+					title: "reject_flag",
+					width: 40,
+					hidden: true,
+				},
+			],
+		});
+
+	}
+	function yesNoTemplate(dataItem) {
+		var val = dataItem.checklist_yesno;
+		return `
+			<label>
+				<input type="radio" class="ynRadio" name="rd_sel_${dataItem.uid}" value="Y" ${val === 'Y' ? 'checked' : ''}> Yes
+			</label>
+			<label>
+				<input type="radio" class="ynRadio" name="rd_sel_${dataItem.uid}" value="N" ${val === 'N' ? 'checked' : ''}> No
+			</label>
+			<label>
+				<input type="radio" class="ynRadio" name="rd_sel_${dataItem.uid}" value="NA" ${val === 'NA' ? 'checked' : ''}> N/A
+			</label>
+		`;
+	}
+	function bindRejectReasons(gridId, reasonStr) {
+		var grid = $(gridId).data("kendoGrid");
+		var arr = reasonStr.split(";").map(x => x.trim());
+
+		grid.dataSource.data().forEach((item, i) => {
+			if (arr[i] != "") {
+				item.set("reject_reason", arr[i]);
+				item.set("checklist_yesno", "N");
+			} else {
+				item.set("checklist_yesno", "Y");
+			}
+
+			var row = grid.tbody.find("tr").eq(i);
+			row.find(`input[name="rd_sel_${item.slno}"]`).each(function () {
+				$(this).prop("checked", $(this).val() === item.checklist_yesno);
+			});
+		});
+		filterClaimStatusOptions();
+	}
+
+	$(document).on("keydown", ".holdRejectReasons", function (e) {
+		protectTemplateInput(this, e);
+	});
+	function rejectReasonEditor(container, options) {
+		var ta = $('<textarea rows="3" style="width:98%; padding:6px"></textarea>').appendTo(container);
+		ta.val(options.model.reject_reason || "");
+		const ranges = getEditableRanges(ta.val());
+		if (ranges.length === 0) {
+			ta.prop("readonly", true);
+			return;
+		}
+		ta.on("keydown paste cut", function(e) {
+			protectText(this, e);
+		});
+		ta.on("input", function() {
+			options.model.set("reject_reason", this.value);
+		});
+		ta.on("focus", function() {
+			if (ranges.length > 0) {
+				this.setSelectionRange(ranges[0].start, ranges[0].end);
+			}
+		});
+	}
+	function getEditableRanges(value) {
+		const ranges = [];
+		const regex = /<[^>]*>/g;
+		let m;
+
+		while ((m = regex.exec(value)) !== null) {
+			ranges.push({ start: m.index, end: m.index + m[0].length });
+		}
+		return ranges;
+	}
+	function protectText(textarea, e) {
+		 const ranges = getEditableRanges(textarea.value);
+		 if (ranges.length === 0) {
+			 e.preventDefault();
+			return;
+		 }
+		const pos = textarea.selectionStart;
+		if (e.key === "Tab") {
+			e.preventDefault();
+			for (let r of ranges) {
+				 if (pos < r.start) {
+					  textarea.setSelectionRange(r.start, r.end);
+					  return;
+				}
+			 }
+			textarea.setSelectionRange(ranges[0].start, ranges[0].end);
+		 return;
+		}
+		const val = textarea.value;
+
+
+		if ((e.key === "Backspace" && val[pos - 1] === "<") || (e.key === "Delete" && val[pos] === ">")) {
+			e.preventDefault();
+			return;
+		}
+		const nav = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+		if (nav.includes(e.key)) return;
+		const inside = ranges.some(r => pos > r.start && pos < r.end);
+		if (!inside) {
+			e.preventDefault();
+			return;
+		}
+		ranges.forEach(r => {
+			if ((e.key === "Backspace" && pos === r.start + 1) || (e.key === "Delete" && pos === r.end)) {
+				 e.preventDefault();
+			}
+		});
+	}
+	function copyText() {
+		var grid = $("#grid_update").data("kendoGrid");
+		var data = grid.dataSource.data();
+		var lines = [];
+		data.forEach(function (item) {
+			if (item.reject_reason && item.reject_reason.trim() !== "") {
+				lines.push(item.reject_reason.trim());
+			}
+		});
+		var finalText = lines
+		.map((text, index) => (index + 1) + ") " + text)
+		.join("\n");
+		if(finalText != ""){
+			var textarea = finalText + "\n\n" + "Note :" + $("#holdRejectReason").val();
+		} else {
+			var textarea = "Note : " + $("#holdRejectReason").val();
+		}
+		
+		
+		if (navigator.clipboard && window.isSecureContext) {
+			navigator.clipboard.writeText(textarea);			 
+		} else {
+			fallbackCopy(textarea);
+		}
+	}
+
+	function fallbackCopy(textarea) {
+		textarea.select();
+		textarea.setSelectionRange(0, textarea.length);
+
+		try {
+		   var success = document.execCommand("copy");
+		  console.log(success ? "Copied (fallback)" : "Copy failed");
+		} catch (err) {
+			console.error("Copy not supported");
+		}
+	}
+	function filterClaimStatusOptions() {
+		var grid = $("#grid_update").data("kendoGrid");
+		if (!grid) return;
+
+		var hasNo = grid.dataSource.data().some(x => x.checklist_yesno === "N");
+
+		var ddl = $("#cmbclaimsts");
+
+		if (hasNo) {
+			// Hide Approved & Pending
+			ddl.find('option[value="Approved"]').hide();
+			ddl.find('option[value="Pending"]').hide();
+			ddl.find('option[value="Rejected"]').show();
+
+			// If currently selected, reset
+			if (ddl.val() === "Approved" || ddl.val() === "Pending" ) {
+				ddl.val("");
+			}
+		} else {
+			// Show them back
+			ddl.find('option[value="Approved"]').show();
+			ddl.find('option[value="Pending"]').show();
+			ddl.find('option[value="Rejected"]').hide();
+			ddl.find('option[value="Cancelled"]').hide();	
+			// If currently selected, reset
+			if (ddl.val() === "Rejected" || ddl.val() === "Cancelled" ) {
+				ddl.val("");
+			}
+		}
+	}
+</script>
