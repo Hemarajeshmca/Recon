@@ -1,0 +1,2003 @@
+﻿@model Recon_proto.Controllers.PreprocessController.partialfetchmodel
+@using Newtonsoft.Json.Linq
+@{
+	ViewData["Title"] = "Preprocess";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+@{
+	JObject json =	null;
+
+	if (!string.IsNullOrEmpty(Model?.partialdata))
+	{
+		json = JObject.Parse(Model.partialdata);
+	}
+
+	var header = json?["header"]?[0];
+}
+<!Doctype html>
+<html>
+<head>
+	<title></title>
+	<style>
+		.nav-item.me-2.me-xl-50 {
+			margin-right: 33rem !important;
+		}
+
+		.error_show {
+			color: red;
+			margin-left: 10px;
+		}
+
+		.k-grid-filter.k-state-active {
+			background-color: initial !important;
+		}
+
+		.k-grid.k-widget {
+			height: 360px;
+		}
+
+		.k-grid-header th.k-header > .k-link {
+			color: white !important;
+		}
+
+		.k-grid-header {
+			font-weight: bold;
+		}
+
+		.k-content {
+			font-weight: normal;
+			font-size: 13px;
+		}
+
+		.k-widget.k-window {
+			padding-top: 35px;
+			min-width: 90px;
+			min-height: 50px;
+			width: 700px !important;
+			height: 300px !important;
+			top: 180.766px !important;
+			/*left: 120px !important;*/
+			z-index: 10003;
+			left: 300px !important;
+		}
+
+		.accordion-wrapper {
+			border-radius: 8px;
+			overflow: hidden;
+			box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.5);
+			width: 100%;
+			margin: 0 auto;
+		}
+
+		.accordion {
+			width: 100%;
+			color: white;
+			overflow: hidden;
+			margin-bottom: 9px;
+		}
+
+		.accordion:last-child {
+			margin-bottom: 0;
+		}
+
+		.accordion-label {
+			display: flex;
+			-webkit-box-pack: justify;
+			justify-content: space-between;
+			padding: 4px;
+			background: rgb(135, 46, 123);
+			/*background: rgba(4,57,94,.8);*/
+			font-weight: bold;
+			cursor: pointer;
+			font-size: 14px;
+			color: white;
+		}
+
+		.accordion-label:hover {
+			background: rgb(135, 46, 123)
+		}
+
+		.accordion-label::after {
+			content: "\276F";
+			width: 16px;
+			height: 16px;
+			text-align: center;
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
+
+		.accordion-content {
+			max-height: 0;
+			padding: 0 16px;
+			color: rgba(4, 57, 94, 1);
+			background: rgb(135 46 123 / 14%);
+			-webkit-transition: all 0.3s;
+			transition: all 0.3s;
+		}
+
+		.accordion-content p {
+			margin: 0;
+			color: rgba(4,57,94,.7);
+			font-size: 18px;
+		}
+
+		input:checked + .accordion-label {
+			background: rgba(4,57,94,1);
+		}
+
+		input:checked + .accordion-label::after {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+
+		input:checked ~ .accordion-content {
+			max-height: 100vh;
+			padding: 16px;
+		}
+
+		.validated1 {
+			background-color: green; /* Change to desired color */
+			color: white; /* Change to desired text color */
+		}
+
+		.validated {
+			background-color: red; /* Change to desired color */
+			color: white; /* Change to desired text color */
+		}
+
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 34px;
+			height: 18px;
+		}
+
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			background-color: #ccc;
+			transition: 0.4s;
+			border-radius: 34px;
+			top: 4px;
+			left: -2px;
+			right: 0;
+			bottom: 0;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 14px;
+			width: 14px;
+			left: 2px;
+			bottom: 2px;
+			background-color: white;
+			transition: 0.4s;
+			border-radius: 50%;
+		}
+
+		input:checked + .slider {
+			background-color: rgb(135,46,123);
+		}
+
+		input:checked + .slider:before {
+			transform: translateX(16px);
+		}
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini fixed">
+	<div class="content-wrapper">
+		<div class="container-xxl flex-grow-1 container-p-y">
+			<div class="card-body" style="margin-top:-12px;height: 82%;">
+				<form method="post" class="form-horizontal" id="form" enctype="multipart/form-data">
+					<div class="row" style="margin-top: -18px;margin-bottom: 10px;">
+						<div class="col-sm-6">
+							<div class="row">
+								<div class="col-sm-4">
+									<label for="lblpreprocesscode" class="form-label">Preprocess Code</label>
+									<input class="form-control" type="text" id="txtpreprocesscode" disabled value="@header["preprocess_code"]">
+								</div>
+								<div class="col-sm-4">
+									<label for="lblmode" class="form-label">Mode</label>
+									<input class="form-control" type="text" id="txtmode" value="Create" disabled>
+								</div>
+								<div class="col-sm-4">
+									<label for="lblstatus" class="form-label">Status</label><br>
+									<input class="form-control" type="text" id="txtstatus" value="Active" disabled>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-5">
+						</div>
+						<div class="col-sm-1" style="margin-top:20px;">
+							<center>
+								<a href="../Preprocess/Preprocesslist"><img style="cursor:pointer;" src="~/Content/images/toplist.png"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+							</center>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10px;">
+						<div class="col-sm-3">
+							<label class="form-label" for="">Preprocess Name&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" id="preprocessname" value="@header["preprocess_desc"]">
+							<input class="form-control" type="hidden" id="preprocessgid" value="@header["preprocess_gid"]">
+							<input class="form-control" type="hidden" id="validquery" />
+						</div>
+						<div class="col-sm-3">
+							<label class="form-label" for="">Recon&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input disabled class="form-control" id="cmbreconname_desc" name="reconName" type="text" value="@header["recon_name"]">
+							<input hidden id="cmbrecon" class="form-select form-control" value="@header["recon_code"]" disabled>
+						</div>
+						<div class="col-sm-2">
+							<label class="form-label" for="">Process Method&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="Cmbprocessmethod" class="form-select form-control" style="width:111%">
+							</select>
+						</div>
+						<div class="col-sm-1" style="margin-left:25px">
+							<label class="form-label" for="">Order&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<input class="form-control" type="text" id="preprocessorder" onpaste="return false;" maxlength="5" value="@header["preprocess_order"]" onkeypress='return isNumberKey(event)'>
+						</div>
+						<div class="col-md-2" style="padding-left:0;margin-left: 15px;">
+							<label for="" class="form-label">Post Process Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="postprocessflag" class="form-select form-control" style=" width:100%;" value="@header["postprocess_flag"]">
+							</select>
+						</div>
+					</div>
+					<div class="row" style="margin-top:10px;">
+						<div class="col-sm-3">
+							<label id="lblsourcedataset" class="form-label">Source Dataset</label>
+							<select id="sourcedataset" class="form-select form-control" style=" width: 100%;" >
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<label id=lblcomdataset class="form-label">Comparison Dataset</label>
+							<select id="comdataset" class="form-select form-control" style=" width: 100%;">
+							</select>
+						</div>
+						<div class="col-sm-3">
+							<label class="form-label" for="">Clone Preprocess&nbsp;</label>
+							<select id="Cmbclone" class="form-select form-control">
+							</select>
+						</div>
+						<div class="col-sm-1" style="margin-top:30px">
+							<button type="button" class="btn btn-sm me-2 save_btn" id="btnclone" onclick="saveclone()">Clone</button>&nbsp;&nbsp;&nbsp;
+						</div>
+						<div class="col-md-2" style="width: 14%;display:none">
+							<label for="" class="form-label">Hold Flag&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+							<select id="holdflag" class="form-select form-control" style=" width:100%;" >
+							</select>
+						</div>
+					</div>
+					<div style="height:244px;overflow-x:auto;">
+						<div id="functionview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_function")
+						</div>
+						<div id="expressiongridview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_expressiongrid")
+						</div>
+						 <div id="lookupdatasetview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookupdataset")
+						</div>
+						<div id="reconvslookupview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_reconvslookup")
+						</div>
+						<div id="lookupvsreconview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookupvsrecon")
+						</div>						
+						<div id="queryview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_query")
+						</div>
+						<div id="expressionview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_expression")
+						</div>
+						<div id="reconorderview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_reconorder")
+						</div>
+						<div id="lookupcomparsionview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookupcomparsion")
+						</div>
+						<div id="aggregationgroupingview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_aggregationgrouping")
+						</div>	
+						<div id="preprocessconditionview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_preprocesscondition")
+						</div>
+						<div id="lookupexpview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookupexpression")
+						</div>
+						<div id="lookupexpaggview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookupexpressionagg")
+						</div>
+						<div id="agglookupgroupingview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_agglookupgrouping")
+						</div>
+						<div id="lookuporderview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookuporder")
+						</div>							
+						<div id="sourcefilterview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_sourcefilter")
+						</div>
+						<div id="comparsionfilterview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_comparsionfilter")
+						</div>
+						<div id="lookupfilterview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_lookupfilter")
+						</div>
+						<div id="reconfilterview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_reconfilter")
+						</div>						
+						<div id="aggregatefunctionview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_aggregatefunction")
+						</div>
+						<div id="aggregateconditionview" style="padding-bottom: 5px;">
+							@await Html.PartialAsync("_aggregatecondition")
+						</div>
+					</div>
+					<div class="row" style="padding-top:16px">
+						<div class="col-sm-4">
+						</div>
+						<div class="col-sm-4" style="margin-left:58px;">
+							<button type="button" id="savesubmit" class="btn btn-sm save_btn me-2" onclick="saveheadersubmit()">Submit</button>&nbsp;&nbsp;&nbsp;
+							<a href="../Preprocess/Preprocesslist" class="btn btn-sm cancel_btn me-2">Cancel</a>
+						</div>
+						<div class="col-sm-4">
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+	$(document).ready(function () {
+		if (getlocalStorage('btn_clk_val') == "Create") {		
+			var data = getlocalStorage("ls_pageList");
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#preprocessorder").val(data[0].preprocess_order);
+			$("#cmbrecon").val(data[0].recon_code);
+			$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
+			 dropload();
+		} else if (getlocalStorage('btn_clk_val') == "Edit") {
+			var data = getlocalStorage("ls_pageList");
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#preprocessorder").val(data.preprocess_order);
+			$("#cmbrecon").val(data.recon_code);
+			$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
+			$("#Cmbclone").prop('disabled', true);
+			$("#btnclone").prop('disabled', true);
+			$("#txtpreprocesscode").val(data.preprocess_code);			
+			dropload();
+			$("#Cmbprocessmethod").val(data.process_method);
+			processmethod1();
+			preprocessfetch(data.preprocess_code);			
+		}else if (getlocalStorage('btn_clk_val') == "View") {
+			var data = getlocalStorage("ls_pageList");
+			$("#txtmode").val(getlocalStorage('btn_clk_val'));
+			$("#preprocessorder").val(data.preprocess_order);
+			$("#cmbrecon").val(data.recon_code);
+			$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
+			$("#savesubmit").hide();
+			$("#btnsubmit").hide();
+			 dropload();
+			$("#preprocessname").prop('disabled', true);
+			$("#preprocessorder").prop('disabled', true);
+			$("#Cmbprocessmethod").prop('disabled', true);
+			$("#cmbgetrecon").prop('disabled', true);
+			$("#Cmbfunction").prop('disabled', true);
+			$("#Cmbreconfield").prop('disabled', true);
+			$("#Cmbreconfield2").prop('disabled', true);
+			$("#Cmbreconfield1").prop('disabled', true);
+			$("#querydata").prop('disabled', true);
+			$("#holdflag").prop('disabled', true);
+			$("#txtpreprocesscode").prop('disabled', true);
+			$("#cmbrecon").prop('disabled', true);
+			$("#querydata").prop('disabled', true);
+			$("#cmblookupdataset").prop('disabled', true);
+			$("#Cmblookupdatasetfield").prop('disabled', true);
+			$("#Cmbclone").prop('disabled', true);
+			$("#btnclone").prop('disabled', true);
+			$("#returnflag").prop('disabled', true);
+			$("#postprocessflag").prop('disabled', true);
+			$("#CmbExpression").prop('disabled', true);
+		}
+		function dropload() {
+		//recon type
+			var in_master_code = "QCD_PROCESSM";
+			var in_user_code = sessionStorage.getItem("usrname");
+			var selectedValue = '@(header?["process_method"]?.ToString() ?? "")';
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#Cmbprocessmethod").empty();
+					$("#Cmbprocessmethod").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#Cmbprocessmethod").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					});
+					$("#Cmbprocessmethod").val(selectedValue);
+					processmethod1();
+					datasetcombo();
+				}
+			});
+			//recon name
+			var data = {};
+			data.in_user_gid = 0;
+			data.in_active_status = '';
+			data.in_user_code = sessionStorage.getItem("usrname");
+			var Context = data;
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Reconlistfetch',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify(data),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var res = JSON.parse(response);
+						$("#cmbrecon").empty();
+						$("#cmbrecon").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(res, function (index, item) {
+							$("#cmbrecon").append($('<option>', {
+								value: item.recon_code,
+								text: item.recon_name
+							}));
+						});
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+			// holdflag flag
+			var in_master_code = "QCD_YN";
+			var in_user_code = sessionStorage.getItem("usrname");
+			var selectedValue = '@(header?["hold_flag"]?.ToString() ?? "")';
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#holdflag").empty();
+					$("#holdflag").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#holdflag").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					});
+					$("#holdflag").val(selectedValue);
+				}
+			});
+			// postprocessflag flag
+			var in_master_code = "QCD_YN";
+			var in_user_code = sessionStorage.getItem("usrname");
+			var selectedValue = '@(header?["postprocess_flag"]?.ToString() ?? "")';
+			$.ajax({
+				type: "POST",
+				url: '../Common/Qcdmaster',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_user_code: in_user_code, in_master_code: in_master_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					$("#postprocessflag").empty();
+					$("#postprocessflag").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(response, function (index, item) {
+						$("#postprocessflag").append($('<option>', {
+							value: item.masterSyscode,
+							text: item.masterName
+						}));
+					});
+					$("#postprocessflag").val('N');
+				}
+			});
+			var reconcode = $("#cmbrecon").val();
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/Preprocesslistfetchclone',
+				dataType: 'json',
+				data: JSON.stringify({ recon_code: reconcode, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					if (result != null) {
+						$("#Cmbclone").empty();
+						$("#Cmbclone").append($('<option>', {
+							value: "",
+							text: "  Select  "
+						}));
+						$.each(result, function (index, item) {
+							$("#Cmbclone").append($('<option>', {
+								value: item.preprocess_code,
+								text: item.preprocess_desc
+							}));
+						});
+					}
+					else {
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		$(document).on("change", "#Cmbprocessmethod", function () {
+			processmethodcon();
+			datasetcombo();
+		});
+		function datasetcombo() {
+			//dataset combo
+			var selectedmethod = '@(header?["process_method"]?.ToString() ?? "")'
+			if( selectedmethod == "" ){
+				 selectedmethod = $("#Cmbprocessmethod").val();
+			}
+			if (selectedmethod != ''){
+				if(selectedmethod == "QCD_LOOKUP_COMPARISON"){
+					var reconcode = $("#cmbrecon").val();
+					var in_user_code = sessionStorage.getItem("usrname");
+					var selectedValue = '@(header?["source_dataset_code"]?.ToString() ?? "")';
+					var selectedValue1 = '@(header?["comparison_dataset_code"]?.ToString() ?? "")';
+					$.ajax({
+						type: "POST",
+						url: '../Preprocess/Preprocessdatasetfetch',
+						dataType: 'json',
+						async: false,
+						data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var res = JSON.parse(response);
+							$("#sourcedataset").empty();
+							$("#sourcedataset").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res, function (index, item) {
+								$("#sourcedataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							});
+							$("#sourcedataset").val(selectedValue);
+							$("#comdataset").empty();
+							$("#comdataset").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res, function (index, item) {
+								$("#comdataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							});
+							$("#comdataset").val(selectedValue1);
+						}
+					});
+
+				} else if(selectedmethod == "QCD_COMPARISONEXP" || selectedmethod == "QCD_COMPARISONEXP_AGG") {
+					var reconcode = $("#cmbrecon").val();
+					var in_user_code = sessionStorage.getItem("usrname");
+					var selectedValue = '@(header?["source_dataset_code"]?.ToString() ?? "")';
+					var selectedValue1 = '@(header?["comparison_dataset_code"]?.ToString() ?? "")';
+					$.ajax({
+						type: "POST",
+						url: '../Theme/themerecondatasetfetch',
+						dataType: 'json',
+						async: false,
+						data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var res = JSON.parse(response);
+							$("#sourcedataset").empty();
+							$("#sourcedataset").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res, function (index, item) {
+								$("#sourcedataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							});
+							$("#sourcedataset").val(selectedValue);
+							$("#comdataset").empty();
+							$("#comdataset").append($('<option>', {
+								value: "",
+								text: "  Select  "
+							}));
+							$.each(res, function (index, item) {
+								$("#comdataset").append($('<option>', {
+									value: item.dataset_code,
+									text: item.dataset_name
+								}));
+							});
+							$("#comdataset").val(selectedValue1);
+						}
+					});
+				}
+			}
+		}
+		function processmethodcon() {
+			var processmethod = $("#Cmbprocessmethod").val();
+			var preprocesscode = $("#txtpreprocesscode").val();
+			if (preprocesscode != '') {
+				$.confirm({
+					icon: 'fa fa-warning',
+					title: 'Recon',
+					autoClose: 'cancel|10000',
+					theme: 'dark',
+					animationSpeed: 700,
+					content: 'Are you sure do you want to change Process Method Existing records will be clear!',
+					type: 'orange',
+					buttons: {
+						confirm: function () {
+							var preprocess_name = "";
+							var preprocess_Code = preprocesscode;
+							var recon_code = "";
+							var process_method = processmethod;
+							var get_recon_field = "";
+							var set_recon_field = "";
+							var process_function = "";
+							var lookup_dataset_code = "";
+							var lookup_return_field = "";
+							var process_query = "";
+							var clone_process = "";
+							var postprocessflag = "";
+							var preprocess_order = "";
+							var source_dataset_code = "";
+							var comparison_dataset_code = "";
+							var expression = "";
+							var muti_lookup_flag = '';
+							var in_cumulative_flag = "";
+							var in_opening_flag="";
+							var in_group_flag = "";
+							var in_agg_flag = "";
+							var action = "DELETEPREPROCESS";
+							var preprocess_gid = $("#preprocessgid").val();
+							var holdflag = "";
+							var action_by = sessionStorage.getItem("usrname");
+							var status = "";
+							var recorderby_type ="";
+							$.ajax({
+								type: "POST",
+								url: '../Preprocess/preprocessheader',
+								dataType: 'json',
+								data: JSON.stringify({
+									preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query,
+									lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+									set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
+									in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+									in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
+									postprocessflag: postprocessflag
+								}),
+								contentType: 'application/json; charset=utf-8',
+								success: function (response) {
+									var result = JSON.parse(response);
+									var data = result[0];
+									if (data.out_result == "1") {
+										processmethod1();
+									} else {
+										$.alert({
+											title: 'Recon',
+											content: data.out_msg,
+											type: 'red',
+										});
+									}
+								}
+							});
+						},
+						cancel: function () {
+							$.alert({
+								icon: 'fa fa-success',
+								title: 'Recon',
+								theme: 'dark',
+								content: 'Delete Canceled.!',
+								type: 'blue',
+								animationSpeed: 700,
+							});
+						},
+					},
+				});
+			} else {
+				processmethod1();
+			}
+		}
+		function processmethod1() {
+			var selectedmethod = '@(header?["process_method"]?.ToString() ?? "")';
+			if (selectedmethod != '' || $("#Cmbprocessmethod").val() != '') {
+				if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+					$("#functionview").show();
+					$("#expressiongridview").hide();
+					$("#reconfilterview").show();
+					$("#queryview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#lookupexpaggview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#lookupexpview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookuporderview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
+					$("#functionview").hide();
+					$("#expressiongridview").show();
+					$("#reconfilterview").show();
+					$("#queryview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#lookupexpaggview").hide();
+					$("#lookupexpview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookuporderview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").show();
+					$("#reconfilterview").show();
+					$("#reconvslookupview").show();
+					$("#lookupvsreconview").show();
+					$("#lookupfilterview").show();
+					$("#queryview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#lookupexpaggview").hide();
+					$("#lookupexpview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookuporderview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#queryview").show();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#lookupexpaggview").hide();
+					$("#lookupexpview").hide();
+					$("#lookuporderview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").show();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#queryview").hide();
+					$("#expressionview").show();
+					$("#reconorderview").show();
+					$("#cumulativeflag").hide();
+					$("#lblcumulativeflag").hide();
+					$("#lookupexpaggview").hide();
+					$("#lblopeningflag").hide();
+					$("#openingflag").hide();
+					$("#lblgroupflag").hide();
+					$("#groupflag").hide();
+					$("#lblaggflag").hide();
+					$("#aggflag").hide();
+					$("#lookupexpview").hide();
+					$("#lookuporderview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").show();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#queryview").hide();
+					$("#expressionview").show();
+					$("#reconorderview").hide();
+					$("#lookupexpaggview").hide();
+					$("#cumulativeflag").show();
+					$("#lblcumulativeflag").show();
+					$("#lblopeningflag").show();
+					$("#openingflag").show();
+					$("#lblgroupflag").show();
+					$("#groupflag").show();
+					$("#lblaggflag").show();
+					$("#aggflag").show();
+					$("#lookupexpview").hide();
+					$("#aggregationgroupingview").show();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#lookuporderview").hide();
+					$("#comparsionfilterview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+					$("#functionview").hide();
+					$("#expressiongridview").show();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#queryview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#lookupexpaggview").hide();
+					$("#lookupexpview").hide();
+					$("#preprocessconditionview").show();
+					$("#sourcefilterview").show();
+					$("#lookuporderview").hide();
+					$("#comparsionfilterview").show();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#sourcedataset").prop('disabled', false);
+					$("#comdataset").prop('disabled', false);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();			
+					$("#queryview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#lookupexpaggview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookuporderview").hide();
+					$("#lookupexpview").show();
+					$("#lookupfilterview").show();
+					$("#aggregatefunctionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#queryview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#lookuporderview").show();
+					$("#lookupexpaggview").show();
+					$("#lookupexpview").hide();
+					$("#agglookupgroupingview").show();
+					$("#lookupfilterview").show();
+					$("#aggregatefunctionview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#sourcedataset").prop('disabled', true);
+					$("#comdataset").prop('disabled', true);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+					$("#functionview").hide();
+					$("#expressiongridview").show();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#queryview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").show();
+					$("#aggregatefunctionview").show();
+					$("#aggregateconditionview").show();
+					$("#sourcefilterview").show();
+					$("#comparsionfilterview").show();
+					$("#lookuporderview").hide();
+					$("#lookupexpaggview").hide();
+					$("#lookupexpview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookupcomparsionview").hide();
+					$("#lookupfilterview").hide();				
+					$("#sourcedataset").prop('disabled', false);
+					$("#comdataset").prop('disabled', false);
+				}
+				else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_COMPARISON') {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconfilterview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#lookupfilterview").hide();
+					$("#queryview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#lookupexpaggview").hide();
+					$("#lookupexpview").hide();
+					$("#preprocessconditionview").show();
+					$("#sourcefilterview").show();
+					$("#lookuporderview").hide();
+					$("#comparsionfilterview").show();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookupcomparsionview").show();
+					$("#sourcedataset").prop('disabled', false);
+					$("#comdataset").prop('disabled', false);
+				}
+				else {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#reconfilterview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#queryview").hide();
+					$("#lookupfilterview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookupexpview").hide();
+					$("#lookuporderview").hide();
+					$("#lookupexpaggview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#lookupcomparsionview").hide();
+				}
+			} else {
+					$("#functionview").hide();
+					$("#expressiongridview").hide();
+					$("#reconfilterview").hide();
+					$("#lookupdatasetview").hide();
+					$("#reconvslookupview").hide();
+					$("#lookupvsreconview").hide();
+					$("#queryview").hide();
+					$("#lookupfilterview").hide();
+					$("#expressionview").hide();
+					$("#reconorderview").hide();
+					$("#aggregationgroupingview").hide();
+					$("#preprocessconditionview").hide();
+					$("#sourcefilterview").hide();
+					$("#comparsionfilterview").hide();
+					$("#agglookupgroupingview").hide();
+					$("#lookupexpview").hide();
+					$("#lookuporderview").hide();
+					$("#lookupexpaggview").hide();
+					$("#aggregatefunctionview").hide();
+					$("#aggregateconditionview").hide();
+					$("#lookupcomparsionview").hide();
+			}
+		}
+	});
+	function saveheadersubmit() {
+		try {
+			var preprocess_name = $("#preprocessname").val();
+			var preprocess_Code = $("#txtpreprocesscode").val();
+			var recon_code = $("#cmbrecon").val();
+			var process_method = $("#Cmbprocessmethod").val();
+			var postprocessflag = $("#postprocessflag").val();
+			var get_recon_field = "";
+			var set_recon_field = "";
+			var expression = "";
+			var process_function = "";
+			var lookup_dataset_code = "";
+			var lookup_return_field = "";
+			var source_dataset_code = "";
+			var comparison_dataset_code = "";
+			var process_query = "";
+			var clone_process = "";
+			var returnflag = '';
+			var muti_lookup_flag = "";
+			var recorderby_type = "";
+			var in_cumulative_flag = "";
+			var in_opening_flag="";
+			var in_group_flag = "";
+			var in_agg_flag = "";
+			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				if ($("#cmbgetrecon").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbfunction").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Function cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				lookup_dataset_code = $("#cmblookupdataset").val();
+				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
+				var checkbox1 = document.getElementById("lookupflag");
+				if (checkbox1.checked) {
+					lookup_return_field = "";
+					set_recon_field = "";
+					muti_lookup_flag = 'Y';
+				} else {
+					if ($("#Cmblookupdatasetfield").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Lookup Return Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#Cmbreconfield1").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Update Recon Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					muti_lookup_flag = '';
+				}
+				var checkbox = document.getElementById("returnflag");
+				if (checkbox.checked) {
+					var returnflag = 'Y';
+				} else {
+					var returnflag = 'N';
+				}
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+				process_query = $("#querydata").val();				
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+				recorderby_type = $("input[name='reconorderby']:checked").val();
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+				if ($('#cumulativeflag').is(":checked")) {
+					in_cumulative_flag = "Y";
+				}
+				if ($('#openingflag').is(":checked")) {
+					in_opening_flag = "Y";
+				}
+				if ($('#groupflag').is(":checked")) {
+					in_group_flag = "Y";
+				}
+				if ($('#aggflag').is(":checked")) {
+					in_agg_flag = "Y";
+				}
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+				if ($("#sourcedataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Source Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#comdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Comparision Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}				
+				set_recon_field = $("#Cmbreconfield2").val();
+				source_dataset_code = $("#sourcedataset").val();
+				comparison_dataset_code = $("#comdataset").val();
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+				lookup_dataset_code = $("#cmblookupdataset1").val();
+				if ($("#cmblookupdataset1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+				lookup_dataset_code = $("#cmblookupdataset2").val();
+				lookup_return_field = $("#Cmblookupdatasetfield1").val();
+				expression = $("#CmbExpression1").val();
+				if ($("#cmblookupdataset2").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#CmbExpression1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Experssion cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($('#cumulativeflag1').is(":checked")) {
+					in_cumulative_flag = "Y";
+				}
+				if ($('#openingflag1').is(":checked")) {
+					in_opening_flag = "Y";
+				}
+				if ($('#groupflag1').is(":checked")) {
+					in_group_flag = "Y";
+				}
+				if ($('#aggflag1').is(":checked")) {
+					in_agg_flag = "Y";
+				}
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG'|| $("#Cmbprocessmethod").val() == 'QCD_LOOKUP_COMPARISON') {
+				if ($("#sourcedataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Source Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#comdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Source Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				source_dataset_code = $("#sourcedataset").val();
+				comparison_dataset_code = $("#comdataset").val();
+			}	
+			var preprocess_order = $("#preprocessorder").val();
+			var action = "";
+			var preprocess_gid = $("#preprocessgid").val();
+			var status = "";
+			if (preprocess_gid > 0) {
+				preprocess_gid = $("#preprocessgid").val();				
+				action = "UPDATE";
+				status = "Y";
+			} else {
+				preprocess_gid = 0;
+				action = "INSERT"
+				status = "D";
+			}
+			var action_by = sessionStorage.getItem("usrname");
+			var holdflag = $("#holdflag").val();
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
+					postprocessflag: postprocessflag
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function saveheader() {
+		try {
+			var preprocess_name = $("#preprocessname").val();
+			var preprocess_Code = $("#txtpreprocesscode").val();
+			var recon_code = $("#cmbrecon").val();
+			var process_method = $("#Cmbprocessmethod").val();
+			var postprocessflag = $("#postprocessflag").val();
+			var get_recon_field = "";
+			var set_recon_field = "";
+			var expression = "";
+			var process_function = "";
+			var lookup_dataset_code = "";
+			var lookup_return_field = "";
+			var source_dataset_code = "";
+			var comparison_dataset_code = "";
+			var process_query = "";
+			var clone_process = "";
+			var returnflag = '';
+			var muti_lookup_flag = "";
+			var recorderby_type = "";
+			if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+				if ($("#cmbgetrecon").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbreconfield").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Update Recon Field  cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmbfunction").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Function cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				get_recon_field = $("#cmbgetrecon").val();
+				set_recon_field = $("#Cmbreconfield").val();
+				process_function = $("#Cmbfunction").val();
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+				if ($("#cmblookupdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Look up cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				lookup_dataset_code = $("#cmblookupdataset").val();
+				lookup_return_field = $("#Cmblookupdatasetfield").val();
+				set_recon_field = $("#Cmbreconfield1").val();
+				var checkbox1 = document.getElementById("lookupflag");
+				if (checkbox1.checked) {
+					lookup_return_field = "";
+					set_recon_field = "";
+					muti_lookup_flag = 'Y';
+				} else {
+					if ($("#Cmblookupdatasetfield").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Lookup Return Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					if ($("#Cmbreconfield1").val() == "") {
+						$.alert({
+							title: 'Recon',
+							content: "Update Recon Field cannot be empty",
+							type: 'green',
+						});
+						return;
+					}
+					muti_lookup_flag = '';
+				}
+				var checkbox = document.getElementById("returnflag");
+				if (checkbox.checked) {
+					var returnflag = 'Y';
+				} else {
+					var returnflag = 'N';
+				}
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+				process_query = $("#querydata").val();
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+				recorderby_type = $("input[name='reconorderby']:checked").val();
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
+				expression = $("#CmbExpression").val();
+				set_recon_field = $("#Cmbreconfield2").val();
+				if ($('#cumulativeflag').is(":checked")) {
+					in_cumulative_flag = "Y";
+				}
+				if ($('#openingflag').is(":checked")) {
+					in_opening_flag = "Y";
+				}
+				if ($('#groupflag').is(":checked")) {
+					in_group_flag = "Y";
+				}
+				if ($('#aggflag').is(":checked")) {
+					in_agg_flag = "Y";
+				}
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+				if ($("#sourcedataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Source Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#comdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Comparision Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}				
+				set_recon_field = $("#Cmbreconfield2").val();
+				source_dataset_code = $("#sourcedataset").val();
+				comparison_dataset_code = $("#comdataset").val();
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+				lookup_dataset_code = $("#cmblookupdataset1").val();
+				if ($("#cmblookupdataset1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+			} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+				lookup_dataset_code = $("#cmblookupdataset2").val();
+				lookup_return_field = $("#Cmblookupdatasetfield1").val();
+				expression = $("#CmbExpression1").val();
+				if ($("#cmblookupdataset2").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#CmbExpression1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Experssion cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#Cmblookupdatasetfield1").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Lookup Field cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($('#cumulativeflag1').is(":checked")) {
+					in_cumulative_flag = "Y";
+				}
+				if ($('#openingflag1').is(":checked")) {
+					in_opening_flag = "Y";
+				}
+				if ($('#groupflag1').is(":checked")) {
+					in_group_flag = "Y";
+				}
+				if ($('#aggflag1').is(":checked")) {
+					in_agg_flag = "Y";
+				}
+			}
+			else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG' || $("#Cmbprocessmethod").val() == 'QCD_LOOKUP_COMPARISON') {
+				if ($("#sourcedataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Source Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				if ($("#comdataset").val() == "") {
+					$.alert({
+						title: 'Recon',
+						content: "Source Dataset cannot be empty",
+						type: 'green',
+					});
+					return;
+				}
+				source_dataset_code = $("#sourcedataset").val();
+				comparison_dataset_code = $("#comdataset").val();
+			}
+			var in_cumulative_flag = "";
+			var in_opening_flag="";
+			var in_group_flag = "";
+			var in_agg_flag = "";			
+			
+			var preprocess_order = $("#preprocessorder").val();
+			var action = "";
+			var preprocess_gid = $("#preprocessgid").val();
+			var status = "";
+			if (preprocess_gid > 0) {
+				preprocess_gid = $("#preprocessgid").val();
+				if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+					addRowfilter();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+					addRow();
+					addRowrecon();
+					addRowlookupfilter();
+					addRowfilter();
+					addRowlookup();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION' || $("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP' || $("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
+					addRowfilter();
+					addexp();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+					addRowcondition();
+					addRowsource();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+					addRowlookupfilter();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+					addrowaggexplookup();
+					addRowlookupfilter();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_COMPARISON') {
+					addRowlookupcomparsion();
+					addRowsource();
+					addRowcondition();
+					return;
+				} else if($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+					addRowcondition();
+					addRowsource();
+					return;				
+				}
+				else {	
+					return;
+				}
+				
+			} else {
+				preprocess_gid = 0;
+				action = "INSERT"
+				status = "D";
+			}
+			var action_by = sessionStorage.getItem("usrname");
+			var holdflag = $("#holdflag").val();
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/preprocessheader',
+				dataType: 'json',
+				data: JSON.stringify({
+					preprocess_name: preprocess_name, recon_code: recon_code, get_recon_field: get_recon_field, process_method: process_method, process_query: process_query, in_returnflag: returnflag,
+					lookup_dataset_code: lookup_dataset_code, lookup_return_field, clone_process: clone_process, preprocess_order: preprocess_order, preprocess_Code: preprocess_Code, hold_flag: holdflag,
+					set_recon_field: set_recon_field, process_function: process_function, lookup_multi_return_flag: muti_lookup_flag,recorderby_type:recorderby_type,
+					in_cumulative_flag:in_cumulative_flag,in_opening_flag:in_opening_flag,in_group_flag:in_group_flag,in_agg_flag:in_agg_flag,source_dataset_code:source_dataset_code,comparison_dataset_code:comparison_dataset_code,
+					in_action: action, in_action_by: action_by, preprocess_gid: preprocess_gid, active_status: status, expression: expression,
+					postprocessflag: postprocessflag
+				}),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					var result = JSON.parse(response);
+					var data = result[0];
+					if (data.out_result == "1") {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'green',
+						});
+						$("#preprocessgid").val(data.in_preprocess_gid);
+						$("#txtpreprocesscode").val(data.in_preprocess_code);
+						preprocessfetch($("#txtpreprocesscode").val());
+					} else {
+						$.alert({
+							title: 'Recon',
+							content: data.out_msg,
+							type: 'red',
+						});
+					}
+				},
+				error: function (er) {
+					alert(er)
+					console.log(er)
+				}
+			});
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}
+	function preprocessfetch(preprocess_code) {
+		var cmbpreprocess_code = preprocess_code;
+		var in_user_code = sessionStorage.getItem("usrname");
+		var data = {};
+		data.in_user_gid = 0;
+		data.in_active_status = '';
+		var Context = data;
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/Preprocessfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ preprocess_code: cmbpreprocess_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				var result = JSON.parse(response);
+				if (result != null) {	
+					$("#txtpreprocesscode").val(result.header[0].preprocess_code);
+					$("#preprocessgid").val(result.header[0].preprocess_gid)
+					$("#cmbrecon").val(result.header[0].recon_code);
+					jQuery('#cmbrecon').trigger("change");
+					$("#cmbreconname_desc").val(sessionStorage.getItem("reconname"));
+					$("#preprocessname").val(result.header[0].preprocess_desc);
+					$("#preprocessorder").val(result.header[0].preprocess_order);
+					$("#preprocessgid").val(result.header[0].preprocess_gid);
+					$("#Cmbprocessmethod").val(result.header[0].process_method);
+					if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
+						$("#cmbgetrecon").val(result.header[0].get_recon_field);
+						jQuery('#cmbgetrecon').trigger("change");
+						$("#Cmbfunction").val(result.header[0].process_function);
+						$("#Cmbreconfield").val(result.header[0].set_recon_field);
+						if (result.filter.length > 0) {
+							$("#gd_filter").empty();
+							$("#gd_filter").append("<div id='grid_filter'></div>");
+							grid_filterdata(result.filter);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
+						if (result.reconexp.length > 0) {
+							grid_expression(result.reconexp)
+						} else {
+							grid_expression([])
+						}
+						if (result.filter.length > 0) {
+							$("#gd_filter").empty();
+							$("#gd_filter").append("<div id='grid_filter'></div>");
+							grid_filterdata(result.filter);
+						}
+						else {
+							grid_filterdata([]);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP') {
+						$("#cmblookupdataset").val(result.header[0].lookup_dataset_code);
+						jQuery('#cmblookupdataset').trigger("change");
+						$("#Cmblookupdatasetfield").val(result.header[0].lookup_return_field);
+						$("#Cmbreconfield1").val(result.header[0].set_recon_field);
+						if (result.header[0].lookup_group_flag == "Y") {
+							$("#returnflag").prop("checked", true);
+						} else {
+							$("#returnflag").prop("checked", false);
+						}
+						if (result.header[0].lookup_multi_return_flag == "Y") {
+							$("#lookupflag").prop("checked", true);
+							lookupflagjs();
+						} else {
+							$("#lookupflag").prop("checked", false);
+						}
+						if (result.lookup.length > 0) {
+							grid_lookupfield(result.lookup)
+						} else {
+							grid_lookupfield([]);
+						}
+						if (result.condition.length > 0){
+							grid_lookup(result.condition)
+						} else {
+							grid_lookup([]);
+						}
+						if (result.conditionlookup.length > 0) {
+							grid_lookuprecon(result.conditionlookup)
+						} else {
+							grid_lookuprecon([])
+						}
+						if (result.filterlookup.length > 0) {
+							$("#gd_lookupfilter").empty();
+							$("#gd_lookupfilter").append("<div id='grid_lookupfilter'></div>");
+							grid_lookupfilter(result.filterlookup);
+						}
+						else {
+							grid_lookupfilter([]);
+						}
+						if (result.filter.length > 0) {
+							$("#gd_filter").empty();
+							$("#gd_filter").append("<div id='grid_filter'></div>");
+							grid_filterdata(result.filter);
+						}
+						else {
+							grid_filterdata([]);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_QUERY') {
+						$("#querydata").val(result.header[0].process_query);					
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_CUMULATIVEXP') {
+						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
+						$("#CmbExpression").val(result.header[0].process_expression)
+						if (result.preprocessorder.length > 0) {
+							grid_cumexporder(result.preprocessorder)
+						} else {
+							grid_cumexporder([]);
+						}
+						if (result.filter.length > 0) {
+							$("#gd_filter").empty();
+							$("#gd_filter").append("<div id='grid_filter'></div>");
+							grid_filterdata(result.filter);
+						}
+						else {
+							grid_filterdata([]);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_AGGEXP') {
+						$("#CmbExpression").val(result.header[0].process_expression);
+						$("#Cmbreconfield2").val(result.header[0].set_recon_field);
+						if (result.header[0].cumulative_flag == "Y") {
+							$('#cumulativeflag').attr('checked', true);
+						}
+						if (result.header[0].opening_flag == "Y") {
+							$('#openingflag').attr('checked', true);
+						}
+						if (result.header[0].group_flag == "Y") {
+							$('#groupflag').attr('checked', true);
+						}
+						if (result.header[0].agg_flag == "Y") {
+							$('#aggflag').attr('checked', true);
+						}
+						if (result.aggexp.length > 0) {
+							grid_aggexp(result.aggexp)
+						} else {
+							grid_aggexp([]);
+						}
+						if (result.filter.length > 0) {
+							$("#gd_filter").empty();
+							$("#gd_filter").append("<div id='grid_filter'></div>");
+							grid_filterdata(result.filter);
+						}
+						else {
+							grid_filterdata([]);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+						$("#sourcedataset").val(result.header[0].source_dataset_code);
+						$("#comdataset").val(result.header[0].comparison_dataset_code);
+						if (result.reconexp.length > 0) {
+							grid_expression(result.reconexp)
+						} else {
+							grid_expression([])
+						}
+						if (result.preprocesscondition.length > 0) {
+							grid_preprocesscondition(result.preprocesscondition)
+						} else {
+							grid_preprocesscondition([]);
+						}
+						if (result.sourcefilter.length > 0) {
+							grid_sourcefilter(result.sourcefilter)
+						} else {
+							grid_sourcefilter([]);
+						}
+						if (result.comparsionfilter.length > 0) {
+							grid_comparisionfilter(result.comparsionfilter)
+						} else {
+							grid_comparisionfilter([]);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXPRESSION') {
+						$("#cmblookupdataset1").val(result.header[0].lookup_dataset_code);
+						jQuery('#cmblookupdataset1').trigger("change");
+						if (result.filterlookup.length > 0)
+						{
+							grid_lookupfilter(result.filterlookup)
+						}
+						else
+						{
+							grid_lookupfilter([]);
+						}
+						if (result.lookupexp.length > 0) {
+							grid_expression1(result.lookupexp)
+						} else {
+							grid_expression1([])
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_EXP_AGG') {
+						$("#CmbExpression1").val(result.header[0].process_expression);
+						$("#cmblookupdataset2").val(result.header[0].lookup_dataset_code);
+						jQuery('#cmblookupdataset2').trigger("change");
+						$("#Cmblookupdatasetfield1").val(result.header[0].lookup_return_field);
+						if (result.lookupaggexp.length > 0)
+						{
+							grid_aggexplookup(result.lookupaggexp)
+						} else
+						{
+							grid_aggexplookup([]);
+						}
+						if (result.lookuporder.length > 0)
+						{
+							grid_lookuporder(result.lookuporder)
+						} else {
+							grid_lookuporder([]);
+						}
+						if (result.filterlookup.length > 0) {
+							$("#gd_lookupfilter").empty();
+							$("#gd_lookupfilter").append("<div id='grid_lookupfilter'></div>");
+							grid_lookupfilter(result.filterlookup);
+						}
+						else {
+							grid_lookupfilter([]);
+						}
+						if (result.header[0].recorderby_type == "ASC")
+						{
+							$("#reconorderby3").prop("checked", true);
+						}else {
+							$("#reconorderby4").prop("checked", true);
+						}
+						if (result.header[0].cumulative_flag == "Y") {
+							$('#cumulativeflag1').attr('checked', true);
+						}
+						if (result.header[0].opening_flag == "Y") {
+							$('#openingflag1').attr('checked', true);
+						}
+						if (result.header[0].group_flag == "Y") {
+							$('#groupflag1').attr('checked', true);
+						}
+						if (result.header[0].agg_flag == "Y") {
+							$('#aggflag1').attr('checked', true);
+						}
+					} else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
+						if (result.reconexp.length > 0) {
+							grid_expression(result.reconexp)
+						} else {
+							grid_expression([])
+						}
+						if (result.preprocesscondition.length > 0) {
+							grid_preprocesscondition(result.preprocesscondition)
+						} else {
+							grid_preprocesscondition([]);
+						}
+						if (result.sourcefilter.length > 0) {
+							grid_sourcefilter(result.sourcefilter)
+						} else {
+							grid_sourcefilter([]);
+						}
+						if (result.comparsionfilter.length > 0) {
+							grid_comparisionfilter(result.comparsionfilter)
+						} else {
+							grid_comparisionfilter([]);
+						}
+						if (result.comaggfun.length > 0) {
+							grid_aggfunction(result.comaggfun)
+						} else {
+							grid_aggfunction([]);
+						}
+						if (result.comaggcon.length > 0) {
+							grid_aggcondition(result.comaggcon)
+						} else {
+							grid_aggcondition([]);
+						}
+					} else if($("#Cmbprocessmethod").val() == 'QCD_LOOKUP_COMPARISON') {
+						$("#sourcedataset").val(result.header[0].source_dataset_code);
+						$("#comdataset").val(result.header[0].comparison_dataset_code);
+						if (result.lookupcomparsion.length > 0) {
+							grid_lookupcomparsion(result.lookupcomparsion)
+						} else {
+							grid_lookupcomparsion([]);
+						}
+						if (result.preprocesscondition.length > 0) {
+							grid_preprocesscondition(result.preprocesscondition)
+						} else {
+							grid_preprocesscondition([]);
+						}
+						if (result.sourcefilter.length > 0) {
+							grid_sourcefilter(result.sourcefilter)
+						} else {
+							grid_sourcefilter([]);
+						}
+						if (result.comparsionfilter.length > 0) {
+							grid_comparisionfilter(result.comparsionfilter)
+						} else {
+							grid_comparisionfilter([]);
+						}
+					}
+				}
+			}
+		});
+	}
+	function saveclone() {
+		if ($("#Cmbclone").val() == "") {
+			$.alert({
+				title: 'Recon',
+				content: "Clone Preprocess cannot be empty",
+				type: 'green',
+			});
+			return;
+		}
+		$.confirm({
+			icon: 'fa fa-info',
+			title: 'Recon',
+			theme: 'dark',
+			content: 'Are you sure to Clone ?',
+			type: 'orange',
+			buttons: {
+				confirm: function () {
+					var newproprecssName = $("#preprocessname").val();
+					var selectedpreprocessCode = $("#Cmbclone").val();
+					var in_user_code = sessionStorage.getItem("usrname");
+					$.ajax({
+						type: "POST",
+						url: '../Preprocess/preprocessclone',
+						dataType: 'json',
+						data: JSON.stringify({ in_preprocess_name: newproprecssName, in_clone_preprocess_code: selectedpreprocessCode, in_user_code: in_user_code }),
+						contentType: 'application/json; charset=utf-8',
+						success: function (response) {
+							var result = JSON.parse(response);
+							if (result.length > 0) {
+								if (result[0].out_result == '1') {
+									$.alert({
+										title: 'Recon',
+										content: result[0].out_msg,
+										type: 'green',
+									});
+									preprocessfetch(result[0].out_preprocess_code);
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: result[0].out_msg,
+										type: 'red',
+									});
+								}
+							}
+						}
+					});
+					$("#Cmbclone").val("");
+				},
+				cancel: function () {
+					$.alert({
+						icon: 'fa fa-success',
+						title: 'Recon',
+						theme: 'dark',
+						content: 'clone Canceled.!',
+						type: 'blue',
+						animationSpeed: 700,
+					});
+					$("#Cmbclone").val("");
+				},
+			},
+		});
+	}
+</script>
+
+

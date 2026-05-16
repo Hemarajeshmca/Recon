@@ -1,0 +1,120 @@
+﻿@model Recon_proto.Controllers.PreprocessController.partialfetchmodel
+@using Newtonsoft.Json.Linq
+@{
+	JObject json = null;
+
+	if (!string.IsNullOrEmpty(Model?.partialdata))
+	{
+		json = JObject.Parse(Model.partialdata);
+	}
+	var header = json?["header"]?[0];
+}
+<div class="accordion-wrapper">
+	<div class="accordion" id="headingfunction">
+		<input type="checkbox" name="radio-a" id="check1" checked style="display:none">
+		<label class="accordion-label" for="check1">&nbsp;&nbsp;&nbsp;Function</label>
+		<div id="headingfunction" class="accordion-content">
+			<div class="accordion-body" style="padding-left:15px;">
+				<div class="row">
+					<div class="col-sm-3">
+						<label class="form-label" for="">Lookup Recon Field&nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmbgetrecon" class="form-select form-control" onchange="cmbgetfunction()">
+						</select>
+					</div>
+					<div class="col-sm-3">
+						<label class="form-label" for="">Lookup Function&nbsp;</label>
+						<input class="form-control" id="Cmbfunction" name="Cmbfunction" type="text" value="@(header?["process_function"]?.ToString() ?? "")" data-bind="value:Cmbfunction">
+					</div>
+					<div class="col-sm-3">
+						<label class="form-label" for="">Update Recon Field&nbsp;</label>
+						<select id="Cmbreconfield" class="form-select form-control">
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var reconcode = sessionStorage.getItem("reconcode");
+	var in_user_code = sessionStorage.getItem("usrname");
+	var selectedValue = '@(header?["get_recon_field"]?.ToString() ?? "")';
+	var selectedValue1 = '@(header?["set_recon_field"]?.ToString() ?? "")';
+	$.ajax({
+		type: "POST",
+		url: '../Rulesetup/FieldAgainstRecon',
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			if (response != null) {
+				var res = JSON.parse(response);
+				$("#Cmbreconfield").empty();
+				$("#Cmbreconfield").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$("#cmbgetrecon").empty();
+				$("#cmbgetrecon").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));
+				$.each(res, function (index, item) {
+					$("#Cmbreconfield").append($('<option>', {
+						value: item.recon_field_name,
+						text: item.recon_field_desc
+					}).data('code', item.recon_field_type));
+				});
+				$.each(res, function (index, item) {
+					$("#cmbgetrecon").append($('<option>', {
+						value: item.recon_field_name,
+						text: item.recon_field_desc
+					}).data('code', item.recon_field_type));
+				});
+				$("#Cmbreconfield").val(selectedValue1);
+				$("#cmbgetrecon").val(selectedValue);
+			}
+		},
+		error: function (er) {
+			alert(er)
+			console.log(er)
+		}
+	});
+	$(document).on("change", "#cmbgetrecon", function () {
+		cmbgetfunction()
+	});
+	function cmbgetfunction() {
+		var sourcedata = "SOURCE1";
+		var codeValue = $('#cmbgetrecon').find(":selected").text();
+		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					var selected = [];
+					for (var i = 0; i < res.length; i++) {
+						selected[i] = res[i].condition_desc;
+					}
+					$("#Cmbfunction").autocomplete({
+						source: selected,
+						minLength: 0
+					}).focus(function () {
+						$("#Cmbfunction").autocomplete('search', $("#Cmbfunction").val())
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+</script>

@@ -1,0 +1,671 @@
+﻿@model Recon_proto.Controllers.PreprocessController.partialfetchmodel
+@using Newtonsoft.Json.Linq
+@{
+	JObject json = null;
+
+	if (!string.IsNullOrEmpty(Model?.partialdata))
+	{
+		json = JObject.Parse(Model.partialdata);
+	}
+	var header = json?["header"]?[0];
+	var lookup = json?["lookup"];
+}
+<div class="accordion-wrapper">
+	<div class="accordion" id="headinglookupdataset">
+		<input type="checkbox" name="radio-a" id="check4" checked style="display:none">
+		<label class="accordion-label" for="check4">&nbsp;&nbsp;&nbsp;Lookup Dataset</label>
+		<div id="headinglookupdataset" class="accordion-content">
+			<div class="row" style="margin-bottom:5px;">
+				<div class="col-sm-3">
+					<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+					<select id="cmblookupdataset" class="form-select form-control" >
+					</select>
+				</div>
+				<div class="col-sm-3" id="luprfield">
+					<label class="form-label" for="">Lookup Return Field&nbsp;</label>
+					<select id="Cmblookupdatasetfield" class="form-select form-control">
+					</select>
+				</div>
+				<div class="col-sm-3" id="uprfield">
+					<label class="form-label" for="">Update Recon Field&nbsp;</label>
+					<select id="Cmbreconfield1" class="form-select form-control">
+					</select>
+				</div>
+				<div class="col-sm-3">
+					<div>
+						<input type="checkbox" id="lookupflag" onclick="lookupflagjs()">
+						<label for="flag1">Enable Mutiple Update Recon Field </label>
+					</div>
+					<div style="margin-top:10px" id="rflag">
+						<input type="checkbox" id="returnflag" onclick="returnflag()">
+						<label for="flag1">Group Return Value</label>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12" style="margin-top:5px;" id="lookupgrid">
+				<label class="form-label" style="font-size: 14px;margin-left: -13px;font-weight:bold">&nbsp;&nbsp;&nbsp;Lookup Update Field</label>
+				<div id="grid_lookupfield">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).on("change", "#cmblookupdataset", function () {
+		lookupchange()
+	});
+	$(document).ready(function () {
+		var data1 = @Html.Raw(lookup?.ToString() ?? "[]")
+		grid_lookupfield(data1);
+		var lookupFlag = '@(header?["lookup_multi_return_flag"]?.ToString() ?? "")';
+		if ((lookupFlag || "").toUpperCase() === "Y") {
+			$("#lookupflag").prop("checked", true);
+			lookupflagjs();
+		} else {
+			$("#lookupflag").prop("checked", false);
+		}
+	});
+	$("#lookupgrid").hide();
+	var reconcode = sessionStorage.getItem("reconcode");
+	var in_user_code = sessionStorage.getItem("usrname");
+	var selectedValue = '@(header?["set_recon_field"]?.ToString() ?? "")';
+	$.ajax({
+		type: "POST",
+		url: '../Rulesetup/FieldAgainstRecon',
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			if (response != null) {
+				var res = JSON.parse(response);
+				$("#Cmbreconfield1").empty();
+				$("#Cmbreconfield1").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));				
+				$.each(res, function (index, item) {
+					$("#Cmbreconfield1").append($('<option>', {
+						value: item.recon_field_name,
+						text: item.recon_field_desc
+					}).data('code', item.recon_field_type));
+				});	
+				$("#Cmbreconfield1").val(selectedValue);
+			}
+		},
+		error: function (er) {
+			alert(er)
+			console.log(er)
+		}
+	});
+	var reconcode = sessionStorage.getItem("reconcode");;
+	var in_user_code = sessionStorage.getItem("usrname");
+	var selectedValue = '@(header?["lookup_dataset_code"]?.ToString() ?? "")';
+	$.ajax({
+		type: "POST",
+		url: '../Preprocess/Preprocessdatasetfetch',
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			var res = JSON.parse(response);
+			$("#cmblookupdataset").empty();
+			$("#cmblookupdataset").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(res, function (index, item) {
+				if (item.dataset_type == "L") {
+					$("#cmblookupdataset").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
+				}
+			});	
+			$("#cmblookupdataset").val(selectedValue);
+			lookupchange();
+		}
+	});
+	function lookupchange() {
+		var datasetcode = $("#cmblookupdataset").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		var selectedValue = '@(header?["lookup_return_field"]?.ToString() ?? "")';
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);						
+					$("#Cmblookupdatasetfield").empty();
+					$("#Cmblookupdatasetfield").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result.DataSet, function (index, item) {
+						$("#Cmblookupdatasetfield").append($('<option>', {
+							value: item.dataset_table_field,
+							text: item.field_name
+						}));
+					});
+					$("#Cmblookupdatasetfield").val(selectedValue);
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+					console.log(er)
+			}
+		});
+	}
+	function lookupflagjs() {
+		var checkbox = document.getElementById("lookupflag");
+		if (checkbox.checked) {
+			$("#lookupgrid").show();
+			$("#Cmblookupdatasetfield").prop('disabled', true);
+			$("#Cmbreconfield1").prop('disabled', true);
+			$("#luprfield").hide();
+			$("#uprfield").hide();
+			$("#rflag").hide();
+		} else {
+			$("#lookupgrid").hide();
+			$("#Cmblookupdatasetfield").prop('disabled', false);
+			$("#Cmbreconfield1").prop('disabled', false);
+			$("#luprfield").show();
+			$("#uprfield").show();
+			$("#rflag").show();
+		}
+	}
+	function grid_lookupfield(data) {
+		var lookup_return_field_desc_list = "";
+		var set_recon_field_desc_list = "";
+		$("#grid_lookupfield").kendoGrid({
+			dataSource: {
+				data: data,
+				pageSize: 5,
+				sort: [{ field: "lookup_seqno", dir: "asc" }],
+				schema: {
+					model: {
+						fields: {
+							preprocesslookup_gid: { type: "string", defaultValue: "0" },
+							preprocess_code: { type: "string" },
+							lookup_seqno: { type: "NUMBER" },
+							lookup_return_field: { type: "string", defaultValue: "" },
+							lookup_return_field_desc: { type: "string", defaultValue: "" },
+							set_recon_field: { type: "string", defaultValue: "" },
+							set_recon_field_desc: { type: "string" },
+							active_status: { type: "string" },
+							active_status_desc: { type: "string" },
+							reverse_update_flag: { type: "string", editable: false },
+							value_flag: { type: "string", editable: false }
+						}
+					}
+				}
+			},
+			height: 200,
+			groupable: false,
+			//dataBinding: setDefaultValues,
+			edit: OnEdit,
+			dataBound: function (e) {
+				resultData = e.sender._data;
+				var rows = $('#grid_lookupfield').data('kendoGrid').tbody.children();
+				setColor(rows, resultData);
+				if ($("#txtmode").val() == "View") {
+					$(".k-grid-save").hide();
+					$(".k-grid-delete").hide();
+					$(".k-grid-add").hide();
+				};
+			},
+			sortable: false,
+			selectable: "row",
+			filterable: false,
+			navigatable: true,
+			resizable: true,
+			pageable: true,
+			pageable: {
+				refresh: false,
+				pageSizes: true,
+				buttonCount: 5
+			},
+			toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+			columns: [{
+				command: [
+					{
+						name: "save",
+						id: "Save",
+						template: "<a href=''onclick='savelookupfield()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:12%;'></a>&nbsp;&nbsp;&nbsp;",
+					},
+					{
+						name: "Delete",
+						id: "Delete",
+						template: function (dataItem) {
+							if ($("#txtmode").val() == "View") {
+								return "";
+							} else {
+								return "<a href='' onclick='myDeleteJslookupfield()'  data-bs-toggle='modal'><img src = '../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;"
+							}
+						}
+					},
+				], title: "Action&nbsp;", width: "40px",
+			},
+			{
+				field: "lookup_seqno",
+				title: "Seq No.",
+				width: 50,
+				attributes: { style: "text-align: right;" },
+				editor: function (container, options) {
+					item_rate(container, options.field, '9', '3');
+				},
+			},
+			{
+				field: "preprocesslookup_gid",
+				title: "preprocesslookup_gid",
+				hidden: true,
+			},
+			{
+				field: "lookup_return_field",
+				title: "Lookup Return Field",
+				width: 100,
+				hidden: true,
+			},
+			{
+				field: "set_recon_field_desc",
+				title: "Update Recon Field",
+				editor: function (container, options) {
+					combo_editor_man_reconfield(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "set_recon_field", "grid_lookupfield",options)
+				},
+				editable: true,
+				width: 120,
+			},
+			{
+				field: "lookup_return_field_desc",
+				title: "Lookup Return Field",
+				editor: function (container, options) {
+					combo_editor_man_lookupfield(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "lookup_return_field", "grid_lookupfield",options)
+				},
+				width: 120,
+			},
+			{
+				field: "value_flag",
+				title: "Value", width: 60,
+				template: function (dataItem) {
+					var isChecked = dataItem.value_flag == "Y" ? 'checked' : '';
+					return `
+					<center>
+						<label class="switch">
+						<input type="checkbox" class="chkbx11" ${isChecked}>
+							<span class="slider round"></span>
+						</label>
+					</center>`;
+				},
+			},
+			{
+				field: "reverse_update_flag",
+				title: "Reverse Update", width: 60,
+				template: function (dataItem) {
+					var isChecked = dataItem.reverse_update_flag == "Y" ? 'checked' : '';
+					return `
+					<center>
+						<label class="switch">
+							<input type="checkbox" class="chkbx10" ${isChecked}>
+							<span class="slider round"></span>
+						</label>
+					</center>`;
+				},
+			},
+			{
+				field: "set_recon_field",
+				title: "set_recon_field",
+				hidden: true,
+			},
+			{
+				field: "active_status",
+				title: "Status",
+				hidden: true
+			},
+			{
+				field: "preprocess_code",
+				title: "preprocess_code",
+				hidden: true
+			},
+			{
+				field: "active_status_desc",
+				title: "Status",
+				width: 80,
+				hidden: true
+			}],
+			editable: true,
+		});
+	}
+	$(function () {
+		$('#grid_lookupfield').on('click', '.chkbx10', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_lookupfield').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('reverse_update_flag', 'Y');
+				dataItem.set('set_recon_field_desc','');
+				dataItem.set('set_recon_field','');
+				dataItem.set('set_recon_field_input','');
+				dataItem.set('lookup_return_field_desc','');
+				dataItem.set('lookup_return_field','');
+				dataItem.set('lookup_return_field_input','');
+			}
+			else {
+				dataItem._set('reverse_update_flag', 'N');
+				dataItem.set('set_recon_field_desc','');
+				dataItem.set('set_recon_field','');
+				dataItem.set('set_recon_field_input','');
+			}
+		})
+	});
+	$(function () {
+		$('#grid_lookupfield').on('click', '.chkbx11', function () {
+			var checked = $(this).is(':checked');
+			var grid = $('#grid_lookupfield').data().kendoGrid;
+			var dataItem = grid.dataItem($(this).closest('tr'));
+			var row = $(this).closest('tr');
+			if (checked == true) {
+				dataItem._set('value_flag', 'Y');
+				dataItem.set('lookup_return_field_desc','');
+				dataItem.set('lookup_return_field','');
+				dataItem.set('lookup_return_field_input','');
+			}
+			else {
+				dataItem._set('value_flag', 'N');
+				dataItem.set('lookup_return_field_desc','');
+				dataItem.set('lookup_return_field','');
+				dataItem.set('lookup_return_field_input','');
+			}
+		})
+	});
+	function combo_editor_man_lookupfield(container, cmbid, datasource, datafield, code_datafield, grid_id,options) {
+		var arr4 = [];
+		var datasetcode = $("#cmblookupdataset").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					var res = result.DataSet;
+					for (i = 0; res.length > i; i++) {
+						var list1 = {};
+						list1.code = res[i].dataset_table_field;
+						list1.desc = res[i].field_name;
+						arr4.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr4,
+			change: function (e) {
+				var cmb_value = this.value();
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "lookup_return_field_desc" && options.model.value_flag === "Y" && options.model.reverse_update_flag === "N" ) {
+					if (datafield == "lookup_return_field_desc" && selectedItem.lookup_return_field_desc_input != undefined)
+					{
+						selectedItem[datafield] = selectedItem.lookup_return_field_desc_input;
+					}
+					else
+					{
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				} 
+				else
+				{
+					if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+						selectedItem[datafield] = "";
+						selectedItem[code_datafield] = "";
+					}
+					else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function combo_editor_man_reconfield(container, cmbid, datasource, datafield, code_datafield, grid_id,options) {
+		var arr5 = [];
+		var reconcode = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/FieldAgainstRecon',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					var res = result;
+					for (i = 0; res.length > i; i++) {
+						var list1 = {};
+						list1.code = res[i].recon_field_name;
+						list1.desc = res[i].recon_field_desc;
+						arr5.push(list1);
+					}
+				}
+			}
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr5,
+			change: function (e) {
+				var cmb_value = this.value();
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "set_recon_field_desc" && options.model.reverse_update_flag === "Y" ) {
+					if (datafield == "set_recon_field_desc" && selectedItem.set_recon_field_desc_input != undefined)
+					{
+						selectedItem[datafield] = selectedItem.set_recon_field_desc_input;
+					}
+					else
+					{
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				} else {
+					if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+						selectedItem[datafield] = "";
+						selectedItem[code_datafield] = "";
+					}
+					else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+			}
+		});
+		$("<span class='k-invalid-msg' data-for='" + datafield + "'></span>").appendTo(container);
+	}
+	function addRowlookup() {
+		var grid = $("#grid_lookupfield").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (parseInt(grid.dataSource._data[i].lookup_seqno) > parseInt(max)) {
+				max = grid.dataSource._data[i].lookup_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ lookup_seqno: newSeqNo, preprocesslookup_gid: 0,value_flag: 'N',reverse_update_flag: 'N' });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function savelookupfield() {
+		var grid = $("#grid_lookupfield").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+		var in_lookup_seqno = model.lookup_seqno;
+		var lookup_return_field = model.lookup_return_field;
+		var set_recon_field = model.set_recon_field;
+		var reverse_update_flag = model.reverse_update_flag;
+		var value_flag = model.value_flag;
+		if (value_flag == "Y" && reverse_update_flag == 'N')
+		{
+			if(model.lookup_return_field_desc != ''){
+				var lookup_return_field = model.lookup_return_field_desc;
+			}else {
+				var lookup_return_field = model.lookup_return_field_input;
+			}
+		} else {
+			if(model.lookup_return_field == '')
+			{
+				$.alert({
+					title: 'Recon',
+					content: 'Lookup Return Field  value not selected',
+					type: 'red',
+				});
+				return false;
+			}
+		}
+		if (reverse_update_flag == "Y" && value_flag == 'Y')
+		{
+			if(model.set_recon_field_desc != ''){
+				var set_recon_field = model.set_recon_field_desc;
+			}else {
+				var set_recon_field = model.set_recon_field_input;
+			}
+		} else {
+			if(model.set_recon_field =='')
+			{
+				$.alert({
+					title: 'Recon',
+					content: 'Update Recon Field  value not selected',
+					type: 'red',
+				});
+				return false;
+			}
+		}
+		var action = "";
+		var action_by = sessionStorage.getItem("usrname");
+		var preprocesslookup_gid = model.preprocesslookup_gid;
+		if (preprocesslookup_gid == "0") {
+			preprocesslookup_gid = 0;
+			action = "INSERT"
+		} else {
+			action = "UPDATE"
+		}
+		var status = 'Y';
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/lookupfieldsave',
+			dataType: 'json',
+			data: JSON.stringify({
+				in_preprocesslookup_gid: preprocesslookup_gid, in_preprocess_code: in_txtpreprocesscode, in_lookup_seqno: in_lookup_seqno,
+				in_lookup_return_field: lookup_return_field,in_value_flag: value_flag,
+				in_set_recon_field: set_recon_field, in_action: action, in_user_code: action_by, in_active_status: status,reverse_update_flag:reverse_update_flag
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					$.alert({
+						title: 'Recon',
+						content: response.out_msg,
+						type: 'green',
+					});
+					preprocessfetch($("#txtpreprocesscode").val());
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function myDeleteJslookupfield() {
+		var grid = $("#grid_lookupfield").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocesslookup_gid = parseInt(model.preprocesslookup_gid);
+		if (preprocesslookup_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_lookup_seqno = model.lookup_seqno;
+						var lookup_return_field = model.lookup_return_field;
+						var set_recon_field = model.set_recon_field;
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var preprocesslookup_gid = model.preprocesslookup_gid;
+						var status = 'Y';
+						var reverse_update_flag = "";
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/lookupfieldsave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocesslookup_gid: preprocesslookup_gid, in_preprocess_code: in_txtpreprocesscode, in_lookup_seqno: in_lookup_seqno, in_lookup_return_field: lookup_return_field,
+								in_set_recon_field: set_recon_field, in_action: action, in_user_code: action_by, in_active_status: status,reverse_update_flag:reverse_update_flag
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response != null) {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'green',
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								}
+								else {
+								}
+							},
+							error: function (er) {
+								alert(er)
+								console.log(er)
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				}
+			});
+		}
+	}
+</script>

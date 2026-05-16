@@ -1,0 +1,91 @@
+﻿@model Recon_proto.Controllers.PreprocessController.partialfetchmodel
+@using Newtonsoft.Json.Linq
+@{
+	JObject json = null;
+	if (!string.IsNullOrEmpty(Model?.partialdata))
+	{
+		json = JObject.Parse(Model.partialdata);
+	}
+	var header = json?["header"]?[0];
+}
+<div class="accordion-wrapper">
+	<div class="accordion" id="headingexpression">
+		<input type="checkbox" name="radio-a" id="check9" checked style="display:none">
+		<label class="accordion-label" for="check9">&nbsp;&nbsp;&nbsp;Expression</label>
+		<div id="headingexpression" class="accordion-content">
+			<div class="accordion-body" style="padding-left:15px;">
+				<div class="row">
+					<div class="col-sm-3">
+						<label class="form-label" for="">Update Recon Field&nbsp;</label>
+						<select id="Cmbreconfield2" class="form-select form-control">
+						</select>
+					</div>
+					<div class="col-sm-8">
+						<label for="organization" class="form-label">
+							<span>Expression</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="cumulativeflag" id="cumulativeflag" />&nbsp;&nbsp;
+							<span id="lblcumulativeflag" style="font-size:12px;">Cumulative Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="openingflag" id="openingflag" />&nbsp;&nbsp;
+							<span id="lblopeningflag" style="font-size:12px;">Opening Flag</span>
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="groupflag" id="groupflag" />&nbsp;&nbsp;
+							<span id="lblgroupflag" style="font-size:12px;">Group Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="aggflag" id="aggflag" />&nbsp;&nbsp;
+							<span id="lblaggflag" style="font-size:12px;">Agg Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						</label>
+						<textarea id="CmbExpression" name="CmbExpression" rows="4" style="height: 32px;width: 818px;border-radius: 0.375rem;">@Html.Raw(header?["process_expression"]?.ToString() ?? "")</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	if ('@(header?["process_method"]?.ToString() ?? "")' == 'QCD_AGGEXP') {
+
+		if ("@(header?["cumulative_flag"]?.ToString() ?? "")" == "Y") {
+			$('#cumulativeflag').attr('checked', true);
+		}
+		if ("@(header?["opening_flag"]?.ToString() ?? "")" == "Y") {
+			$('#openingflag').attr('checked', true);
+		}
+		if ("@(header?["group_flag"]?.ToString() ?? "")" == "Y") {
+			$('#groupflag').attr('checked', true);
+		}
+		if ("@(header?["agg_flag"]?.ToString() ?? "")" == "Y") {
+			$('#aggflag').attr('checked', true);
+		}
+
+	}
+	var reconcode = $("#cmbrecon").val();
+	var in_user_code = sessionStorage.getItem("usrname");
+	var selectedValue = '@(header?["set_recon_field"]?.ToString() ?? "")';
+	$.ajax({
+		type: "POST",
+		url: '../Rulesetup/FieldAgainstRecon',
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			if (response != null) {
+				var res = JSON.parse(response);					
+				$("#Cmbreconfield2").empty();
+				$("#Cmbreconfield2").append($('<option>', {
+					value: "",
+					text: "  Select  "
+				}));					
+				$.each(res, function (index, item) {
+					$("#Cmbreconfield2").append($('<option>', {
+						value: item.recon_field_name,
+						text: item.recon_field_desc
+					}).data('code', item.recon_field_type));
+				});
+				$("#Cmbreconfield2").val(selectedValue);
+			}
+		},
+		error: function (er) {
+			alert(er)
+			console.log(er)
+		}
+	});
+</script>

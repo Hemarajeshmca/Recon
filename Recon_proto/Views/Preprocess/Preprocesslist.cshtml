@@ -357,7 +357,7 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].preprocess_order > max) {
+			if (parseInt(grid.dataSource._data[i].preprocess_order) > parseInt(max)) {
 				max = grid.dataSource._data[i].preprocess_order;
 			}
 		}
@@ -371,7 +371,20 @@
 
 		if (selectedItem[0].recon_code != "") {
 			setlocalStorage("ls_pageList", selectedItem);
-			document.location = "../Preprocess/PreprocessForm";
+			var cmbpreprocess_code = "";
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Preprocess/SetPreprocessData',
+				async: false,
+				data: JSON.stringify({ preprocess_code: cmbpreprocess_code,	in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function () {
+					window.location = "../Preprocess/PreprocessForm1";
+				}
+			});
+			//document.location = "../Preprocess/PreprocessForm1?preprocess_code=" + "&user_code=" + sessionStorage.getItem("usrname");
+			// document.location = "../Preprocess/PreprocessForm";
 		} else {
 			$.alert({
 				title: 'Recon',
@@ -391,12 +404,37 @@
 					if ($(mode).attr('value') == "edit") {
 						if (items.active_status != "N") {
 							btn_onClick("Edit");
-							document.location = '../Preprocess/PreprocessForm';
+							var cmbpreprocess_code = items.preprocess_code;
+							var in_user_code = sessionStorage.getItem("usrname");
+							$.ajax({
+								type: "POST",
+								url: '../Preprocess/SetPreprocessData',
+								async: false,
+								data: JSON.stringify({ preprocess_code: cmbpreprocess_code,	in_user_code: in_user_code }),
+								contentType: 'application/json; charset=utf-8',
+								success: function () {
+										window.location = "../Preprocess/PreprocessForm1";
+								}
+							});
+							//document.location = "../Preprocess/PreprocessForm1?preprocess_code="+ items.preprocess_code + "&user_code=" + sessionStorage.getItem("usrname");
 						}
 					}
 					else if ($(mode).attr('value') == "view") {
 						btn_onClick('View');
-						document.location = "../Preprocess/PreprocessForm";
+						var cmbpreprocess_code = items.preprocess_code;
+						var in_user_code = sessionStorage.getItem("usrname");
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/SetPreprocessData',
+							async: false,
+							data: JSON.stringify({ preprocess_code: cmbpreprocess_code,	in_user_code: in_user_code }),
+							contentType: 'application/json; charset=utf-8',
+							success: function () {
+									window.location = "../Preprocess/PreprocessForm1";
+							}
+						});
+						// document.location = "../Preprocess/PreprocessForm";
+						//document.location = "../Preprocess/PreprocessForm1?preprocess_code="+ items.preprocess_code + "&user_code=" + sessionStorage.getItem("usrname");
 					}
 				}
 			}

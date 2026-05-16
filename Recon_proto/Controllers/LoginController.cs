@@ -1,17 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Security.Cryptography;
-using System.Text;
-using System.Data;
-using System.Net;
+﻿using DocumentFormat.OpenXml.EMMA;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using Recon_proto.Models;
+using System.Data;
+using System.Globalization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
-using Recon_proto.Models;
+using System.Security.Cryptography;
+using System.Text;
+using static Recon_proto.Controllers.AdminController;
 using static Recon_proto.Controllers.LoginController;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using DocumentFormat.OpenXml.EMMA;
-using System.Globalization;
 
 namespace Recon_proto.Controllers
 {
@@ -36,7 +37,7 @@ namespace Recon_proto.Controllers
 
         [HttpPost]
         public string Login_validation([FromBody] Login_model1 model)
-        {
+        {            
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             Login_model loginmodel = new Login_model();
             List<user_model> objcat_lst = new List<user_model>();
@@ -46,7 +47,8 @@ namespace Recon_proto.Controllers
             {
                 using (var client = new HttpClient())
                 {
-                    ipAddress = GetLocalIPAddress();
+                    //ipAddress = GetLocalIPAddress();
+                    ipAddress = GetClientIpAddress();
                     var pass = Encrypt(model.Password);
                     loginmodel.user_id = model.UserName;
                     loginmodel.password = pass;
@@ -97,6 +99,7 @@ namespace Recon_proto.Controllers
                                 }
                                 else
                                 {
+                                   HttpContext.Session.SetString("User", result.Rows[i]["user_name"].ToString());                                   
                                     user_model objcat = new user_model();
                                     objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
                                     objcat.user_code = result.Rows[i]["user_code"].ToString();
@@ -118,13 +121,14 @@ namespace Recon_proto.Controllers
                                     _configuration.GetSection("AppSettings")["role_code"] = result.Rows[i]["usergroup_code"].ToString();
                                     _configuration.GetSection("AppSettings")["lastlogin"] = result.Rows[i]["lastlogin"].ToString();
                                     _configuration.GetSection("AppSettings")["ipAddress"] = ipAddress;
-                                   
+                                    //Response.Cookies.Append("User", result.Rows[i]["user_name"].ToString());
                                 }
                             }
                         }
                         else
                         {
-							user_model objcat = new user_model();
+                            HttpContext.Session.SetString("User", result.Rows[i]["user_name"].ToString());
+                            user_model objcat = new user_model();
 							objcat.user_gid = Convert.ToInt32(result.Rows[i]["user_gid"]);
 							objcat.user_code = result.Rows[i]["user_code"].ToString();
 							objcat.user_name = result.Rows[i]["user_name"].ToString();
@@ -159,7 +163,18 @@ namespace Recon_proto.Controllers
             IPAddress ipv4Address = addresses.FirstOrDefault(ip => ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
             return ipv4Address?.ToString() ?? "No IPv4 address found";
         }
+        public string GetClientIpAddress()
+        {
+            var ip = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            CommonController objcom = new CommonController(_configuration);
+            objcom.errorlog(ip, "GetClientIpAddress");
+            if (!string.IsNullOrEmpty(ip))
+            {
+                return ip.Split(',')[0];                
+            }
 
+            return HttpContext.Connection.RemoteIpAddress?.ToString();
+        }
         [HttpPost]
         public IActionResult changepassword_Save([FromBody] changePassword model)
         {
@@ -226,6 +241,7 @@ namespace Recon_proto.Controllers
         }
         public IActionResult session_expires()
         {
+            //Response.Cookies.Delete("User");
             return View();
         }
 
@@ -408,9 +424,19 @@ namespace Recon_proto.Controllers
 
 		public class lastloginsessionmodel
 		{
-			public String user_code { get; set; }
+			public string user_code { get; set; }
 			public string status { get; set; }
 		}
-		#endregion
-	}
+        #endregion
+        [HttpPost]
+        public IActionResult SetSession([FromBody] UserModel model)
+        {
+            HttpContext.Session.SetString("User", model.user);
+            return Ok();
+        }
+        public class UserModel
+        {
+            public string user { get; set; }
+        }
+    }
 }

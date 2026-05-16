@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Data;
@@ -24,9 +25,66 @@ namespace Recon_proto.Controllers
 		{
 			return View();
 		}
-		#region Preprocesslistfetch
+        public IActionResult SetPreprocessData([FromBody] Preprocessfetchmodel context)
+        {
+            TempData["preprocess_code"] = context.preprocess_code;
+            TempData["user_code"] = context.in_user_code;
+            return Ok();
+        }
+        public IActionResult PreprocessForm1()
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            DataTable result = new DataTable();
+            string post_data = "";
+            var preprocess_code = TempData["preprocess_code"]?.ToString();
+            var user_code = TempData["user_code"]?.ToString();
+            Preprocessfetchmodel context = new Preprocessfetchmodel();
+			context.preprocess_code = preprocess_code;
+			context.in_user_code = user_code;
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Preprocess/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("Preprocessfetch", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = response.Content.ReadAsStringAsync().Result;
+                    string cleanJson = post_data;
+                    if (post_data.StartsWith("\""))
+                    {
+                        cleanJson = JsonConvert.DeserializeObject<string>(post_data);
+                    }
+                    partialfetchmodel par1 = new partialfetchmodel();
+                    par1.partialdata = cleanJson; // store full JSON
 
-		[HttpPost]
+                    return View(par1);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "Preprocessfetch");
+                return View(ex);
+            }            
+        }
+        public class partialfetchmodel
+        {
+            public string partialdata { get; set; }
+        }
+
+        #region Preprocesslistfetch
+
+        [HttpPost]
 		public JsonResult Preprocesslistfetch([FromBody] Preprocesslistmodel context)
 		{
 			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
@@ -919,6 +977,59 @@ namespace Recon_proto.Controllers
                 for (int i = 0; i < result.Rows.Count; i++)
                 {
                     objList.preprocessaggcondition_gid = Convert.ToInt32(result.Rows[i]["in_preprocessaggcondition_gid"]);
+                    objList.out_msg = result.Rows[i]["out_msg"].ToString();
+                    objList.out_result = result.Rows[i]["out_result"].ToString();
+                }
+                return Json(objList);
+            }
+        }
+        #endregion
+
+        #region lookup comparsion
+        public class lookupcomparsionmodel
+        {
+            public int? in_preprocessdsupdate_gid { get; set; }
+            public string? in_preprocess_code { get; set; }
+            public Double in_rec_seqno { get; set; }
+            public string? in_source_field { get; set; }
+            public string? in_comparison_field { get; set; }
+            public string? in_active_status { get; set; }
+            public string? in_action { get; set; }
+            public string? in_user_code { get; set; }
+            public string? reverse_update_flag { get; set; }
+            public string? in_value_flag { get; set; }
+            public string? out_msg { get; set; }
+            public string? out_result { get; set; }
+        }
+        [HttpPost]
+        public JsonResult lookupcomparsionsave([FromBody] lookupcomparsionmodel context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            lookupcomparsionmodel objList = new lookupcomparsionmodel();
+            DataTable result = new DataTable();
+            string post_data = "";
+            string d2 = "";
+            using (var client = new HttpClient())
+            {
+                string Urlcon = "Preprocess/";
+                client.BaseAddress = new Uri(urlstring + Urlcon);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+                client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                var response = client.PostAsync("lookupcomparsionsave", content).Result;
+                Stream data = response.Content.ReadAsStreamAsync().Result;
+                StreamReader reader = new StreamReader(data);
+                post_data = reader.ReadToEnd();
+                d2 = JsonConvert.DeserializeObject<string>(post_data);
+                result = JsonConvert.DeserializeObject<DataTable>(d2);
+                for (int i = 0; i < result.Rows.Count; i++)
+                {
+                    objList.in_preprocessdsupdate_gid = Convert.ToInt32(result.Rows[i]["in_preprocessdsupdate_gid"]);
                     objList.out_msg = result.Rows[i]["out_msg"].ToString();
                     objList.out_result = result.Rows[i]["out_result"].ToString();
                 }

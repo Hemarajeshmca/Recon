@@ -968,7 +968,7 @@
         var jsondata = {};
         jsondata.in_reporttemplate_code = getselectedTemplate.reporttemplate_code;
         jsondata.in_recon_code = getselectedTemplate.recon_code;
-        jsondata.in_report_code =getselectedTemplate.report_code;
+        jsondata.in_report_code = $("#report_code").val();
         jsondata.in_reporttemplateresultset_code =$("#Resultset_code").val();
          if($("#Resultset_code").val() == "empty")
          {
@@ -1990,8 +1990,8 @@
         if (isChecked1 == "Y") {
             con = 'checked';
         }
-        if (data.system_flag == 'Y') {
-            return '<input id="display_sel" class="checkbox" type="checkbox" ' + con + ' disabled /> ';
+        if (data.display_flag == 'Y') {
+            return '<input id="display_sel" class="checkbox" type="checkbox" ' + con + '  /> ';
         } else {
             return '<input id="display_sel" class="checkbox" type="checkbox" ' + con + ' /> ';
         }
@@ -2110,7 +2110,7 @@
             editable: true,
         });
     }
-     function combo_editor_sorttype(container, cmbid, datafield, code_datafield, grid_id){
+    function combo_editor_sorttype(container, cmbid, datafield, code_datafield, grid_id){
         var arr = [];
         var list = {};
         list.code = "ASC";
@@ -2482,6 +2482,7 @@
                                     $("#txtmode").val("Edit");
                                 }
                                 tabdataFetch();
+                                detailfetch();
                             }
                         }
                         else {
@@ -2517,7 +2518,7 @@
     function savecolfilter() {
         var modelArr = [];
         var grid = $("#grid_colfilter").data("kendoGrid");
-        var colfilterData = $("#grid_colfilter").data().kendoGrid.dataSource.view();
+        var colfilterData = grid.dataSource.data();
         var checkedrows = $("#display_sel:checked", grid.tbody).closest("tr");
         var data = {};
         for (var i = 0; i < colfilterData.length; i++) {
