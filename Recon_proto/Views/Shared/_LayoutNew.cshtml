@@ -1,4 +1,7 @@
-
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
+	@{
+		var sessionTimeout = Configuration.GetValue<int>("Appsettings:TimeoutSeconds");
+	}
 <!DOCTYPE html>
 <html lang="en"
 	  class="light-style layout-navbar-fixed layout-menu-fixed layout-menu-collapsed"
@@ -285,7 +288,7 @@
 			</aside>
 			<footer class="footer">
 				<div>
-					<h2 style="color:#000;font-family:inherit;font-size:14px;margin-left:8%;float:left">Ver. 18</h2>
+					<h2 style="color:#000;font-family:inherit;font-size:14px;margin-left:8%;float:left">Ver. 18.3</h2>
 					<img src="../Assets/images/footerlogo_new.png" style="float: right;margin-right: 23px;margin-top: -10px; height: 31px;   object-fit: contain;">
 					<h6 class="copyright" style="color:#000;font-family:inherit;font-size:14px;margin-left: 12%;">Copyright © Flexicode Technologies (P) Ltd </h6>
 					<img src="../Assets/images/footerlogo_new.png" style="float: left;margin-top: -39px;margin-left: 109px;height: 28px;visibility: hidden;">
@@ -1235,22 +1238,22 @@
 			}
 		}
 
-		var sessionTimer;
-		// Reset the timer function
-		function resetSessionTimer() {
-			clearTimeout(sessionTimer);
-			sessionTimer = setTimeout(function () {
-				lastloginsession("logout")
-				sessionStorage.clear();
-				localStorage.clear();
-				window.location.href = '@Url.Action("session_expires", "Login")';
-			}, 1000 * 45 * 60); // 300000 milliseconds = 45 minutes
-			//}, 1000 * 60 * 2); // 2 minutes
-		}
-		// Call resetSessionTimer() whenever there is a user interaction event
-		document.addEventListener("mousemove", resetSessionTimer);
-		document.addEventListener("keypress", resetSessionTimer);
-		resetSessionTimer();
+		// var sessionTimer;
+		// // Reset the timer function
+		// function resetSessionTimer() {
+		// 	clearTimeout(sessionTimer);
+		// 	sessionTimer = setTimeout(function () {
+		// 		lastloginsession("logout")
+		// 		sessionStorage.clear();
+		// 		localStorage.clear();
+		// 		window.location.href = '@Url.Action("session_expires", "Login")';
+		// 	}, 1000 * 45 * 60); // 300000 milliseconds = 45 minutes
+		// 	//}, 1000 * 60 * 2); // 2 minutes
+		// }
+		// // Call resetSessionTimer() whenever there is a user interaction event
+		// document.addEventListener("mousemove", resetSessionTimer);
+		// document.addEventListener("keypress", resetSessionTimer);
+		// resetSessionTimer();
 
 		function isNumberKey(evt) {
 			var charCode = (evt.which) ? evt.which : event.keyCode
@@ -1352,6 +1355,65 @@
 
 			return result;
 		}
+	</script>
+	<script>		
+
+		var sessionTimeout = @sessionTimeout;
+		//var sessionTimeout = 1200000; // 20 minutes //60000; // 1 minute
+		//var sessionTimeout = 120000;
+		var logoutTimer;
+
+		function startTimer() {
+			clearTimeout(logoutTimer);
+
+			logoutTimer = setTimeout(function () {
+				window.location.href = '@Url.Action("session_expires", "Login")';
+			}, sessionTimeout);
+		}
+
+		function stopTimer() {
+			clearTimeout(logoutTimer);
+		}
+
+		/* start timer initially */
+		startTimer();
+
+		/* reset timer on user activity */
+		document.onclick = startTimer;
+		document.onmousemove = startTimer;
+		document.onkeypress = startTimer;
+
+
+		/* Detect AJAX / fetch requests and pause timer */
+
+		(function () {
+
+			var originalFetch = window.fetch;
+
+			window.fetch = function () {
+
+				stopTimer(); // pause timer
+
+				return originalFetch.apply(this, arguments)
+					.then(function (response) {
+						startTimer(); // restart timer after response
+						return response;
+					});
+
+			};
+
+		})();
+		// 	var user = sessionStorage.getItem("usrname");
+
+		// if (user) {
+		// 	fetch('/Login/SetSession', {
+		// 		method: 'POST',
+		// 		headers: {
+		// 			'Content-Type': 'application/json'
+		// 		},
+		// 		body: JSON.stringify({ user: user })
+		// 	});
+		// }
 	</script>
 </body>
 </html>

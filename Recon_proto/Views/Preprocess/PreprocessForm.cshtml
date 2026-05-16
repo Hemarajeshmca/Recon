@@ -2184,7 +2184,7 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].filter_seqno > max) {
+			if (parseInt(grid.dataSource._data[i].filter_seqno) > parseInt(max)) {
 				max = grid.dataSource._data[i].filter_seqno;
 			}
 		}
@@ -2598,7 +2598,7 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].filter_seqno > max) {
+			if (parseInt(grid.dataSource._data[i].filter_seqno) > parseInt(max)) {
 				max = grid.dataSource._data[i].filter_seqno;
 			}
 		}
@@ -3109,7 +3109,7 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].filter_seqno > max) {
+			if (parseInt(grid.dataSource._data[i].filter_seqno) > parseInt(max)) {
 				max = grid.dataSource._data[i].filter_seqno;
 			}
 		}
@@ -3451,7 +3451,7 @@
 			// Get the last sequence number and increment it
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].lookup_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].lookup_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].lookup_seqno;
 				}
 			}
@@ -3709,7 +3709,7 @@
 			// Get the last sequence number and increment it
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].condition_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].condition_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].condition_seqno;
 				}
 			}
@@ -4184,7 +4184,7 @@
 			// Get the last sequence number and increment it
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].condition_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].condition_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].condition_seqno;
 				}
 			}
@@ -5506,7 +5506,7 @@
 					expression = $("#CmbExpression").val();
 					set_recon_field = $("#Cmbreconfield2").val();
 				}
-				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP'|| $("#Cmbprocessmethod").val() == "QCD_COMPARISONEXP_AGG") {
 					if ($("#sourcedataset").val() == "") {
 						$.alert({
 							title: 'Recon',
@@ -5518,7 +5518,7 @@
 					if ($("#comdataset").val() == "") {
 						$.alert({
 							title: 'Recon',
-							content: "Source Dataset cannot be empty",
+							content: "Comparision Dataset cannot be empty",
 							type: 'green',
 						});
 						return;
@@ -5526,26 +5526,7 @@
 					source_dataset_code = $("#sourcedataset").val();
 					comparison_dataset_code = $("#comdataset").val();
 				}
-				else if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
-					if ($("#sourcedataset").val() == "") {
-						$.alert({
-							title: 'Recon',
-							content: "Source Dataset cannot be empty",
-							type: 'green',
-						});
-						return;
-					}
-					if ($("#comdataset").val() == "") {
-						$.alert({
-							title: 'Recon',
-							content: "Source Dataset cannot be empty",
-							type: 'green',
-						});
-						return;
-					}
-					source_dataset_code = $("#sourcedataset").val();
-					comparison_dataset_code = $("#comdataset").val();
-				}
+				
 				var in_cumulative_flag = "";
 				var in_opening_flag = "";
 				if ($('#cumulativeflag').is(":checked")) {
@@ -5563,7 +5544,7 @@
 					addRow();
 					addRowrecon();
 					addrowexporder();
-					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP' || $("#Cmbprocessmethod").val() == "QCD_COMPARISONEXP_AGG") {
 					addRowcondition();
 					}
 					if ($("#Cmbprocessmethod").val() == 'QCD_EXPRESSION') {
@@ -5901,7 +5882,7 @@
 				if (preprocess_gid > 0) {
 					preprocess_gid = $("#preprocessgid").val();
 					addRowfilter();
-					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+					if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP' || $("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
 						addRowsource();
 						addRowcomparision();
 					}
@@ -5937,7 +5918,7 @@
 							$("#preprocessgid").val(data.in_preprocess_gid);
 							$("#txtpreprocesscode").val(data.in_preprocess_code);
 							addRowfilter();
-							if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP') {
+							if ($("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP' || $("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
 								addRowsource();
 								addRowcomparision();
 							}
@@ -6808,7 +6789,7 @@
 				var max = 0;
 				var lastSeqNo = grid.dataSource._data.length;
 				for (var i = 0; i < grid.dataSource._data.length; i++) {
-					if (grid.dataSource._data[i].recorder_seqno > max) {
+					if (parseInt(grid.dataSource._data[i].recorder_seqno) >parseInt(max)) {
 						max = grid.dataSource._data[i].recorder_seqno;
 					}
 				}
@@ -7116,7 +7097,7 @@
 				var max = 0;
 				var lastSeqNo = grid.dataSource._data.length;
 				for (var i = 0; i < grid.dataSource._data.length; i++) {
-					if (grid.dataSource._data[i].grpfield_seqno > max) {
+					if (parseInt(grid.dataSource._data[i].grpfield_seqno) > parseInt(max)) {
 						max = grid.dataSource._data[i].grpfield_seqno;
 					}
 				}
@@ -7672,7 +7653,7 @@
 			// Get the last sequence number and increment it
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].condition_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].condition_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].condition_seqno;
 				}
 			}
@@ -7717,6 +7698,8 @@
 				var model = grid.dataItem($(event.target).closest("tr"));
 
 				var in_preprocess_code = $("#txtpreprocesscode").val();
+				var in_source_field = "";
+				var in_comparison_field = "";
 				var in_source_field = model.source_field_code;
 				var in_comparison_field = model.comparison_field;
 				var in_extraction_criteria = model.extraction_criteria;
@@ -7808,6 +7791,9 @@
 							var in_open_flag = "";
 							var in_close_flag = "";
 							var in_join_condition = "";
+							var in_source_field_type = "COMPARISON";
+							var in_extraction_filter = "";
+							var in_comparison_filter = "";
 							$.ajax({
 								type: "POST",
 								url: '../Preprocess/preprocesscomparisonsave',
@@ -7829,7 +7815,7 @@
 											type: 'green',
 											animationSpeed: 700,
 										});
-										getfetch($("#txtthemecode").val(), "themecond");
+										preprocessfetch($("#txtpreprocesscode").val());
 									} else {
 										$.alert({
 											title: 'Recon',
@@ -8148,7 +8134,7 @@
 			// Get the last sequence number and increment it
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].filter_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].filter_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].filter_seqno;
 				}
 			}
@@ -8776,7 +8762,7 @@
 		// Get the last sequence number and increment it
 		var lastSeqNo = grid.dataSource._data.length;
 		for (var i = 0; i < grid.dataSource._data.length; i++) {
-			if (grid.dataSource._data[i].filter_seqno > max) {
+			if (parseInt(grid.dataSource._data[i].filter_seqno) > parseInt(max)) {
 				max = grid.dataSource._data[i].filter_seqno;
 			}
 		}
@@ -9237,7 +9223,7 @@
 			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].grpfield_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].grpfield_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].grpfield_seqno;
 				}
 			}
@@ -9542,7 +9528,7 @@
 			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].recorder_seqno > max) {
+				if (parseInt(grid.dataSource._data[i].recorder_seqno) > parseInt(max)) {
 					max = grid.dataSource._data[i].recorder_seqno;
 				}
 			}
@@ -9857,7 +9843,7 @@
 			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].preprocessexp_sno > max) {
+				if (parseInt(grid.dataSource._data[i].preprocessexp_sno) > parseInt(max)) {
 					max = grid.dataSource._data[i].preprocessexp_sno;
 				}
 			}
@@ -9873,7 +9859,7 @@
 	}
 	function combo_editor_exp(container, cmbid, datasource, datafield, code_datafield, grid_id) {
 		var arr1 = [];
-		if($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP") {
+		if($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP" || $("#Cmbprocessmethod").val() == "QCD_COMPARISONEXP_AGG") {
 			var reconcode = $("#cmbrecon").val();
 			var in_user_code = sessionStorage.getItem("usrname");
 			$.ajax({
@@ -9947,7 +9933,7 @@
 	}
 	function saveexp() {
 		try {
-			if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP") {
+			if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP" || $("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
 				var grid = $("#grid_expression").data("kendoGrid");
 				var model = grid.dataItem($(event.target).closest("tr"));
 				var in_preprocess_code = $("#txtpreprocesscode").val();
@@ -10008,7 +9994,7 @@
 		}
 	}
 	function myDeleteJsexp() {
-		if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION") {
+		if ($("#Cmbprocessmethod").val()  == "QCD_EXPRESSION" || $("#Cmbprocessmethod").val()  == "QCD_COMPARISONEXP" || $("#Cmbprocessmethod").val() == 'QCD_COMPARISONEXP_AGG') {
 			var grid = $("#grid_expression").data("kendoGrid");
 		} else {
 			var grid = $("#grid_expression1").data("kendoGrid");
@@ -10216,7 +10202,7 @@
 			var max = 0;
 			var lastSeqNo = grid.dataSource._data.length;
 			for (var i = 0; i < grid.dataSource._data.length; i++) {
-				if (grid.dataSource._data[i].preprocessexp_sno > max) {
+				if (parseInt(grid.dataSource._data[i].preprocessexp_sno) > parseInt(max)) {
 					max = grid.dataSource._data[i].preprocessexp_sno;
 				}
 			}
@@ -10680,7 +10666,7 @@
 				title: "Condition Criteria",
 				width: 100,
 				editor: function (container, options) {
-					combo_editor_conditionCriteria(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "themeagg_criteria", "grid_aggcondition")
+					combo_editor_conditionCriteria(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "preprocessagg_criteria", "grid_aggcondition")
 				},
 			},
 			{
@@ -10990,7 +10976,6 @@
 			var preprocessagg_value_flag = model.preprocessagg_value_flag;
 			if (model.preprocessagg_value_flag == 'Y') {					
 				var preprocessagg_value = model.preprocessagg_value;
-				var preprocessagg_value = model.preprocessagg_value_input;
 			} else {				
 				var preprocessagg_value = model.preprocessagg_value_code;
 			}

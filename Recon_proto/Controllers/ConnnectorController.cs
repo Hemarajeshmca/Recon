@@ -12,12 +12,27 @@ namespace Recon_proto.Controllers
             _configuration = configuration;
         }
         public IActionResult connectors()
-		{
+        {
             var conn = _configuration.GetValue<string>("AppSettings:connector");
-            var user_code = _configuration.GetSection("AppSettings")["user_code"].ToString();
-            ViewBag.conn = conn+"?user_code=" + user_code;
+            var user_code = _configuration.GetValue<string>("AppSettings:user_code");
+
+            // Validate URL
+            if (!Uri.TryCreate(conn, UriKind.Absolute, out Uri validUri))
+            {
+                return BadRequest("Invalid connector URL");
+            }
+
+            //// Allow only trusted domain (IMPORTANT)
+            //if (validUri.Host != "yourdomain.com")   // change this
+            //{
+            //    return BadRequest("Unauthorized source");
+            //}
+
+            // Build URL safely
+            var safeUrl = $"{validUri}?user_code={Uri.EscapeDataString(user_code)}";
+            ViewBag.SafeUrl = safeUrl;
             return View();
-		}
+        }
         public IActionResult Importedfile()
         {
             var conn = _configuration.GetValue<string>("AppSettings:Importedfile");

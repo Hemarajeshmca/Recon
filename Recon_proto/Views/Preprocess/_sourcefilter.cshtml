@@ -1,0 +1,639 @@
+﻿@model Recon_proto.Controllers.PreprocessController.partialfetchmodel
+@using Newtonsoft.Json.Linq
+@{
+	JObject json = null;
+	if (!string.IsNullOrEmpty(Model?.partialdata))
+	{
+		json = JObject.Parse(Model.partialdata);
+	}
+	var sourcefilter = json?["sourcefilter"];
+}
+<div class="accordion-wrapper">
+	<div class="accordion" id="headingsourcefilter">
+		<input type="checkbox" name="radio-a" id="check13" style="display:none">
+		<label class="accordion-label" for="check13">&nbsp;&nbsp;&nbsp;Source Filter</label>
+		<div class="accordion-content" id="headingsourcefilter">
+			<div class="row" style="margin-bottom:5px;">
+				<div class="col-xs-12" style="margin-top:5px;">
+					<div id="gd_sourcefilter">
+						<div id="grid_sourcefilter">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function () {
+		var data1 = @Html.Raw(sourcefilter?.ToString() ?? "[]")
+		grid_sourcefilter(data1);
+	});
+	function grid_sourcefilter(data) {
+		try {
+			var join_condition_list = "";
+			var filter_field_list = "";
+			var filter_criteria_list = "";
+			var filter_value_list = "";
+			$("#grid_sourcefilter").kendoGrid({
+				dataSource: {
+					data: data,
+					pageSize: 5,
+					sort: [{ field: "filter_seqno", dir: "asc" }],
+					schema: {
+						model: {
+							fields: {
+								preprocessfilter_gid: { type: "string", defaultValue: "0" },
+								preprocess_code: { type: "string" },
+								filter_field_code: { type: "string", defaultValue: "" },
+								filter_field: { type: "string" },
+								filter_criteria: { type: "string", defaultValue: "" },
+								filter_seqno: { type: "string", defaultValue: 0 },
+								filter_value_flag: { type: "string", editable: false },
+								filter_value: { type: "string", defaultValue: "" },
+								filter_value_code: { type: "string", defaultValue: "" },
+								active_status: { type: "string" },
+								active_status_desc: { type: "string" },
+								join_condition: { type: "string", defaultValue: "" },
+								open_parentheses_flag: { type: "string", editable: false },
+								close_parentheses_flag: { type: "string", editable: false },
+							}
+						}
+					}
+				},
+				height: 185,
+				groupable: false,
+				dataBinding: setDefaultValues,
+				edit: OnEdit,
+				dataBound: function (e) {
+					resultData = e.sender._data;
+					var rows = $('#grid_sourcefilter').data('kendoGrid').tbody.children();
+					setColor(rows, resultData);
+					if ($("#txtmode").val() == "View") {
+						$(".k-grid-save").hide();
+					};
+				},
+				sortable: false,
+				selectable: "row",
+				filterable: false,
+				navigatable: true,
+				resizable: true,
+				pageable: true,
+				pageable: {
+					refresh: false,
+					pageSizes: true,
+					buttonCount: 5
+				},
+				toolbar: "<a onclick=saveheader()  href='javascript:void(0)' > <span class='fa fa-plus' style = 'color:white' > </span></a> ",
+				columns: [{
+					command: [
+						{
+							name: "save",
+							id: "Save",
+							template: "<a href=''onclick='savesourcefilter()' class='k-grid-save' data-bs-toggle='modal' ><img src = '../Assets/images/topsave.png' style='width:17%;'></a>&nbsp;&nbsp;&nbsp;",
+						},
+
+						{
+							name: "Delete",
+							id: "Delete",
+							template: function (dataItem) {
+								// Check your condition here to determine whether to show or hide the delete button
+								if ($("#txtmode").val() == "View") {
+									return ""; // Return empty string to hide the delete button
+								} else {
+									return "<a href='' onclick='myDeleteJssourcefilter()' data-bs-toggle='modal'><img src='../Assets/images/del.png'></a>&nbsp;&nbsp;&nbsp;";
+								}
+							}
+						},
+					], title: "Action&nbsp;", width: "40px",
+				},
+				{
+					field: "filter_seqno",
+					title: "Seq No.",
+					width: 60,
+					attributes: { style: "text-align: right;" },
+					editor: function (container, options) {
+						item_rate(container, options.field, '9', '3');
+					},
+				},
+				{
+					field: "open_parentheses_flag",
+					title: "(", width: 20,filterable: false,
+					template: function (dataItem) {
+						if (dataItem.preprocessfilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.open_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx3">';
+						}
+					}
+				},
+				{
+					field: "preprocessfilter_gid",
+					title: "preprocessfilter_gid",
+					hidden: true,
+				},
+				{
+					field: "preprocess_code",
+					title: "preprocess_code",
+					width: 100,
+					hidden: true,
+				},
+
+				{
+					field: "filter_field_code",
+					title: "filter_field_code",
+					width: 100,
+					hidden: true,
+				},
+				{
+					field: "filter_field",
+					title: "Filter Field",
+					width: 100,
+					editor: function (container, options) {
+						//combo_editor_man_theme(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourcefilter")
+						combo_editor_newsource(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_field_code", "grid_sourcefilter","SOURCE")
+					},
+				},
+				{
+					field: "filter_criteria",
+					title: "Filter Criteria",
+					width: 100,
+					editor: function (container, options) {
+						combo_filter_field(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_criteria", "grid_sourcefilter", "COMPARISON")
+					},
+				},
+				{
+					field: "filter_value_code",
+					title: "filter_value_code",
+					hidden: true,
+					width:50
+				},
+				{
+					field: "filter_value_flag",
+					title: "Value",
+					width: 60,
+					template: function (dataItem) {
+						var isChecked = dataItem.filter_value_flag == "Y" ? 'checked' : '';
+						return `
+						<center>
+							<label class="switch">
+								<input type="checkbox" class="chkbx9" ${isChecked}>
+								<span class="slider round"></span>
+							</label>
+						</center>`;
+					},
+					width: 50,
+				},
+				{
+					field: "filter_value",
+					title: "Filter Value",
+					width: 100,
+					editor: function (container, options) {
+						//combo_editor_filtervalues(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "filter_value_flag", "grid_sourcefilter")
+						//combo_editor_newsource(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_sourcefilter","SOURCE")
+						if (options.model.filter_value_flag === "Y") {
+
+							$('<input name="' + options.field + '" class="k-input k-textbox" />')
+							.appendTo(container);
+						} else {
+						combo_editor_newsource(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "filter_value_code", "grid_sourcefilter","SOURCE")
+						}
+					},
+				},
+				{
+					field: "active_status",
+					title: "Status",
+					hidden: true
+				},
+				{
+					field: "active_status_desc",
+					title: "Status",
+					width: 80,
+					hidden: true
+				},
+				{
+					field: "close_parentheses_flag",
+					title: ")", width: 20,filterable: false,
+					template: function (dataItem) {
+						if (dataItem.preprocessfilter_gid > 0) {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+						} else {
+							return '<input type="checkbox" ' + (dataItem.close_parentheses_flag == "Y" ? 'checked="checked"' : '') + ' class="chkbx4">';
+						}
+					},
+				},
+
+				{
+					field: "join_condition",
+					title: "Joins",
+					editor: function (container, options) {
+						combo_editor_man(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "join_condition", "grid_sourcefilter")
+					},
+					width: 40,
+				}],
+				editable: true,
+			});
+			join_condition_list = [{ code: '', desc: '' }, { code: 'AND', desc: 'AND' }, { code: 'OR', desc: 'OR' }];
+
+		}
+		catch (err) {
+			javascript_log4j_root(arguments.callee.name, err);
+		}
+
+		function OnEdit(e) {
+			try {
+				setDefaultValues(e);
+
+			}
+			catch (err) {
+				javascript_log4j_root(arguments.callee.name, err);
+			}
+		}
+		$(function () {
+
+			$('#grid_sourcefilter').on('click', '.chkbx3', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_sourcefilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('open_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('open_parentheses_flag', 'N');
+				}
+			});
+		});
+		$(function () {
+
+			$('#grid_sourcefilter').on('click', '.chkbx4', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_sourcefilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('close_parentheses_flag', 'Y');
+				}
+				else {
+					dataItem._set('close_parentheses_flag', 'N');
+				}
+			});
+		});
+		$(function () {
+			$('#grid_sourcefilter').on('click', '.chkbx9', function () {
+				var checked = $(this).is(':checked');
+				var grid = $('#grid_sourcefilter').data().kendoGrid;
+				var dataItem = grid.dataItem($(this).closest('tr'));
+				var row = $(this).closest('tr');
+				if (checked == true) {
+					dataItem._set('filter_value_flag', 'Y');
+					dataItem._set('filter_value', '');
+					dataItem._set('filter_value_code', '');
+					var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						grid.refresh();
+						setTimeout(function() {
+							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+							grid.select(editedRow);
+							grid.content.scrollTop(editedRow.position().top);
+						}, 100);
+				}
+				else {
+						dataItem._set('filter_value_flag', 'N');
+						dataItem._set('filter_value', '');
+						dataItem._set('filter_value_code', '');
+						var uid = dataItem.uid; // store the edited dataItem UID before refresh
+						grid.refresh();
+						setTimeout(function() {
+							var editedRow = grid.table.find("tr[data-uid='" + uid + "']");
+							grid.select(editedRow);
+							grid.content.scrollTop(editedRow.position().top);
+						}, 100);
+					}
+			 });
+		});
+	}
+	function addRowsource() {
+		var grid = $("#grid_sourcefilter").data("kendoGrid");
+		var dataSource = grid.dataSource;
+		var max = 0;
+		// Get the last sequence number and increment it
+		var lastSeqNo = grid.dataSource._data.length;
+		for (var i = 0; i < grid.dataSource._data.length; i++) {
+			if (parseInt(grid.dataSource._data[i].filter_seqno) > parseInt(max)) {
+				max = grid.dataSource._data[i].filter_seqno;
+			}
+		}
+		var newSeqNo = parseInt(max) + 1;
+		// Add a new row with the incremented sequence number
+		dataSource.add({ filter_seqno: newSeqNo, open_parentheses_flag: "N", close_parentheses_flag: "N", preprocessfilter_gid: 0, filter_value_code: '',filter_value_flag: "Y" });
+		var lastRow = grid.tbody.children().last();
+		grid.content.scrollTop(lastRow.position().top);
+	}
+	function combo_filter_field(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (sourcedata == "COMPARISON") {
+			var codeValue = selectedItem.filter_field;
+		} else {
+			var codeValue = selectedItem.filter_field;
+		}
+		var in_recon_code = $("#cmbrecon").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Rulesetup/rulefilterfetch',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ in_condition_type: sourcedata, in_field_type: codeValue, in_recon_code: in_recon_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var res = JSON.parse(response);
+					for (i = 0; res.length > i; i++) {
+						var list = {};
+						list.code = res[i].condition_desc;
+						list.desc = res[i].condition_desc;
+						arr.push(list);
+					}
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "filter_criteria") {
+					if (datafield == "filter_criteria" && selectedItem.filter_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.filter_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.filter_criteria_input = undefined;
+				}
+				if (datafield == "ident_criteria") {
+					if (datafield == "ident_criteria" && selectedItem.ident_criteria_input != undefined) {
+						selectedItem[datafield] = selectedItem.ident_criteria_input;
+					} else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+					}
+					selectedItem.ident_criteria_input = undefined;
+				}
+			}
+		});
+	}
+	function combo_editor_newsource(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+		var arr = [];
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if($("#Cmbprocessmethod").val() != "QCD_LOOKUP_COMPARISON"){
+			if (Sdata == "SOURCE") {
+				var dataset_code = $("#sourcedataset").val();
+			} else {
+				var dataset_code = $("#comdataset").val();
+			}
+			var in_recon_code = $("#cmbrecon").val();
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Rulesetup/getdatasetField',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ in_dataset_code: dataset_code, in_recon_code: in_recon_code, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var res = JSON.parse(response);
+						for (i = 0; res.length > i; i++) {
+							var list = {};
+							list.code = res[i].recon_field_name;
+							list.desc = res[i].recon_field_desc;
+							arr.push(list);
+						}
+					}
+				},
+				error: function (er) {
+					alert(er)
+				}
+			});
+		}else {
+			if (Sdata == "SOURCE") {
+				dataset_code = $("#sourcedataset").val();
+			} else {
+				dataset_code = $("#comdataset").val();
+			}
+			var in_user_code = sessionStorage.getItem("usrname");
+			$.ajax({
+				type: "POST",
+				url: '../Recon/Datasetfieldlist',
+				dataType: 'json',
+				async: false,
+				data: JSON.stringify({ datasetCode: dataset_code, in_user_code: in_user_code }),
+				contentType: 'application/json; charset=utf-8',
+				success: function (response) {
+					if (response != null) {
+						var result = JSON.parse(response);
+						var res = result.DataSet;
+						for (i = 0; res.length > i; i++) {
+							var list1 = {};
+							list1.code = res[i].dataset_table_field;
+							list1.desc = res[i].field_name;
+							arr.push(list1);
+						}
+					}
+				}
+			});
+		}
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr,
+			change: function (e) {
+			var cmb_value = this.value();
+			if (cmb_value && this.selectedIndex == -1) {
+				this.value("");
+			}
+			var cmb_var = $("#" + grid_id).data("kendoGrid");
+			var selectedItem = cmb_var.dataItem(cmb_var.select());
+			var combobox_data = $("#" + cmbid).data("kendoComboBox");
+			if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+				selectedItem[datafield] = "";
+				selectedItem[code_datafield] = "";
+			}
+			else {
+				selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+				selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+				}
+			}
+		});		
+	}
+	function savesourcefilter() {
+		var grid = $("#grid_sourcefilter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		if(model.filter_value =='' && model.filter_value_flag=='N')
+		{
+			$.alert({
+				title: 'Recon',
+				content: 'Filter value not selected',
+				type: 'red',
+			});
+			return false;
+		}
+		var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+		var in_recon_code = $("#cmbrecon").val();
+		var cmbfiltername = model.filter_field_code;
+		var extractcriteria = model.filter_criteria;
+		var identifiercriteria = model.ident_criteria;
+		var filter_value=model.filter_value;
+		var filter_value_flag = model.filter_value_flag;
+		if(filter_value_flag == 'N')
+		{
+			filter_value=model.filter_value_code;
+		}
+		var in_filter_seqno = model.filter_seqno
+		var action = "";
+		var action_by = sessionStorage.getItem("usrname");
+		var preprocessfilter_gid = model.preprocessfilter_gid;
+		if (preprocessfilter_gid == "0") {
+			preprocessfilter_gid = 0;
+			action = "INSERT"
+		} else {
+			action = "UPDATE"
+		}
+		var status = "Y";
+		var in_filter_applied_on = "SOURCE";
+		var in_open_flag = model.open_parentheses_flag;
+		var in_close_flag = model.close_parentheses_flag;
+		var in_join_condition = model.join_condition;
+		$.ajax({
+			type: "POST",
+			url: '../Preprocess/filterdatasave',
+			dataType: 'json',
+			data: JSON.stringify({
+				in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: filter_value_flag,
+				in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: filter_value, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+				in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
+			}),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response.out_result == "1") {
+					$.alert({
+						title: 'Recon',
+						content: response.out_msg,
+						type: 'green',
+					});
+					preprocessfetch($("#txtpreprocesscode").val());
+				} else {
+					$.alert({
+						title: 'Recon',
+						content: response.out_msg,
+						type: 'green',
+					});
+				}
+			},
+			error: function (er) {
+				alert(er)
+				console.log(er)
+			}
+		});
+	}
+	function myDeleteJssourcefilter() {
+		var grid = $("#grid_sourcefilter").data("kendoGrid");
+		var model = grid.dataItem($(event.target).closest("tr"));
+		var preprocessfilter_gid = parseInt(model.preprocessfilter_gid);
+		if (preprocessfilter_gid == 0) {
+			grid.dataSource.remove(model);
+		} else {
+			$.confirm({
+				icon: 'fa fa-warning',
+				title: 'Recon',
+				autoClose: 'cancel|10000',
+				theme: 'dark',
+				animationSpeed: 700,
+				content: 'Are you sure do you want to delete this record!',
+				type: 'orange',
+				buttons: {
+					confirm: function () {
+						var in_txtpreprocesscode = $("#txtpreprocesscode").val();
+						var in_recon_code = $("#cmbrecon").val();
+						var cmbfiltername = model.filter_field_code;
+						var extractcriteria = model.filter_criteria;
+						var identifiercriteria = model.ident_criteria;
+						var identifiervalue = model.ident_value;
+						var in_filter_seqno = model.filter_seqno
+						var action = "DELETE";
+						var action_by = sessionStorage.getItem("usrname");
+						var ident_value_flag = "";
+						var preprocessfilter_gid = model.preprocessfilter_gid;
+						var status = "Y";
+						var in_open_flag = "";
+						if ($('#chk_sel_' + model.preprocessfilter_gid).is(":checked")) {
+							in_open_flag = "Y";
+						} else {
+							in_open_flag = "N";
+						}
+						var in_close_flag = "";
+						if ($('#chk_sel1_' + model.preprocessfilter_gid).is(":checked")) {
+							in_close_flag = "Y";
+						} else {
+							in_close_flag = "N";
+						}
+						var in_join_condition = model.join_condition;
+						var in_filter_applied_on = "LOOKUP";
+						$.ajax({
+							type: "POST",
+							url: '../Preprocess/filterdatasave',
+							dataType: 'json',
+							data: JSON.stringify({
+								in_preprocessfilter_gid: preprocessfilter_gid, in_preprocess_code: in_txtpreprocesscode, in_recon_code: in_recon_code, in_join_condition: in_join_condition, in_ident_value_flag: ident_value_flag,
+								in_filter_field: cmbfiltername, in_filter_criteria: extractcriteria, in_ident_value: identifiervalue, in_open_flag: in_open_flag, in_filter_seqno: in_filter_seqno,
+								in_action: action, in_user_code: action_by, in_active_status: status, in_close_flag: in_close_flag, in_filter_applied_on: in_filter_applied_on
+							}),
+							contentType: 'application/json; charset=utf-8',
+							success: function (response) {
+								if (response.out_result == "1") {
+									$.alert({
+										icon: 'fa fa-success',
+										title: 'Recon',
+										theme: 'dark',
+										content: response.out_msg,
+										type: 'green',
+										animationSpeed: 700,
+									});
+									preprocessfetch($("#txtpreprocesscode").val());
+								} else {
+									$.alert({
+										title: 'Recon',
+										content: response.out_msg,
+										type: 'red',
+									});
+								}
+							}
+						})
+					},
+					cancel: function () {
+						$.alert({
+							icon: 'fa fa-success',
+							title: 'Recon',
+							theme: 'dark',
+							content: 'Delete Canceled.!',
+							type: 'blue',
+							animationSpeed: 700,
+						});
+					},
+				},
+			});
+		}
+	}
+</script>

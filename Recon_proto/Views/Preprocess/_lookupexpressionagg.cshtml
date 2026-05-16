@@ -1,0 +1,135 @@
+﻿@model Recon_proto.Controllers.PreprocessController.partialfetchmodel
+@using Newtonsoft.Json.Linq
+@{
+	JObject json = null;
+
+	if (!string.IsNullOrEmpty(Model?.partialdata))
+	{
+		json = JObject.Parse(Model.partialdata);
+	}
+	var header = json?["header"]?[0];
+}
+<div class="accordion-wrapper">
+	<div class="accordion" id="headingexpressionlookupAgg">
+		<input type="checkbox" name="radio-a" id="check16" checked style="display:none">
+		<label class="accordion-label" for="check16">&nbsp;&nbsp;&nbsp;Lookup Expression</label>
+		<div id="headingexpressionlookupAgg" class="accordion-content">
+			<div class="accordion-body" style="padding-left:15px;">
+				<div class="row" style="padding-bottom:10px">
+					<div class="col-sm-6">
+						<label class="form-label" for="">Lookup Dataset &nbsp&nbsp;<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
+						<select id="cmblookupdataset2" class="form-select form-control" >
+						</select>
+					</div>
+					<div class="col-sm-6" style="margin-top:34px;">
+						<label for="organization" class="form-label">
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="cumulativeflag1" id="cumulativeflag1" />&nbsp;&nbsp;
+							<span id="lblcumulativeflag1" style="font-size:12px;">Cumulative Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="openingflag1" id="openingflag1" />&nbsp;&nbsp;
+							<span id="lblopeningflag1" style="font-size:12px;">Opening Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="groupflag1" id="groupflag1" />&nbsp;&nbsp;
+							<span id="lblgroupflag1" style="font-size:12px;">Group Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+							<input class="form-check-input" style="margin: 0px;" type="checkbox" value="false" name="aggflag1" id="aggflag1" />&nbsp;&nbsp;
+							<span id="lblaggflag1" style="font-size:12px;">Agg Flag</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<label class="form-label" for="">Lookup Field&nbsp;</label>
+						<select id="Cmblookupdatasetfield1" class="form-select form-control">
+						</select>
+					</div>
+					<div class="col-sm-8">
+						<label for="organization" class="form-label">
+							<span>Expression</span>&nbsp;&nbsp;&nbsp;&nbsp;
+						</label>
+						<textarea id="CmbExpression1" name="CmbExpression" rows="4" style="height: 32px;width: 818px;border-radius: 0.375rem;">@Html.Raw(header?["process_expression"]?.ToString() ?? "")</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(document).on("change", "#cmblookupdataset2", function () {
+		lookupchange1()
+	});
+	if ("@(header?["cumulative_flag"]?.ToString() ?? "")" == "Y") {
+			$('#cumulativeflag1').attr('checked', true);
+	}
+	if ("@(header?["opening_flag"]?.ToString() ?? "")" == "Y") {
+		$('#openingflag1').attr('checked', true);
+	}
+	if ("@(header?["group_flag"]?.ToString() ?? "")" == "Y") {
+		$('#groupflag1').attr('checked', true);
+	}
+	if ("@(header?["agg_flag"]?.ToString() ?? "")" == "Y") {
+		$('#aggflag1').attr('checked', true);
+	}
+	var reconcode = sessionStorage.getItem("reconcode");;
+	var in_user_code = sessionStorage.getItem("usrname");
+	var selectedValue = '@(header?["lookup_dataset_code"]?.ToString() ?? "")';
+	$.ajax({
+		type: "POST",
+		url: '../Preprocess/Preprocessdatasetfetch',
+		dataType: 'json',
+		async: false,
+		data: JSON.stringify({ in_recon_code: reconcode, in_user_code: in_user_code }),
+		contentType: 'application/json; charset=utf-8',
+		success: function (response) {
+			var res = JSON.parse(response);
+			$("#cmblookupdataset2").empty();
+			$("#cmblookupdataset2").append($('<option>', {
+				value: "",
+				text: "  Select  "
+			}));
+			$.each(res, function (index, item) {
+				if (item.dataset_type == "L") {
+					$("#cmblookupdataset2").append($('<option>', {
+						value: item.dataset_code,
+						text: item.dataset_name
+					}));
+				}
+			});
+			$("#cmblookupdataset2").val(selectedValue);
+			lookupchange1()
+		}
+	});
+	function lookupchange1() {
+		var datasetcode = $("#cmblookupdataset2").val();
+		var in_user_code = sessionStorage.getItem("usrname");
+		var selectedValue = '@(header?["lookup_return_field"]?.ToString() ?? "")';
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: datasetcode, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					$("#Cmblookupdatasetfield1").empty();
+					$("#Cmblookupdatasetfield1").append($('<option>', {
+						value: "",
+						text: "  Select  "
+					}));
+					$.each(result.DataSet, function (index, item) {
+						$("#Cmblookupdatasetfield1").append($('<option>', {
+							value: item.dataset_table_field,
+							text: item.field_name
+						}));
+					});
+					$("#Cmblookupdatasetfield1").val(selectedValue);
+				}
+				else {
+				}
+			},
+			error: function (er) {
+				alert(er)
+					console.log(er)
+			}
+		});
+	}
+</script>
