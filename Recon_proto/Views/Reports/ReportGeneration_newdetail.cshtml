@@ -1030,7 +1030,8 @@
 	function addRow() {
 		var grid = $("#grid_tempfilter").data("kendoGrid");
 		var dataSource = grid.dataSource;
-		var report_code = $("#resultsetname").val();
+		var report_code = grid._data[0].report_code;
+		var resultsetname = $("#resultsetname").val();
 		var report_name =  $("#resultsetname option:selected").text().split(" - ")[0].trim();
 		var filter_val = "";
 		// 🔍 Filter existing rows with the same report_code
@@ -1038,7 +1039,8 @@
 			return item.report_code === report_code;
 		});
 		// 🆕 Determine new sequence number based on report_code group
-		var lastSeqNo = grid.dataSource._data.length;
+		
+		var lastSeqNo = grid._data.length;
 		var newSeqNo = parseInt(lastSeqNo)  + 1;
 		// ✅ Set join_condition of the last matching row to "AND" if empty
 		if (existingRows.length > 0) {
@@ -1056,7 +1058,6 @@
 			open_parentheses_flag: "N",
 			close_parentheses_flag: "N",
 			reporttemplatefilter_gid: 0,
-			isLastRow: false,
 			filter_value: filter_val
 		});
 	}
@@ -2702,6 +2703,7 @@
 				var isInteger = row.reportparam_value?.toUpperCase().includes("INTEGER");
 				var isText = row.reportparam_value?.toUpperCase().includes("TEXT");
 				var isDate = row.reportparam_value?.toUpperCase().includes("DATE");
+				var isDateTime = row.reportparam_value?.toUpperCase().includes("DATETIME");
 				var isNumeric = row.reportparam_value?.toUpperCase().includes("NUMERIC");
 				var fieldExpr = row.report_field;
 
@@ -2709,6 +2711,25 @@
 					fieldExpr = isInteger
 						? `CAST(${row.report_field} AS SIGNED)`
 						: `CAST(${row.report_field} AS NCHAR)`;
+				}		
+				else
+				{
+					if (isInteger)
+					{
+						fieldExpr =  `CAST(${row.report_field} AS signed)`;
+					}
+					else if (isDateTime)
+					{
+						fieldExpr =  `CAST(${row.report_field} AS datetime)`;
+					}
+					else if (isDate)
+					{
+						fieldExpr =  `CAST(${row.report_field} AS date)`;
+					}
+					else if (isNumeric)
+					{
+						fieldExpr =  `CAST(${row.report_field} AS decimal(15,4))`;
+					}
 				}
 
 				var value = "";

@@ -702,6 +702,9 @@
 					.join(";");
 					var remarkStr = data
 					.map(function (item) {
+						if (item.checklist_yesno === "NA" && item.reject_reason == "") {
+								item.reject_reason = "NA";
+						}
 						return item.reject_reason;
 					})
 					.join(";");
@@ -939,9 +942,9 @@
 					title: "Yes / No",
 					filterable: false,
 					template: yesNoTemplate,
-					width: 30
+					width: 30,
+						editable: false,
 				},
-
 				{
 					field: "reject_reason",
 					title: "Reject Reason",
@@ -1000,11 +1003,14 @@
 		var arr = reasonStr.split(";").map(x => x.trim());
 
 		grid.dataSource.data().forEach((item, i) => {
-			if (arr[i] != "") {
+			if (arr[i] == "") {
+				item.set("checklist_yesno", "Y");
+			}else if (arr[i] == "NA"){
+				item.set("reject_reason", arr[i]);
+				item.set("checklist_yesno", "NA");
+			} else {				
 				item.set("reject_reason", arr[i]);
 				item.set("checklist_yesno", "N");
-			} else {
-				item.set("checklist_yesno", "Y");
 			}
 
 			var row = grid.tbody.find("tr").eq(i);

@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewData["Title"] = "ETL";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<html>
+<body>
+    <div id="ses1">
+        <embed src=@ViewBag.pipe title="description" style="height: 99vh;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
+    </div>
+</body>
+</html>
+
+<script>
+    $(document).ready(function () {
+        $("#navhead").text("ETL");
+        $("#contextdiv").hide();
+        var div = document.getElementById("ses1");
+        if (div.offsetParent !== null) {
+            startTimer();
+            console.log("DIV is OPEN");
+        } else {
+            stopTimer();
+            console.log("DIV is CLOSED");
+        }
+    });</script>
+
