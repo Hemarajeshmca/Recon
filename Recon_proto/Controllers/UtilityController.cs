@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Recon_proto.Controllers
 {
-	public class UtilityController : Controller
+    public class UtilityController : Controller
     {
         Fileservice _fileservice = new Fileservice();
         private IConfiguration _configuration;
@@ -30,7 +30,14 @@ namespace Recon_proto.Controllers
         {
             return View();
         }
-
+        public IActionResult jobinprogress()
+        {
+            return View();
+        }
+        public IActionResult jobcompleted()
+        {
+            return View();
+        }
         #region jobtypelist
 
         [HttpPost]
@@ -122,8 +129,8 @@ namespace Recon_proto.Controllers
                         objcat.job_remark = result.Rows[i]["job_remark"].ToString();
                         objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
                         objcat.jobtype_desc = result.Rows[i]["jobtype_desc"].ToString();
-						objcat.job_initiated_by = result.Rows[i]["job_initiated_by"].ToString();
-						objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+                        objcat.job_initiated_by = result.Rows[i]["job_initiated_by"].ToString();
+                        objcat.recon_code = result.Rows[i]["recon_code"].ToString();
                         objcat.recon_name = result.Rows[i]["recon_name"].ToString();
                         objcat_lst.Add(objcat);
                     }
@@ -182,7 +189,7 @@ namespace Recon_proto.Controllers
                         objcat.jobtype_desc = result.Rows[i]["jobtype_desc"].ToString();
                         objcat.recon_code = result.Rows[i]["recon_code"].ToString();
                         objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-						objcat.file_type = result.Rows[i]["file_type"].ToString();
+                        objcat.file_type = result.Rows[i]["file_type"].ToString();
                         objcat.job_initiated_by = result.Rows[i]["job_initiated_by"].ToString();
                         objcat.file_name = result.Rows[i]["file_name"].ToString();
                         objcat_lst.Add(objcat);
@@ -197,7 +204,7 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-       
+
         public class Joblistmodel
         {
             public int job_gid { get; set; }
@@ -222,8 +229,8 @@ namespace Recon_proto.Controllers
             public String? in_end_date { get; set; }
             public String? in_jobtype_code { get; set; }
             public String? in_jobstatus { get; set; }
-			public string? in_user_code { get; set; }
-		}
+            public string? in_user_code { get; set; }
+        }
         #endregion
         #region QueueListFetch
         [HttpPost]
@@ -257,21 +264,21 @@ namespace Recon_proto.Controllers
                     result = JsonConvert.DeserializeObject<DataTable>(d2);
                     for (int i = 0; i < result.Rows.Count; i++)
                     {
-						Queuelistmodel objcat = new Queuelistmodel();
+                        Queuelistmodel objcat = new Queuelistmodel();
                         objcat.in_koqueue_gid = Convert.ToInt32(result.Rows[i]["koqueue_gid"]);
-						objcat.recon_code = result.Rows[i]["recon_code"].ToString();
-						objcat.recon_name = result.Rows[i]["recon_name"].ToString();
-						objcat.scheduled_date = result.Rows[i]["scheduled_date"].ToString();
+                        objcat.recon_code = result.Rows[i]["recon_code"].ToString();
+                        objcat.recon_name = result.Rows[i]["recon_name"].ToString();
+                        objcat.scheduled_date = result.Rows[i]["scheduled_date"].ToString();
                         objcat.in_koqueue_remark = result.Rows[i]["koqueue_remark"].ToString();
                         objcat.koqueue_status = result.Rows[i]["koqueue_status"].ToString();
                         objcat.jobstatus_desc = result.Rows[i]["jobstatus_desc"].ToString();
                         objcat.scheduled_by = result.Rows[i]["scheduled_by"].ToString();
                         objcat.queue_type = result.Rows[i]["queue_type"].ToString();  // "Knock Off";
                         objcat.queue_name = result.Rows[i]["queue_name"].ToString();
-						objcat_lst.Add(objcat);
+                        objcat_lst.Add(objcat);
                     }
-					return Json(objcat_lst);
-					//return Json(d2);
+                    return Json(objcat_lst);
+                    //return Json(d2);
                 }
             }
             catch (Exception ex)
@@ -281,61 +288,61 @@ namespace Recon_proto.Controllers
                 return Json(ex.Message);
             }
         }
-		[HttpPost]
-		public JsonResult QueueSuspend([FromBody] KoQueued context)
-		{
-			urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
-			Jobstatusmodel objList = new Jobstatusmodel();
-			DataTable result = new DataTable();
-			List<Queuelistmodel> objcat_lst = new List<Queuelistmodel>();
-			string post_data = "";
-			try
-			{
-				using (var client = new HttpClient())
-				{
-					string Urlcon = "Utility/";
-					client.BaseAddress = new Uri(urlstring + Urlcon);
-					//client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
-					client.DefaultRequestHeaders.Accept.Clear();
-					client.Timeout = Timeout.InfiniteTimeSpan;
-					client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
-					client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
-					client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
-					client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
-					client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-					HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
-					var response = client.PostAsync("SuspendKoQueue", content).Result;
-					Stream data = response.Content.ReadAsStreamAsync().Result;
-					StreamReader reader = new StreamReader(data);
-					post_data = reader.ReadToEnd();
-					string d2 = JsonConvert.DeserializeObject<string>(post_data);
-					result = JsonConvert.DeserializeObject<DataTable>(d2);
-					
-					return Json(d2);
-				}
-			}
-			catch (Exception ex)
-			{
-				CommonController objcom = new CommonController(_configuration);
-				objcom.errorlog(ex.Message, "QueueSuspend");
-				return Json(ex.Message);
-			}
-		}
-		public class Queuelistmodel
-		{
-			public int in_koqueue_gid { get; set; }
-			public String? recon_code { get; set; }
-			public String? recon_name { get; set; }
-			public String? scheduled_date { get; set; }
-			public String? in_koqueue_remark { get; set; }
-			public String? koqueue_status { get; set; }
-			public String? jobstatus_desc { get; set; }
-			public string? scheduled_by { get; set; }
-			public string? in_user_code { get; set; }
-            public string? queue_type { get; set; }
-			public string? queue_name { get; set; }
+        [HttpPost]
+        public JsonResult QueueSuspend([FromBody] KoQueued context)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            Jobstatusmodel objList = new Jobstatusmodel();
+            DataTable result = new DataTable();
+            List<Queuelistmodel> objcat_lst = new List<Queuelistmodel>();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Utility/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    //client.BaseAddress = new Uri("https://localhost:44348/api/Utility/");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(context), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("SuspendKoQueue", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
 
-		}
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "QueueSuspend");
+                return Json(ex.Message);
+            }
+        }
+        public class Queuelistmodel
+        {
+            public int in_koqueue_gid { get; set; }
+            public String? recon_code { get; set; }
+            public String? recon_name { get; set; }
+            public String? scheduled_date { get; set; }
+            public String? in_koqueue_remark { get; set; }
+            public String? koqueue_status { get; set; }
+            public String? jobstatus_desc { get; set; }
+            public string? scheduled_by { get; set; }
+            public string? in_user_code { get; set; }
+            public string? queue_type { get; set; }
+            public string? queue_name { get; set; }
+
+        }
         public class KoQueued
         {
             public string? in_koqueue_remark { get; set; }
@@ -347,7 +354,7 @@ namespace Recon_proto.Controllers
         #region Downloads
 
 
-        public JsonResult getfilepath(string confing_val,string username)
+        public JsonResult getfilepath(string confing_val, string username)
         {
             urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
             fileconfigmodel FileDownload = new fileconfigmodel();
@@ -387,7 +394,7 @@ namespace Recon_proto.Controllers
             }
         }
 
-        public IActionResult Downloads(string jobid, string filetype, string file_name,string username)
+        public IActionResult Downloads(string jobid, string filetype, string file_name, string username)
         {
             var out_result = getfilepath("fileconfig_value", username);
             List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
@@ -413,72 +420,75 @@ namespace Recon_proto.Controllers
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownloadgrid), UTF8Encoding.UTF8, "application/json");
                     content.Headers.Add("user_code", username);
                     var response = client.PostAsync("files", content).Result;
-                    if(filetype != "xlsx")
+                    if (filetype != "xlsx")
                     {
-						Stream data = response.Content.ReadAsStreamAsync().Result;
-						StreamReader reader = new StreamReader(data);
-						string base64data = string.Empty;
-						var bytes = new byte[data.Length];
-						data.Read(bytes, 0, bytes.Length);
-						var responses = new FileContentResult(bytes, "application/octet-stream");
-						var fileName = file_name.ToString() + ".zip";
-						var contentDisposition = new ContentDisposition
-						{
-							FileName = file_name,
-							Inline = true,
-						};
-						Response.Clear();
-						Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
-						Response.Headers.Add("Content-Type", "application/octet-stream");
-						return File(bytes, "application/octet-stream", fileName);
-					} else
+                        Stream data = response.Content.ReadAsStreamAsync().Result;
+                        StreamReader reader = new StreamReader(data);
+                        string base64data = string.Empty;
+                        var bytes = new byte[data.Length];
+                        data.Read(bytes, 0, bytes.Length);
+                        var responses = new FileContentResult(bytes, "application/octet-stream");
+                        var fileName = file_name.ToString() + ".zip";
+                        var contentDisposition = new ContentDisposition
+                        {
+                            FileName = file_name,
+                            Inline = true,
+                        };
+                        Response.Clear();
+                        Response.Headers.Add("Content-Disposition", contentDisposition.ToString());
+                        Response.Headers.Add("Content-Type", "application/octet-stream");
+                        return File(bytes, "application/octet-stream", fileName);
+                    }
+                    else
                     {
-						var get_outresult = getfilepath("download_xls_folder", username);
-						List<fileconfigmodel> obj_outresult = JsonConvert.DeserializeObject<List<fileconfigmodel>>(get_outresult.Value.ToString());
+                        var get_outresult = getfilepath("download_xls_folder", username);
+                        List<fileconfigmodel> obj_outresult = JsonConvert.DeserializeObject<List<fileconfigmodel>>(get_outresult.Value.ToString());
                         string out_filepath = "";
                         string fileName = "";
                         if (obj_outresult.Count > 0)
-						{
-							out_filepath = obj_outresult[0].out_config_value;
+                        {
+                            out_filepath = obj_outresult[0].out_config_value;
                             //out_filepath = "E:\\UAT_RECON\\Recon_files\\prod\\JobFiles\\";
-						}
+                        }
                         if (file_name.ToLower().Contains(".xlsx"))
                         {
                             fileName = file_name;
-                        } else {
+                        }
+                        else
+                        {
                             fileName = file_name + ".xlsx";
                         }
-						string filePath = Path.Combine(out_filepath, fileName);
+                        string filePath = Path.Combine(out_filepath, fileName);
 
-						if (!System.IO.File.Exists(filePath))
-						{
+                        if (!System.IO.File.Exists(filePath))
+                        {
                             filePath = filePath.Replace("xlsx", "xlsm");
                             if (!System.IO.File.Exists(filePath))
                             {
                                 return NotFound();
                             }
-						}
+                        }
 
-						
-						using (var memoryStream = new MemoryStream())
-						{
-							using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-							{
-								var fileName1 = Path.GetFileName(filePath);
-								var entry = archive.CreateEntry(fileName1, CompressionLevel.Optimal);
 
-								using (var entryStream = entry.Open())
-								using (var fileStream = System.IO.File.OpenRead(filePath))
-								{
-									fileStream.CopyTo(entryStream);
-								}
-							}
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                            {
+                                var fileName1 = Path.GetFileName(filePath);
+                                var entry = archive.CreateEntry(fileName1, CompressionLevel.Optimal);
+
+                                using (var entryStream = entry.Open())
+                                using (var fileStream = System.IO.File.OpenRead(filePath))
+                                {
+                                    fileStream.CopyTo(entryStream);
+                                }
+                            }
                             var zipName = $"{file_name}.zip";
                             memoryStream.Seek(0, SeekOrigin.Begin);
-							return File(memoryStream.ToArray(), "application/zip", zipName);
-						}
-					}
-				}
+                            return File(memoryStream.ToArray(), "application/zip", zipName);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -501,27 +511,27 @@ namespace Recon_proto.Controllers
             public string? out_result { get; set; }
         }
 
-		#endregion
+        #endregion
 
-		public (string fileType, byte[] archiveData, string archiveName) DownloadFiles(string subDirectory, string y)
-		{
-			string jobid = y;
-			int filelength = jobid.Length;
-			var zipName = $"archive-{DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss")}.zip";
-			var files = Directory.GetFiles(subDirectory).ToList();
-			string supportedExtensions = String.Concat(jobid.ToString(), ".csv,", jobid.ToString(), "_*.*");
+        public (string fileType, byte[] archiveData, string archiveName) DownloadFiles(string subDirectory, string y)
+        {
+            string jobid = y;
+            int filelength = jobid.Length;
+            var zipName = $"archive-{DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss")}.zip";
+            var files = Directory.GetFiles(subDirectory).ToList();
+            string supportedExtensions = String.Concat(jobid.ToString(), ".csv,", jobid.ToString(), "_*.*");
 
-			List<string> myList = new List<string>();
+            List<string> myList = new List<string>();
 
-			foreach (string file in Directory.GetFiles(subDirectory, String.Concat(jobid, ".*"), SearchOption.AllDirectories).Union(
-									Directory.GetFiles(subDirectory, String.Concat(jobid, "_*.*"), SearchOption.AllDirectories)))
-			{
+            foreach (string file in Directory.GetFiles(subDirectory, String.Concat(jobid, ".*"), SearchOption.AllDirectories).Union(
+                                    Directory.GetFiles(subDirectory, String.Concat(jobid, "_*.*"), SearchOption.AllDirectories)))
+            {
 
-				var fil = Path.GetFileName(file);
-				string filess = file;
-				myList.Add(filess);
+                var fil = Path.GetFileName(file);
+                string filess = file;
+                myList.Add(filess);
 
-			}
+            }
 
 
             using (var memoryStream = new MemoryStream())
@@ -541,9 +551,9 @@ namespace Recon_proto.Controllers
                 return ("application/zip", memoryStream.ToArray(), zipName);
             }
 
-		}
+        }
 
 
-	}
+    }
 }
 

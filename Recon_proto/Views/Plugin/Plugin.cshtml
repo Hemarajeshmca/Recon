@@ -1,0 +1,23 @@
+﻿@{
+	ViewData["Title"] = "Plugin";
+	Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+<body>
+	<div id="ses">
+		<embed src=@ViewBag.SafeUrl title="description" style="height: 550px;width: 98%;padding-left: 23px;padding-bottom: -5px;margin-top: -13px;border:1px white">
+	</div>
+</body>
+
+<script>
+	$(document).ready(function () {
+		$("#navhead").text("Plugin");
+		$("#contextdiv").hide();
+		var div = document.getElementById("ses");
+		if (div.offsetParent !== null) {
+			startTimer();
+		}else{
+			stopTimer()
+		}
+	});
+</script>
+

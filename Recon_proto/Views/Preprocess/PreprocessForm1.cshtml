@@ -516,7 +516,12 @@
 							text: item.masterName
 						}));
 					});
-					$("#postprocessflag").val('N');
+					if(selectedValue == ""){
+						$("#postprocessflag").val('N');
+					}else {
+						$("#postprocessflag").val(selectedValue)
+					}
+					
 				}
 			});
 			var reconcode = $("#cmbrecon").val();
@@ -1677,6 +1682,7 @@
 					$("#preprocessorder").val(result.header[0].preprocess_order);
 					$("#preprocessgid").val(result.header[0].preprocess_gid);
 					$("#Cmbprocessmethod").val(result.header[0].process_method);
+					$("#postprocessflag").val(result.header[0].postprocess_flag)
 					if ($("#Cmbprocessmethod").val() == 'QCD_FUNCTION') {
 						$("#cmbgetrecon").val(result.header[0].get_recon_field);
 						jQuery('#cmbgetrecon').trigger("change");
