@@ -8,6 +8,9 @@
 <head>
 	<title></title>
 	<style>
+		.form-label {
+			font-weight:bold;
+		}
 
 		.nav-item.me-2.me-xl-50 {
 			margin-right: 33rem !important;
@@ -40,11 +43,17 @@
 		.box-orange {
 			background-color: white;
 			border: 2px solid darkgreen;
+			box-shadow: 5px 10px darkgreen;
 		}
 
 		.k-grid-header {
 			font-weight: bold;
 		}
+
+		/* #grid_jobinprogress td {
+			 white-space: normal !important;
+			 line-height: 18px;
+		} */
 
 		.k-grid-filter.k-state-active {
 			color: #ffffff;
@@ -61,10 +70,26 @@
 			color: white !important;
 		}
 
-		/* =========================
-						   ANIMATION STYLES
-						========================= */
+		.form-control1 {
+			display: block;
+			width: 100%;
+			padding: 2px 2px 5px 5px;
+			font-weight: 400;			
+			background-clip: padding-box;
+			border: 1px solid black;
+			-webkit-appearance: none;
+			-moz-appearance: none;
+			appearance: none;
+			border-radius: 0.375rem;
+			font-size: 0.75rem;
+			line-height: 20px !important;
+			transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+		}
 
+		.form-control1:disabled, .form-control1[readonly] {
+			background-color: #eceef1;
+			opacity: 1;
+		}
 		.job-details-box {
 			transform-origin: top center;
 			perspective: 1000px;
@@ -133,7 +158,7 @@
 	<div class="content-wrapper">
 		<div class="container-xxl flex-grow-1 container-p-y">
 			<div class="card-body" style="margin-top: -3%; min-height: 82%;">
-				<div class="row" style="margin-bottom: 1%;margin-top: -1%;">
+				<div class="row" style="margin-bottom: 5px;margin-top: -2%;">
 					<div class="col-md-3">
 						<label class="form-label">Process Type<span style="font-size: 12px;color: red;font-weight: bold;">*</span></label>
 						<select id="jobtype" class="form-select form-control"> </select>
@@ -165,37 +190,45 @@
 					<div class="row" style="padding-bottom:2px;padding-right:5px" id="jobDetailsBox">
 						<div class="col-sm-3">
 							<label for="" class="form-label">Job ID&nbsp</label>
-							<input class="form-control" id="jobgid" type="text" disabled>
-							<input class="form-control" id="filename" type="hidden" disabled />
-							<input class="form-control" id="filetype" type="hidden" disabled>
+							<input class="form-control1" id="jobgid" type="text" readonly>
+							<input class="form-control" id="filename" type="hidden" readonly />
+							<input class="form-control" id="filetype" type="hidden" readonly>
 						</div>
 						<div class="col-sm-3">
 							<label for="" class="form-label">Job Type&nbsp;</label>
-							<input class="form-control" id="job_type" type="text" disabled>
+							<input class="form-control1" id="job_type" type="text" readonly>
 						</div>
-						<div class="col-sm-3">
-							<label for="" class="form-label">Start Date&nbsp;</label>
-							<input class="form-control" id="startdate" type="text" disabled>
+						<div class="col-sm-5">
+							<label for="" class="form-label">Job Name&nbsp;</label>
+							<input class="form-control1" id="job_name" type="text" readonly style="width:120%">
 						</div>
-						<div class="col-sm-3">
-							<label for="" class="form-label">End Date&nbsp;</label>
-							<input class="form-control" id="enddate" type="text" disabled>
-						</div>
-						<div class="col-sm-3">
-							<label for="" class="form-label">Job Remark&nbsp;</label>
-							<input class="form-control" id="jobremark" type="text" disabled>
+						<div class="col-sm-1" style="margin-top: -5px; width: 5%; margin-left: 22px;">
+							<img style="height: 31px; width: 40px;cursor: pointer; margin-left: 4px;" title="Download" src="../Assets/images/download.png" onclick="downloadJob()" />
 						</div>
 						<div class="col-sm-3">
 							<label for="" class="form-label">Initated By&nbsp;</label>
-							<input class="form-control" id="initatedby" type="text" disabled>
+							<input class="form-control1" id="initatedby" type="text" readonly>
 						</div>
 						<div class="col-sm-3">
 							<label for="" class="form-label">Job Status&nbsp;</label>
-							<input class="form-control" id="jobstatus" type="text" disabled>
+							<input class="form-control1" id="jobstatus" type="text" readonly>
 						</div>
-						<div class="col-sm-2" style="margin-top: 27px; width: 5%; margin-left: -4px;">
-							<img style="height: 35px; width: 35px;cursor: pointer; margin-left: 4px;" title="Download" src="../Assets/images/download.png" onclick="downloadJob()" />
+						<div class="col-sm-6">
+							<label for="" class="form-label">Recon Name&nbsp;</label>
+							<input class="form-control1" id="recon_name" type="text" readonly>
 						</div>
+						<div class="col-sm-3">
+							<label for="" class="form-label">Start Date&nbsp;</label>
+							<input class="form-control1" id="startdate" type="text" readonly>
+						</div>
+						<div class="col-sm-3">
+							<label for="" class="form-label">End Date&nbsp;</label>
+							<input class="form-control1" id="enddate" type="text" readonly>
+						</div>
+						<div class="col-sm-6">
+							<label for="" class="form-label">Job Remark&nbsp;</label>
+							<input class="form-control1" id="jobremark" type="text" readonly>
+						</div>											
 					</div>
 				</div>
 			</div>
@@ -243,28 +276,36 @@
 			var te = period_end.split("/");
 			var end_date = te[2] + "-" + te[1] + "-" + te[0];
 			var action_by = sessionStorage.getItem("usrname");
-			$.ajax({
-				type: "POST",
-				url: '../Utility/Joblistfetch',
-				dataType: 'json',
+			if(start_date <= end_date) {
+				$.ajax({
+					type: "POST",
+					url: '../Utility/Joblistfetch',
+					dataType: 'json',
 					data: JSON.stringify({ in_start_date: start_date, in_end_date: end_date, in_jobtype_code: job_type, in_jobstatus: 'C', in_user_code: action_by }),
-				contentType: 'application/json; charset=utf-8',
-				success: function (response) {
-					if (response != null) {
-						$("#gd_jobinprogress").empty();
-						$("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
-						fetchGrid(response);
+					contentType: 'application/json; charset=utf-8',
+					success: function (response) {
+						if (response != null) {
+							$("#gd_jobinprogress").empty();
+							$("#gd_jobinprogress").append("<div id='grid_jobinprogress'></div>");
+							fetchGrid(response);
+						}
+						else {
+							fetchGrid();
+						}
+					},
+					error: function (er) {
+						alert(er)
+						console.log(er)
 					}
-					else {
-						fetchGrid();
-					}
-				},
-				error: function (er) {
-					alert(er)
-					console.log(er)
-				}
 
-			});
+				});
+			} else {
+				$.alert({
+					title: 'Recon',
+					content: "Invalid Date ..!",
+					type: 'red',
+				});
+			}
 		}
 		catch (e) {
 			console.log(e)
@@ -312,7 +353,7 @@
 						}
 					}
 				},
-				height: 300,
+				height: 250,
 				change: onRowSelect,
 				groupable: false,
 				dataBound: function (e) {
@@ -361,6 +402,9 @@
 						field: "job_name",
 						title: "Job Name",
 						width: 125,
+						// attributes: {
+						// 	 style: "white-space: normal; word-break: break-word;"
+						// },
 					},
 					{
 						field: "jobtype_code",
@@ -446,22 +490,7 @@
 			console.log(err);
 		}
 	}
-	// function onRowSelect(e) {
-	// 	var formatdatetimefetch = sessionStorage.getItem("kendatetime");
-	// 	var grid = $("#grid_jobinprogress").data("kendoGrid");
-	// 	var selectedRow = grid.select();
-	// 	var dataItem = grid.dataItem(selectedRow);
-	// 	// bind values to textbox
-	// 	$("#jobgid").val(dataItem.job_gid);
-	// 	$("#job_type").val(dataItem.jobtype_desc);
-	// 	$("#startdate").val(kendo.toString(dataItem.start_date, formatdatetimefetch));
-	// 	$("#enddate").val(kendo.toString(dataItem.end_date, formatdatetimefetch));
-	// 	$("#jobremark").val(dataItem.job_remark);
-	// 	$("#initatedby").val(dataItem.job_initiated_by);
-	// 	$("#jobstatus").val(dataItem.jobstatus_desc);
-	// 	$("#filename").val(dataItem.file_name);
-	// 	$("#filetype").val(dataItem.file_type);
-	// }
+	
 	function downloadJob(val) {
 		var job_gid = $("#jobgid").val();
 		var file_name = $("#filename").val();
@@ -515,9 +544,7 @@
 	}
 
 	function loadJobDetails(dataItem) {
-
 		var formatdatetimefetch = sessionStorage.getItem("kendatetime");
-
 		$("#jobgid").val(dataItem.job_gid);
 		$("#job_type").val(dataItem.jobtype_desc);
 		$("#startdate").val(kendo.toString(dataItem.start_date, formatdatetimefetch));
@@ -527,5 +554,7 @@
 		$("#jobstatus").val(dataItem.jobstatus_desc);
 		$("#filename").val(dataItem.file_name);
 		$("#filetype").val(dataItem.file_type);
+		$("#job_name").val(dataItem.job_name);
+		$("#recon_name").val(dataItem.recon_name);
 	}
 </script>
