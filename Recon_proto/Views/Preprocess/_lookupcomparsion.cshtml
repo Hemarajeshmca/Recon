@@ -16,7 +16,7 @@
 		<label class="accordion-label" for="check22">&nbsp;&nbsp;&nbsp;Lookup Dataset</label>
 		<div id="headinglookupdataset" class="accordion-content">
 			<div class="row" style="margin-bottom:5px;">
-				<div class="col-xs-12" style="margin-top:5px;" id="lookupgrid">					
+				<div class="col-xs-12" style="margin-top:5px;" id="lookupgrid">
 					<div id="grid_lookupcomparsion">
 					</div>
 				</div>
@@ -125,7 +125,7 @@
 				field: "source_field_desc",
 				title: "Source Field",
 				editor: function (container, options) {
-					combo_editor_comparsion(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field", "grid_lookupcomparsion","SOURCE")
+					combo_editor_lookcomparsionsource(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "source_field", "grid_lookupcomparsion","SOURCE",options)
 				},
 				editable: true,
 				width: 120,
@@ -134,7 +134,7 @@
 				field: "comparison_field_desc",
 				title: "Comparsion Field",
 				editor: function (container, options) {
-					combo_editor_comparsion(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_lookupcomparsion","COMPARISON")
+					combo_editor_lookcomparsionfield(container, "cmb_" + options.field, eval(options.field + "_list"), options.field, "comparison_field", "grid_lookupcomparsion","COMPARISON",options)
 				},
 				width: 120,
 			},
@@ -146,7 +146,7 @@
 					return `
 					<center>
 						<label class="switch">
-						<input type="checkbox" class="chkbx11" ${isChecked}>
+						<input type="checkbox" class="chkbx31" ${isChecked}>
 							<span class="slider round"></span>
 						</label>
 					</center>`;
@@ -160,7 +160,7 @@
 					return `
 					<center>
 						<label class="switch">
-							<input type="checkbox" class="chkbx10" ${isChecked}>
+							<input type="checkbox" class="chkbx30" ${isChecked}>
 							<span class="slider round"></span>
 						</label>
 					</center>`;
@@ -191,7 +191,7 @@
 		});
 	}
 	$(function () {
-		$('#grid_lookupcomparsion').on('click', '.chkbx10', function () {
+		$('#grid_lookupcomparsion').on('click', '.chkbx30', function () {
 			var checked = $(this).is(':checked');
 			var grid = $('#grid_lookupcomparsion').data().kendoGrid;
 			var dataItem = grid.dataItem($(this).closest('tr'));
@@ -214,7 +214,7 @@
 		})
 	});
 	$(function () {
-		$('#grid_lookupcomparsion').on('click', '.chkbx11', function () {
+		$('#grid_lookupcomparsion').on('click', '.chkbx31', function () {
 			var checked = $(this).is(':checked');
 			var grid = $('#grid_lookupcomparsion').data().kendoGrid;
 			var dataItem = grid.dataItem($(this).closest('tr'));
@@ -233,7 +233,7 @@
 			}
 		})
 	});
-	function combo_editor_comparsion(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata) {
+	function combo_editor_lookcomparsionfield(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata,options) {
 		var arr = [];
 		var dataset_code = "";
 		var cmb_var = $("#" + grid_id).data("kendoGrid");
@@ -243,8 +243,8 @@
 			dataset_code = $("#sourcedataset").val();
 		} else {
 			dataset_code = $("#comdataset").val();
-		}		
-		
+		}
+
 		var in_user_code = sessionStorage.getItem("usrname");
 		$.ajax({
 			type: "POST",
@@ -269,22 +269,97 @@
 		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
 			autoBind: false,
 			filter: "contains",
-			dataSource: arr,
+			dataSource: arr,			
 			change: function (e) {
-			var cmb_value = this.value();
-			if (cmb_value && this.selectedIndex == -1) {
-				this.value("");
+				var cmb_value = this.value();
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "comparison_field_desc" && options.model.value_flag === "Y" && options.model.reverse_update_flag === "N" ) {
+					if (datafield == "comparison_field_desc" && selectedItem.comparison_field_desc_input != undefined)
+					{
+						selectedItem[datafield] = selectedItem.comparison_field_desc_input;
+					}
+					else
+					{
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+				else
+				{
+					if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+						selectedItem[datafield] = "";
+						selectedItem[code_datafield] = "";
+					}
+					else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
 			}
-			var cmb_var = $("#" + grid_id).data("kendoGrid");
-			var selectedItem = cmb_var.dataItem(cmb_var.select());
-			var combobox_data = $("#" + cmbid).data("kendoComboBox");
-			if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
-				selectedItem[datafield] = "";
-				selectedItem[code_datafield] = "";
+		});
+	}
+	function combo_editor_lookcomparsionsource(container, cmbid, datasource, datafield, code_datafield, grid_id, Sdata,options) {
+		var arr1 = [];
+		var dataset_code = "";
+		var cmb_var = $("#" + grid_id).data("kendoGrid");
+		var selectedItem = cmb_var.dataItem(cmb_var.select());
+		var sourcedata = Sdata;
+		if (Sdata == "SOURCE") {
+			dataset_code = $("#sourcedataset").val();
+		} 
+		var in_user_code = sessionStorage.getItem("usrname");
+		$.ajax({
+			type: "POST",
+			url: '../Recon/Datasetfieldlist',
+			dataType: 'json',
+			async: false,
+			data: JSON.stringify({ datasetCode: dataset_code, in_user_code: in_user_code }),
+			contentType: 'application/json; charset=utf-8',
+			success: function (response) {
+				if (response != null) {
+					var result = JSON.parse(response);
+					var res = result.DataSet;
+					for (i = 0; res.length > i; i++) {
+						var list1 = {};
+						list1.code = res[i].dataset_table_field;
+						list1.desc = res[i].field_name;
+						arr1.push(list1);
+					}
+				}
 			}
-			else {
-				selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
-				selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+		});
+		$('<input  id="' + cmbid + '" data-text-field="desc" data-value-field="desc" data-bind="value:' + datafield + '" name ="' + datafield + '"/>').appendTo(container).kendoComboBox({
+			autoBind: false,
+			filter: "contains",
+			dataSource: arr1,
+			change: function (e) {
+				var cmb_value = this.value();
+				var cmb_var = $("#" + grid_id).data("kendoGrid");
+				var selectedItem = cmb_var.dataItem(cmb_var.select());
+				var combobox_data = $("#" + cmbid).data("kendoComboBox");
+				if (datafield == "source_field_desc" && options.model.reverse_update_flag === "Y" ) {
+					if (datafield == "source_field_desc" && selectedItem.source_field_desc_input != undefined)
+					{
+						selectedItem[datafield] = selectedItem.source_field_desc_input;
+					}
+					else
+					{
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
+				}
+				else
+				{
+					if (combobox_data != undefined && combobox_data.selectedIndex == -1) {
+						selectedItem[datafield] = "";
+						selectedItem[code_datafield] = "";
+					}
+					else {
+						selectedItem[datafield] = combobox_data.dataItem(combobox_data.selectedIndex).desc;
+						selectedItem[code_datafield] = combobox_data.dataItem(combobox_data.selectedIndex).code;
+					}
 				}
 			}
 		});
