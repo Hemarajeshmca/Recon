@@ -471,7 +471,7 @@ namespace Recon_proto.Controllers
                     //client.BaseAddress = new Uri("http://localhost:4195/api/Recon/");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.Timeout = Timeout.InfiniteTimeSpan;
-                    client.DefaultRequestHeaders.Add("user_code", context.in_user_code);
+                    client.DefaultRequestHeaders.Add("user_code", string.IsNullOrWhiteSpace(context.in_user_code) ? "blank" : context.in_user_code);
                     client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
                     client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
                     client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
