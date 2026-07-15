@@ -1,0 +1,64 @@
+﻿<textarea id="restrictedArea" rows="4" cols="80">
+what is your Name?<>. <Your Name> SON/Daughter of <father /mother Name>
+</textarea>
+
+<script>
+    const textarea = document.getElementById("restrictedArea");
+
+    function getRanges(value) {
+        const ranges = [];
+        const regex = /<[^>]*>/g;
+        let match;
+        while ((match = regex.exec(value)) !== null) {
+            ranges.push({
+                start: match.index + 1,
+                end: match.index + match[0].length - 1
+            });
+        }
+        return ranges;
+    }
+
+    function selectionInsideRange(start, end, ranges) {
+        return ranges.some(r => start >= r.start && end <= r.end);
+    }
+
+    textarea.addEventListener("keydown", function (e) {
+        const value = textarea.value;
+        const ranges = getRanges(value);
+
+        const selStart = textarea.selectionStart;
+        const selEnd = textarea.selectionEnd;
+
+        const allowedKeys = [
+            "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown",
+            "Tab"
+        ];
+
+        const isSelection = selStart !== selEnd;
+        const inside = selectionInsideRange(selStart, selEnd, ranges);
+
+        /* ❌ Block delete/backspace if selection is outside <> */
+        if ((e.key === "Backspace" || e.key === "Delete") && !inside) {
+            e.preventDefault();
+            return;
+        }
+
+        /* ❌ Block typing outside <> */
+        if (!inside && !allowedKeys.includes(e.key)) {
+            e.preventDefault();
+            return;
+        }
+
+        /* ❌ Prevent deleting < or > */
+        ranges.forEach(r => {
+            if ((selStart === r.start && e.key === "Backspace") ||
+                (selStart === r.end && e.key === "Delete")) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Block paste & cut
+    textarea.addEventListener("paste", e => e.preventDefault());
+    textarea.addEventListener("cut", e => e.preventDefault());
+</script>
