@@ -264,6 +264,14 @@
                                     <input class="form-control" type="text" id="approveamt" value="" tabindex="-1" readonly>
                                 </div>
                                 <div class="col-sm-2">
+                                    <label for="" class="form-label">Modified Approved Amount</label>
+                                    <input class="form-control" type="text" id="audit_approveamt" value="" tabindex="-1" readonly>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="" class="form-label">Variance Amount</label>
+                                    <input class="form-control" type="text" id="diff_approveamt" value="" tabindex="-1" readonly>
+                                </div>
+                                <div class="col-sm-2">
                                     <label for="" class="form-label">Sub Category</label>
                                     <input class="form-control" type="text" id="subcategory" value="" tabindex="-1" readonly>
                                 </div>
@@ -271,6 +279,9 @@
                                     <label for="" class="form-label">Description</label>
                                     <input class="form-control" type="text" id="description" value="" tabindex="-1" readonly>
                                 </div>
+                                
+                            </div>
+                            <div class="row">
                                 <div class="col-sm-2">
                                     <label for="" class="form-label">Email ID</label>
                                     <input class="form-control" type="text" id="emailid" value="" tabindex="-1" readonly>
@@ -283,8 +294,6 @@
                                     <label for="" class="form-label">AH Location</label>
                                     <input class="form-control" type="text" id="ahloc" value="" tabindex="-1" readonly>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-2" style="display: none">
                                     <label for="" class="form-label">Received Date</label>
                                     <input class="form-control" type="text" id="tknat3" value="" tabindex="-1" readonly>
@@ -372,7 +381,7 @@
                                         data-bs-toggle="tab"
                                         data-bs-target="#expense"
                                         type="button">
-                                    Expense Details
+                                    Expense Details <span id="lblTotalCount" class="badge bg-primary ms-2">0</span>
                                 </button>
                             </li>
                         </ul>
@@ -507,6 +516,11 @@
                                             <input type="text" id="audit_approved_amount" class="form-control" />
                                         </div>
 
+                                        <div class="col-md-3">
+                                            <label class="form-label"> Audit Remarks </label>
+                                            <textarea id="audit_remarks" class="form-control"></textarea>
+                                        </div>
+
                                         <!-- Save & Cancel Button -->
                                         <div class="col-md-2">
                                             <button type="button" id="btnExpenseSave" class="btn btn-sm save_btn" onclick="saveExpenseDetails()"
@@ -602,6 +616,8 @@
                         $("#category").val((getValueByDesc("Category")));
                         $("#transts").val((getValueByDesc("Transaction Status")));
                         $("#approveamt").val((getValueByDesc("Gross Amount")));
+                        $("#audit_approveamt").val((getValueByDesc("Audit Gross Amount")));
+                        $("#diff_approveamt").val((getValueByDesc("Gross Amount")) - (getValueByDesc("Audit Gross Amount")));
                         $("#subcategory").val((getValueByDesc("Subcategories")));
                         $("#description").val((getValueByDesc("Description")));
                         $("#emailid").val((getValueByDesc("Email ID")));
@@ -732,17 +748,29 @@
 
         // Initialize Kendo tooltips
         var tooltip = $("#expense").kendoTooltip({
-            filter: "input[type='text']",
+            filter: "input[type='text'], #lblTotalCount",
             autoHide: true,
             position: "top",
             width: "auto",
             showOn: "click",   // Prevent automatic mouseenter
             content: function (e) {
+                // For Total Count badge
+                if ($(e.target).attr("id") === "lblTotalCount") {
+                    return "Total Records : " + $(e.target).text();
+                }
+
+                // For textboxes
                 return $(e.target).val();
             }
         }).data("kendoTooltip");
 
-        $("#expense").on("mouseenter", "input[type='text']", function () {
+        $("#expense").on("mouseenter", "input[type='text'], #lblTotalCount", function () {
+
+            // Always show tooltip for Total Count badge
+            if ($(this).attr("id") === "lblTotalCount") {
+                tooltip.show(this);
+                return;
+            }
 
             var input = $(this);
             var value = input.val();
@@ -769,7 +797,7 @@
             }
         });
 
-        $("#expense").on("mouseleave", "input[type='text']", function () {
+        $("#expense").on("mouseleave", "input[type='text'], #lblTotalCount", function () {
             tooltip.hide();
         });
     });
@@ -1731,6 +1759,12 @@
                 type: 'red',
             });
         }
+
+        var grid = $("#grid").data("kendoGrid");
+
+        if (grid) {
+            $("#lblTotalCount").text(grid.dataSource.total());
+        }
     }
 
     function selectRow(radio) {
@@ -1751,6 +1785,7 @@
         var auditSubCategory = item.entries[columnMap["Audit Sub Category"]];
         var approvedAmount = item.entries[columnMap["Approved Amount"]];
         var auditApprovedAmount = item.entries[columnMap["Audit Approved Amount"]];
+        var auditRemarks = item.entries[columnMap["Field Update Remarks"]];
 
         // If Audit values are empty, use original values
         if (!auditSubCategory || $.trim(auditSubCategory) === "") {
@@ -1768,6 +1803,7 @@
         $("#audit_subcategory").val(auditSubCategory);
         $("#det_approved_amount").val(approvedAmount);
         $("#audit_approved_amount").val(auditApprovedAmount);
+        $("#audit_remarks").val(auditRemarks);
     }
 
 
@@ -1874,6 +1910,30 @@
             }
         });
 
+        var _jsondata = {};
+        _jsondata.in_tran_gid = data.entries[(res[0].position_tran_gid) - 1];
+        _jsondata.in_recon_code = sessionStorage.getItem("reconcode");
+        _jsondata.in_tranbrkp_gid = res[0].position_tranbrkp_gid;
+        _jsondata.in_user_code = sessionStorage.getItem("usrname");
+
+        $.ajax({
+            type: "POST",
+            url: '../KoSequence/getreconvalue',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify(_jsondata),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var result = JSON.parse(response);
+                fields = result.Table
+                $("#approveamt").val((getValueByDesc("Gross Amount")));
+                $("#audit_approveamt").val((getValueByDesc("Audit Gross Amount")));
+                $("#diff_approveamt").val((getValueByDesc("Gross Amount")) - (getValueByDesc("Audit Gross Amount")));                
+            }
+        });
+
+
+
         if (($.trim(original_subcategory || "")) != ($.trim(audit_subcategory || ""))) {
             subcatChnageFlag = "Y";
         }
@@ -1898,6 +1958,10 @@
             {
                 field_name: getcolByDesc("Field Update By"),
                 field_value: sessionStorage.getItem("usrname")
+            },
+            {
+                field_name: getcolByDesc("Field Update Remarks"),
+                field_value: $("#audit_remarks").val()
             }
         ];
 
@@ -1925,6 +1989,7 @@
                     // Reload Expense Grid
                     preview();    // <-- Call your grid loading function here
                     //window.location.href = "../KoSequence/Reconexception";
+                    clearExpenseDetails();
                 }
                 else {
                     $.alert({
@@ -1945,7 +2010,10 @@
 
         // Switch to Audit tab
         $('#audit-tab').tab('show');
-
+        clearExpenseDetails();
+        
+    }
+    function clearExpenseDetails() { 
         // Optional: Clear the Expense Details fields
         $("#det_tran_id").val("");
         $("#det_report_id").val("");
@@ -1954,5 +2022,6 @@
         $("#audit_subcategory").val("");
         $("#det_approved_amount").val("");
         $("#audit_approved_amount").val("");
+        $("#audit_remarks").val("");
     }
 </script>
