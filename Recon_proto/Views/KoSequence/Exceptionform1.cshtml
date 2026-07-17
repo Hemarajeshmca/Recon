@@ -1910,30 +1910,6 @@
             }
         });
 
-        var _jsondata = {};
-        _jsondata.in_tran_gid = data.entries[(res[0].position_tran_gid) - 1];
-        _jsondata.in_recon_code = sessionStorage.getItem("reconcode");
-        _jsondata.in_tranbrkp_gid = res[0].position_tranbrkp_gid;
-        _jsondata.in_user_code = sessionStorage.getItem("usrname");
-
-        $.ajax({
-            type: "POST",
-            url: '../KoSequence/getreconvalue',
-            dataType: 'json',
-            async: false,
-            data: JSON.stringify(_jsondata),
-            contentType: 'application/json; charset=utf-8',
-            success: function (response) {
-                var result = JSON.parse(response);
-                fields = result.Table
-                $("#approveamt").val((getValueByDesc("Gross Amount")));
-                $("#audit_approveamt").val((getValueByDesc("Audit Gross Amount")));
-                $("#diff_approveamt").val((getValueByDesc("Gross Amount")) - (getValueByDesc("Audit Gross Amount")));                
-            }
-        });
-
-
-
         if (($.trim(original_subcategory || "")) != ($.trim(audit_subcategory || ""))) {
             subcatChnageFlag = "Y";
         }
@@ -1986,10 +1962,8 @@
                         type: 'green',
                     });
                     sessionStorage.setItem("excpform", in_recon_code);
-                    // Reload Expense Grid
-                    preview();    // <-- Call your grid loading function here
-                    //window.location.href = "../KoSequence/Reconexception";
-                    clearExpenseDetails();
+                    /* Audit Gross Amount Fetch*/
+                    getreconValue(in_parent_tran_gid);
                 }
                 else {
                     $.alert({
@@ -2002,6 +1976,34 @@
             error: function (er) {
                 alert(er)
                 console.log(er)
+            }
+        });      
+        
+    }
+
+    function getreconValue(tran_id){
+        var _jsondata = {};
+        _jsondata.in_tran_gid = tran_id;
+        _jsondata.in_recon_code = sessionStorage.getItem("reconcode");
+        _jsondata.in_tranbrkp_gid = 0;
+        _jsondata.in_user_code = sessionStorage.getItem("usrname");
+
+        $.ajax({
+            type: "POST",
+            url: '../KoSequence/getreconvalue',
+            dataType: 'json',
+            async: false,
+            data: JSON.stringify(_jsondata),
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                var result = JSON.parse(response);
+                fields = result.Table
+                $("#approveamt").val((getValueByDesc("Gross Amount")));
+                $("#audit_approveamt").val((getValueByDesc("Audit Gross Amount")));
+                $("#diff_approveamt").val((getValueByDesc("Gross Amount")) - (getValueByDesc("Audit Gross Amount")));
+                // Reload Expense Grid
+                preview();    // <-- Call your grid loading function here
+                clearExpenseDetails();
             }
         });
     }
