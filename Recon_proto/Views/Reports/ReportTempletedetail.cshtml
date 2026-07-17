@@ -336,6 +336,9 @@
                                         <label id="fetch_filename"> </label>
                                     </div>
                                 </div>
+                                <div class="col-sm-2" id="tempdwn" style="margin-top: 27px; width: 5%; margin-left: -4px;">
+                                    <img style="height: 35px; width: 35px;cursor: pointer; margin-left: 4px;" title="Download Template" src="../Assets/images/download.png" onclick="downloadTemplate()" />
+                                </div>
                                 <div class="col-sm-1" style="margin-top: 2.5%;">
                                     <img id="img_checkQuery" onclick="tabdataFetchAll('fromcheckquery')" style="cursor:pointer;margin-top: 3px;height: 28px;width: 28px;" class="" src="~/Assets/images/check_query.png" title="Check Query">&nbsp;&nbsp;&nbsp;&nbsp;
                                 </div>
@@ -911,6 +914,12 @@
                             $("#sys_flag").val(res.Table[0].system_flag);
                             $("#cmbreconname").val(res.Table[0].recon_code);
                             document.getElementById("fetch_filename").textContent = res.Table[0].file_name ? res.Table[0].file_name : '';
+                            if(res.Table[0].file_name == null){
+                                $("#tempdwn").hide();
+                            } else {
+                                $("#tempdwn").show();
+                            }
+                            
                             $("#cmbreporttype").prop("disabled", true);
                             $("#clonereport").prop('disabled', true);
                             $("#cmbreconname").prop('disabled', true);
@@ -3628,5 +3637,15 @@
             rpt_cond += `${joins1} ${open_braces}${fieldExpr}${value} ${close_braces}${joins}`;
         }
         return rpt_cond = rpt_cond.trim().endsWith("AND") ? rpt_cond.trim().slice(0, -3).trim() : rpt_cond.trim();
+    }
+
+    function downloadTemplate() {
+          var reporttemplate_code = $("#reporttemplate_code").val();
+          var user_code = sessionStorage.getItem("usrname");
+          var fileName = document.getElementById("fetch_filename").textContent;
+          var extension = fileName.substring(fileName.lastIndexOf('.'));
+          if (extension) {         
+          window.location.href = '@Url.Action("TemplateDownload", "Reports")?report_code=' + reporttemplate_code + '&file_extension=' + extension +  '&username=' + user_code + '';
+          } 
     }
 </script>
