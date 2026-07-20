@@ -3088,6 +3088,84 @@ namespace Recon_proto.Controllers
             public String? report_exec_type { get; set; } // hariharan changes 28-08-25
         }
         #endregion
+
+        #region template_download
+        public IActionResult TemplateDownload(string report_code,string file_extension, string username)
+        {
+            var out_result = getrptfilepath("Uploadpath", username);
+            List<fileconfigmodel> myObjects = JsonConvert.DeserializeObject<List<fileconfigmodel>>(out_result.Value.ToString());
+            var folderPath = _configuration.GetSection("Appsettings")["Uploadpath"].ToString();
+            string filepath = "";
+            if (myObjects.Count > 0)
+            {
+                filepath = myObjects[0].out_config_value;
+            }
+            try
+            {
+                string fileName = report_code + file_extension;  // Assuming the file extension is .csv; adjust as needed
+
+                string filePath = Path.Combine(filepath, fileName);
+
+                // Check if the file exists
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound("File not found.");
+                }
+
+                // Read the file into a stream
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+                // Return the file for download
+                return File(fileBytes, "application/octet-stream", fileName);
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "TemplateDownload");
+                return Json(ex.Message);
+            }
+        }
+
+        public JsonResult getrptfilepath(string confing_val, string username)
+        {
+            urlstring = _configuration.GetSection("Appsettings")["apiurl"].ToString();
+            fileconfigmodel FileDownload = new fileconfigmodel();
+
+            var context = _configuration.GetSection("Appsettings")[confing_val];
+            FileDownload.in_config_name = context;
+            DataTable result = new DataTable();
+            string post_data = "";
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    string Urlcon = "Common/";
+                    client.BaseAddress = new Uri(urlstring + Urlcon);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.DefaultRequestHeaders.Add("user_code", username);
+                    client.DefaultRequestHeaders.Add("lang_code", _configuration.GetSection("AppSettings")["lang_code"].ToString());
+                    client.DefaultRequestHeaders.Add("role_code", _configuration.GetSection("AppSettings")["role_code"].ToString());
+                    client.DefaultRequestHeaders.Add("ipaddress", _configuration.GetSection("AppSettings")["ipaddress"].ToString());
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(FileDownload), UTF8Encoding.UTF8, "application/json");
+                    var response = client.PostAsync("configvalue", content).Result;
+                    Stream data = response.Content.ReadAsStreamAsync().Result;
+                    StreamReader reader = new StreamReader(data);
+                    post_data = reader.ReadToEnd();
+                    string d2 = JsonConvert.DeserializeObject<string>(post_data);
+                    result = JsonConvert.DeserializeObject<DataTable>(d2);
+                    return Json(d2);
+                }
+            }
+            catch (Exception ex)
+            {
+                CommonController objcom = new CommonController(_configuration);
+                objcom.errorlog(ex.Message, "getrptfilepath");
+                return Json(ex.Message);
+            }
+        }
+        #endregion
     }
 }
 
